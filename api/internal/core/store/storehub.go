@@ -82,6 +82,16 @@ func GetStore(key HubKey) *GenericStore {
 	panic(fmt.Sprintf("no store with key: %s", key))
 }
 
+func RangeStore(f func(key HubKey, store *GenericStore) bool) {
+	for k, s := range storeHub {
+		if k != "" && s != nil {
+			if !f(k, s) {
+				break
+			}
+		}
+	}
+}
+
 func InitStores() error {
 	err := InitStore(HubKeyConsumer, GenericStoreOption{
 		BasePath: conf.ETCDConfig.Prefix + "/consumers",

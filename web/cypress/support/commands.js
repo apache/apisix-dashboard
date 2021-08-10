@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+/* eslint-disable */
 import defaultSettings from '../../config/defaultSettings';
 import 'cypress-file-upload';
+import '@4tw/cypress-drag-drop';
 
 Cypress.Commands.add('login', () => {
   const { SERVE_ENV = 'dev' } = Cypress.env();
@@ -34,16 +35,20 @@ Cypress.Commands.add('login', () => {
 
 Cypress.Commands.add('configurePlugins', (cases) => {
   const timeout = 300;
-  const domSelectors = {
+  const domSelector = {
     name: '[data-cy-plugin-name]',
     parents: '.ant-card-bordered',
     drawer_wrap: '.ant-drawer-content-wrapper',
     drawer: '.ant-drawer-content',
     switch: '#disable',
     close: '.anticon-close',
+    selectDropdown: '.ant-select-dropdown',
+    monacoMode: '[data-cy="monaco-mode"]',
+    selectJSON: '.ant-select-dropdown [label=JSON]',
+    monacoViewZones: '.view-zones',
   };
 
-  cy.get(domSelectors.name, { timeout }).then(function (cards) {
+  cy.get(domSelector.name, { timeout }).then(function (cards) {
     [...cards].forEach((card) => {
       const name = card.innerText;
       const pluginCases = cases[name] || [];
@@ -54,45 +59,70 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         }
 
         cy.contains(name)
-          .parents(domSelectors.parents)
+          .parents(domSelector.parents)
           .within(() => {
-            cy.contains('Enable').click({
+            cy.get('button').click({
               force: true,
             });
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.focused(domSelectors.drawer).should('exist');
-        cy.get(domSelectors.drawer, { timeout }).within(() => {
-          cy.get(domSelectors.switch).click({
+        cy.focused(domSelector.drawer).should('exist');
+
+        cy.get(domSelector.monacoMode)
+          .invoke('text')
+          .then((text) => {
+            if (text === 'Form') {
+              cy.wait(5000);
+              cy.get(domSelector.monacoMode).should('be.visible');
+              cy.get(domSelector.monacoMode).click();
+              cy.get(domSelector.selectDropdown).should('be.visible');
+              cy.get(domSelector.selectJSON).click();
+            }
+          });
+
+        cy.get(domSelector.drawer, { timeout }).within(() => {
+          cy.get(domSelector.switch).click({
             force: true,
           });
         });
 
-        cy.window().then(({ codemirror }) => {
-          if (codemirror) {
-            codemirror.setValue(JSON.stringify(data));
-          }
-          cy.get(domSelectors.drawer).should('exist');
-          cy.get(domSelectors.drawer, { timeout }).within(() => {
+        cy.get(domSelector.monacoMode)
+          .invoke('text')
+          .then((text) => {
+            if (text === 'Form') {
+              // FIXME: https://github.com/cypress-io/cypress/issues/7306
+              cy.wait(5000);
+              cy.get(domSelector.monacoMode).should('be.visible');
+              cy.get(domSelector.monacoMode).click();
+              cy.get(domSelector.selectDropdown).should('be.visible');
+              cy.get(domSelector.selectJSON).click();
+            }
+          });
+        // edit monaco
+        cy.get(domSelector.monacoViewZones).should('exist').click({ force: true });
+        cy.window().then((window) => {
+          window.monacoEditor.setValue(JSON.stringify(data));
+
+          cy.get(domSelector.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({
               force: true,
             });
-            cy.get(domSelectors.drawer).should('not.exist');
+            cy.get(domSelector.drawer).should('not.exist');
           });
         });
 
         if (shouldValid === true) {
-          cy.get(domSelectors.drawer).should('not.exist');
+          cy.get(domSelector.drawer).should('not.exist');
         } else if (shouldValid === false) {
           cy.get(this.domSelector.notification).should('contain', 'Invalid plugin data');
 
-          cy.get(domSelectors.close).should('be.visible').click({
+          cy.get(domSelector.close).should('be.visible').click({
             force: true,
             multiple: true,
           });
 
-          cy.get(domSelectors.drawer, { timeout })
+          cy.get(domSelector.drawer, { timeout })
             .invoke('show')
             .within(() => {
               cy.contains('Cancel').click({

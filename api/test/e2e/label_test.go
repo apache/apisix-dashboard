@@ -40,7 +40,7 @@ func TestLabel(t *testing.T) {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
@@ -78,7 +78,7 @@ func TestLabel(t *testing.T) {
 			Path:   "/apisix/admin/upstreams/u1",
 			Body: `{
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				}],
@@ -372,6 +372,16 @@ func TestLabel(t *testing.T) {
 			Path:         "/apisix/admin/plugin_configs/1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "get route label(check empty response)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			Path:         "/apisix/admin/labels/route",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "{\"rows\":[],\"total_size\":0}",
+			Sleep:        sleepTime,
 		},
 	}
 

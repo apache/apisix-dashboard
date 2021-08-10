@@ -24,7 +24,7 @@ GOLDFLAGS="-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X
 
 # Enter dry-run mode
 if [ "$1" == "--dry-run" ]; then
-    cd ./api && go run -ldflags "${GOLDFLAGS}" ./cmd/manager
+    cd ./api && go run -ldflags "${GOLDFLAGS}" ./main.go
     exit 0
 fi
 
@@ -42,7 +42,7 @@ if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
 fi
 
 # build
-cd ./api && go build -o ../output/manager-api -ldflags "${GOLDFLAGS}" ./cmd/manager && cd ..
+cd ./api && go build -o ../output/manager-api -ldflags "${GOLDFLAGS}" ./main.go && cd ..
 
 cp ./api/conf/schema.json ./output/conf/schema.json
 cp ./api/conf/conf.yaml ./output/conf/conf.yaml

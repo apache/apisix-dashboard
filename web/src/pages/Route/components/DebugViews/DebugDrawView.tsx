@@ -14,25 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState, useRef } from 'react';
-import { Input, Select, Card, Tabs, Form, Drawer, Spin, notification, Radio } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Drawer, Form, Input, notification, Radio, Select, Spin, Tabs } from 'antd';
 import { useIntl } from 'umi';
-import CodeMirror from '@uiw/react-codemirror';
-import { PanelSection } from '@api7-dashboard/ui';
 import queryString from 'query-string';
 import Base64 from 'base-64';
 import urlRegexSafe from 'url-regex-safe';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { CopyOutlined } from '@ant-design/icons';
+import type * as monacoEditor from 'monaco-editor';
+import type { Monaco } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
+
+import PanelSection from '@/components/PanelSection';
 
 import {
-  HTTP_METHOD_OPTION_LIST,
-  DEFAULT_DEBUG_PARAM_FORM_DATA,
-  DEFAULT_DEBUG_AUTH_FORM_DATA,
-  PROTOCOL_SUPPORTED,
+  DEBUG_BODY_MODE_SUPPORTED,
   DEBUG_BODY_TYPE_SUPPORTED,
-  DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
+  DEBUG_RESPONSE_BODY_MODE_SUPPORTED,
   DebugBodyFormDataValueType,
+  DEFAULT_DEBUG_AUTH_FORM_DATA,
+  DEFAULT_DEBUG_PARAM_FORM_DATA,
+  HTTP_METHOD_OPTION_LIST,
+  PROTOCOL_SUPPORTED,
 } from '../../constants';
-import { DebugParamsView, AuthenticationView, DebugFormDataView } from '.';
+import { AuthenticationView, DebugFormDataView, DebugParamsView } from '.';
 import { debugRoute } from '../../service';
 import styles from './index.less';
 
@@ -50,15 +56,16 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [formDataForm] = Form.useForm();
   const [authForm] = Form.useForm();
   const [headerForm] = Form.useForm();
-  const [responseCode, setResponseCode] = useState<string>();
+  const [response, setResponse] = useState<RouteModule.debugResponse | null>();
   const [loading, setLoading] = useState(false);
-  const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
-  const bodyCodeMirrorRef = useRef<any>(null);
+  const [body, setBody] = useState('');
+  const [height, setHeight] = useState(50);
   const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
-  const [bodyCodeMirrorMode, setBodyCodeMirrorMode] = useState(
-    DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
+  const [responseBodyMode, setResponseBodyMode] = useState(
+    DEBUG_RESPONSE_BODY_MODE_SUPPORTED[0].mode,
   );
+  const [bodyMode, setBodyCodeMode] = useState(DEBUG_BODY_MODE_SUPPORTED[0].mode);
 
   enum DebugBodyType {
     None = 0,
@@ -73,7 +80,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     formDataForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
-    setResponseCode(`${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`);
+    setResponse(null);
     setBodyType(DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]);
   };
 
@@ -91,7 +98,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     switch (bodyType) {
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded]: {
         let transformFormUrlencoded: string[] = [];
-        const FormUrlencodedData: RouteModule.debugRequestParamsFormData[] = urlencodedForm.getFieldsValue().params;
+        const FormUrlencodedData: RouteModule.debugRequestParamsFormData[] = urlencodedForm.getFieldsValue()
+          .params;
         transformFormUrlencoded = (FormUrlencodedData || [])
           .filter((data) => data && data.check)
           .map((data) => {
@@ -101,48 +109,50 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         return {
           bodyFormData: transformFormUrlencoded.join('&'),
           header: {
-            'Content-type': ['application/x-www-form-urlencoded;charset=UTF-8']
-          }
-        }
+            'Content-type': ['application/x-www-form-urlencoded;charset=UTF-8'],
+          },
+        };
       }
-      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]:{
+      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]: {
         let contentType = [''];
-        switch (bodyCodeMirrorMode){
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode:
+        switch (bodyMode) {
+          case DEBUG_BODY_MODE_SUPPORTED[0].mode:
             contentType = ['application/json;charset=UTF-8'];
             break;
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[1].mode:
+          case DEBUG_BODY_MODE_SUPPORTED[1].mode:
             contentType = ['text/plain;charset=UTF-8'];
             break;
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[2].mode:
+          case DEBUG_BODY_MODE_SUPPORTED[2].mode:
             contentType = ['application/xml;charset=UTF-8'];
             break;
-          default: break;
+          default:
+            break;
         }
 
         return {
-          bodyFormData: bodyCodeMirrorRef.current.editor.getValue(),
+          bodyFormData: body,
           header: {
-            'Content-type': contentType
-          }
-        }
+            'Content-type': contentType,
+          },
+        };
       }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData]: {
         const transformFormData = new FormData();
-        const formDataData: RouteModule.debugRequestParamsFormData[] = formDataForm.getFieldsValue().params;
+        const formDataData: RouteModule.debugRequestParamsFormData[] = formDataForm.getFieldsValue()
+          .params;
 
         (formDataData || [])
           .filter((data) => data && data.check)
           .forEach((data) => {
             if (data.type === DebugBodyFormDataValueType.File) {
-              transformFormData.append(data.key, data.value.originFileObj)
+              transformFormData.append(data.key, data.value.originFileObj);
             } else {
-              transformFormData.append(data.key, data.value)
+              transformFormData.append(data.key, data.value);
             }
-          })
+          });
         return {
           bodyFormData: transformFormData,
-        }
+        };
       }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]:
       default:
@@ -168,7 +178,11 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     return transformData;
   };
 
-  const transformAuthFormData = (formData: RouteModule.authData, userHeaderData: any, formHeaderData: any) => {
+  const transformAuthFormData = (
+    formData: RouteModule.authData,
+    userHeaderData: any,
+    formHeaderData: any,
+  ) => {
     const { authType } = formData;
 
     switch (authType) {
@@ -197,12 +211,12 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     return {
       ...formHeaderData,
       ...userHeaderData,
-    }
+    };
   };
 
   const handleDebug = (url: string) => {
     /* eslint-disable no-useless-escape */
-    if (!urlRegexSafe({exact: true, strict: false}).test(url)) {
+    if (!urlRegexSafe({ exact: true, strict: false }).test(url)) {
       notification.warning({
         message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
       });
@@ -210,30 +224,68 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     }
     const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
     const bodyFormRelateData = transformBodyParamsFormData();
-    const {bodyFormData, header: bodyFormHeader} = bodyFormRelateData;
+    const { bodyFormData, header: bodyFormHeader } = bodyFormRelateData;
     const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
       headerForm.getFieldsValue().params,
     );
-    const headerFormData = transformAuthFormData(authForm.getFieldsValue(), pureHeaderFormData, bodyFormHeader);
-    const urlQueryString = url.indexOf('?') === -1 ? `?${queryString.stringify(queryFormData)}` : `&${queryString.stringify(queryFormData)}`
+    const headerFormData = transformAuthFormData(
+      authForm.getFieldsValue(),
+      pureHeaderFormData,
+      bodyFormHeader,
+    );
+    const urlQueryString =
+      url.indexOf('?') === -1
+        ? `?${queryString.stringify(queryFormData)}`
+        : `&${queryString.stringify(queryFormData)}`;
 
     setLoading(true);
     // TODO: grpc and websocket
-    debugRoute({
-      online_debug_header_params: JSON.stringify(headerFormData),
-      online_debug_url: `${requestProtocol}://${url}${urlQueryString}`,
-      online_debug_request_protocol: requestProtocol,
-      online_debug_method: httpMethod,
-    }, bodyFormData)
+    debugRoute(
+      {
+        online_debug_header_params: JSON.stringify(headerFormData),
+        online_debug_url: `${requestProtocol}://${url}${urlQueryString}`,
+        online_debug_request_protocol: requestProtocol,
+        online_debug_method: httpMethod,
+      },
+      bodyFormData,
+    )
       .then((req) => {
         setLoading(false);
-        setResponseCode(JSON.stringify(req.data.data, null, 2));
-        setCodeMirrorHeight('auto');
+        const resp: RouteModule.debugResponse = req.data;
+        if (typeof resp.data !== 'string') {
+          resp.data = JSON.stringify(resp.data, null, 2);
+        }
+        setResponse(resp);
+        const contentType = resp.header['Content-Type'];
+        if (contentType == null || contentType.length !== 1) {
+          setResponseBodyMode('TEXT');
+        } else if (contentType[0].toLowerCase().indexOf('json') !== -1) {
+          setResponseBodyMode('JSON');
+        } else if (contentType[0].toLowerCase().indexOf('xml') !== -1) {
+          setResponseBodyMode('XML');
+        } else if (contentType[0].toLowerCase().indexOf('html') !== -1) {
+          setResponseBodyMode('HTML');
+        } else {
+          setResponseBodyMode('TEXT');
+        }
       })
       .catch(() => {
         setLoading(false);
       });
   };
+
+  const handleEditorMount = (editor: monacoEditor.editor.IStandaloneCodeEditor, monaco: Monaco) => {
+    editor.onDidChangeModelDecorations(() => {
+      if (!editor.getDomNode()) {
+        return;
+      }
+      const padding = 40;
+      const lineHeight = editor.getOption(monaco.editor.EditorOption.lineHeight);
+      const lineCount = editor.getModel()?.getLineCount() || 1;
+      setHeight(editor.getTopForLineNumber(lineCount + 1) + lineHeight + padding);
+    });
+  };
+
   return (
     <Drawer
       title={formatMessage({ id: 'page.route.onlineDebug' })}
@@ -245,7 +297,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         props.onClose();
       }}
       className={styles.routeDebugDraw}
-      data-cy='debug-draw'
+      data-cy="debug-draw"
     >
       <Card bordered={false}>
         <Input.Group compact>
@@ -257,7 +309,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               setShowBodyTab(!(methodWithoutBody.indexOf(value) > -1));
             }}
             size="large"
-            data-cy='debug-method'
+            data-cy="debug-method"
           >
             {HTTP_METHOD_OPTION_LIST.map((method) => {
               return (
@@ -274,7 +326,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               setRequestProtocol(value);
             }}
             size="large"
-            data-cy='debug-protocol'
+            data-cy="debug-protocol"
           >
             {PROTOCOL_SUPPORTED.map((protocol) => {
               return (
@@ -298,7 +350,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             onChange={(e) => {
               if (e.currentTarget.value === '') {
                 resetForms();
-                setCodeMirrorHeight(50);
               }
             }}
           />
@@ -307,17 +358,33 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
           title={formatMessage({ id: 'page.route.PanelSection.title.defineRequestParams' })}
         >
           <Tabs>
-            <TabPane data-cy='query' tab={formatMessage({ id: 'page.route.TabPane.queryParams' })} key="query">
-              <DebugParamsView form={queryForm} name='queryForm'/>
+            <TabPane
+              data-cy="query"
+              tab={formatMessage({ id: 'page.route.TabPane.queryParams' })}
+              key="query"
+            >
+              <DebugParamsView form={queryForm} name="queryForm" />
             </TabPane>
-            <TabPane data-cy='auth' tab={formatMessage({ id: 'page.route.TabPane.authentication' })} key="auth">
+            <TabPane
+              data-cy="auth"
+              tab={formatMessage({ id: 'page.route.TabPane.authentication' })}
+              key="auth"
+            >
               <AuthenticationView form={authForm} />
             </TabPane>
-            <TabPane data-cy='header' tab={formatMessage({ id: 'page.route.TabPane.headerParams' })} key="header">
-              <DebugParamsView form={headerForm} name='headerForm'/>
+            <TabPane
+              data-cy="header"
+              tab={formatMessage({ id: 'page.route.TabPane.headerParams' })}
+              key="header"
+            >
+              <DebugParamsView form={headerForm} name="headerForm" inputType="header" />
             </TabPane>
             {showBodyTab && (
-              <TabPane data-cy='body' tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
+              <TabPane
+                data-cy="body"
+                tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })}
+                key="body"
+              >
                 <Radio.Group
                   onChange={(e) => {
                     setBodyType(e.target.value);
@@ -334,12 +401,12 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                   <Select
                     size="small"
                     onChange={(value) => {
-                      setBodyCodeMirrorMode(value);
+                      setBodyCodeMode(value);
                     }}
                     style={{ width: 100 }}
-                    defaultValue={bodyCodeMirrorMode}
+                    defaultValue={bodyMode}
                   >
-                    {DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED.map((modeObj) => (
+                    {DEBUG_BODY_MODE_SUPPORTED.map((modeObj) => (
                       <Option key={modeObj.name} value={modeObj.mode}>
                         {modeObj.name}
                       </Option>
@@ -348,7 +415,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 )}
                 <div style={{ marginTop: 16 }}>
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] && (
-                    <DebugParamsView form={urlencodedForm} name='urlencodedForm'/>
+                    <DebugParamsView form={urlencodedForm} name="urlencodedForm" />
                   )}
 
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData] && (
@@ -358,23 +425,29 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput] && (
                     <Form>
                       <Form.Item>
-                        <CodeMirror
-                          ref={(codemirror) => {
-                            bodyCodeMirrorRef.current = codemirror;
-                            if (codemirror) {
-                              // NOTE: for debug & test
-                              window.codeMirrorBody = codemirror.editor;
+                        <Editor
+                          value={body}
+                          language={bodyMode.toLowerCase()}
+                          onChange={(text) => {
+                            if (text) {
+                              setBody(text);
+                            } else {
+                              setBody('');
                             }
                           }}
                           height={250}
+                          beforeMount={(monaco) => {
+                            monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({
+                              validate: false,
+                            });
+                          }}
                           options={{
-                            mode: bodyCodeMirrorMode,
-                            readOnly: '',
-                            lineWrapping: true,
-                            lineNumbers: true,
-                            showCursorWhenSelecting: true,
-                            autofocus: true,
-                            scrollbarStyle: null,
+                            scrollbar: {
+                              vertical: 'hidden',
+                              horizontal: 'hidden',
+                            },
+                            wordWrap: 'on',
+                            minimap: { enabled: false },
                           }}
                         />
                       </Form.Item>
@@ -386,27 +459,84 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
           </Tabs>
         </PanelSection>
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
-          <Tabs>
-            <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
-              <Spin tip="Loading..." spinning={loading}>
-                <div id='codeMirror-response'>
-                  <CodeMirror
-                    value={responseCode}
-                    height={codeMirrorHeight}
+          <Spin tip="Loading..." spinning={loading}>
+            <Tabs
+              tabBarExtraContent={
+                response
+                  ? response.message
+                  : formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })
+              }
+            >
+              <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
+                <Select
+                  disabled={response == null}
+                  value={responseBodyMode}
+                  onSelect={(mode) => setResponseBodyMode(mode as string)}
+                >
+                  {DEBUG_RESPONSE_BODY_MODE_SUPPORTED.map((mode) => {
+                    return (
+                      <Option value={mode.mode} key={mode.mode}>
+                        {mode.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+                <CopyToClipboard
+                  text={response ? response.data : ''}
+                  onCopy={(_: string, result: boolean) => {
+                    if (!result) {
+                      notification.error({
+                        message: formatMessage({ id: 'component.global.copyFail' }),
+                      });
+                      return;
+                    }
+                    notification.success({
+                      message: formatMessage({ id: 'component.global.copySuccess' }),
+                    });
+                  }}
+                >
+                  <Button type="text" disabled={!response}>
+                    <CopyOutlined />
+                  </Button>
+                </CopyToClipboard>
+                <div id="monaco-response" style={{ marginTop: 16 }}>
+                  <Editor
+                    value={response ? response.data : ''}
+                    height={height}
+                    language={responseBodyMode.toLowerCase()}
+                    onMount={handleEditorMount}
+                    beforeMount={(monaco) => {
+                      monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({
+                        validate: false,
+                      });
+                    }}
                     options={{
-                      mode: 'json-ld',
-                      readOnly: 'nocursor',
-                      lineWrapping: true,
-                      lineNumbers: true,
-                      showCursorWhenSelecting: true,
-                      autofocus: true,
-                      scrollbarStyle: null,
+                      automaticLayout: true,
+                      scrollbar: {
+                        vertical: 'hidden',
+                        horizontal: 'hidden',
+                      },
+                      wordWrap: 'on',
+                      minimap: { enabled: false },
+                      readOnly: true,
                     }}
                   />
                 </div>
-              </Spin>
-            </TabPane>
-          </Tabs>
+              </TabPane>
+              <TabPane tab={formatMessage({ id: 'page.route.TabPane.header' })} key="header">
+                {response &&
+                  Object.keys(response.header).map((header) => {
+                    return response.header[header].map((value) => {
+                      return (
+                        <div>
+                          <b>{header}</b>: {value}
+                        </div>
+                      );
+                    });
+                  })}
+              </TabPane>
+            </Tabs>
+          </Spin>
         </PanelSection>
       </Card>
     </Drawer>

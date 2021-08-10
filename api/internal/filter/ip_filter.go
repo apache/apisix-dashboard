@@ -19,6 +19,7 @@ package filter
 import (
 	"net"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -81,7 +82,10 @@ func checkIP(ipStr string, ips map[string]bool, subnets []*subnet) bool {
 func IPFilter() gin.HandlerFunc {
 	ips, subnets := generateIPSet(conf.AllowList)
 	return func(c *gin.Context) {
-		ipStr := c.ClientIP()
+		var ipStr string
+		if ip, _, err := net.SplitHostPort(strings.TrimSpace(c.Request.RemoteAddr)); err == nil {
+			ipStr = ip
+		}
 
 		if len(conf.AllowList) < 1 {
 			c.Next()

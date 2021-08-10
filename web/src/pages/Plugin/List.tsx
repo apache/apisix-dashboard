@@ -22,7 +22,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Space, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { omit } from 'lodash';
-import querystring from 'query-string'
+import querystring from 'query-string';
 
 import PluginDetail from '@/components/Plugin/PluginDetail';
 
@@ -125,11 +125,11 @@ const Page: React.FC = () => {
       onClose={() => {
         setVisible(false);
       }}
-      onChange={({ formData, codemirrorData, shouldDelete }) => {
+      onChange={({ formData, monacoData, shouldDelete }) => {
         const disable = !formData.disable;
         let plugins = {
           ...initialData,
-          [name]: { ...codemirrorData, disable },
+          [name]: { ...monacoData, disable },
         };
         if (shouldDelete === true) {
           plugins = omit(plugins, name);
@@ -146,7 +146,10 @@ const Page: React.FC = () => {
   );
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.list' })}>
+    <PageHeaderWrapper
+      title={formatMessage({ id: 'page.plugin.list' })}
+      content={formatMessage({ id: 'page.plugin.list.enabled' })}
+    >
       <ProTable<PluginModule.TransformedPlugin>
         actionRef={ref}
         rowKey="id"
@@ -161,7 +164,7 @@ const Page: React.FC = () => {
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push('/plugin/market')}>
             <PlusOutlined />
-            {formatMessage({ id: 'component.global.create' })}
+            {formatMessage({ id: 'component.global.enable' })}
           </Button>,
         ]}
       />

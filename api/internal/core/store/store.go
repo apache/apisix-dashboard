@@ -21,6 +21,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
 	"sort"
 	"sync"
@@ -105,6 +106,7 @@ func (s *GenericStore) Init() error {
 		key := ret[i].Key[len(s.opt.BasePath)+1:]
 		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error occurred while initializing logical store: ", s.opt.BasePath)
 			return err
 		}
 
@@ -161,6 +163,11 @@ type ListInput struct {
 type ListOutput struct {
 	Rows      []interface{} `json:"rows"`
 	TotalSize int           `json:"total_size"`
+}
+
+// NewListOutput returns JSON marshalling safe struct pointer for empty slice
+func NewListOutput() *ListOutput {
+	return &ListOutput{Rows: make([]interface{}, 0)}
 }
 
 var defLessFunc = func(i, j interface{}) bool {
@@ -223,6 +230,12 @@ func (s *GenericStore) List(_ context.Context, input ListInput) (*ListOutput, er
 	}
 
 	return output, nil
+}
+
+func (s *GenericStore) Range(_ context.Context, f func(key string, obj interface{}) bool) {
+	s.cache.Range(func(key, value interface{}) bool {
+		return f(key.(string), value)
+	})
 }
 
 func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
@@ -348,8 +361,8 @@ func (s *GenericStore) StringToObjPtr(str, key string) (interface{}, error) {
 	ret := objPtr.Interface()
 	err := json.Unmarshal([]byte(str), ret)
 	if err != nil {
-		log.Errorf("json marshal failed: %s", err)
-		return nil, fmt.Errorf("json unmarshal failed: %s", err)
+		log.Errorf("json unmarshal failed: %s", err)
+		return nil, fmt.Errorf("json unmarshal failed\n\tRelated Key:\t\t%s\n\tError Description:\t%s", key, err)
 	}
 
 	if setter, ok := ret.(entity.BaseInfoSetter); ok {

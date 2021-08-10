@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/tidwall/gjson"
 	"gopkg.in/yaml.v2"
@@ -44,8 +45,12 @@ var (
 	ENV              string
 	Schema           gjson.Result
 	WorkDir          = "."
-	ServerHost       = "127.0.0.1"
+	ServerHost       = "0.0.0.0"
 	ServerPort       = 80
+	SSLHost          = "0.0.0.0"
+	SSLPort          = 443
+	SSLCert          string
+	SSLKey           string
 	ETCDConfig       *Etcd
 	ErrorLogLevel    = "warn"
 	ErrorLogPath     = "logs/error.log"
@@ -73,6 +78,13 @@ type Etcd struct {
 	Prefix    string
 }
 
+type SSL struct {
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
+	Cert string `yaml:"cert"`
+	Key  string `yaml:"key"`
+}
+
 type Listen struct {
 	Host string
 	Port int
@@ -95,6 +107,7 @@ type Log struct {
 type Conf struct {
 	Etcd      Etcd
 	Listen    Listen
+	SSL       SSL
 	Log       Log
 	AllowList []string `yaml:"allow_list"`
 	MaxCpu    int      `yaml:"max_cpu"`
@@ -152,9 +165,19 @@ func setConf() {
 		if config.Conf.Listen.Port != 0 {
 			ServerPort = config.Conf.Listen.Port
 		}
-
 		if config.Conf.Listen.Host != "" {
 			ServerHost = config.Conf.Listen.Host
+		}
+
+		// SSL
+		if config.Conf.SSL.Port != 0 {
+			SSLPort = config.Conf.SSL.Port
+		}
+		if config.Conf.SSL.Cert != "" {
+			SSLCert = config.Conf.SSL.Cert
+		}
+		if config.Conf.SSL.Key != "" {
+			SSLKey = config.Conf.SSL.Key
 		}
 
 		// for etcd
@@ -169,21 +192,34 @@ func setConf() {
 		if config.Conf.Log.ErrorLog.FilePath != "" {
 			ErrorLogPath = config.Conf.Log.ErrorLog.FilePath
 		}
-		if !filepath.IsAbs(ErrorLogPath) {
-			ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
-			if err != nil {
-				panic(err)
-			}
-		}
 
 		// access log
 		if config.Conf.Log.AccessLog.FilePath != "" {
 			AccessLogPath = config.Conf.Log.AccessLog.FilePath
 		}
+
+		if !filepath.IsAbs(ErrorLogPath) {
+			if strings.HasPrefix(ErrorLogPath, "winfile") {
+				return
+			}
+			ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
+			if err != nil {
+				panic(err)
+			}
+			if runtime.GOOS == "windows" {
+				ErrorLogPath = `winfile:///` + ErrorLogPath
+			}
+		}
 		if !filepath.IsAbs(AccessLogPath) {
+			if strings.HasPrefix(AccessLogPath, "winfile") {
+				return
+			}
 			AccessLogPath, err = filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
 			if err != nil {
 				panic(err)
+			}
+			if runtime.GOOS == "windows" {
+				AccessLogPath = `winfile:///` + AccessLogPath
 			}
 		}
 

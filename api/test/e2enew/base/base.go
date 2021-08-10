@@ -41,6 +41,7 @@ var (
 	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
 	ManagerAPIHost         = "http://127.0.0.1:9000"
+	PrometheusExporter     = "http://127.0.0.1:9091"
 )
 
 func GetToken() string {
@@ -77,6 +78,11 @@ func ManagerApiExpect() *httpexpect.Expect {
 func APISIXExpect() *httpexpect.Expect {
 	t := getTestingHandle()
 	return httpexpect.New(t, APISIXHost)
+}
+
+func PrometheusExporterExpect() *httpexpect.Expect {
+	t := getTestingHandle()
+	return httpexpect.New(t, PrometheusExporter)
 }
 
 func APISIXHTTPSExpect() *httpexpect.Expect {
@@ -248,8 +254,9 @@ func CleanAPISIXErrorLog() {
 	pwd := string(pwdByte)
 	pwd = strings.Replace(pwd, "\n", "", 1)
 	pwd = pwd[:strings.Index(pwd, "/e2e")]
-	cmd = exec.Command("sudo", "echo", " > ", pwd+"/docker/apisix_logs/error.log")
-	_, err = cmd.CombinedOutput()
+	cmdStr := "echo | sudo tee " + pwd + "/docker/apisix_logs/error.log"
+	cmd = exec.Command("bash", "-c", cmdStr)
+	_, err = cmd.Output()
 	if err != nil {
 		fmt.Println("cmd error:", err.Error())
 	}

@@ -84,25 +84,15 @@ BACKUP_FILE="${CONF_PATH}.backup.yaml"
 
 up() {
   set -e
-  if [ ! -f "Dockerfile-apisix" ]; then
-    echo "Downloading Dockerfile"
-    if ! curl --version &>/dev/null; then
-      give_up "The script depends on curl. Please proceed after the installation."
-    else
-      curl -o Dockerfile-apisix https://raw.githubusercontent.com/apache/apisix-docker/master/alpine/Dockerfile
-    fi
-  fi
-
   #creating backup of current config
   if [ ! -f "$BACKUP_FILE" ]; then
     cp "$YAML_FILE" "$BACKUP_FILE"
 
     #modifying config
     sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' "$YAML_FILE"
-    sed -i 's/127.0.0.1/0.0.0.0/' "$YAML_FILE"
+    sed -i 's@127.0.0.1@0.0.0.0/0@' "$YAML_FILE"
     sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' "$YAML_FILE"
     sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' "$YAML_FILE"
-    sed -i 's@127.0.0.0/24@0.0.0.0/0@' "$YAML_FILE"
     sed -i 's@# - dubbo-proxy@- dubbo-proxy@' "$YAML_FILE"
 
   fi

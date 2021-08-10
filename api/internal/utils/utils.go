@@ -29,8 +29,6 @@ import (
 
 	"github.com/sony/sonyflake"
 	"github.com/yuin/gopher-lua/parse"
-
-	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 var _sf *sonyflake.Sonyflake
@@ -39,7 +37,7 @@ func init() {
 	saltStr, ok := os.LookupEnv("FLAKE_SALT")
 	var salt uint16
 	if ok {
-		i, err := strconv.Atoi(saltStr)
+		i, err := strconv.ParseUint(saltStr, 10, 16)
 		if err != nil {
 			panic(err)
 		}
@@ -207,12 +205,4 @@ func ValueEqual(a interface{}, b interface{}) bool {
 		return false
 	}
 	return bytes.Equal(aBytes, bBytes)
-}
-
-func GetMatchedVersion(dashboardVersion string) string {
-	if apisixVersion, exist := consts.VersionMap[dashboardVersion]; exist {
-		return apisixVersion
-	}
-
-	return ""
 }

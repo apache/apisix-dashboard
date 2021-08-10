@@ -1,12 +1,22 @@
+# Test make build command to see if ManagerAPI and Web are ok to build
+
 name: make build
 
 on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'docs/**'
   pull_request:
     branches:
       - master
+    paths-ignore:
+      - 'docs/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   make-build-test:
@@ -25,9 +35,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: 14.x
 

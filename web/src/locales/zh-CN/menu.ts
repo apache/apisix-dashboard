@@ -22,7 +22,7 @@ export default {
   'menu.login': '登录',
   'menu.register': '注册',
   'menu.register.result': '注册结果',
-  'menu.dashboard': 'Dashboard',
+  'menu.dashboard': '仪表板',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',
@@ -69,4 +69,6 @@ export default {
   'menu.service': '服务',
   'menu.setting': '系统设置',
   'menu.serverinfo': '系统信息',
+  'menu.advanced-feature': '高级特性',
+  'menu.more': '更多',
 };

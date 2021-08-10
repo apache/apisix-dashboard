@@ -68,7 +68,6 @@ declare namespace UpstreamModule {
     upstream_id: string;
     type: Type;
     nodes?: Node[];
-    k8s_deployment_info?: K8SDeploymentInfo;
     hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
     key?: string;
     checks?: HealthCheck;
@@ -79,6 +78,9 @@ declare namespace UpstreamModule {
     desc?: string;
     pass_host?: 'pass' | 'node' | 'rewrite';
     upstream_host: UpstreamHost[];
+
+    // Custom Fields that need to be omitted
+    custom?: {};
   };
 
   // TODO: typing

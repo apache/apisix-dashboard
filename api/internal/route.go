@@ -33,9 +33,9 @@ import (
 	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
+	"github.com/apisix/manager-api/internal/handler/migrate"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
 	"github.com/apisix/manager-api/internal/handler/route"
-	"github.com/apisix/manager-api/internal/handler/route_online_debug"
 	"github.com/apisix/manager-api/internal/handler/schema"
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
@@ -70,13 +70,13 @@ func SetUpRouter() *gin.Engine {
 		healthz.NewHandler,
 		authentication.NewHandler,
 		global_rule.NewHandler,
-		route_online_debug.NewHandler,
 		server_info.NewHandler,
 		label.NewHandler,
 		data_loader.NewHandler,
 		data_loader.NewImportHandler,
 		tool.NewHandler,
 		plugin_config.NewHandler,
+		migrate.NewHandler,
 	}
 
 	for i := range factories {

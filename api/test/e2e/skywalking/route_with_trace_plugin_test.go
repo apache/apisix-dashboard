@@ -54,7 +54,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + e2e.UpstreamIp + `",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -105,7 +105,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + e2e.UpstreamIp + `",
 						"port": 1981,
 						"weight": 1
 					}]

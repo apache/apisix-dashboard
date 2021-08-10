@@ -127,11 +127,7 @@ services:
 
   apisix:
     hostname: apisix_server1
-    build:
-      context: ../../
-      dockerfile: test/docker/Dockerfile-apisix
-      args:
-        - APISIX_VERSION=2.4
+    image: apache/apisix:2.7-alpine
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -145,6 +141,7 @@ services:
     ports:
       - '9080:9080/tcp'
       - '9090:9090/tcp'
+      - '9091:9091/tcp'
       - '9443:9443/tcp'
     networks:
       apisix_dashboard_e2e:
@@ -152,11 +149,7 @@ services:
 
   apisix2:
     hostname: apisix_server2
-    build:
-      context: ../../
-      dockerfile: test/docker/Dockerfile-apisix
-      args:
-        - APISIX_VERSION=2.4
+    image: apache/apisix:2.7-alpine
     restart: always
     volumes:
       - ./apisix_config2.yaml:/usr/local/apisix/conf/config.yaml:ro

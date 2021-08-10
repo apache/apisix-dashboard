@@ -59,7 +59,7 @@ endif
 .PHONY: dag-lib
 dag-lib:
 ifeq ("$(wildcard api/dag-to-lua/dag-to-lua.lua)", "")
-	wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp
+	curl -Lso /tmp/v1.1.tar.gz https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
 	tar -zxvf /tmp/v1.1.tar.gz -C /tmp
 	mkdir ./api/dag-to-lua
 	cp -r /tmp/dag-to-lua-1.1/lib/* ./api/dag-to-lua
@@ -80,7 +80,7 @@ api-run: api-default
 
 ### api-stop:		Stop the manager-api
 api-stop:
-	cd api && go run -ldflags "${GOLDFLAGS}" ./cmd/manager stop
+	cd api && go run -ldflags "${GOLDFLAGS}" ./main.go stop
 
 ### go-lint:		Lint Go source codes
 .PHONY: go-lint

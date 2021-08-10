@@ -14,30 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Button,
-  notification,
-  PageHeader,
-  Switch,
-  Form,
-  Select,
   Divider,
   Drawer,
-  Alert,
-  Space,
+  Form,
+  Input,
+  notification,
+  PageHeader,
   Popconfirm,
+  Select,
+  Space,
+  Switch,
 } from 'antd';
 import { useIntl } from 'umi';
-import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
 import Ajv from 'ajv';
 import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
+import { compact, omit } from 'lodash';
+import type { Monaco } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
+import type { languages } from 'monaco-editor';
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
+import { PluginForm, PLUGIN_UI_LIST } from './UI';
 
 type Props = {
   name: string;
@@ -48,8 +53,9 @@ type Props = {
   readonly?: boolean;
   visible: boolean;
   maskClosable?: boolean;
+  isEnabled?: boolean;
   onClose?: () => void;
-  onChange?: (data: any) => void;
+  onChange?: (data: PluginComponent.PluginDetailValues) => void;
 };
 
 const ajv = new Ajv();
@@ -86,33 +92,111 @@ const PluginDetail: React.FC<Props> = ({
   pluginList = [],
   readonly = false,
   maskClosable = true,
+  isEnabled = false,
   initialData = {},
   onClose = () => {},
   onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
-  enum codeMirrorModeList {
-    Json = 'Json',
-    Yaml = 'Yaml',
+  enum monacoModeList {
+    JSON = 'JSON',
+    YAML = 'YAML',
+    UIForm = 'Form',
   }
   const [form] = Form.useForm();
-  const ref = useRef<any>(null);
+  const [UIForm] = Form.useForm();
   const data = initialData[name] || {};
-  const pluginType = pluginList.find((item) => item.name === name)?.type;
-  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
-    codeMirrorModeList.Json,
-  );
-  const modeOptions = [
-    { label: codeMirrorModeList.Json, value: codeMirrorModeList.Json },
-    { label: codeMirrorModeList.Yaml, value: codeMirrorModeList.Yaml },
+  const pluginType = pluginList.find((item) => item.name === name)?.originType;
+  const pluginSchema = pluginList.find((item) => item.name === name)?.schema;
+  const [content, setContent] = useState<string>(JSON.stringify(data, null, 2));
+  const [monacoMode, setMonacoMode] = useState<PluginComponent.MonacoLanguage>(monacoModeList.JSON);
+  const modeOptions: { label: string; value: string }[] = [
+    { label: monacoModeList.JSON, value: monacoModeList.JSON },
+    { label: monacoModeList.YAML, value: monacoModeList.YAML },
   ];
+
+  if (PLUGIN_UI_LIST.includes(name)) {
+    modeOptions.push({
+      label: formatMessage({ id: 'component.plugin.form' }),
+      value: monacoModeList.UIForm,
+    });
+  }
+
+  const getUIFormData = () => {
+    if (name === 'cors') {
+      const formData = UIForm.getFieldsValue();
+      const newMethods = formData.allow_methods.join(',');
+      const compactAllowRegex = compact(formData.allow_origins_by_regex);
+      // Note: default allow_origins_by_regex setted for UI is [''], but this is not allowed, omit it.
+      if (compactAllowRegex.length === 0) {
+        return omit({ ...formData, allow_methods: newMethods }, ['allow_origins_by_regex']);
+      }
+
+      return { ...formData, allow_methods: newMethods };
+    }
+    return UIForm.getFieldsValue();
+  };
+
+  const setUIFormData = (formData: any) => {
+    if (name === 'cors' && formData) {
+      const methods = (formData.allow_methods || '').length
+        ? formData.allow_methods.split(',')
+        : ['*'];
+      UIForm.setFieldsValue({ ...formData, allow_methods: methods });
+      return;
+    }
+    UIForm.setFieldsValue(formData);
+  };
 
   useEffect(() => {
     form.setFieldsValue({
-      disable: initialData[name] && !initialData[name].disable,
+      disable: isEnabled ? true : initialData[name] && !initialData[name].disable,
       scope: 'global',
     });
+    if (PLUGIN_UI_LIST.includes(name)) {
+      setMonacoMode(monacoModeList.UIForm);
+      setUIFormData(initialData[name]);
+    }
   }, []);
+
+  const formatYaml = (yaml: string): string => {
+    const json = yaml2json(yaml, true);
+    if (json.error) {
+      return yaml;
+    }
+    return json2yaml(json.data).data;
+  };
+
+  const editorWillMount = (monaco: Monaco) => {
+    fetchSchema(name, schemaType).then((schema) => {
+      const schemaConfig: languages.json.DiagnosticsOptions = {
+        validate: true,
+        schemas: [
+          {
+            // useless placeholder
+            uri: `https://apisix.apache.org/`,
+            fileMatch: ['*'],
+            schema,
+          },
+        ],
+        trailingCommas: 'error',
+        enableSchemaRequest: false,
+      };
+      const yamlFormatProvider: languages.DocumentFormattingEditProvider = {
+        provideDocumentFormattingEdits(model) {
+          return [
+            {
+              text: formatYaml(model.getValue()),
+              range: model.getFullModelRange(),
+            },
+          ];
+        },
+      };
+      monaco.languages.registerDocumentFormattingEditProvider('yaml', yamlFormatProvider);
+      monaco.editor.getModels().forEach((model) => model.updateOptions({ tabSize: 2 }));
+      monaco.languages.json.jsonDefaults.setDiagnosticsOptions(schemaConfig);
+    });
+  };
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     return fetchSchema(pluginName, schemaType).then((schema) => {
@@ -158,201 +242,231 @@ const PluginDetail: React.FC<Props> = ({
       });
     });
   };
-  const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
-    switch (value) {
-      case codeMirrorModeList.Json: {
-        const { data: yamlData , error } = yaml2json(ref.current.editor.getValue(), true);
 
-        if (error) {
-          notification.error({
-            message: 'Invalid Yaml data',
-          });
-          return;
+  const handleModeChange = (value: PluginComponent.MonacoLanguage) => {
+    switch (value) {
+      case monacoModeList.JSON: {
+        if (monacoMode === monacoModeList.YAML) {
+          const { data: yamlData, error } = yaml2json(content, true);
+          if (error) {
+            notification.error({ message: formatMessage({ id: 'component.global.invalidYaml' }) });
+            return;
+          }
+          setContent(js_beautify(yamlData, { indent_size: 2 }));
+        } else {
+          setContent(js_beautify(JSON.stringify(getUIFormData()), { indent_size: 2 }));
         }
-        ref.current.editor.setValue(
-          js_beautify(yamlData, {
-            indent_size: 2,
-          }),
-        );
         break;
       }
-      case codeMirrorModeList.Yaml: {
-        const { data: jsonData, error } = json2yaml(ref.current.editor.getValue());
-
+      case monacoModeList.YAML: {
+        const jsonData =
+          monacoMode === monacoModeList.JSON ? content : JSON.stringify(getUIFormData());
+        const { data: yamlData, error } = json2yaml(jsonData);
         if (error) {
-          notification.error({
-            message: 'Invalid Json data',
-          });
+          notification.error({ message: formatMessage({ id: 'component.global.invalidJson' }) });
           return;
         }
-        ref.current.editor.setValue(jsonData);
+        setContent(yamlData);
+        break;
+      }
+
+      case monacoModeList.UIForm: {
+        if (monacoMode === monacoModeList.JSON) {
+          setUIFormData(JSON.parse(content));
+        } else {
+          const { data: yamlData, error } = yaml2json(content, true);
+          if (error) {
+            notification.error({ message: formatMessage({ id: 'component.global.invalidYaml' }) });
+            return;
+          }
+          setUIFormData(JSON.parse(yamlData));
+        }
         break;
       }
       default:
         break;
     }
-    setCodeMirrorMode(value);
-  };
-  const formatCodes = () => {
-    try {
-      if (ref.current) {
-        ref.current.editor.setValue(
-          js_beautify(ref.current.editor.getValue(), {
-            indent_size: 2,
-          }),
-        );
-      }
-    } catch (error) {
-      notification.error({
-        message: 'Format failed',
-      });
-    }
+    setMonacoMode(value);
   };
 
+  const isNoConfigurationRequired =
+    pluginType === 'auth' && schemaType !== 'consumer' && monacoMode !== monacoModeList.UIForm;
+
   return (
-    <>
-      <Drawer
-        title={`Plugin: ${name}`}
-        visible={visible}
-        placement="right"
-        closable={false}
-        maskClosable={maskClosable}
-        onClose={onClose}
-        width={700}
-        footer={
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {' '}
-            <Button onClick={onClose} key={1}>
-              {formatMessage({ id: 'component.global.cancel' })}
-            </Button>
-            <Space>
-              <Popconfirm
-                title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
-                okText={formatMessage({ id: 'component.global.confirm' })}
-                cancelText={formatMessage({ id: 'component.global.cancel' })}
-                onConfirm={() => {
-                  onChange({
-                    formData: form.getFieldsValue(),
-                    codemirrorData: {},
-                    shouldDelete: true,
-                  });
-                }}
-              >
-                {initialData[name] ? (
-                  <Button key={3} type="primary" danger>
-                    {formatMessage({ id: 'component.global.delete' })}
-                  </Button>
-                ) : null}
-              </Popconfirm>
-              <Button
-                key={2}
-                type="primary"
-                onClick={() => {
-                  try {
-                    const editorData =
-                      codeMirrorMode === codeMirrorModeList.Json
-                        ? JSON.parse(ref.current?.editor.getValue())
-                        : yaml2json(ref.current?.editor.getValue(), false).data;
-                    validateData(name, editorData).then((value) => {
-                      onChange({ formData: form.getFieldsValue(), codemirrorData: value });
-                    });
-                  } catch (error) {
-                    notification.error({
-                      message: 'Invalid JSON data',
-                    });
+    <Drawer
+      title={formatMessage({ id: 'component.plugin.editor' })}
+      visible={visible}
+      placement="right"
+      closable={false}
+      maskClosable={maskClosable}
+      destroyOnClose
+      onClose={onClose}
+      width={700}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {' '}
+          <Button onClick={onClose} key={1}>
+            {formatMessage({ id: 'component.global.cancel' })}
+          </Button>
+          <Space>
+            <Popconfirm
+              title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
+              disabled={readonly}
+              onConfirm={() => {
+                onChange({
+                  formData: form.getFieldsValue(),
+                  monacoData: {},
+                  shouldDelete: true,
+                });
+              }}
+            >
+              {initialData[name] ? (
+                <Button key={3} type="primary" danger disabled={readonly}>
+                  {formatMessage({ id: 'component.global.delete' })}
+                </Button>
+              ) : null}
+            </Popconfirm>
+            <Button
+              key={2}
+              disabled={readonly}
+              type="primary"
+              onClick={() => {
+                try {
+                  let editorData;
+                  if (monacoMode === monacoModeList.JSON) {
+                    editorData = JSON.parse(content);
+                  } else if (monacoMode === monacoModeList.YAML) {
+                    editorData = yaml2json(content, false).data;
+                  } else {
+                    editorData = getUIFormData();
                   }
-                }}
-              >
-                {formatMessage({ id: 'component.global.submit' })}
-              </Button>
-            </Space>
-          </div>
-        }
-      >
-        <style>
-          {`
+
+                  validateData(name, editorData).then((value) => {
+                    onChange({ formData: form.getFieldsValue(), monacoData: value });
+                  });
+                } catch (error) {
+                  notification.error({
+                    message: formatMessage({ id: 'component.global.invalidJson' }),
+                  });
+                }
+              }}
+            >
+              {formatMessage({ id: 'component.global.submit' })}
+            </Button>
+          </Space>
+        </div>
+      }
+    >
+      <style>
+        {`
         .site-page-header {
           border: 1px solid rgb(235, 237, 240);
           margin-top:10px;
         }
+        .ant-input[disabled] {
+          color: #000;
+        }
       `}
-        </style>
+      </style>
 
-        <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-          <Form.Item label="Enable" valuePropName="checked" name="disable">
-            <Switch
-              defaultChecked={initialData[name] && !initialData[name].disable}
-              disabled={readonly}
-            />
+      <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
+        <Form.Item label={formatMessage({ id: 'component.global.name' })}>
+          <Input value={name} bordered={false} disabled />
+        </Form.Item>
+        <Form.Item
+          label={formatMessage({ id: 'component.global.enable' })}
+          valuePropName="checked"
+          name="disable"
+        >
+          <Switch
+            defaultChecked={isEnabled ? true : initialData[name] && !initialData[name].disable}
+            disabled={readonly || isEnabled}
+          />
+        </Form.Item>
+        {type === 'global' && (
+          <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
+            <Select disabled>
+              <Select.Option value="global">{formatMessage({ id: 'other.global' })}</Select.Option>
+            </Select>
           </Form.Item>
-          {type === 'global' && (
-            <Form.Item label="Scope" name="scope">
-              <Select disabled>
-                <Select.Option value="global">Global</Select.Option>
-              </Select>
-            </Form.Item>
-          )}
-        </Form>
-        <Divider orientation="left">Data Editor</Divider>
-        <PageHeader
-          title=""
-          subTitle={
-            pluginType === 'auth' && schemaType !== 'consumer' ? (
-              <Alert message={`${name} does not require configuration`} type="warning" />
-            ) : (
-              <>Current plugin: {name}</>
-            )
-          }
-          ghost={false}
-          extra={[
-            <Button
-              type="default"
-              icon={<LinkOutlined />}
-              onClick={() => {
-                if (name.startsWith('serverless')) {
-                  window.open('https://apisix.apache.org/docs/apisix/plugins/serverless');
-                } else {
-                  window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
-                }
-              }}
-              key={1}
-            >
-              Document
-            </Button>,
-            <Select
-              defaultValue={codeMirrorModeList.Json}
-              value={codeMirrorMode}
-              options={modeOptions}
-              onChange={(value: PluginComponent.CodeMirrorMode) => {
-                handleModeChange(value);
-              }}
-              data-cy='code-mirror-mode'
-            ></Select>,
-            <Button type="primary" onClick={formatCodes} key={3}>
-              Format
-            </Button>,
-          ]}
+        )}
+      </Form>
+      <Divider orientation="left">{formatMessage({ id: 'component.global.data.editor' })}</Divider>
+      <PageHeader
+        title=""
+        subTitle={
+          isNoConfigurationRequired ? (
+            <Alert
+              message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })}
+              type="warning"
+            />
+          ) : null
+        }
+        ghost={false}
+        extra={[
+          <Select
+            defaultValue={monacoModeList.JSON}
+            value={monacoMode}
+            options={modeOptions}
+            onChange={handleModeChange}
+            data-cy="monaco-mode"
+            key={1}
+          />,
+          <Button
+            type="default"
+            icon={<LinkOutlined />}
+            onClick={() => {
+              if (name.startsWith('serverless')) {
+                window.open('https://apisix.apache.org/docs/apisix/plugins/serverless');
+              } else {
+                window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
+              }
+            }}
+            key={3}
+          >
+            {formatMessage({ id: 'component.global.document' })}
+          </Button>,
+        ]}
+      />
+      {Boolean(monacoMode === monacoModeList.UIForm) && (
+        <PluginForm
+          name={name}
+          schema={pluginSchema}
+          form={UIForm}
+          renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')}
         />
-        <CodeMirror
-          ref={(codemirror) => {
-            ref.current = codemirror;
-            if (codemirror) {
-              // NOTE: for debug & test
-              window.codemirror = codemirror.editor;
+      )}
+      <div style={{ display: monacoMode === monacoModeList.UIForm ? 'none' : 'unset' }}>
+        <Editor
+          value={content}
+          onChange={(text) => {
+            if (text) {
+              setContent(text);
+            } else {
+              setContent('');
             }
           }}
-          value={JSON.stringify(data, null, 2)}
+          language={monacoMode.toLocaleLowerCase()}
+          onMount={(editor) => {
+            // NOTE: for debug & test
+            // @ts-ignore
+            window.monacoEditor = editor;
+          }}
+          beforeMount={editorWillMount}
           options={{
-            mode: codeMirrorMode,
-            readOnly: readonly ? 'nocursor' : '',
-            lineWrapping: true,
-            lineNumbers: true,
-            showCursorWhenSelecting: true,
-            autofocus: true,
+            scrollbar: {
+              vertical: 'hidden',
+              horizontal: 'hidden',
+            },
+            wordWrap: 'on',
+            minimap: { enabled: false },
+            readOnly: readonly,
           }}
         />
-      </Drawer>
-    </>
+      </div>
+    </Drawer>
   );
 };
 

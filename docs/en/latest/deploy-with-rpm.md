@@ -26,7 +26,7 @@ title: Deploy with RPM
 ## Install from RPM
 
 ```sh
-$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.4/apisix-dashboard-2.4-0.x86_64.rpm
+$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.7/apisix-dashboard-2.7-0.x86_64.rpm
 ```
 
 ## Run
@@ -37,4 +37,9 @@ Before you start, make sure the following dependencies are installed and running
 
 ```sh
 $ sudo nohup manager-api -p /usr/local/apisix/dashboard/ &
+
+# or manager-api as a service
+$ sudo manager-api start -p /usr/local/apisix/dashboard/
 ```
+
+Without changing the configuration, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.

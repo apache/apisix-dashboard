@@ -216,6 +216,7 @@ The following components are provided under the MIT License. See project link fo
 The text of each license is also included at licenses/LICENSE-[project].txt.
 
    files from ant-design-pro: https://github.com/ant-design/ant-design-pro MIT
+   files from antvis-x6: https://github.com/antvis/X6 MIT
    files from json.lua: https://github.com/rxi/json.lua MIT
 
 ========================================================================

@@ -20,11 +20,13 @@ import component from './zh-CN/component';
 import globalHeader from './zh-CN/globalHeader';
 import menu from './zh-CN/menu';
 import pwa from './zh-CN/pwa';
+import other from './zh-CN/other';
 import settingDrawer from './zh-CN/settingDrawer';
 import settings from './zh-CN/setting';
-import PluginOrchestration from '../components/PluginOrchestration/locales/zh-CN';
 import Plugin from '../components/Plugin/locales/zh-CN';
+import PluginFlow from '../components/PluginFlow/locales/zh-CN';
 import RawDataEditor from '../components/RawDataEditor/locales/zh-CN';
+import UpstreamComponent from '../components/Upstream/locales/zh-CN';
 
 export default {
   'navBar.lang': '语言',
@@ -38,8 +40,10 @@ export default {
   ...settings,
   ...pwa,
   ...component,
+  ...other,
   ...ActionBarZhCN,
-  ...PluginOrchestration,
   ...Plugin,
-  ...RawDataEditor
+  ...PluginFlow,
+  ...RawDataEditor,
+  ...UpstreamComponent,
 };

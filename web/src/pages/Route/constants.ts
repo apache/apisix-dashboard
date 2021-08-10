@@ -16,18 +16,20 @@
  */
 export const HTTP_METHOD_OPTION_LIST: HttpMethod[] = [
   'GET',
-  'HEAD',
   'POST',
   'PUT',
   'DELETE',
-  'OPTIONS',
   'PATCH',
+  'HEAD',
+  'OPTIONS',
+  'CONNECT',
+  'TRACE',
 ];
 
 export const FORM_ITEM_LAYOUT = {
   labelCol: {
     span: 3,
-  }
+  },
 };
 
 export const FORM_ITEM_WITHOUT_LABEL = {
@@ -72,40 +74,76 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   },
   URIRewriteType: URI_REWRITE_TYPE.KEEP,
   hostRewriteType: HOST_REWRITE_TYPE.KEEP,
-
 };
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
   plugins: {},
   script: {},
-  plugin_config_id: ""
+  plugin_config_id: '',
 };
-
-export const INIT_CHART = {
-  offset: { x: 55.71, y: 21.69 },
-  scale: 0.329,
-  nodes: {},
-  links: {},
-  selected: {},
-  hovered: {},
-};
-
-export const HASH_KEY_LIST = [
-  'remote_addr',
-  'host',
-  'uri',
-  'server_name',
-  'server_addr',
-  'request_uri',
-  'query_string',
-  'remote_port',
-  'hostname',
-  'arg_id',
-];
-
-export const HASH_ON_LIST = ['vars', 'header', 'cookie', 'consumer'];
 
 export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
+
+export const HEADER_LIST = [
+  'A-IM',
+  'Accept',
+  'Accept-Charset',
+  'Accept-Datetime',
+  'Accept-Encoding',
+  'Accept-Language',
+  'Access-Control-Request-Method',
+  'Access-Control-Request-Headers',
+  'Allow',
+  'Authorization',
+  'Cache-Control',
+  'Connection',
+  'Content-Encoding',
+  'Content-Length',
+  'Content-MD5',
+  'Content-Type',
+  'Cookie',
+  'DNT',
+  'Date',
+  'Expect',
+  'Forwarded',
+  'From',
+  'Front-End-Https',
+  'Host',
+  'HTTP2-Settings',
+  'If-Match',
+  'If-Modified-Since',
+  'If-None-Match',
+  'If-Range',
+  'If-Unmodified-Since',
+  'Max-Forwards',
+  'Origin',
+  'Pragma',
+  'Prefer',
+  'Proxy-Authorization',
+  'Proxy-Connection',
+  'Range',
+  'Referer',
+  'Save-Data',
+  'TE',
+  'Trailer',
+  'Transfer-Encoding',
+  'Upgrade',
+  'Upgrade-Insecure-Requests',
+  'User-Agent',
+  'Via',
+  'Warning',
+  'X-ATT-DeviceId',
+  'X-Correlation-ID',
+  'X-Csrf-Token',
+  'X-Forwarded-For',
+  'X-Forwarded-Host',
+  'X-Forwarded-Proto',
+  'X-Http-Method-Override',
+  'X-Request-ID',
+  'X-Requested-With',
+  'X-UIDH',
+  'X-Wap-Profile',
+];
 
 export const PROTOCOL_SUPPORTED: RouteModule.debugRequest['request_protocol'][] = ['http', 'https'];
 
@@ -132,16 +170,22 @@ export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[] = [
   'raw input',
 ];
 
-// Note: codemirror mode: apl for text; javascript for json(need to format); xml for xml;
-export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
-  { name: 'Json', mode: 'javascript' },
-  { name: 'Text', mode: 'apl' },
+export const DEBUG_BODY_MODE_SUPPORTED = [
+  { name: 'JSON', mode: 'json' },
+  { name: 'TEXT', mode: 'text' },
   { name: 'XML', mode: 'xml' },
+];
+
+export const DEBUG_RESPONSE_BODY_MODE_SUPPORTED = [
+  { name: 'JSON', mode: 'json' },
+  { name: 'XML', mode: 'xml' },
+  { name: 'HTML', mode: 'html' },
+  { name: 'TEXT', mode: 'text' },
 ];
 
 export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];
 
 export enum DebugBodyFormDataValueType {
   Text = 'Text',
-  File = 'File'
+  File = 'File',
 }

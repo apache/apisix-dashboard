@@ -17,6 +17,7 @@
 package log
 
 import (
+	"net/url"
 	"os"
 
 	"go.uber.org/zap"
@@ -40,6 +41,8 @@ func InitLogger() {
 }
 
 func GetLogger(logType Type) *zap.SugaredLogger {
+	_ = zap.RegisterSink("winfile", newWinFileSink)
+
 	writeSyncer := fileWriter(logType)
 	encoder := getEncoder(logType)
 	logLevel := getLogLevel()
@@ -111,4 +114,8 @@ func getZapFields(logger *zap.SugaredLogger, fields []interface{}) *zap.SugaredL
 	}
 
 	return logger.With(fields)
+}
+
+func newWinFileSink(u *url.URL) (zap.Sink, error) {
+	return os.OpenFile(u.Path[1:], os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 }

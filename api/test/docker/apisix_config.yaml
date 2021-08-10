@@ -22,7 +22,7 @@ etcd:
     - "http://172.16.238.10:2379"
     - "http://172.16.238.11:2379"
     - "http://172.16.238.12:2379"
-  resync_delay: 0.1  # sync data from etcd quickly for e2e test
+  resync_delay: 0  # sync data from etcd quickly for e2e test
 
 apisix:
   id: "apisix-server1"
@@ -96,7 +96,12 @@ plugin_attr:
     service_name: APISIX
     service_instance_name: "APISIX Instance Name"
     endpoint_addr: http://172.16.238.50:12800
-
   server-info:
     report_interval: 60
     report_ttl: 3600
+  prometheus:
+    export_uri: /apisix/prometheus/metrics
+    enable_export_server: true
+    export_addr:
+      ip: "0.0.0.0"
+      port: 9091

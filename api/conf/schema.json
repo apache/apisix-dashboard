@@ -10,17 +10,6 @@
 					"maxLength": 256,
 					"type": "string"
 				},
-				"id": {
-					"anyOf": [{
-						"maxLength": 64,
-						"minLength": 1,
-						"pattern": "^[a-zA-Z0-9-_.]+$",
-						"type": "string"
-					}, {
-						"minimum": 1,
-						"type": "integer"
-					}]
-				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
 					"maxProperties": 16,
@@ -42,7 +31,7 @@
 					"type": "integer"
 				},
 				"username": {
-					"maxLength": 32,
+					"maxLength": 100,
 					"minLength": 1,
 					"pattern": "^[a-zA-Z0-9_]+$",
 					"type": "string"
@@ -147,6 +136,27 @@
 					"maxLength": 1048576,
 					"minLength": 1,
 					"type": "string"
+				},
+				"create_time": {
+					"type": "integer"
+				},
+				"desc": {
+					"maxLength": 256,
+					"type": "string"
+				},
+				"id": {
+					"anyOf": [{
+						"maxLength": 64,
+						"minLength": 1,
+						"pattern": "^[a-zA-Z0-9-_.]+$",
+						"type": "string"
+					}, {
+						"minimum": 1,
+						"type": "integer"
+					}]
+				},
+				"update_time": {
+					"type": "integer"
 				}
 			},
 			"required": ["content"],
@@ -387,6 +397,24 @@
 					"enum": [0, 1],
 					"type": "integer"
 				},
+				"timeout": {
+					"properties": {
+						"connect": {
+							"exclusiveMinimum": 0,
+							"type": "number"
+						},
+						"read": {
+							"exclusiveMinimum": 0,
+							"type": "number"
+						},
+						"send": {
+							"exclusiveMinimum": 0,
+							"type": "number"
+						}
+					},
+					"required": ["connect", "read", "send"],
+					"type": "object"
+				},
 				"update_time": {
 					"type": "integer"
 				},
@@ -591,13 +619,22 @@
 							"maxLength": 256,
 							"type": "string"
 						},
+						"discovery_args": {
+							"properties": {
+								"group_name": {
+									"description": "group name",
+									"type": "string"
+								},
+								"namespace_id": {
+									"description": "namespace id",
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
 						"discovery_type": {
 							"description": "discovery type",
 							"type": "string"
-						},
-						"enable_websocket": {
-							"description": "enable websocket for request",
-							"type": "boolean"
 						},
 						"hash_on": {
 							"default": "vars",
@@ -664,6 +701,11 @@
 											"minimum": 1,
 											"type": "integer"
 										},
+										"priority": {
+											"default": 0,
+											"description": "priority of node",
+											"type": "integer"
+										},
 										"weight": {
 											"description": "weight of node",
 											"minimum": 0,
@@ -713,6 +755,22 @@
 							"required": ["connect", "read", "send"],
 							"type": "object"
 						},
+						"tls": {
+							"properties": {
+								"client_cert": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								},
+								"client_key": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								}
+							},
+							"required": ["client_cert", "client_key"],
+							"type": "object"
+						},
 						"type": {
 							"description": "algorithms of load balancing",
 							"enum": ["chash", "ewma", "least_conn", "roundrobin"],
@@ -754,12 +812,6 @@
 					"uniqueItems": true
 				},
 				"vars": {
-					"items": {
-						"description": "Nginx builtin variable name and value",
-						"maxItems": 4,
-						"minItems": 2,
-						"type": "array"
-					},
 					"type": "array"
 				}
 			},
@@ -1021,13 +1073,22 @@
 							"maxLength": 256,
 							"type": "string"
 						},
+						"discovery_args": {
+							"properties": {
+								"group_name": {
+									"description": "group name",
+									"type": "string"
+								},
+								"namespace_id": {
+									"description": "namespace id",
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
 						"discovery_type": {
 							"description": "discovery type",
 							"type": "string"
-						},
-						"enable_websocket": {
-							"description": "enable websocket for request",
-							"type": "boolean"
 						},
 						"hash_on": {
 							"default": "vars",
@@ -1094,6 +1155,11 @@
 											"minimum": 1,
 											"type": "integer"
 										},
+										"priority": {
+											"default": 0,
+											"description": "priority of node",
+											"type": "integer"
+										},
 										"weight": {
 											"description": "weight of node",
 											"minimum": 0,
@@ -1141,6 +1207,22 @@
 								}
 							},
 							"required": ["connect", "read", "send"],
+							"type": "object"
+						},
+						"tls": {
+							"properties": {
+								"client_cert": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								},
+								"client_key": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								}
+							},
+							"required": ["client_cert", "client_key"],
 							"type": "object"
 						},
 						"type": {
@@ -1193,6 +1275,22 @@
 					},
 					"type": "array"
 				},
+				"client": {
+					"properties": {
+						"ca": {
+							"maxLength": 65536,
+							"minLength": 128,
+							"type": "string"
+						},
+						"depth": {
+							"default": 1,
+							"minimum": 0,
+							"type": "integer"
+						}
+					},
+					"required": ["ca"],
+					"type": "object"
+				},
 				"create_time": {
 					"type": "integer"
 				},
@@ -1239,12 +1337,12 @@
 					"type": "object"
 				},
 				"sni": {
-					"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+					"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 					"type": "string"
 				},
 				"snis": {
 					"items": {
-						"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+						"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 						"type": "string"
 					},
 					"minItems": 1,
@@ -1270,6 +1368,13 @@
 		},
 		"stream_route": {
 			"properties": {
+				"create_time": {
+					"type": "integer"
+				},
+				"desc": {
+					"maxLength": 256,
+					"type": "string"
+				},
 				"id": {
 					"anyOf": [{
 						"maxLength": 64,
@@ -1328,6 +1433,14 @@
 				},
 				"server_port": {
 					"description": "server port",
+					"type": "integer"
+				},
+				"sni": {
+					"description": "server name indication",
+					"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+					"type": "string"
+				},
+				"update_time": {
 					"type": "integer"
 				},
 				"upstream": {
@@ -1531,13 +1644,22 @@
 							"maxLength": 256,
 							"type": "string"
 						},
+						"discovery_args": {
+							"properties": {
+								"group_name": {
+									"description": "group name",
+									"type": "string"
+								},
+								"namespace_id": {
+									"description": "namespace id",
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
 						"discovery_type": {
 							"description": "discovery type",
 							"type": "string"
-						},
-						"enable_websocket": {
-							"description": "enable websocket for request",
-							"type": "boolean"
 						},
 						"hash_on": {
 							"default": "vars",
@@ -1604,6 +1726,11 @@
 											"minimum": 1,
 											"type": "integer"
 										},
+										"priority": {
+											"default": 0,
+											"description": "priority of node",
+											"type": "integer"
+										},
 										"weight": {
 											"description": "weight of node",
 											"minimum": 0,
@@ -1651,6 +1778,22 @@
 								}
 							},
 							"required": ["connect", "read", "send"],
+							"type": "object"
+						},
+						"tls": {
+							"properties": {
+								"client_cert": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								},
+								"client_key": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								}
+							},
+							"required": ["client_cert", "client_key"],
 							"type": "object"
 						},
 						"type": {
@@ -1883,13 +2026,22 @@
 					"maxLength": 256,
 					"type": "string"
 				},
+				"discovery_args": {
+					"properties": {
+						"group_name": {
+							"description": "group name",
+							"type": "string"
+						},
+						"namespace_id": {
+							"description": "namespace id",
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
 				"discovery_type": {
 					"description": "discovery type",
 					"type": "string"
-				},
-				"enable_websocket": {
-					"description": "enable websocket for request",
-					"type": "boolean"
 				},
 				"hash_on": {
 					"default": "vars",
@@ -1956,6 +2108,11 @@
 									"minimum": 1,
 									"type": "integer"
 								},
+								"priority": {
+									"default": 0,
+									"description": "priority of node",
+									"type": "integer"
+								},
 								"weight": {
 									"description": "weight of node",
 									"minimum": 0,
@@ -2003,6 +2160,22 @@
 						}
 					},
 					"required": ["connect", "read", "send"],
+					"type": "object"
+				},
+				"tls": {
+					"properties": {
+						"client_cert": {
+							"maxLength": 65536,
+							"minLength": 128,
+							"type": "string"
+						},
+						"client_key": {
+							"maxLength": 65536,
+							"minLength": 128,
+							"type": "string"
+						}
+					},
+					"required": ["client_cert", "client_key"],
 					"type": "object"
 				},
 				"type": {
@@ -2293,58 +2466,81 @@
 			},
 			"version": 0.1
 		},
+		"client-control": {
+			"priority": 22000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"max_body_size": {
+						"minimum": 0,
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"consumer-restriction": {
 			"priority": 2400,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
-				"oneOf": [{
-					"properties": {
-						"blacklist": {
-							"items": {
-								"type": "string"
-							},
-							"minItems": 1,
-							"type": "array"
-						},
-						"rejected_code": {
-							"default": 403,
-							"minimum": 200,
-							"type": "integer"
-						},
-						"type": {
-							"default": "consumer_name",
-							"enum": ["consumer_name", "service_id"],
-							"type": "string"
-						}
-					},
-					"required": ["blacklist"],
-					"title": "blacklist"
+				"anyOf": [{
+					"required": ["blacklist"]
 				}, {
-					"properties": {
-						"rejected_code": {
-							"default": 403,
-							"minimum": 200,
-							"type": "integer"
-						},
-						"type": {
-							"default": "consumer_name",
-							"enum": ["consumer_name", "service_id"],
-							"type": "string"
-						},
-						"whitelist": {
-							"items": {
-								"type": "string"
-							},
-							"minItems": 1,
-							"type": "array"
-						}
-					},
-					"required": ["whitelist"],
-					"title": "whitelist"
+					"required": ["whitelist"]
+				}, {
+					"required": ["allowed_by_methods"]
 				}],
 				"properties": {
+					"allowed_by_methods": {
+						"items": {
+							"properties": {
+								"methods": {
+									"items": {
+										"description": "HTTP method",
+										"enum": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+										"type": "string"
+									},
+									"minItems": 1,
+									"type": "array"
+								},
+								"user": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"blacklist": {
+						"items": {
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
 					"disable": {
 						"type": "boolean"
+					},
+					"rejected_code": {
+						"default": 403,
+						"minimum": 200,
+						"type": "integer"
+					},
+					"type": {
+						"default": "consumer_name",
+						"enum": ["consumer_name", "service_id"],
+						"type": "string"
+					},
+					"whitelist": {
+						"items": {
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
 					}
 				},
 				"type": "object"
@@ -2375,6 +2571,17 @@
 						"default": "*",
 						"description": "you can use '*' to allow all origins when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple origin use ',' to split. default: *.",
 						"type": "string"
+					},
+					"allow_origins_by_regex": {
+						"description": "you can use regex to allow specific origins when no credentials,for example use [.*\\.test.com] to allow a.test.com and b.test.com",
+						"items": {
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array",
+						"uniqueItems": true
 					},
 					"disable": {
 						"type": "boolean"
@@ -2436,10 +2643,6 @@
 				"properties": {
 					"after_body": {
 						"description": "body after the modification of filter phase.",
-						"type": "string"
-					},
-					"auth_value": {
-						"description": "auth value",
 						"type": "string"
 					},
 					"before_body": {
@@ -2586,6 +2789,68 @@
 			},
 			"version": 0.1
 		},
+		"ext-plugin-post-req": {
+			"priority": -3000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"conf": {
+						"items": {
+							"properties": {
+								"name": {
+									"maxLength": 128,
+									"minLength": 1,
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"required": ["name", "value"],
+							"type": "object"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"ext-plugin-pre-req": {
+			"priority": 12000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"conf": {
+						"items": {
+							"properties": {
+								"name": {
+									"maxLength": 128,
+									"minLength": 1,
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"required": ["name", "value"],
+							"type": "object"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"fault-injection": {
 			"priority": 11000,
 			"schema": {
@@ -2608,6 +2873,9 @@
 								"type": "integer"
 							},
 							"vars": {
+								"items": {
+									"type": "array"
+								},
 								"maxItems": 20,
 								"type": "array"
 							}
@@ -2627,6 +2895,9 @@
 								"type": "integer"
 							},
 							"vars": {
+								"items": {
+									"type": "array"
+								},
 								"maxItems": 20,
 								"type": "array"
 							}
@@ -3033,6 +3304,11 @@
 						"default": "kafka logger",
 						"type": "string"
 					},
+					"producer_type": {
+						"default": "async",
+						"enum": ["async", "sync"],
+						"type": "string"
+					},
 					"retry_delay": {
 						"default": 1,
 						"minimum": 0,
@@ -3067,6 +3343,10 @@
 				"properties": {
 					"disable": {
 						"type": "boolean"
+					},
+					"header": {
+						"default": "apikey",
+						"type": "string"
 					}
 				},
 				"type": "object"
@@ -3157,6 +3437,9 @@
 								"policy": {
 									"enum": ["redis-cluster"]
 								},
+								"redis_cluster_name": {
+									"type": "string"
+								},
 								"redis_cluster_nodes": {
 									"items": {
 										"maxLength": 100,
@@ -3176,7 +3459,7 @@
 									"type": "integer"
 								}
 							},
-							"required": ["redis_cluster_nodes"]
+							"required": ["redis_cluster_name", "redis_cluster_nodes"]
 						}]
 					}
 				},
@@ -3230,6 +3513,10 @@
 						"enum": ["consumer_name", "http_x_forwarded_for", "http_x_real_ip", "remote_addr", "server_addr"],
 						"type": "string"
 					},
+					"nodelay": {
+						"default": false,
+						"type": "boolean"
+					},
 					"rate": {
 						"exclusiveMinimum": 0,
 						"type": "number"
@@ -3275,7 +3562,15 @@
 						"type": "string"
 					},
 					"upstream": {
+						"oneOf": [{
+							"required": ["host", "port"]
+						}, {
+							"required": ["ip", "port"]
+						}],
 						"properties": {
+							"host": {
+								"type": "string"
+							},
 							"ip": {
 								"type": "string"
 							},
@@ -3399,6 +3694,10 @@
 				"properties": {
 					"disable": {
 						"type": "boolean"
+					},
+					"prefer_name": {
+						"default": false,
+						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -3443,7 +3742,7 @@
 					"cache_method": {
 						"default": ["GET", "HEAD"],
 						"items": {
-							"description": "http method",
+							"description": "HTTP method",
 							"enum": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
 							"type": "string"
 						},
@@ -3550,14 +3849,34 @@
 				"oneOf": [{
 					"required": ["uri"]
 				}, {
+					"required": ["regex_uri"]
+				}, {
 					"required": ["http_to_https"]
 				}],
 				"properties": {
+					"append_query_string": {
+						"default": false,
+						"type": "boolean"
+					},
 					"disable": {
+						"type": "boolean"
+					},
+					"encode_uri": {
+						"default": false,
 						"type": "boolean"
 					},
 					"http_to_https": {
 						"type": "boolean"
+					},
+					"regex_uri": {
+						"description": "params for generating new uri that substitute from client uri, first param is regular expression, the second one is uri template",
+						"items": {
+							"description": "regex uri",
+							"type": "string"
+						},
+						"maxItems": 2,
+						"minItems": 2,
+						"type": "array"
 					},
 					"ret_code": {
 						"default": 302,
@@ -3682,6 +4001,9 @@
 						"maximum": 598,
 						"minimum": 200,
 						"type": "integer"
+					},
+					"vars": {
+						"type": "array"
 					}
 				},
 				"type": "object"
@@ -3761,6 +4083,9 @@
 					"endpoint_addr": {
 						"default": "http://127.0.0.1:12800",
 						"type": "string"
+					},
+					"report_interval": {
+						"type": "integer"
 					},
 					"service_instance_name": {
 						"default": "APISIX Instance Name",
@@ -4020,51 +4345,9 @@
 							"additionalProperties": false,
 							"properties": {
 								"match": {
-									"default": [{
-										"vars": [
-											[0, ">", "server_port"]
-										]
-									}],
 									"items": {
 										"properties": {
 											"vars": {
-												"items": {
-													"additionalItems": {
-														"anyOf": [{
-															"type": "string"
-														}, {
-															"type": "number"
-														}, {
-															"type": "boolean"
-														}, {
-															"items": {
-																"anyOf": [{
-																	"maxLength": 100,
-																	"minLength": 1,
-																	"type": "string"
-																}, {
-																	"type": "number"
-																}, {
-																	"type": "boolean"
-																}]
-															},
-															"type": "array",
-															"uniqueItems": true
-														}]
-													},
-													"items": [{
-														"maxLength": 100,
-														"minLength": 1,
-														"type": "string"
-													}, {
-														"maxLength": 2,
-														"minLength": 1,
-														"type": "string"
-													}],
-													"maxItems": 10,
-													"minItems": 0,
-													"type": "array"
-												},
 												"type": "array"
 											}
 										},
@@ -4279,13 +4562,22 @@
 														"maxLength": 256,
 														"type": "string"
 													},
+													"discovery_args": {
+														"properties": {
+															"group_name": {
+																"description": "group name",
+																"type": "string"
+															},
+															"namespace_id": {
+																"description": "namespace id",
+																"type": "string"
+															}
+														},
+														"type": "object"
+													},
 													"discovery_type": {
 														"description": "discovery type",
 														"type": "string"
-													},
-													"enable_websocket": {
-														"description": "enable websocket for request",
-														"type": "boolean"
 													},
 													"hash_on": {
 														"default": "vars",
@@ -4352,6 +4644,11 @@
 																		"minimum": 1,
 																		"type": "integer"
 																	},
+																	"priority": {
+																		"default": 0,
+																		"description": "priority of node",
+																		"type": "integer"
+																	},
 																	"weight": {
 																		"description": "weight of node",
 																		"minimum": 0,
@@ -4399,6 +4696,22 @@
 															}
 														},
 														"required": ["connect", "read", "send"],
+														"type": "object"
+													},
+													"tls": {
+														"properties": {
+															"client_cert": {
+																"maxLength": 65536,
+																"minLength": 128,
+																"type": "string"
+															},
+															"client_key": {
+																"maxLength": 65536,
+																"minLength": 128,
+																"type": "string"
+															}
+														},
+														"required": ["client_cert", "client_key"],
 														"type": "object"
 													},
 													"type": {
@@ -4578,6 +4891,10 @@
 						"default": "APISIX",
 						"description": "service name for zipkin reporter",
 						"type": "string"
+					},
+					"span_version": {
+						"default": 2,
+						"enum": [1, 2]
 					}
 				},
 				"required": ["endpoint", "sample_ratio"],

@@ -39,6 +39,7 @@ var (
 	token string
 	Token string
 
+	UpstreamIp             = "172.16.238.20"
 	APISIXHost             = "http://127.0.0.1:9080"
 	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
@@ -54,10 +55,10 @@ func init() {
 
 	url := ManagerAPIHost + "/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
-	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		panic(err)
 	}
+	req.Header.Add("Content-Type", "application/json")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -147,9 +148,6 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 	for i := 0; i < times; i++ {
 		client = &http.Client{}
 		resp, err = client.Do(req)
-		if err != nil {
-			fmt.Printf("err: %s", err)
-		}
 		assert.Nil(t, err)
 
 		bodyByte, err = ioutil.ReadAll(resp.Body)

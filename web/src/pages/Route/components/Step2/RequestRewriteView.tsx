@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import UpstreamForm from '@/components/Upstream';
 
-import { fetchUpstreamList } from '../../service';
+import UpstreamForm from '@/components/Upstream';
+import { fetchUpstreamList } from '@/components/Upstream/service';
 
 const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
   form,
@@ -25,9 +25,9 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
   disabled,
   hasServiceId = false,
 }) => {
-  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
+  const [list, setList] = useState<UpstreamComponent.ResponseData[]>([]);
   useEffect(() => {
-    fetchUpstreamList().then(({ data }) => setList(data));
+    fetchUpstreamList().then(({ data }) => setList(data as UpstreamComponent.ResponseData[]));
   }, []);
   return (
     <UpstreamForm

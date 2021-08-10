@@ -22,7 +22,7 @@ import { omit } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
-import { DEFAULT_UPSTREAM } from '@/components/Upstream';
+import { convertToFormData } from '@/components/Upstream/service';
 import Preview from './components/Preview';
 import Step1 from './components/Step1';
 import { create, update, fetchItem } from './service';
@@ -46,18 +46,17 @@ const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
-    // init upstream default value
-    upstreamForm.setFieldsValue(DEFAULT_UPSTREAM);
-
     const { serviceId } = (props as any).match.params;
     if (serviceId) {
       fetchItem(serviceId).then(({ data }) => {
-        if (data.upstream_id && data.upstream_id !== '') {
+        if (data.upstream_id) {
           upstreamForm.setFieldsValue({ upstream_id: data.upstream_id });
+        } else if (data.upstream) {
+          upstreamForm.setFieldsValue(convertToFormData(data.upstream));
+        } else {
+          upstreamForm.setFieldsValue({ upstream_id: 'None' });
         }
-        if (data.upstream) {
-          upstreamForm.setFieldsValue(data.upstream);
-        }
+
         form.setFieldsValue(omit(data, ['upstream_id', 'upstream', 'plugins']));
         setPlugins(data.plugins || {});
       });
@@ -71,7 +70,7 @@ const Page: React.FC = (props) => {
     };
 
     const upstreamFormData = upstreamRef.current?.getData();
-    if (!upstreamFormData.upstream_id) {
+    if (!upstreamFormData?.upstream_id) {
       data.upstream = upstreamFormData;
     } else {
       data.upstream_id = upstreamFormData.upstream_id;
@@ -115,11 +114,11 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${
-          (props as any).match.params.rid
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.service' })}`}
+        title={
+          (props as any).match.params.serviceId
+            ? formatMessage({ id: 'page.service.configure' })
+            : formatMessage({ id: 'page.service.create' })
+        }
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: '25px' }}>

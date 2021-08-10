@@ -14,102 +14,127 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Drawer, PageHeader, notification, Space, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Drawer, notification, PageHeader, Select, Space } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
-import CodeMirror from '@uiw/react-codemirror';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useIntl } from 'umi';
 import { js_beautify } from 'js-beautify';
+import type { Monaco } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
+import type { languages } from 'monaco-editor';
 
 import { json2yaml, yaml2json } from '../../helpers';
 
 type Props = {
-  visible: boolean,
-  readonly: boolean,
-  type: 'route' | 'service' | 'consumer' | 'upstream'
-  data: Record<string, any>,
+  visible: boolean;
+  readonly: boolean;
+  type: 'route' | 'service' | 'consumer' | 'upstream';
+  data: Record<string, any>;
   onClose?: () => void;
   onSubmit?: (data: Record<string, any>) => void;
 };
 
-enum codeMirrorModeList {
-  Json = 'Json',
-  Yaml = 'Yaml',
+enum monacoLanguageList {
+  JSON = 'JSON',
+  YAML = 'YAML',
 }
 
-const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose = () => { }, onSubmit = () => { } }) => {
-  const ref = useRef<any>(null);
+const RawDataEditor: React.FC<Props> = ({
+  visible,
+  readonly = true,
+  type,
+  data = {},
+  onClose = () => {},
+  onSubmit = () => {},
+}) => {
   const { formatMessage } = useIntl();
-  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
-    codeMirrorModeList.Json,
+  const [monacoLanguage, setMonacoLanguage] = useState<PluginComponent.MonacoLanguage>(
+    monacoLanguageList.JSON,
   );
+  const [content, setContent] = useState('');
 
   useEffect(() => {
-    setCodeMirrorMode(codeMirrorModeList.Json);
-  }, [visible])
-
-  const modeOptions = [
-    { label: codeMirrorModeList.Json, value: codeMirrorModeList.Json },
-    { label: codeMirrorModeList.Yaml, value: codeMirrorModeList.Yaml },
-  ];
-
-  const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
-    switch (value) {
-      case codeMirrorModeList.Json: {
-        const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
-
-        if (error) {
-          notification.error({
-            message: 'Invalid Yaml data',
-          });
-          return;
-        }
-        ref.current.editor.setValue(
-          js_beautify(yamlData, {
-            indent_size: 2,
-          }),
-        );
+    switch (monacoLanguage) {
+      case monacoLanguageList.JSON:
+        setContent(JSON.stringify(data, null, 2));
         break;
-      }
-      case codeMirrorModeList.Yaml: {
-        const { data: jsonData, error } = json2yaml(ref.current.editor.getValue());
-
-        if (error) {
-          notification.error({
-            message: 'Invalid Json data',
-          });
-          return;
-        }
-        ref.current.editor.setValue(jsonData);
+      case monacoLanguageList.YAML: {
+        const { data: yamlData } = json2yaml(JSON.stringify(data, null, 2));
+        setContent(yamlData);
         break;
       }
       default:
+    }
+  }, [data]);
+
+  useEffect(() => {
+    setMonacoLanguage(monacoLanguageList.JSON);
+  }, [visible]);
+
+  const modeOptions = [
+    { label: monacoLanguageList.JSON, value: monacoLanguageList.JSON },
+    { label: monacoLanguageList.YAML, value: monacoLanguageList.YAML },
+  ];
+
+  const handleModeChange = (value: PluginComponent.MonacoLanguage) => {
+    switch (value) {
+      case monacoLanguageList.JSON:
+        setContent((c) => {
+          const { data: jsonData, error } = yaml2json(c, true);
+          if (error) {
+            notification.error({ message: formatMessage({ id: 'component.global.invalidYaml' }) });
+            return c;
+          }
+          return js_beautify(jsonData, { indent_size: 2 });
+        });
+        break;
+      case monacoLanguageList.YAML:
+        setContent((c) => {
+          const { data: yamlData, error } = json2yaml(c);
+          if (error) {
+            notification.error({ message: formatMessage({ id: 'component.global.invalidJson' }) });
+            return c;
+          }
+          return yamlData;
+        });
+        break;
+      default:
         break;
     }
-    setCodeMirrorMode(value);
+    setMonacoLanguage(value);
   };
 
-  const formatCodes = () => {
-    try {
-      if (ref.current) {
-        ref.current.editor.setValue(
-          js_beautify(ref.current.editor.getValue(), {
-            indent_size: 2,
-          }),
-        );
-      }
-    } catch (error) {
-      notification.error({
-        message: 'Format failed',
-      });
+  const formatYaml = (yaml: string): string => {
+    const json = yaml2json(yaml, true);
+    if (json.error) {
+      return yaml;
     }
+    return json2yaml(json.data).data;
+  };
+
+  const editorWillMount = (monaco: Monaco) => {
+    const yamlFormatProvider: languages.DocumentFormattingEditProvider = {
+      provideDocumentFormattingEdits(model) {
+        return [
+          {
+            text: formatYaml(model.getValue()),
+            range: model.getFullModelRange(),
+          },
+        ];
+      },
+    };
+    monaco.languages.registerDocumentFormattingEditProvider('yaml', yamlFormatProvider);
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: true,
+      trailingCommas: 'error',
+    });
   };
 
   return (
     <>
       <Drawer
-        title={formatMessage({ id: 'component.rawDataEditor.title' })}
+        title={formatMessage({ id: 'component.global.data.editor' })}
         placement="right"
         width={700}
         visible={visible}
@@ -126,13 +151,13 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                 onClick={() => {
                   try {
                     const editorData =
-                      codeMirrorMode === codeMirrorModeList.Json
-                        ? JSON.parse(ref.current?.editor.getValue())
-                        : yaml2json(ref.current?.editor.getValue(), false).data;
+                      monacoLanguage === monacoLanguageList.JSON
+                        ? JSON.parse(content)
+                        : yaml2json(content, false).data;
                     onSubmit(editorData);
                   } catch (error) {
                     notification.error({
-                      message: 'Invalid JSON data',
+                      message: formatMessage({ id: 'component.global.invalidJson' }),
                     });
                   }
                 }}
@@ -146,63 +171,69 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         <PageHeader
           title=""
           extra={[
+            <Select
+              defaultValue={monacoLanguageList.JSON}
+              value={monacoLanguage}
+              options={modeOptions}
+              onChange={(value: PluginComponent.MonacoLanguage) => {
+                handleModeChange(value);
+              }}
+              data-cy="monaco-language"
+            />,
+            <CopyToClipboard
+              text={content}
+              onCopy={(_: string, result: boolean) => {
+                if (!result) {
+                  notification.error({
+                    message: formatMessage({ id: 'component.global.copyFail' }),
+                  });
+                  return;
+                }
+                notification.success({
+                  message: formatMessage({ id: 'component.global.copySuccess' }),
+                });
+              }}
+            >
+              <Button type="primary" key={2}>
+                {formatMessage({ id: 'component.global.copy' })}
+              </Button>
+            </CopyToClipboard>,
             <Button
               type="default"
               icon={<LinkOutlined />}
               onClick={() => {
-                window.open(
-                  `https://apisix.apache.org/docs/apisix/admin-api#${type}`,
-                );
+                window.open(`https://apisix.apache.org/docs/apisix/admin-api#${type}`);
               }}
               key={1}
             >
-              Document
+              {formatMessage({ id: 'component.global.document' })}
             </Button>,
-            <Select
-              defaultValue={codeMirrorModeList.Json}
-              value={codeMirrorMode}
-              options={modeOptions}
-              onChange={(value: PluginComponent.CodeMirrorMode) => {
-                handleModeChange(value);
-              }}
-              data-cy='code-mirror-mode'
-            ></Select>,
-            <Button type="primary" onClick={formatCodes} key={2}>
-              Format
-            </Button>,
-            <CopyToClipboard text={JSON.stringify(data)} onCopy={(_: string, result: boolean) => {
-              if (!result) {
-                notification.error({
-                  message: 'Copy Failed',
-                });
-                return;
-              }
-              notification.success({
-                message: 'Copy Successfully',
-              });
-            }}>
-              <Button type="primary" key={2}>
-                Copy
-              </Button>
-            </CopyToClipboard>,
           ]}
         />
-        <CodeMirror
-          ref={(codemirror) => {
-            ref.current = codemirror;
-            if (codemirror) {
-              // NOTE: for debug & test
-              window.codemirror = codemirror.editor;
+        <Editor
+          value={content}
+          onChange={(text) => {
+            if (text) {
+              setContent(text);
+            } else {
+              setContent('');
             }
           }}
-          value={JSON.stringify(data, null, 2)}
+          onMount={(editor) => {
+            // NOTE: for debug & test
+            // @ts-ignore
+            window.monacoEditor = editor;
+          }}
+          beforeMount={editorWillMount}
+          language={monacoLanguage.toLocaleLowerCase()}
           options={{
-            mode: 'json-ld',
-            readOnly: readonly ? 'nocursor' : '',
-            lineWrapping: true,
-            lineNumbers: true,
-            showCursorWhenSelecting: true,
-            autofocus: true,
+            scrollbar: {
+              vertical: 'hidden',
+              horizontal: 'hidden',
+            },
+            wordWrap: 'on',
+            minimap: { enabled: false },
+            readOnly: readonly,
           }}
         />
       </Drawer>

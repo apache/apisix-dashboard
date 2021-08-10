@@ -8,8 +8,8 @@
     "openapi": "3.0.0",
     "paths": {
       "/{params}": {
-        "get": {
-          "operationId": "route_name_0GET",
+        "post": {
+          "operationId": "route_name_0POST",
           "parameters": [
             {
               "description": "params in path",
@@ -44,6 +44,7 @@
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }
@@ -59,8 +60,8 @@
     "openapi": "3.0.0",
     "paths": {
       "/{params}": {
-        "get": {
-          "operationId": "route_name_0GET",
+        "post": {
+          "operationId": "route_name_0POST",
           "parameters": [
             {
               "description": "params in path",
@@ -95,13 +96,14 @@
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }
       },
       "/{params}-APISIX-REPEAT-URI-2": {
-        "get": {
-          "operationId": "route_name_1GET",
+        "post": {
+          "operationId": "route_name_1POST",
           "parameters": [
             {
               "description": "params in path",
@@ -145,6 +147,7 @@
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }

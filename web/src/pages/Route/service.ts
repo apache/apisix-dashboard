@@ -17,11 +17,7 @@
 import { request } from 'umi';
 import { pickBy, identity } from 'lodash';
 
-import {
-  transformStepData,
-  transformRouteData,
-  transformUpstreamNodes,
-} from './transform';
+import { transformStepData, transformRouteData, transformUpstreamNodes } from './transform';
 import { transformLabelList } from '@/helpers';
 
 export const create = (data: RouteModule.RequestData, mode?: RouteModule.RequestMode) =>
@@ -30,7 +26,11 @@ export const create = (data: RouteModule.RequestData, mode?: RouteModule.Request
     data: mode === 'RawData' ? data : transformStepData(data),
   });
 
-export const update = (rid: string, data: RouteModule.RequestData, mode?: RouteModule.RequestMode) =>
+export const update = (
+  rid: string,
+  data: RouteModule.RequestData,
+  mode?: RouteModule.RequestMode,
+) =>
   request(`/routes/${rid}`, {
     method: 'PUT',
     data: mode === 'RawData' ? data : transformStepData(data),
@@ -72,13 +72,6 @@ export const checkUniqueName = (name = '', exclude = '') =>
     ),
   });
 
-export const fetchUpstreamList = () => {
-  return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams').then(({ data }) => ({
-    data: data.rows,
-    total: data.total_size,
-  }));
-};
-
 export const fetchUpstreamItem = (sid: string) => {
   return request(`/upstreams/${sid}`).then(({ nodes, timeout, id }) => {
     return {
@@ -96,9 +89,7 @@ export const checkHostWithSSL = (hosts: string[]) =>
   });
 
 export const fetchLabelList = () =>
-  request('/labels/route').then(
-    ({ data }) => transformLabelList(data.rows) as LabelList,
-  );
+  request('/labels/route').then(({ data }) => transformLabelList(data.rows) as LabelList);
 
 export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
   request(`/routes/${rid}`, {
@@ -106,7 +97,7 @@ export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) 
     data: { status },
   });
 
-export const debugRoute = (headers, data: RouteModule.debugRequest) => {
+export const debugRoute = (headers: any, data: RouteModule.debugRequest) => {
   return request('/debug-request-forwarding', {
     method: 'post',
     data,

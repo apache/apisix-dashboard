@@ -28,13 +28,6 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
     total: data.total_size,
   }));
 
-export const fetchUpstreamList = () => {
-  return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams').then(({ data }) => ({
-    data: data.rows,
-    total: data.total_size,
-  }));
-};
-
 export const create = (data: ServiceModule.Entity) =>
   request('/services', {
     method: 'POST',

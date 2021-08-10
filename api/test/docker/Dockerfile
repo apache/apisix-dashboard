@@ -22,7 +22,7 @@ WORKDIR /go/src/github.com/apisix/manager-api
 COPY ./ ./
 
 RUN mkdir -p /go/manager-api/conf \
-    && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./cmd/manager \
+    && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./ \
     && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
     && mv /go/src/github.com/apisix/manager-api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
     && mv /go/src/github.com/apisix/manager-api/conf/schema.json /go/manager-api/conf/schema.json \

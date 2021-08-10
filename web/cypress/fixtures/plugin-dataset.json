@@ -192,8 +192,8 @@
     {
       "shouldValid": true,
       "data": {
-        "client_id" : "foo",
-        "token_endpoint" : "https://host.domain/auth/realms/foo/protocol/openid-connect/token"
+        "client_id": "foo",
+        "token_endpoint": "https://host.domain/auth/realms/foo/protocol/openid-connect/token"
       }
     },
     {
@@ -280,7 +280,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "whitelist": ["jack1"],
         "blacklist": ["jack2"]
@@ -1265,7 +1265,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "rules": [
           {

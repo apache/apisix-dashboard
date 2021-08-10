@@ -35,7 +35,7 @@ const Page: React.FC = (props) => {
 
     if (id) {
       fetchOne(id).then((data) => {
-        form1.setFieldsValue(data.data);
+        form1.setFieldsValue(data);
       });
     }
   }, []);
@@ -44,18 +44,20 @@ const Page: React.FC = (props) => {
     form1.validateFields().then(() => {
       const data = upstreamRef.current?.getData();
       if (!data) {
-        // TODO: i18n
-        notification.error({ message: '请检查配置' });
+        notification.error({
+          message: formatMessage({ id: 'page.upstream.other.configuration.invalid' }),
+        });
         return;
       }
 
       const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
         notification.success({
-          message: `${id
-            ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
-            : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
-            }`,
+          message: `${
+            id
+              ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
+              : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
+          }`,
         });
         history.replace('/upstream/list');
       });
@@ -76,14 +78,20 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageContainer title={formatMessage({ id: 'page.upstream.create' })}>
+      <PageContainer
+        title={
+          (props as any).match.params.id
+            ? formatMessage({ id: 'page.upstream.configure' })
+            : formatMessage({ id: 'page.upstream.create' })
+        }
+      >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
             <Steps.Step title={formatMessage({ id: 'page.upstream.create.basic.info' })} />
             <Steps.Step title={formatMessage({ id: 'page.upstream.create.preview' })} />
           </Steps>
 
-          {step === 1 && <Step1 form={form1} upstreamRef={upstreamRef} />}
+          {step === 1 && <Step1 form={form1} upstreamRef={upstreamRef} neverReadonly />}
           {step === 2 && <Step1 form={form1} upstreamRef={upstreamRef} disabled />}
         </Card>
       </PageContainer>

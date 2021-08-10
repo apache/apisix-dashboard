@@ -1,0 +1,3 @@
+[submodule ".github/actions/gitleaks-action"]
+	path = .github/actions/gitleaks-action
+	url = https://github.com/zricethezav/gitleaks-action

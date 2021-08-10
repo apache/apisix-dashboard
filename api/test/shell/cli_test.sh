@@ -52,7 +52,7 @@ clean_logfile() {
 trap clean_up EXIT
 
 export GO111MODULE=on
-go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X github.com/apisix/manager-api/internal/utils.gitHash=${GITHASH}" ./cmd/manager
+go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X github.com/apisix/manager-api/internal/utils.gitHash=${GITHASH}" ./main.go
 
 # default level: warn, path: logs/error.log
 
@@ -174,7 +174,7 @@ if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]
     exit 1
 fi
 
-if [[ `grep -c "${VERSION}" ${STDOUT}` -ne '1' ]]; then
+if [[ `grep -c -w "${VERSION}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi
@@ -189,13 +189,13 @@ if [[ `grep -c "${LOGLEVEL}" ${STDOUT}` -ne '1' ]]; then
     exit 1
 fi
 
-if [[ `grep -c "${HOST}:${PORT}" ${STDOUT}` -ne '1' ]]; then
+if [[ `grep -c "0.0.0.0:${PORT}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi
 
-# test -v command
-out=$(./manager-api -v 2>&1 || true)
+# test version command
+out=$(./manager-api version 2>&1 || true)
 if [[ `echo $out | grep -c $VERSION` -ne '1' ]]; then
     echo "failed: the manager server didn't show version info"
     exit 1
@@ -223,7 +223,7 @@ sleep 6
 
 cat ${logfile}
 
-if [[ `grep -c "cmd/managerapi.go" ${logfile}` -ne '1' ]]; then
+if [[ `grep -c "server/store.go" ${logfile}` -ne '1' ]]; then
     echo "failed: failed to write the correct caller"
     exit 1
 fi
@@ -252,9 +252,9 @@ clean_up
 
 # set ip allowed list
 if [[ $KERNEL = "Darwin" ]]; then
-  sed -i "" 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+  sed -i "" 's@- 127.0.0.1 @- 10.0.0.1 @' conf/conf.yaml
 else
-  sed -i 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+  sed -i 's@- 127.0.0.1 @- 10.0.0.1 @' conf/conf.yaml
 fi
 
 ./manager-api &
@@ -265,6 +265,35 @@ curl http://127.0.0.1:9000
 code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000)
 if [ ! $code -eq 403 ]; then
     echo "failed: verify IP allowed list failed"
+    exit 1
+fi
+
+./manager-api stop
+sleep 6
+clean_up
+
+
+# HTTPS test
+currentDir=$(pwd)
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's@# ssl:@ssl:@' conf/conf.yaml
+  sed -i "" 's@#   port: 9001@  port: 9001@' conf/conf.yaml
+  sed -i "" "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$currentDir/test/certs/test2.crt\"@" conf/conf.yaml
+  sed -i "" "s@#   key:  \"/tmp/cert/example.key\"@  cert: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
+else
+  sed -i 's@# ssl:@ssl:@' conf/conf.yaml
+  sed -i 's@#   port: 9001@  port: 9001@' conf/conf.yaml
+  sed -i "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$currentDir/test/certs/test2.crt\"@" conf/conf.yaml
+  sed -i "s@#   key:  \"/tmp/cert/example.key\"@  key: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+# access by HTTPS
+code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} --resolve 'www.test2.com:9001:127.0.0.1' https://www.test2.com:9001/apisix/admin/tool/version)
+if [ ! $code -eq 200 ]; then
+    echo "failed: verify HTTPS failed"
     exit 1
 fi
 
@@ -456,6 +485,94 @@ fi
 
 ./manager-api stop
 sleep 6
+clean_up
+
+# run manager api as os service
+# 2 times OK for installing and starting
+if [[ `echo $(sudo ./manager-api start) | grep -o "OK" | wc -l` -ne "2" ]]; then
+  echo "error while initializing the service"
+  exit 1
+fi
+# check running status
+if [[ `echo $(sudo ./manager-api status) | grep -c "running..."` -ne "1" ]]; then
+  echo "error while starting the service"
+  exit 1
+fi
+# stop the service
+sudo ./manager-api stop
+sleep 2
+# recheck running status
+if [[ `echo $(sudo ./manager-api status) | grep -c "Service is stopped"` -ne "1" ]]; then
+  echo "error while stopping the service"
+  exit 1
+fi
+# restart the service
+# 1 time OK for just for starting
+if [[ `echo $(sudo ./manager-api start) | grep -c "OK"` -ne "1" ]]; then
+  echo "error while restarting the service"
+  exit 1
+fi
+# stop the service
+sudo ./manager-api stop
+sleep 2
+# remove the service
+if [[ `echo $(sudo ./manager-api remove) | grep -c "OK"` -ne "1" ]]; then
+  echo "error while removing the service"
+  exit 1
+fi
+# test manager-api output for bad data on etcd
+# make a dummy entry
+./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
+sleep 2
+
+./manager-api 2>man-api.err &
+sleep 4
+
+if [[ `cat man-api.err | grep -c "Error occurred while initializing logical store:  /apisix/routes"` -ne '1' ||
+`cat man-api.err | grep -c "Error: json unmarshal failed"` -ne '1' ]];then
+  echo "manager api failed to stream error on stderr for bad data"
+  exit 1
+fi
+# delete dummy entry
+./etcd-v3.4.14-linux-amd64/etcdctl del /apisix/routes/unique1
+# just to make sure
+./manager-api stop
+sleep 6
+clean_up
+
+# run manager api as os service
+# 2 times OK for installing and starting
+if [[ `echo $(sudo ./manager-api start) | grep -o "OK" | wc -l` -ne "2" ]]; then
+  echo "error while initializing the service"
+  exit 1
+fi
+# check running status
+if [[ `echo $(sudo ./manager-api status) | grep -c "running..."` -ne "1" ]]; then
+  echo "error while starting the service"
+  exit 1
+fi
+# stop the service
+sudo ./manager-api stop
+sleep 2
+# recheck running status
+if [[ `echo $(sudo ./manager-api status) | grep -c "Service is stopped"` -ne "1" ]]; then
+  echo "error while stopping the service"
+  exit 1
+fi
+# restart the service
+# 1 time OK for just for starting
+if [[ `echo $(sudo ./manager-api start) | grep -c "OK"` -ne "1" ]]; then
+  echo "error while restarting the service"
+  exit 1
+fi
+# stop the service
+sudo ./manager-api stop
+sleep 2
+# remove the service
+if [[ `echo $(sudo ./manager-api remove) | grep -c "OK"` -ne "1" ]]; then
+  echo "error while removing the service"
+  exit 1
+fi
 
 pkill -f etcd
 

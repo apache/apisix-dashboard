@@ -16,10 +16,10 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
-import { PanelSection } from '@api7-dashboard/ui';
 import { omit, orderBy } from 'lodash';
 import { useIntl } from 'umi';
 
+import PanelSection from '@/components/PanelSection';
 import PluginDetail from './PluginDetail';
 import { fetchList, fetchPluginTemplateList } from './service';
 import { PLUGIN_ICON_LIST, PLUGIN_FILTER_LIST } from './data';
@@ -28,11 +28,11 @@ import defaultPluginImg from '../../../public/static/default-plugin.png';
 type Props = {
   readonly?: boolean;
   type?: 'global' | 'scoped';
-  initialData?: PluginComponent.Data,
-  plugin_config_id?: string,
+  initialData?: PluginComponent.Data;
+  plugin_config_id?: string;
   schemaType?: PluginComponent.Schema;
   referPage?: PluginComponent.ReferPage;
-  showSelector?: boolean,
+  showSelector?: boolean;
   onChange?: (plugins: PluginComponent.Data, plugin_config_id?: string) => void;
 };
 
@@ -52,22 +52,23 @@ const NEVER_EXIST_PLUGIN_FLAG = 'NEVER_EXIST_PLUGIN_FLAG';
 const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
-  plugin_config_id = "",
+  plugin_config_id = '',
   schemaType = 'route',
   referPage = '',
   type = 'scoped',
   showSelector = false,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
-  const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>([]);
+  const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>(
+    [],
+  );
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
   const [plugins, setPlugins] = useState({});
 
-  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
     setPlugins(initialData);
     fetchList().then((data) => {
@@ -80,36 +81,44 @@ const PluginPage: React.FC<Props> = ({
       setPluginList(filteredData);
       const categoryList: string[] = [];
       data.forEach((item) => {
-        if (!categoryList.includes(firstUpperCase(item.type))) {
-          categoryList.push(firstUpperCase(item.type));
+        if (!categoryList.includes(item.type)) {
+          categoryList.push(item.type);
         }
       });
-      setTypeList(categoryList.sort());
+      setTypeList(categoryList);
     });
     fetchPluginTemplateList().then((data) => {
       setPluginTemplateList(data);
-      form.setFieldsValue({ plugin_config_id })
-    })
+      form.setFieldsValue({ plugin_config_id });
+    });
   }, []);
 
   const PluginList = () => (
     <>
       <style>
         {`
-      .ant-card-body .icon {
-          width: 5em;
-          height: 5em;
-          margin-right: 0;
-          overflow: hidden;
-          vertical-align: -0.15em;
-          fill: currentColor;
-        }`}
+          .ant-card-body .icon {
+            width: 5em;
+            height: 5em;
+            margin-right: 0;
+            overflow: hidden;
+            vertical-align: -0.15em;
+            fill: currentColor;
+          }
+          .ant-card-head {
+            padding: 0;
+          }
+        `}
       </style>
       <Sider theme="light">
         <Anchor offsetTop={150}>
           {typeList.map((typeItem) => {
             return (
-              <Anchor.Link href={`#plugin-category-${typeItem}`} title={typeItem} key={typeItem} />
+              <Anchor.Link
+                href={`#plugin-category-${typeItem}`}
+                title={formatMessage({ id: `component.plugin.${typeItem}` })}
+                key={typeItem}
+              />
             );
           })}
         </Anchor>
@@ -146,7 +155,9 @@ const PluginPage: React.FC<Props> = ({
                   {[
                     {
                       id: '',
-                      desc: formatMessage({ id: 'component.step.select.pluginTemplate.select.option' }),
+                      desc: formatMessage({
+                        id: 'component.step.select.pluginTemplate.select.option',
+                      }),
                     },
                     ...pluginTemplateList,
                   ].map((item) => (
@@ -157,22 +168,27 @@ const PluginPage: React.FC<Props> = ({
                 </Select>
               </Form.Item>
             </Form>
-            <Alert message={<>
-              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip1' })}</p>
-              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip2' })}</p>
-            </>} type="info" />
+            <Alert
+              message={
+                <>
+                  <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip1' })}</p>
+                  <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip2' })}</p>
+                </>
+              }
+              type="info"
+            />
           </>
         )}
         {typeList.map((typeItem) => {
           return (
             <PanelSection
-              title={typeItem}
+              title={formatMessage({ id: `component.plugin.${typeItem}` })}
               key={typeItem}
               style={PanelSectionStyle}
               id={`plugin-category-${typeItem}`}
             >
               {orderBy(
-                pluginList.filter((item) => item.type === typeItem.toLowerCase()),
+                pluginList.filter((item) => item.type === typeItem.toLowerCase() && !item.hidden),
                 'name',
                 'asc',
               ).map((item) => (
@@ -185,11 +201,14 @@ const PluginPage: React.FC<Props> = ({
                           ? 'primary'
                           : 'default'
                       }
+                      danger={initialData[item.name] && !initialData[item.name].disable}
                       onClick={() => {
                         setName(item.name);
                       }}
                     >
-                      Enable
+                      {initialData[item.name] && !initialData[item.name].disable
+                        ? formatMessage({ id: 'component.plugin.disable' })
+                        : formatMessage({ id: 'component.plugin.enable' })}
                     </Button>,
                   ]}
                   title={[
@@ -221,7 +240,7 @@ const PluginPage: React.FC<Props> = ({
           );
         })}
         <br />
-        {formatMessage({ id: 'component.plugin.tip1' })}
+        {formatMessage({ id: 'component.plugin.tip1' })}&nbsp;
         <a
           href="https://apisix.apache.org/docs/dashboard/FAQ#4-after-modifying-the-plugin-schema-or-creating-a-custom-plugin-in-apache-apisix-why-cant-i-find-it-on-the-dashboard"
           target="_blank"
@@ -246,10 +265,10 @@ const PluginPage: React.FC<Props> = ({
       onClose={() => {
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
-      onChange={({ codemirrorData, formData, shouldDelete }) => {
+      onChange={({ monacoData, formData, shouldDelete }) => {
         let newPlugins = {
           ...initialData,
-          [name]: { ...codemirrorData, disable: !formData.disable },
+          [name]: { ...monacoData, disable: !formData.disable },
         };
         if (shouldDelete === true) {
           newPlugins = omit(newPlugins, name);

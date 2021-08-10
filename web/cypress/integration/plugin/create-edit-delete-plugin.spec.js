@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+/* eslint-disable */
 
-context('Create and Delete Plugin List', () => {
+context('Enable and Delete Plugin List', () => {
   const timeout = 5000;
 
   beforeEach(() => {
@@ -29,7 +29,7 @@ context('Create and Delete Plugin List', () => {
   it('should visit plugin market', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.contains('Create').click();
+    cy.contains('Enable').click();
 
     cy.fixture('plugin-dataset.json').as('cases');
     cy.get('@cases').then((cases) => {
@@ -41,13 +41,10 @@ context('Create and Delete Plugin List', () => {
     cy.visit('/plugin/list');
 
     cy.get(this.domSelector.refresh).click();
-    cy.contains('Edit').click();
-    cy.get(this.domSelector.codemirror)
-      .first()
-      .then(() => {
-        cy.get(this.domSelector.disabledSwitcher).click();
-        cy.contains('button', 'Submit').click();
-      });
+    cy.contains('Configure').click();
+    cy.get(this.domSelector.monacoScroll).should('exist');
+    cy.get(this.domSelector.disabledSwitcher).click();
+    cy.contains('button', 'Submit').click();
   });
 
   it('should delete plugin list', function () {
@@ -58,12 +55,14 @@ context('Create and Delete Plugin List', () => {
     cy.get(this.domSelector.fiftyPerPage).should('exist');
     cy.location('href').should('include', 'pageSize=50');
 
-    cy.get(this.domSelector.deleteButton, { timeout }).should('exist').each(function ($el) {
-      cy.wrap($el).click().click({ timeout });
-      cy.contains('button', 'Confirm').click({ force: true });
-      cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
-    });
+    cy.get(this.domSelector.deleteButton, { timeout })
+      .should('exist')
+      .each(function ($el) {
+        cy.wrap($el).click().click({ timeout });
+        cy.contains('button', 'Confirm').click({ force: true });
+        cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
+        cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+      });
 
     // check if plugin list is empty
     cy.get(this.domSelector.empty).should('be.visible');

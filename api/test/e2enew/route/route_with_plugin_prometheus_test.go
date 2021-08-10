@@ -18,6 +18,7 @@ package route
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -60,7 +61,7 @@ var _ = ginkgo.Describe("route with plugin prometheus", func() {
 			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("fetch the prometheus metric data", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
+			Object:       base.PrometheusExporterExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
 			ExpectStatus: http.StatusOK,
@@ -102,15 +103,15 @@ var _ = ginkgo.Describe("route with plugin prometheus", func() {
 			Sleep:        base.SleepTime,
 		}),
 		table.Entry("verify the prometheus metric data (apisix_http_status 200)", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
+			Object:       base.PrometheusExporterExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `apisix_http_status{code="200",route="r1",matched_uri="/hello",matched_host="",service="",consumer=""`,
-			Sleep:        base.SleepTime,
+			Sleep:        1 * time.Second,
 		}),
 		table.Entry("verify the prometheus metric data (apisix_http_status 404)", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
+			Object:       base.PrometheusExporterExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
 			ExpectStatus: http.StatusOK,

@@ -42,7 +42,6 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
 
   const NormalLabelComponent = () => {
     const field = 'custom_normal_labels';
-    const title = 'Label Manager';
     return (
       <React.Fragment>
         <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field}>
@@ -74,13 +73,18 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
               const labels = form.getFieldValue(field) || [];
               return (
                 <LabelsDrawer
-                  title={title}
+                  title={formatMessage({ id: 'component.label-manager' })}
                   actionName={field}
                   dataSource={labels}
                   disabled={disabled || false}
                   onChange={({ data }) => {
-                    const handledLabels = [...new Set([...(form.getFieldValue('custom_normal_labels') || []), ...data])];
-                    form.setFieldsValue({ ...form.getFieldsValue(), custom_normal_labels: handledLabels });
+                    const handledLabels = [
+                      ...new Set([...(form.getFieldValue('custom_normal_labels') || []), ...data]),
+                    ];
+                    form.setFieldsValue({
+                      ...form.getFieldsValue(),
+                      custom_normal_labels: handledLabels,
+                    });
                   }}
                   onClose={() => setVisible(false)}
                   filterList={[]}

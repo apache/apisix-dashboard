@@ -14,80 +14,123 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+/* eslint-disable */
 
 context('Test RawDataEditor', () => {
   const timeout = 1000;
 
+  const selector = {
+    notificationClose: '.anticon-close',
+    tableBody: '.ant-table-tbody',
+    drawer: '.ant-drawer-content',
+    notification: '.ant-notification-notice-message',
+    monacoViewZones: '.view-zones',
+  };
+
+  const data = {
+    deleteRouteSuccess: 'Delete Route Successfully',
+    deleteServiceSuccess: 'Delete Service Successfully',
+    deletePluginSuccess: 'Delete Plugin Successfully',
+    deleteUpstreamSuccess: 'Delete Upstream Successfully',
+    deleteConsumerSuccess: 'Delete Consumer Successfully',
+  };
+
   beforeEach(() => {
     cy.login();
-
     cy.fixture('rawDataEditor-dataset.json').as('dataset');
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create and update with rawDataEditor', function () {
     const menuList = ['Route', 'Service', 'Upstream', 'Consumer'];
-    const publicData = this.data;
-    const dateset = this.dataset;
-    const domSelector = this.domSelector;
+    const dataset = this.dataset;
     menuList.forEach(function (item) {
       cy.visit('/');
       cy.contains(item).click();
-      cy.contains('Create with Editor').click();
-      const data = dateset[item];
+      cy.get('.anticon-reload').click();
+      if (item === 'Route') {
+        cy.contains('Advanced').should('be.visible').click({ force: true });
+        cy.contains('Raw Data Editor').should('be.visible').click();
+      } else {
+        cy.contains('Raw Data Editor').should('be.visible').click();
+      }
 
-      // create with editor
-      cy.window().then(({ codemirror }) => {
-        if (codemirror) {
-          codemirror.setValue(JSON.stringify(data));
-        }
-        cy.get(domSelector.drawer).should('exist');
-        cy.get(domSelector.drawer, { timeout }).within(() => {
+      const dataSetItem = dataset[item];
+
+      cy.get(selector.monacoViewZones).should('exist').click({ force: true });
+      // edit monaco
+      cy.window().then((window) => {
+        window.monacoEditor.setValue(JSON.stringify(dataSetItem));
+        cy.get(selector.drawer).should('exist');
+        cy.get(selector.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
           });
-          cy.get(domSelector.drawer).should('not.exist');
+          cy.get(selector.drawer).should('not.exist');
         });
       });
 
       cy.reload();
-      // update with editor
-      cy.contains(item === 'Consumer' ? data.username : data.name)
-        .siblings()
-        .contains('View')
-        .click();
+      if (item === 'Route') {
+        // update with editor
+        cy.contains(item === 'Consumer' ? dataSetItem.username : dataSetItem.name)
+          .siblings()
+          .contains('More')
+          .click();
 
-      cy.window().then(({ codemirror }) => {
-        if (codemirror) {
-          if (item === 'Consumer') {
-            codemirror.setValue(JSON.stringify({ ...data, desc: 'newDesc' }));
-          } else {
-            codemirror.setValue(JSON.stringify({ ...data, name: 'newName' }));
-          }
+        cy.contains('View').should('be.visible').click({ force: true });
+      } else {
+        // update with editor
+        cy.contains(item === 'Consumer' ? dataSetItem.username : dataSetItem.name)
+          .siblings()
+          .contains('View')
+          .click();
+      }
+
+      cy.get(selector.monacoViewZones).should('exist').click({ force: true });
+      // edit monaco
+      cy.window().then((window) => {
+        if (item === 'Consumer') {
+          window.monacoEditor.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
+        } else {
+          window.monacoEditor.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
         }
-        cy.get(domSelector.drawer).should('exist');
-        cy.get(domSelector.drawer, { timeout }).within(() => {
+        cy.get(selector.drawer).should('exist');
+        cy.get(selector.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
           });
-          cy.get(domSelector.drawer).should('not.exist');
+          cy.get(selector.drawer).should('not.exist');
         });
       });
 
-      cy.reload();
-      cy.get(domSelector.tableBody).should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
+      if (item === 'Route') {
+        cy.reload();
+        cy.get(selector.tableBody).should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
 
-      // delete resource
-      cy.contains(item === 'Consumer' ? 'newDesc' : 'newName')
-        .siblings()
-        .contains('Delete')
-        .click();
-      cy.contains('button', 'Confirm').click();
+        cy.contains(item === 'Consumer' ? 'newDesc' : 'newName')
+          .siblings()
+          .contains('More')
+          .click();
 
-      cy.get(domSelector.notification).should('contain', publicData[`delete${item}Success`]);
-      cy.get(domSelector.notificationClose).should('be.visible').click({
+        cy.contains('Delete').should('be.visible').click();
+        cy.get('.ant-modal-content')
+          .should('be.visible')
+          .within(() => {
+            cy.contains('OK').click();
+          });
+      } else {
+        cy.reload();
+        cy.get(selector.tableBody).should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
+
+        cy.contains(item === 'Consumer' ? 'newDesc' : 'newName')
+          .siblings()
+          .contains('Delete')
+          .click();
+        cy.contains('button', 'Confirm').click();
+      }
+
+      cy.get(selector.notification).should('contain', data[`delete${item}Success`]);
+      cy.get(selector.notificationClose).should('be.visible').click({
         force: true,
         multiple: true,
       });
