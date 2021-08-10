@@ -21,6 +21,7 @@ import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
   ref?: any;
 };
 
@@ -33,8 +34,9 @@ const FORM_ITEM_LAYOUT = {
   },
 };
 
-const LimitConn: React.FC<Props> = ({ form }) => {
+const LimitConn: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
+  const propertires = schema?.properties;
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
@@ -43,7 +45,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         name="conn"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.conn.tooltip' })}
       >
-        <InputNumber min={1} required />
+        <InputNumber min={propertires.conn.exclusiveMinimum} required />
       </Form.Item>
       <Form.Item
         label="burst"
@@ -51,7 +53,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         name="burst"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.burst.tooltip' })}
       >
-        <InputNumber min={0} required />
+        <InputNumber min={propertires.burst.minimum} required />
       </Form.Item>
       <Form.Item
         label="default_conn_delay"
@@ -61,7 +63,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
           id: 'component.pluginForm.limit-conn.default_conn_delay.tooltip',
         })}
       >
-        <InputNumber step={0.001} min={0.001} required />
+        <InputNumber step={0.001} min={propertires.default_conn_delay.exclusiveMinimum} required />
       </Form.Item>
 
       <Form.Item
@@ -71,13 +73,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.key.tooltip' })}
       >
         <Select>
-          {[
-            'remote_addr',
-            'server_addr',
-            'http_x_real_ip',
-            'http_x_forwarded_for',
-            'consumer_name',
-          ].map((item) => {
+          {propertires.key.enum.map((item: string) => {
             return (
               <Select.Option value={item} key={item}>
                 {item}
@@ -90,10 +86,14 @@ const LimitConn: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="rejected_code"
         name="rejected_code"
-        initialValue={503}
+        initialValue={propertires.rejected_code.default}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.rejected_code.tooltip' })}
       >
-        <InputNumber min={200} max={599} required />
+        <InputNumber
+          min={propertires.rejected_code.minimum}
+          max={propertires.rejected_code.maximum}
+          required
+        />
       </Form.Item>
     </Form>
   );

@@ -58,6 +58,8 @@ context('Create and Delete Upstream', () => {
     cy.get(selector.nodes_0_host).type(data.ip1);
     cy.get(selector.nodes_0_port).clear().type('7000');
     cy.get(selector.nodes_0_weight).clear().type(1);
+    cy.get('#custom_checks_active').click();
+    cy.get('#checks_active_port').clear();
     cy.contains('Next').click();
     cy.get(selector.input).should('be.disabled');
     cy.contains('Submit').click();

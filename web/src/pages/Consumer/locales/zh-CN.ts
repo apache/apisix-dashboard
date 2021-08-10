@@ -18,7 +18,7 @@ export default {
   'page.consumer.form.itemRuleMessage.username':
     '最大长度100，仅支持字母、数字和 _ ，且只能以字母开头',
   'page.consumer.form.itemExtraMessage.username': '名称需唯一',
-  'page.consumer.notification.warning.enableAuthenticationPlugin': '请启用一种身份认证类插件',
+  'page.consumer.notification.warning.enableAuthenticationPlugin': '请至少启用如下一种认证类插件：',
   'page.consumer.username': '名称',
   'page.consumer.username.required': '请输入消费者名称',
   'page.consumer.updateTime': '更新时间',

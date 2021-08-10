@@ -251,6 +251,7 @@ export const transformStepData = ({
     'redirect',
     'plugins',
     'labels',
+    'enable_websocket',
     data.uri ? 'uri' : 'uris',
     data.vars?.length ? 'vars' : '',
     service_id.length !== 0 ? 'service_id' : '',

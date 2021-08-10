@@ -52,7 +52,7 @@ var _ = ginkgo.Describe("route with plugin http logger", func() {
 				"uri": "/hello_",
 				"plugins": {
 					"http-logger": {
-						"uri": "http://172.16.238.20:1982/hello",
+						"uri": "http://` + base.UpstreamIp + `:1982/hello",
 						"batch_max_size": 1,
 						"max_retry_count": 1,
 						"retry_delay": 2,

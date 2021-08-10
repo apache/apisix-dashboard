@@ -212,7 +212,7 @@ export const PLUGIN_LIST = {
     type: PluginType.security,
   },
   'wolf-rbac': {
-    type: PluginType.other,
+    type: PluginType.authentication,
   },
   'authz-keycloak': {
     type: PluginType.authentication,
