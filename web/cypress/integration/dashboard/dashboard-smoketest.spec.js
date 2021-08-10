@@ -19,7 +19,7 @@
 context('dashboard page smoke test', () => {
   const selector = {
     pageContent: '.ant-pro-page-container',
-  }
+  };
   beforeEach(() => {
     cy.login();
   });

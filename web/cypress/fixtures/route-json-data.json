@@ -14,11 +14,13 @@
     "vars": [],
     "upstream": {
       "type": "roundrobin",
-      "nodes": [{
-        "host": "httpbin.org",
-        "port": 80,
-        "weight": 1
-      }],
+      "nodes": [
+        {
+          "host": "httpbin.org",
+          "port": 80,
+          "weight": 1
+        }
+      ],
       "pass_host": "pass",
       "timeout": {
         "connect": 6,

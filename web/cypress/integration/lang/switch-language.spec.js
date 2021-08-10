@@ -21,7 +21,7 @@ context('Switch language', () => {
 
   const selector = {
     languageSwitcher: '.ant-space-align-center',
-  }
+  };
 
   beforeEach(() => {
     cy.login();

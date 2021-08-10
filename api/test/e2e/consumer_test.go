@@ -221,7 +221,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -401,7 +401,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]

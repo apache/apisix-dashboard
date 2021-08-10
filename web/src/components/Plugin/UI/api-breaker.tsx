@@ -29,7 +29,7 @@ const FORM_ITEM_LAYOUT = {
     span: 7,
   },
   wrapperCol: {
-    span: 7
+    span: 7,
   },
 };
 
@@ -40,7 +40,7 @@ const FORM_ITEM_WITHOUT_LABEL = {
 };
 
 const ApiBreaker: React.FC<Props> = ({ form }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
     <Form
@@ -51,11 +51,15 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="break_response_code"
         name="break_response_code"
-        rules={[{
-          required: true,
-          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} break_response_code`
-        }]}
-        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.break_response_code.tooltip' })}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} break_response_code`,
+          },
+        ]}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.api-breaker.break_response_code.tooltip',
+        })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={200} max={599} required />
@@ -78,14 +82,12 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                 <Form.Item
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'unhealthy.http_statuses'}
-                  tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip' })}
+                  tooltip={formatMessage({
+                    id: 'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip',
+                  })}
                   key={field.key}
                 >
-                  <Form.Item
-                    {...field}
-                    validateTrigger={['onChange', 'onBlur']}
-                    noStyle
-                  >
+                  <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
                     <InputNumber min={500} max={599} />
                   </Form.Item>
                   {fields.length > 1 ? (
@@ -120,7 +122,9 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="unhealthy.failures"
         name={['unhealthy', 'failures']}
         initialValue={3}
-        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.unhealthy.failures.tooltip' })}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.api-breaker.unhealthy.failures.tooltip',
+        })}
       >
         <InputNumber min={1} />
       </Form.Item>
@@ -134,13 +138,11 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   key={field.key}
                   label={index === 0 && 'healthy.http_statuses'}
-                  tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.healthy.http_statuses.tooltip' })}
+                  tooltip={formatMessage({
+                    id: 'component.pluginForm.api-breaker.healthy.http_statuses.tooltip',
+                  })}
                 >
-                  <Form.Item
-                    {...field}
-                    validateTrigger={['onChange', 'onBlur']}
-                    noStyle
-                  >
+                  <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
                     <InputNumber min={200} max={499} />
                   </Form.Item>
                   {fields.length > 1 ? (
@@ -175,12 +177,14 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="healthy.successes"
         name={['healthy', 'successes']}
         initialValue={3}
-        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.healthy.successes.tooltip' })}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.api-breaker.healthy.successes.tooltip',
+        })}
       >
         <InputNumber min={1} />
       </Form.Item>
-    </Form >
+    </Form>
   );
-}
+};
 
 export default ApiBreaker;
