@@ -239,6 +239,7 @@ export const transformStepData = ({
     'redirect',
     'plugins',
     'labels',
+    'enable_websocket',
     data.vars?.length ? 'vars' : '',
     service_id.length !== 0 ? 'service_id' : '',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
