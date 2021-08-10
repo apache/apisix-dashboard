@@ -10,53 +10,33 @@ import (
 var (
 	// UserList is a mapping of user type and users
 	// like  local  => [User1, User2] google => [User3, User4] github => [User5, User6]
-	UserList = make(map[UserType][]DashboardUser)
+	UserList   = make([]DashboardUserLocal, 0)
+	DataSource DataSourceType
+)
+
+type UserType string
+type DataSourceType string
+
+const (
+	DataSourceTypeLocal DataSourceType = "local"
+	DataSourceTypeEtcd  DataSourceType = "etcd"
 )
 
 type Authentication struct {
 	Secret     string
-	ExpireTime int `yaml:"expire_time"`
-	Users      []map[string]string
-}
-
-type UserType string
-
-const (
-	UserTypeLocal UserType = "local"
-)
-
-// DashboardUser is the define of functions required for the dashboard user structure
-type DashboardUser interface {
-	GetType() UserType
-	GetID() string
-	Valid(params map[string]interface{}) (bool, error)
-}
-
-type DashboardUserBasic struct {
-	Type UserType
+	ExpireTime int            `yaml:"expire_time"`
+	DataSource DataSourceType `yaml:"data_source"`
+	Users      []DashboardUserLocal
 }
 
 // DashboardUserLocal is local user and login by username and password
 type DashboardUserLocal struct {
-	DashboardUserBasic
-	Username string
-	Password string
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func (DashboardUserLocal) GetType() UserType {
-	return UserTypeLocal
-}
-
-func (u DashboardUserLocal) GetID() string {
-	return u.Username
-}
-
-func (u DashboardUserLocal) Valid(params map[string]interface{}) (bool, error) {
-	if params["password"] == nil {
-		return false, consts.ErrUsernamePassword
-	}
-
-	if u.Password != params["password"].(string) {
+func (u DashboardUserLocal) Valid(password string) (bool, error) {
+	if password == "" || u.Password != password {
 		return false, consts.ErrUsernamePassword
 	}
 
@@ -69,41 +49,21 @@ func initAuthentication(conf Authentication) {
 		AuthConf.Secret = utils.GetFlakeUidStr()
 	}
 
-	// parse user list in config file
-	userList := conf.Users
-	for key, item := range userList {
-		userType := item["type"]
+	// user store data source
+	DataSource = conf.DataSource
 
-		// compatible with old usage
-		if userType == "" {
-			userType = "local"
-		}
-
-		basicInfo := DashboardUserBasic{
-			Type: UserType(userType),
-		}
-
-		// initialize user list slice
-		if UserList[basicInfo.Type] == nil {
-			UserList[basicInfo.Type] = make([]DashboardUser, 0)
-		}
-
-		// write user to the user list
-		switch basicInfo.Type {
-		case UserTypeLocal:
-			fallthrough
-		default:
-			if _, ok := item["username"]; !ok {
-				panic("user info error: username empty, key: " + strconv.Itoa(key))
+	if DataSource == DataSourceTypeLocal {
+		// parse user list in config file
+		userList := conf.Users
+		for key, item := range userList {
+			if item.Username == "" {
+				panic("user info error: username empty, index: " + strconv.Itoa(key))
 			}
-			if _, ok := item["password"]; !ok {
-				panic("user info error: password empty, key: " + strconv.Itoa(key))
+			if item.Password == "" {
+				panic("user info error: password empty, index: " + strconv.Itoa(key))
 			}
-			UserList[basicInfo.Type] = append(UserList[basicInfo.Type], &DashboardUserLocal{
-				DashboardUserBasic: basicInfo,
-				Username:           item["username"],
-				Password:           item["password"],
-			})
+
+			UserList = append(UserList, item)
 		}
 	}
 }

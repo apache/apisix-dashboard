@@ -87,27 +87,29 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	username := input.Username
 	password := input.Password
 
-	users := conf.UserList[conf.UserTypeLocal]
-
 	loginSuccess := false
-	for _, user := range users {
-		if username == user.GetID() {
-			ok, err := user.Valid(map[string]interface{}{
-				"password": password,
-			})
-			if !ok && err != nil {
-				return nil, err
-			}
+	switch conf.DataSource {
+	case conf.DataSourceTypeLocal:
+		users := conf.UserList
+		for _, user := range users {
+			if username == user.Username {
+				ok, err := user.Valid(password)
+				if !ok && err != nil {
+					return nil, err
+				}
 
-			loginSuccess = true
+				loginSuccess = true
+			}
 		}
+	case conf.DataSourceTypeEtcd:
+
 	}
 
 	if loginSuccess {
 		// create JWT for session
 		claims := jwt.StandardClaims{
 			Audience:  "local",
-			Subject:   username,
+			Subject:   string(conf.DataSource),
 			IssuedAt:  time.Now().Unix(),
 			ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthConf.ExpireTime)).Unix(),
 		}

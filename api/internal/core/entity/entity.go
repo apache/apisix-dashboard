@@ -289,7 +289,7 @@ type ExternalUser struct {
 // swagger:model DashboardUser
 type DashboardUser struct {
 	BaseInfo
-	Username string         `json:"username"`
-	Password string         `json:"password"`
+	Username  string         `json:"username"`
+	Password  string         `json:"password"`
 	Externals []ExternalUser `json:"externals"`
 }
