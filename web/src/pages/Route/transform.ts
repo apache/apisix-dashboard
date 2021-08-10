@@ -180,6 +180,19 @@ export const transformStepData = ({
     unset(data.plugins, ['proxy-rewrite']);
   }
 
+  if (data.uris && data.uris.filter(Boolean).length === 1) {
+    [data.uri] = data.uris;
+    delete data.uris;
+  }
+  if (data.hosts && data.hosts.filter(Boolean).length === 1) {
+    [data.host] = data.hosts;
+    delete data.hosts;
+  }
+  if (data.remote_addrs && data.remote_addrs.filter(Boolean).length === 1) {
+    [data.remote_addr] = data.remote_addrs;
+    delete data.remote_addrs;
+  }
+
   if ((Object.keys(redirect).length === 0 || redirect.http_to_https) && form2Data) {
     /**
      * Due to convertToRequestData under the Upstream component,
@@ -216,7 +229,7 @@ export const transformStepData = ({
       service_id.length === 0 ? 'service_id' : '',
       !Object.keys(data.plugins || {}).length ? 'plugins' : '',
       !Object.keys(data.script || {}).length ? 'script' : '',
-      form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
+      form1Data.hosts?.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
       data.remote_addrs?.filter(Boolean).length === 0 ? 'remote_addrs' : '',
       step3DataCloned.plugin_config_id === '' ? 'plugin_config_id' : '',
@@ -234,16 +247,18 @@ export const transformStepData = ({
   return pick(data, [
     'name',
     'desc',
-    'uris',
     'methods',
     'redirect',
     'plugins',
     'labels',
     'enable_websocket',
+    data.uri ? 'uri' : 'uris',
     data.vars?.length ? 'vars' : '',
     service_id.length !== 0 ? 'service_id' : '',
-    form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
+    data.hosts?.filter(Boolean).length !== 0 ? 'hosts' : '',
     data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
+    data.host ? 'host' : '',
+    data.remote_addr ? 'remote_addr' : '',
   ]);
 };
 
@@ -287,6 +302,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     hosts,
     host,
     remote_addrs,
+    remote_addr,
     vars = [],
     status,
     upstream,
@@ -302,7 +318,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     status,
     hosts: hosts || (host && [host]) || [''],
     uris: uris || (uri && [uri]) || [],
-    remote_addrs: remote_addrs || [''],
+    remote_addrs: remote_addrs || (remote_addr && [remote_addr]) || [''],
     // NOTE: API_VERSION is a system label
     custom_version_label: labels.API_VERSION || '',
     custom_normal_labels: Object.keys(labels)
