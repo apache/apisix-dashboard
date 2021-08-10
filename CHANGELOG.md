@@ -35,7 +35,7 @@
 
 # 2.7.1
 
-This release conatains some features and bugfixes, and all the existing functionalities are compatible with Apache APISIX 2.7.
+This release contains some features and bugfixes, and all the existing functionalities are compatible with Apache APISIX 2.7.
 
 ### Core
 
