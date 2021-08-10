@@ -86,7 +86,8 @@ context('Create and Search Route', () => {
 
       // eslint-disable-next-line no-loop-func
       cy.get(selector.drawerBody).within(() => {
-        cy.contains('Add')
+        cy.contains('button', 'Add')
+          .should('not.be.disabled')
           .click()
           .then(() => {
             cy.get(selector.labels_0_labelKey).type(`label${i}`);
