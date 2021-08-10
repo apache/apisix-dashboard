@@ -71,7 +71,7 @@ context('Create Route Both use uri and uris', () => {
     cy.get(selector.description).type(data.description);
 
     cy.get(selector.hosts_0).type(data.host_0);
-    cy.get(selector.uris_0).type(data.uri_0);
+    cy.get(selector.uris_0).clear().type(data.uri_0);
     cy.get(selector.remote_addrs_0).type(data.remote_addr_0);
 
     cy.contains('Next').click();
@@ -115,10 +115,14 @@ context('Create Route Both use uri and uris', () => {
     cy.contains(data.name).siblings().contains('Configure').click();
 
     cy.get('#status').should('have.class', 'ant-switch-checked');
+
+    cy.get(selector.hosts_0).should('have.value', data.host_0);
+    cy.get(selector.uris_0).should('have.value', data.uri_0);
+
     cy.get(selector.addHost).click();
     cy.get(selector.hosts_1).type(data.host_1);
     cy.get(selector.addUri).click();
-    cy.get(selector.uris_1).type(data.uri_1);
+    cy.get(selector.uris_1).clear().type(data.uri_1);
     cy.get(selector.addRemoteAddr).click();
     cy.get(selector.remote_addrs_1).type(data.remote_addr_1);
 
