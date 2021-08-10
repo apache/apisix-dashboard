@@ -204,6 +204,9 @@ context('Create and Delete Route', () => {
     cy.get(selector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains('vars').should('exist');
+      cy.contains('uri').should('exist');
+      cy.contains('hosts').should('exist');
+      cy.contains('remote_addr').should('exist');
       cy.contains(name).should('exist');
     });
   });
@@ -220,6 +223,7 @@ context('Create and Delete Route', () => {
     cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(selector.name).clear().type(newName);
     cy.get(selector.description).clear().type(data.description2);
+
     cy.get(selector.advancedMatchingTable).should('exist');
     cy.wrap(opreatorList).each(() => {
       cy.get(selector.advancedMatchingTableOperation).within(() => {

@@ -29,7 +29,7 @@ context('Create and Delete Consumer', () => {
     serviceSelector: '[title=test_service]',
     monacoScroll: '.monaco-scrollable-element',
     monacoViewZones: '.view-zones',
-    notificationCloseIcon: '.ant-notification-close-icon'
+    notificationCloseIcon: '.ant-notification-close-icon',
   };
 
   const data = {

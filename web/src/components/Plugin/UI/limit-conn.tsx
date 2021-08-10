@@ -36,7 +36,7 @@ const FORM_ITEM_LAYOUT = {
 
 const LimitConn: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
-  const propertires = schema?.properties
+  const propertires = schema?.properties;
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
@@ -74,7 +74,11 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
       >
         <Select>
           {propertires.key.enum.map((item: string) => {
-            return <Select.Option value={item} key={item}>{item}</Select.Option>
+            return (
+              <Select.Option value={item} key={item}>
+                {item}
+              </Select.Option>
+            );
           })}
         </Select>
       </Form.Item>
@@ -85,7 +89,11 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
         initialValue={propertires.rejected_code.default}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.rejected_code.tooltip' })}
       >
-        <InputNumber min={propertires.rejected_code.minimum} max={propertires.rejected_code.maximum} required />
+        <InputNumber
+          min={propertires.rejected_code.minimum}
+          max={propertires.rejected_code.maximum}
+          required
+        />
       </Form.Item>
     </Form>
   );
