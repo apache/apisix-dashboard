@@ -32,6 +32,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
     webSocketSelector: '[title=WebSocket]',
+    enable_websocket_button: '#enable_websocket',
   };
 
   const data = {
@@ -61,6 +62,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.get(selector.customRedirectUrI).should('be.visible');
     cy.get(selector.customRedirectCode).should('be.visible');
     cy.get(selector.webSocketSelector).should('not.exist');
+    cy.get(selector.enable_websocket_button).should('not.exist');
 
     // step 2 and step 3 should not be visible
     cy.contains(data.step2Title).should('not.exist');
@@ -90,6 +92,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains(data.setUpstreamNotice).should('not.exist');
     cy.get(selector.name).clear().type(newName);
     cy.get(selector.webSocketSelector).should('not.exist');
+    cy.get(selector.enable_websocket_button).should('not.exist');
 
     cy.contains('Next').click();
     cy.contains('Submit').click();
