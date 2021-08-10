@@ -108,8 +108,8 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	if loginSuccess {
 		// create JWT for session
 		claims := jwt.StandardClaims{
-			Audience:  "local",
-			Subject:   string(conf.DataSource),
+			Audience:  string(conf.DataSource),
+			Subject:   username,
 			IssuedAt:  time.Now().Unix(),
 			ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthConf.ExpireTime)).Unix(),
 		}

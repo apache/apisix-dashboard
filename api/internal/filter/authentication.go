@@ -92,14 +92,16 @@ func (mw *AuthenticationMiddleware) Handle(ctx droplet.Context) error {
 
 	userExist := false
 	switch conf.DataSourceType(claims.Audience) {
+	case conf.DataSourceTypeEtcd:
+
 	case conf.DataSourceTypeLocal:
+		fallthrough
+	default:
 		for _, item := range conf.UserList {
 			if claims.Subject == item.Username {
 				userExist = true
 			}
 		}
-	case conf.DataSourceTypeEtcd:
-
 	}
 
 	if !userExist {
