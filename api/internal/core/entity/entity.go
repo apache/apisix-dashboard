@@ -291,5 +291,5 @@ type DashboardUser struct {
 	BaseInfo
 	Username string         `json:"username"`
 	Password string         `json:"password"`
-	External []ExternalUser `json:"externals"`
+	Externals []ExternalUser `json:"externals"`
 }
