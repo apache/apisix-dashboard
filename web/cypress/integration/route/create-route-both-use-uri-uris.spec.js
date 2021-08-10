@@ -118,6 +118,7 @@ context('Create Route Both use uri and uris', () => {
 
     cy.get(selector.hosts_0).should('have.value', data.host_0);
     cy.get(selector.uris_0).should('have.value', data.uri_0);
+    cy.get(selector.remote_addrs_0).should('have.value', data.remote_addr_0);
 
     cy.get(selector.addHost).click();
     cy.get(selector.hosts_1).type(data.host_1);
@@ -156,6 +157,23 @@ context('Create Route Both use uri and uris', () => {
       cy.contains('hosts').should('exist');
       cy.contains('remote_addrs').should('exist');
     });
+  });
+
+  it('confirm the configure view render normally', () => {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    cy.get(selector.nameSelector).type(data.name);
+    cy.contains('Search').click();
+    cy.contains(data.name).siblings().contains('Configure').click();
+
+    cy.get('#status').should('have.class', 'ant-switch-checked');
+    cy.get(selector.hosts_0).should('have.value', data.host_0);
+    cy.get(selector.hosts_1).should('have.value', data.host_1);
+    cy.get(selector.uris_0).should('have.value', data.uri_0);
+    cy.get(selector.uris_1).should('have.value', data.uri_1);
+    cy.get(selector.remote_addrs_0).should('have.value', data.remote_addr_0);
+    cy.get(selector.remote_addrs_1).should('have.value', data.remote_addr_1);
   });
 
   it('should delete the route', function () {
