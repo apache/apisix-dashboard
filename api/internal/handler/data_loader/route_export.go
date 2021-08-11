@@ -412,7 +412,7 @@ func ParseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 				log.Errorf("Plugins MergeJson err: ", err)
 				return path, nil, nil, nil, err
 			}
-			err = json.Unmarshal([]byte(bytePlugins), &plugins)
+			err = json.Unmarshal(bytePlugins, &plugins)
 			if err != nil {
 				log.Errorf("JsonToMapDemo err: ", err)
 				return path, nil, nil, nil, err
