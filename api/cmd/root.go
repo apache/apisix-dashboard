@@ -63,6 +63,7 @@ func init() {
 		newStartCommand(),
 		newStopCommand(),
 		newStatusCommand(),
+		newCacheVerifyCommand(),
 	)
 }
 
