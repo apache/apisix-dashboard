@@ -17,7 +17,7 @@
 /* eslint-disable */
 
 context('Create and Search Route', () => {
-  const timeout = 500;
+  const timeout = 5000;
 
   const selector = {
     name: '#name',
