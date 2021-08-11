@@ -29,7 +29,12 @@ func newCacheVerifyCommand() *cobra.Command {
 		Short: "verify that data in cache are consistent with that in ETCD",
 		Run: func(cmd *cobra.Command, args []string) {
 			rsp, err := http.Get("http://localhost:9000/apisix/admin/cache_verify")
-			defer rsp.Body.Close()
+			defer func() {
+				err := rsp.Body.Close()
+				if err != nil {
+					fmt.Println("close on response body failed")
+				}
+			}()
 			if err != nil {
 				fmt.Println("get result from migrate/export failed")
 				return
