@@ -115,12 +115,12 @@ var (
 func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
 
-	if len(routelist.Rows) < 1 {
-		return nil, consts.ErrRouteData
-	}
-
 	if err != nil {
 		return nil, err
+	}
+
+	if len(routelist.Rows) < 1 {
+		return nil, consts.ErrRouteData
 	}
 
 	routes := []*entity.Route{}
