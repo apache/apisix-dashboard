@@ -17,6 +17,7 @@
 package authentication
 
 import (
+	"math"
 	"reflect"
 	"time"
 
@@ -27,15 +28,20 @@ import (
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apisix/manager-api/internal/conf"
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
+	dashboardUserStore store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
-	return &Handler{}, nil
+	return &Handler{
+		dashboardUserStore: store.GetStore(store.HubKeyDashboardUser),
+	}, nil
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
@@ -102,7 +108,26 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 			}
 		}
 	case conf.DataSourceTypeEtcd:
+		ret, err := h.dashboardUserStore.List(c.Context(), store.ListInput{
+			Predicate: func(obj interface{}) bool {
+				return obj.(*entity.DashboardUser).Username == username
+			},
+			Format: func(obj interface{}) interface{} {
+				return obj.(*entity.DashboardUser)
+			},
+			PageSize:   math.MaxInt32,
+			PageNumber: 1,
+		})
+		if err != nil {
+			return nil, err
+		}
 
+		if ret.TotalSize == 1 {
+			user := ret.Rows[0].(*entity.DashboardUser)
+			if password == user.Password {
+				loginSuccess = true
+			}
+		}
 	}
 
 	if loginSuccess {
