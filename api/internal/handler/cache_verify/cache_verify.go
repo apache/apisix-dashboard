@@ -26,6 +26,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	"path"
 	"reflect"
 )
 
@@ -78,66 +79,71 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 
 	var rs resultOuput
 	etcd = storage.GenEtcdStorage()
-	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
-		s.Range(context.TODO(), func(k string, obj interface{}) bool {
-			cmp, cacheValue, etcdValue := compare(k, infixMap[key], obj)
-			if !cmp {
-				if key == store.HubKeyConsumer {
-					rs.Consumers = append(rs.Consumers, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-				if key == store.HubKeyRoute {
-					rs.Routes = append(rs.Routes, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-				if key == store.HubKeyScript {
-					rs.Scripts = append(rs.Scripts, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-				if key == store.HubKeyService {
-					rs.Services = append(rs.Services, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-				if key == store.HubKeyGlobalRule {
-					rs.GlobalPlugins = append(rs.GlobalPlugins, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-				if key == store.HubKeyPluginConfig {
-					rs.PluginConfigs = append(rs.PluginConfigs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-				if key == store.HubKeyUpstream {
-					rs.Upstreams = append(rs.Upstreams, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-				if key == store.HubKeySsl {
-					rs.SSLs = append(rs.SSLs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-				if key == store.HubKeyServerInfo {
-					rs.ServerInfos = append(rs.ServerInfos, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
-				}
-
-			}
+	store.RangeStore(func(hubKey store.HubKey, s *store.GenericStore) bool {
+		keyPairs, err := etcd.List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
+		if err != nil {
+			fmt.Println(err)
 			return true
-		})
+		}
+
+		for i := range keyPairs {
+			key := path.Base(keyPairs[i].Key)
+
+			cacheObj, err := s.Get(context.TODO(), key)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			etcdValue := keyPairs[i].Value
+			cmp, cacheValue := compare(keyPairs[i].Value, cacheObj)
+
+			if !cmp {
+				if hubKey == store.HubKeyConsumer {
+					rs.Consumers = append(rs.Consumers, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+				if hubKey == store.HubKeyRoute {
+					rs.Routes = append(rs.Routes, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+				if hubKey == store.HubKeyScript {
+					rs.Scripts = append(rs.Scripts, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+				if hubKey == store.HubKeyService {
+					rs.Services = append(rs.Services, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+				if hubKey == store.HubKeyGlobalRule {
+					rs.GlobalPlugins = append(rs.GlobalPlugins, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+				if hubKey == store.HubKeyPluginConfig {
+					rs.PluginConfigs = append(rs.PluginConfigs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+				if hubKey == store.HubKeyUpstream {
+					rs.Upstreams = append(rs.Upstreams, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+				if hubKey == store.HubKeySsl {
+					rs.SSLs = append(rs.SSLs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+				if hubKey == store.HubKeyServerInfo {
+					rs.ServerInfos = append(rs.ServerInfos, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+				}
+			}
+		}
 		return true
 	})
 	return rs, nil
 }
 
-func compare(k, infix string, v interface{}) (bool, string, string) {
-	s, err := json.Marshal(v)
+func compare(etcdValue string, cacheObj interface{}) (bool, string) {
+	s, err := json.Marshal(cacheObj)
 	if err != nil {
-		fmt.Printf("json marsharl failed : %v\n", err)
-		return false, "", ""
+		fmt.Printf("json marsharl failed : %cacheObj\n", err)
+		return false, ""
 	}
 	cacheValue := string(s)
-	key := fmt.Sprintf("/apisix/%s/%s", infix, k)
-	val, err := etcd.Get(context.TODO(), key)
-	if err != nil {
-		fmt.Printf("etcd get failed %v \n", err)
-		return false, "", ""
-	}
-	etcdValue := val
-
 	cmp, err := areEqualJSON(cacheValue, etcdValue)
 	if err != nil {
-		fmt.Printf("compare json failed %v\n", err)
+		fmt.Printf("compare json failed %cacheObj\n", err)
 	}
-	return cmp, cacheValue, etcdValue
+	return cmp, cacheValue
 }
 
 func areEqualJSON(s1, s2 string) (bool, error) {
