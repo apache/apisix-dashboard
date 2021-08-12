@@ -35,7 +35,7 @@ type Handler struct {
 }
 
 type compareResult struct {
-	K          string `json:"key"`
+	Key        string `json:"key"`
 	CacheValue string `json:"cache_value"`
 	EtcdValue  string `json:"etcd_value"`
 }
@@ -72,39 +72,42 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/cache_verify", wgin.Wraps(h.CacheVerify))
 }
 
+var etcd *storage.EtcdV3Storage
+
 func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 
 	var rs resultOuput
+	etcd = storage.GenEtcdStorage()
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
 		s.Range(context.TODO(), func(k string, obj interface{}) bool {
 			cmp, cacheValue, etcdValue := compare(k, infixMap[key], obj)
 			if !cmp {
 				if key == store.HubKeyConsumer {
-					rs.Consumers = append(rs.Consumers, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.Consumers = append(rs.Consumers, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 				if key == store.HubKeyRoute {
-					rs.Routes = append(rs.Routes, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.Routes = append(rs.Routes, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 				if key == store.HubKeyScript {
-					rs.Scripts = append(rs.Scripts, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.Scripts = append(rs.Scripts, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 				if key == store.HubKeyService {
-					rs.Services = append(rs.Services, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.Services = append(rs.Services, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 				if key == store.HubKeyGlobalRule {
-					rs.GlobalPlugins = append(rs.GlobalPlugins, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.GlobalPlugins = append(rs.GlobalPlugins, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 				if key == store.HubKeyPluginConfig {
-					rs.PluginConfigs = append(rs.PluginConfigs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.PluginConfigs = append(rs.PluginConfigs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 				if key == store.HubKeyUpstream {
-					rs.Upstreams = append(rs.Upstreams, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.Upstreams = append(rs.Upstreams, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 				if key == store.HubKeySsl {
-					rs.SSLs = append(rs.SSLs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.SSLs = append(rs.SSLs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 				if key == store.HubKeyServerInfo {
-					rs.ServerInfos = append(rs.ServerInfos, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, K: k})
+					rs.ServerInfos = append(rs.ServerInfos, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: k})
 				}
 
 			}
@@ -123,7 +126,7 @@ func compare(k, infix string, v interface{}) (bool, string, string) {
 	}
 	cacheValue := string(s)
 	key := fmt.Sprintf("/apisix/%s/%s", infix, k)
-	val, err := storage.GenEtcdStorage().Get(context.TODO(), key)
+	val, err := etcd.Get(context.TODO(), key)
 	if err != nil {
 		fmt.Printf("etcd get failed %v \n", err)
 		return false, "", ""
