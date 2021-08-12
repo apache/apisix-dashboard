@@ -98,32 +98,33 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 			cmp, cacheValue := compare(keyPairs[i].Value, cacheObj)
 
 			if !cmp {
+				cmpResult := compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key}
 				if hubKey == store.HubKeyConsumer {
-					rs.Consumers = append(rs.Consumers, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.Consumers = append(rs.Consumers, cmpResult)
 				}
 				if hubKey == store.HubKeyRoute {
-					rs.Routes = append(rs.Routes, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.Routes = append(rs.Routes, cmpResult)
 				}
 				if hubKey == store.HubKeyScript {
-					rs.Scripts = append(rs.Scripts, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.Scripts = append(rs.Scripts, cmpResult)
 				}
 				if hubKey == store.HubKeyService {
-					rs.Services = append(rs.Services, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.Services = append(rs.Services, cmpResult)
 				}
 				if hubKey == store.HubKeyGlobalRule {
-					rs.GlobalPlugins = append(rs.GlobalPlugins, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.GlobalPlugins = append(rs.GlobalPlugins, cmpResult)
 				}
 				if hubKey == store.HubKeyPluginConfig {
-					rs.PluginConfigs = append(rs.PluginConfigs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.PluginConfigs = append(rs.PluginConfigs, cmpResult)
 				}
 				if hubKey == store.HubKeyUpstream {
-					rs.Upstreams = append(rs.Upstreams, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.Upstreams = append(rs.Upstreams, cmpResult)
 				}
 				if hubKey == store.HubKeySsl {
-					rs.SSLs = append(rs.SSLs, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.SSLs = append(rs.SSLs, cmpResult)
 				}
 				if hubKey == store.HubKeyServerInfo {
-					rs.ServerInfos = append(rs.ServerInfos, compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key})
+					rs.ServerInfos = append(rs.ServerInfos, cmpResult)
 				}
 			}
 		}
