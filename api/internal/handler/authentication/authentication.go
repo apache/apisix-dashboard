@@ -26,6 +26,7 @@ import (
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
@@ -124,7 +125,8 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 
 		if ret.TotalSize == 1 {
 			user := ret.Rows[0].(*entity.DashboardUser)
-			if password == user.Password {
+			err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+			if err == nil {
 				loginSuccess = true
 			}
 		}
