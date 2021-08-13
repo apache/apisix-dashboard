@@ -402,7 +402,7 @@ func TestRoute_export_import(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -425,7 +425,7 @@ func TestRoute_export_import(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -448,7 +448,7 @@ func TestRoute_export_import(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -552,7 +552,7 @@ func TestRoute_export_import(t *testing.T) {
 			ExpectBody: []string{`"methods":["GET"]`,
 				`"desc":"所有`,
 				`"hosts":["test.com"]`,
-				`"upstream":{"nodes":[{"host":"172.16.238.20","port":1980,"weight":1}],"type":"roundrobin"}`,
+				`"upstream":{"nodes":[{"host":"` + UpstreamIp + `","port":1980,"weight":1}],"type":"roundrobin"}`,
 			},
 			Sleep: sleepTime,
 		}

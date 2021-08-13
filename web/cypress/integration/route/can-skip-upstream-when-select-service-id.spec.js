@@ -29,6 +29,7 @@ context('Can select service_id skip upstream in route', () => {
     serviceSelector: '[title=test_service]',
     deleteAlert: '.ant-modal-body',
     notificationCloseIcon: '.ant-notification-close-icon',
+    enable_websocket: '#enable_websocket',
   };
 
   const data = {
@@ -93,6 +94,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.wait(500);
     cy.contains('None').click();
     cy.contains(data.serviceName).click();
+    cy.get(selector.enable_websocket).click();
     cy.contains('Next').click();
 
     // make sure upstream data can be saved
@@ -116,6 +118,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();
     cy.get(selector.serviceSelector).click();
+    cy.get(selector.enable_websocket).should('have.class', 'ant-switch-checked');
     cy.contains('None').click();
     cy.contains('Next').click();
     cy.wait(500);

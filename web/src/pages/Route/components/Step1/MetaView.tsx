@@ -185,17 +185,18 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.Item>
   );
 
-  const WebSocket: React.FC = () => (
-    <Form.Item label="WebSocket">
-      <Row>
-        <Col>
-          <Form.Item noStyle valuePropName="checked" name="enable_websocket">
-            <Switch disabled={disabled} />
-          </Form.Item>
-        </Col>
-      </Row>
-    </Form.Item>
-  );
+  const WebSocket: React.FC = () =>
+    form.getFieldValue('redirectOption') === 'disabled' ? (
+      <Form.Item label="WebSocket">
+        <Row>
+          <Col>
+            <Form.Item noStyle valuePropName="checked" name="enable_websocket">
+              <Switch disabled={disabled} />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form.Item>
+    ) : null;
 
   const Redirect: React.FC = () => {
     const list = [

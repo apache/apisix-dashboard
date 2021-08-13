@@ -36,7 +36,7 @@ func TestID_Using_Int(t *testing.T) {
 			Body: `{
 				"id": 1,
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				}],
@@ -171,7 +171,7 @@ func TestID_Using_String(t *testing.T) {
 			Body: `{
 				"id": "2",
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				}],
@@ -254,7 +254,7 @@ func TestID_Crossing(t *testing.T) {
 			Body: `{
 				"id": 3,
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				}],
@@ -368,7 +368,7 @@ func TestID_Not_In_Body(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					}
 				}
 			}`,
@@ -421,7 +421,7 @@ func TestID_Not_In_Body(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					}
 				}
 			}`,
