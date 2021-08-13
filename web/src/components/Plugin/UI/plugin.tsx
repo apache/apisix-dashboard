@@ -27,6 +27,7 @@ import ProxyMirror from './proxy-mirror';
 import LimitConn from './limit-conn';
 import RefererRestriction from './referer-restriction';
 import Cors from './cors';
+import RequestId from './request-id';
 
 type Props = {
   name: string;
@@ -44,6 +45,7 @@ export const PLUGIN_UI_LIST = [
   'proxy-mirror',
   'referer-restriction',
   'limit-count',
+  'request-id',
 ];
 
 export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) => {
@@ -75,6 +77,8 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
       return <LimitConn form={form} schema={schema} />;
     case 'referer-restriction':
       return <RefererRestriction form={form} />;
+    case 'request-id':
+      return <RequestId form={form} />;
     default:
       return null;
   }
