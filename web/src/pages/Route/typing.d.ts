@@ -246,6 +246,7 @@ declare namespace RouteModule {
   type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input' | 'form-data';
   type DebugDrawProps = {
     visible: boolean;
+    data: Record<string, any>;
     onClose: () => void;
   };
 }

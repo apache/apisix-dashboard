@@ -288,6 +288,14 @@ const Page: React.FC = () => {
           });
         },
       },
+      {
+        name: formatMessage({ id: 'component.global.debug' }),
+        onClick: () => {
+          setId(record.id);
+          setRawData(record);
+          setDebugDrawVisible(true);
+        },
+      },
     ];
 
     return (
@@ -584,6 +592,7 @@ const Page: React.FC = () => {
       />
       <DebugDrawView
         visible={debugDrawVisible}
+        data={rawData}
         onClose={() => {
           setDebugDrawVisible(false);
         }}
