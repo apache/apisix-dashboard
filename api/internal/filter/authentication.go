@@ -45,7 +45,7 @@ func (mw *AuthenticationMiddleware) Handle(ctx droplet.Context) error {
 
 	req := httpReq.(*http.Request)
 
-	if req.URL.Path == "/apisix/admin/tool/version" || req.URL.Path == "/apisix/admin/user/login" || req.URL.Path == "/apisix/admin/cache_verify" {
+	if req.URL.Path == "/apisix/admin/tool/version" || req.URL.Path == "/apisix/admin/user/login" {
 		return mw.BaseMiddleware.Handle(ctx)
 	}
 
