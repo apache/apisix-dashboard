@@ -27,6 +27,11 @@ import ProxyMirror from './proxy-mirror';
 import LimitConn from './limit-conn';
 import RefererRestriction from './referer-restriction';
 import Cors from './cors';
+<<<<<<< HEAD
+=======
+import RequestId from './request-id';
+import IpRestriction from './ip-restriction';
+>>>>>>> 18ade18 (feat: ip-restriction added to plugin list)
 
 type Props = {
   name: string;
@@ -44,6 +49,11 @@ export const PLUGIN_UI_LIST = [
   'proxy-mirror',
   'referer-restriction',
   'limit-count',
+<<<<<<< HEAD
+=======
+  'request-id',
+  'ip-restriction',
+>>>>>>> 18ade18 (feat: ip-restriction added to plugin list)
 ];
 
 export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) => {
@@ -75,6 +85,13 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
       return <LimitConn form={form} schema={schema} />;
     case 'referer-restriction':
       return <RefererRestriction form={form} />;
+<<<<<<< HEAD
+=======
+    case 'request-id':
+      return <RequestId form={form} />;
+    case 'ip-restriction':
+      return <IpRestriction form={form} />;
+>>>>>>> 18ade18 (feat: ip-restriction added to plugin list)
     default:
       return null;
   }
