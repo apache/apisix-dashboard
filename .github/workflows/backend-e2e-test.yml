@@ -42,6 +42,8 @@ jobs:
         with:
           install: true
 
+      - run: docker login
+
       - uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
