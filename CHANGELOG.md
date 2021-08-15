@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.7.1](#271)
 - [2.7.0](#270)
 - [2.6.1](#261)
 - [2.6.0](#260)
@@ -31,6 +32,36 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+# 2.7.1
+
+This release contains some features and bugfixes, and all the existing functionalities are compatible with Apache APISIX 2.7.
+
+### Core
+
+- chore: refactor ManagerAPI to reduce redundant code and improve readability [#1956](https://github.com/apache/apisix-dashboard/pull/1956)
+- chore: add required flag for Route name field [#2025](https://github.com/apache/apisix-dashboard/pull/2025)
+- feat: remove the Version Match logics [2023](https://github.com/apache/apisix-dashboard/pull/2023) [#2038](https://github.com/apache/apisix-dashboard/pull/2038)
+- feat(i18n): improve Web to have a better i18n description [#1973](https://github.com/apache/apisix-dashboard/pull/1973) [#1963](https://github.com/apache/apisix-dashboard/pull/1963)
+- feat(Upstream): set a initial weight value for the upstream node [#1979](https://github.com/apache/apisix-dashboard/pull/1979)
+- feat(Plugin): allowing limit-req to dynamically adapt to the BE rules [#1995](https://github.com/apache/apisix-dashboard/pull/1995)
+- feat(Plugin): allowing limit-conn to dynamically adapt to the BE rules [#1990](https://github.com/apache/apisix-dashboard/pull/1990)
+- feat(Route): support uri/uris/remote_addr/remote_addrs/host/hosts [#2046](https://github.com/apache/apisix-dashboard/pull/2046)
+
+### Bugfix
+
+- fix(Plugin): only auth type plugin need to configure [1983](https://github.com/apache/apisix-dashboard/pull/1983)
+- fix(Plugin): add nodelay for limit-req plugin [#2021](https://github.com/apache/apisix-dashboard/pull/2021)
+- fix(Route): add the missing operators [#2022](https://github.com/apache/apisix-dashboard/pull/2022)
+- fix(Route): support websocket enable in route [#2042](https://github.com/apache/apisix-dashboard/pull/2052)
+- fix(Consumer): remove the extra `undefined` user [#1987](https://github.com/apache/apisix-dashboard/pull/1987)
+- fix(Upstream): make service chash key Input inputable and selectable [#1982](https://github.com/apache/apisix-dashboard/pull/1982)
+- fix(Upstream): update hash_on field and limitation [#2034](https://github.com/apache/apisix-dashboard/pull/2034)
+- fix(Web): omit all `null` value from request body [#2042](https://github.com/apache/apisix-dashboard/pull/2042)
+- fix(Web): redirect uri when session expired [#2044](https://github.com/apache/apisix-dashboard/pull/2044)
+- fix(Web): update the sidebar menu position [#2051](https://github.com/apache/apisix-dashboard/pull/2051)
+- fix(ManagerAPI): avoid nil pointer dereference and remove redundant code [#2031](https://github.com/apache/apisix-dashboard/pull/2031)
+- fix(ManagerAPI): support running ManagerAPI on Windows [#1947](https://github.com/apache/apisix-dashboard/pull/1947)
 
 # 2.7.0
 
