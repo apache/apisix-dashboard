@@ -441,8 +441,6 @@ user login.
 | plugin_configs | [[ CompareResult ]](#CompareResult) |             | No       |
 | server_infos   | [[ CompareResult ]](#CompareResult) |             | No       |
 
-
-
 #### CompareResult
 
 | Name                | Type   | Description | Required |
