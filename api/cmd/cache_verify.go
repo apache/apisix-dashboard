@@ -66,7 +66,7 @@ func newCacheVerifyCommand() *cobra.Command {
 				fmt.Println(err)
 			}
 
-			fmt.Println("cache verification result as follows:\n")
+			fmt.Printf("cache verification result as follows:\n\n")
 			inconsistent_ssls := gjson.Get(string(data), "data.inconsistent_ssls")
 			printResult("ssls", inconsistent_ssls)
 			inconsistent_routes := gjson.Get(string(data), "data.inconsistent_routes")
