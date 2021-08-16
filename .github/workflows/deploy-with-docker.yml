@@ -25,6 +25,19 @@ jobs:
         with:
           submodules: recursive
 
+      - uses: docker/setup-buildx-action@v1
+        with:
+          install: true
+
+      - run: docker login
+
+      - uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - uses: Azure/docker-login@v1
         if: ${{ github.event_name == 'push' }}
         with:
