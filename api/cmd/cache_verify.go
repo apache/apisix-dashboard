@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/spf13/cobra"
+	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -65,7 +66,25 @@ func newCacheVerifyCommand() *cobra.Command {
 				fmt.Println(err)
 			}
 
-			fmt.Println(string(data))
+			fmt.Println("cache verification result as follows:\n")
+			inconsistent_ssls := gjson.Get(string(data), "data.inconsistent_ssls")
+			printResult("ssls", inconsistent_ssls)
+			inconsistent_routes := gjson.Get(string(data), "data.inconsistent_routes")
+			printResult("routes", inconsistent_routes)
+			inconsistent_scripts := gjson.Get(string(data), "data.inconsistent_scripts")
+			printResult("scripts", inconsistent_scripts)
+			inconsistent_services := gjson.Get(string(data), "data.inconsistent_services")
+			printResult("services", inconsistent_services)
+			inconsistent_upstreams := gjson.Get(string(data), "data.inconsistent_upstreams")
+			printResult("upstreams", inconsistent_upstreams)
+			inconsistent_consumers := gjson.Get(string(data), "data.inconsistent_consumers")
+			printResult("consumers", inconsistent_consumers)
+			inconsistent_server_infos := gjson.Get(string(data), "data.inconsistent_server_infos")
+			printResult("server infos", inconsistent_server_infos)
+			inconsistent_global_plugins := gjson.Get(string(data), "data.inconsistent_global_plugins")
+			printResult("global plugins", inconsistent_global_plugins)
+			inconsistent_plugin_configs := gjson.Get(string(data), "data.inconsistent_plugin_configs")
+			printResult("plugin configs", inconsistent_plugin_configs)
 		},
 	}
 }
@@ -94,23 +113,26 @@ func getToken() string {
 		}
 	}()
 
-	sth, err := ioutil.ReadAll(resp.Body)
+	respObj, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	token := loginOutput{}
-	err = json.Unmarshal(sth, &token)
-	if err != nil {
-		log.Fatal("get token from resp failed", err)
+	token := gjson.Get(string(respObj), "data.token")
+	if !token.Exists() {
+		log.Fatal("no token found in response")
 	}
-
-	return token.Data.Token
+	return token.String()
 }
 
-type loginOutput struct {
-	Data data `json:"data"`
-}
-type data struct {
-	Token string `json:"token"`
+func printResult(name string, result gjson.Result) {
+	if !result.Exists() {
+		fmt.Printf("%-15s info not found in response\n", name)
+	} else {
+		if len(result.String()) == 0 {
+			fmt.Printf("%-15s :\tall consistent\n", name)
+		} else {
+			fmt.Printf("inconsistent %-15s: %s\n", name, result.String())
+		}
+	}
 }
