@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodule: true
 
       - uses: ./.github/actions/paths-filter
         id: changes
