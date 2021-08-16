@@ -133,7 +133,7 @@ cd -
 rm -rf html
 
 if [[ $res != "hi~" ]]; then
-    echo "failed: manager-api cant run on a different path"
+    echo "failed: manager-api can't run on a different path"
     exit 1
 fi
 clean_up
