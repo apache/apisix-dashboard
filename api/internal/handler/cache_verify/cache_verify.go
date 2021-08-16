@@ -41,7 +41,7 @@ type compareResult struct {
 	EtcdValue  string `json:"etcd_value"`
 }
 
-type resultOuput struct {
+type resultOutput struct {
 	Consumers     []compareResult `json:"inconsistent_consumers"`
 	Routes        []compareResult `json:"inconsistent_routes"`
 	Services      []compareResult `json:"inconsistent_services"`
@@ -77,7 +77,7 @@ var etcd *storage.EtcdV3Storage
 
 func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 
-	var rs resultOuput
+	var rs resultOutput
 	etcd = storage.GenEtcdStorage()
 	store.RangeStore(func(hubKey store.HubKey, s *store.GenericStore) bool {
 		keyPairs, err := etcd.List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
