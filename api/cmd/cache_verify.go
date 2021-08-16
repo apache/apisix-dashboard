@@ -20,20 +20,25 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/spf13/cobra"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
+var port int
+
 func newCacheVerifyCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "cache-verify",
 		Short: "verify that data in cache are consistent with that in ETCD",
 		Run: func(cmd *cobra.Command, args []string) {
+			conf.InitConf()
+			port = conf.ServerPort
 			token := getToken()
 
-			url := "http://localhost:9000/apisix/admin/cache_verify"
+			url := fmt.Sprintf("http://localhost:%d/apisix/admin/cache_verify", port)
 			client := &http.Client{}
 
 			get, err := http.NewRequest("GET", url, nil)
@@ -76,11 +81,12 @@ func getToken() string {
 		log.Fatal("json marshal failed")
 	}
 
-	url := `http://localhost:9000/apisix/admin/user/login`
+	url := fmt.Sprintf("http://localhost:%d/apisix/admin/user/login", port)
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
 	if err != nil {
 		log.Fatal("login failed")
 	}
+
 	defer func() {
 		err := resp.Body.Close()
 		if err != nil {
