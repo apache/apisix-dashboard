@@ -26,12 +26,19 @@ Manager API directly operates ETCD and provides data management for Apache APISI
 **License:** [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 ### /apisix/admin/cache_verify
+
 #### GET
+
 #### Summary
+
 Compare items(consumer,route ...) in cache to those in ETCD
+
 #### Parameters
+
 None
+
 #### Responses
+
 | Code  | Description     | Schema                |
 | ----- | --------------- | --------------------- |
 | 0     | query success  | [ApiError](#ApiError) |
@@ -437,8 +444,9 @@ user login.
 
 
 #### CompareResult
+
 | Name                | Type   | Description | Required |
 | ------------------- | ------ | ----------- | -------- |
-| key           | string |             | No       |
-| cache_value              | string |             | No       |
-| etcd_value            | string |             | No       |
+| key                 | string |             | No       |
+| cache_value         | string |             | No       |
+| etcd_value          | string |             | No       |
