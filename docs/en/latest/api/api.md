@@ -25,6 +25,18 @@ Manager API directly operates ETCD and provides data management for Apache APISI
 
 **License:** [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
+### /apisix/admin/cache_verify
+#### GET
+#### Summary
+Compare items(consumer,route ...) in cache to those in ETCD
+#### Parameters
+None
+#### Responses
+| Code  | Description     | Schema                |
+| ----- | --------------- | --------------------- |
+| 0     | query success  | [ApiError](#ApiError) |
+| default | unexpected error | [ApiError](#ApiError) |
+
 ### /apisix/admin/migrate/export
 
 #### GET
@@ -407,3 +419,26 @@ user login.
 | timeout             | object |             | No       |
 | type                | string |             | No       |
 | upstream_host       | string |             | No       |
+
+#### InconsistentItems
+
+| Name           | Type                                | Description | Required |
+| -------------- | ----------------------------------- | ----------- | -------- |
+| consumers      | [[ CompareResult ]](#CompareResult) |             | No       |
+| routes         | [[ CompareResult ]](#CompareResult) |             | No       |
+| services       | [[ CompareResult ]](#CompareResult) |             | No       |
+| ssls           | [[ CompareResult ]](#CompareResult) |             | No       |
+| upstreams      | [[ CompareResult ]](#CompareResult) |             | No       |
+| scripts        | [[ CompareResult ]](#CompareResult) |             | No       |
+| global_plugins | [[ CompareResult ]](#CompareResult) |             | No       |
+| plugin_configs | [[ CompareResult ]](#CompareResult) |             | No       |
+| server_infos   | [[ CompareResult ]](#CompareResult) |             | No       |
+
+
+
+#### CompareResult
+| Name                | Type   | Description | Required |
+| ------------------- | ------ | ----------- | -------- |
+| key           | string |             | No       |
+| cache_value              | string |             | No       |
+| etcd_value            | string |             | No       |
