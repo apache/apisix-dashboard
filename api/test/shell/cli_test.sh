@@ -578,13 +578,14 @@ clean_up
 # Testing Manager API for existing PID file in /tmp
 echo "" & # Creating a PID that hasn't been taken.
 echo $! >/tmp/manager-api.pid
-sleep 1
+sleep 2
 # ls process no longer exists, so Manager API should run successfully even with existing pid file.
 ./manager-api 2>man-api.err &
 sleep 4
 
 if [ -s man-api.err ]; then # checking if file contains some error log
   cat man-api.err
+  lsof -i :9000
   echo "Manager API didn't run successfully for a stale PID file"
   exit 1
 fi
