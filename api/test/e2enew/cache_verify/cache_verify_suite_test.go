@@ -17,10 +17,14 @@
 package cache_verify
 
 import (
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
 	"github.com/onsi/ginkgo"
 	"testing"
 )
 
 func TestCacheVerify(t *testing.T) {
+	RegisterFailHandler(Fail)
 	ginkgo.RunSpecs(t, "cache verify suite")
 }
