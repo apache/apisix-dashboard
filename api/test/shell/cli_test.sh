@@ -574,6 +574,52 @@ if [[ `echo $(sudo ./manager-api remove) | grep -c "OK"` -ne "1" ]]; then
   exit 1
 fi
 
+clean_up
+# Testing Manager API for existing PID file in /tmp
+echo "" & # Creating a PID that hasn't been taken.
+echo $! >/tmp/manager-api.pid
+sleep 1
+# ls process no longer exists, so Manager API should run successfully even with existing pid file.
+./manager-api 2>man-api.err &
+sleep 4
+
+if [ -s man-api.err ]; then # checking if file contains some error log
+  cat man-api.err
+  echo "Manager API didn't run successfully for a stale PID file"
+  exit 1
+fi
+./manager-api stop
+sleep 6
+
+# Creating a long running process & testing the behaviour.
+watch ls &
+WATCH_PID=$!
+echo $WATCH_PID >/tmp/manager-api.pid
+sleep 1
+# manager-api.pid contains process id for which a process is already running.
+./manager-api 2>man-api.err &
+sleep 4
+if [ ! -s man-api.err ]; then # checking if file is empty
+  echo "Manager API run successfully for a running pid present in manager-api.pid without --force flag"
+  exit 1
+fi
+
+# Running manager-api with --force, it should run successfully
+./manager-api --force 2>man-api.err &
+sleep 4
+if [ -s man-api.err ]; then
+  echo "Manager API didn't run successfully for a running pid present in manager-api.pid with --force flag"
+  exit 1
+fi
+./manager-api stop
+sleep 6
+# "watch ls &" should be killed by now.
+
+if kill -s 0 $WATCH_PID; then # checking the pid status
+  echo "Manager API failed to kill the existing pid present in the /tmp/manager-api.pid"
+  exit 1
+fi
+
 pkill -f etcd
 
 clean_up
