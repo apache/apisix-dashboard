@@ -141,7 +141,7 @@ jobs:
         run: |
           bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out -F backend-e2e-test-ginkgo
 
-  backend-e2e-authentication:
+  backend-e2e-test-authentication:
     runs-on: ubuntu-latest
 
     steps:
@@ -179,7 +179,7 @@ jobs:
       - name: Insert etcd dashboard user record
         run: |
           curl -L http://localhost:2379/v3/kv/put -X POST -d "{\"key\": \"L2Rhc2hib2FyZC91c2Vycy8wMDAwMDAwMDAwMDAwMDAwMDA=\", \"value\": \"eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMCIsImNyZWF0ZV90aW1lIjoxNjAwMDAwMDAwLCJ1cGRhdGVfdGltZSI6MTYwMDAwMDAwMCwidXNlcm5hbWUiOiJldGNkIiwicGFzc3dvcmQiOiIkMmEkMTAkUDVOQ0R5NEZRUWdmakhaVHJLWXQ5dUVCektCYlRvVE8uWWtweXZuWVNEUTdUTzR0VWI2OHUiLCJleHRlcm5hbHMiOm51bGx9\"}"
-          docker exec docker_node1_1 /bin/sh -c "/usr/local/bin/etcdctl get /dashboard/user/000000000000000000"
+          docker exec docker_node1_1 /bin/sh -c "/usr/local/bin/etcdctl get /dashboard/users/000000000000000000"
 
       - name: install ginkgo cli
         run: go get github.com/onsi/ginkgo/ginkgo
