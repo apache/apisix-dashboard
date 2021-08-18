@@ -13,7 +13,6 @@ on:
       - '.gitignore'
       - '.DS_Store'
       - 'docs/**'
-      - 'release/**'
       - 'api/internal/core/store/validate_mock.go'
       - 'api/internal/core/storage/storage_mock.go'
   pull_request:
@@ -28,7 +27,6 @@ on:
       - '.gitignore'
       - '.DS_Store'
       - 'docs/**'
-      - 'release/**'
       - 'api/internal/core/store/validate_mock.go'
       - 'api/internal/core/storage/storage_mock.go'
 
