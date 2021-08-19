@@ -30,9 +30,16 @@ import (
 	"reflect"
 )
 
-// we read from cache and etcd,then compare them
-
 type Handler struct {
+	consumerStore     store.Interface
+	routeStore        store.Interface
+	serviceStore      store.Interface
+	sslStore          store.Interface
+	upstreamStore     store.Interface
+	scriptStore       store.Interface
+	globalPluginStore store.Interface
+	pluginConfigStore store.Interface
+	serverInfoStore   store.Interface
 }
 
 type compareResult struct {
@@ -66,7 +73,17 @@ var infixMap = map[store.HubKey]string{
 }
 
 func NewHandler() (handler.RouteRegister, error) {
-	return &Handler{}, nil
+	return &Handler{
+		consumerStore:     store.GetStore(store.HubKeyConsumer),
+		routeStore:        store.GetStore(store.HubKeyRoute),
+		serviceStore:      store.GetStore(store.HubKeyService),
+		sslStore:          store.GetStore(store.HubKeySsl),
+		upstreamStore:     store.GetStore(store.HubKeyUpstream),
+		scriptStore:       store.GetStore(store.HubKeyScript),
+		globalPluginStore: store.GetStore(store.HubKeyGlobalRule),
+		pluginConfigStore: store.GetStore(store.HubKeyPluginConfig),
+		serverInfoStore:   store.GetStore(store.HubKeyServerInfo),
+	}, nil
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
@@ -76,20 +93,21 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 var etcd *storage.EtcdV3Storage
 
 func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
-
-	var rs inconsistentItems
-	etcd = storage.GenEtcdStorage()
-	store.RangeStore(func(hubKey store.HubKey, s *store.GenericStore) bool {
+	checkConsistent := func(hubKey store.HubKey, s *store.Interface, rs *inconsistentItems, etcd *storage.EtcdV3Storage) {
+		fmt.Printf("checking %s\n", hubKey)
+		// 下面就是这个函数的实现:通过etcd(注意,每个genericStore里都有etcd,所以上面不用再次获取)
+		// 获取到该HubKey对应的全部key,value pair,然后对于每个pair,都去分别获取对应的Cache值和etcd值,并且比较
 		keyPairs, err := etcd.List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
 		if err != nil {
 			fmt.Println(err)
-			return true
+			//return true
 		}
 
 		for i := range keyPairs {
 			key := path.Base(keyPairs[i].Key)
 
-			cacheObj, err := s.Get(context.TODO(), key)
+			// todo 这里s应该传进来指针吗?
+			cacheObj, err := (*s).Get(context.TODO(), key)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -128,9 +146,77 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 				}
 			}
 		}
-		return true
-	})
+		//return true
+	}
+	var rs inconsistentItems
+	etcd = storage.GenEtcdStorage()
+	checkConsistent(store.HubKeyConsumer, &h.consumerStore, &rs, etcd)
+	checkConsistent(store.HubKeyRoute, &h.routeStore, &rs, etcd)
+	checkConsistent(store.HubKeyService, &h.serviceStore, &rs, etcd)
+	checkConsistent(store.HubKeySsl, &h.sslStore, &rs, etcd)
+	checkConsistent(store.HubKeyUpstream, &h.upstreamStore, &rs, etcd)
+	checkConsistent(store.HubKeyScript, &h.scriptStore, &rs, etcd)
+	checkConsistent(store.HubKeyGlobalRule, &h.globalPluginStore, &rs, etcd)
+	checkConsistent(store.HubKeyPluginConfig, &h.pluginConfigStore, &rs, etcd)
+	checkConsistent(store.HubKeyServerInfo, &h.serverInfoStore, &rs, etcd)
 	return rs, nil
+	//var rs inconsistentItems
+	//etcd = storage.GenEtcdStorage()
+	//// rangeStore:参数为一个函数,遍历storeHub,然后为每个(hubKey,store)调用这个函数
+	//store.RangeStore(func(hubKey store.HubKey, s *store.GenericStore) bool {
+	//	// 下面就是这个函数的实现:通过etcd(注意,每个genericStore里都有etcd,所以上面不用再次获取)
+	//	// 获取到该HubKey对应的全部key,value pair,然后对于每个pair,都去分别获取对应的Cache值和etcd值,并且比较
+	//	keyPairs, err := etcd.List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		return true
+	//	}
+	//
+	//	for i := range keyPairs {
+	//		key := path.Base(keyPairs[i].Key)
+	//
+	//		cacheObj, err := s.Get(context.TODO(), key)
+	//		if err != nil {
+	//			fmt.Println(err)
+	//		}
+	//
+	//		etcdValue := keyPairs[i].Value
+	//		cmp, cacheValue := compare(keyPairs[i].Value, cacheObj)
+	//
+	//		if !cmp {
+	//			cmpResult := compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key}
+	//			if hubKey == store.HubKeyConsumer {
+	//				rs.Consumers = append(rs.Consumers, cmpResult)
+	//			}
+	//			if hubKey == store.HubKeyRoute {
+	//				rs.Routes = append(rs.Routes, cmpResult)
+	//			}
+	//			if hubKey == store.HubKeyScript {
+	//				rs.Scripts = append(rs.Scripts, cmpResult)
+	//			}
+	//			if hubKey == store.HubKeyService {
+	//				rs.Services = append(rs.Services, cmpResult)
+	//			}
+	//			if hubKey == store.HubKeyGlobalRule {
+	//				rs.GlobalPlugins = append(rs.GlobalPlugins, cmpResult)
+	//			}
+	//			if hubKey == store.HubKeyPluginConfig {
+	//				rs.PluginConfigs = append(rs.PluginConfigs, cmpResult)
+	//			}
+	//			if hubKey == store.HubKeyUpstream {
+	//				rs.Upstreams = append(rs.Upstreams, cmpResult)
+	//			}
+	//			if hubKey == store.HubKeySsl {
+	//				rs.SSLs = append(rs.SSLs, cmpResult)
+	//			}
+	//			if hubKey == store.HubKeyServerInfo {
+	//				rs.ServerInfos = append(rs.ServerInfos, cmpResult)
+	//			}
+	//		}
+	//	}
+	//	return true
+	//})
+	//return rs, nil
 }
 
 func compare(etcdValue string, cacheObj interface{}) (bool, string) {
@@ -150,7 +236,7 @@ func compare(etcdValue string, cacheObj interface{}) (bool, string) {
 func areEqualJSON(s1, s2 string) (bool, error) {
 	var o1 interface{}
 	var o2 interface{}
-
+	fmt.Printf("cache: %s\netcd:%s\n", s1, s2)
 	var err error
 	err = json.Unmarshal([]byte(s1), &o1)
 	if err != nil {
