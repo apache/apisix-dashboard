@@ -54,7 +54,7 @@ jobs:
           if [ "$VERSION" != "merge" && "$VERSION" != "master" ];then
             export checkout=release/${VERSION}
           fi
-          sed -i 's/docker build/docker buildx build --load --cache-from type=local,src=\/tmp\/.buildx-cache --cache-to type=local,src=\/tmp\/.buildx-cache/g' Makefile
+          sed -i 's/docker build/docker buildx build --load --cache-from type=local,src=\/tmp\/.buildx-cache --cache-to type=local,dest=\/tmp\/.buildx-cache/g' Makefile
           make package type=rpm app=dashboard version=${VERSION} checkout=${checkout} image_base=centos image_tag=7
 
 
