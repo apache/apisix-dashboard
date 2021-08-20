@@ -70,7 +70,7 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
     case 'limit-req':
       return <LimitReq form={form} schema={schema} />;
     case 'proxy-mirror':
-      return <ProxyMirror form={form} />;
+      return <ProxyMirror form={form} schema={schema} />
     case 'limit-conn':
       return <LimitConn form={form} schema={schema} />;
     case 'referer-restriction':
