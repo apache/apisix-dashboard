@@ -26,8 +26,6 @@ jobs:
           submodules: recursive
 
       - uses: docker/setup-buildx-action@v1
-        with:
-          install: true
 
       - uses: actions/cache@v2
         with:
@@ -44,8 +42,17 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build Docker Image
-        run: |
-          docker build --load -t dashboard:ci . --build-arg APISIX_DASHBOARD_VERSION=master
+        uses: docker/build-push-action@v2
+        with:
+          load: true
+          tags: dashboard:ci
+          context: .
+          build-args: |
+            APISIX_DASHBOARD_VERSION=master
+          cache-from: |
+            type=local,src=/tmp/.buildx-cache
+          cache-to: |
+            type=local,dest=/tmp/.buildx-cache
 
       - name: Modify Config
         run: |
