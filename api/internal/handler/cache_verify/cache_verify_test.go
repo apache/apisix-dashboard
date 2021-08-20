@@ -8,6 +8,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"testing"
 )
 
@@ -27,11 +28,12 @@ func TestHandler_CacheVerify(t *testing.T) {
 	consumerPrefix := "/apisix/consumers/"
 
 	tests := []struct {
-		caseDesc  string
-		listInput string
-		listRet   []storage.Keypair
-		getInput  string
-		getRet    interface{}
+		caseDesc                 string
+		listInput                string
+		listRet                  []storage.Keypair
+		getInput                 string
+		getRet                   interface{}
+		wantInconsistentConsumer int
 	}{
 		{
 			caseDesc:  "consistent",
@@ -42,8 +44,9 @@ func TestHandler_CacheVerify(t *testing.T) {
 					Value: andyStr,
 				},
 			},
-			getInput: "andy",
-			getRet:   andyObj,
+			getInput:                 "andy",
+			getRet:                   andyObj,
+			wantInconsistentConsumer: 0,
 		},
 		{
 			caseDesc:  "inconsistent",
@@ -54,8 +57,9 @@ func TestHandler_CacheVerify(t *testing.T) {
 					Value: andyStr,
 				},
 			},
-			getInput: "andy",
-			getRet:   brokenAndyObj,
+			getInput:                 "andy",
+			getRet:                   brokenAndyObj,
+			wantInconsistentConsumer: 1,
 		},
 	}
 
@@ -64,34 +68,19 @@ func TestHandler_CacheVerify(t *testing.T) {
 			mockConsumerCache := store.MockInterface{}
 			mockEtcdStorage := storage.MockInterface{}
 			mockEtcdStorage.On("List", context.TODO(), consumerPrefix).Return(tc.listRet, nil)
+			// for any other type of configs,etcd.List just return empty slice,so it will not check further
+			mockEtcdStorage.On("List", context.TODO(), mock.Anything).Return([]storage.Keypair{}, nil)
+
 			mockConsumerCache.On("Get", tc.getInput).Return(tc.getRet, nil)
 			handler := Handler{consumerStore: &mockConsumerCache, etcdStorage: &mockEtcdStorage}
 			rs, err := handler.CacheVerify(droplet.NewContext())
-			fmt.Println(rs)
+			//fmt.Println((string)(rs))
 			assert.Nil(t, err, nil)
+			// todo 因为现在输出了很多统计信息,那么测试的时候,就要相应的assert这些
+			v, ok := rs.(OutputResult)
+			assert.True(t, ok, true)
+			assert.Equal(t, v.Items.Consumers.InconsistentCount, tc.wantInconsistentConsumer)
 		})
 	}
-	//// this is a working testify mocking example
-	//mockConsumerCache := store.MockInterface{}
-	//mockEtcdStorage := storage.MockInterface{}
-	//andyStr := `{"username":"andy","plugins":{"key-auth":{"key":"key-of-john"}},
-	//			"create_time":1627739045,"update_time":1627744978}`
-	//var andyObj interface{}
-	//err := json.Unmarshal([]byte(andyStr), &andyObj)
-	//if err != nil {
-	//	fmt.Printf("error mashalling string 1 :: %s", err.Error())
-	//}
-	//mockEtcdStorage.On("List", context.TODO(), "/apisix/consumers/").Return([]storage.Keypair{
-	//	{
-	//		Key:   "/apisix/consumers/andy",
-	//		Value: andyStr,
-	//	},
-	//}, nil)
-	//// 解释:为什么我们这里只传进去andy,而没有context.TODO()?
-	//// 因为,在mockInterface里,对于called,只使用了key,没有使用context
-	//mockConsumerCache.On("Get", "andy").Return(andyObj, nil)
-	//handler := Handler{consumerStore: &mockConsumerCache, etcdStorage: &mockEtcdStorage}
-	//rs, err := handler.CacheVerify(droplet.NewContext())
-	//fmt.Println(rs)
-	//assert.Nil(t, err, nil)
+
 }

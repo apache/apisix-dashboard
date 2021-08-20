@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/apisix/manager-api/internal/conf"
+	"github.com/apisix/manager-api/internal/handler/cache_verify"
 	"github.com/spf13/cobra"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
@@ -29,6 +30,10 @@ import (
 )
 
 var port int
+
+type response struct {
+	Data cache_verify.OutputResult `json:"data"`
+}
 
 func newCacheVerifyCommand() *cobra.Command {
 	return &cobra.Command{
@@ -66,25 +71,33 @@ func newCacheVerifyCommand() *cobra.Command {
 				fmt.Println(err)
 			}
 
+			var rs response
+			err = json.Unmarshal(data, &rs)
+			if err != nil {
+				log.Fatal("bad Data format,json unmarshal failed")
+			}
+
 			fmt.Printf("cache verification result as follows:\n\n")
-			inconsistent_ssls := gjson.Get(string(data), "data.inconsistent_ssls")
-			printResult("ssls", inconsistent_ssls)
-			inconsistent_routes := gjson.Get(string(data), "data.inconsistent_routes")
-			printResult("routes", inconsistent_routes)
-			inconsistent_scripts := gjson.Get(string(data), "data.inconsistent_scripts")
-			printResult("scripts", inconsistent_scripts)
-			inconsistent_services := gjson.Get(string(data), "data.inconsistent_services")
-			printResult("services", inconsistent_services)
-			inconsistent_upstreams := gjson.Get(string(data), "data.inconsistent_upstreams")
-			printResult("upstreams", inconsistent_upstreams)
-			inconsistent_consumers := gjson.Get(string(data), "data.inconsistent_consumers")
-			printResult("consumers", inconsistent_consumers)
-			inconsistent_server_infos := gjson.Get(string(data), "data.inconsistent_server_infos")
-			printResult("server infos", inconsistent_server_infos)
-			inconsistent_global_plugins := gjson.Get(string(data), "data.inconsistent_global_plugins")
-			printResult("global plugins", inconsistent_global_plugins)
-			inconsistent_plugin_configs := gjson.Get(string(data), "data.inconsistent_plugin_configs")
-			printResult("plugin configs", inconsistent_plugin_configs)
+			fmt.Printf("There are %d items in total,%d of them are consistent,%d of them are inconsistent\n",
+				rs.Data.Total, rs.Data.ConsistentCount, rs.Data.InconsistentCount)
+
+			printResult("ssls", rs.Data.Items.SSLs)
+
+			printResult("routes", rs.Data.Items.Routes)
+
+			printResult("scripts", rs.Data.Items.Scripts)
+
+			printResult("services", rs.Data.Items.Services)
+
+			printResult("upstreams", rs.Data.Items.Upstreams)
+
+			printResult("consumers", rs.Data.Items.Consumers)
+
+			printResult("server infos", rs.Data.Items.ServerInfos)
+
+			printResult("global plugins", rs.Data.Items.GlobalPlugins)
+
+			printResult("plugin configs", rs.Data.Items.PluginConfigs)
 		},
 	}
 }
@@ -125,14 +138,12 @@ func getToken() string {
 	return token.String()
 }
 
-func printResult(name string, result gjson.Result) {
-	if !result.Exists() {
-		fmt.Printf("%-15s info not found in response\n", name)
-	} else {
-		if len(result.String()) == 0 {
-			fmt.Printf("%-15s :\tall consistent\n", name)
-		} else {
-			fmt.Printf("inconsistent %-15s: %s\n", name, result.String())
+func printResult(name string, data cache_verify.StatisticalData) {
+	fmt.Printf("%-15s: %d in total,%d consistent,%d inconsistent\n", name, data.Total, data.ConsistentCount, data.InconsistentCount)
+	if data.InconsistentCount > 0 {
+		fmt.Printf("inconsistent %s:\n", name)
+		for _, pair := range data.InconsistentPairs {
+			fmt.Printf("[key](%-15s)\n[etcd](%s)\n[cache](%s)\n", pair.Key, pair.EtcdValue, pair.CacheValue)
 		}
 	}
 }

@@ -43,22 +43,36 @@ type Handler struct {
 	etcdStorage       storage.Interface
 }
 
-type compareResult struct {
+type inconsistentPair struct {
 	Key        string `json:"key"`
 	CacheValue string `json:"cache_value"`
 	EtcdValue  string `json:"etcd_value"`
 }
 
-type inconsistentItems struct {
-	Consumers     []compareResult `json:"inconsistent_consumers"`
-	Routes        []compareResult `json:"inconsistent_routes"`
-	Services      []compareResult `json:"inconsistent_services"`
-	SSLs          []compareResult `json:"inconsistent_ssls"`
-	Upstreams     []compareResult `json:"inconsistent_upstreams"`
-	Scripts       []compareResult `json:"inconsistent_scripts"`
-	GlobalPlugins []compareResult `json:"inconsistent_global_plugins"`
-	PluginConfigs []compareResult `json:"inconsistent_plugin_configs"`
-	ServerInfos   []compareResult `json:"inconsistent_server_infos"`
+type StatisticalData struct {
+	Total             int                `json:"total"`
+	ConsistentCount   int                `json:"consistent_count"`
+	InconsistentCount int                `json:"inconsistent_count"`
+	InconsistentPairs []inconsistentPair `json:"inconsistent_pairs"`
+}
+
+type items struct {
+	Consumers     StatisticalData `json:"consumers"`
+	Routes        StatisticalData `json:"routes"`
+	Services      StatisticalData `json:"services"`
+	SSLs          StatisticalData `json:"ssls"`
+	Upstreams     StatisticalData `json:"upstreams"`
+	Scripts       StatisticalData `json:"scripts"`
+	GlobalPlugins StatisticalData `json:"global_plugins"`
+	PluginConfigs StatisticalData `json:"plugin_configs"`
+	ServerInfos   StatisticalData `json:"server_infos" json:"server_infos"`
+}
+
+type OutputResult struct {
+	Total             int   `json:"total"`
+	ConsistentCount   int   `json:"consistent_count"`
+	InconsistentCount int   `json:"inconsistent_count"`
+	Items             items `json:"items"`
 }
 
 var infixMap = map[store.HubKey]string{
@@ -93,20 +107,18 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 }
 
 func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
-	checkConsistent := func(hubKey store.HubKey, s *store.Interface, rs *inconsistentItems, etcd *storage.Interface) {
-		//fmt.Printf("checking %s\n", hubKey)
-		// 下面就是这个函数的实现:通过etcd(注意,每个genericStore里都有etcd,所以上面不用再次获取)
-		// 获取到该HubKey对应的全部key,value pair,然后对于每个pair,都去分别获取对应的Cache值和etcd值,并且比较
+	checkConsistent := func(hubKey store.HubKey, s *store.Interface, rs *OutputResult, etcd *storage.Interface) {
+
 		keyPairs, err := (*etcd).List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
 		if err != nil {
 			fmt.Println(err)
-			//return true
 		}
+
+		rs.Total += len(keyPairs)
 
 		for i := range keyPairs {
 			key := path.Base(keyPairs[i].Key)
 
-			// todo 这里s应该传进来指针吗?
 			cacheObj, err := (*s).Get(context.TODO(), key)
 			if err != nil {
 				fmt.Println(err)
@@ -116,107 +128,112 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 			cmp, cacheValue := compare(keyPairs[i].Value, cacheObj)
 
 			if !cmp {
-				cmpResult := compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key}
+				rs.InconsistentCount++
+				cmpResult := inconsistentPair{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key}
 				if hubKey == store.HubKeyConsumer {
-					rs.Consumers = append(rs.Consumers, cmpResult)
+					// is there a way that I can avoid this if else ?
+					// 可以尝试用map实现?比如:items作为一个hubKey为key,statisticalData为value的map
+					rs.Items.Consumers.InconsistentCount++
+					rs.Items.Consumers.Total++
+					rs.Items.Consumers.InconsistentPairs = append(rs.Items.Consumers.InconsistentPairs, cmpResult)
 				}
 				if hubKey == store.HubKeyRoute {
-					rs.Routes = append(rs.Routes, cmpResult)
+					rs.Items.Routes.InconsistentCount++
+					rs.Items.Routes.Total++
+					rs.Items.Routes.InconsistentPairs = append(rs.Items.Routes.InconsistentPairs, cmpResult)
 				}
 				if hubKey == store.HubKeyScript {
-					rs.Scripts = append(rs.Scripts, cmpResult)
+					rs.Items.Scripts.InconsistentCount++
+					rs.Items.Scripts.Total++
+					rs.Items.Scripts.InconsistentPairs = append(rs.Items.Scripts.InconsistentPairs, cmpResult)
 				}
 				if hubKey == store.HubKeyService {
-					rs.Services = append(rs.Services, cmpResult)
+					rs.Items.Services.InconsistentCount++
+					rs.Items.Services.Total++
+					rs.Items.Services.InconsistentPairs = append(rs.Items.Services.InconsistentPairs, cmpResult)
 				}
 				if hubKey == store.HubKeyGlobalRule {
-					rs.GlobalPlugins = append(rs.GlobalPlugins, cmpResult)
+					rs.Items.GlobalPlugins.InconsistentCount++
+					rs.Items.GlobalPlugins.Total++
+					rs.Items.GlobalPlugins.InconsistentPairs = append(rs.Items.GlobalPlugins.InconsistentPairs, cmpResult)
 				}
 				if hubKey == store.HubKeyPluginConfig {
-					rs.PluginConfigs = append(rs.PluginConfigs, cmpResult)
+					rs.Items.PluginConfigs.InconsistentCount++
+					rs.Items.PluginConfigs.Total++
+					rs.Items.PluginConfigs.InconsistentPairs = append(rs.Items.PluginConfigs.InconsistentPairs, cmpResult)
 				}
 				if hubKey == store.HubKeyUpstream {
-					rs.Upstreams = append(rs.Upstreams, cmpResult)
+					rs.Items.Upstreams.InconsistentCount++
+					rs.Items.Upstreams.Total++
+					rs.Items.Upstreams.InconsistentPairs = append(rs.Items.Upstreams.InconsistentPairs, cmpResult)
 				}
 				if hubKey == store.HubKeySsl {
-					rs.SSLs = append(rs.SSLs, cmpResult)
+					rs.Items.SSLs.InconsistentCount++
+					rs.Items.SSLs.Total++
+					rs.Items.SSLs.InconsistentPairs = append(rs.Items.SSLs.InconsistentPairs, cmpResult)
 				}
 				if hubKey == store.HubKeyServerInfo {
-					rs.ServerInfos = append(rs.ServerInfos, cmpResult)
+					rs.Items.ServerInfos.Total++
+					rs.Items.ServerInfos.InconsistentCount++
+					rs.Items.ServerInfos.InconsistentPairs = append(rs.Items.ServerInfos.InconsistentPairs, cmpResult)
+				}
+			} else {
+				rs.ConsistentCount++
+
+				if hubKey == store.HubKeyConsumer {
+					// is there a way that I can avoid this if else ?
+					// 可以尝试用map实现?比如:items作为一个hubKey为key,statisticalData为value的map
+					rs.Items.Consumers.ConsistentCount++
+					rs.Items.Consumers.Total++
+				}
+				if hubKey == store.HubKeyRoute {
+					rs.Items.Routes.ConsistentCount++
+					rs.Items.Routes.Total++
+				}
+				if hubKey == store.HubKeyScript {
+					rs.Items.Scripts.ConsistentCount++
+					rs.Items.Scripts.Total++
+				}
+				if hubKey == store.HubKeyService {
+					rs.Items.Services.ConsistentCount++
+					rs.Items.Services.Total++
+				}
+				if hubKey == store.HubKeyGlobalRule {
+					rs.Items.GlobalPlugins.ConsistentCount++
+					rs.Items.GlobalPlugins.Total++
+				}
+				if hubKey == store.HubKeyPluginConfig {
+					rs.Items.PluginConfigs.ConsistentCount++
+					rs.Items.PluginConfigs.Total++
+				}
+				if hubKey == store.HubKeyUpstream {
+					rs.Items.Upstreams.ConsistentCount++
+					rs.Items.Upstreams.Total++
+				}
+				if hubKey == store.HubKeySsl {
+					rs.Items.SSLs.ConsistentCount++
+					rs.Items.SSLs.Total++
+				}
+				if hubKey == store.HubKeyServerInfo {
+					rs.Items.ServerInfos.Total++
+					rs.Items.ServerInfos.ConsistentCount++
 				}
 			}
 		}
-		//return true
 	}
-	var rs inconsistentItems
+
+	var rs OutputResult
 	// todo this will panic when consumerStore is nil?
 	checkConsistent(store.HubKeyConsumer, &h.consumerStore, &rs, &h.etcdStorage)
-	//checkConsistent(store.HubKeyRoute, &h.routeStore, &rs, &h.etcdStorage)
-	//checkConsistent(store.HubKeyService, &h.serviceStore, &rs, &h.etcdStorage)
-	//checkConsistent(store.HubKeySsl, &h.sslStore, &rs, &h.etcdStorage)
-	//checkConsistent(store.HubKeyUpstream, &h.upstreamStore, &rs, &h.etcdStorage)
-	//checkConsistent(store.HubKeyScript, &h.scriptStore, &rs, &h.etcdStorage)
-	//checkConsistent(store.HubKeyGlobalRule, &h.globalPluginStore, &rs, &h.etcdStorage)
-	//checkConsistent(store.HubKeyPluginConfig, &h.pluginConfigStore, &rs, &h.etcdStorage)
-	//checkConsistent(store.HubKeyServerInfo, &h.serverInfoStore, &rs, &h.etcdStorage)
+	checkConsistent(store.HubKeyRoute, &h.routeStore, &rs, &h.etcdStorage)
+	checkConsistent(store.HubKeyService, &h.serviceStore, &rs, &h.etcdStorage)
+	checkConsistent(store.HubKeySsl, &h.sslStore, &rs, &h.etcdStorage)
+	checkConsistent(store.HubKeyUpstream, &h.upstreamStore, &rs, &h.etcdStorage)
+	checkConsistent(store.HubKeyScript, &h.scriptStore, &rs, &h.etcdStorage)
+	checkConsistent(store.HubKeyGlobalRule, &h.globalPluginStore, &rs, &h.etcdStorage)
+	checkConsistent(store.HubKeyPluginConfig, &h.pluginConfigStore, &rs, &h.etcdStorage)
+	checkConsistent(store.HubKeyServerInfo, &h.serverInfoStore, &rs, &h.etcdStorage)
 	return rs, nil
-	//var rs inconsistentItems
-	//etcd = storage.GenEtcdStorage()
-	//// rangeStore:参数为一个函数,遍历storeHub,然后为每个(hubKey,store)调用这个函数
-	//store.RangeStore(func(hubKey store.HubKey, s *store.GenericStore) bool {
-	//	// 下面就是这个函数的实现:通过etcd(注意,每个genericStore里都有etcd,所以上面不用再次获取)
-	//	// 获取到该HubKey对应的全部key,value pair,然后对于每个pair,都去分别获取对应的Cache值和etcd值,并且比较
-	//	keyPairs, err := etcd.List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
-	//	if err != nil {
-	//		fmt.Println(err)
-	//		return true
-	//	}
-	//
-	//	for i := range keyPairs {
-	//		key := path.Base(keyPairs[i].Key)
-	//
-	//		cacheObj, err := s.Get(context.TODO(), key)
-	//		if err != nil {
-	//			fmt.Println(err)
-	//		}
-	//
-	//		etcdValue := keyPairs[i].Value
-	//		cmp, cacheValue := compare(keyPairs[i].Value, cacheObj)
-	//
-	//		if !cmp {
-	//			cmpResult := compareResult{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key}
-	//			if hubKey == store.HubKeyConsumer {
-	//				rs.Consumers = append(rs.Consumers, cmpResult)
-	//			}
-	//			if hubKey == store.HubKeyRoute {
-	//				rs.Routes = append(rs.Routes, cmpResult)
-	//			}
-	//			if hubKey == store.HubKeyScript {
-	//				rs.Scripts = append(rs.Scripts, cmpResult)
-	//			}
-	//			if hubKey == store.HubKeyService {
-	//				rs.Services = append(rs.Services, cmpResult)
-	//			}
-	//			if hubKey == store.HubKeyGlobalRule {
-	//				rs.GlobalPlugins = append(rs.GlobalPlugins, cmpResult)
-	//			}
-	//			if hubKey == store.HubKeyPluginConfig {
-	//				rs.PluginConfigs = append(rs.PluginConfigs, cmpResult)
-	//			}
-	//			if hubKey == store.HubKeyUpstream {
-	//				rs.Upstreams = append(rs.Upstreams, cmpResult)
-	//			}
-	//			if hubKey == store.HubKeySsl {
-	//				rs.SSLs = append(rs.SSLs, cmpResult)
-	//			}
-	//			if hubKey == store.HubKeyServerInfo {
-	//				rs.ServerInfos = append(rs.ServerInfos, cmpResult)
-	//			}
-	//		}
-	//	}
-	//	return true
-	//})
-	//return rs, nil
 }
 
 func compare(etcdValue string, cacheObj interface{}) (bool, string) {
@@ -236,7 +253,7 @@ func compare(etcdValue string, cacheObj interface{}) (bool, string) {
 func areEqualJSON(s1, s2 string) (bool, error) {
 	var o1 interface{}
 	var o2 interface{}
-	//fmt.Printf("cache: %s\netcd:%s\n", s1, s2)
+
 	var err error
 	err = json.Unmarshal([]byte(s1), &o1)
 	if err != nil {
