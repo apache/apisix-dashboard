@@ -96,7 +96,40 @@ func TestHandler_CacheVerify(t *testing.T) {
 			v, ok := rs.(OutputResult)
 			assert.True(t, ok, true)
 			assert.Equal(t, v.Items.Consumers.InconsistentCount, tc.wantInconsistentConsumer)
+
+			// test output of command line,when there are inconsistent items
+			//fmt.Printf("cache verification result as follows:\n\n")
+			//fmt.Printf("There are %d items in total,%d of them are consistent,%d of them are inconsistent\n",
+			//	v.Total, v.ConsistentCount, v.InconsistentCount)
+			//
+			//printResult("ssls", v.Items.SSLs)
+			//
+			//printResult("routes", v.Items.Routes)
+			//
+			//printResult("scripts", v.Items.Scripts)
+			//
+			//printResult("services", v.Items.Services)
+			//
+			//printResult("upstreams", v.Items.Upstreams)
+			//
+			//printResult("consumers", v.Items.Consumers)
+			//
+			//printResult("server infos", v.Items.ServerInfos)
+			//
+			//printResult("global plugins", v.Items.GlobalPlugins)
+			//
+			//printResult("plugin configs", v.Items.PluginConfigs)
 		})
 	}
 
 }
+
+//func printResult(name string, data StatisticalData) {
+//	fmt.Printf("%-15s: %d in total,%d consistent,%d inconsistent\n", name, data.Total, data.ConsistentCount, data.InconsistentCount)
+//	if data.InconsistentCount > 0 {
+//		fmt.Printf("inconsistent %s:\n", name)
+//		for _, pair := range data.InconsistentPairs {
+//			fmt.Printf("[key](%s)\n[etcd](%s)\n[cache](%s)\n", pair.Key, pair.EtcdValue, pair.CacheValue)
+//		}
+//	}
+//}
