@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { Form, Input } from 'antd';
+import { Form, Select } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
@@ -29,11 +29,25 @@ const DiscoveryType: React.FC<Props> = ({ readonly }) => {
       name="discovery_type"
       label={formatMessage({ id: 'component.upstream.fields.discovery_type' })}
       tooltip={formatMessage({ id: 'component.upstream.fields.discovery_type.tooltip' })}
+      rules={[{ required: true }]}
     >
-      <Input
+      <Select
         disabled={readonly}
         placeholder={formatMessage({ id: 'component.upstream.fields.discovery_type.placeholder' })}
-      />
+      >
+        <Select.Option value="dns">
+          {formatMessage({ id: 'component.upstream.fields.discovery_type.type.dns' })}
+        </Select.Option>
+        <Select.Option value="consul_kv">
+          {formatMessage({ id: 'component.upstream.fields.discovery_type.type.consul_kv' })}
+        </Select.Option>
+        <Select.Option value="nacos">
+          {formatMessage({ id: 'component.upstream.fields.discovery_type.type.nacos' })}
+        </Select.Option>
+        <Select.Option value="eureka">
+          {formatMessage({ id: 'component.upstream.fields.discovery_type.type.eureka' })}
+        </Select.Option>
+      </Select>
     </Form.Item>
   );
 };

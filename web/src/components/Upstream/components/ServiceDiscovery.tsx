@@ -15,28 +15,20 @@
  * limitations under the License.
  */
 import React from 'react';
-import { Form, Input } from 'antd';
-import { useIntl } from 'umi';
+import DiscoveryType from '@/components/Upstream/components/DiscoveryType';
+import ServiceName from '@/components/Upstream/components/ServiceName';
 
 type Props = {
   readonly?: boolean;
 };
 
-const ServiceName: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl();
+const ServiceDiscovery: React.FC<Props> = ({ readonly }) => {
   return (
-    <Form.Item
-      name="service_name"
-      label={formatMessage({ id: 'component.upstream.fields.service_name' })}
-      tooltip={formatMessage({ id: 'component.upstream.fields.service_name.tooltip' })}
-      rules={[{ required: true }, { min: 1 }, { max: 256 }]}
-    >
-      <Input
-        disabled={readonly}
-        placeholder={formatMessage({ id: 'component.upstream.fields.service_name.placeholder' })}
-      />
-    </Form.Item>
+    <React.Fragment>
+      <DiscoveryType readonly={readonly} />
+      <ServiceName readonly={readonly} />
+    </React.Fragment>
   );
 };
 
-export default ServiceName;
+export default ServiceDiscovery;

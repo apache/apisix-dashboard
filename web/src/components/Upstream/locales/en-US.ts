@@ -20,9 +20,17 @@ export default {
   'component.upstream.fields.tls.client_cert': 'Client Cert',
   'component.upstream.fields.tls.client_cert.required': 'Please enter the client cert',
 
+  'component.upstream.fields.upstream_type': 'Upstream Type',
+  'component.upstream.fields.upstream_type.node': 'Node',
+  'component.upstream.fields.upstream_type.service_discovery': 'Service Discovery',
+
   'component.upstream.fields.discovery_type': 'Discovery Type',
   'component.upstream.fields.discovery_type.tooltip': 'Discovery Type',
-  'component.upstream.fields.discovery_type.placeholder': 'Please enter the discovery type',
+  'component.upstream.fields.discovery_type.placeholder': 'Please select the discovery type',
+  'component.upstream.fields.discovery_type.type.dns': 'DNS',
+  'component.upstream.fields.discovery_type.type.consul_kv': 'Consul KV',
+  'component.upstream.fields.discovery_type.type.nacos': 'Nacos',
+  'component.upstream.fields.discovery_type.type.eureka': 'Eureka',
 
   'component.upstream.fields.service_name': 'Service Name',
   'component.upstream.fields.service_name.tooltip': 'Service Name',

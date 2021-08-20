@@ -68,7 +68,10 @@ export const convertToRequestData = (
     type,
     hash_on,
     key,
+    upstream_type,
     nodes,
+    discovery_type,
+    service_name,
     pass_host,
     upstream_host,
     upstream_id = 'Custom',
@@ -103,16 +106,20 @@ export const convertToRequestData = (
     return undefined;
   }
 
-  /**
-   * nodes will be [] or node list
-   * when upstream_id === none, None === undefined
-   */
-  if (nodes) {
+  if (upstream_type === 'node' && nodes) {
+    /**
+     * nodes will be [] or node list
+     * when upstream_id === none, None === undefined
+     */
     // NOTE: https://github.com/ant-design/ant-design/issues/27396
     data.nodes = nodes?.map((item) => {
       return pick(item, ['host', 'port', 'weight']);
     });
-    return data;
+    return omit(data, 'upstream_type');
+  }
+
+  if (upstream_type === 'service_discovery' && discovery_type && service_name) {
+    return omit(data, 'upstream_type');
   }
 
   return undefined;

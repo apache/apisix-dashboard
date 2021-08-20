@@ -20,9 +20,17 @@ export default {
   'component.upstream.fields.tls.client_cert': '客户端证书',
   'component.upstream.fields.tls.client_cert.required': '请输入客户端证书',
 
+  'component.upstream.fields.upstream_type': '上游类型',
+  'component.upstream.fields.upstream_type.node': '节点',
+  'component.upstream.fields.upstream_type.service_discovery': '服务发现',
+
   'component.upstream.fields.discovery_type': '服务发现类型',
   'component.upstream.fields.discovery_type.tooltip': '服务发现类型',
-  'component.upstream.fields.discovery_type.placeholder': '请输入服务发现类型',
+  'component.upstream.fields.discovery_type.placeholder': '请选择服务发现类型',
+  'component.upstream.fields.discovery_type.type.dns': 'DNS',
+  'component.upstream.fields.discovery_type.type.consul_kv': 'Consul KV',
+  'component.upstream.fields.discovery_type.type.nacos': 'Nacos',
+  'component.upstream.fields.discovery_type.type.eureka': 'Eureka',
 
   'component.upstream.fields.service_name': '服务名称',
   'component.upstream.fields.service_name.tooltip': '服务名称',
