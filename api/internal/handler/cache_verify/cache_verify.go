@@ -40,6 +40,7 @@ type Handler struct {
 	globalPluginStore store.Interface
 	pluginConfigStore store.Interface
 	serverInfoStore   store.Interface
+	etcdStorage       storage.Interface
 }
 
 type compareResult struct {
@@ -83,6 +84,7 @@ func NewHandler() (handler.RouteRegister, error) {
 		globalPluginStore: store.GetStore(store.HubKeyGlobalRule),
 		pluginConfigStore: store.GetStore(store.HubKeyPluginConfig),
 		serverInfoStore:   store.GetStore(store.HubKeyServerInfo),
+		etcdStorage:       storage.GenEtcdStorage(),
 	}, nil
 }
 
@@ -90,14 +92,12 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/cache_verify", wgin.Wraps(h.CacheVerify))
 }
 
-var etcd *storage.EtcdV3Storage
-
 func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
-	checkConsistent := func(hubKey store.HubKey, s *store.Interface, rs *inconsistentItems, etcd *storage.EtcdV3Storage) {
-		fmt.Printf("checking %s\n", hubKey)
+	checkConsistent := func(hubKey store.HubKey, s *store.Interface, rs *inconsistentItems, etcd *storage.Interface) {
+		//fmt.Printf("checking %s\n", hubKey)
 		// 下面就是这个函数的实现:通过etcd(注意,每个genericStore里都有etcd,所以上面不用再次获取)
 		// 获取到该HubKey对应的全部key,value pair,然后对于每个pair,都去分别获取对应的Cache值和etcd值,并且比较
-		keyPairs, err := etcd.List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
+		keyPairs, err := (*etcd).List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
 		if err != nil {
 			fmt.Println(err)
 			//return true
@@ -149,16 +149,16 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 		//return true
 	}
 	var rs inconsistentItems
-	etcd = storage.GenEtcdStorage()
-	checkConsistent(store.HubKeyConsumer, &h.consumerStore, &rs, etcd)
-	checkConsistent(store.HubKeyRoute, &h.routeStore, &rs, etcd)
-	checkConsistent(store.HubKeyService, &h.serviceStore, &rs, etcd)
-	checkConsistent(store.HubKeySsl, &h.sslStore, &rs, etcd)
-	checkConsistent(store.HubKeyUpstream, &h.upstreamStore, &rs, etcd)
-	checkConsistent(store.HubKeyScript, &h.scriptStore, &rs, etcd)
-	checkConsistent(store.HubKeyGlobalRule, &h.globalPluginStore, &rs, etcd)
-	checkConsistent(store.HubKeyPluginConfig, &h.pluginConfigStore, &rs, etcd)
-	checkConsistent(store.HubKeyServerInfo, &h.serverInfoStore, &rs, etcd)
+	// todo this will panic when consumerStore is nil?
+	checkConsistent(store.HubKeyConsumer, &h.consumerStore, &rs, &h.etcdStorage)
+	//checkConsistent(store.HubKeyRoute, &h.routeStore, &rs, &h.etcdStorage)
+	//checkConsistent(store.HubKeyService, &h.serviceStore, &rs, &h.etcdStorage)
+	//checkConsistent(store.HubKeySsl, &h.sslStore, &rs, &h.etcdStorage)
+	//checkConsistent(store.HubKeyUpstream, &h.upstreamStore, &rs, &h.etcdStorage)
+	//checkConsistent(store.HubKeyScript, &h.scriptStore, &rs, &h.etcdStorage)
+	//checkConsistent(store.HubKeyGlobalRule, &h.globalPluginStore, &rs, &h.etcdStorage)
+	//checkConsistent(store.HubKeyPluginConfig, &h.pluginConfigStore, &rs, &h.etcdStorage)
+	//checkConsistent(store.HubKeyServerInfo, &h.serverInfoStore, &rs, &h.etcdStorage)
 	return rs, nil
 	//var rs inconsistentItems
 	//etcd = storage.GenEtcdStorage()
@@ -236,7 +236,7 @@ func compare(etcdValue string, cacheObj interface{}) (bool, string) {
 func areEqualJSON(s1, s2 string) (bool, error) {
 	var o1 interface{}
 	var o2 interface{}
-	fmt.Printf("cache: %s\netcd:%s\n", s1, s2)
+	//fmt.Printf("cache: %s\netcd:%s\n", s1, s2)
 	var err error
 	err = json.Unmarshal([]byte(s1), &o1)
 	if err != nil {
