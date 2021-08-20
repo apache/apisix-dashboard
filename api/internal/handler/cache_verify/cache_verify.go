@@ -65,7 +65,7 @@ type items struct {
 	Scripts       StatisticalData `json:"scripts"`
 	GlobalPlugins StatisticalData `json:"global_plugins"`
 	PluginConfigs StatisticalData `json:"plugin_configs"`
-	ServerInfos   StatisticalData `json:"server_infos" json:"server_infos"`
+	ServerInfos   StatisticalData `json:"server_infos"`
 }
 
 type OutputResult struct {
