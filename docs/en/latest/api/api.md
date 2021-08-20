@@ -427,8 +427,6 @@ user login.
 | type                | string |             | No       |
 | upstream_host       | string |             | No       |
 
-
-
 #### CacheVerifyResult
 
 | Name              | Type            | Description                                 | Required |
