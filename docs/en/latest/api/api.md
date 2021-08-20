@@ -41,8 +41,8 @@ None
 
 | Code  | Description     | Schema                |
 | ----- | --------------- | --------------------- |
-| 0     | query success  | [ApiError](#ApiError) |
-| default | unexpected error | [ApiError](#ApiError) |
+| 0     | query success  | [CacheVerifyResult](#CacheVerifyResult) |
+| default | unexpected error | [ApiError](#ApiError)                   |
 
 ### /apisix/admin/migrate/export
 
@@ -427,24 +427,44 @@ user login.
 | type                | string |             | No       |
 | upstream_host       | string |             | No       |
 
-#### InconsistentItems
 
-| Name           | Type                                | Description | Required |
-| -------------- | ----------------------------------- | ----------- | -------- |
-| consumers      | [[ CompareResult ]](#CompareResult) |             | No       |
-| routes         | [[ CompareResult ]](#CompareResult) |             | No       |
-| services       | [[ CompareResult ]](#CompareResult) |             | No       |
-| ssls           | [[ CompareResult ]](#CompareResult) |             | No       |
-| upstreams      | [[ CompareResult ]](#CompareResult) |             | No       |
-| scripts        | [[ CompareResult ]](#CompareResult) |             | No       |
-| global_plugins | [[ CompareResult ]](#CompareResult) |             | No       |
-| plugin_configs | [[ CompareResult ]](#CompareResult) |             | No       |
-| server_infos   | [[ CompareResult ]](#CompareResult) |             | No       |
 
-#### CompareResult
+#### CacheVerifyResult
 
-| Name                | Type   | Description | Required |
-| ------------------- | ------ | ----------- | -------- |
-| key                 | string |             | No       |
-| cache_value         | string |             | No       |
-| etcd_value          | string |             | No       |
+| Name              | Type            | Description                                 | Required |
+| ----------------- | --------------- | ------------------------------------------- | -------- |
+| total             | int             | number of items compared                    | No       |
+| ConsistentCount   | int             | number of consistent items                  | No       |
+| InconsistentCount | int             | number of inconsistent items                | No       |
+| Items             | [items](#items) | statistical data for each type of meta data | N        |
+
+#### items
+
+| Name           | Type                                | Description                    | Required |
+| -------------- | ----------------------------------- | ------------------------------ | -------- |
+| consumers      | [StatisticalData](#StatisticalData) | statistical data for consumers | No       |
+| routes         | [StatisticalData](#StatisticalData) |                                | No       |
+| services       | [StatisticalData](#StatisticalData) |                                | No       |
+| ssls           | [StatisticalData](#StatisticalData) |                                | No       |
+| upstreams      | [StatisticalData](#StatisticalData) |                                | No       |
+| scripts        | [StatisticalData](#StatisticalData) |                                | No       |
+| global_plugins | [StatisticalData](#StatisticalData) |                                | No       |
+| plugin_configs | [StatisticalData](#StatisticalData) |                                | No       |
+| server_infos   | [StatisticalData](#StatisticalData) |                                | No       |
+
+#### StatisticalData
+
+| Name              | Type                                      | Description                                 | Required |
+| ----------------- | ----------------------------------------- | ------------------------------------------- | -------- |
+| Total             | int                                       | number of items for this type               | No       |
+| ConsistentCount   | int                                       | number of consistent items for this type    | No       |
+| InconsistentCount | int                                       | number of inconsistent items for this type  | No       |
+| InconsistentPairs | [[ inconsistentPair ]](#inconsistentPair) | statistical data for each type of meta data | No       |
+
+#### inconsistentPair
+
+| Name       | Type   | Description                 | Required |
+| ---------- | ------ | --------------------------- | -------- |
+| Key        | string | key of this item            | No       |
+| CacheValue | string | value of this item in cache | No       |
+| EtcdValue  | string | value of this item in ETCD  | No       |
