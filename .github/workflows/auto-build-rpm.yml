@@ -56,7 +56,7 @@ jobs:
           if [ "$VERSION" != "merge" && "$VERSION" != "master" ];then
             export checkout=release/${VERSION}
           fi
-          sed -i 's/docker build /docker build --load/g' Makefile
+          sed -i 's/docker build/docker build --load/g' Makefile
           make package type=rpm app=dashboard version=${VERSION} checkout=${checkout} image_base=centos image_tag=7
 
 
