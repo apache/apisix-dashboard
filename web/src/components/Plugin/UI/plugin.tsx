@@ -60,7 +60,7 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
 
   switch (name) {
     case 'api-breaker':
-      return <ApiBreaker form={form} />;
+      return <ApiBreaker form={form} schema={schema} />
     case 'basic-auth':
       return <BasicAuth form={form} />;
     case 'limit-count':
