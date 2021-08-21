@@ -52,6 +52,14 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
     data.upstream_id = data.id;
   }
 
+  if (data.nodes) {
+    data.upstream_type = 'node';
+  }
+
+  if (data.discovery_type && data.service_name) {
+    data.upstream_type = 'service_discovery';
+  }
+
   return data;
 };
 
