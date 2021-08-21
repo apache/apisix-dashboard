@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Divider, Form, notification, Select, Switch } from 'antd';
+import { Divider, Form, notification, Switch } from 'antd';
 import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { useIntl } from 'umi';
 import type { FormInstance } from 'antd/es/form';
@@ -29,9 +29,8 @@ import UpstreamSelector from './components/UpstreamSelector';
 import Retries from './components/Retries';
 import PassHost from './components/PassHost';
 import TLSComponent from './components/TLS';
+import UpstreamType from './components/UpstreamType';
 import { convertToRequestData } from './service';
-import Nodes from '@/components/Upstream/components/Nodes';
-import ServiceDiscovery from '@/components/Upstream/components/ServiceDiscovery';
 
 type Upstream = {
   name?: string;
@@ -144,35 +143,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       const upstream_id = form.getFieldValue('upstream_id');
       resetForm(upstream_id);
     }, [form.getFieldValue('upstream_id'), list]);
-
-    const UpstreamType = () => (
-      <React.Fragment>
-        <Form.Item
-          label={formatMessage({ id: 'component.upstream.fields.upstream_type' })}
-          name="upstream_type"
-          rules={[{ required: true }]}
-          initialValue="node"
-        >
-          <Select disabled={readonly}>
-            <Select.Option value="node">
-              {formatMessage({ id: 'component.upstream.fields.upstream_type.node' })}
-            </Select.Option>
-            <Select.Option value="service_discovery">
-              {formatMessage({ id: 'component.upstream.fields.upstream_type.service_discovery' })}
-            </Select.Option>
-          </Select>
-        </Form.Item>
-
-        <Form.Item shouldUpdate noStyle>
-          {() => {
-            if (form.getFieldValue('upstream_type') === 'node') {
-              return <Nodes readonly={readonly} />;
-            }
-            return <ServiceDiscovery readonly={readonly} />;
-          }}
-        </Form.Item>
-      </React.Fragment>
-    );
 
     const ActiveHealthCheck = () => (
       <React.Fragment>
@@ -317,7 +287,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           <React.Fragment>
             <Type form={form} readonly={readonly} />
 
-            <UpstreamType />
+            <UpstreamType form={form} readonly={readonly} />
 
             <PassHost form={form} readonly={readonly} />
             <Retries readonly={readonly} />

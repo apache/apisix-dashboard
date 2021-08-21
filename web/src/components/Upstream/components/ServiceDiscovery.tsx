@@ -15,18 +15,55 @@
  * limitations under the License.
  */
 import React from 'react';
-import DiscoveryType from '@/components/Upstream/components/DiscoveryType';
-import ServiceName from '@/components/Upstream/components/ServiceName';
+import { Form, Input, Select } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
   readonly?: boolean;
 };
 
 const ServiceDiscovery: React.FC<Props> = ({ readonly }) => {
+  const { formatMessage } = useIntl();
+
   return (
     <React.Fragment>
-      <DiscoveryType readonly={readonly} />
-      <ServiceName readonly={readonly} />
+      <Form.Item
+        name="discovery_type"
+        label={formatMessage({ id: 'component.upstream.fields.discovery_type' })}
+        tooltip={formatMessage({ id: 'component.upstream.fields.discovery_type.tooltip' })}
+        rules={[{ required: true }]}
+      >
+        <Select
+          disabled={readonly}
+          placeholder={formatMessage({
+            id: 'component.upstream.fields.discovery_type.placeholder',
+          })}
+        >
+          <Select.Option value="dns">
+            {formatMessage({ id: 'component.upstream.fields.discovery_type.type.dns' })}
+          </Select.Option>
+          <Select.Option value="consul_kv">
+            {formatMessage({ id: 'component.upstream.fields.discovery_type.type.consul_kv' })}
+          </Select.Option>
+          <Select.Option value="nacos">
+            {formatMessage({ id: 'component.upstream.fields.discovery_type.type.nacos' })}
+          </Select.Option>
+          <Select.Option value="eureka">
+            {formatMessage({ id: 'component.upstream.fields.discovery_type.type.eureka' })}
+          </Select.Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="service_name"
+        label={formatMessage({ id: 'component.upstream.fields.service_name' })}
+        tooltip={formatMessage({ id: 'component.upstream.fields.service_name.tooltip' })}
+        rules={[{ required: true }, { min: 1 }, { max: 256 }]}
+      >
+        <Input
+          disabled={readonly}
+          placeholder={formatMessage({ id: 'component.upstream.fields.service_name.placeholder' })}
+        />
+      </Form.Item>
     </React.Fragment>
   );
 };
