@@ -178,7 +178,7 @@ context('Create and Delete Upstream', () => {
     cy.get(selector.selectItem).within(() => {
       cy.contains('DNS').click();
     });
-    cy.get(selector.service_name).type('test.cluster.local');
+    cy.get(selector.service_name).type(data.serviceName);
 
     cy.get('#custom_checks_active').click();
     cy.get('#checks_active_port').clear();
