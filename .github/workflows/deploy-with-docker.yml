@@ -30,8 +30,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          key: ${{ runner.os }}-buildx-apisixdashboard-${{ github.sha }}
           restore-keys: |
+            ${{ runner.os }}-buildx-apisixdashboard-
             ${{ runner.os }}-buildx-
 
       - uses: Azure/docker-login@v1
@@ -62,6 +63,11 @@ jobs:
           # At present, the docker CI is still running the code of the master branch
           # So we need to configure `listen.host` so that it can be accessed outside docker
           sed -i '/port: 9000/i\    host: 0.0.0.0' ./api/conf/conf.yaml
+
+      - name: build docker images
+        working-directory: ./api/test/docker-deploy
+        run: |
+          docker buildx bake --load
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
