@@ -26,23 +26,34 @@ import (
 
 var _ = ginkgo.Describe("Cache verify", func() {
 
-	ginkgo.It("prepare config data", prepareConfigData)
+	//ginkgo.It("prepare config data", prepareConfigData)
 
 	ginkgo.It("cache verify ", func() {
 
+		// we access this API twice,assert the diff
 		headers := map[string]string{
 			"Authorization": base.GetToken(),
 		}
 
-		data, status, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/cache_verify", headers)
-
+		oldData, status, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/cache_verify", headers)
 		gomega.Expect(status).Should(gomega.Equal(http.StatusOK))
 		gomega.Expect(err).Should(gomega.BeNil())
 
-		total := gjson.Get((string)(data), "data.total")
-		gomega.Expect(total.Exists()).Should(gomega.Equal(true))
-		totalInt := total.Int()
-		gomega.Expect(totalInt).Should(gomega.Equal(int64(12)))
+		oldTotal := gjson.Get((string)(oldData), "data.total")
+		gomega.Expect(oldTotal.Exists()).Should(gomega.Equal(true))
+		oldTotalInt := oldTotal.Int()
+
+		prepareConfigData()
+
+		newData, status, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/cache_verify", headers)
+		gomega.Expect(status).Should(gomega.Equal(http.StatusOK))
+		gomega.Expect(err).Should(gomega.BeNil())
+
+		newTotal := gjson.Get((string)(newData), "data.total")
+		gomega.Expect(newTotal.Exists()).Should(gomega.Equal(true))
+		newTotalInt := newTotal.Int()
+
+		gomega.Expect(newTotalInt).Should(gomega.Equal(oldTotalInt + 3))
 
 	})
 
