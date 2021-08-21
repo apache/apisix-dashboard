@@ -64,7 +64,10 @@ jobs:
       - name: build docker images
         working-directory: ./api/test/docker
         run: |
-          docker buildx bake --load
+          docker buildx bake --load \
+          -f docker-compose.yaml \
+          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
+          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
       - name: run docker compose
         working-directory: ./api/test/docker
@@ -92,7 +95,10 @@ jobs:
       - name: re-build docker images
         working-directory: ./api/test/docker
         run: |
-          docker buildx bake --load
+          docker buildx bake --load \
+          -f docker-compose.yaml \
+          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
+          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
       - name: re-run docker compose
         working-directory: ./api/test/docker
@@ -151,7 +157,10 @@ jobs:
       - name: build docker images
         working-directory: ./api/test/docker
         run: |
-          docker buildx bake --load
+          docker buildx bake --load \
+          -f docker-compose.yaml \
+          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
+          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
       - name: run docker compose
         working-directory: ./api/test/docker

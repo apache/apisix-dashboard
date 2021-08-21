@@ -67,7 +67,10 @@ jobs:
       - name: build docker images
         working-directory: ./api/test/docker-deploy
         run: |
-          docker buildx bake --load
+          docker buildx bake --load \
+          -f docker-compose.yaml \
+          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
+          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
