@@ -66,6 +66,7 @@ jobs:
 
       - name: build docker images
         working-directory: ./api/test/docker-deploy
+        continue-on-error: true
         run: |
           docker buildx bake --load \
           -f docker-compose.yaml \
