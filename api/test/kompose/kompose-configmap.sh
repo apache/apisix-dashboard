@@ -1,0 +1,10 @@
+kubectl create configmap apisix-hostpath0 --from-file=./apisix_config.yaml
+kubectl create configmap apisix-hostpath1 --from-file=../certs/apisix.crt
+kubectl create configmap apisix-hostpath2 --from-file=../certs/apisix.key
+kubectl create configmap apisix-hostpath3 --from-file=./apisix_logs
+kubectl create configmap apisix2-hostpath0 --from-file=./apisix_config2.yaml
+kubectl create configmap apisix2-hostpath1 --from-file=../certs/apisix.crt
+kubectl create configmap apisix2-hostpath2 --from-file=../certs/apisix.key
+kubectl create configmap managerapi-hostpath0 --from-file=../../conf/conf.yaml
+kubectl create configmap managerapi-hostpath1 --from-file=../testdata
+kubectl create configmap upstream-hostpath0 --from-file=./upstream.conf

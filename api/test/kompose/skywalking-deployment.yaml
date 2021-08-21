@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: skywalking
+  name: skywalking
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: skywalking
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/apisix-dashboard-e2e: "true"
+        io.kompose.service: skywalking
+    spec:
+      containers:
+        - image: apache/skywalking-oap-server:8.3.0-es6
+          name: skywalking
+          ports:
+            - containerPort: 1234
+            - containerPort: 11800
+            - containerPort: 12800
+          resources: {}
+      restartPolicy: Always
+status: {}

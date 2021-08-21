@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: apisix2
+  name: apisix2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: apisix2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/apisix-dashboard-e2e: "true"
+        io.kompose.service: apisix2
+    spec:
+      containers:
+        - image: apache/apisix:2.6-alpine
+          name: apisix2
+          ports:
+            - containerPort: 9080
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/apisix/conf/config.yaml
+              name: apisix2-hostpath0-configmap
+              subPath: config.yaml
+              readOnly: true
+            - mountPath: /usr/local/apisix/certs/apisix.crt
+              subPath: apisix.crt
+              name: apisix2-hostpath1-configmap
+              readOnly: true
+            - mountPath: /usr/local/apisix/certs/apisix.key
+              subPath: apisix.key
+              name: apisix2-hostpath2-configmap
+              readOnly: true
+      hostname: apisix-server2
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            name: apisix2-hostpath0
+          name: apisix2-hostpath0-configmap
+        - configMap:
+            name: apisix2-hostpath1
+          name: apisix2-hostpath1-configmap
+        - configMap:
+            name: apisix2-hostpath2
+          name: apisix2-hostpath2-configmap
+status: {}

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: skywalking
+  name: skywalking
+spec:
+  ports:
+    - name: "1234"
+      port: 1234
+      targetPort: 1234
+    - name: "11800"
+      port: 11800
+      targetPort: 11800
+    - name: "12800"
+      port: 12800
+      targetPort: 12800
+  selector:
+    io.kompose.service: skywalking
+status:
+  loadBalancer: {}

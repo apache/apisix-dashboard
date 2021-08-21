@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: node3
+  name: node3
+spec:
+  ports:
+    - name: "2379"
+      port: 2379
+      targetPort: 2379
+    - name: "2380"
+      port: 2380
+      targetPort: 2380
+  selector:
+    io.kompose.service: node3
+status:
+  loadBalancer: {}

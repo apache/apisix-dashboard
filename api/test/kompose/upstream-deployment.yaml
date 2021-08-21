@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: upstream
+  name: upstream
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: upstream
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/apisix-dashboard-e2e: "true"
+        io.kompose.service: upstream
+    spec:
+      containers:
+        - image: johz/upstream:v2.0
+          name: upstream
+          ports:
+            - containerPort: 80
+            - containerPort: 1980
+            - containerPort: 1981
+            - containerPort: 1982
+            - containerPort: 1983
+            - containerPort: 1984
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+              name: upstream-hostpath0-configmap
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            name: upstream-hostpath0
+          name: upstream-hostpath0-configmap
+status: {}
