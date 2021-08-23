@@ -375,24 +375,3 @@ export const transformRouteData = (data: RouteModule.Body) => {
     advancedMatchingRules,
   };
 };
-
-export const transformLabelList = (data: ResponseLabelList) => {
-  if (!data) {
-    return {};
-  }
-  const transformData = {};
-  data.forEach((item) => {
-    const key = Object.keys(item)[0];
-    const value = item[key];
-    if (!transformData[key]) {
-      transformData[key] = [];
-      transformData[key].push(value);
-      return;
-    }
-
-    if (transformData[key] && !transformData[key][value]) {
-      transformData[key].push(value);
-    }
-  });
-  return transformData;
-};

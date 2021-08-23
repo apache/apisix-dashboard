@@ -22,6 +22,7 @@ import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
   ref?: any;
 };
 
@@ -40,8 +41,12 @@ export const FORM_ITEM_WITHOUT_LABEL = {
   },
 };
 
-const Cors: React.FC<Props> = ({ form }) => {
+const Cors: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
+  const properties = schema?.properties
+  const regexPro = properties.allow_origins_by_regex
+  const { minLength, maxLength } = regexPro.items
+  const regexInit = Array(regexPro.minItems).join('.').split('.')
 
   const HTTPMethods: React.FC = () => (
     <Form.Item
@@ -50,7 +55,10 @@ const Cors: React.FC<Props> = ({ form }) => {
     >
       <Row>
         <Col span={24}>
-          <Form.Item name="allow_methods" initialValue={['*']}>
+          <Form.Item
+            name="allow_methods"
+            initialValue={[properties.allow_methods.default]}
+          >
             <Select
               mode="multiple"
               optionLabelProp="label"
@@ -93,7 +101,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         extra={formatMessage({ id: 'component.pluginForm.cors.allow_origins.extra' })}
         name="allow_origins"
         label="allow_origins"
-        initialValue="*"
+        initialValue={properties.allow_origins.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_origins.tooltip' })}
       >
         <Input />
@@ -103,7 +111,7 @@ const Cors: React.FC<Props> = ({ form }) => {
       <Form.Item
         name="allow_headers"
         label="allow_headers"
-        initialValue="*"
+        initialValue={properties.allow_headers.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_headers.tooltip' })}
       >
         <Input />
@@ -111,7 +119,7 @@ const Cors: React.FC<Props> = ({ form }) => {
       <Form.Item
         name="expose_headers"
         label="expose_headers"
-        initialValue="*"
+        initialValue={properties.expose_headers.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.expose_headers.tooltip' })}
       >
         <Input />
@@ -119,7 +127,7 @@ const Cors: React.FC<Props> = ({ form }) => {
       <Form.Item
         name="max_age"
         label="max_age"
-        initialValue={5}
+        initialValue={properties.max_age.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.max_age.tooltip' })}
       >
         <InputNumber />
@@ -128,13 +136,13 @@ const Cors: React.FC<Props> = ({ form }) => {
         name="allow_credential"
         label="allow_credential"
         valuePropName="checked"
-        initialValue={false}
+        initialValue={properties.allow_credential.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_credential.tooltip' })}
       >
         <Switch />
       </Form.Item>
 
-      <Form.List name="allow_origins_by_regex" initialValue={['']}>
+      <Form.List name='allow_origins_by_regex' initialValue={regexInit}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -150,7 +158,7 @@ const Cors: React.FC<Props> = ({ form }) => {
                   <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
-                  {fields.length > 1 ? (
+                  {fields.length > minLength &&
                     <MinusCircleOutlined
                       className="dynamic-delete-button"
                       style={{ margin: '0 8px' }}
@@ -158,12 +166,12 @@ const Cors: React.FC<Props> = ({ form }) => {
                         remove(field.name);
                       }}
                     />
-                  ) : null}
+                  }
                 </Form.Item>
               ))}
               {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                  <Button
+                  {fields.length < maxLength && <Button
                     type="dashed"
                     data-cy="add-allow_origins_by_regex"
                     onClick={() => {
@@ -171,7 +179,7 @@ const Cors: React.FC<Props> = ({ form }) => {
                     }}
                   >
                     <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
-                  </Button>
+                  </Button>}
                 </Form.Item>
               }
             </div>

@@ -60,17 +60,17 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
 
   switch (name) {
     case 'api-breaker':
-      return <ApiBreaker form={form} />;
+      return <ApiBreaker form={form} schema={schema} />
     case 'basic-auth':
       return <BasicAuth form={form} />;
     case 'limit-count':
-      return <LimitCount form={form} />;
+      return <LimitCount form={form} schema={schema} />
     case 'cors':
-      return <Cors form={form} />;
+      return <Cors form={form} schema={schema} />
     case 'limit-req':
       return <LimitReq form={form} schema={schema} />;
     case 'proxy-mirror':
-      return <ProxyMirror form={form} />;
+      return <ProxyMirror form={form} schema={schema} />
     case 'limit-conn':
       return <LimitConn form={form} schema={schema} />;
     case 'referer-restriction':
