@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Create Route with Upstream', () => {
+context('Create Route with Service Discovery Upstream', () => {
   const selector = {
     name: '#name',
     description: '#desc',
@@ -47,7 +47,7 @@ context('Create Route with Upstream', () => {
     cy.login();
   });
 
-  it('should create route with service discovery upstream', function () {
+  it('should create route with DNS service discovery upstream', function () {
     cy.visit('/');
     cy.get('[role=menu]')
       .should('be.visible')
@@ -84,7 +84,7 @@ context('Create Route with Upstream', () => {
     cy.url().should('contains', 'routes/list');
   });
 
-  it('should edit this route with upstream', function () {
+  it('should edit this route with Nacos Service Discovery upstream', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(selector.nameSelector).type(data.routeName);
