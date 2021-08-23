@@ -79,6 +79,7 @@ export const convertToRequestData = (
     upstream_type,
     nodes,
     discovery_type,
+    discovery_args,
     service_name,
     pass_host,
     upstream_host,
@@ -127,6 +128,7 @@ export const convertToRequestData = (
   }
 
   if (upstream_type === 'service_discovery' && discovery_type && service_name) {
+    if (!discovery_args) data.discovery_args = {};
     return omit(data, 'upstream_type');
   }
 

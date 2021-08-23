@@ -32,6 +32,14 @@ export default {
   'component.upstream.fields.discovery_type.type.nacos': 'Nacos',
   'component.upstream.fields.discovery_type.type.eureka': 'Eureka',
 
+  'component.upstream.fields.discovery_args.group_name': 'Group Name',
+  'component.upstream.fields.discovery_args.group_name.tooltip': 'Group Name',
+  'component.upstream.fields.discovery_args.group_name.placeholder': 'Please enter the group name',
+  'component.upstream.fields.discovery_args.namespace_id': 'Namespace ID',
+  'component.upstream.fields.discovery_args.namespace_id.tooltip': 'Namespace ID',
+  'component.upstream.fields.discovery_args.namespace_id.placeholder':
+    'Please enter the namespace id',
+
   'component.upstream.fields.service_name': 'Service Name',
   'component.upstream.fields.service_name.tooltip': 'Service Name',
   'component.upstream.fields.service_name.placeholder': 'Please enter the service name',

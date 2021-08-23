@@ -17,12 +17,15 @@
 import React from 'react';
 import { Form, Input, Select } from 'antd';
 import { useIntl } from 'umi';
+import type { FormInstance } from 'antd/lib/form';
+import ServiceDiscoveryArgs from '@/components/Upstream/components/ServiceDiscoveryArgs';
 
 type Props = {
+  form: FormInstance;
   readonly?: boolean;
 };
 
-const ServiceDiscovery: React.FC<Props> = ({ readonly }) => {
+const ServiceDiscovery: React.FC<Props> = ({ readonly, form }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -63,6 +66,14 @@ const ServiceDiscovery: React.FC<Props> = ({ readonly }) => {
           disabled={readonly}
           placeholder={formatMessage({ id: 'component.upstream.fields.service_name.placeholder' })}
         />
+      </Form.Item>
+      <Form.Item shouldUpdate noStyle>
+        {() => {
+          if (form.getFieldValue('discovery_type') === 'nacos') {
+            return <ServiceDiscoveryArgs readonly={readonly} />;
+          }
+          return null;
+        }}
       </Form.Item>
     </React.Fragment>
   );

@@ -52,7 +52,7 @@ const UpstreamType: React.FC<Props> = ({ readonly, form }) => {
           if (form.getFieldValue('upstream_type') === 'node') {
             return <Nodes readonly={readonly} />;
           }
-          return <ServiceDiscovery readonly={readonly} />;
+          return <ServiceDiscovery form={form} readonly={readonly} />;
         }}
       </Form.Item>
     </React.Fragment>

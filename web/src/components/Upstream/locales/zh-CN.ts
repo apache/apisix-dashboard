@@ -32,6 +32,13 @@ export default {
   'component.upstream.fields.discovery_type.type.nacos': 'Nacos',
   'component.upstream.fields.discovery_type.type.eureka': 'Eureka',
 
+  'component.upstream.fields.discovery_args.group_name': '分组名',
+  'component.upstream.fields.discovery_args.group_name.tooltip': '分组名',
+  'component.upstream.fields.discovery_args.group_name.placeholder': '请输入分组名',
+  'component.upstream.fields.discovery_args.namespace_id': '命名空间ID',
+  'component.upstream.fields.discovery_args.namespace_id.tooltip': '命名空间ID',
+  'component.upstream.fields.discovery_args.namespace_id.placeholder': '请输入命名空间ID',
+
   'component.upstream.fields.service_name': '服务名称',
   'component.upstream.fields.service_name.tooltip': '服务名称',
   'component.upstream.fields.service_name.placeholder': '请输入服务名称',
