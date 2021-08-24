@@ -14,23 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, InputNumber } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, InputNumber } from 'antd';
+import { useIntl } from 'umi';
 
-import TimeUnit from '../../TimeUnit'
+import TimeUnit from '../../TimeUnit';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   return (
     <Form.Item
       label={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.interval' })}
       required
-      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.interval.tooltip' })}
+      tooltip={formatMessage({
+        id: 'component.upstream.fields.checks.active.unhealthy.interval.tooltip',
+      })}
     >
       <Form.Item
         name={['checks', 'active', 'unhealthy', 'interval']}
@@ -49,7 +51,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
       </Form.Item>
       <TimeUnit />
     </Form.Item>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

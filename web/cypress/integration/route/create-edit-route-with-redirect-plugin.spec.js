@@ -27,10 +27,12 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     customRedirectSelectOpt: '#redirectOption_list_1',
     customRedirectUrI: '#redirectURI',
     customRedirectCode: '[data-cy=redirect_code]',
-    customRedirectLabel: '[title=\'Custom Redirect\']',
+    customRedirectLabel: "[title='Custom Redirect']",
     deleteAlert: '.ant-modal-body',
     notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
+    webSocketSelector: '[title=WebSocket]',
+    enable_websocket_button: '#enable_websocket',
   };
 
   const data = {
@@ -39,7 +41,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
     step2Title: 'Define API Backend Server',
     step3Title: 'Plugin Config',
-    setUpstreamNotice: 'If you do not bind the service, you must set the Upstream (Step 2)'
+    setUpstreamNotice: 'If you do not bind the service, you must set the Upstream (Step 2)',
   };
 
   beforeEach(() => {
@@ -54,11 +56,13 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains('Next').click().click();
     cy.get(selector.name).type(name);
     cy.get(selector.redirect).click();
-    cy.contains('Custom').click({force: true});
+    cy.contains('Custom').click({ force: true });
     // after choose Custom option, Custom Redirect form field should be visible
     cy.get(selector.customRedirectLabel).should('be.visible');
     cy.get(selector.customRedirectUrI).should('be.visible');
     cy.get(selector.customRedirectCode).should('be.visible');
+    cy.get(selector.webSocketSelector).should('not.exist');
+    cy.get(selector.enable_websocket_button).should('not.exist');
 
     // step 2 and step 3 should not be visible
     cy.contains(data.step2Title).should('not.exist');
@@ -87,6 +91,8 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     // should not shown set upstream notice
     cy.contains(data.setUpstreamNotice).should('not.exist');
     cy.get(selector.name).clear().type(newName);
+    cy.get(selector.webSocketSelector).should('not.exist');
+    cy.get(selector.enable_websocket_button).should('not.exist');
 
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -94,7 +100,6 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
     cy.contains(newName).should('be.visible');
-
   });
 
   it('should delete the route', function () {
@@ -104,11 +109,11 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains(newName).siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
-        .should('be.visible')
-        .within(() => {
+      .should('be.visible')
+      .within(() => {
         cy.contains('OK').click();
-        });
+      });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(selector.notificationCloseIcon).click({multiple: true});
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
   });
 });

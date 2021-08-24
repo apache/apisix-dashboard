@@ -20,35 +20,35 @@ import { request } from 'umi';
 import { PLUGIN_LIST, PluginType } from './data';
 
 const cached: {
-  list: PluginComponent.Meta[]
+  list: PluginComponent.Meta[];
 } = {
-  list: []
-}
+  list: [],
+};
 
 export const fetchList = () => {
   if (cached.list.length) {
-    return Promise.resolve(cached.list)
+    return Promise.resolve(cached.list);
   }
 
   return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then((data) => {
-    const typedData = data.data.map(item => ({
+    const typedData = data.data.map((item) => ({
       ...item,
-      type: PLUGIN_LIST[item.name]?.type || "other",
+      type: PLUGIN_LIST[item.name]?.type || 'other',
       originType: item.type,
-      hidden: PLUGIN_LIST[item.name]?.hidden || false
+      hidden: PLUGIN_LIST[item.name]?.hidden || false,
     }));
 
-    let finalList: PluginComponent.Meta[] = []
+    let finalList: PluginComponent.Meta[] = [];
 
-    Object.values(PluginType).forEach(type => {
-      finalList = finalList.concat(typedData.filter(item => item.type === type))
-    })
+    Object.values(PluginType).forEach((type) => {
+      finalList = finalList.concat(typedData.filter((item) => item.type === type));
+    });
 
     if (cached.list.length === 0) {
-      cached.list = finalList
+      cached.list = finalList;
     }
 
-    return finalList
+    return finalList;
   });
 };
 
@@ -82,7 +82,9 @@ export const fetchSchema = async (
 };
 
 export const fetchPluginTemplateList = () => {
-  return request<Res<ResListData<PluginTemplateModule.ResEntity>>>('/plugin_configs').then((data) => {
-    return data.data.rows;
-  });
+  return request<Res<ResListData<PluginTemplateModule.ResEntity>>>('/plugin_configs').then(
+    (data) => {
+      return data.data.rows;
+    },
+  );
 };

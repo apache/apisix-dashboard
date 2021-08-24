@@ -26,8 +26,8 @@ context('Create and Edit Service with Custom CHash Key Upstream', () => {
     nodes_0_host: '#nodes_0_host',
     nodes_0_port: '#nodes_0_port',
     nodes_0_weight: '#nodes_0_weight',
-    upstreamType: ".ant-select-item-option-content",
-    hashPosition: ".ant-select-item-option-content",
+    upstreamType: '.ant-select-item-option-content',
+    hashPosition: '.ant-select-item-option-content',
     chash_key: '#key',
     notification: '.ant-notification-notice-message',
     nameSearch: '[title=Name]',
@@ -92,7 +92,6 @@ context('Create and Edit Service with Custom CHash Key Upstream', () => {
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.editServiceSuccess);
   });
-
 
   it('should delete this service', function () {
     cy.visit('/service/list');

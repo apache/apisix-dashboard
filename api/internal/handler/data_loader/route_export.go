@@ -115,12 +115,12 @@ var (
 func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
 
-	if len(routelist.Rows) < 1 {
-		return nil, consts.ErrRouteData
-	}
-
 	if err != nil {
 		return nil, err
+	}
+
+	if len(routelist.Rows) < 1 {
+		return nil, consts.ErrRouteData
 	}
 
 	routes := []*entity.Route{}
@@ -177,7 +177,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		if err != nil {
 			log.Errorf("ParseRouteUpstream err: ", err)
 			return nil, err
-		} else if err == nil && _upstream != nil {
+		} else if _upstream != nil {
 			extensions["x-apisix-upstream"] = _upstream
 		}
 
@@ -292,12 +292,8 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 func ParseLabels(route *entity.Route, serviceLabels map[string]string) (map[string]string, error) {
 	if route.Labels != nil {
 		return route.Labels, nil
-	} else if route.Labels == nil && route.ServiceID != nil {
-		if serviceLabels != nil {
-			return serviceLabels, nil
-		} else if serviceLabels == nil {
-			return nil, nil
-		}
+	} else if route.ServiceID != nil {
+		return serviceLabels, nil
 	}
 	return nil, nil
 }
@@ -416,7 +412,7 @@ func ParseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 				log.Errorf("Plugins MergeJson err: ", err)
 				return path, nil, nil, nil, err
 			}
-			err = json.Unmarshal([]byte(bytePlugins), &plugins)
+			err = json.Unmarshal(bytePlugins, &plugins)
 			if err != nil {
 				log.Errorf("JsonToMapDemo err: ", err)
 				return path, nil, nil, nil, err

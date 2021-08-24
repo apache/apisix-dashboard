@@ -40,7 +40,8 @@ export default {
   'component.ssl.removeSSLSuccess': 'Remove target SSL successfully',
   'component.ssl.removeSSLItemModalContent': 'You are going to remove this item!',
 
-  'component.ssl.description': 'The certificate is used by the gateway to process encrypted requests, which will be associated with the SNI and bound to the host name in the Route.',
+  'component.ssl.description':
+    'The certificate is used by the gateway to process encrypted requests, which will be associated with the SNI and bound to the host name in the Route.',
   'component.ssl.fields.cert.required': 'Please enter the certificate',
   'component.ssl.fields.key.required': 'Please enter the key',
 };

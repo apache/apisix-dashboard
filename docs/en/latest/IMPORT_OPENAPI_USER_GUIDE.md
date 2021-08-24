@@ -86,7 +86,7 @@ info:
 ...
 ```
 
-2. [API server and base path](https://swagger.io/docs/specification/api-host-and-base-path/): upsream url + url prefix(options).
+2. [API server and base path](https://swagger.io/docs/specification/api-host-and-base-path/): upstream url + url prefix(options).
 
 **Example:**
 

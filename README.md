@@ -17,7 +17,7 @@
 #
 -->
 
-# Apache APISIX Dashboard (Experimental)
+# Apache APISIX Dashboard
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/apache/apisix-dashboard)](https://goreportcard.com/report/github.com/apache/apisix-dashboard)
@@ -32,7 +32,7 @@
 
 - The master version should be used with Apache APISIX master version.
 
-- The latest released version is [2.7](https://apisix.apache.org/downloads/) and should be used with [Apache APISIX 2.6](https://apisix.apache.org/downloads/). It is not recommended to use with other Apache APISIX versions.
+- The latest released version is [2.7.1](https://apisix.apache.org/downloads/) and is compatible with [Apache APISIX 2.7](https://apisix.apache.org/downloads/).
 
 ## What's Apache APISIX Dashboard
 
@@ -40,15 +40,13 @@ The Apache APISIX Dashboard is designed to make it as easy as possible for users
 
 The Dashboard is the control plane and performs all parameter checks; Apache APISIX mixes data and control planes and will evolve to a pure data plane.
 
-This project includes `Manager API`, which will gradually replace `Admin API` in Apache APISIX.
-
 Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
 ![architecture](./docs/assets/images/architecture.png)
 
 ## Demo
 
-```
+```text
 URL: http://139.217.190.60/
 Username: admin
 Password: admin
@@ -56,7 +54,7 @@ Password: admin
 
 ## Project structure
 
-```
+```text
 .
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md

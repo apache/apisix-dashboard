@@ -31,11 +31,11 @@ context('Create and delete route with cors form', () => {
     deleteAlert: '.ant-modal-body',
     notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
-    allow_credential: "#allow_credential",
-    allow_origins_by_regex0: "#allow_origins_by_regex_0",
-    allow_origins_by_regex1: "#allow_origins_by_regex_1",
-    addButton: "[data-cy=add-allow_origins_by_regex]",
-  }
+    allow_credential: '#allow_credential',
+    allow_origins_by_regex0: '#allow_origins_by_regex_0',
+    allow_origins_by_regex1: '#allow_origins_by_regex_1',
+    addButton: '[data-cy=add-allow_origins_by_regex]',
+  };
 
   const data = {
     deleteRouteSuccess: 'Delete Route Successfully',
@@ -64,16 +64,20 @@ context('Create and delete route with cors form', () => {
     cy.contains('Next').click();
 
     // config cors plugin
-    cy.contains('cors').parents(selector.pluginCardBordered).within(() => {
-      cy.get('button').click({
-        force: true
+    cy.contains('cors')
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
       });
-    });
 
-    cy.get(selector.drawer).should('be.visible').within(() => {
-      cy.get(selector.disabledSwitcher).click();
-      cy.get(selector.checkedSwitcher).should('exist');
-    });
+    cy.get(selector.drawer)
+      .should('be.visible')
+      .within(() => {
+        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.checkedSwitcher).should('exist');
+      });
 
     // config cors form
     cy.get(selector.allow_credential).click();
@@ -83,7 +87,10 @@ context('Create and delete route with cors form', () => {
     cy.get(selector.addButton).click();
     cy.get(selector.allow_origins_by_regex1).should('exist');
     cy.get(selector.allow_origins_by_regex0).next().should('have.class', 'anticon-minus-circle');
-    cy.get(selector.allow_origins_by_regex1).type('foo.com').next().should('have.class', 'anticon-minus-circle');
+    cy.get(selector.allow_origins_by_regex1)
+      .type('foo.com')
+      .next()
+      .should('have.class', 'anticon-minus-circle');
 
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
@@ -107,21 +114,25 @@ context('Create and delete route with cors form', () => {
     cy.get(selector.name).clear().type('routeName');
     cy.contains('Search').click();
     cy.contains('routeName').siblings().contains('Configure').click();
-    cy.get(selector.name).should('have.value','routeName');
+    cy.get(selector.name).should('have.value', 'routeName');
     cy.contains('Next').click();
     cy.contains('Next').click();
 
     // config cors plugin
-    cy.contains('cors').parents(selector.pluginCardBordered).within(() => {
-      cy.get('button').click({
-        force: true
+    cy.contains('cors')
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
       });
-    });
 
-    cy.get(selector.drawer).should('be.visible').within(() => {
-      cy.get(selector.disabledSwitcher).click();
-      cy.get(selector.checkedSwitcher).should('exist');
-    });
+    cy.get(selector.drawer)
+      .should('be.visible')
+      .within(() => {
+        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.checkedSwitcher).should('exist');
+      });
 
     // edit allow_origins_by_regex ''
     cy.get(selector.allow_origins_by_regex0).clear();
@@ -149,10 +160,12 @@ context('Create and delete route with cors form', () => {
     cy.contains('Search').click();
     cy.contains('routeName').siblings().contains('More').click();
     cy.contains('Delete').click();
-    cy.get(selector.deleteAlert).should('be.visible').within(() => {
-      cy.contains('OK').click();
-    });
+    cy.get(selector.deleteAlert)
+      .should('be.visible')
+      .within(() => {
+        cy.contains('OK').click();
+      });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(selector.notificationCloseIcon).click({ multiple: true});
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
   });
 });

@@ -30,6 +30,7 @@ const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [plugins, setPlugins] = useState<PluginComponent.Data>({});
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
+  const [authPluginList, setAuthPluginList] = useState<string[]>([]);
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
 
@@ -43,7 +44,14 @@ const Page: React.FC = (props) => {
       });
     }
 
-    fetchPlugList().then(setPluginList);
+    fetchPlugList().then((data) => {
+      setPluginList(data);
+      const authList = data
+        .filter((item) => item.type === 'auth')
+        .map((item) => item.name)
+        .sort();
+      setAuthPluginList(authList);
+    });
   }, []);
 
   const onSubmit = () => {
@@ -82,9 +90,9 @@ const Page: React.FC = (props) => {
         ).length
       ) {
         notification.warning({
-          message: formatMessage({
+          message: `${formatMessage({
             id: 'page.consumer.notification.warning.enableAuthenticationPlugin',
-          }),
+          })} ${authPluginList.join(', ')}`,
         });
         return;
       }

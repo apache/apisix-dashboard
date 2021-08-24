@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Timeouts from './Timeouts'
-import Interval from './Interval'
-import HttpStatuses from './HttpStatuses'
-import HttpFailures from './HttpFailures'
-import TCPFailures from './TCPFailures'
+import Timeouts from './Timeouts';
+import Interval from './Interval';
+import HttpStatuses from './HttpStatuses';
+import HttpFailures from './HttpFailures';
+import TCPFailures from './TCPFailures';
 
 export default {
   Timeouts,
   Interval,
   HttpStatuses,
   HttpFailures,
-  TCPFailures
-}
+  TCPFailures,
+};

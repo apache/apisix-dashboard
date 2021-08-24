@@ -14,22 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Row, Col, Button, InputNumber } from 'antd'
-import { useIntl } from 'umi'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import React from 'react';
+import { Form, Row, Col, Button, InputNumber } from 'antd';
+import { useIntl } from 'umi';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { removeBtnStyle } from '@/components/Upstream'
+import { removeBtnStyle } from '@/components/Upstream';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
-    <Form.List name={['checks', 'active', 'unhealthy', 'http_statuses']} initialValue={[429, 404, 500, 501, 502, 503, 504, 505]}>
+    <Form.List
+      name={['checks', 'active', 'unhealthy', 'http_statuses']}
+      initialValue={[429, 404, 500, 501, 502, 503, 504, 505]}
+    >
       {(fields, { add, remove }) => (
         <>
           <Form.Item
@@ -39,7 +42,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
           >
             {fields.map((field, index) => (
               <Row style={{ marginBottom: 10 }} key={index}>
-                <Col span={2}>
+                <Col md={4} lg={4} xl={4} xxl={2}>
                   <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
                     <InputNumber disabled={readonly} min={200} max={599} />
                   </Form.Item>
@@ -69,6 +72,6 @@ const Component: React.FC<Props> = ({ readonly }) => {
         </>
       )}
     </Form.List>
-  )
-}
-export default Component
+  );
+};
+export default Component;

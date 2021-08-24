@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Consumer', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -28,17 +27,18 @@ context('Create and Delete Consumer', () => {
     notification: '.ant-notification-notice-message',
     nameSelector: '[title=Name]',
     serviceSelector: '[title=test_service]',
-    monacoScroll: ".monaco-scrollable-element",
-    monacoViewZones: '.view-zones'
-  }
+    monacoScroll: '.monaco-scrollable-element',
+    monacoViewZones: '.view-zones',
+    notificationCloseIcon: '.ant-notification-close-icon',
+  };
 
   const data = {
     consumerName: 'test_consumer',
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
-    pluginErrorAlert: 'Invalid plugin data'
-  }
+    pluginErrorAlert: 'Invalid plugin data',
+  };
 
   beforeEach(() => {
     cy.login();
@@ -57,6 +57,13 @@ context('Create and Delete Consumer', () => {
     cy.get(selector.description).type(data.description);
     cy.contains('Next').click();
 
+    cy.contains('Next').click();
+    cy.get(selector.notification).should(
+      'contain',
+      'Please enable at least one of the following authentication plugin: basic-auth, hmac-auth, jwt-auth, key-auth, wolf-rbac',
+    );
+    cy.get(selector.notificationCloseIcon).click().should('not.exist');
+
     // plugin config
     cy.contains(selector.pluginCard, 'key-auth').within(() => {
       cy.contains('Enable').click({
@@ -67,9 +74,15 @@ context('Create and Delete Consumer', () => {
     cy.get(selector.disabledSwitcher).click();
 
     // edit monaco
-    cy.get(selector.monacoViewZones).should('exist').click({ force: true });
+    cy.get(selector.monacoViewZones).should('exist').click({
+      force: true,
+    });
     cy.window().then((window) => {
-      window.monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+      window.monacoEditor.setValue(
+        JSON.stringify({
+          key: 'test',
+        }),
+      );
       cy.contains('button', 'Submit').click();
     });
     cy.contains('button', 'Next').click();
@@ -114,9 +127,15 @@ context('Create and Delete Consumer', () => {
     });
 
     // edit monaco
-    cy.get(selector.monacoViewZones).should('exist').click({ force: true });
+    cy.get(selector.monacoViewZones).should('exist').click({
+      force: true,
+    });
     cy.window().then((window) => {
-      window.monacoEditor.setValue(JSON.stringify({ key_not_exist: 'test' }));
+      window.monacoEditor.setValue(
+        JSON.stringify({
+          key_not_exist: 'test',
+        }),
+      );
       cy.contains('button', 'Submit').click();
     });
     cy.get(selector.notification).should('contain', data.pluginErrorAlert);

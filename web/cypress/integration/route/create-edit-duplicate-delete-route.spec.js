@@ -47,14 +47,14 @@ context('Create and Delete Route', () => {
     selectJSON: '.ant-select-dropdown [label=JSON]',
     drawerFooter: '.ant-drawer-footer',
     nameSelector: '[title=Name]',
-    monacoScroll: ".monaco-scrollable-element",
+    monacoScroll: '.monaco-scrollable-element',
     deleteAlert: '.ant-modal-body',
     notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
     addHost: '[data-cy=addHost]',
-    schemaErrorMessage: ".ant-form-item-explain.ant-form-item-explain-error",
-    advancedMatchingTable: ".ant-table-row.ant-table-row-level-0",
-    advancedMatchingTableOperation: ".ant-space"
+    schemaErrorMessage: '.ant-form-item-explain.ant-form-item-explain-error',
+    advancedMatchingTable: '.ant-table-row.ant-table-row-level-0',
+    advancedMatchingTableOperation: '.ant-space',
   };
 
   const data = {
@@ -71,6 +71,13 @@ context('Create and Delete Route', () => {
     description2: 'description2',
     deleteRouteSuccess: 'Delete Route Successfully',
   };
+
+  const opreatorList = [
+    'Equal(==)',
+    'Case insensitive regular match(~*)',
+    'HAS',
+    'Reverse the result(!)',
+  ];
 
   beforeEach(() => {
     cy.login();
@@ -92,18 +99,31 @@ context('Create and Delete Route', () => {
     cy.get(selector.remoteHost).type(data.host2);
     cy.get(selector.remoteAddress).click();
     cy.get(selector.address1).type(data.host3);
-    cy.contains('Advanced Routing Matching Conditions').parent().siblings().contains('Add').click();
 
-    // create advanced routing matching conditions
-    cy.get(selector.parameterPosition).click();
-    cy.contains('Cookie').click();
-    cy.get(selector.ruleCard).within(() => {
-      cy.get(selector.name).type('modalName');
+    // All Of Operational Character Should Exist And Can be Created
+    cy.wrap(opreatorList).each((opreator) => {
+      cy.contains('Advanced Routing Matching Conditions')
+        .parent()
+        .siblings()
+        .contains('Add')
+        .click()
+        .then(() => {
+          cy.get(selector.parameterPosition)
+            .click()
+            .then(() => {
+              cy.get('.ant-select-dropdown').within(() => {
+                cy.contains('Cookie').should('be.visible').click();
+              });
+            });
+          cy.get(selector.ruleCard).within(() => {
+            cy.get(selector.name).type('modalName');
+          });
+          cy.get(selector.operator).click();
+          cy.get(`[title="${opreator}"]`).should('be.visible').click();
+          cy.get(selector.value).type('value');
+          cy.contains('Confirm').click();
+        });
     });
-    cy.get(selector.operator).click();
-    cy.get('[title="Equal(==)"]').should('be.visible').click();
-    cy.get(selector.value).type('value');
-    cy.contains('Confirm').click();
 
     cy.contains('Next').click();
     cy.get(selector.nodes_0_host).type(data.host4);
@@ -183,7 +203,10 @@ context('Create and Delete Route', () => {
 
     cy.get(selector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
-      cy.contains('vars').should('exist')
+      cy.contains('vars').should('exist');
+      cy.contains('uri').should('exist');
+      cy.contains('hosts').should('exist');
+      cy.contains('remote_addr').should('exist');
       cy.contains(name).should('exist');
     });
   });
@@ -200,9 +223,12 @@ context('Create and Delete Route', () => {
     cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(selector.name).clear().type(newName);
     cy.get(selector.description).clear().type(data.description2);
+
     cy.get(selector.advancedMatchingTable).should('exist');
-    cy.get(selector.advancedMatchingTableOperation).within(() => {
-      cy.contains('Delete').click().should('not.exist');
+    cy.wrap(opreatorList).each(() => {
+      cy.get(selector.advancedMatchingTableOperation).within(() => {
+        cy.contains('Delete').click().should('not.exist');
+      });
     });
 
     cy.contains('Next').click();
