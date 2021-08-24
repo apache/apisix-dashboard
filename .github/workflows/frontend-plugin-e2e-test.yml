@@ -86,7 +86,7 @@ jobs:
         run: yarn
 
       - name: Start frontend then test
-        uses: cypress-io/github-action@v2
+        uses: ./.github/actions/github-action
         with:
           working-directory: web
           start: 'env SERVE_ENV=test yarn start'
