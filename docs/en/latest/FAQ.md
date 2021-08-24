@@ -126,6 +126,6 @@ enabled = true
 2. Allow access via iframe
 
 ```shell
-# grep 'allow_embedding'  defaults.ini
+# grep 'allow_embedding' defaults.ini
 allow_embedding = true
 ···
