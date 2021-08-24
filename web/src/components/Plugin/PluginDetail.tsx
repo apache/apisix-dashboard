@@ -107,7 +107,8 @@ const PluginDetail: React.FC<Props> = ({
   const [UIForm] = Form.useForm();
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.originType;
-  const pluginSchema = pluginList.find((item) => item.name === name)?.schema;
+  const schemaName = name === 'basic-auth' ? 'consumer_schema' : 'schema';
+  const pluginSchema = pluginList.find((item) => item.name === name)?.[schemaName];
   const [content, setContent] = useState<string>(JSON.stringify(data, null, 2));
   const [monacoMode, setMonacoMode] = useState<PluginComponent.MonacoLanguage>(monacoModeList.JSON);
   const modeOptions: { label: string; value: string }[] = [
