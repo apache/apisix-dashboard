@@ -62,7 +62,7 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
     case 'api-breaker':
       return <ApiBreaker form={form} />;
     case 'basic-auth':
-      return <BasicAuth form={form} schema={schema} />
+      return <BasicAuth form={form} schema={schema} />;
     case 'limit-count':
       return <LimitCount form={form} />;
     case 'cors':
@@ -72,7 +72,7 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
     case 'proxy-mirror':
       return <ProxyMirror form={form} />;
     case 'limit-conn':
-      return <LimitConn form={form} schema={schema} />
+      return <LimitConn form={form} schema={schema} />;
     case 'referer-restriction':
       return <RefererRestriction form={form} />;
     default:
