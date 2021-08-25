@@ -184,6 +184,8 @@ context('Create and Delete Upstream', () => {
       cy.contains('DNS').click();
     });
     cy.get(selector.service_name).type(data.serviceName);
+    cy.get(selector.discovery_type_group_name).should('not.exist');
+    cy.get(selector.discovery_type_namespace_id).should('not.exist');
 
     cy.get('#custom_checks_active').click();
     cy.get('#checks_active_port').clear();
