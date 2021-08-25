@@ -25,6 +25,15 @@ type Props = {
   readonly?: boolean;
 };
 
+const discoveryType = {
+  dns: {},
+  consul_kv: {},
+  nacos: {
+    args: ['group_name', 'namespace_id'],
+  },
+  eureka: {},
+};
+
 const ServiceDiscovery: React.FC<Props> = ({ readonly, form }) => {
   const { formatMessage } = useIntl();
 
@@ -42,18 +51,13 @@ const ServiceDiscovery: React.FC<Props> = ({ readonly, form }) => {
             id: 'component.upstream.fields.discovery_type.placeholder',
           })}
         >
-          <Select.Option value="dns">
-            {formatMessage({ id: 'component.upstream.fields.discovery_type.type.dns' })}
-          </Select.Option>
-          <Select.Option value="consul_kv">
-            {formatMessage({ id: 'component.upstream.fields.discovery_type.type.consul_kv' })}
-          </Select.Option>
-          <Select.Option value="nacos">
-            {formatMessage({ id: 'component.upstream.fields.discovery_type.type.nacos' })}
-          </Select.Option>
-          <Select.Option value="eureka">
-            {formatMessage({ id: 'component.upstream.fields.discovery_type.type.eureka' })}
-          </Select.Option>
+          {Object.keys(discoveryType).map((item) => {
+            return (
+              <Select.Option key={item} value={item}>
+                {formatMessage({ id: `component.upstream.fields.discovery_type.type.${item}` })}
+              </Select.Option>
+            );
+          })}
         </Select>
       </Form.Item>
       <Form.Item
@@ -69,8 +73,11 @@ const ServiceDiscovery: React.FC<Props> = ({ readonly, form }) => {
       </Form.Item>
       <Form.Item shouldUpdate noStyle>
         {() => {
-          if (form.getFieldValue('discovery_type') === 'nacos') {
-            return <ServiceDiscoveryArgs readonly={readonly} />;
+          if (!form.getFieldValue('discovery_type')) return null;
+
+          const { args } = discoveryType[form.getFieldValue('discovery_type')];
+          if (args && args.length > 0) {
+            return <ServiceDiscoveryArgs readonly={readonly} args={args} />;
           }
           return null;
         }}
