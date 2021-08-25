@@ -64,7 +64,7 @@ we have already defined many global keys, before you do i18n, you can refer to [
 
 ```js
 'page.route.form.itemRulesExtraMessage.parameterName': '仅支持字母和数字，且只能以字母开头',
-'page.route.form.itemRulesPatternMessage.apiNameRule': '最大长度应仅为 100',
+'page.route.form.itemRulesPatternMessage.apiNameRule': '最大长度应小于100',
 ```
 
 - **Input**
