@@ -82,6 +82,18 @@ context('Create Route with Service Discovery Upstream', () => {
     cy.contains(data.submitSuccess).should('be.visible');
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
+
+    // check if the service discovery have been saved
+    cy.get(selector.nameSelector).type(data.routeName);
+    cy.contains('Search').click();
+
+    cy.contains(data.routeName).siblings().contains('Configure').click();
+    // ensure it has already changed to edit page
+    cy.get(selector.name).should('value', data.routeName);
+    cy.contains('Next').click({
+      force: true,
+    });
+    cy.get(selector.service_name).should('value', data.serviceName);
   });
 
   it('should edit this route with Nacos Service Discovery upstream', function () {
@@ -97,7 +109,7 @@ context('Create Route with Service Discovery Upstream', () => {
       force: true,
     });
 
-    cy.wait(1000);
+    cy.contains('DNS').should('exist');
 
     // set another service discovery
     cy.get(selector.discovery_type).click({ force: true });
