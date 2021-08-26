@@ -26,6 +26,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
@@ -115,7 +116,8 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 
 		keyPairs, err := (*etcd).List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
 		if err != nil {
-			fmt.Println(err)
+			log.Errorf("etcd list failed: %s", err)
+			return
 		}
 
 		rs.Total += len(keyPairs)
@@ -125,7 +127,8 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 
 			cacheObj, err := (*s).Get(context.TODO(), key)
 			if err != nil {
-				fmt.Println(err)
+				log.Errorf("cache get failed: %s", err)
+				return
 			}
 
 			etcdValue := keyPairs[i].Value
@@ -184,13 +187,14 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 func compare(etcdValue string, cacheObj interface{}) (bool, string) {
 	s, err := json.Marshal(cacheObj)
 	if err != nil {
-		fmt.Printf("json marsharl failed : %cacheObj\n", err)
+		log.Errorf("json marsharl failed : %s\n", err)
 		return false, ""
 	}
 	cacheValue := string(s)
 	cmp, err := areEqualJSON(cacheValue, etcdValue)
 	if err != nil {
-		fmt.Printf("compare json failed %cacheObj\n", err)
+		log.Errorf("compare json failed: %s\n", err)
+		return false, ""
 	}
 	return cmp, cacheValue
 }
@@ -202,10 +206,12 @@ func areEqualJSON(s1, s2 string) (bool, error) {
 	var err error
 	err = json.Unmarshal([]byte(s1), &o1)
 	if err != nil {
+		log.Errorf("json unmarshal failed: %s", err)
 		return false, fmt.Errorf("error mashalling string 1 :: %s", err.Error())
 	}
 	err = json.Unmarshal([]byte(s2), &o2)
 	if err != nil {
+		log.Errorf("json unmarshal failed: %s", err)
 		return false, fmt.Errorf("error mashalling string 2 :: %s", err.Error())
 	}
 
