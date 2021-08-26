@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/spf13/cobra"
@@ -29,6 +28,7 @@ import (
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/handler/cache_verify"
+	"github.com/apisix/manager-api/internal/log"
 )
 
 var port int
@@ -46,6 +46,8 @@ func newCacheVerifyCommand() *cobra.Command {
 		Short: "verify that data in cache are consistent with that in ETCD",
 		Run: func(cmd *cobra.Command, args []string) {
 			conf.InitConf()
+			log.InitLogger()
+
 			port = conf.ServerPort
 			host = conf.ServerHost
 			username = "admin"
@@ -58,32 +60,36 @@ func newCacheVerifyCommand() *cobra.Command {
 
 			get, err := http.NewRequest("GET", url, nil)
 			if err != nil {
-				log.Fatal("new http request failed")
+				log.Errorf("new http request failed: %s", err)
+				return
 			}
 
 			get.Header.Set("Authorization", token)
 
 			rsp, err := client.Do(get)
 			if err != nil {
-				fmt.Println("get result from migrate/export failed")
+				log.Errorf("get result from migrate/export failed: %s", err)
 				return
 			}
 			defer func() {
 				err := rsp.Body.Close()
 				if err != nil {
-					fmt.Println("close on response body failed")
+					log.Errorf("close on response body failed: %s", err)
+					return
 				}
 			}()
 
 			data, err := ioutil.ReadAll(rsp.Body)
 			if err != nil {
-				fmt.Println(err)
+				log.Errorf("io read all failed: %s", err)
+				return
 			}
 
 			var rs response
 			err = json.Unmarshal(data, &rs)
 			if err != nil {
-				log.Fatal("bad Data format,json unmarshal failed")
+				log.Errorf("bad Data format,json unmarshal failed: %s", err)
+				return
 			}
 
 			fmt.Printf("cache verification result as follows:\n\n")
@@ -127,30 +133,35 @@ func getToken() string {
 
 	data, err := json.Marshal(account)
 	if err != nil {
-		log.Fatal("json marshal failed")
+		log.Errorf("json marshal failed: %s", err)
+		return ""
 	}
 
 	url := fmt.Sprintf("http://localhost:%d/apisix/admin/user/login", port)
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
 	if err != nil {
-		log.Fatal("login failed")
+		log.Errorf("login failed: %s", err)
+		return ""
 	}
 
 	defer func() {
 		err := resp.Body.Close()
 		if err != nil {
-			fmt.Println("close on response body failed")
+			log.Errorf("close on response body failed: %s", err)
+			return
 		}
 	}()
 
 	respObj, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println(err)
+		log.Errorf("io read all failed: %s", err)
+		return ""
 	}
 
 	token := gjson.Get(string(respObj), "data.token")
 	if !token.Exists() {
-		log.Fatal("no token found in response")
+		log.Errorf("no token found in response")
+		return ""
 	}
 	return token.String()
 }
