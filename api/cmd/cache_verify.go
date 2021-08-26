@@ -20,13 +20,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/apisix/manager-api/internal/conf"
-	"github.com/apisix/manager-api/internal/handler/cache_verify"
-	"github.com/spf13/cobra"
-	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/spf13/cobra"
+	"github.com/tidwall/gjson"
+
+	"github.com/apisix/manager-api/internal/conf"
+	"github.com/apisix/manager-api/internal/handler/cache_verify"
 )
 
 var port int

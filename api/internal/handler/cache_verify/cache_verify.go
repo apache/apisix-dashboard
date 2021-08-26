@@ -20,14 +20,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"path"
+	"reflect"
+
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
-	"path"
-	"reflect"
 )
 
 type Handler struct {

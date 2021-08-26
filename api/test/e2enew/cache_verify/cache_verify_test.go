@@ -17,11 +17,12 @@
 package cache_verify
 
 import (
+	"net/http"
+
 	"github.com/apisix/manager-api/test/e2enew/base"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
 	"github.com/tidwall/gjson"
-	"net/http"
 )
 
 var _ = ginkgo.Describe("Cache verify", func() {
