@@ -32,6 +32,7 @@ import (
 )
 
 var port int
+var username, password string
 
 type response struct {
 	Data cache_verify.OutputResult `json:"data"`
@@ -44,6 +45,9 @@ func newCacheVerifyCommand() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			conf.InitConf()
 			port = conf.ServerPort
+			username = "admin"
+			password = conf.UserList[username].Password
+
 			token := getToken()
 
 			url := fmt.Sprintf("http://localhost:%d/apisix/admin/cache_verify", port)
@@ -114,8 +118,8 @@ func newCacheVerifyCommand() *cobra.Command {
 
 func getToken() string {
 	account := map[string]string{
-		"username": "admin",
-		"password": "admin",
+		"username": username,
+		"password": password,
 	}
 
 	data, err := json.Marshal(account)
