@@ -107,7 +107,10 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/cache_verify", wgin.Wraps(h.CacheVerify))
 }
 
+var hubToData map[store.HubKey]*StatisticalData
+
 func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
+
 	checkConsistent := func(hubKey store.HubKey, s *store.Interface, rs *OutputResult, etcd *storage.Interface) {
 
 		keyPairs, err := (*etcd).List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
@@ -131,109 +134,50 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 			if !cmp {
 				rs.InconsistentCount++
 				cmpResult := inconsistentPair{EtcdValue: etcdValue, CacheValue: cacheValue, Key: key}
-				if hubKey == store.HubKeyConsumer {
-					// is there a way that I can avoid this if else ?
-					// 可以尝试用map实现?比如:items作为一个hubKey为key,statisticalData为value的map
-					rs.Items.Consumers.InconsistentCount++
-					rs.Items.Consumers.Total++
-					rs.Items.Consumers.InconsistentPairs = append(rs.Items.Consumers.InconsistentPairs, cmpResult)
-				}
-				if hubKey == store.HubKeyRoute {
-					rs.Items.Routes.InconsistentCount++
-					rs.Items.Routes.Total++
-					rs.Items.Routes.InconsistentPairs = append(rs.Items.Routes.InconsistentPairs, cmpResult)
-				}
-				if hubKey == store.HubKeyScript {
-					rs.Items.Scripts.InconsistentCount++
-					rs.Items.Scripts.Total++
-					rs.Items.Scripts.InconsistentPairs = append(rs.Items.Scripts.InconsistentPairs, cmpResult)
-				}
-				if hubKey == store.HubKeyService {
-					rs.Items.Services.InconsistentCount++
-					rs.Items.Services.Total++
-					rs.Items.Services.InconsistentPairs = append(rs.Items.Services.InconsistentPairs, cmpResult)
-				}
-				if hubKey == store.HubKeyGlobalRule {
-					rs.Items.GlobalPlugins.InconsistentCount++
-					rs.Items.GlobalPlugins.Total++
-					rs.Items.GlobalPlugins.InconsistentPairs = append(rs.Items.GlobalPlugins.InconsistentPairs, cmpResult)
-				}
-				if hubKey == store.HubKeyPluginConfig {
-					rs.Items.PluginConfigs.InconsistentCount++
-					rs.Items.PluginConfigs.Total++
-					rs.Items.PluginConfigs.InconsistentPairs = append(rs.Items.PluginConfigs.InconsistentPairs, cmpResult)
-				}
-				if hubKey == store.HubKeyUpstream {
-					rs.Items.Upstreams.InconsistentCount++
-					rs.Items.Upstreams.Total++
-					rs.Items.Upstreams.InconsistentPairs = append(rs.Items.Upstreams.InconsistentPairs, cmpResult)
-				}
-				if hubKey == store.HubKeySsl {
-					rs.Items.SSLs.InconsistentCount++
-					rs.Items.SSLs.Total++
-					rs.Items.SSLs.InconsistentPairs = append(rs.Items.SSLs.InconsistentPairs, cmpResult)
-				}
-				if hubKey == store.HubKeyServerInfo {
-					rs.Items.ServerInfos.Total++
-					rs.Items.ServerInfos.InconsistentCount++
-					rs.Items.ServerInfos.InconsistentPairs = append(rs.Items.ServerInfos.InconsistentPairs, cmpResult)
+
+				if v, ok := hubToData[hubKey]; ok {
+					v.InconsistentCount++
+					v.Total++
+					v.InconsistentPairs = append(v.InconsistentPairs, cmpResult)
 				}
 			} else {
 				rs.ConsistentCount++
-
-				if hubKey == store.HubKeyConsumer {
-					// is there a way that I can avoid this if else ?
-					// 可以尝试用map实现?比如:items作为一个hubKey为key,statisticalData为value的map
-					rs.Items.Consumers.ConsistentCount++
-					rs.Items.Consumers.Total++
-				}
-				if hubKey == store.HubKeyRoute {
-					rs.Items.Routes.ConsistentCount++
-					rs.Items.Routes.Total++
-				}
-				if hubKey == store.HubKeyScript {
-					rs.Items.Scripts.ConsistentCount++
-					rs.Items.Scripts.Total++
-				}
-				if hubKey == store.HubKeyService {
-					rs.Items.Services.ConsistentCount++
-					rs.Items.Services.Total++
-				}
-				if hubKey == store.HubKeyGlobalRule {
-					rs.Items.GlobalPlugins.ConsistentCount++
-					rs.Items.GlobalPlugins.Total++
-				}
-				if hubKey == store.HubKeyPluginConfig {
-					rs.Items.PluginConfigs.ConsistentCount++
-					rs.Items.PluginConfigs.Total++
-				}
-				if hubKey == store.HubKeyUpstream {
-					rs.Items.Upstreams.ConsistentCount++
-					rs.Items.Upstreams.Total++
-				}
-				if hubKey == store.HubKeySsl {
-					rs.Items.SSLs.ConsistentCount++
-					rs.Items.SSLs.Total++
-				}
-				if hubKey == store.HubKeyServerInfo {
-					rs.Items.ServerInfos.Total++
-					rs.Items.ServerInfos.ConsistentCount++
+				if v, ok := hubToData[hubKey]; ok {
+					v.ConsistentCount++
+					v.Total++
 				}
 			}
 		}
 	}
 
 	var rs OutputResult
-	// todo this will panic when consumerStore is nil?
-	checkConsistent(store.HubKeyConsumer, &h.consumerStore, &rs, &h.etcdStorage)
-	checkConsistent(store.HubKeyRoute, &h.routeStore, &rs, &h.etcdStorage)
-	checkConsistent(store.HubKeyService, &h.serviceStore, &rs, &h.etcdStorage)
-	checkConsistent(store.HubKeySsl, &h.sslStore, &rs, &h.etcdStorage)
-	checkConsistent(store.HubKeyUpstream, &h.upstreamStore, &rs, &h.etcdStorage)
-	checkConsistent(store.HubKeyScript, &h.scriptStore, &rs, &h.etcdStorage)
-	checkConsistent(store.HubKeyGlobalRule, &h.globalPluginStore, &rs, &h.etcdStorage)
-	checkConsistent(store.HubKeyPluginConfig, &h.pluginConfigStore, &rs, &h.etcdStorage)
-	checkConsistent(store.HubKeyServerInfo, &h.serverInfoStore, &rs, &h.etcdStorage)
+
+	hubToData = make(map[store.HubKey]*StatisticalData)
+	hubToData[store.HubKeyConsumer] = &rs.Items.Consumers
+	hubToData[store.HubKeyRoute] = &rs.Items.Routes
+	hubToData[store.HubKeyScript] = &rs.Items.Scripts
+	hubToData[store.HubKeyService] = &rs.Items.Services
+	hubToData[store.HubKeyGlobalRule] = &rs.Items.GlobalPlugins
+	hubToData[store.HubKeyPluginConfig] = &rs.Items.PluginConfigs
+	hubToData[store.HubKeyUpstream] = &rs.Items.Upstreams
+	hubToData[store.HubKeySsl] = &rs.Items.SSLs
+	hubToData[store.HubKeyServerInfo] = &rs.Items.ServerInfos
+
+	keyToStore := make(map[store.HubKey]*store.Interface)
+	keyToStore[store.HubKeyConsumer] = &h.consumerStore
+	keyToStore[store.HubKeyRoute] = &h.routeStore
+	keyToStore[store.HubKeyService] = &h.serviceStore
+	keyToStore[store.HubKeySsl] = &h.sslStore
+	keyToStore[store.HubKeyUpstream] = &h.upstreamStore
+	keyToStore[store.HubKeyScript] = &h.scriptStore
+	keyToStore[store.HubKeyGlobalRule] = &h.globalPluginStore
+	keyToStore[store.HubKeyPluginConfig] = &h.pluginConfigStore
+	keyToStore[store.HubKeyServerInfo] = &h.serverInfoStore
+
+	for k, v := range keyToStore {
+		checkConsistent(k, v, &rs, &h.etcdStorage)
+	}
+
 	return rs, nil
 }
 
