@@ -137,7 +137,7 @@ func getToken() string {
 		return ""
 	}
 
-	url := fmt.Sprintf("http://localhost:%d/apisix/admin/user/login", port)
+	url := fmt.Sprintf("http://%s:%d/apisix/admin/user/login", host, port)
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
 	if err != nil {
 		log.Errorf("login failed: %s", err)
