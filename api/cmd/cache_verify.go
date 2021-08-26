@@ -83,23 +83,31 @@ func newCacheVerifyCommand() *cobra.Command {
 			fmt.Printf("There are %d items in total,%d of them are consistent,%d of them are inconsistent\n",
 				rs.Data.Total, rs.Data.ConsistentCount, rs.Data.InconsistentCount)
 
-			printResult("ssls", rs.Data.Items.SSLs)
-
-			printResult("routes", rs.Data.Items.Routes)
-
-			printResult("scripts", rs.Data.Items.Scripts)
-
-			printResult("services", rs.Data.Items.Services)
-
-			printResult("upstreams", rs.Data.Items.Upstreams)
-
-			printResult("consumers", rs.Data.Items.Consumers)
-
-			printResult("server infos", rs.Data.Items.ServerInfos)
-
-			printResult("global plugins", rs.Data.Items.GlobalPlugins)
-
-			printResult("plugin configs", rs.Data.Items.PluginConfigs)
+			names := []string{
+				"ssls",
+				"routes",
+				"scripts",
+				"services",
+				"upstreams",
+				"consumers",
+				"server infos",
+				"global plugins",
+				"plugin configs",
+			}
+			datas := []cache_verify.StatisticalData{
+				rs.Data.Items.SSLs,
+				rs.Data.Items.Routes,
+				rs.Data.Items.Scripts,
+				rs.Data.Items.Services,
+				rs.Data.Items.Upstreams,
+				rs.Data.Items.Consumers,
+				rs.Data.Items.ServerInfos,
+				rs.Data.Items.GlobalPlugins,
+				rs.Data.Items.PluginConfigs,
+			}
+			for i, v := range names {
+				printResult(v, datas[i])
+			}
 		},
 	}
 }
