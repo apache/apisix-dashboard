@@ -32,6 +32,8 @@ import (
 )
 
 var port int
+var host string
+
 var username, password string
 
 type response struct {
@@ -45,12 +47,13 @@ func newCacheVerifyCommand() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			conf.InitConf()
 			port = conf.ServerPort
+			host = conf.ServerHost
 			username = "admin"
 			password = conf.UserList[username].Password
 
 			token := getToken()
 
-			url := fmt.Sprintf("http://localhost:%d/apisix/admin/cache_verify", port)
+			url := fmt.Sprintf("http://%s:%d/apisix/admin/cache_verify", host, port)
 			client := &http.Client{}
 
 			get, err := http.NewRequest("GET", url, nil)
