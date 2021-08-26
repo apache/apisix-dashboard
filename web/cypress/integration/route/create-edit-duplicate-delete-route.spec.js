@@ -90,7 +90,7 @@ context('Create and Delete Route', () => {
     cy.contains('Route').click();
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
-    cy.contains('Next').click().click();
+    cy.contains('Next').click();
     cy.get(selector.name).type(data.invalidName);
     cy.contains(selector.schemaErrorMessage, 'Maximum length should be of 100 only').should(
       'be.visible',
