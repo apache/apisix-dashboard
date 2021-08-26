@@ -27,11 +27,8 @@ import (
 
 var _ = ginkgo.Describe("Cache verify", func() {
 
-	//ginkgo.It("prepare config data", prepareConfigData)
-
 	ginkgo.It("cache verify ", func() {
 
-		// we access this API twice,assert the diff
 		headers := map[string]string{
 			"Authorization": base.GetToken(),
 		}
@@ -41,8 +38,20 @@ var _ = ginkgo.Describe("Cache verify", func() {
 		gomega.Expect(err).Should(gomega.BeNil())
 
 		oldTotal := gjson.Get((string)(oldData), "data.total")
-		gomega.Expect(oldTotal.Exists()).Should(gomega.Equal(true))
+		gomega.Expect(oldTotal.Exists()).Should(gomega.BeTrue())
 		oldTotalInt := oldTotal.Int()
+
+		oldRouteTotal := gjson.Get(string(oldData), "data.items.routes.total")
+		gomega.Expect(oldRouteTotal.Exists()).Should(gomega.BeTrue())
+		oldRouteTotalInt := oldRouteTotal.Int()
+
+		oldUpstreamTotal := gjson.Get(string(oldData), "data.items.upstreams.total")
+		gomega.Expect(oldUpstreamTotal.Exists()).Should(gomega.BeTrue())
+		oldUpstreamTotalInt := oldUpstreamTotal.Int()
+
+		oldServiceTotal := gjson.Get(string(oldData), "data.items.services.total")
+		gomega.Expect(oldServiceTotal.Exists()).Should(gomega.BeTrue())
+		oldServiceTotalInt := oldServiceTotal.Int()
 
 		prepareConfigData()
 
@@ -54,19 +63,37 @@ var _ = ginkgo.Describe("Cache verify", func() {
 		gomega.Expect(newTotal.Exists()).Should(gomega.Equal(true))
 		newTotalInt := newTotal.Int()
 
+		newRouteTotal := gjson.Get(string(newData), "data.items.routes.total")
+		gomega.Expect(newRouteTotal.Exists()).Should(gomega.BeTrue())
+		newRouteTotalInt := newRouteTotal.Int()
+
+		newUpstreamTotal := gjson.Get(string(newData), "data.items.upstreams.total")
+		gomega.Expect(newUpstreamTotal.Exists()).Should(gomega.BeTrue())
+		newUpstreamTotalInt := newUpstreamTotal.Int()
+
+		newServiceTotal := gjson.Get(string(newData), "data.items.services.total")
+		gomega.Expect(newServiceTotal.Exists()).Should(gomega.BeTrue())
+		newServiceTotalInt := newServiceTotal.Int()
+
+		// check that we add those configs successfully
 		gomega.Expect(newTotalInt).Should(gomega.Equal(oldTotalInt + 3))
 
-	})
+		// check route,upstream,service has incremented by 1
+		gomega.Expect(newRouteTotalInt).Should(gomega.Equal(oldRouteTotalInt + 1))
+		gomega.Expect(newUpstreamTotalInt).Should(gomega.Equal(oldUpstreamTotalInt + 1))
+		gomega.Expect(newServiceTotalInt).Should(gomega.Equal(oldServiceTotalInt + 1))
 
-	ginkgo.It("request hit route r1", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello_",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        base.SleepTime,
-		})
+		// check consistent ones + inconsistent ones = total
+		consistentRouteCount := gjson.Get(string(newData), "data.items.routes.consistent_count")
+		gomega.Expect(consistentRouteCount.Exists()).Should(gomega.BeTrue())
+		consistentRouteCountInt := consistentRouteCount.Int()
+
+		inConsistentRouteCount := gjson.Get(string(newData), "data.items.routes.inconsistent_count")
+		gomega.Expect(inConsistentRouteCount.Exists()).Should(gomega.BeTrue())
+		inConsistentRouteCountInt := consistentRouteCount.Int()
+
+		gomega.Expect(consistentRouteCountInt + inConsistentRouteCountInt).Should(gomega.Equal(newRouteTotalInt))
+
 	})
 
 	ginkgo.It("delete all config", deleteConfigData)
