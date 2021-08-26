@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, InputNumber, Select, Switch } from 'antd';
+import { Form, Input, InputNumber, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
@@ -99,6 +99,13 @@ const LimitReq: React.FC<Props> = ({ form, schema }) => {
           min={propertires.rejected_code.minimum}
           max={propertires.rejected_code.maximum}
         />
+      </Form.Item>
+      <Form.Item
+        label="reject_message"
+        name="reject_message"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.reject_message.tooltip' })}
+      >
+        <Input />
       </Form.Item>
       <Form.Item
         label="nodelay"

@@ -3383,6 +3383,10 @@
 						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
+					},
+					"reject_message": {
+						"minLength": 1,
+						"type": "string"
 					}
 				},
 				"required": ["burst", "conn", "default_conn_delay", "key"],
@@ -3487,6 +3491,10 @@
 						"minimum": 200,
 						"type": "integer"
 					},
+					"reject_message": {
+						"minLength": 1,
+						"type": "string"
+					},
 					"time_window": {
 						"exclusiveMinimum": 0,
 						"type": "integer"
@@ -3526,6 +3534,10 @@
 						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
+					},
+					"reject_message": {
+						"minLength": 1,
+						"type": "string"
 					}
 				},
 				"required": ["burst", "key", "rate"],

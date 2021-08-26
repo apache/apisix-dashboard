@@ -84,7 +84,9 @@ export default {
   'component.pluginForm.limit-conn.key.tooltip':
     'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests. Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
-    'returned when the request exceeds conn + burst will be rejected.',
+    'HTTP status code returned when the request exceeds conn + burst will be rejected.',
+  'component.pluginForm.limit-conn.reject_message.tooltip':
+    'message returned when the request exceeds conn + burst will be rejected.',
 
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip':
@@ -95,6 +97,8 @@ export default {
     'The user specified key to limit the rate, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected.',
+  'component.pluginForm.limit-req.reject_message.tooltip':
+    'message returned when the request exceeds the threshold and will be rejected.',
   'component.pluginForm.limit-req.nodelay.tooltip':
     'If nodelay flag is true, bursted requests will not get delayed',
 
@@ -128,4 +132,6 @@ export default {
   'component.pluginForm.limit-count.redis_cluster_name.tooltip':
     'When using redis-cluster policy, this property is the name of Redis cluster service nodes.',
   'component.pluginForm.limit-count.atLeast2Characters.rule': 'Please enter at least 2 characters',
+  'component.pluginForm.limit-count.reject_message.tooltip':
+    'message returned when the request exceeds the threshold and will be rejected.',
 };
