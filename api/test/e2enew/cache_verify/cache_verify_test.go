@@ -90,7 +90,7 @@ var _ = ginkgo.Describe("Cache verify", func() {
 
 		inConsistentRouteCount := gjson.Get(string(newData), "data.items.routes.inconsistent_count")
 		gomega.Expect(inConsistentRouteCount.Exists()).Should(gomega.BeTrue())
-		inConsistentRouteCountInt := consistentRouteCount.Int()
+		inConsistentRouteCountInt := inConsistentRouteCount.Int()
 
 		gomega.Expect(consistentRouteCountInt + inConsistentRouteCountInt).Should(gomega.Equal(newRouteTotalInt))
 
