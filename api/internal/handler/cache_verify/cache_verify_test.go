@@ -19,11 +19,11 @@ package cache_verify
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -34,13 +34,15 @@ func TestHandler_CacheVerify(t *testing.T) {
 	var andyObj interface{}
 	err := json.Unmarshal([]byte(andyStr), &andyObj)
 	if err != nil {
-		fmt.Printf("unmarshal error :: %s", err.Error())
+		log.Errorf("unmarshal error :: %s", err)
+		return
 	}
 	brokenAndyStr := `{"username":"andy","plugins":{"key-auth":{"key":"key-of-john"}},"create_time":1627739046,"update_time":1627744978}`
 	var brokenAndyObj interface{}
 	err = json.Unmarshal([]byte(brokenAndyStr), &brokenAndyObj)
 	if err != nil {
-		fmt.Printf("unmarshal error :: %s", err.Error())
+		log.Errorf("unmarshal error :: %s", err)
+		return
 	}
 	consumerPrefix := "/apisix/consumers/"
 
@@ -91,46 +93,12 @@ func TestHandler_CacheVerify(t *testing.T) {
 			mockConsumerCache.On("Get", tc.getInput).Return(tc.getRet, nil)
 			handler := Handler{consumerStore: &mockConsumerCache, etcdStorage: &mockEtcdStorage}
 			rs, err := handler.CacheVerify(droplet.NewContext())
-			//fmt.Println((string)(rs))
 			assert.Nil(t, err, nil)
-			// todo 因为现在输出了很多统计信息,那么测试的时候,就要相应的assert这些
 			v, ok := rs.(OutputResult)
 			assert.True(t, ok, true)
 			assert.Equal(t, v.Items.Consumers.InconsistentCount, tc.wantInconsistentConsumer)
 
-			// test output of command line,when there are inconsistent items
-			//fmt.Printf("cache verification result as follows:\n\n")
-			//fmt.Printf("There are %d items in total,%d of them are consistent,%d of them are inconsistent\n",
-			//	v.Total, v.ConsistentCount, v.InconsistentCount)
-			//
-			//printResult("ssls", v.Items.SSLs)
-			//
-			//printResult("routes", v.Items.Routes)
-			//
-			//printResult("scripts", v.Items.Scripts)
-			//
-			//printResult("services", v.Items.Services)
-			//
-			//printResult("upstreams", v.Items.Upstreams)
-			//
-			//printResult("consumers", v.Items.Consumers)
-			//
-			//printResult("server infos", v.Items.ServerInfos)
-			//
-			//printResult("global plugins", v.Items.GlobalPlugins)
-			//
-			//printResult("plugin configs", v.Items.PluginConfigs)
 		})
 	}
 
 }
-
-//func printResult(name string, data StatisticalData) {
-//	fmt.Printf("%-15s: %d in total,%d consistent,%d inconsistent\n", name, data.Total, data.ConsistentCount, data.InconsistentCount)
-//	if data.InconsistentCount > 0 {
-//		fmt.Printf("inconsistent %s:\n", name)
-//		for _, pair := range data.InconsistentPairs {
-//			fmt.Printf("[key](%s)\n[etcd](%s)\n[cache](%s)\n", pair.Key, pair.EtcdValue, pair.CacheValue)
-//		}
-//	}
-//}
