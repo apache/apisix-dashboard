@@ -1,7 +1,24 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package proto
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -17,6 +34,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
@@ -49,6 +67,10 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PUT("/apisix/admin/proto/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+	r.PATCH("/apisix/admin/upstreams/:id", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+	r.PATCH("/apisix/admin/upstreams/:id/*path", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 	r.DELETE("/apisix/admin/proto/:id", wgin.Wraps(h.Delete,
 		wrapper.InputType(reflect.TypeOf(DeleteInput{}))))
 }
@@ -149,6 +171,42 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	return res, nil
+}
+
+type PatchInput struct {
+	ID      string `auto_read:"id,path"`
+	SubPath string `auto_read:"path,path"`
+	Body    []byte `auto_read:"@body"`
+}
+
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PatchInput)
+	reqBody := input.Body
+	id := input.ID
+	subPath := input.SubPath
+
+	stored, err := h.protoStore.Get(c.Context(), id)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	res, err := utils.MergePatch(stored, subPath, reqBody)
+
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	var proto entity.Proto
+	if err := json.Unmarshal(res, &proto); err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	ret, err := h.protoStore.Update(c.Context(), &proto, false)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return ret, nil
 }
 
 type DeleteInput struct {
