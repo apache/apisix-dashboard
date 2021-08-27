@@ -38,6 +38,7 @@ const (
 	HubKeyGlobalRule   HubKey = "global_rule"
 	HubKeyServerInfo   HubKey = "server_info"
 	HubKeyPluginConfig HubKey = "plugin_config"
+	HubKeyStreamRoute  HubKey = "stream_route"
 )
 
 var (
@@ -194,6 +195,18 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.PluginConfig{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.PluginConfig)
+			return utils.InterfaceToString(r.ID)
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyStreamRoute, GenericStoreOption{
+		BasePath: conf.ETCDConfig.Prefix + "/stream_routes",
+		ObjType:  reflect.TypeOf(entity.StreamRoute{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.StreamRoute)
 			return utils.InterfaceToString(r.ID)
 		},
 	})

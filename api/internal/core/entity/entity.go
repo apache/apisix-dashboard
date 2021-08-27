@@ -280,3 +280,13 @@ type PluginConfig struct {
 	Plugins map[string]interface{} `json:"plugins"`
 	Labels  map[string]string      `json:"labels,omitempty"`
 }
+
+type StreamRoute struct {
+	BaseInfo
+	RemoteAddr string       `json:"remote_addr"`
+	ServerAddr string       `json:"server_addr"`
+	ServerPort int          `json:"server_port"`
+	Sni        string       `json:"sni"`
+	Upstream   *UpstreamDef `json:"upstream"`
+	UpstreamID interface{}  `json:"upstream_id"`
+}
