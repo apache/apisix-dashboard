@@ -35,7 +35,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -71,8 +70,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 	r.PATCH("/apisix/admin/proto/:id/*path", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
-	r.DELETE("/apisix/admin/proto/:id", wgin.Wraps(h.Delete,
-		wrapper.InputType(reflect.TypeOf(DeleteInput{}))))
+	r.DELETE("/apisix/admin/proto/:id", wgin.Wraps(h.BatchDelete,
+		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
 }
 
 var plugins = []string{"grpc-transcode"}
@@ -212,77 +211,46 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
-type DeleteInput struct {
-	ID string `auto_read:"id,path"`
+type BatchDeleteInput struct {
+	IDs string `auto_read:"ids,path"`
 }
 
-func (h *Handler) Delete(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*DeleteInput)
+func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*BatchDeleteInput)
 
-	fmt.Println(reflect.TypeOf(entity.Route{}))
+	ids := strings.Split(input.IDs, ",")
 
-	// check route plugin dependencies
+	for _, id := range ids {
+		// check route plugin dependencies
+		if err := checkProtoUsed(c.Context(), store.HubKeyRoute, id); err != nil {
+			return handler.SpecCodeResponse(err), err
+		}
 
-	if err := checkProtoUsed(c.Context(), store.HubKeyRoute, input.ID); err != nil {
+		// check consumer plugin dependencies
+		if err := checkProtoUsed(c.Context(), store.HubKeyConsumer, id); err != nil {
+			return handler.SpecCodeResponse(err), err
+		}
+
+		// check service plugin dependencies
+		if err := checkProtoUsed(c.Context(), store.HubKeyService, id); err != nil {
+			return handler.SpecCodeResponse(err), err
+		}
+
+		// check plugin template dependencies
+		if err := checkProtoUsed(c.Context(), store.HubKeyPluginConfig, id); err != nil {
+			return handler.SpecCodeResponse(err), err
+		}
+
+		// check global plugin dependencies
+		if err := checkProtoUsed(c.Context(), store.HubKeyGlobalRule, id); err != nil {
+			return handler.SpecCodeResponse(err), err
+		}
+	}
+
+	if err := h.protoStore.BatchDelete(c.Context(), ids); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	// check consumer plugin dependencies
-	if err := checkProtoUsed(c.Context(), store.HubKeyConsumer, input.ID); err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-
-	// check service plugin dependencies
-	if err := checkProtoUsed(c.Context(), store.HubKeyService, input.ID); err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-
-	// check plugin template dependencies
-	if err := checkProtoUsed(c.Context(), store.HubKeyPluginConfig, input.ID); err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-
-	// check global plugin dependencies
-	if err := checkProtoUsed(c.Context(), store.HubKeyGlobalRule, input.ID); err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-
-	if err := h.protoStore.BatchDelete(c.Context(), []string{input.ID}); err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-
-	return nil, nil
-}
-
-type ExistCheckInput struct {
-	ID      string `auto_read:"id,query"`
-	Exclude string `auto_read:"exclude,query"`
-}
-
-func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*ExistCheckInput)
-	id := input.ID
-	exclude := input.Exclude
-
-	ret, err := h.protoStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			r := obj.(*entity.Proto)
-			if r.ID == id && r.ID != exclude {
-				return true
-			}
-			return false
-		},
-		PageSize:   0,
-		PageNumber: 0,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	if ret.TotalSize > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, consts.InvalidParam("Proto ID is reduplicate")
-	}
 	return nil, nil
 }
 
