@@ -67,9 +67,9 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PUT("/apisix/admin/proto/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.PATCH("/apisix/admin/upstreams/:id", wgin.Wraps(h.Patch,
+	r.PATCH("/apisix/admin/proto/:id", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
-	r.PATCH("/apisix/admin/upstreams/:id/*path", wgin.Wraps(h.Patch,
+	r.PATCH("/apisix/admin/proto/:id/*path", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 	r.DELETE("/apisix/admin/proto/:id", wgin.Wraps(h.Delete,
 		wrapper.InputType(reflect.TypeOf(DeleteInput{}))))
