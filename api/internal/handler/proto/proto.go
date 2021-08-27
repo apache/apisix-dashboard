@@ -128,17 +128,20 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 
 	// check proto id exist
 	ret, err := h.protoStore.Get(c.Context(), input.ID.(string))
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
 	if ret != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("proto id exists")
 	}
 
 	// create
-	res, err := h.protoStore.Create(c.Context(), input)
+	ret, err = h.protoStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return res, nil
+	return ret, nil
 }
 
 type UpdateInput struct {
