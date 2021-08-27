@@ -540,52 +540,15 @@ fi
 sleep 6
 clean_up
 
-# run manager api as os service
-# 2 times OK for installing and starting
-if [[ `echo $(sudo ./manager-api start) | grep -o "OK" | wc -l` -ne "2" ]]; then
-  echo "error while initializing the service"
-  exit 1
-fi
-# check running status
-if [[ `echo $(sudo ./manager-api status) | grep -c "running..."` -ne "1" ]]; then
-  echo "error while starting the service"
-  exit 1
-fi
-# stop the service
-sudo ./manager-api stop
-sleep 2
-# recheck running status
-if [[ `echo $(sudo ./manager-api status) | grep -c "Service is stopped"` -ne "1" ]]; then
-  echo "error while stopping the service"
-  exit 1
-fi
-# restart the service
-# 1 time OK for just for starting
-if [[ `echo $(sudo ./manager-api start) | grep -c "OK"` -ne "1" ]]; then
-  echo "error while restarting the service"
-  exit 1
-fi
-# stop the service
-sudo ./manager-api stop
-sleep 2
-# remove the service
-if [[ `echo $(sudo ./manager-api remove) | grep -c "OK"` -ne "1" ]]; then
-  echo "error while removing the service"
-  exit 1
-fi
-
-clean_up
 # Testing Manager API for existing PID file in /tmp
-echo "" & # Creating a PID that hasn't been taken.
+echo "TEST 1 - Old Released PID" & # Creating a PID that hasn't been taken.
 echo $! >/tmp/manager-api.pid
 sleep 2
 # ls process no longer exists, so Manager API should run successfully even with existing pid file.
-./manager-api 2>man-api.err &
+./manager-api 2>man-api.log &
 sleep 4
 
-if [ -s man-api.err ]; then # checking if file contains some error log
-  cat man-api.err
-  lsof -i :9000
+if [ -s man-api.log ]; then # checking if file contains some error log
   echo "Manager API didn't run successfully for a stale PID file"
   exit 1
 fi
@@ -593,33 +556,37 @@ fi
 sleep 6
 
 # Creating a long running process & testing the behaviour.
-watch ls &
-WATCH_PID=$!
-echo $WATCH_PID >/tmp/manager-api.pid
-sleep 1
-# manager-api.pid contains process id for which a process is already running.
-./manager-api 2>man-api.err &
+# TEST2 - Existing PID & another instance is running.
+rm -f /tmp/manager-api.pid
+sleep 2
+./manager-api & # Running another instance of manager-api in background.
+BG_PID=$!
 sleep 4
-if [ ! -s man-api.err ]; then # checking if file is empty
+# manager-api.pid contains process id for which a process is already running.
+./manager-api 2>man-api.log &
+sleep 4
+if [ ! -s man-api.log ]; then # checking if file is empty
   echo "Manager API run successfully for a running pid present in manager-api.pid without --force flag"
   exit 1
 fi
 
-# Running manager-api with --force, it should run successfully
-./manager-api --force 2>man-api.err &
+# TEST3 - Running manager-api with --force, it should run successfully
+./manager-api --force 2>man-api.log &
 sleep 4
-if [ -s man-api.err ]; then
+if [ -s man-api.log ]; then
   echo "Manager API didn't run successfully for a running pid present in manager-api.pid with --force flag"
   exit 1
 fi
 ./manager-api stop
 sleep 6
-# "watch ls &" should be killed by now.
+#  Old Manager-API should be killed by now.
 
-if kill -s 0 $WATCH_PID; then # checking the pid status
+if kill -s 0 $BG_PID; then # checking the pid status
   echo "Manager API failed to kill the existing pid present in the /tmp/manager-api.pid"
   exit 1
 fi
+
+clean_up
 
 pkill -f etcd
 
