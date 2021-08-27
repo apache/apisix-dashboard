@@ -512,6 +512,7 @@ if [[ `echo $(sudo ./manager-api start) | grep -c "OK"` -ne "1" ]]; then
   echo "error while restarting the service"
   exit 1
 fi
+sleep 6 # small sleep
 # stop the service
 sudo ./manager-api stop
 sleep 2
