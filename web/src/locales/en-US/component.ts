@@ -36,7 +36,7 @@ export default {
   'component.global.edit': 'Configure',
   'component.global.view': 'View',
   'component.global.duplicate': 'Duplicate',
-  'component.global.debug': 'debug',
+  'component.global.debug': 'Debug',
   'component.global.manage': 'Manage',
   'component.global.update': 'Update',
   'component.global.get': 'Get',

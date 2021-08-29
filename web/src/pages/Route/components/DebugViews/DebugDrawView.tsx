@@ -231,13 +231,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   };
 
   const handleDebug = (url: string) => {
-    /* eslint-disable no-useless-escape */
-    /* if (!urlRegexSafe({ exact: true, strict: false }).test(url)) {
-      notification.warning({
-        message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
-      });
-      return;
-    } */
     const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
     const bodyFormRelateData = transformBodyParamsFormData();
     const { bodyFormData, header: bodyFormHeader } = bodyFormRelateData;
@@ -312,9 +305,16 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         props.onClose();
         setPathWildcardRewriteVisible(false);
         setPathWildcardRewrite('');
+        setResponse(null);
+        queryForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
+        urlencodedForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
+        formDataForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
+        headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
+        authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
       }}
       className={styles.routeDebugDraw}
       data-cy="debug-draw"
+      destroyOnClose={true}
     >
       <Card bordered={false}>
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.requestLine' })}>
@@ -367,10 +367,10 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 if (value.endsWith('*')) {
                   setPathWildcardRewrite('');
                   setPathWildcardRewriteVisible(true);
-                  setPathWildcardRewritePrefix(value ? value.replace('*', '') : '');
+                  setPathWildcardRewritePrefix(value.slice(0, value.length - 1));
                 } else {
                   setPathWildcardRewriteVisible(false);
-                  setPathWildcardRewritePrefix('');
+                  setPathWildcardRewritePrefix(value);
                   setPathWildcardRewrite('');
                 }
               }}
@@ -384,7 +384,12 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                         value: path,
                       };
                     })
-                  : []
+                  : [
+                      {
+                        label: props.data.uri,
+                        value: props.data.uri,
+                      },
+                    ]
               }
             />
             <Divider

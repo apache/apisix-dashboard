@@ -119,13 +119,15 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	}
 	route := r.(*entity.Route)
 
-	host := route.Hosts[0]
+	host := route.Host
 
-	if uri, ok := route.Plugins["proxy-rewrite"].(map[string]interface{})["uri"]; ok {
-		requestPath = uri.(string)
-	}
-	if rewriteHost, ok := route.Plugins["proxy-rewrite"].(map[string]interface{})["host"]; ok {
-		host = rewriteHost.(string)
+	if route.Plugins != nil {
+		if uri, ok := route.Plugins["proxy-rewrite"].(map[string]interface{})["uri"]; ok {
+			requestPath = uri.(string)
+		}
+		if rewriteHost, ok := route.Plugins["proxy-rewrite"].(map[string]interface{})["host"]; ok {
+			host = rewriteHost.(string)
+		}
 	}
 
 	if route.Upstream != nil {
