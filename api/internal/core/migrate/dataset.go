@@ -25,7 +25,7 @@ import (
 )
 
 type DataSet struct {
-	Counsumers    []*entity.Consumer
+	Consumers     []*entity.Consumer
 	Routes        []*entity.Route
 	Services      []*entity.Service
 	SSLs          []*entity.SSL
@@ -37,7 +37,7 @@ type DataSet struct {
 
 func newDataSet() *DataSet {
 	return &DataSet{
-		Counsumers:    make([]*entity.Consumer, 0),
+		Consumers:     make([]*entity.Consumer, 0),
 		Routes:        make([]*entity.Route, 0),
 		Services:      make([]*entity.Service, 0),
 		SSLs:          make([]*entity.SSL, 0),
@@ -51,7 +51,7 @@ func newDataSet() *DataSet {
 func (a *DataSet) rangeData(key store.HubKey, f func(int, interface{}) bool) {
 	switch key {
 	case store.HubKeyConsumer:
-		for i, v := range a.Counsumers {
+		for i, v := range a.Consumers {
 			if !f(i, v) {
 				break
 			}
@@ -105,7 +105,7 @@ func (a *DataSet) Add(obj interface{}) error {
 	var err error = nil
 	switch obj := obj.(type) {
 	case *entity.Consumer:
-		a.Counsumers = append(a.Counsumers, obj)
+		a.Consumers = append(a.Consumers, obj)
 	case *entity.Route:
 		a.Routes = append(a.Routes, obj)
 	case *entity.Service:

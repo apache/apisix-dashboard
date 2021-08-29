@@ -32,7 +32,7 @@
 
 - The master version should be used with Apache APISIX master version.
 
-- The latest released version is [2.7](https://apisix.apache.org/downloads/) and should be used with [Apache APISIX 2.6](https://apisix.apache.org/downloads/). It is not recommended to use with other Apache APISIX versions.
+- The latest released version is [2.7.1](https://apisix.apache.org/downloads/) and is compatible with [Apache APISIX 2.7](https://apisix.apache.org/downloads/).
 
 ## What's Apache APISIX Dashboard
 
@@ -46,7 +46,7 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 
 ## Demo
 
-```
+```text
 URL: http://139.217.190.60/
 Username: admin
 Password: admin
@@ -54,7 +54,7 @@ Password: admin
 
 ## Project structure
 
-```
+```text
 .
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md

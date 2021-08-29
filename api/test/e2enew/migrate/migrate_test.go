@@ -35,7 +35,7 @@ const (
 )
 
 type AllData struct {
-	Counsumers    []interface{}
+	Consumers     []interface{}
 	Routes        []interface{}
 	Services      []interface{}
 	SSLs          []interface{}

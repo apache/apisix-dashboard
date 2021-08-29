@@ -39,13 +39,13 @@ jobs:
         run: |
           export VERSION=${{ steps.branch_env.outputs.version }}
           sudo gem install --no-document fpm
-          git clone https://github.com/api7/apisix-build-tools.git
+          git clone -b v2.0.0 https://github.com/api7/apisix-build-tools.git
           cd apisix-build-tools
           export checkout=master
           if [ "$VERSION" != "merge" && "$VERSION" != "master" ];then
             export checkout=release/${VERSION}
           fi
-          make package type=rpm app=dashboard version=${VERSION} checkout=${checkout}
+          make package type=rpm app=dashboard version=${VERSION} checkout=${checkout} image_base=centos image_tag=7
 
       - name: Run centos7 docker and mapping apisix into container
         run: |
@@ -54,7 +54,7 @@ jobs:
       - name: Install rpm package
         run: |
           export VERSION=${{ steps.branch_env.outputs.version }}
-          docker exec centos7Instance bash -c "cd apisix-dashboard && yum install -y ./apisix-build-tools/output/apisix-dashboard-${VERSION}-0.x86_64.rpm"
+          docker exec centos7Instance bash -c "cd apisix-dashboard && yum install -y ./apisix-build-tools/output/apisix-dashboard-${VERSION}-0.el7.x86_64.rpm"
           docker logs centos7Instance
           # Dependencies are attached with rpm, so revert `make deps`
           docker exec centos7Instance bash -c "cd /usr/local/apisix/dashboard/ && nohup ./manager-api &"
@@ -67,4 +67,4 @@ jobs:
         uses: actions/upload-artifact@v2.2.4
         with:
           name: "rpm"
-          path: "./apisix-build-tools/output/apisix-dashboard-${{ steps.branch_env.outputs.version }}-0.x86_64.rpm"
+          path: "./apisix-build-tools/output/apisix-dashboard-${{ steps.branch_env.outputs.version }}-0.el7.x86_64.rpm"
