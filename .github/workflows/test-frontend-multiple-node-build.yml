@@ -8,13 +8,9 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'web/**'
   pull_request:
     branches:
       - master
-    paths:
-      - 'web/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/master' && github.run_number || github.ref }}
