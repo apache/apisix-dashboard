@@ -41,6 +41,10 @@ export default {
   'component.upstream.fields.retries.tooltip':
     'The retry mechanism sends the request to the next upstream node. A value of 0 disables the retry mechanism and leaves the table empty to use the number of available backend nodes.',
 
+  'component.upstream.fields.retry_timeout': 'Retry Timeout',
+  'component.upstream.fields.retry_timeout.tooltip':
+    'Limit the retry time to avoid spending too much time retrying requests. A value of 0 disables the retry timeout mechanism',
+
   'component.upstream.fields.checks.active.type': 'Type',
   'component.upstream.fields.checks.active.type.tooltip':
     'Whether to perform active health checks using HTTP or HTTPS, or just attempt a TCP connection.',

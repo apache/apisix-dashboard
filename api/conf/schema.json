@@ -1182,6 +1182,10 @@
 							"minimum": 0,
 							"type": "integer"
 						},
+						"retry_timeout": {
+							"minimum": 0,
+							"type": "integer"
+						},
 						"scheme": {
 							"default": "http",
 							"enum": ["grpc", "grpcs", "http", "https"]

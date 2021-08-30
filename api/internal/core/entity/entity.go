@@ -164,6 +164,7 @@ type UpstreamTLS struct {
 type UpstreamDef struct {
 	Nodes         interface{}       `json:"nodes,omitempty"`
 	Retries       int               `json:"retries,omitempty"`
+	RetryTimeout  int               `json:"retry_timeout,omitempty"`
 	Timeout       interface{}       `json:"timeout,omitempty"`
 	Type          string            `json:"type,omitempty"`
 	Checks        interface{}       `json:"checks,omitempty"`

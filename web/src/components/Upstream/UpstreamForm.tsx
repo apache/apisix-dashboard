@@ -28,6 +28,7 @@ import Timeout from './components/Timeout';
 import Type from './components/Type';
 import UpstreamSelector from './components/UpstreamSelector';
 import Retries from './components/Retries';
+import RetryTimeout from './components/RetryTimeout'
 import PassHost from './components/PassHost';
 import TLSComponent from './components/TLS';
 import { convertToRequestData } from './service';
@@ -290,6 +291,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
             <PassHost form={form} readonly={readonly} />
             <Retries readonly={readonly} />
+            <RetryTimeout readonly={readonly}/>
 
             <Scheme readonly={readonly} />
             <Form.Item noStyle shouldUpdate={(prev, next) => prev.scheme !== next.scheme}>
