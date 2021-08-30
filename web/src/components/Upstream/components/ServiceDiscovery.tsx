@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 import React from 'react';
+import type { FormInstance } from 'antd';
 import { Form, Input, Select } from 'antd';
 import { useIntl } from 'umi';
-import type { FormInstance } from 'antd/lib/form';
 import ServiceDiscoveryArgs from '@/components/Upstream/components/ServiceDiscoveryArgs';
 
 type Props = {
