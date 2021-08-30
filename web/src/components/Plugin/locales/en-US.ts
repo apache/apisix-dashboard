@@ -41,9 +41,9 @@ export default {
   'component.pluginForm.cors.allow_headers.tooltip':
     'Which headers are allowed to set in request when access cross-origin resource. Multiple value use , to split. When allow_credential is false, you can use * to indicate allow all request headers. You also can allow any header forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.expose_headers.tooltip':
-    'Which headers are allowed to set in response when access cross-origin resource. Multiple value use , to split.',
+    'Which headers are allowed to set in response when access cross-origin resource. Multiple value use , to split. When allow_credential is false, you can use * to indicate allow any header. You also can allow any header forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.max_age.tooltip':
-    'Maximum number of seconds the results can be cached.. Within this time range, the browser will reuse the last check result. -1 means no cache. Please note that the maximum value is depended on browser, please refer to MDN for details.',
+    'Maximum number of seconds the results can be cached. Within this time range, the browser will reuse the last check result. -1 means no cache. Please note that the maximum value is depended on browser, please refer to MDN for details.',
   'component.pluginForm.cors.allow_credential.tooltip':
     "If you set this option to true, you can not use '*' for other options.",
   'component.pluginForm.cors.allow_origins_by_regex.tooltip':
