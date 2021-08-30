@@ -38,7 +38,7 @@ export default {
   'component.pluginForm.cors.allow_methods.tooltip':
     '允许跨域访问的 Method，比如: GET，POST等。多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所有 Origin 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Method 都通过，但请注意这样存在安全隐患。',
   'component.pluginForm.cors.allow_headers.tooltip':
-    '允许跨域访问时请求方携带哪些非 CORS规范 以外的 Header， 多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所有 Header 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Header 都通过，但请注意这样存在安全隐患。',
+    '允许跨域访问时请求方携带哪些非 CORS 规范 以外的 Header， 多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所有 Header 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Header 都通过，但请注意这样存在安全隐患。',
   'component.pluginForm.cors.expose_headers.tooltip':
     '允许跨域访问时响应方携带哪些非 CORS 规范 以外的 Header， 多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示允许任意 Header 。你也可以在启用了 allow_credential 后使用 ** 强制允许任意 Header ，但请注意这样存在安全隐患。',
   'component.pluginForm.cors.max_age.tooltip':
