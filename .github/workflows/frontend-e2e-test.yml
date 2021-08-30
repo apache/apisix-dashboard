@@ -45,26 +45,28 @@ jobs:
         uses: actions/setup-node@v2.4.0
         with:
           node-version: 14.x
+          cache: 'yarn'
+          cache-dependency-path: web/yarn.lock
 
       - name: Setup golang environment
         uses: actions/setup-go@v2.1.3
         with:
           go-version: '1.13'
 
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: Start manager-api
         working-directory: ./api
         run: |
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
           nohup go run ./main.go &
-
-      - name: Cache node_modules
-        uses: actions/cache@v2.1.6
-        id: yarn-cache
-        with:
-          path: '*/node_modules'
-          key: '${{ runner.os }}-yarn-cache0-${{ hashFiles(''**/yarn.lock'') }}'
-          restore-keys: |
-            ${{ runner.os }}-yarn-cache0
 
       - name: Cache Cypress binary
         uses: actions/cache@v2.1.6
@@ -76,7 +78,6 @@ jobs:
             cypress-${{ runner.os }}-cypress-cache0
 
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn
 
       - name: Start frontend then test
@@ -97,6 +98,6 @@ jobs:
         with:
           name: cypress-report
           path: |
-           web/cypress/videos
-           web/cypress/screenshots
+            web/cypress/videos
+            web/cypress/screenshots
           retention-days: 5
