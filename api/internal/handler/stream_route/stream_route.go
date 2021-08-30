@@ -49,7 +49,11 @@ type GetInput struct {
 
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
-	return h.streamRouteStore.Get(c.Context(), input.ID)
+	streamRoute, err := h.streamRouteStore.Get(c.Context(), input.ID)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+	return streamRoute, nil
 }
 
 type ListInput struct {
