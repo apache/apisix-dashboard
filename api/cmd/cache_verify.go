@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/tidwall/gjson"
@@ -31,10 +32,10 @@ import (
 	"github.com/apisix/manager-api/internal/log"
 )
 
-var port int
-var host string
-
-var username, password string
+var (
+	port                     int
+	host, username, password string
+)
 
 type response struct {
 	Data cache_verify.OutputResult `json:"data"`
@@ -60,7 +61,7 @@ func newCacheVerifyCommand() *cobra.Command {
 
 			get, err := http.NewRequest("GET", url, nil)
 			if err != nil {
-				log.Errorf("new http request failed: %s", err)
+				fmt.Fprintf(os.Stderr, "new http request failed: %s\n", err)
 				return
 			}
 
@@ -68,27 +69,27 @@ func newCacheVerifyCommand() *cobra.Command {
 
 			rsp, err := client.Do(get)
 			if err != nil {
-				log.Errorf("get result from migrate/export failed: %s", err)
+				fmt.Fprintf(os.Stderr, "get result from migrate/export failed: %s\n", err)
 				return
 			}
 			defer func() {
 				err := rsp.Body.Close()
 				if err != nil {
-					log.Errorf("close on response body failed: %s", err)
+					fmt.Fprintf(os.Stderr, "close on response body failed: %s\n", err)
 					return
 				}
 			}()
 
 			data, err := ioutil.ReadAll(rsp.Body)
 			if err != nil {
-				log.Errorf("io read all failed: %s", err)
+				fmt.Fprintf(os.Stderr, "io read all failed: %s\n", err)
 				return
 			}
 
 			var rs response
 			err = json.Unmarshal(data, &rs)
 			if err != nil {
-				log.Errorf("bad Data format,json unmarshal failed: %s", err)
+				fmt.Fprintf(os.Stderr, "bad Data format,json unmarshal failed: %s\n", err)
 				return
 			}
 
@@ -133,34 +134,34 @@ func getToken() string {
 
 	data, err := json.Marshal(account)
 	if err != nil {
-		log.Errorf("json marshal failed: %s", err)
+		fmt.Fprintf(os.Stderr, "json marshal failed: %s\n", err)
 		return ""
 	}
 
 	url := fmt.Sprintf("http://%s:%d/apisix/admin/user/login", host, port)
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
 	if err != nil {
-		log.Errorf("login failed: %s", err)
+		fmt.Fprintf(os.Stderr, "login failed: %s\n", err)
 		return ""
 	}
 
 	defer func() {
 		err := resp.Body.Close()
 		if err != nil {
-			log.Errorf("close on response body failed: %s", err)
+			fmt.Fprintf(os.Stderr, "close on response body failed: %s\n", err)
 			return
 		}
 	}()
 
 	respObj, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Errorf("io read all failed: %s", err)
+		fmt.Fprintf(os.Stderr, "io read all failed: %s\n", err)
 		return ""
 	}
 
 	token := gjson.Get(string(respObj), "data.token")
 	if !token.Exists() {
-		log.Errorf("no token found in response")
+		fmt.Fprintf(os.Stderr, "no token found in response\n")
 		return ""
 	}
 	return token.String()
