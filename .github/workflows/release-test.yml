@@ -5,12 +5,26 @@ on:
     branches:
       - master
     paths-ignore:
+      - '.github/**'
+      - '.git/**'
+      - '.gitattributes'
+      - '.vscode/**'
+      - '.gitignore'
       - 'docs/**'
+      - 'api/internal/core/store/validate_mock.go'
+      - 'api/internal/core/storage/storage_mock.go'
   pull_request:
     branches:
       - master
     paths-ignore:
+      - '.github/**'
+      - '.git/**'
+      - '.gitattributes'
+      - '.vscode/**'
+      - '.gitignore'
       - 'docs/**'
+      - 'api/internal/core/store/validate_mock.go'
+      - 'api/internal/core/storage/storage_mock.go'
 
 jobs:
   run-test:
@@ -32,6 +46,15 @@ jobs:
         uses: actions/setup-go@v2.1.3
         with:
           go-version: '1.13'
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
       - name: release and build
         run: |

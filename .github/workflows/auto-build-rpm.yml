@@ -39,13 +39,18 @@ jobs:
         run: |
           export VERSION=${{ steps.branch_env.outputs.version }}
           sudo gem install --no-document fpm
-          git clone -b v2.0.0 https://github.com/api7/apisix-build-tools.git
+          git clone -b v2.1.0 https://github.com/api7/apisix-build-tools.git
+
+          # move codes under build tool
+          mkdir ./apisix-build-tools/apisix-dashboard
+          for dir in `ls|grep -v "^apisix-build-tools$"`;do cp -r $dir ./apisix-build-tools/apisix-dashboard/;done
+
           cd apisix-build-tools
           export checkout=master
           if [ "$VERSION" != "merge" && "$VERSION" != "master" ];then
             export checkout=release/${VERSION}
           fi
-          make package type=rpm app=dashboard version=${VERSION} checkout=${checkout} image_base=centos image_tag=7
+          make package type=rpm app=dashboard version=${VERSION} checkout=${checkout} image_base=centos image_tag=7 local_code_path=./apisix-dashboard
 
       - name: Run centos7 docker and mapping apisix into container
         run: |
