@@ -18,18 +18,20 @@ package stream_route
 
 import (
 	"fmt"
-	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/store"
-	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
+	"net/http"
+	"reflect"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
-	"net/http"
-	"reflect"
-	"strings"
+
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {

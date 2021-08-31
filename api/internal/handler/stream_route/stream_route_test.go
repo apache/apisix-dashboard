@@ -19,15 +19,17 @@ package stream_route
 import (
 	"errors"
 	"fmt"
-	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/store"
-	"github.com/apisix/manager-api/internal/handler"
+	"net/http"
+	"testing"
+
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"net/http"
-	"testing"
+
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/handler"
 )
 
 func TestHandler_Get(t *testing.T) {
