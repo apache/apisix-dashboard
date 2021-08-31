@@ -52,6 +52,14 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
     data.upstream_id = data.id;
   }
 
+  if (data.nodes) {
+    data.upstream_type = 'node';
+  }
+
+  if (data.discovery_type && data.service_name) {
+    data.upstream_type = 'service_discovery';
+  }
+
   return data;
 };
 
@@ -68,7 +76,11 @@ export const convertToRequestData = (
     type,
     hash_on,
     key,
+    upstream_type,
     nodes,
+    discovery_type,
+    discovery_args,
+    service_name,
     pass_host,
     upstream_host,
     upstream_id = 'Custom',
@@ -103,16 +115,21 @@ export const convertToRequestData = (
     return undefined;
   }
 
-  /**
-   * nodes will be [] or node list
-   * when upstream_id === none, None === undefined
-   */
-  if (nodes) {
+  if (upstream_type === 'node' && nodes) {
+    /**
+     * nodes will be [] or node list
+     * when upstream_id === none, None === undefined
+     */
     // NOTE: https://github.com/ant-design/ant-design/issues/27396
     data.nodes = nodes?.map((item) => {
       return pick(item, ['host', 'port', 'weight']);
     });
-    return data;
+    return omit(data, 'upstream_type');
+  }
+
+  if (upstream_type === 'service_discovery' && discovery_type && service_name) {
+    if (!discovery_args) data.discovery_args = {};
+    return omit(data, 'upstream_type');
   }
 
   return undefined;

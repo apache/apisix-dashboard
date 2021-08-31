@@ -62,6 +62,8 @@ declare namespace UpstreamComponent {
     service_name?: string;
     id?: string;
     upstream_id?: string;
+    upstream_type?: string;
+
     // NOTE: custom field
     custom?: Record<string, any>;
   };

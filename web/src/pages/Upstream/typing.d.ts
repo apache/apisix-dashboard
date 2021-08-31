@@ -17,6 +17,11 @@
 declare namespace UpstreamModule {
   type Node = Record<string, number | string>;
   type Type = 'roundrobin' | 'chash' | 'ewma';
+  type DiscoveryType = 'dns' | 'consul_kv' | 'nacos' | 'eureka';
+  type DiscoveryArgs = {
+    group_name?: string;
+    namespace_id?: string;
+  };
 
   type Timeout = Record<'connect' | 'send' | 'read', number>;
 
@@ -67,6 +72,10 @@ declare namespace UpstreamModule {
     id: string;
     upstream_id: string;
     type: Type;
+    upstream_type: string;
+    discovery_type?: DiscoveryType;
+    service_name?: string;
+    discovery_args?: DiscoveryArgs;
     nodes?: Node[];
     hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
     key?: string;

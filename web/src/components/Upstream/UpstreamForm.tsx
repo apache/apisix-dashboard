@@ -22,7 +22,6 @@ import type { FormInstance } from 'antd/es/form';
 import PanelSection from '@/components/PanelSection';
 import PassiveCheck from './components/passive-check';
 import ActiveCheck from './components/active-check';
-import Nodes from './components/Nodes';
 import Scheme from './components/Scheme';
 import Timeout from './components/Timeout';
 import Type from './components/Type';
@@ -30,6 +29,7 @@ import UpstreamSelector from './components/UpstreamSelector';
 import Retries from './components/Retries';
 import PassHost from './components/PassHost';
 import TLSComponent from './components/TLS';
+import UpstreamType from './components/UpstreamType';
 import { convertToRequestData } from './service';
 
 type Upstream = {
@@ -286,7 +286,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         {!hiddenForm && (
           <React.Fragment>
             <Type form={form} readonly={readonly} />
-            <Nodes readonly={readonly} />
+
+            <UpstreamType form={form} readonly={readonly} />
 
             <PassHost form={form} readonly={readonly} />
             <Retries readonly={readonly} />
