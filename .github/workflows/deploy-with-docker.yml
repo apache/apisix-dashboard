@@ -26,6 +26,11 @@ jobs:
           submodules: recursive
 
       - uses: docker/setup-buildx-action@v1
+        with:
+          driver: docker-container
+          driver-opts: |
+            image=moby/buildkit:master
+            network=host
 
       - uses: actions/cache@v2
         with:
