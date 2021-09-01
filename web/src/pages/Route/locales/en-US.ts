@@ -23,6 +23,7 @@ export default {
   'page.route.parameterPosition': 'Parameter Position',
   'page.route.httpRequestHeader': 'HTTP Request Header',
   'page.route.requestParameter': 'Request Parameter',
+  'page.route.buildinParameter': 'Build-in Parameter',
   'page.route.parameterName': 'Parameter Name',
   'page.route.operationalCharacter': 'Operational Character',
   'page.route.equal': 'Equal(==)',
