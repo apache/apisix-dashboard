@@ -73,10 +73,14 @@ jobs:
         working-directory: ./api/test/docker-deploy
         continue-on-error: true
         run: |
+          docker buildx create --name=builderx --use \
+            --driver docker-container \
+            --driver-opt image=moby/buildkit:master,network=host
           docker buildx bake --load \
           -f docker-compose.yaml \
           --set *.cache-from=type=local,src=/tmp/.buildx-cache \
-          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
+          --set *.cache-to=type=local,dest=/tmp/.buildx-cache \
+          --builder builderx
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
