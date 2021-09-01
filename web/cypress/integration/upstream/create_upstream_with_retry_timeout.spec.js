@@ -55,9 +55,9 @@ context('Create Upstream With retry_timeout', () => {
     cy.get(selector.description).type(data.description);
 
     cy.get(selector.nodes_0_host).type(data.ip1);
-    cy.get(selector.nodes_0_port).clear().type('8000');
+    cy.get(selector.nodes_0_port).clear().type('7000');
     cy.get(selector.nodes_0_weight).clear().type(1);
-    cy.get(selector.retry_timeout).clear().type('6');
+    cy.get(selector.retry_timeout).clear().type(data.retry_timeout);
     cy.get('#custom_checks_active').click();
     cy.get('#checks_active_port').clear();
     cy.contains('Next').click();
@@ -77,6 +77,7 @@ context('Create Upstream With retry_timeout', () => {
     cy.get('.ant-drawer-content').should('be.visible');
 
     cy.get(selector.monacoScroll).within(() => {
+      cy.contains(data.retry_timeout).should('exist');
       cy.contains('nodes').should('exist');
       cy.contains('roundrobin').should('exist');
       cy.contains(data.upstreamName).should('exist');
