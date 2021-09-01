@@ -136,7 +136,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
                 }),
               },
               {
-                pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
+                pattern: new RegExp(/^.{0,100}$/, 'g'),
                 message: formatMessage({
                   id: 'page.route.form.itemRulesPatternMessage.apiNameRule',
                 }),

@@ -53,12 +53,14 @@ context('Create and Delete Route', () => {
     notification: '.ant-notification-notice-message',
     addHost: '[data-cy=addHost]',
     schemaErrorMessage: '.ant-form-item-explain.ant-form-item-explain-error',
+    stepCheck: '.ant-steps-finish-icon',
     advancedMatchingTable: '.ant-table-row.ant-table-row-level-0',
     advancedMatchingTableOperation: '.ant-space',
   };
 
   const data = {
     description: 'desc_by_autotest',
+    invalidName: new Array(101).fill('a').join(''),
     host1: '11.11.11.11',
     host2: '12.12.12.12',
     host3: '10.10.10.10',
@@ -81,6 +83,20 @@ context('Create and Delete Route', () => {
 
   beforeEach(() => {
     cy.login();
+  });
+
+  it.only('should not create route with name above 100 characters', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(selector.empty).should('be.visible');
+    cy.contains('Create').click();
+    cy.contains('Next').click();
+    cy.get(selector.name).type(data.invalidName);
+    cy.contains(selector.schemaErrorMessage, 'Maximum length should be of 100 only').should(
+      'be.visible',
+    );
+    cy.contains('Next').click();
+    cy.get(selector.stepCheck).should('not.exist');
   });
 
   it('should create route', function () {

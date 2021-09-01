@@ -56,8 +56,7 @@ export default {
   'page.route.panelSection.title.advancedMatchRule': 'Advanced Routing Matching Conditions',
 
   'page.route.panelSection.title.nameDescription': 'Name And Description',
-  'page.route.form.itemRulesPatternMessage.apiNameRule':
-    'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
+  'page.route.form.itemRulesPatternMessage.apiNameRule': 'Maximum length should be of 100 only',
 
   'page.route.panelSection.title.requestConfigBasicDefine': 'Request Basic Define',
   'page.route.form.itemLabel.httpMethod': 'HTTP Method',
