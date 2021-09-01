@@ -571,6 +571,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			Path:   "/apisix/admin/upstreams/u2",
 			Body: `{
 				"retries": 1,
+				"retry_timeout":3,
 				"timeout": {
 					"connect":15,
 					"send":15,

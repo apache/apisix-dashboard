@@ -43,7 +43,7 @@ export default {
 
   'component.upstream.fields.retry_timeout': '重试超时时间',
   'component.upstream.fields.retry_timeout.tooltip':
-    '限制是否继续重试的时间，若之前的请求和重试请求花费太多时间就不再继续重试。`0` 代表不启用重试超时机制。。',
+    '限制是否继续重试的时间，若之前的请求和重试请求花费太多时间就不再继续重试。`0` 代表不启用重试超时机制。',
 
   'component.upstream.fields.checks.active.type': '类型',
   'component.upstream.fields.checks.active.type.tooltip':

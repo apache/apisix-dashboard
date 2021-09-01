@@ -72,6 +72,7 @@ declare namespace UpstreamModule {
     key?: string;
     checks?: HealthCheck;
     retries?: number;
+    retry_timeout?: number;
     enable_websocket?: boolean;
     timeout?: Timeout;
     name?: string;

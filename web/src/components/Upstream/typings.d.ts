@@ -44,6 +44,7 @@ declare namespace UpstreamComponent {
   type ResponseData = {
     nodes?: Node[];
     retries?: number;
+    retry_timeout?: number;
     timeout?: Timeout;
     tls?: TLS;
     type?: string;

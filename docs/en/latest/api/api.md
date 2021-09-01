@@ -383,6 +383,7 @@ user login.
 | nodes               | object |             | No       |
 | pass_host           | string |             | No       |
 | retries             | long   |             | No       |
+| retry_timeout       | long   |             | No       |
 | service_name        | string |             | No       |
 | timeout             | object |             | No       |
 | type                | string |             | No       |
@@ -403,6 +404,7 @@ user login.
 | nodes               | object |             | No       |
 | pass_host           | string |             | No       |
 | retries             | long   |             | No       |
+| retry_timeout       | long   |             | No       |
 | service_name        | string |             | No       |
 | timeout             | object |             | No       |
 | type                | string |             | No       |
