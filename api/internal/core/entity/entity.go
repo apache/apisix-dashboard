@@ -97,10 +97,11 @@ type Route struct {
 }
 
 // --- structures for upstream start  ---
+type TimeoutValue float32
 type Timeout struct {
-	Connect int `json:"connect,omitempty"`
-	Send    int `json:"send,omitempty"`
-	Read    int `json:"read,omitempty"`
+	Connect TimeoutValue `json:"connect,omitempty"`
+	Send    TimeoutValue `json:"send,omitempty"`
+	Read    TimeoutValue `json:"read,omitempty"`
 }
 
 type Node struct {
@@ -133,16 +134,16 @@ type UnHealthy struct {
 }
 
 type Active struct {
-	Type                   string    `json:"type,omitempty"`
-	Timeout                int       `json:"timeout,omitempty"`
-	Concurrency            int       `json:"concurrency,omitempty"`
-	Host                   string    `json:"host,omitempty"`
-	Port                   int       `json:"port,omitempty"`
-	HTTPPath               string    `json:"http_path,omitempty"`
-	HTTPSVerifyCertificate string    `json:"https_verify_certificate,omitempty"`
-	Healthy                Healthy   `json:"healthy,omitempty"`
-	UnHealthy              UnHealthy `json:"unhealthy,omitempty"`
-	ReqHeaders             []string  `json:"req_headers,omitempty"`
+	Type                   string       `json:"type,omitempty"`
+	Timeout                TimeoutValue `json:"timeout,omitempty"`
+	Concurrency            int          `json:"concurrency,omitempty"`
+	Host                   string       `json:"host,omitempty"`
+	Port                   int          `json:"port,omitempty"`
+	HTTPPath               string       `json:"http_path,omitempty"`
+	HTTPSVerifyCertificate string       `json:"https_verify_certificate,omitempty"`
+	Healthy                Healthy      `json:"healthy,omitempty"`
+	UnHealthy              UnHealthy    `json:"unhealthy,omitempty"`
+	ReqHeaders             []string     `json:"req_headers,omitempty"`
 }
 
 type Passive struct {
@@ -161,24 +162,32 @@ type UpstreamTLS struct {
 	ClientKey  string `json:"client_key,omitempty"`
 }
 
+type UpstreamKeepalivePool struct {
+	IdleTimeout TimeoutValue `json:"idle_timeout,omitempty"`
+	Requests    int          `json:"requests,omitempty"`
+	Size        int          `json:"size"`
+}
+
 type UpstreamDef struct {
-	Nodes         interface{}       `json:"nodes,omitempty"`
-	Retries       int               `json:"retries,omitempty"`
-	Timeout       interface{}       `json:"timeout,omitempty"`
-	Type          string            `json:"type,omitempty"`
-	Checks        interface{}       `json:"checks,omitempty"`
-	HashOn        string            `json:"hash_on,omitempty"`
-	Key           string            `json:"key,omitempty"`
-	Scheme        string            `json:"scheme,omitempty"`
-	DiscoveryType string            `json:"discovery_type,omitempty"`
-	DiscoveryArgs map[string]string `json:"discovery_args,omitempty"`
-	PassHost      string            `json:"pass_host,omitempty"`
-	UpstreamHost  string            `json:"upstream_host,omitempty"`
-	Name          string            `json:"name,omitempty"`
-	Desc          string            `json:"desc,omitempty"`
-	ServiceName   string            `json:"service_name,omitempty"`
-	Labels        map[string]string `json:"labels,omitempty"`
-	TLS           *UpstreamTLS      `json:"tls,omitempty"`
+	Nodes         interface{}            `json:"nodes,omitempty"`
+	Retries       int                    `json:"retries,omitempty"`
+	Timeout       *Timeout               `json:"timeout,omitempty"`
+	Type          string                 `json:"type,omitempty"`
+	Checks        interface{}            `json:"checks,omitempty"`
+	HashOn        string                 `json:"hash_on,omitempty"`
+	Key           string                 `json:"key,omitempty"`
+	Scheme        string                 `json:"scheme,omitempty"`
+	DiscoveryType string                 `json:"discovery_type,omitempty"`
+	DiscoveryArgs map[string]string      `json:"discovery_args,omitempty"`
+	PassHost      string                 `json:"pass_host,omitempty"`
+	UpstreamHost  string                 `json:"upstream_host,omitempty"`
+	Name          string                 `json:"name,omitempty"`
+	Desc          string                 `json:"desc,omitempty"`
+	ServiceName   string                 `json:"service_name,omitempty"`
+	Labels        map[string]string      `json:"labels,omitempty"`
+	TLS           *UpstreamTLS           `json:"tls,omitempty"`
+	KeepalivePool *UpstreamKeepalivePool `json:"keepalive_pool,omitempty"`
+	RetryTimeout  TimeoutValue           `json:"retry_timeout,omitempty"`
 }
 
 // swagger:model Upstream
