@@ -30,7 +30,13 @@ import (
 var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 	ginkgo.It("create upstream with keepalive pool", func() {
 		createUpstreamBody := make(map[string]interface{})
-		createUpstreamBody["nodes"] = nodes
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			},
+		}
 		createUpstreamBody["type"] = "roundrobin"
 		createUpstreamBody["retries"] = 5
 		createUpstreamBody["retry_timeout"] = 5.5

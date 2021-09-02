@@ -26,24 +26,17 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var nodes []map[string]interface{} = []map[string]interface{}{
-	{
-		"host":   base.UpstreamIp,
-		"port":   1980,
-		"weight": 1,
-	},
-	{
-		"host":   base.UpstreamIp,
-		"port":   1981,
-		"weight": 1,
-	},
-}
-
 // just test for schema check
 var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 	ginkgo.It("create upstream with keepalive pool", func() {
 		createUpstreamBody := make(map[string]interface{})
-		createUpstreamBody["nodes"] = nodes
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			},
+		}
 		createUpstreamBody["type"] = "roundrobin"
 		createUpstreamBody["keepalive_pool"] = map[string]interface{}{
 			"size": 320,
