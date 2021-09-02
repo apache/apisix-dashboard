@@ -23,6 +23,12 @@ declare namespace UpstreamModule {
     namespace_id?: string;
   };
 
+  type KeepalivePool = {
+    size?: number;
+    idle_timeout?: number;
+    requests?: number;
+  };
+
   type Timeout = Record<'connect' | 'send' | 'read', number>;
 
   type HealthCheck = {
@@ -81,12 +87,14 @@ declare namespace UpstreamModule {
     key?: string;
     checks?: HealthCheck;
     retries?: number;
+    retry_timeout?: number;
     enable_websocket?: boolean;
     timeout?: Timeout;
     name?: string;
     desc?: string;
     pass_host?: 'pass' | 'node' | 'rewrite';
     upstream_host: UpstreamHost[];
+    keepalive_pool: KeepalivePool;
 
     // Custom Fields that need to be omitted
     custom?: {};

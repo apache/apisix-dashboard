@@ -57,6 +57,20 @@ export default {
   'component.upstream.fields.retries.tooltip':
     'The retry mechanism sends the request to the next upstream node. A value of 0 disables the retry mechanism and leaves the table empty to use the number of available backend nodes.',
 
+  'component.upstream.fields.retry_timeout': 'Retry Timeout',
+  'component.upstream.fields.retry_timeout.tooltip':
+    'Configure a number to limit the amount of seconds that retries can be continued, and do not continue retries if the previous request and retry requests have taken too long. 0 means disable retry timeout mechanism.',
+
+  'component.upstream.fields.keepalive_pool': 'Keepalive Pool',
+  'component.upstream.fields.keepalive_pool.tooltip': 'Set independent keepalive pool for Upstream',
+  'component.upstream.fields.keepalive_pool.size': 'Size',
+  'component.upstream.fields.keepalive_pool.size.placeholder': 'Please enter the size',
+  'component.upstream.fields.keepalive_pool.idle_timeout': 'Idle Timeout',
+  'component.upstream.fields.keepalive_pool.idle_timeout.placeholder':
+    'Please enter the idle timeout',
+  'component.upstream.fields.keepalive_pool.requests': 'Requests',
+  'component.upstream.fields.keepalive_pool.requests.placeholder': 'Please enter the requests',
+
   'component.upstream.fields.checks.active.type': 'Type',
   'component.upstream.fields.checks.active.type.tooltip':
     'Whether to perform active health checks using HTTP or HTTPS, or just attempt a TCP connection.',
