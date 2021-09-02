@@ -26,11 +26,6 @@ jobs:
           submodules: recursive
 
       - uses: docker/setup-buildx-action@v1
-        with:
-          driver: docker-container
-          driver-opts: |
-            image=moby/buildkit:master
-            network=host
 
       - uses: actions/cache@v2
         with:
@@ -55,10 +50,6 @@ jobs:
           context: .
           build-args: |
             APISIX_DASHBOARD_VERSION=master
-          cache-from: |
-            type=local,src=/tmp/.buildx-cache
-          cache-to: |
-            type=local,dest=/tmp/.buildx-cache
 
       - name: Modify Config
         run: |
@@ -73,14 +64,8 @@ jobs:
         working-directory: ./api/test/docker-deploy
         continue-on-error: true
         run: |
-          docker buildx create --name=builderx --use \
-            --driver docker-container \
-            --driver-opt image=moby/buildkit:master,network=host
           docker buildx bake --load \
-          -f docker-compose.yaml \
-          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
-          --set *.cache-to=type=local,dest=/tmp/.buildx-cache \
-          --builder builderx
+          -f docker-compose.yaml
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
