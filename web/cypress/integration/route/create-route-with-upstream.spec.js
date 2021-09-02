@@ -20,9 +20,9 @@ context('Create Route with Upstream', () => {
   const selector = {
     name: '#name',
     description: '#desc',
-    nodes_0_host: '#nodes_0_host',
-    nodes_0_port: '#nodes_0_port',
-    nodes_0_weight: '#nodes_0_weight',
+    nodes_0_host: '#submitNodes_0_host',
+    nodes_0_port: '#submitNodes_0_port',
+    nodes_0_weight: '#submitNodes_0_weight',
     upstreamSelector: '[data-cy=upstream_selector]',
     nameSelector: '[title=Name]',
     input: ':input',
@@ -42,6 +42,7 @@ context('Create Route with Upstream', () => {
     routeName: 'test_route',
     ip1: '127.0.0.1',
     ip2: '127.0.0.2',
+    FQDN: 'bigserver.mycompany.com',
   };
 
   beforeEach(() => {
@@ -55,8 +56,14 @@ context('Create Route with Upstream', () => {
 
     cy.get(selector.name).type(data.upstreamName);
     cy.get(selector.description).type(data.description);
-    cy.get(selector.nodes_0_host).type(data.host1);
-    cy.get(selector.nodes_0_port).type(data.port);
+    cy.get(selector.nodes_0_host).type(data.FQDN);
+    cy.get('label[title="Port"]').then(($els) => {
+      const win = $els[0].ownerDocument.defaultView;
+      const before = win.getComputedStyle($els[0], 'before');
+      const contentValue = before.getPropertyValue('content');
+      expect(contentValue).to.eq('none');
+    });
+    cy.get(selector.nodes_0_port).clear();
     cy.get(selector.nodes_0_weight).type(data.weight);
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -82,8 +89,8 @@ context('Create Route with Upstream', () => {
     cy.get(selector.upstreamSelector).click();
     cy.contains('.ant-select-item-option-content', 'Custom').click();
 
-    cy.get(selector.nodes_0_host).clear().type(data.ip1);
-    cy.get(selector.nodes_0_port).type(data.port);
+    cy.get(selector.nodes_0_host).should('have.value', data.FQDN).clear().type(data.ip1);
+    cy.get(selector.nodes_0_port).should('have.value', '').type(data.port);
     cy.get(selector.nodes_0_weight).type(data.weight);
     cy.contains('Next').click();
     cy.contains('Next').click();
