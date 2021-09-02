@@ -59,7 +59,7 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
   // https://github.com/apache/apisix-dashboard/issues/2080
   if (data.nodes instanceof Array) {
     data['submitNodes'] = data.nodes;
-  } else {
+  } else if (data.nodes) {
     data['submitNodes'] = Object.keys(data.nodes as Object).map((key) => ({
       host: key.split(':')[0],
       port: key.split(':')[1],
