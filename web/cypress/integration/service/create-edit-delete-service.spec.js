@@ -22,9 +22,9 @@ context('Create and Delete Service ', () => {
   const selector = {
     name: '#name',
     description: '#desc',
-    nodes_0_host: '#nodes_0_host',
-    nodes_0_port: '#nodes_0_port',
-    nodes_0_weight: '#nodes_0_weight',
+    nodes_0_host: '#submitNodes_0_host',
+    nodes_0_port: '#submitNodes_0_port',
+    nodes_0_weight: '#submitNodes_0_weight',
     pluginCardBordered: '.ant-card-bordered',
     disabledSwitcher: '#disable',
     drawer: '.ant-drawer-content',

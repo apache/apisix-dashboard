@@ -19,9 +19,9 @@
 context('Can select service_id skip upstream in route', () => {
   const selector = {
     name: '#name',
-    nodes_0_host: '#nodes_0_host',
-    nodes_0_port: '#nodes_0_port',
-    nodes_0_weight: '#nodes_0_weight',
+    nodes_0_host: '#submitNodes_0_host',
+    nodes_0_port: '#submitNodes_0_port',
+    nodes_0_weight: '#submitNodes_0_weight',
     notification: '.ant-notification-notice-message',
     upstreamSelector: '[data-cy=upstream_selector]',
     input: ':input',
