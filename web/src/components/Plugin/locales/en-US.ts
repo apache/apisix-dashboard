@@ -85,6 +85,8 @@ export default {
     'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests. Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
     'returned when the request exceeds conn + burst will be rejected.',
+  'component.pluginForm.limit-conn.only_use_default_delay.tooltip':
+    'enable the strict mode of the latency seconds. If you set this option to true, it will run strictly according to the latency seconds you set without additional calculation logic.',
 
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip':

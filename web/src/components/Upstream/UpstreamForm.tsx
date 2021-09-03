@@ -31,6 +31,8 @@ import PassHost from './components/PassHost';
 import TLSComponent from './components/TLS';
 import UpstreamType from './components/UpstreamType';
 import { convertToRequestData } from './service';
+import RetryTimeout from './components/RetryTimeout';
+import KeepalivePool from './components/KeepalivePool';
 
 type Upstream = {
   name?: string;
@@ -270,6 +272,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       );
     };
 
+    const KeepalivePoolComponent = () => {
+      return (
+        <PanelSection title={formatMessage({ id: 'page.upstream.step.keepalive_pool' })}>
+          <KeepalivePool readonly={readonly} />
+        </PanelSection>
+      );
+    };
+
     return (
       <Form form={form} labelCol={{ span: 3 }}>
         {showSelector && (
@@ -291,6 +301,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
             <PassHost form={form} readonly={readonly} />
             <Retries readonly={readonly} />
+            <RetryTimeout readonly={readonly} />
 
             <Scheme readonly={readonly} />
             <Form.Item noStyle shouldUpdate={(prev, next) => prev.scheme !== next.scheme}>
@@ -306,6 +317,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             {timeoutFields.map((item, index) => (
               <Timeout key={index} {...item} readonly={readonly} />
             ))}
+
+            <KeepalivePoolComponent />
 
             <HealthCheckComponent />
           </React.Fragment>

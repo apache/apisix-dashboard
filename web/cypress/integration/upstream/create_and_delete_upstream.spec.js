@@ -246,4 +246,65 @@ context('Create and Delete Upstream', () => {
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
   });
+
+  it('should create upstream with keepalive pool default value', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains('Create').click();
+
+    cy.get(selector.name).type(data.upstreamName);
+    cy.get(selector.description).type(data.description);
+
+    cy.get(selector.nodes_0_host).type(data.ip1);
+    cy.get(selector.nodes_0_port).clear().type('7000');
+    cy.get(selector.nodes_0_weight).clear().type(1);
+
+    cy.get('#keepalive_pool_size').clear().type('1');
+    cy.get('#keepalive_pool_idle_timeout').clear().type('15.5');
+    cy.get('#keepalive_pool_requests').clear().type('50');
+
+    cy.contains('Next').click();
+    cy.get(selector.input).should('be.disabled');
+    cy.contains('Submit').click();
+    cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
+  });
+
+  it('should delete the upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains(data.upstreamName).siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
+  });
+
+  it('should create upstream with retries and retry timeout', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains('Create').click();
+
+    cy.get(selector.name).type(data.upstreamName);
+    cy.get(selector.description).type(data.description);
+
+    cy.get(selector.nodes_0_host).type(data.ip1);
+    cy.get(selector.nodes_0_port).clear().type('7000');
+    cy.get(selector.nodes_0_weight).clear().type(1);
+
+    cy.get('#retries').clear().type('5');
+    cy.get('#retry_timeout').clear().type('15.5');
+
+    cy.contains('Next').click();
+    cy.get(selector.input).should('be.disabled');
+    cy.contains('Submit').click();
+    cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
+  });
+
+  it('should delete the upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains(data.upstreamName).siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
+  });
 });

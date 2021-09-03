@@ -56,6 +56,19 @@ export default {
   'component.upstream.fields.retries.tooltip':
     '重试机制将请求发到下一个上游节点。值为 0 表示禁用重试机制，留空表示使用可用后端节点的数量。',
 
+  'component.upstream.fields.retry_timeout': '重试超时时间',
+  'component.upstream.fields.retry_timeout.tooltip':
+    '限制是否继续重试的时间，若之前的请求和重试请求花费太多时间就不再继续重试。0 代表不启用重试超时机制。',
+
+  'component.upstream.fields.keepalive_pool': '连接池',
+  'component.upstream.fields.keepalive_pool.tooltip': '为 upstream 对象设置独立的连接池',
+  'component.upstream.fields.keepalive_pool.size': '容量',
+  'component.upstream.fields.keepalive_pool.size.placeholder': '请输入容量',
+  'component.upstream.fields.keepalive_pool.idle_timeout': '空闲超时时间',
+  'component.upstream.fields.keepalive_pool.idle_timeout.placeholder': '请输入空闲超时时间',
+  'component.upstream.fields.keepalive_pool.requests': '请求数量',
+  'component.upstream.fields.keepalive_pool.requests.placeholder': '请输入请求数量',
+
   'component.upstream.fields.checks.active.type': '类型',
   'component.upstream.fields.checks.active.type.tooltip':
     '是使用 HTTP 或 HTTPS 进行主动健康检查，还是只尝试 TCP 连接。',

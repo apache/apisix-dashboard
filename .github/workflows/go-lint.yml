@@ -12,25 +12,6 @@ on:
       - 'api/**'
 
 jobs:
-  go-filter:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodule: true
-
-      - uses: ./.github/actions/paths-filter
-        id: changes
-        with:
-          filters: |
-            go:
-              - '**.go'
-          working-directory: 'api'
-          list-files: shell
-    outputs:
-      matches: ${{ steps.changes.outputs.go }}
-      files: ${{ steps.changes.outputs.go_files }}
-
   golangci:
     runs-on: ubuntu-latest
     needs: go-filter
@@ -45,11 +26,8 @@ jobs:
           working-directory: api
           args: --tests=false
           only-new-issues: true
-
   gofmt:
     runs-on: ubuntu-latest
-    needs: go-filter
-    if: needs.go-filter.outputs.matches == 'true'
     steps:
       - uses: actions/checkout@v2
       - name: setup go
