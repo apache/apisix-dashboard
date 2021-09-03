@@ -50,6 +50,10 @@ jobs:
           context: .
           build-args: |
             APISIX_DASHBOARD_VERSION=master
+          cache-from: |
+            type=local,src=/tmp/.buildx-cache
+          cache-to: |
+            type=local,dest=/tmp/.buildx-cache
 
       - name: Modify Config
         run: |
@@ -65,7 +69,9 @@ jobs:
         continue-on-error: true
         run: |
           docker buildx bake --load \
-          -f docker-compose.yaml
+          -f docker-compose.yaml \
+          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
+          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
