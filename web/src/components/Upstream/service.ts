@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { notification } from 'antd';
-import { isNil, omitBy, omit, pick, cloneDeep } from 'lodash';
+import { isNil, omitBy, omit, cloneDeep } from 'lodash';
 import { formatMessage, request } from 'umi';
 
 /**
@@ -55,6 +55,17 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
   if (data.nodes) {
     data.upstream_type = 'node';
   }
+  // nodes have two types
+  // https://github.com/apache/apisix-dashboard/issues/2080
+  if (data.nodes instanceof Array) {
+    data['submitNodes'] = data.nodes;
+  } else if (data.nodes) {
+    data['submitNodes'] = Object.keys(data.nodes as Object).map((key) => ({
+      host: key.split(':')[0],
+      port: key.split(':')[1],
+      weight: (data.nodes as Object)[key],
+    }));
+  }
 
   if (data.discovery_type && data.service_name) {
     data.upstream_type = 'service_discovery';
@@ -77,7 +88,7 @@ export const convertToRequestData = (
     hash_on,
     key,
     upstream_type,
-    nodes,
+    submitNodes,
     discovery_type,
     discovery_args,
     service_name,
@@ -115,16 +126,21 @@ export const convertToRequestData = (
     return undefined;
   }
 
-  if (upstream_type === 'node' && nodes) {
+  if (upstream_type === 'node' && submitNodes) {
     /**
-     * nodes will be [] or node list
+     * submitNodes will be [] or node list
      * when upstream_id === none, None === undefined
      */
     // NOTE: https://github.com/ant-design/ant-design/issues/27396
-    data.nodes = nodes?.map((item) => {
-      return pick(item, ['host', 'port', 'weight']);
+    data.nodes = {};
+    submitNodes?.forEach((item) => {
+      const port = item.port ? `:${item.port}` : '';
+      data.nodes = {
+        ...data.nodes,
+        [`${item.host}${port}`]: item.weight as number,
+      };
     });
-    return omit(data, 'upstream_type');
+    return omit(data, ['upstream_type', 'submitNodes']);
   }
 
   if (upstream_type === 'service_discovery' && discovery_type && service_name) {

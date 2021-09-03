@@ -30,7 +30,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
 
   return (
     <Form.List
-      name="nodes"
+      name="submitNodes"
       initialValue={[{ host: undefined, port: undefined, weight: undefined }]}
     >
       {(fields, { add, remove }) => (
@@ -72,12 +72,6 @@ const Component: React.FC<Props> = ({ readonly }) => {
                     style={{ marginBottom: 0 }}
                     name={[field.name, 'port']}
                     label={formatMessage({ id: 'page.upstream.step.port' })}
-                    rules={[
-                      {
-                        required: true,
-                        message: formatMessage({ id: 'page.upstream.step.input.port' }),
-                      },
-                    ]}
                   >
                     <InputNumber
                       placeholder={formatMessage({ id: 'page.upstream.step.port' })}

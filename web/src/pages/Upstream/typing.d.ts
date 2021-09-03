@@ -82,7 +82,7 @@ declare namespace UpstreamModule {
     discovery_type?: DiscoveryType;
     service_name?: string;
     discovery_args?: DiscoveryArgs;
-    nodes?: Node[];
+    nodes?: UpstreamComponent.SubmitNode;
     hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
     key?: string;
     checks?: HealthCheck;
@@ -98,6 +98,7 @@ declare namespace UpstreamModule {
 
     // Custom Fields that need to be omitted
     custom?: {};
+    submitNodes?: Node[];
   };
 
   // TODO: typing
