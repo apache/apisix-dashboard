@@ -2720,6 +2720,32 @@
 			},
 			"version": 0.1
 		},
+		"dubbo-proxy": {
+			"priority": 507,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"method": {
+						"minLength": 1,
+						"type": "string"
+					},
+					"service_name": {
+						"minLength": 1,
+						"type": "string"
+					},
+					"service_version": {
+						"pattern": "^\\d+\\.\\d+\\.\\d+",
+						"type": "string"
+					}
+				},
+				"required": ["service_name", "service_version"],
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"echo": {
 			"priority": 412,
 			"schema": {
@@ -2752,6 +2778,84 @@
 						"description": "new headers for response",
 						"minProperties": 1,
 						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"error-log-logger": {
+			"metadata_schema": {
+				"properties": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"host": {
+						"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+						"type": "string"
+					},
+					"inactive_timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"keepalive": {
+						"default": 30,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"level": {
+						"default": "WARN",
+						"enum": ["ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "ERROR", "INFO", "NOTICE", "STDERR", "WARN"],
+						"type": "string"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "error-log-logger",
+						"type": "string"
+					},
+					"port": {
+						"minimum": 0,
+						"type": "integer"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"tls": {
+						"default": false,
+						"type": "boolean"
+					},
+					"tls_server_name": {
+						"type": "string"
+					}
+				},
+				"required": ["host", "port"],
+				"type": "object"
+			},
+			"priority": 1091,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -3636,6 +3740,20 @@
 			},
 			"version": 0.1
 		},
+		"log-rotate": {
+			"priority": 100,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"mqtt-proxy": {
 			"priority": 1000,
 			"schema": {
@@ -3671,6 +3789,20 @@
 					}
 				},
 				"required": ["protocol_level", "protocol_name", "upstream"],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"node-status": {
+			"priority": 1000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -4188,6 +4320,49 @@
 					}
 				},
 				"required": ["functions"],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"skywalking": {
+			"metadata_schema": {
+				"additionalProperties": false,
+				"properties": {
+					"endpoint_addr": {
+						"default": "http://127.0.0.1:12800",
+						"type": "string"
+					},
+					"report_interval": {
+						"type": "integer"
+					},
+					"service_instance_name": {
+						"default": "APISIX Instance Name",
+						"description": "User Service Instance Name",
+						"type": "string"
+					},
+					"service_name": {
+						"default": "APISIX",
+						"description": "service name for skywalking",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"priority": -1100,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"sample_ratio": {
+						"default": 1,
+						"maximum": 1,
+						"minimum": 0.00001,
+						"type": "number"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
