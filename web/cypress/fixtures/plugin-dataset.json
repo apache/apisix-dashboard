@@ -693,13 +693,13 @@
       "data": {}
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "invalid": "invalid"
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "invalid_property": 1
       }
@@ -862,7 +862,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "uri": "/apisix/home",
         "host": "apisix.apache.org",
@@ -1054,7 +1054,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "body": "Hello world",
         "headers": {
