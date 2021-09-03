@@ -40,12 +40,17 @@
             ],
             "timeout": {
               "connect": 6,
-              "read": 6,
-              "send": 6
+              "send": 6,
+              "read": 6
             },
             "type": "roundrobin",
             "scheme": "http",
-            "pass_host": "pass"
+            "pass_host": "pass",
+            "keepalive_pool": {
+              "idle_timeout": 60,
+              "requests": 1000,
+              "size": 320
+            }
           }
         }
       }
@@ -92,12 +97,17 @@
             ],
             "timeout": {
               "connect": 6,
-              "read": 6,
-              "send": 6
+              "send": 6,
+              "read": 6
             },
             "type": "roundrobin",
             "scheme": "http",
-            "pass_host": "pass"
+            "pass_host": "pass",
+            "keepalive_pool": {
+              "idle_timeout": 60,
+              "requests": 1000,
+              "size": 320
+            }
           }
         }
       },
@@ -143,12 +153,17 @@
             ],
             "timeout": {
               "connect": 6,
-              "read": 6,
-              "send": 6
+              "send": 6,
+              "read": 6
             },
             "type": "roundrobin",
             "scheme": "http",
-            "pass_host": "pass"
+            "pass_host": "pass",
+            "keepalive_pool": {
+              "idle_timeout": 60,
+              "requests": 1000,
+              "size": 320
+            }
           }
         }
       }
