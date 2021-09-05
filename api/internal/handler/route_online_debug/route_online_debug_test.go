@@ -19,15 +19,34 @@ package route_online_debug
 
 import (
 	"compress/gzip"
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
 var TestResponse = "test"
+
+//type TestRoute struct {
+//	Path string
+//	Result string
+//}
+
+//var test map[string]TestRoute = map[string]TestRoute {
+//	"test1": {
+//		Path:   "test1",
+//		Result: "test1",
+//	},
+//	"test2": {
+//		Path: "test2",
+//		Result: "test2",
+//	},
+//}
 
 func mockServer() *httptest.Server {
 	f := func(w http.ResponseWriter, r *http.Request) {
@@ -40,57 +59,119 @@ func mockServer() *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(f))
 }
 
-func TestHTTPProtocolSupport_RequestForwarding(t *testing.T) {
+func TestDebugRequestForwardingANDRequestForwarding(t *testing.T) {
 	server := mockServer()
 	defer server.Close()
 	var cases = []struct {
-		Desc   string
-		Input  *DebugOnlineInput
-		Result interface{}
+		Desc      string
+		Input     *DebugOnlineInput
+		Result    interface{}
+		MockRoute *entity.Route
 	}{
 		{
-			Desc: "unsupported method",
+			Desc: "unsupported protocol",
 			Input: &DebugOnlineInput{
-				URL:    server.URL,
-				Method: "Lock",
+				ID:              "test1",
+				RequestProtocol: "grpc",
+			},
+			MockRoute: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "",
+				},
+				URI:     "",
+				Methods: []string{""},
+				Upstream: &entity.UpstreamDef{
+					Nodes: []*entity.Node{
+						{Port: 0, Host: ""},
+					},
+					Retries:       0,
+					Timeout:       nil,
+					Type:          "",
+					Checks:        nil,
+					HashOn:        "",
+					Key:           "",
+					Scheme:        "",
+					DiscoveryType: "",
+					PassHost:      "",
+					UpstreamHost:  "",
+					Name:          "",
+					Desc:          "",
+					ServiceName:   "",
+					Labels:        nil,
+					TLS:           nil,
+				},
+				ServiceID:       nil,
+				UpstreamID:      nil,
+				ServiceProtocol: "",
 			},
 			Result: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 		},
 		{
-			Desc:   "wrong url",
-			Input:  &DebugOnlineInput{URL: "grpc://localhost"},
+			Desc: "can not get header",
+			Input: &DebugOnlineInput{
+				ID:              "test2",
+				RequestProtocol: "http",
+				RequestPath:     "test/1",
+				Method:          "get",
+			},
+			MockRoute: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "test2",
+				},
+				URI:     "",
+				Methods: []string{""},
+				Upstream: &entity.UpstreamDef{
+					Nodes: []*entity.Node{
+						{Port: 0, Host: ""},
+					},
+					Retries:       0,
+					Timeout:       nil,
+					Type:          "",
+					Checks:        nil,
+					HashOn:        "",
+					Key:           "",
+					Scheme:        "",
+					DiscoveryType: "",
+					PassHost:      "",
+					UpstreamHost:  "",
+					Name:          "",
+					Desc:          "",
+					ServiceName:   "",
+					Labels:        nil,
+					TLS:           nil,
+				},
+				ServiceID:       nil,
+				UpstreamID:      nil,
+				ServiceProtocol: "",
+			},
 			Result: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-		},
-		{
-			Desc: "not specify the accept-encoding request header explicitly",
-			Input: &DebugOnlineInput{
-				URL:          server.URL,
-				Method:       "Get",
-				HeaderParams: "{}",
-			},
-			Result: TestResponse,
-		},
-		{
-			Desc: "specify the accept-encoding request header explicitly",
-			Input: &DebugOnlineInput{
-				URL:          server.URL,
-				Method:       "Get",
-				HeaderParams: `{"Accept-Encoding": ["gzip"]}`,
-			},
-			Result: TestResponse,
 		},
 	}
+
 	for _, c := range cases {
+		routeStore := &store.MockInterface{}
+		routeStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+		}).Return(c.MockRoute, nil)
+
 		t.Run(c.Desc, func(t *testing.T) {
-			proto := &HTTPProtocolSupport{}
+			handler := Handler{
+				routeStore:    routeStore,
+				svcStore:      nil,
+				upstreamStore: nil,
+			}
+
+			//proto := &HTTPProtocolSupport{}
 			context := droplet.NewContext()
 			context.SetInput(c.Input)
-			result, _ := proto.RequestForwarding(context)
+
+			result, _ := handler.DebugRequestForwarding(context)
+
+			//result, _ := proto.RequestForwarding(context)
 			switch result.(type) {
 			case *Result:
-				assert.Equal(t, result.(*Result).Data, c.Result.(string))
+				assert.Equal(t, c.Result, result.(*Result).Data)
 			case *data.SpecCodeResponse:
-				assert.Equal(t, result, c.Result)
+				assert.Equal(t, c.Result, result)
 			}
 		})
 	}
