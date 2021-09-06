@@ -38,20 +38,22 @@ import (
 )
 
 type Handler struct {
-	routeStore      store.Interface
-	serviceStore    store.Interface
-	consumerStore   store.Interface
-	globalRuleStore store.Interface
-	protoStore      store.Interface
+	routeStore        store.Interface
+	serviceStore      store.Interface
+	consumerStore     store.Interface
+	pluginConfigStore store.Interface
+	globalRuleStore   store.Interface
+	protoStore        store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
-		routeStore:      store.GetStore(store.HubKeyRoute),
-		serviceStore:    store.GetStore(store.HubKeyService),
-		consumerStore:   store.GetStore(store.HubKeyConsumer),
-		globalRuleStore: store.GetStore(store.HubKeyGlobalRule),
-		protoStore:      store.GetStore(store.HubKeyProto),
+		routeStore:        store.GetStore(store.HubKeyRoute),
+		serviceStore:      store.GetStore(store.HubKeyService),
+		consumerStore:     store.GetStore(store.HubKeyConsumer),
+		pluginConfigStore: store.GetStore(store.HubKeyPluginConfig),
+		globalRuleStore:   store.GetStore(store.HubKeyGlobalRule),
+		protoStore:        store.GetStore(store.HubKeyProto),
 	}, nil
 }
 
@@ -162,7 +164,6 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 
 	// check proto id exist
 	ret, err := h.protoStore.Get(c.Context(), input.Proto.ID.(string))
-	fmt.Println(input.Proto.ID, ret, err)
 	if ret == nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("proto id not exists")
 	}
@@ -222,27 +223,27 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 
 	for _, id := range ids {
 		// check route plugin dependencies
-		if err := checkProtoUsed(c.Context(), store.HubKeyRoute, id); err != nil {
+		if err := h.checkProtoUsed(c.Context(), h.routeStore, id); err != nil {
 			return handler.SpecCodeResponse(err), err
 		}
 
 		// check consumer plugin dependencies
-		if err := checkProtoUsed(c.Context(), store.HubKeyConsumer, id); err != nil {
+		if err := h.checkProtoUsed(c.Context(), h.consumerStore, id); err != nil {
 			return handler.SpecCodeResponse(err), err
 		}
 
 		// check service plugin dependencies
-		if err := checkProtoUsed(c.Context(), store.HubKeyService, id); err != nil {
+		if err := h.checkProtoUsed(c.Context(), h.serviceStore, id); err != nil {
 			return handler.SpecCodeResponse(err), err
 		}
 
 		// check plugin template dependencies
-		if err := checkProtoUsed(c.Context(), store.HubKeyPluginConfig, id); err != nil {
+		if err := h.checkProtoUsed(c.Context(), h.pluginConfigStore, id); err != nil {
 			return handler.SpecCodeResponse(err), err
 		}
 
 		// check global plugin dependencies
-		if err := checkProtoUsed(c.Context(), store.HubKeyGlobalRule, id); err != nil {
+		if err := h.checkProtoUsed(c.Context(), h.globalRuleStore, id); err != nil {
 			return handler.SpecCodeResponse(err), err
 		}
 	}
@@ -254,8 +255,8 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func checkProtoUsed(ctx context.Context, resource store.HubKey, key string) error {
-	ret, err := store.GetStore(resource).List(ctx, store.ListInput{
+func (h *Handler) checkProtoUsed(ctx context.Context, storeInterface store.Interface, key string) error {
+	ret, err := storeInterface.List(ctx, store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			record := obj.(entity.GetPlugins)
 			for _, plugin := range plugins {
@@ -278,7 +279,7 @@ func checkProtoUsed(ctx context.Context, resource store.HubKey, key string) erro
 		return err
 	}
 	if ret.TotalSize > 0 {
-		return fmt.Errorf("proto used check invalid: %s: %s is using this proto", resource, ret.Rows[0].(entity.GetBaseInfo).GetBaseInfo().ID)
+		return fmt.Errorf("proto used check invalid: %s: %s is using this proto", storeInterface.Type(), ret.Rows[0].(entity.GetBaseInfo).GetBaseInfo().ID)
 	}
 	return nil
 
