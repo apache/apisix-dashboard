@@ -157,8 +157,11 @@ export const transformStepData = ({
         case 'http':
           key = `http_${name}`;
           break;
-        default:
+        case 'arg':
           key = `arg_${name}`;
+          break;
+        default:
+          key = `${name}`;
       }
       let finalValue = value;
       if (operator === 'IN') {
@@ -267,7 +270,15 @@ const transformVarsToRules = (
   data: [string, RouteModule.Operator, string | any[]][] = [],
 ): RouteModule.MatchingRule[] =>
   data.map(([key, operator, value]) => {
-    const [, position, name] = key.split(/^(cookie|http|arg)_/);
+    let position = '';
+    let name = '';
+    const regex = new RegExp('^(cookie|http|arg)_.+');
+    if (regex.test(key)) {
+      [, position, name] = key.split(/^(cookie|http|arg)_/);
+    }else {
+      position = "buildin";
+      name = key;
+    }
     return {
       position: position as RouteModule.VarPosition,
       name,
@@ -375,25 +386,4 @@ export const transformRouteData = (data: RouteModule.Body) => {
     step3Data,
     advancedMatchingRules,
   };
-};
-
-export const transformLabelList = (data: ResponseLabelList) => {
-  if (!data) {
-    return {};
-  }
-  const transformData = {};
-  data.forEach((item) => {
-    const key = Object.keys(item)[0];
-    const value = item[key];
-    if (!transformData[key]) {
-      transformData[key] = [];
-      transformData[key].push(value);
-      return;
-    }
-
-    if (transformData[key] && !transformData[key][value]) {
-      transformData[key].push(value);
-    }
-  });
-  return transformData;
 };

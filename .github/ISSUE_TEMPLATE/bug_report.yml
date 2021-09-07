@@ -1,0 +1,51 @@
+name: Bug Report
+description: Please use this template for reporting suspected bugs.
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue description
+      description: A clear and concise description of what the issue is.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: howto
+    attributes:
+      label: How to Reproduce
+      description: Describe the how we have to take to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Add screenshots to help explain your problem if applicable.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      value: |
+        - apisix version (cmd: `apisix version`):
+        - OS (cmd: `uname -a`):
+        - OpenResty / Nginx version (cmd: `nginx -V` or `openresty -V`):
+        - etcd version, if have (cmd: run `etcd --version`):
+        - apisix-dashboard version, if have:
+        - Browser version, if have:
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Do you want to solve this issue? or add any other context about the problem here.

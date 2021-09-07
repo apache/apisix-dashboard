@@ -62,5 +62,5 @@ func TestPlugin(t *testing.T) {
 	// plugin type
 	assert.ElementsMatch(t, []string{"basic-auth", "jwt-auth", "hmac-auth", "key-auth", "wolf-rbac"}, authPlugins)
 	// consumer schema
-	assert.Equal(t, `{"additionalProperties":false,"properties":{"password":{"type":"string"},"username":{"type":"string"}},"required":["password","username"],"title":"work with consumer object","type":"object"}`, basicAuthConsumerSchema)
+	assert.Equal(t, `{"properties":{"password":{"type":"string"},"username":{"type":"string"}},"required":["password","username"],"title":"work with consumer object","type":"object"}`, basicAuthConsumerSchema)
 }

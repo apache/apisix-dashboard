@@ -1,5 +1,5 @@
 ---
-title: API doc of Manager API.
+title: API doc of Manager API
 ---
 
 <!--
@@ -29,7 +29,7 @@ Manager API directly operates ETCD and provides data management for Apache APISI
 
 #### GET
 
-##### Summary:
+##### Summary
 
 Export a config file for migrate.
 
@@ -43,7 +43,7 @@ A file for download.
 
 ### /apisix/admin/migrate/import
 
-##### Summary:
+##### Summary
 
 Import the config file for restore config.
 
@@ -51,23 +51,23 @@ Import the config file for restore config.
 
 ##### Parameters (FORM)
 
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ------ |
+| Name | Located in | Description                             | Required | Schema |
+| ---- | ---------- | --------------------------------------- | -------- | ------ |
 | mode | body(form) | import mode (return, skip or overwrite) | Yes      | string |
-| file | body(form) | file to upload  | Yes      | string |
+| file | body(form) | file to upload                          | Yes      | string |
 
 ##### Responses
 
-| Code    | Description      | Schema                |
-| ------- | ---------------- | --------------------- |
-| 0       | import success   | [ApiError](#ApiError) |
-| 20001   | Config conflict  |[ApiError](#ApiError) |
+| Code  | Description     | Schema                |
+| ----- | --------------- | --------------------- |
+| 0     | import success  | [ApiError](#ApiError) |
+| 20001 | Config conflict | [ApiError](#ApiError) |
 
 ### /apisix/admin/check_ssl_cert
 
 #### POST
 
-##### Summary:
+##### Summary
 
 verify SSL cert and key.
 
@@ -89,7 +89,7 @@ verify SSL cert and key.
 
 #### POST
 
-##### Summary:
+##### Summary
 
 Check whether the SSL exists.
 
@@ -111,7 +111,7 @@ Check whether the SSL exists.
 
 #### GET
 
-##### Summary:
+##### Summary
 
 Return the consumer list according to the specified page number and page size, and can search consumers by username.
 
@@ -134,7 +134,7 @@ Return the consumer list according to the specified page number and page size, a
 
 #### GET
 
-##### Summary:
+##### Summary
 
 Return result of route exists checking by name and exclude id.
 
@@ -156,7 +156,7 @@ Return result of route exists checking by name and exclude id.
 
 #### GET
 
-##### Summary:
+##### Summary
 
 Return the route list according to the specified page number and page size, and can search routes by name and uri.
 
@@ -181,7 +181,7 @@ Return the route list according to the specified page number and page size, and 
 
 #### GET
 
-##### Summary:
+##### Summary
 
 Return the service list according to the specified page number and page size, and can search services by name.
 
@@ -204,7 +204,7 @@ Return the service list according to the specified page number and page size, an
 
 #### GET
 
-##### Summary:
+##### Summary
 
 Return the SSL list according to the specified page number and page size, and can SSLs search by sni.
 
@@ -227,7 +227,7 @@ Return the SSL list according to the specified page number and page size, and ca
 
 #### GET
 
-##### Summary:
+##### Summary
 
 Return the upstream list according to the specified page number and page size, and can search upstreams by name.
 
@@ -250,7 +250,7 @@ Return the upstream list according to the specified page number and page size, a
 
 #### POST
 
-##### Summary:
+##### Summary
 
 user login.
 

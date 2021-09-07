@@ -35,7 +35,16 @@ const Page: React.FC = (props) => {
 
     if (id) {
       fetchOne(id).then((data) => {
-        form1.setFieldsValue(data);
+        const newData = data;
+        if (newData) {
+          if ('nodes' in newData) {
+            newData.upstream_type = 'node';
+          } else {
+            newData.upstream_type = 'service_discovery';
+          }
+        }
+
+        form1.setFieldsValue(newData);
       });
     }
   }, []);

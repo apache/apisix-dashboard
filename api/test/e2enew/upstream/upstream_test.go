@@ -845,7 +845,6 @@ var _ = ginkgo.Describe("test upstream delete (route is in use)", func() {
 			Body: `{
 				"name": "route1",
 				"id": "r1",
-				"name": "route1",
 				"uri": "/hello",
 				"upstream_id": "u1"
 			}`,

@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, InputNumber, Select } from 'antd';
+import { Form, InputNumber, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
@@ -37,6 +37,9 @@ const FORM_ITEM_LAYOUT = {
 const LimitConn: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
   const propertires = schema?.properties;
+  const onlyUseDefaultDelay = form.getFieldValue('only_use_default_delay')
+    ? form.getFieldValue('only_use_default_delay')
+    : false;
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
@@ -67,6 +70,17 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
       </Form.Item>
 
       <Form.Item
+        label="only_use_default_delay"
+        name="only_use_default_delay"
+        initialValue={propertires.only_use_default_delay.default}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.limit-conn.only_use_default_delay.tooltip',
+        })}
+      >
+        <Switch defaultChecked={onlyUseDefaultDelay} />
+      </Form.Item>
+
+      <Form.Item
         label="key"
         required
         name="key"
@@ -81,19 +95,6 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
             );
           })}
         </Select>
-      </Form.Item>
-
-      <Form.Item
-        label="rejected_code"
-        name="rejected_code"
-        initialValue={propertires.rejected_code.default}
-        tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.rejected_code.tooltip' })}
-      >
-        <InputNumber
-          min={propertires.rejected_code.minimum}
-          max={propertires.rejected_code.maximum}
-          required
-        />
       </Form.Item>
     </Form>
   );
