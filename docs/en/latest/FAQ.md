@@ -129,3 +129,5 @@ enabled = true
 # grep 'allow_embedding' defaults.ini
 allow_embedding = true
 ···
+### 9. APISIX dashboard configured domain name,grafana can't login
+It's best for grafana to configure the domain name in the same way.Otherwise, there will be problems with address resolution.
