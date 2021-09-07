@@ -283,10 +283,12 @@ type PluginConfig struct {
 
 type StreamRoute struct {
 	BaseInfo
-	RemoteAddr string       `json:"remote_addr"`
-	ServerAddr string       `json:"server_addr"`
-	ServerPort int          `json:"server_port"`
-	Sni        string       `json:"sni"`
-	Upstream   *UpstreamDef `json:"upstream"`
-	UpstreamID interface{}  `json:"upstream_id"`
+	RemoteAddr string                 `json:"remote_addr,omitempty"`
+	ServerAddr string                 `json:"server_addr,omitempty"`
+	ServerPort int                    `json:"server_port,omitempty"`
+	Sni        string                 `json:"sni,omitempty"`
+	Upstream   *UpstreamDef           `json:"upstream,omitempty"`
+	UpstreamID interface{}            `json:"upstream_id,omitempty"`
+	Desc       string                 `json:"desc,omitempty"`
+	Plugins    map[string]interface{} `json:"plugins,omitempty"`
 }
