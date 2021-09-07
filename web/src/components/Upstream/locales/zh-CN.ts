@@ -20,9 +20,24 @@ export default {
   'component.upstream.fields.tls.client_cert': '客户端证书',
   'component.upstream.fields.tls.client_cert.required': '请输入客户端证书',
 
+  'component.upstream.fields.upstream_type': '上游类型',
+  'component.upstream.fields.upstream_type.node': '节点',
+  'component.upstream.fields.upstream_type.service_discovery': '服务发现',
+
   'component.upstream.fields.discovery_type': '服务发现类型',
   'component.upstream.fields.discovery_type.tooltip': '服务发现类型',
-  'component.upstream.fields.discovery_type.placeholder': '请输入服务发现类型',
+  'component.upstream.fields.discovery_type.placeholder': '请选择服务发现类型',
+  'component.upstream.fields.discovery_type.type.dns': 'DNS',
+  'component.upstream.fields.discovery_type.type.consul_kv': 'Consul KV',
+  'component.upstream.fields.discovery_type.type.nacos': 'Nacos',
+  'component.upstream.fields.discovery_type.type.eureka': 'Eureka',
+
+  'component.upstream.fields.discovery_args.group_name': '分组名',
+  'component.upstream.fields.discovery_args.group_name.tooltip': '分组名',
+  'component.upstream.fields.discovery_args.group_name.placeholder': '请输入分组名',
+  'component.upstream.fields.discovery_args.namespace_id': '命名空间ID',
+  'component.upstream.fields.discovery_args.namespace_id.tooltip': '命名空间ID',
+  'component.upstream.fields.discovery_args.namespace_id.placeholder': '请输入命名空间ID',
 
   'component.upstream.fields.service_name': '服务名称',
   'component.upstream.fields.service_name.tooltip': '服务名称',
@@ -40,6 +55,19 @@ export default {
   'component.upstream.fields.retries': '重试次数',
   'component.upstream.fields.retries.tooltip':
     '重试机制将请求发到下一个上游节点。值为 0 表示禁用重试机制，留空表示使用可用后端节点的数量。',
+
+  'component.upstream.fields.retry_timeout': '重试超时时间',
+  'component.upstream.fields.retry_timeout.tooltip':
+    '限制是否继续重试的时间，若之前的请求和重试请求花费太多时间就不再继续重试。0 代表不启用重试超时机制。',
+
+  'component.upstream.fields.keepalive_pool': '连接池',
+  'component.upstream.fields.keepalive_pool.tooltip': '为 upstream 对象设置独立的连接池',
+  'component.upstream.fields.keepalive_pool.size': '容量',
+  'component.upstream.fields.keepalive_pool.size.placeholder': '请输入容量',
+  'component.upstream.fields.keepalive_pool.idle_timeout': '空闲超时时间',
+  'component.upstream.fields.keepalive_pool.idle_timeout.placeholder': '请输入空闲超时时间',
+  'component.upstream.fields.keepalive_pool.requests': '请求数量',
+  'component.upstream.fields.keepalive_pool.requests.placeholder': '请输入请求数量',
 
   'component.upstream.fields.checks.active.type': '类型',
   'component.upstream.fields.checks.active.type.tooltip':

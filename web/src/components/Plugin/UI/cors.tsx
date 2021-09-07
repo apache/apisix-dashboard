@@ -72,6 +72,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
             >
               {[
                 '*',
+                '**',
                 'GET',
                 'HEAD',
                 'POST',

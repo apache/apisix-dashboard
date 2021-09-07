@@ -15,27 +15,27 @@
  * limitations under the License.
  */
 import React from 'react';
-import { Form, Input } from 'antd';
+import { Form, InputNumber } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
   readonly?: boolean;
 };
 
-const DiscoveryType: React.FC<Props> = ({ readonly }) => {
+const RetryTimeout: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl();
+
   return (
-    <Form.Item
-      name="discovery_type"
-      label={formatMessage({ id: 'component.upstream.fields.discovery_type' })}
-      tooltip={formatMessage({ id: 'component.upstream.fields.discovery_type.tooltip' })}
-    >
-      <Input
-        disabled={readonly}
-        placeholder={formatMessage({ id: 'component.upstream.fields.discovery_type.placeholder' })}
-      />
-    </Form.Item>
+    <React.Fragment>
+      <Form.Item
+        name="retry_timeout"
+        label={formatMessage({ id: 'component.upstream.fields.retry_timeout' })}
+        tooltip={formatMessage({ id: 'component.upstream.fields.retry_timeout.tooltip' })}
+      >
+        <InputNumber disabled={readonly} />
+      </Form.Item>
+    </React.Fragment>
   );
 };
 
-export default DiscoveryType;
+export default RetryTimeout;

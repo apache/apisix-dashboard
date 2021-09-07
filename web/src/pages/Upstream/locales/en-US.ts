@@ -65,6 +65,7 @@ export default {
   'page.upstream.step.input.healthyCheck.passive.http_statuses': 'Please enter http status',
   'page.upstream.step.healthyCheck.passive.tcp_failures': 'TCP Failures',
   'page.upstream.step.input.healthyCheck.passive.tcp_failures': 'Please enter TCP failures',
+  'page.upstream.step.keepalive_pool': 'Keepalive Pool',
   'page.upstream.notificationMessage.enableHealthCheckFirst': 'Please enable health check first.',
   'page.upstream.upstream_host.required': 'Please enter the custom Host',
 

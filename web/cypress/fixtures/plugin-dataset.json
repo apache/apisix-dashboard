@@ -291,12 +291,12 @@
     {
       "shouldValid": true,
       "data": {
-        "allow_origins": "",
-        "allow_methods": "",
-        "allow_headers": "",
-        "expose_headers": "",
-        "max_age": 600,
-        "allow_credential": true
+        "allow_origins": "*",
+        "allow_methods": "*",
+        "allow_headers": "*",
+        "expose_headers": "*",
+        "max_age": 5,
+        "allow_credential": false
       }
     },
     {
@@ -506,7 +506,7 @@
       }
     },
     {
-      "shouldValid": true,
+      "shouldValid": false,
       "data": {
         "conn": 5,
         "burst": 1,
@@ -516,7 +516,7 @@
       }
     },
     {
-      "shouldValid": true,
+      "shouldValid": false,
       "data": {
         "conn": 5,
         "burst": 1,
@@ -693,13 +693,13 @@
       "data": {}
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "invalid": "invalid"
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "invalid_property": 1
       }
@@ -862,7 +862,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "uri": "/apisix/home",
         "host": "apisix.apache.org",
@@ -1054,7 +1054,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "body": "Hello world",
         "headers": {

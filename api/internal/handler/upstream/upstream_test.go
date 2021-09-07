@@ -55,10 +55,10 @@ func TestUpstream_Get(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -103,10 +103,10 @@ func TestUpstream_Get(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -345,10 +345,10 @@ func TestUpstream_Create(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -393,10 +393,10 @@ func TestUpstream_Create(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -441,10 +441,10 @@ func TestUpstream_Create(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -489,10 +489,10 @@ func TestUpstream_Create(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -542,10 +542,10 @@ func TestUpstream_Create(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -591,10 +591,10 @@ func TestUpstream_Create(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -689,10 +689,10 @@ func TestUpstream_Update(t *testing.T) {
 				Upstream: entity.Upstream{
 					UpstreamDef: entity.UpstreamDef{
 						Name: "upstream1",
-						Timeout: map[string]interface{}{
-							"connect": 15,
-							"send":    15,
-							"read":    15,
+						Timeout: &entity.Timeout{
+							Connect: 15,
+							Send:    15,
+							Read:    15,
 						},
 						Checks: map[string]interface{}{
 							"active": map[string]interface{}{
@@ -738,10 +738,10 @@ func TestUpstream_Update(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -786,10 +786,10 @@ func TestUpstream_Update(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -834,10 +834,10 @@ func TestUpstream_Update(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": 15,
-						"send":    15,
-						"read":    15,
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -887,10 +887,10 @@ func TestUpstream_Update(t *testing.T) {
 					},
 					UpstreamDef: entity.UpstreamDef{
 						Name: "upstream1",
-						Timeout: map[string]interface{}{
-							"connect": 15,
-							"send":    15,
-							"read":    15,
+						Timeout: &entity.Timeout{
+							Connect: 15,
+							Send:    15,
+							Read:    15,
 						},
 						Checks: map[string]interface{}{
 							"active": map[string]interface{}{
@@ -973,10 +973,10 @@ func TestUpstream_Patch(t *testing.T) {
 		},
 		UpstreamDef: entity.UpstreamDef{
 			Name: "upstream1",
-			Timeout: map[string]interface{}{
-				"connect": 15,
-				"send":    15,
-				"read":    15,
+			Timeout: &entity.Timeout{
+				Connect: 15,
+				Send:    15,
+				Read:    15,
 			},
 			Checks: map[string]interface{}{
 				"active": map[string]interface{}{
@@ -1022,10 +1022,10 @@ func TestUpstream_Patch(t *testing.T) {
 		},
 		UpstreamDef: entity.UpstreamDef{
 			Name: "upstream2",
-			Timeout: map[string]interface{}{
-				"connect": float64(20),
-				"send":    float64(20),
-				"read":    float64(20),
+			Timeout: &entity.Timeout{
+				Connect: 20,
+				Send:    20,
+				Read:    20,
 			},
 			Checks: map[string]interface{}{
 				"active": map[string]interface{}{
@@ -1085,10 +1085,10 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream2",
-					Timeout: map[string]interface{}{
-						"connect": float64(20),
-						"send":    float64(20),
-						"read":    float64(20),
+					Timeout:  &entity.Timeout{
+						Connect: 20,
+						Send:    20,
+						Read:    20,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -1138,10 +1138,10 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream2",
-					Timeout: map[string]interface{}{
-						"connect": float64(20),
-						"send":    float64(20),
-						"read":    float64(20),
+					Timeout:  &entity.Timeout{
+						Connect: 20,
+						Send:    20,
+						Read:    20,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -1186,10 +1186,10 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream2",
-					Timeout: map[string]interface{}{
-						"connect": float64(20),
-						"send":    float64(20),
-						"read":    float64(20),
+					Timeout:  &entity.Timeout{
+						Connect: 20,
+						Send:    20,
+						Read:    20,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -1243,10 +1243,10 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": float64(20),
-						"send":    float64(20),
-						"read":    float64(20),
+					Timeout:  &entity.Timeout{
+						Connect: 20,
+						Send:    20,
+						Read:    20,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -1291,10 +1291,10 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": float64(15),
-						"send":    float64(15),
-						"read":    float64(15),
+					Timeout:  &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{
@@ -1339,10 +1339,10 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout: map[string]interface{}{
-						"connect": float64(20),
-						"send":    float64(20),
-						"read":    float64(20),
+					Timeout:  &entity.Timeout{
+						Connect: 20,
+						Send:    20,
+						Read:    20,
 					},
 					Checks: map[string]interface{}{
 						"active": map[string]interface{}{

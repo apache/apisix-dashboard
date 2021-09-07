@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
+import type { FormInstance } from 'antd';
 import { AutoComplete, Form, Select } from 'antd';
 import { useIntl } from 'umi';
-import type { FormInstance } from 'antd/es/form';
 
 import { HashOnEnum, CommonHashKeyEnum, AlgorithmEnum } from '../constant';
 
