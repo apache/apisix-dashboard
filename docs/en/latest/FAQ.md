@@ -135,4 +135,4 @@ allow_embedding = true
 
 If the domain name of the address is configured as HTTPS, the embedded grafana will jump to the login page after logging in. You can refer to this solution:
 
-    It's best for grafana to configure the domain name in the same way.Otherwise, there will be problems with address resolution.
+It's best for Grafana to configure the domain name in the same way. Otherwise there will be problems with address resolution.
