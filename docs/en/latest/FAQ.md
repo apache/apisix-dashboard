@@ -130,7 +130,8 @@ enabled = true
 allow_embedding = true
 ···
 ```
-### 9. APISIX dashboard configured domain name,grafana can't login
+
+### 9. APISIX dashboard configured domain name, the embedded Grafana can't login
 
 If the domain name of the address is configured as HTTPS, the embedded grafana will jump to the login page after logging in. You can refer to this solution:
 
