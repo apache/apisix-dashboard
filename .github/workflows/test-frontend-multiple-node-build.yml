@@ -37,6 +37,8 @@ jobs:
         uses: actions/setup-node@v2.4.0
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+          cache-dependency-path: web/yarn.lock
 
       # Install dependencies
       - name: Install dependencies

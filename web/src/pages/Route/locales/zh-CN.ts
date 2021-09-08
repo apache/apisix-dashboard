@@ -19,6 +19,7 @@ export default {
   'page.route.parameterPosition': '参数位置',
   'page.route.httpRequestHeader': 'HTTP 请求头',
   'page.route.requestParameter': '请求参数',
+  'page.route.buildinParameter': '内置参数',
   'page.route.parameterName': '参数名称',
   'page.route.operationalCharacter': '运算符',
   'page.route.equal': '等于（==）',
@@ -64,8 +65,7 @@ export default {
   'page.route.input.placeholder.paramValue': '参数值',
   // form
   'page.route.form.itemRulesRequiredMessage.parameterName': '仅支持字母和数字，且只能以字母开头',
-  'page.route.form.itemRulesPatternMessage.apiNameRule':
-    '路由的名称，最大长度100，仅支持字母、数字、- 和 _，且只能以字母开头',
+  'page.route.form.itemRulesPatternMessage.apiNameRule': '最大长度应仅为 100',
   'page.route.form.itemLabel.httpMethod': 'HTTP 方法',
   'page.route.form.itemLabel.scheme': '协议',
   'page.route.form.itemLabel.priority': '优先级',

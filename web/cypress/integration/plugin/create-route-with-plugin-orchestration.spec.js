@@ -21,9 +21,9 @@ context('Create and delete route with plugin orchestration', () => {
     empty: '.ant-empty-normal',
     name: '#name',
     description: '#desc',
-    nodes_0_host: '#nodes_0_host',
-    nodes_0_port: '#nodes_0_port',
-    nodes_0_weight: '#nodes_0_weight',
+    nodes_0_host: '#submitNodes_0_host',
+    nodes_0_port: '#submitNodes_0_port',
+    nodes_0_weight: '#submitNodes_0_weight',
     groupButton: '.ant-radio-group',
     canvas: '.x6-graph-svg',
     startNode:
@@ -78,9 +78,6 @@ context('Create and delete route with plugin orchestration', () => {
     cy.get(selector.canvasNode)
       .click()
       .then(() => {
-        const node2 = cy
-          .get('#container > svg > g > g.x6-graph-svg-stage > g:nth-child(2) > g > circle')
-          .eq(0);
         const node1 = cy
           .get('#container > svg > g > g.x6-graph-svg-stage > g:nth-child(1) > g > circle')
           .eq(0);

@@ -19,9 +19,9 @@
 context('Create Route without Upstream', () => {
   const selector = {
     name: '#name',
-    nodes_0_host: '#nodes_0_host',
-    nodes_0_port: '#nodes_0_port',
-    nodes_0_weight: '#nodes_0_weight',
+    nodes_0_host: '#submitNodes_0_host',
+    nodes_0_port: '#submitNodes_0_port',
+    nodes_0_weight: '#submitNodes_0_weight',
     input: ':input',
     nameSelector: '[title=Name]',
     deleteAlert: '.ant-modal-body',

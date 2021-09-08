@@ -297,9 +297,9 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
         />
       </Form.Item>
       <Form.Item
-        label="reject_message"
-        name="reject_message"
-        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.reject_message.tooltip' })}
+        label="rejected_msg"
+        name="rejected_msg"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.rejected_msg.tooltip' })}
       >
         <Input />
       </Form.Item>

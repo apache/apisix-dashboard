@@ -16,15 +16,17 @@
  */
 /* eslint-disable no-undef */
 
-context('Create Route with Upstream', () => {
+context('Create Route with Service Discovery Upstream', () => {
   const selector = {
     name: '#name',
     description: '#desc',
-    nodes_0_host: '#submitNodes_0_host',
-    nodes_0_port: '#submitNodes_0_port',
-    nodes_0_weight: '#submitNodes_0_weight',
+    discovery_type: '#discovery_type',
+    service_name: '#service_name',
     upstreamSelector: '[data-cy=upstream_selector]',
     nameSelector: '[title=Name]',
+    selectItem: '.ant-select-item-option-content',
+    drawer: '.ant-drawer-content',
+    monacoScroll: '.monaco-scrollable-element',
     input: ':input',
     deleteAlert: '.ant-modal-body',
     notification: '.ant-notification-notice-message',
@@ -34,42 +36,18 @@ context('Create Route with Upstream', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
     submitSuccess: 'Submit Successfully',
     deleteUpstreamSuccess: 'Delete Upstream Successfully',
-    host1: '11.11.11.11',
-    port: '80',
     weight: 1,
     description: 'desc_by_autotest',
     upstreamName: 'test_upstream',
     routeName: 'test_route',
-    ip1: '127.0.0.1',
-    ip2: '127.0.0.2',
-    FQDN: 'bigserver.mycompany.com',
+    serviceName: 'test.cluster.local',
   };
 
   beforeEach(() => {
     cy.login();
   });
 
-  it('should create an upstream', function () {
-    cy.visit('/');
-    cy.contains('Upstream').click();
-    cy.contains('Create').click();
-
-    cy.get(selector.name).type(data.upstreamName);
-    cy.get(selector.description).type(data.description);
-    cy.get(selector.nodes_0_host).type(data.FQDN);
-    cy.get('label[title="Port"]').then(($els) => {
-      const win = $els[0].ownerDocument.defaultView;
-      const before = win.getComputedStyle($els[0], 'before');
-      const contentValue = before.getPropertyValue('content');
-      expect(contentValue).to.eq('none');
-    });
-    cy.get(selector.nodes_0_port).clear();
-    cy.get(selector.nodes_0_weight).type(data.weight);
-    cy.contains('Next').click();
-    cy.contains('Submit').click();
-  });
-
-  it('should create route with upstream just created', function () {
+  it('should create route with DNS service discovery upstream', function () {
     cy.visit('/');
     cy.get('[role=menu]')
       .should('be.visible')
@@ -81,26 +59,44 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click().click();
     cy.get(selector.name).type(data.routeName);
     cy.contains('Next').click();
-    // should disable Upstream input boxes after selecting an existing upstream
-    cy.get(selector.upstreamSelector).click();
-    cy.contains(data.upstreamName).click();
-    cy.get(selector.input).should('be.disabled');
+
     // should enable Upstream input boxes after selecting Custom mode
     cy.get(selector.upstreamSelector).click();
     cy.contains('.ant-select-item-option-content', 'Custom').click();
 
-    cy.get(selector.nodes_0_host).should('have.value', data.FQDN).clear().type(data.ip1);
-    cy.get(selector.nodes_0_port).should('have.value', '').type(data.port);
-    cy.get(selector.nodes_0_weight).type(data.weight);
+    // set service discovery
+    cy.get('[title="Node"]').click();
+    cy.get(selector.selectItem).within(() => {
+      cy.contains('Service Discovery').click();
+    });
+
+    cy.get(selector.discovery_type).click();
+    cy.get(selector.selectItem).within(() => {
+      cy.contains('DNS').click();
+    });
+    cy.get(selector.service_name).type(data.serviceName);
+
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess).should('be.visible');
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
+
+    // check if the service discovery have been saved
+    cy.get(selector.nameSelector).type(data.routeName);
+    cy.contains('Search').click();
+
+    cy.contains(data.routeName).siblings().contains('Configure').click();
+    // ensure it has already changed to edit page
+    cy.get(selector.name).should('value', data.routeName);
+    cy.contains('Next').click({
+      force: true,
+    });
+    cy.get(selector.service_name).should('value', data.serviceName);
   });
 
-  it('should edit this route with upstream', function () {
+  it('should edit this route with Nacos Service Discovery upstream', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(selector.nameSelector).type(data.routeName);
@@ -113,20 +109,15 @@ context('Create Route with Upstream', () => {
       force: true,
     });
 
-    // check if the changes have been saved
-    cy.get(selector.nodes_0_host).should('value', data.ip1);
+    cy.contains('DNS').should('exist');
 
-    cy.get(selector.upstreamSelector).click();
-    cy.contains(data.upstreamName).click();
-    cy.get(selector.input).should('be.disabled');
+    // set another service discovery
+    cy.get(selector.discovery_type).click({ force: true });
+    cy.get(selector.selectItem).within(() => {
+      cy.contains('Nacos').click();
+    });
+    cy.get(selector.service_name).clear().type(`another.${data.serviceName}`);
 
-    cy.contains(data.upstreamName).click();
-    cy.contains('.ant-select-item-option-content', 'Custom').click();
-    cy.get(selector.input).should('not.be.disabled');
-
-    cy.get(selector.nodes_0_host).clear().type(data.ip2);
-    cy.get(selector.nodes_0_port).type(data.port);
-    cy.get(selector.nodes_0_weight).type(data.weight);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -144,7 +135,23 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click({
       force: true,
     });
-    cy.get(selector.nodes_0_host).should('value', data.ip2);
+    cy.get(selector.service_name).should('value', `another.${data.serviceName}`);
+  });
+
+  it('should view the test route', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    cy.get(selector.nameSelector).type(data.routeName);
+    cy.contains('Search').click();
+    cy.contains(data.routeName).siblings().contains('More').click();
+    cy.contains('View').click();
+    cy.get(selector.drawer).should('be.visible');
+
+    cy.get(selector.monacoScroll).within(() => {
+      cy.contains('service_name').should('exist');
+      cy.contains('discovery').should('exist');
+    });
   });
 
   it('should delete this test route and upstream', function () {
@@ -159,11 +166,5 @@ context('Create Route with Upstream', () => {
         cy.contains('OK').click();
       });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
-
-    cy.visit('/');
-    cy.contains('Upstream').click();
-    cy.contains(data.upstreamName).siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
   });
 });
