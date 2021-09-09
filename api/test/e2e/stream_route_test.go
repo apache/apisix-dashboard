@@ -48,7 +48,7 @@ func TestStreamRouteCreate(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			Desc:   "create stream route with upstream",
+			Desc:   "create stream route with upstream id not found",
 			Object: ManagerApiExpect(t),
 			Path:   "/apisix/admin/stream_routes",
 			Method: http.MethodPost,
@@ -57,7 +57,7 @@ func TestStreamRouteCreate(t *testing.T) {
 				"remote_addr": "127.0.0.1",
 				"server_addr": "127.0.0.1",
 				"server_port": 9090,
-				"sni": "test.com"
+				"sni": "test.com",
 				"upstream": {
 					"nodes": {
 						"` + UpstreamIp + `:1980": 1
@@ -67,7 +67,6 @@ func TestStreamRouteCreate(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "hit stream route just create",
@@ -120,7 +119,7 @@ func TestStreamRouteUpdate(t *testing.T) {
 				"remote_addr": "127.0.0.1",
 				"server_addr": "127.0.0.1",
 				"server_port": 9090,
-				"sni": "test.com"
+				"sni": "test.com",
 				"upstream": {
 					"nodes": {
 						"` + UpstreamIp + `:1980": 1
