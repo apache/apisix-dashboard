@@ -69,6 +69,7 @@ jobs:
           api/test/shell/manager_smoking.sh -s true
 
       - name: Publish Artifact
+        if: ${{ startsWith(github.ref, 'refs/heads/release/') }}
         uses: actions/upload-artifact@v2.2.4
         with:
           name: "rpm"
