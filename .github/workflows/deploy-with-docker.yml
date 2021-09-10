@@ -35,13 +35,6 @@ jobs:
             ${{ runner.os }}-buildx-apisixdashboard-
             ${{ runner.os }}-buildx-
 
-      - uses: Azure/docker-login@v1
-        if: ${{ github.event_name == 'push' }}
-        with:
-          login-server: apisixacr.azurecr.cn
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
       - name: Build Docker Image
         uses: docker/build-push-action@v2
         with:
@@ -50,6 +43,10 @@ jobs:
           context: .
           build-args: |
             APISIX_DASHBOARD_VERSION=master
+          cache-from: |
+            type=local,src=/tmp/.buildx-cache
+          cache-to: |
+            type=local,dest=/tmp/.buildx-cache
 
       - name: Modify Config
         run: |
@@ -65,7 +62,9 @@ jobs:
         continue-on-error: true
         run: |
           docker buildx bake --load \
-          -f docker-compose.yaml
+          -f docker-compose.yaml \
+          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
+          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
@@ -76,6 +75,13 @@ jobs:
 
       - name: Run Test
         run: api/test/shell/manager_smoking.sh -s false
+
+      - uses: Azure/docker-login@v1
+        if: ${{ github.event_name == 'push' }}
+        with:
+          login-server: apisixacr.azurecr.cn
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Deploy
         if: ${{ github.event_name == 'push' }}

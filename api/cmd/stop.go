@@ -41,7 +41,12 @@ func newStopCommand() *cobra.Command {
 				}
 				return
 			}
-			if err := syscall.Kill(pid, syscall.SIGINT); err != nil {
+			p, err := os.FindProcess(pid)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "failed to find process manager-api: %s\n", err)
+				return
+			}
+			if err := p.Signal(syscall.SIGINT); err != nil {
 				fmt.Fprintf(os.Stderr, "failed to kill manager-api: %s", err)
 			}
 		},
