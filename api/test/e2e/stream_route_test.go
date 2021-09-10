@@ -42,7 +42,7 @@ func TestStreamRouteCreate(t *testing.T) {
 				"server_addr": "127.0.0.1",
 				"server_port": 9090,
 				"sni": "test.com",
-				"upstream_id": "u1" 
+				"upstream_id": "u1"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
