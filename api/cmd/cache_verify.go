@@ -19,6 +19,7 @@ package cmd
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -50,28 +51,30 @@ func newCacheVerifyCommand() *cobra.Command {
 			log.InitLogger()
 
 			port = conf.ServerPort
-			host = conf.ServerHost
-			username = "admin"
+			host = "127.0.0.1"
+			username = conf.AuthConf.Users[0].Username
 			password = conf.UserList[username].Password
-
-			token := getToken()
+			token, err := getToken()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "get token failed: %s\n", err)
+				return
+			}
 
 			url := fmt.Sprintf("http://%s:%d/apisix/admin/cache_verify", host, port)
 			client := &http.Client{}
-
-			get, err := http.NewRequest("GET", url, nil)
+			req, err := http.NewRequest("GET", url, nil)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "new http request failed: %s\n", err)
 				return
 			}
 
-			get.Header.Set("Authorization", token)
-
-			rsp, err := client.Do(get)
+			req.Header.Set("Authorization", token)
+			rsp, err := client.Do(req)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "get result from migrate/export failed: %s\n", err)
 				return
 			}
+
 			defer func() {
 				err := rsp.Body.Close()
 				if err != nil {
@@ -126,7 +129,7 @@ func newCacheVerifyCommand() *cobra.Command {
 	}
 }
 
-func getToken() string {
+func getToken() (string, error) {
 	account := map[string]string{
 		"username": username,
 		"password": password,
@@ -135,14 +138,14 @@ func getToken() string {
 	data, err := json.Marshal(account)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "json marshal failed: %s\n", err)
-		return ""
+		return "", err
 	}
 
 	url := fmt.Sprintf("http://%s:%d/apisix/admin/user/login", host, port)
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "login failed: %s\n", err)
-		return ""
+		return "", err
 	}
 
 	defer func() {
@@ -156,15 +159,15 @@ func getToken() string {
 	respObj, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "io read all failed: %s\n", err)
-		return ""
+		return "", err
 	}
 
 	token := gjson.Get(string(respObj), "data.token")
 	if !token.Exists() {
 		fmt.Fprintf(os.Stderr, "no token found in response\n")
-		return ""
+		return "", errors.New("no token found in response")
 	}
-	return token.String()
+	return token.String(), nil
 }
 
 func printResult(name string, data cache_verify.StatisticalData) {

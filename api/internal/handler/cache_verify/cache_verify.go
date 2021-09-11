@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/apisix/manager-api/internal/conf"
 	"path"
 	"reflect"
 
@@ -112,9 +113,9 @@ var hubToData map[store.HubKey]*StatisticalData
 
 func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 
-	checkConsistent := func(hubKey store.HubKey, s *store.Interface, rs *OutputResult, etcd *storage.Interface) {
+	checkConsistent := func(hubKey store.HubKey, cache *store.Interface, rs *OutputResult, etcdStorage *storage.Interface) {
 
-		keyPairs, err := (*etcd).List(context.TODO(), fmt.Sprintf("/apisix/%s/", infixMap[hubKey]))
+		keyPairs, err := (*etcdStorage).List(context.TODO(), fmt.Sprintf("%s/%s/", conf.ETCDConfig.Prefix, infixMap[hubKey]))
 		if err != nil {
 			log.Errorf("etcd list failed: %s", err)
 			return
@@ -125,7 +126,7 @@ func (h *Handler) CacheVerify(_ droplet.Context) (interface{}, error) {
 		for i := range keyPairs {
 			key := path.Base(keyPairs[i].Key)
 
-			cacheObj, err := (*s).Get(context.TODO(), key)
+			cacheObj, err := (*cache).Get(context.TODO(), key)
 			if err != nil {
 				log.Errorf("cache get failed: %s", err)
 				return
