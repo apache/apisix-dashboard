@@ -20,9 +20,25 @@ export default {
   'component.upstream.fields.tls.client_cert': 'Client Cert',
   'component.upstream.fields.tls.client_cert.required': 'Please enter the client cert',
 
+  'component.upstream.fields.upstream_type': 'Upstream Type',
+  'component.upstream.fields.upstream_type.node': 'Node',
+  'component.upstream.fields.upstream_type.service_discovery': 'Service Discovery',
+
   'component.upstream.fields.discovery_type': 'Discovery Type',
   'component.upstream.fields.discovery_type.tooltip': 'Discovery Type',
-  'component.upstream.fields.discovery_type.placeholder': 'Please enter the discovery type',
+  'component.upstream.fields.discovery_type.placeholder': 'Please select the discovery type',
+  'component.upstream.fields.discovery_type.type.dns': 'DNS',
+  'component.upstream.fields.discovery_type.type.consul_kv': 'Consul KV',
+  'component.upstream.fields.discovery_type.type.nacos': 'Nacos',
+  'component.upstream.fields.discovery_type.type.eureka': 'Eureka',
+
+  'component.upstream.fields.discovery_args.group_name': 'Group Name',
+  'component.upstream.fields.discovery_args.group_name.tooltip': 'Group Name',
+  'component.upstream.fields.discovery_args.group_name.placeholder': 'Please enter the group name',
+  'component.upstream.fields.discovery_args.namespace_id': 'Namespace ID',
+  'component.upstream.fields.discovery_args.namespace_id.tooltip': 'Namespace ID',
+  'component.upstream.fields.discovery_args.namespace_id.placeholder':
+    'Please enter the namespace id',
 
   'component.upstream.fields.service_name': 'Service Name',
   'component.upstream.fields.service_name.tooltip': 'Service Name',
@@ -40,6 +56,20 @@ export default {
   'component.upstream.fields.retries': 'Retries',
   'component.upstream.fields.retries.tooltip':
     'The retry mechanism sends the request to the next upstream node. A value of 0 disables the retry mechanism and leaves the table empty to use the number of available backend nodes.',
+
+  'component.upstream.fields.retry_timeout': 'Retry Timeout',
+  'component.upstream.fields.retry_timeout.tooltip':
+    'Configure a number to limit the amount of seconds that retries can be continued, and do not continue retries if the previous request and retry requests have taken too long. 0 means disable retry timeout mechanism.',
+
+  'component.upstream.fields.keepalive_pool': 'Keepalive Pool',
+  'component.upstream.fields.keepalive_pool.tooltip': 'Set independent keepalive pool for Upstream',
+  'component.upstream.fields.keepalive_pool.size': 'Size',
+  'component.upstream.fields.keepalive_pool.size.placeholder': 'Please enter the size',
+  'component.upstream.fields.keepalive_pool.idle_timeout': 'Idle Timeout',
+  'component.upstream.fields.keepalive_pool.idle_timeout.placeholder':
+    'Please enter the idle timeout',
+  'component.upstream.fields.keepalive_pool.requests': 'Requests',
+  'component.upstream.fields.keepalive_pool.requests.placeholder': 'Please enter the requests',
 
   'component.upstream.fields.checks.active.type': 'Type',
   'component.upstream.fields.checks.active.type.tooltip':

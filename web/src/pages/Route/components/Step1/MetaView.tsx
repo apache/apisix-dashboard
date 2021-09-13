@@ -136,7 +136,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
                 }),
               },
               {
-                pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
+                pattern: new RegExp(/^.{0,100}$/, 'g'),
                 message: formatMessage({
                   id: 'page.route.form.itemRulesPatternMessage.apiNameRule',
                 }),
@@ -185,18 +185,17 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.Item>
   );
 
-  const WebSocket: React.FC = () =>
-    form.getFieldValue('redirectOption') === 'disabled' ? (
-      <Form.Item label="WebSocket">
-        <Row>
-          <Col>
-            <Form.Item noStyle valuePropName="checked" name="enable_websocket">
-              <Switch disabled={disabled} />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form.Item>
-    ) : null;
+  const WebSocket: React.FC = () => (
+    <Form.Item label="WebSocket">
+      <Row>
+        <Col>
+          <Form.Item noStyle valuePropName="checked" name="enable_websocket">
+            <Switch disabled={disabled} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  );
 
   const Redirect: React.FC = () => {
     const list = [

@@ -22,7 +22,6 @@ import type { FormInstance } from 'antd/es/form';
 import PanelSection from '@/components/PanelSection';
 import PassiveCheck from './components/passive-check';
 import ActiveCheck from './components/active-check';
-import Nodes from './components/Nodes';
 import Scheme from './components/Scheme';
 import Timeout from './components/Timeout';
 import Type from './components/Type';
@@ -30,7 +29,10 @@ import UpstreamSelector from './components/UpstreamSelector';
 import Retries from './components/Retries';
 import PassHost from './components/PassHost';
 import TLSComponent from './components/TLS';
+import UpstreamType from './components/UpstreamType';
 import { convertToRequestData } from './service';
+import RetryTimeout from './components/RetryTimeout';
+import KeepalivePool from './components/KeepalivePool';
 
 type Upstream = {
   name?: string;
@@ -270,6 +272,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       );
     };
 
+    const KeepalivePoolComponent = () => {
+      return (
+        <PanelSection title={formatMessage({ id: 'page.upstream.step.keepalive_pool' })}>
+          <KeepalivePool readonly={readonly} />
+        </PanelSection>
+      );
+    };
+
     return (
       <Form form={form} labelCol={{ span: 3 }}>
         {showSelector && (
@@ -286,10 +296,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         {!hiddenForm && (
           <React.Fragment>
             <Type form={form} readonly={readonly} />
-            <Nodes readonly={readonly} />
+
+            <UpstreamType form={form} readonly={readonly} />
 
             <PassHost form={form} readonly={readonly} />
             <Retries readonly={readonly} />
+            <RetryTimeout readonly={readonly} />
 
             <Scheme readonly={readonly} />
             <Form.Item noStyle shouldUpdate={(prev, next) => prev.scheme !== next.scheme}>
@@ -305,6 +317,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             {timeoutFields.map((item, index) => (
               <Timeout key={index} {...item} readonly={readonly} />
             ))}
+
+            <KeepalivePoolComponent />
 
             <HealthCheckComponent />
           </React.Fragment>

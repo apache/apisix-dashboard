@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-invalid-this */
+/* eslint-disable @typescript-eslint/no-loop-func */
+
 import actionBarUS from '../../../src/components/ActionBar/locales/en-US';
 import componentLocaleUS from '../../../src/locales/en-US/component';
 import menuLocaleUS from '../../../src/locales/en-US/menu';
@@ -25,9 +28,9 @@ context('import and export routes', () => {
   const selector = {
     name: '#name',
     description: '#desc',
-    nodes_0_host: '#nodes_0_host',
-    nodes_0_port: '#nodes_0_port',
-    nodes_0_weight: '#nodes_0_weight',
+    nodes_0_host: '#submitNodes_0_host',
+    nodes_0_port: '#submitNodes_0_port',
+    nodes_0_weight: '#submitNodes_0_weight',
     fileTypeRadio: '[type=radio]',
     deleteAlert: '.ant-modal-body',
     refresh: '.anticon-reload',
@@ -72,9 +75,9 @@ context('import and export routes', () => {
       // input name, click Next
       cy.contains('Next').click().click();
       cy.get(selector.name).type(data[`route_name_${i}`]);
-      //FIXME: only GET in methods
+      // FIXME: only GET in methods
       cy.get('#methods').click();
-      for (let i = 0; i < 7; i += 1) {
+      for (let j = 0; j < 7; j += 1) {
         cy.get('#methods').type('{backspace}');
       }
       cy.get('#methods').type('GET');

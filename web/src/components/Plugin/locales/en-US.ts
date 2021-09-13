@@ -41,9 +41,9 @@ export default {
   'component.pluginForm.cors.allow_headers.tooltip':
     'Which headers are allowed to set in request when access cross-origin resource. Multiple value use , to split. When allow_credential is false, you can use * to indicate allow all request headers. You also can allow any header forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.expose_headers.tooltip':
-    'Which headers are allowed to set in response when access cross-origin resource. Multiple value use , to split.',
+    'Which headers are allowed to set in response when access cross-origin resource. Multiple value use , to split. When allow_credential is false, you can use * to indicate allow any header. You also can allow any header forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.max_age.tooltip':
-    'Maximum number of seconds the results can be cached.. Within this time range, the browser will reuse the last check result. -1 means no cache. Please note that the maximum value is depended on browser, please refer to MDN for details.',
+    'Maximum number of seconds the results can be cached. Within this time range, the browser will reuse the last check result. -1 means no cache. Please note that the maximum value is depended on browser, please refer to MDN for details.',
   'component.pluginForm.cors.allow_credential.tooltip':
     "If you set this option to true, you can not use '*' for other options.",
   'component.pluginForm.cors.allow_origins_by_regex.tooltip':
@@ -85,6 +85,8 @@ export default {
     'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests. Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
     'returned when the request exceeds conn + burst will be rejected.',
+  'component.pluginForm.limit-conn.only_use_default_delay.tooltip':
+    'enable the strict mode of the latency seconds. If you set this option to true, it will run strictly according to the latency seconds you set without additional calculation logic.',
 
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip':

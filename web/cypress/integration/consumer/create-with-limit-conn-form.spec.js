@@ -30,6 +30,7 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     conn: '#conn',
     burst: '#burst',
     default_conn_delay: '#default_conn_delay',
+    only_use_default_delay: '#only_use_default_delay',
     key: '#key',
     rejected_code: '#rejected_code',
     title: '[title="remote_addr"]',
@@ -89,6 +90,7 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     cy.get(selector.conn).type(data.conn);
     cy.get(selector.burst).type(data.burst);
     cy.get(selector.default_conn_delay).type(data.default_conn_delay);
+    cy.get(selector.only_use_default_delay).click();
     cy.get(selector.key).click();
     cy.get(selector.selectDropdown).should('be.visible');
     cy.get(selector.title).click({

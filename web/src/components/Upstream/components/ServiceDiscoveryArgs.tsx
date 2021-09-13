@@ -19,23 +19,36 @@ import { Form, Input } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
+  args: string[];
   readonly?: boolean;
 };
 
-const ServiceName: React.FC<Props> = ({ readonly }) => {
+const ServiceDiscoveryArgs: React.FC<Props> = ({ readonly, args }) => {
   const { formatMessage } = useIntl();
+
   return (
-    <Form.Item
-      name="service_name"
-      label={formatMessage({ id: 'component.upstream.fields.service_name' })}
-      tooltip={formatMessage({ id: 'component.upstream.fields.service_name.tooltip' })}
-    >
-      <Input
-        disabled={readonly}
-        placeholder={formatMessage({ id: 'component.upstream.fields.service_name.placeholder' })}
-      />
-    </Form.Item>
+    <React.Fragment>
+      {args.map((item) => {
+        return (
+          <Form.Item
+            key={item}
+            name={['discovery_args', item]}
+            label={formatMessage({ id: `component.upstream.fields.discovery_args.${item}` })}
+            tooltip={formatMessage({
+              id: `component.upstream.fields.discovery_args.${item}.tooltip`,
+            })}
+          >
+            <Input
+              disabled={readonly}
+              placeholder={formatMessage({
+                id: `component.upstream.fields.discovery_args.${item}.placeholder`,
+              })}
+            />
+          </Form.Item>
+        );
+      })}
+    </React.Fragment>
   );
 };
 
-export default ServiceName;
+export default ServiceDiscoveryArgs;

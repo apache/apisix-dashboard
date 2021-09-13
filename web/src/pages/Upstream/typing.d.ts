@@ -17,6 +17,17 @@
 declare namespace UpstreamModule {
   type Node = Record<string, number | string>;
   type Type = 'roundrobin' | 'chash' | 'ewma';
+  type DiscoveryType = 'dns' | 'consul_kv' | 'nacos' | 'eureka';
+  type DiscoveryArgs = {
+    group_name?: string;
+    namespace_id?: string;
+  };
+
+  type KeepalivePool = {
+    size?: number;
+    idle_timeout?: number;
+    requests?: number;
+  };
 
   type Timeout = Record<'connect' | 'send' | 'read', number>;
 
@@ -67,20 +78,27 @@ declare namespace UpstreamModule {
     id: string;
     upstream_id: string;
     type: Type;
-    nodes?: Node[];
+    upstream_type: string;
+    discovery_type?: DiscoveryType;
+    service_name?: string;
+    discovery_args?: DiscoveryArgs;
+    nodes?: UpstreamComponent.SubmitNode;
     hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
     key?: string;
     checks?: HealthCheck;
     retries?: number;
+    retry_timeout?: number;
     enable_websocket?: boolean;
     timeout?: Timeout;
     name?: string;
     desc?: string;
     pass_host?: 'pass' | 'node' | 'rewrite';
     upstream_host: UpstreamHost[];
+    keepalive_pool: KeepalivePool;
 
     // Custom Fields that need to be omitted
     custom?: {};
+    submitNodes?: Node[];
   };
 
   // TODO: typing
