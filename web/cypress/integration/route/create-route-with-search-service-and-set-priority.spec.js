@@ -113,7 +113,17 @@ context('Create Route with search service name', () => {
     cy.get(selector.result).should('contain', data.createRouteSuccess);
   });
 
-  it('should check the priority was seted', function () {
+  it('should check the priority and service was seted', function () {
+    let serviceUuid = '';
+    cy.visit('/');
+    cy.contains('Service').click();
+    cy.get(selector.name).type(data.serviceName2 + '\n');
+    cy.contains(data.serviceName2)
+      .siblings()
+      .first()
+      .then((a) => {
+        serviceUuid = a.text();
+      });
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(selector.name).type(data.routeName + '\n');
@@ -122,6 +132,7 @@ context('Create Route with search service name', () => {
     cy.get(selector.drawer).should('be.visible');
     cy.get(selector.monacoScroll).within(() => {
       cy.contains('priority').should('exist');
+      cy.contains(`${serviceUuid}`).should('exist');
     });
   });
 
