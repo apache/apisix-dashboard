@@ -35,12 +35,16 @@ func WritePID(filepath string, forceStart bool) error {
 	pidStatAction := func() error {
 		pid, err := ReadPID(filepath)
 		if err != nil {
-			return nil
+			if _, ok := err.(*os.PathError); ok {
+				return nil // No pid file indicates no running instance of manager-api
+			}
+			return err // Other errors in ReadPID must be reported.
 		}
-		// In unix system this always succeeds, doesn't ensure if the process at all exist or not.
+
+		// In unix system this always succeeds, doesn't ensure if the process at all exist or not. In windows, it returns an error indicating no such process exists.
 		proc, err := os.FindProcess(pid)
 		if err != nil {
-			return errors.Errorf("instance of Manager API maybe running with a pid %d. If not, please run Manager API with '-f' or '--force' flag. Error :%v\n", pid, err)
+			return nil
 		}
 
 		// Traditional unix way to check the existence of the particular PID.
@@ -52,7 +56,7 @@ func WritePID(filepath string, forceStart bool) error {
 
 		// Windows has a tendency to pick unused old PIDs and allocate that to new process, so we won't kill it.
 		if runtime.GOOS != "windows" && forceStart {
-			fmt.Println("Killing existing instance of Manager API")
+			fmt.Printf("Killing existing instance of Manager API with PID: %d\n", pid)
 			if err := proc.Signal(syscall.SIGINT); err != nil {
 				return errors.Wrapf(err, "failed to kill the existing process of PID %d ", pid)
 			}
@@ -63,7 +67,7 @@ func WritePID(filepath string, forceStart bool) error {
 				}
 				time.Sleep(time.Second)
 			}
-			fmt.Println("Existing instance of Manager API successfully killed")
+			fmt.Println("Existing instance of Manager API successfully exited")
 		}
 		if forceStart {
 			fmt.Printf("Force starting new instance. Another instance of Manager API was running with pid %d\n", pid)
@@ -94,7 +98,7 @@ func ReadPID(filepath string) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-	pid, err := strconv.Atoi(string(bytes.Trim(data, " \n")))
+	pid, err := strconv.Atoi(string(bytes.Trim(data, "\n")))
 	if err != nil {
 		return -1, fmt.Errorf("invalid pid: %s", err)
 	}
