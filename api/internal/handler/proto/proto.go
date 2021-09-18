@@ -266,7 +266,8 @@ func (h *Handler) checkProtoUsed(ctx context.Context, storeInterface store.Inter
 			for _, plugin := range plugins {
 				if _, ok := record.GetPlugins()[plugin]; ok {
 					configs := record.GetPlugins()[plugin].(map[string]interface{})
-					if !configs["disable"].(bool) && configs["proto_id"].(string) == key {
+					protoId := utils.InterfaceToString(configs["proto_id"])
+					if !configs["disable"].(bool) && protoId == key {
 						return true
 					}
 				}

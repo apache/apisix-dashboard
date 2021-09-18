@@ -41,23 +41,6 @@ var correctProtobuf = `syntax = "proto3";
 var _ = ginkgo.Describe("Proto", func() {
 	ginkgo.It("create proto success", func() {
 		createProtoBody := make(map[string]interface{})
-		createProtoBody["desc"] = "test_proto1"
-		createProtoBody["content"] = correctProtobuf
-
-		_createProtoBody, err := json.Marshal(createProtoBody)
-		gomega.Expect(err).To(gomega.BeNil())
-
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/proto",
-			Body:         string(_createProtoBody),
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("create proto with ID success", func() {
-		createProtoBody := make(map[string]interface{})
 		createProtoBody["id"] = 1
 		createProtoBody["desc"] = "test_proto1"
 		createProtoBody["content"] = correctProtobuf
@@ -161,6 +144,98 @@ var _ = ginkgo.Describe("Proto", func() {
 		})
 	})
 	ginkgo.It("delete proto", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/proto/1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+})
+
+var _ = ginkgo.Describe("Proto with grpc-transcode plugin", func() {
+	ginkgo.It("create proto success", func() {
+		createProtoBody := make(map[string]interface{})
+		createProtoBody["id"] = 1
+		createProtoBody["desc"] = "test_proto1"
+		createProtoBody["content"] = correctProtobuf
+
+		_createProtoBody, err := json.Marshal(createProtoBody)
+		gomega.Expect(err).To(gomega.BeNil())
+
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/proto",
+			Body:         string(_createProtoBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("create route with grpc-transcode", func() {
+		createRouteBody := make(map[string]interface{})
+		createRouteBody["id"] = 1
+		createRouteBody["name"] = "test_route"
+		createRouteBody["uri"] = "/*"
+		createRouteBody["methods"] = []string{"GET", "POST"}
+		createRouteBody["upstream"] = map[string]interface{}{
+			"nodes": []map[string]interface{}{
+				{
+					"host":   "1.1.1.1",
+					"port":   1,
+					"weight": 1,
+				},
+			},
+			"timeout": map[string]interface{}{
+				"connect": 6, "send": 6, "read": 6,
+			},
+			"type":      "roundrobin",
+			"scheme":    "http",
+			"pass_host": "pass",
+		}
+		createRouteBody["plugins"] = map[string]interface{}{
+			"grpc-transcode": map[string]interface{}{
+				"disable":  false,
+				"method":   "SayHello",
+				"proto_id": "1",
+				"service":  "helloworld.Greeter",
+			},
+		}
+		createRouteBody["status"] = 1
+
+		_createRouteBody, err := json.Marshal(createRouteBody)
+		gomega.Expect(err).To(gomega.BeNil())
+
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes",
+			Body:         string(_createRouteBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("delete route used proto", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/proto/1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   "proto used check invalid: route",
+			ExpectStatus: http.StatusBadRequest,
+		})
+	})
+	ginkgo.It("delete conflict route", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("delete proto again", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,

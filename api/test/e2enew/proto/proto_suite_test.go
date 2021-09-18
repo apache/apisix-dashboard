@@ -35,5 +35,6 @@ var _ = ginkgo.AfterSuite(func() {
 	base.CleanResource("routes")
 	base.CleanResource("upstreams")
 	base.CleanResource("consumers")
+	base.CleanResource("proto")
 	time.Sleep(base.SleepTime)
 })
