@@ -129,8 +129,9 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 
 	// check proto id exist
 	if input.ID != nil {
-		ret, err := h.protoStore.Get(c.Context(), input.ID.(string))
-		if err != nil {
+		protoID := utils.InterfaceToString(input.ID)
+		ret, err := h.protoStore.Get(c.Context(), protoID)
+		if err != nil && err != data.ErrNotFound {
 			return handler.SpecCodeResponse(err), err
 		}
 		if ret != nil {
