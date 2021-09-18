@@ -3141,7 +3141,7 @@
 								"minLength": 1,
 								"type": "string"
 							},
-							"minItem": 1,
+							"minItems": 1,
 							"type": "array"
 						}, {
 							"enum": ["*"]
