@@ -128,16 +128,18 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Proto)
 
 	// check proto id exist
-	ret, err := h.protoStore.Get(c.Context(), input.ID.(string))
-	if err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-	if ret != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("proto id exists")
+	if input.ID != nil {
+		ret, err := h.protoStore.Get(c.Context(), input.ID.(string))
+		if err != nil {
+			return handler.SpecCodeResponse(err), err
+		}
+		if ret != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("proto id exists")
+		}
 	}
 
 	// create
-	ret, err = h.protoStore.Create(c.Context(), input)
+	ret, err := h.protoStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
