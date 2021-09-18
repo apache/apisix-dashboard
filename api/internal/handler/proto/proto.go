@@ -72,7 +72,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 	r.PATCH("/apisix/admin/proto/:id/*path", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
-	r.DELETE("/apisix/admin/proto/:id", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/proto/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
 }
 
