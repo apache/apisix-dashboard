@@ -89,6 +89,26 @@ var _ = ginkgo.Describe("Proto", func() {
 			Path:         "/apisix/admin/proto",
 			Body:         string(_createProtoBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   "proto id exists",
+			ExpectStatus: http.StatusBadRequest,
+		})
+	})
+	ginkgo.It("update proto success", func() {
+		updateProtoBody := make(map[string]interface{})
+		updateProtoBody["id"] = 1
+		updateProtoBody["desc"] = "test_proto1_modify"
+		updateProtoBody["content"] = correctProtobuf
+
+		_updateProtoBody, err := json.Marshal(updateProtoBody)
+		gomega.Expect(err).To(gomega.BeNil())
+
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/proto",
+			Body:         string(_updateProtoBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   "test_proto1_modify",
 			ExpectStatus: http.StatusOK,
 		})
 	})

@@ -166,7 +166,8 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	// check proto id exist
-	ret, err := h.protoStore.Get(c.Context(), input.Proto.ID.(string))
+	protoID := utils.InterfaceToString(input.Proto.ID)
+	ret, err := h.protoStore.Get(c.Context(), protoID)
 	if ret == nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("proto id not exists")
 	}
