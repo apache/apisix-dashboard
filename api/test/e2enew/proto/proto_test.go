@@ -26,11 +26,7 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var _ = ginkgo.Describe("Proto", func() {
-	ginkgo.It("create proto success", func() {
-		createProtoBody := make(map[string]interface{})
-		createProtoBody["desc"] = "test_proto1"
-		createProtoBody["content"] = `syntax = "proto3";
+var correctProtobuf = `syntax = "proto3";
     package helloworld;
     service Greeter {
         rpc SayHello (HelloRequest) returns (HelloReply) {}
@@ -41,6 +37,48 @@ var _ = ginkgo.Describe("Proto", func() {
     message HelloReply {
         string message = 1;
     }`
+
+var _ = ginkgo.Describe("Proto", func() {
+	ginkgo.It("create proto success", func() {
+		createProtoBody := make(map[string]interface{})
+		createProtoBody["desc"] = "test_proto1"
+		createProtoBody["content"] = correctProtobuf
+
+		_createProtoBody, err := json.Marshal(createProtoBody)
+		gomega.Expect(err).To(gomega.BeNil())
+
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/proto",
+			Body:         string(_createProtoBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("create proto with ID success", func() {
+		createProtoBody := make(map[string]interface{})
+		createProtoBody["id"] = 1
+		createProtoBody["desc"] = "test_proto1"
+		createProtoBody["content"] = correctProtobuf
+
+		_createProtoBody, err := json.Marshal(createProtoBody)
+		gomega.Expect(err).To(gomega.BeNil())
+
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/proto",
+			Body:         string(_createProtoBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("create proto failed, id existed", func() {
+		createProtoBody := make(map[string]interface{})
+		createProtoBody["id"] = 1
+		createProtoBody["desc"] = "test_proto1"
+		createProtoBody["content"] = correctProtobuf
 
 		_createProtoBody, err := json.Marshal(createProtoBody)
 		gomega.Expect(err).To(gomega.BeNil())
