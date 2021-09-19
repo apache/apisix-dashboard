@@ -250,6 +250,7 @@ export const transformStepData = ({
   return pick(data, [
     'name',
     'desc',
+    'priority',
     'methods',
     'redirect',
     'plugins',
