@@ -7,6 +7,7 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 replace github.com/coreos/bbolt => go.etcd.io/bbolt v1.3.5
 
 require (
+	github.com/blang/semver v3.5.1+incompatible
 	github.com/coreos/bbolt v1.3.2 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
