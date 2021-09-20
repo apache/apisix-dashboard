@@ -71,123 +71,138 @@ type Status uint8
 // swagger:model Route
 type Route struct {
 	BaseInfo
-	URI             string                 `json:"uri,omitempty"`
-	Uris            []string               `json:"uris,omitempty"`
-	Name            string                 `json:"name" validate:"max=50"`
-	Desc            string                 `json:"desc,omitempty" validate:"max=256"`
-	Priority        int                    `json:"priority,omitempty"`
-	Methods         []string               `json:"methods,omitempty"`
-	Host            string                 `json:"host,omitempty"`
-	Hosts           []string               `json:"hosts,omitempty"`
-	RemoteAddr      string                 `json:"remote_addr,omitempty"`
-	RemoteAddrs     []string               `json:"remote_addrs,omitempty"`
-	Vars            []interface{}          `json:"vars,omitempty"`
-	FilterFunc      string                 `json:"filter_func,omitempty"`
-	Script          interface{}            `json:"script,omitempty"`
-	ScriptID        interface{}            `json:"script_id,omitempty"` // For debug and optimization(cache), currently same as Route's ID
-	Plugins         map[string]interface{} `json:"plugins,omitempty"`
-	PluginConfigID  interface{}            `json:"plugin_config_id,omitempty"`
-	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
-	ServiceID       interface{}            `json:"service_id,omitempty"`
-	UpstreamID      interface{}            `json:"upstream_id,omitempty"`
-	ServiceProtocol string                 `json:"service_protocol,omitempty"`
-	Labels          map[string]string      `json:"labels,omitempty"`
-	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
-	Status          Status                 `json:"status"`
+	URI             string                 `json:"uri,omitempty" version:">=0.8.0"`
+	Uris            []string               `json:"uris,omitempty" version:">=0.9.0"`
+	Name            string                 `json:"name" validate:"max=50" version:">=1.4.0"`
+	Desc            string                 `json:"desc,omitempty" validate:"max=256" version:">=0.8.0"`
+	Priority        int                    `json:"priority,omitempty" version:">=1.0.0"`
+	Methods         []string               `json:"methods,omitempty" version:">=0.8.0"`
+	Host            string                 `json:"host,omitempty" version:">=0.8.0"`
+	Hosts           []string               `json:"hosts,omitempty" version:">=0.8.0"`
+	RemoteAddr      string                 `json:"remote_addr,omitempty" version:">=0.8.0"`
+	RemoteAddrs     []string               `json:"remote_addrs,omitempty" version:">=0.8.0"`
+	Vars            []interface{}          `json:"vars,omitempty" version:">=0.8.0"`
+	FilterFunc      string                 `json:"filter_func,omitempty" version:">=0.9.0"`
+	Script          interface{}            `json:"script,omitempty" version:">=1.5.0"`
+	ScriptID        interface{}            `json:"script_id,omitempty" version:">=2.2.0"` // For debug and optimization(cache), currently same as Route's ID
+	Plugins         map[string]interface{} `json:"plugins,omitempty" version:">=0.8.0"`
+	PluginConfigID  interface{}            `json:"plugin_config_id,omitempty" version:">=2.4.0"`
+	Upstream        *UpstreamDef           `json:"upstream,omitempty" version:">=0.8.0"`
+	ServiceID       interface{}            `json:"service_id,omitempty" version:">=0.8.0"`
+	UpstreamID      interface{}            `json:"upstream_id,omitempty" version:">=0.8.0"`
+	ServiceProtocol string                 `json:"service_protocol,omitempty" version:">=0.8.0"`
+	Labels          map[string]string      `json:"labels,omitempty" version:">=2.1.0"`
+	EnableWebsocket bool                   `json:"enable_websocket,omitempty" version:">=2.1.0"`
+	Timeout         *Timeout               `json:"timeout,omitempty" version:">=2.7.0"`
+	Status          Status                 `json:"status" version:">=2.2.0"`
 }
 
 // --- structures for upstream start  ---
 type TimeoutValue float32
 type Timeout struct {
-	Connect TimeoutValue `json:"connect,omitempty"`
-	Send    TimeoutValue `json:"send,omitempty"`
-	Read    TimeoutValue `json:"read,omitempty"`
+	Connect TimeoutValue `json:"connect,omitempty" version:">=0.8.0"`
+	Send    TimeoutValue `json:"send,omitempty" version:">=0.8.0"`
+	Read    TimeoutValue `json:"read,omitempty" version:">=0.8.0"`
 }
 
 type Node struct {
-	Host     string      `json:"host,omitempty"`
-	Port     int         `json:"port,omitempty"`
-	Weight   int         `json:"weight"`
-	Metadata interface{} `json:"metadata,omitempty"`
+	Host     string      `json:"host,omitempty" version:">=0.8.0"`
+	Port     int         `json:"port,omitempty" version:">=0.8.0"`
+	Weight   int         `json:"weight" version:">=0.8.0"`
+	Metadata interface{} `json:"metadata,omitempty" version:">=0.8.0"`
+
+	Priority int `json:"priority,omitempty" version:">=2.5.0"`
 }
 
 type K8sInfo struct {
-	Namespace   string `json:"namespace,omitempty"`
-	DeployName  string `json:"deploy_name,omitempty"`
-	ServiceName string `json:"service_name,omitempty"`
-	Port        int    `json:"port,omitempty"`
-	BackendType string `json:"backend_type,omitempty"`
+	Namespace   string `json:"namespace,omitempty" version:">=1.3.0 <2.2.0"`
+	DeployName  string `json:"deploy_name,omitempty" version:">=1.3.0 <2.2.0"`
+	ServiceName string `json:"service_name,omitempty" version:">=1.3.0 <2.2.0"`
+	Port        int    `json:"port,omitempty" version:">=1.3.0 <2.2.0"`
+	BackendType string `json:"backend_type,omitempty" version:">=1.3.0 <2.2.0"`
 }
 
 type Healthy struct {
-	Interval     int   `json:"interval,omitempty"`
-	HttpStatuses []int `json:"http_statuses,omitempty"`
-	Successes    int   `json:"successes,omitempty"`
+	Interval     int   `json:"interval,omitempty" version:">=0.8.0"`
+	HttpStatuses []int `json:"http_statuses,omitempty" version:">=0.8.0"`
+	Successes    int   `json:"successes,omitempty" version:">=0.8.0"`
 }
 
 type UnHealthy struct {
-	Interval     int   `json:"interval,omitempty"`
-	HTTPStatuses []int `json:"http_statuses,omitempty"`
-	TCPFailures  int   `json:"tcp_failures,omitempty"`
-	Timeouts     int   `json:"timeouts,omitempty"`
-	HTTPFailures int   `json:"http_failures,omitempty"`
+	Interval     int   `json:"interval,omitempty" version:">=0.8.0"`
+	HTTPStatuses []int `json:"http_statuses,omitempty" version:">=0.8.0"`
+	TCPFailures  int   `json:"tcp_failures,omitempty" version:">=0.8.0"`
+	Timeouts     int   `json:"timeouts,omitempty" version:">=0.8.0"`
+	HTTPFailures int   `json:"http_failures,omitempty" version:">=0.8.0"`
 }
 
 type Active struct {
-	Type                   string       `json:"type,omitempty"`
-	Timeout                TimeoutValue `json:"timeout,omitempty"`
-	Concurrency            int          `json:"concurrency,omitempty"`
-	Host                   string       `json:"host,omitempty"`
-	Port                   int          `json:"port,omitempty"`
-	HTTPPath               string       `json:"http_path,omitempty"`
-	HTTPSVerifyCertificate string       `json:"https_verify_certificate,omitempty"`
-	Healthy                Healthy      `json:"healthy,omitempty"`
-	UnHealthy              UnHealthy    `json:"unhealthy,omitempty"`
-	ReqHeaders             []string     `json:"req_headers,omitempty"`
+	Type                   string       `json:"type,omitempty" version:">=0.8.0"`
+	Timeout                TimeoutValue `json:"timeout,omitempty" version:">=0.8.0"`
+	Concurrency            int          `json:"concurrency,omitempty" version:">=0.8.0"`
+	Host                   string       `json:"host,omitempty" version:">=0.8.0"`
+	Port                   int          `json:"port,omitempty" version:">=1.5.0"`
+	HTTPPath               string       `json:"http_path,omitempty" version:">=0.8.0"`
+	HTTPSVerifyCertificate string       `json:"https_verify_certificate,omitempty" version:">=0.8.0"`
+	Healthy                Healthy      `json:"healthy,omitempty" version:">=0.8.0"`
+	UnHealthy              UnHealthy    `json:"unhealthy,omitempty" version:">=0.8.0"`
+	ReqHeaders             []string     `json:"req_headers,omitempty" version:">=1.0.0"`
 }
 
 type Passive struct {
-	Type      string    `json:"type,omitempty"`
-	Healthy   Healthy   `json:"healthy,omitempty"`
-	UnHealthy UnHealthy `json:"unhealthy,omitempty"`
+	Type      string    `json:"type,omitempty" version:">=0.8.0"`
+	Healthy   Healthy   `json:"healthy,omitempty" version:">=0.8.0"`
+	UnHealthy UnHealthy `json:"unhealthy,omitempty" version:">=0.8.0"`
 }
 
 type HealthChecker struct {
-	Active  Active  `json:"active,omitempty"`
-	Passive Passive `json:"passive,omitempty"`
+	Active  Active  `json:"active,omitempty" version:">=0.8.0"`
+	Passive Passive `json:"passive,omitempty" version:">=0.8.0"`
 }
 
 type UpstreamTLS struct {
-	ClientCert string `json:"client_cert,omitempty"`
-	ClientKey  string `json:"client_key,omitempty"`
+	ClientCert string `json:"client_cert,omitempty" version:">=2.6.0"`
+	ClientKey  string `json:"client_key,omitempty" version:">=2.6.0"`
 }
 
 type UpstreamKeepalivePool struct {
-	IdleTimeout TimeoutValue `json:"idle_timeout,omitempty"`
-	Requests    int          `json:"requests,omitempty"`
-	Size        int          `json:"size"`
+	IdleTimeout TimeoutValue `json:"idle_timeout,omitempty" version:">=2.8.0"`
+	Requests    int          `json:"requests,omitempty" version:">=2.8.0"`
+	Size        int          `json:"size" version:">=2.8.0"`
 }
 
 type UpstreamDef struct {
-	Nodes         interface{}            `json:"nodes,omitempty"`
-	Retries       int                    `json:"retries,omitempty"`
-	Timeout       *Timeout               `json:"timeout,omitempty"`
-	Type          string                 `json:"type,omitempty"`
-	Checks        interface{}            `json:"checks,omitempty"`
-	HashOn        string                 `json:"hash_on,omitempty"`
-	Key           string                 `json:"key,omitempty"`
-	Scheme        string                 `json:"scheme,omitempty"`
-	DiscoveryType string                 `json:"discovery_type,omitempty"`
-	DiscoveryArgs map[string]string      `json:"discovery_args,omitempty"`
-	PassHost      string                 `json:"pass_host,omitempty"`
-	UpstreamHost  string                 `json:"upstream_host,omitempty"`
-	Name          string                 `json:"name,omitempty"`
-	Desc          string                 `json:"desc,omitempty"`
-	ServiceName   string                 `json:"service_name,omitempty"`
-	Labels        map[string]string      `json:"labels,omitempty"`
-	TLS           *UpstreamTLS           `json:"tls,omitempty"`
-	KeepalivePool *UpstreamKeepalivePool `json:"keepalive_pool,omitempty"`
-	RetryTimeout  TimeoutValue           `json:"retry_timeout,omitempty"`
+	Nodes         interface{}            `json:"nodes,omitempty" version:">=0.8.0"`
+	Retries       int                    `json:"retries,omitempty" version:">=0.8.0"`
+	Timeout       *Timeout               `json:"timeout,omitempty" version:">=0.8.0"`
+	Type          string                 `json:"type,omitempty" version:">=0.8.0"`
+	Checks        interface{}            `json:"checks,omitempty" version:">=0.8.0"`
+	HashOn        string                 `json:"hash_on,omitempty" version:">=1.0.0"`
+	Key           string                 `json:"key,omitempty" version:">=0.8.0"`
+	Scheme        string                 `json:"scheme,omitempty" version:">=0.8.0 <0.9.0 || >=2.3.0"`
+	DiscoveryType string                 `json:"discovery_type,omitempty" version:">=2.1.0"`
+	DiscoveryArgs map[string]string      `json:"discovery_args,omitempty" version:">=2.7.0"`
+	PassHost      string                 `json:"pass_host,omitempty" version:">=2.1.0"`
+	UpstreamHost  string                 `json:"upstream_host,omitempty" version:">=2.1.0"`
+	Name          string                 `json:"name,omitempty" version:">=1.4.0"`
+	Desc          string                 `json:"desc,omitempty" version:">=0.8.0"`
+	ServiceName   string                 `json:"service_name,omitempty" version:">=1.4.0"`
+	Labels        map[string]string      `json:"labels,omitempty" version:">=2.1.0"`
+	TLS           *UpstreamTLS           `json:"tls,omitempty" version:">=2.6.0"`
+	KeepalivePool *UpstreamKeepalivePool `json:"keepalive_pool,omitempty" version:">=2.8.0"`
+	RetryTimeout  TimeoutValue           `json:"retry_timeout,omitempty" version:">=2.8.0"`
+
+	// exist between version 0.8 and 0.9
+	// see: https://github.com/apache/apisix/blob/v0.9/lua/apisix/schema_def.lua#L218
+	Host            string `json:"host,omitempty" version:">=0.8.0 <0.9.0"`
+	Upgrade         string `json:"upgrade,omitempty" version:">=0.8.0 <0.9.0"`
+	Connection      string `json:"connection,omitempty" version:">=0.8.0 <0.9.0"`
+	Uri             string `json:"uri,omitempty" version:">=0.8.0 <0.9.0"`
+	EnableWebsocket bool   `json:"enable_websocket,omitempty" version:">=0.8.0 <0.9.0 || >=1.0.0 <2.5"`
+
+	// exist between version 1.3 and 2.2
+	// see: https://github.com/apache/apisix/blob/v2.2/apisix/schema_def.lua#L305
+	K8sDeploymentInfo *K8sInfo `json:"k8s_deployment_info,omitempty" version:">=1.3.0 <2.2.0"`
 }
 
 // swagger:model Upstream
@@ -213,12 +228,14 @@ func (upstream *Upstream) Parse2NameResponse() (*UpstreamNameResponse, error) {
 
 // swagger:model Consumer
 type Consumer struct {
-	Username   string                 `json:"username"`
-	Desc       string                 `json:"desc,omitempty"`
-	Plugins    map[string]interface{} `json:"plugins,omitempty"`
-	Labels     map[string]string      `json:"labels,omitempty"`
+	Username   string                 `json:"username" version:">=0.8.0"`
+	Desc       string                 `json:"desc,omitempty" version:">=0.8.0"`
+	Plugins    map[string]interface{} `json:"plugins,omitempty" version:">=0.8.0"`
+	Labels     map[string]string      `json:"labels,omitempty" version:">=2.1.0"`
 	CreateTime int64                  `json:"create_time,omitempty"`
 	UpdateTime int64                  `json:"update_time,omitempty"`
+
+	ID interface{} `json:"id,omitempty" version:">=1.5.0 <2.5.0"`
 }
 
 type SSLClient struct {
@@ -229,31 +246,31 @@ type SSLClient struct {
 // swagger:model SSL
 type SSL struct {
 	BaseInfo
-	Cert          string            `json:"cert,omitempty"`
-	Key           string            `json:"key,omitempty"`
-	Sni           string            `json:"sni,omitempty"`
-	Snis          []string          `json:"snis,omitempty"`
-	Certs         []string          `json:"certs,omitempty"`
-	Keys          []string          `json:"keys,omitempty"`
-	ExpTime       int64             `json:"exptime,omitempty"`
-	Status        int               `json:"status"`
-	ValidityStart int64             `json:"validity_start,omitempty"`
-	ValidityEnd   int64             `json:"validity_end,omitempty"`
-	Labels        map[string]string `json:"labels,omitempty"`
-	Client        *SSLClient        `json:"client,omitempty"`
+	Cert          string            `json:"cert,omitempty" version:">=0.8.0"`
+	Key           string            `json:"key,omitempty" version:">=0.8.0"`
+	Sni           string            `json:"sni,omitempty" version:">=0.8.0"`
+	Snis          []string          `json:"snis,omitempty" version:">=1.4.0"`
+	Certs         []string          `json:"certs,omitempty" version:">=2.1.0"`
+	Keys          []string          `json:"keys,omitempty" version:">=2.1.0"`
+	ExpTime       int64             `json:"exptime,omitempty" version:">=1.4.0"`
+	Status        int               `json:"status" version:">=1.4.0"`
+	ValidityStart int64             `json:"validity_start,omitempty" version:">=2.1.0"`
+	ValidityEnd   int64             `json:"validity_end,omitempty" version:">=2.1.0"`
+	Labels        map[string]string `json:"labels,omitempty" version:">=2.1.0"`
+	Client        *SSLClient        `json:"client,omitempty" version:">=2.6.0"`
 }
 
 // swagger:model Service
 type Service struct {
 	BaseInfo
-	Name            string                 `json:"name,omitempty"`
-	Desc            string                 `json:"desc,omitempty"`
-	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
-	UpstreamID      interface{}            `json:"upstream_id,omitempty"`
-	Plugins         map[string]interface{} `json:"plugins,omitempty"`
-	Script          string                 `json:"script,omitempty"`
-	Labels          map[string]string      `json:"labels,omitempty"`
-	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
+	Name            string                 `json:"name,omitempty" version:">=1.4.0"`
+	Desc            string                 `json:"desc,omitempty" version:">=0.8.0"`
+	Upstream        *UpstreamDef           `json:"upstream,omitempty" version:">=0.8.0"`
+	UpstreamID      interface{}            `json:"upstream_id,omitempty" version:">=0.8.0"`
+	Plugins         map[string]interface{} `json:"plugins,omitempty" version:">=0.8.0"`
+	Script          string                 `json:"script,omitempty" version:">=1.5.0"`
+	Labels          map[string]string      `json:"labels,omitempty" version:">=2.1.0"`
+	EnableWebsocket bool                   `json:"enable_websocket,omitempty" version:">=2.1.0"`
 }
 
 type Script struct {
@@ -270,7 +287,7 @@ type RequestValidation struct {
 // swagger:model GlobalPlugins
 type GlobalPlugins struct {
 	BaseInfo
-	Plugins map[string]interface{} `json:"plugins"`
+	Plugins map[string]interface{} `json:"plugins" version:">=0.8.0"`
 }
 
 type ServerInfo struct {
@@ -286,7 +303,7 @@ type ServerInfo struct {
 // swagger:model GlobalPlugins
 type PluginConfig struct {
 	BaseInfo
-	Desc    string                 `json:"desc,omitempty" validate:"max=256"`
-	Plugins map[string]interface{} `json:"plugins"`
-	Labels  map[string]string      `json:"labels,omitempty"`
+	Desc    string                 `json:"desc,omitempty" validate:"max=256" version:">=2.4.0"`
+	Plugins map[string]interface{} `json:"plugins" version:">=2.4.0"`
+	Labels  map[string]string      `json:"labels,omitempty" version:">=2.4.0"`
 }
