@@ -106,13 +106,12 @@ type HTTPProtocolSupport struct {
 
 func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*DebugOnlineInput)
-	requestPath := input.RequestPath //  aaa?a=1&b=3
+	requestPath := input.RequestPath
 	method := input.Method
 	body := input.Body
 	contentType := input.ContentType
 	var upstreamAddress string
 
-	//根据id获取路由
 	r, err := h.handler.routeStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return nil, err
@@ -137,8 +136,8 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 		if err != nil {
 			return nil, err
 		}
-		upstream := up.(*entity.UpstreamDef)
-		upstreamAddress = upstream.Nodes.([]*entity.Node)[0].Host + ":" + strconv.Itoa(upstream.Nodes.([]*entity.Node)[0].Port)
+		upstream := up.(*entity.Upstream)
+		upstreamAddress = upstream.UpstreamDef.Nodes.([]*entity.Node)[0].Host + ":" + strconv.Itoa(upstream.UpstreamDef.Nodes.([]*entity.Node)[0].Port)
 	}
 
 	url := input.RequestProtocol + "://" + upstreamAddress + requestPath

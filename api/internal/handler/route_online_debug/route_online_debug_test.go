@@ -25,6 +25,7 @@ import (
 	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -32,23 +33,8 @@ import (
 
 var TestResponse = "test"
 
-//type TestRoute struct {
-//	Path string
-//	Result string
-//}
-
-//var test map[string]TestRoute = map[string]TestRoute {
-//	"test1": {
-//		Path:   "test1",
-//		Result: "test1",
-//	},
-//	"test2": {
-//		Path: "test2",
-//		Result: "test2",
-//	},
-//}
-
 func mockServer() *httptest.Server {
+	l, _ := net.Listen("tcp", "127.0.0.1:9000")
 	f := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "plain/text")
 		w.Header().Set("Content-Encoding", "gzip")
@@ -56,117 +42,243 @@ func mockServer() *httptest.Server {
 		defer writer.Close()
 		_, _ = writer.Write([]byte(TestResponse))
 	}
-	return httptest.NewServer(http.HandlerFunc(f))
+	ts := httptest.NewUnstartedServer(http.HandlerFunc(f))
+	ts.Listener.Close()
+	ts.Listener = l
+	ts.Start()
+	return ts
 }
 
 func TestDebugRequestForwardingANDRequestForwarding(t *testing.T) {
 	server := mockServer()
 	defer server.Close()
-	var cases = []struct {
-		Desc      string
-		Input     *DebugOnlineInput
-		Result    interface{}
-		MockRoute *entity.Route
-	}{
-		{
-			Desc: "unsupported protocol",
-			Input: &DebugOnlineInput{
-				ID:              "test1",
-				RequestProtocol: "grpc",
-			},
-			MockRoute: &entity.Route{
-				BaseInfo: entity.BaseInfo{
-					ID: "",
+
+	var (
+		cases = []struct {
+			Desc       string
+			Input      *DebugOnlineInput
+			Result     interface{}
+			MockRoute  *entity.Route
+			MockStream *entity.Upstream
+		}{
+			{
+				Desc: "correct request with no UpstreamID",
+				Input: &DebugOnlineInput{
+					ID:              "test1",
+					RequestPath:     "test/abc",
+					RequestProtocol: "http",
+					Method:          "Get",
+					HeaderParams:    `{"Accept-Encoding": ["gzip"]}`,
+					ContentType:     "application/json",
+					Body:            nil,
 				},
-				URI:     "",
-				Methods: []string{""},
-				Upstream: &entity.UpstreamDef{
-					Nodes: []*entity.Node{
-						{Port: 0, Host: ""},
+				MockRoute: &entity.Route{
+					BaseInfo: entity.BaseInfo{
+						ID: "test1",
 					},
-					Retries:       0,
-					Timeout:       nil,
-					Type:          "",
-					Checks:        nil,
-					HashOn:        "",
-					Key:           "",
-					Scheme:        "",
-					DiscoveryType: "",
-					PassHost:      "",
-					UpstreamHost:  "",
-					Name:          "",
-					Desc:          "",
-					ServiceName:   "",
-					Labels:        nil,
-					TLS:           nil,
-				},
-				ServiceID:       nil,
-				UpstreamID:      nil,
-				ServiceProtocol: "",
-			},
-			Result: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-		},
-		{
-			Desc: "can not get header",
-			Input: &DebugOnlineInput{
-				ID:              "test2",
-				RequestProtocol: "http",
-				RequestPath:     "test/1",
-				Method:          "get",
-			},
-			MockRoute: &entity.Route{
-				BaseInfo: entity.BaseInfo{
-					ID: "test2",
-				},
-				URI:     "",
-				Methods: []string{""},
-				Upstream: &entity.UpstreamDef{
-					Nodes: []*entity.Node{
-						{Port: 0, Host: ""},
+					Host: "1.2.3.4",
+					Plugins: map[string]interface{}{
+						"proxy-rewrite": map[string]interface{}{
+							"uri":  "/test/1",
+							"host": "1.2.3.4",
+						},
 					},
-					Retries:       0,
-					Timeout:       nil,
-					Type:          "",
-					Checks:        nil,
-					HashOn:        "",
-					Key:           "",
-					Scheme:        "",
-					DiscoveryType: "",
-					PassHost:      "",
-					UpstreamHost:  "",
-					Name:          "",
-					Desc:          "",
-					ServiceName:   "",
-					Labels:        nil,
-					TLS:           nil,
+					Upstream: &entity.UpstreamDef{
+						Nodes: []*entity.Node{
+							{
+								Host: "127.0.0.1",
+								Port: 9000,
+							},
+						},
+					},
+					UpstreamID: nil,
 				},
-				ServiceID:       nil,
-				UpstreamID:      nil,
-				ServiceProtocol: "",
+				MockStream: &entity.Upstream{
+					UpstreamDef: entity.UpstreamDef{
+						Nodes: nil,
+					},
+				},
+				Result: TestResponse,
 			},
-			Result: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-		},
-	}
+			{
+				Desc: "correct request with no Upstream",
+				Input: &DebugOnlineInput{
+					ID:              "test2",
+					RequestPath:     "test/abc",
+					RequestProtocol: "http",
+					Method:          "Get",
+					HeaderParams:    `{"Accept-Encoding": ["gzip"]}`,
+					ContentType:     "application/json",
+					Body:            nil,
+				},
+				MockRoute: &entity.Route{
+					BaseInfo: entity.BaseInfo{
+						ID: "test1",
+					},
+					Host: "1.2.3.4",
+					Plugins: map[string]interface{}{
+						"proxy-rewrite": map[string]interface{}{
+							"uri":  "/test/1",
+							"host": "1.2.3.4",
+						},
+					},
+					Upstream:   nil,
+					UpstreamID: "test2",
+				},
+				MockStream: &entity.Upstream{
+					BaseInfo: entity.BaseInfo{
+						ID: "test2",
+					},
+					UpstreamDef: entity.UpstreamDef{
+						Nodes: []*entity.Node{
+							{
+								Host: "127.0.0.1",
+								Port: 9000,
+							},
+						},
+					},
+				},
+				Result: TestResponse,
+			},
+			{
+				Desc: "unsupported protocol",
+				Input: &DebugOnlineInput{
+					ID:              "test1",
+					RequestPath:     "test/abc",
+					RequestProtocol: "grpc",
+					Method:          "Get",
+					HeaderParams:    `{"Accept-Encoding": ["gzip"]}`,
+					ContentType:     "application/json",
+					Body:            nil,
+				},
+				MockRoute: &entity.Route{
+					BaseInfo: entity.BaseInfo{
+						ID: "test1",
+					},
+					Host: "1.2.3.4",
+					Plugins: map[string]interface{}{
+						"proxy-rewrite": map[string]interface{}{
+							"uri":  "/test/1",
+							"host": "1.2.3.4",
+						},
+					},
+					Upstream: &entity.UpstreamDef{
+						Nodes: []*entity.Node{
+							{
+								Host: "127.0.0.1",
+								Port: 9000,
+							},
+						},
+					},
+					UpstreamID: nil,
+				},
+				MockStream: &entity.Upstream{
+					UpstreamDef: entity.UpstreamDef{
+						Nodes: nil,
+					},
+				},
+				Result: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			},
+			{
+				Desc: "unsupported HeaderParams",
+				Input: &DebugOnlineInput{
+					ID:              "test1",
+					RequestPath:     "test/abc",
+					RequestProtocol: "http",
+					Method:          "Get",
+					HeaderParams:    "",
+					ContentType:     "application/json",
+					Body:            nil,
+				},
+				MockRoute: &entity.Route{
+					BaseInfo: entity.BaseInfo{
+						ID: "test1",
+					},
+					Host: "1.2.3.4",
+					Plugins: map[string]interface{}{
+						"proxy-rewrite": map[string]interface{}{
+							"uri":  "/test/1",
+							"host": "1.2.3.4",
+						},
+					},
+					Upstream: &entity.UpstreamDef{
+						Nodes: []*entity.Node{
+							{
+								Host: "127.0.0.1",
+								Port: 9000,
+							},
+						},
+					},
+					UpstreamID: nil,
+				},
+				MockStream: &entity.Upstream{
+					UpstreamDef: entity.UpstreamDef{
+						Nodes: nil,
+					},
+				},
+				Result: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			},
+			{
+				Desc: "wrong url",
+				Input: &DebugOnlineInput{
+					ID:              "test1",
+					RequestPath:     "test/abc",
+					RequestProtocol: "http",
+					Method:          "Get",
+					HeaderParams:    `{"Accept-Encoding": ["gzip"]}`,
+					ContentType:     "application/json",
+					Body:            nil,
+				},
+				MockRoute: &entity.Route{
+					BaseInfo: entity.BaseInfo{
+						ID: "test1",
+					},
+					Host: "1.2.3.4",
+					Plugins: map[string]interface{}{
+						"proxy-rewrite": map[string]interface{}{
+							"uri":  "/test/1",
+							"host": "1.2.3.4",
+						},
+					},
+					Upstream: &entity.UpstreamDef{
+						Nodes: []*entity.Node{
+							{
+								Host: "127.0.0.2",
+								Port: 9000,
+							},
+						},
+					},
+					UpstreamID: nil,
+				},
+				MockStream: &entity.Upstream{
+					UpstreamDef: entity.UpstreamDef{
+						Nodes: nil,
+					},
+				},
+				Result: &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError},
+			},
+		}
+	)
 
 	for _, c := range cases {
 		routeStore := &store.MockInterface{}
 		routeStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 		}).Return(c.MockRoute, nil)
-
+		upstreamStore := &store.MockInterface{}
+		upstreamStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+		}).Return(c.MockStream, nil)
 		t.Run(c.Desc, func(t *testing.T) {
 			handler := Handler{
 				routeStore:    routeStore,
 				svcStore:      nil,
-				upstreamStore: nil,
+				upstreamStore: upstreamStore,
 			}
 
-			//proto := &HTTPProtocolSupport{}
 			context := droplet.NewContext()
 			context.SetInput(c.Input)
 
 			result, _ := handler.DebugRequestForwarding(context)
 
-			//result, _ := proto.RequestForwarding(context)
 			switch result.(type) {
 			case *Result:
 				assert.Equal(t, c.Result, result.(*Result).Data)
