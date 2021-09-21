@@ -26,7 +26,9 @@ context('Create and delete consumer with basic-auth plugin form', () => {
     drawer: '.ant-drawer-content',
     disabledSwitcher: '#disable',
     notification: '.ant-notification-notice-message',
+    notificationCloseIcon: '.ant-notification-close-icon',
     monacoViewZones: '.view-zones',
+    alert: '.ant-form-item-explain-error [role=alert]'
   };
 
   const data = {
@@ -76,16 +78,23 @@ context('Create and delete consumer with basic-auth plugin form', () => {
 
     cy.focused(selector.drawer).should('exist');
 
-    // config basic-auth form
+    // config basic-auth form without username and password
+    cy.get(selector.username).click();
+    cy.get(selector.alert).contains('Please enter username');
+    cy.get(selector.password).click();
+    cy.get(selector.alert).contains('Please enter password');
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
       });
     });
     cy.get(selector.notification).should('contain', 'Invalid plugin data');
+    cy.get(selector.notificationCloseIcon).click();
 
+    // config basic-auth form with username and password
     cy.get(selector.username).type(data.username);
     cy.get(selector.password).type(data.password);
+    cy.get(selector.alert).should('not.exist');
     cy.get(selector.disabledSwitcher).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
