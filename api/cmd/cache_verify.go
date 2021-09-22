@@ -52,7 +52,7 @@ func newCacheVerifyCommand() *cobra.Command {
 
 			port = conf.ServerPort
 			host = conf.ServerHost
-			if host == "0.0.0.0" {
+			if host == "0.0.0.0" || host == "" {
 				host = "127.0.0.1"
 			}
 			username = conf.AuthConf.Users[0].Username
