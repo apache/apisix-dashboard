@@ -136,3 +136,40 @@ allow_embedding = true
 If the domain name of the address is configured as HTTPS, the embedded grafana will jump to the login page after logging in. You can refer to this solution:
 
 It's best for Grafana to configure the domain name in the same way. Otherwise there will be problems with address resolution.
+
+### 10. APISIX configured single-page application(SPA)
+
+Modifying `/usr/local/apisix/conf/config.yaml`
+
+```
+nginx_config:
+    main_configuration_snippet: |
+        daemon on;
+    http_configuration_snippet: |
+        server {
+            listen  8099;
+            server_name  localhost;
+            charset utf-8;
+            location / {
+                # Your SPA build file like this
+                root /usr/share/nginx/html;
+                try_files $uri $uri/ /index.html;
+                expires      -1s;
+           }
+        }
+        chunked_transfer_encoding on;
+
+    http_server_configuration_snippet: |
+        set $my "var";
+    http_admin_configuration_snippet: |
+        log_format admin "$request_time $pipe";
+    http_end_configuration_snippet: |
+        server_names_hash_bucket_size 128;
+    stream_configuration_snippet: |
+        tcp_nodelay off;
+
+```
+
+Reference `https://github.com/apache/apisix/issues/4544`
+
+
