@@ -22,6 +22,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
 };
 
 const FORM_ITEM_LAYOUT = {
@@ -46,10 +47,17 @@ const removeBtnStyle = {
   alignItems: 'center',
 };
 
-const RefererRestriction: React.FC<Props> = ({ form }) => {
-  const { formatMessage } = useIntl();
+const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
+  const { formatMessage } = useIntl()
+  const properties = schema?.properties
+  const allowListMinLength = properties.whitelist.minItems
+  const whiteInit = Array(allowListMinLength).join('.').split('.')
   return (
-    <Form form={form} {...FORM_ITEM_LAYOUT} initialValues={{ whitelist: [''] }}>
+    <Form
+      form={form}
+      {...FORM_ITEM_LAYOUT}
+      initialValues={{ whitelist: whiteInit }}
+    >
       <Form.List name="whitelist">
         {(fields, { add, remove }) => {
           return (
@@ -73,33 +81,28 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                         validateTrigger={['onChange', 'onBlur', 'onClick']}
                         noStyle
                         required
-                        rules={[
-                          {
-                            message: formatMessage({
-                              id: 'page.route.form.itemRulesPatternMessage.domain',
-                            }),
-                            pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g'),
-                          },
-                          {
-                            required: true,
-                            message: `${formatMessage({
-                              id: 'component.global.pleaseEnter',
-                            })} whitelist`,
-                          },
-                        ]}
+                        rules={[{
+                          message: formatMessage({
+                            id: 'page.route.form.itemRulesPatternMessage.domain',
+                          }),
+                          pattern: new RegExp(`${properties.whitelist.items.pattern}`, 'g')
+                        }, {
+                          required: true,
+                          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} whitelist`
+                        }]}
                       >
                         <Input />
                       </Form.Item>
                     </Col>
                     <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
-                      {fields.length > 1 ? (
+                      {fields.length > allowListMinLength &&
                         <MinusCircleOutlined
                           className="dynamic-delete-button"
                           onClick={() => {
                             remove(field.name);
                           }}
                         />
-                      ) : null}
+                      }
                     </Col>
                   </Row>
                 ))}
@@ -129,7 +132,7 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
         })}
         valuePropName="checked"
       >
-        <Switch />
+        <Switch defaultChecked={properties.bypass_missing.default} />
       </Form.Item>
     </Form>
   );
