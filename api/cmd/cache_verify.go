@@ -51,7 +51,10 @@ func newCacheVerifyCommand() *cobra.Command {
 			log.InitLogger()
 
 			port = conf.ServerPort
-			host = "127.0.0.1"
+			host = conf.ServerHost
+			if host == "0.0.0.0" {
+				host = "127.0.0.1"
+			}
 			username = conf.AuthConf.Users[0].Username
 			password = conf.UserList[username].Password
 			token, err := getToken()
