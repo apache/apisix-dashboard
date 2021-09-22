@@ -40,7 +40,7 @@ const Page: React.FC = (props) => {
         form1.setFieldsValue(data.data);
         if (isDuplicate) {
           form1.setFieldsValue({
-            'name': ''
+            name: ''
           });
         }
       });

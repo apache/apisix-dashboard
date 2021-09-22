@@ -88,7 +88,6 @@ export default {
   'page.upstream.list.edit.time': '更新时间',
   'page.upstream.list.operation': '操作',
   'page.upstream.list.edit': '配置',
-  'page.upstream.list.duplicate': '复制',
   'page.upstream.list.confirm.delete': '确定删除该条记录吗？',
   'page.upstream.list.confirm': '确定',
   'page.upstream.list.cancel': '取消',

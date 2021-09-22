@@ -96,7 +96,7 @@ const Page: React.FC = () => {
             type="primary"
             onClick={() => history.push(`/upstream/${record.id}/duplicate`)}
           >
-            {formatMessage({ id: 'page.upstream.list.duplicate' })}
+            {formatMessage({ id: 'component.global.duplicate' })}
           </Button>
           <Popconfirm
             title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
