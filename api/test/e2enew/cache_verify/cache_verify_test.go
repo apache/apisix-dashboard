@@ -105,7 +105,7 @@ func prepareConfigData() {
 		"Content-Type":  "application/json",
 		"Authorization": base.GetToken(),
 	}
-	_, statusCode, err := base.HttpPut(base.ManagerAPIHost+"/apisix/admin/routes/r1", headers, `{
+	_, statusCode, err := base.HttpPut(base.ManagerAPIHost+"/apisix/admin/routes/ra", headers, `{
 		"name": "route1",
 		"uri": "/hello_",
 		"upstream": {
@@ -118,7 +118,7 @@ func prepareConfigData() {
 	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
 	gomega.Expect(err).Should(gomega.BeNil())
 
-	_, statusCode, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/upstreams/1", headers, `{
+	_, statusCode, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/upstreams/u1", headers, `{
 		"name": "upstream1",
 		"nodes": [
 			{
@@ -132,7 +132,7 @@ func prepareConfigData() {
 	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
 	gomega.Expect(err).Should(gomega.BeNil())
 
-	_, statusCode, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/services/s1", headers, `{
+	_, statusCode, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/services/sa", headers, `{
  "name": "testservice",
  "upstream": {
    "nodes": [
@@ -164,13 +164,13 @@ func deleteConfigData() {
 		"Content-Type":  "application/json",
 		"Authorization": base.GetToken(),
 	}
-	_, statusCode, err := base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/routes/r1", headers)
+	_, statusCode, err := base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/routes/ra", headers)
 	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
 	gomega.Expect(err).Should(gomega.BeNil())
-	_, statusCode, err = base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/upstreams/1", headers)
+	_, statusCode, err = base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/upstreams/u1", headers)
 	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
 	gomega.Expect(err).Should(gomega.BeNil())
-	_, statusCode, err = base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/services/s1", headers)
+	_, statusCode, err = base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/services/sa", headers)
 	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
 	gomega.Expect(err).Should(gomega.BeNil())
 }
