@@ -41,9 +41,9 @@ export default {
   'component.pluginForm.cors.allow_headers.tooltip':
     'Which headers are allowed to set in request when access cross-origin resource. Multiple value use , to split. When allow_credential is false, you can use * to indicate allow all request headers. You also can allow any header forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.expose_headers.tooltip':
-    'Which headers are allowed to set in response when access cross-origin resource. Multiple value use , to split.',
+    'Which headers are allowed to set in response when access cross-origin resource. Multiple value use , to split. When allow_credential is false, you can use * to indicate allow any header. You also can allow any header forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.max_age.tooltip':
-    'Maximum number of seconds the results can be cached.. Within this time range, the browser will reuse the last check result. -1 means no cache. Please note that the maximum value is depended on browser, please refer to MDN for details.',
+    'Maximum number of seconds the results can be cached. Within this time range, the browser will reuse the last check result. -1 means no cache. Please note that the maximum value is depended on browser, please refer to MDN for details.',
   'component.pluginForm.cors.allow_credential.tooltip':
     "If you set this option to true, you can not use '*' for other options.",
   'component.pluginForm.cors.allow_origins_by_regex.tooltip':
@@ -82,9 +82,11 @@ export default {
   'component.pluginForm.limit-conn.default_conn_delay.tooltip':
     'the latency seconds of request when concurrent requests exceeding conn but below (conn + burst).',
   'component.pluginForm.limit-conn.key.tooltip':
-    'to limit the concurrency level.For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests.Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
+    'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests. Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
     'returned when the request exceeds conn + burst will be rejected.',
+  'component.pluginForm.limit-conn.only_use_default_delay.tooltip':
+    'enable the strict mode of the latency seconds. If you set this option to true, it will run strictly according to the latency seconds you set without additional calculation logic.',
 
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip':
@@ -112,7 +114,7 @@ export default {
   'component.pluginForm.limit-count.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected, default 503.',
   'component.pluginForm.limit-count.policy.tooltip':
-    'The rate-limiting policies to use for retrieving and incrementing the limits. Available values are local(the counters will be stored locally in-memory on the node) and redis(counters are stored on a Redis server and will be shared across the nodes, usually use it to do the global speed limit).',
+    'The rate-limiting policies to use for retrieving and incrementing the limits. Available values are local(the counters will be stored locally in-memory on the node) and redis(counters are stored on a Redis server and will be shared across the nodes, usually use it to do the global speed limit) and redis-cluster(the same function as redis, only use Redis cluster pattern).',
   'component.pluginForm.limit-count.redis_host.tooltip':
     'When using the redis policy, this property specifies the address of the Redis server.',
   'component.pluginForm.limit-count.redis_port.tooltip':

@@ -289,7 +289,7 @@ func TestAPISIXJsonSchemaValidator_Plugin(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
 	err = validator.Validate(route)
-	assert.Equal(t, fmt.Errorf("schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Additional property disable is not allowed\ndisable: Invalid type. Expected: boolean, given: integer"), err)
+	assert.Equal(t, fmt.Errorf("schema validate failed: disable: Invalid type. Expected: boolean, given: integer"), err)
 }
 
 func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
@@ -447,23 +447,4 @@ func TestAPISIXSchemaValidator_Validate(t *testing.T) {
 	}`
 	err = validator.Validate([]byte(reqBody))
 	assert.Nil(t, err)
-
-	// config with non existent field, should be failed.
-	reqBody = `{
-		"username": "jack",
-		"not-exist": "val",
-		"plugins": {
-			"limit-count": {
-				"count": 2,
-				"time_window": 60,
-				"rejected_code": 503,
-				"key": "remote_addr"
-			}
-		},
-		"desc": "test description"
-	}`
-	err = validator.Validate([]byte(reqBody))
-	assert.NotNil(t, err)
-	assert.EqualError(t, err, "schema validate failed: (root): Additional property not-exist is not allowed")
-
 }

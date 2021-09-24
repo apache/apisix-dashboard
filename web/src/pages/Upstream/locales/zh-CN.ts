@@ -64,6 +64,7 @@ export default {
   'page.upstream.step.input.healthyCheck.passive.http_statuses': '请输入状态码',
   'page.upstream.step.healthyCheck.passive.tcp_failures': 'TCP 失败次数',
   'page.upstream.step.input.healthyCheck.passive.tcp_failures': '请输入 TCP 失败次数',
+  'page.upstream.step.keepalive_pool': '连接池',
   'page.upstream.notificationMessage.enableHealthCheckFirst': '请先启用探活健康检查。',
   'page.upstream.upstream_host.required': '请输入自定义 Host 请求头',
 

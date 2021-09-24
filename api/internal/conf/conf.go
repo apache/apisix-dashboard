@@ -19,14 +19,13 @@ package conf
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
-	"gopkg.in/yaml.v2"
 
 	"github.com/apisix/manager-api/internal/utils"
 )
@@ -45,6 +44,7 @@ var (
 	ENV              string
 	Schema           gjson.Result
 	WorkDir          = "."
+	ConfigFile       = ""
 	ServerHost       = "0.0.0.0"
 	ServerPort       = 80
 	SSLHost          = "0.0.0.0"
@@ -65,9 +65,9 @@ var (
 )
 
 type MTLS struct {
-	CaFile   string `yaml:"ca_file"`
-	CertFile string `yaml:"cert_file"`
-	KeyFile  string `yaml:"key_file"`
+	CaFile   string `mapstructure:"ca_file"`
+	CertFile string `mapstructure:"cert_file"`
+	KeyFile  string `mapstructure:"key_file"`
 }
 
 type Etcd struct {
@@ -79,10 +79,10 @@ type Etcd struct {
 }
 
 type SSL struct {
-	Host string `yaml:"host"`
-	Port int    `yaml:"port"`
-	Cert string `yaml:"cert"`
-	Key  string `yaml:"key"`
+	Host string `mapstructure:"host"`
+	Port int    `mapstructure:"port"`
+	Cert string `mapstructure:"cert"`
+	Key  string `mapstructure:"key"`
 }
 
 type Listen struct {
@@ -92,16 +92,16 @@ type Listen struct {
 
 type ErrorLog struct {
 	Level    string
-	FilePath string `yaml:"file_path"`
+	FilePath string `mapstructure:"file_path"`
 }
 
 type AccessLog struct {
-	FilePath string `yaml:"file_path"`
+	FilePath string `mapstructure:"file_path"`
 }
 
 type Log struct {
-	ErrorLog  ErrorLog  `yaml:"error_log"`
-	AccessLog AccessLog `yaml:"access_log"`
+	ErrorLog  ErrorLog  `mapstructure:"error_log"`
+	AccessLog AccessLog `mapstructure:"access_log"`
 }
 
 type Conf struct {
@@ -109,8 +109,8 @@ type Conf struct {
 	Listen    Listen
 	SSL       SSL
 	Log       Log
-	AllowList []string `yaml:"allow_list"`
-	MaxCpu    int      `yaml:"max_cpu"`
+	AllowList []string `mapstructure:"allow_list"`
+	MaxCpu    int      `mapstructure:"max_cpu"`
 }
 
 type User struct {
@@ -120,7 +120,7 @@ type User struct {
 
 type Authentication struct {
 	Secret     string
-	ExpireTime int `yaml:"expire_time"`
+	ExpireTime int `mapstructure:"expire_time"`
 	Users      []User
 }
 
@@ -144,98 +144,112 @@ func InitConf() {
 		WorkDir = workDir
 	}
 
-	setConf()
-	setEnvironment()
+	setupConfig()
+	setupEnv()
 	initSchema()
 }
 
-func setConf() {
-	filePath := WorkDir + "/conf/conf.yaml"
-	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
-		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
+func setupConfig() {
+	// setup config file path
+	if ConfigFile == "" {
+		viper.SetConfigName("conf")
+		viper.SetConfigType("yaml")
+		viper.AddConfigPath(WorkDir + "/conf")
 	} else {
-		// configuration := gjson.ParseBytes(configurationContent)
-		config := Config{}
-		err := yaml.Unmarshal(configurationContent, &config)
-		if err != nil {
-			log.Printf("conf: %s, error: %v", configurationContent, err)
-		}
-
-		// listen
-		if config.Conf.Listen.Port != 0 {
-			ServerPort = config.Conf.Listen.Port
-		}
-		if config.Conf.Listen.Host != "" {
-			ServerHost = config.Conf.Listen.Host
-		}
-
-		// SSL
-		if config.Conf.SSL.Port != 0 {
-			SSLPort = config.Conf.SSL.Port
-		}
-		if config.Conf.SSL.Cert != "" {
-			SSLCert = config.Conf.SSL.Cert
-		}
-		if config.Conf.SSL.Key != "" {
-			SSLKey = config.Conf.SSL.Key
-		}
-
-		// for etcd
-		if len(config.Conf.Etcd.Endpoints) > 0 {
-			initEtcdConfig(config.Conf.Etcd)
-		}
-
-		// error log
-		if config.Conf.Log.ErrorLog.Level != "" {
-			ErrorLogLevel = config.Conf.Log.ErrorLog.Level
-		}
-		if config.Conf.Log.ErrorLog.FilePath != "" {
-			ErrorLogPath = config.Conf.Log.ErrorLog.FilePath
-		}
-
-		// access log
-		if config.Conf.Log.AccessLog.FilePath != "" {
-			AccessLogPath = config.Conf.Log.AccessLog.FilePath
-		}
-
-		if !filepath.IsAbs(ErrorLogPath) {
-			if strings.HasPrefix(ErrorLogPath, "winfile") {
-				return
-			}
-			ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
-			if err != nil {
-				panic(err)
-			}
-			if runtime.GOOS == "windows" {
-				ErrorLogPath = `winfile:///` + ErrorLogPath
-			}
-		}
-		if !filepath.IsAbs(AccessLogPath) {
-			if strings.HasPrefix(AccessLogPath, "winfile") {
-				return
-			}
-			AccessLogPath, err = filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
-			if err != nil {
-				panic(err)
-			}
-			if runtime.GOOS == "windows" {
-				AccessLogPath = `winfile:///` + AccessLogPath
-			}
-		}
-
-		AllowList = config.Conf.AllowList
-
-		// set degree of parallelism
-		initParallelism(config.Conf.MaxCpu)
-
-		// auth
-		initAuthentication(config.Authentication)
-
-		initPlugins(config.Plugins)
+		viper.SetConfigFile(ConfigFile)
 	}
+
+	// load config
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			panic(fmt.Sprintf("fail to find configuration: %s", ConfigFile))
+		} else {
+			panic(fmt.Sprintf("fail to read configuration: %s, err: %s", ConfigFile, err.Error()))
+		}
+	}
+
+	// unmarshal config
+	config := Config{}
+	err := viper.Unmarshal(&config)
+	if err != nil {
+		panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
+	}
+
+	// listen
+	if config.Conf.Listen.Port != 0 {
+		ServerPort = config.Conf.Listen.Port
+	}
+	if config.Conf.Listen.Host != "" {
+		ServerHost = config.Conf.Listen.Host
+	}
+
+	// SSL
+	if config.Conf.SSL.Port != 0 {
+		SSLPort = config.Conf.SSL.Port
+	}
+	if config.Conf.SSL.Cert != "" {
+		SSLCert = config.Conf.SSL.Cert
+	}
+	if config.Conf.SSL.Key != "" {
+		SSLKey = config.Conf.SSL.Key
+	}
+
+	// ETCD Storage
+	if len(config.Conf.Etcd.Endpoints) > 0 {
+		initEtcdConfig(config.Conf.Etcd)
+	}
+
+	// error log
+	if config.Conf.Log.ErrorLog.Level != "" {
+		ErrorLogLevel = config.Conf.Log.ErrorLog.Level
+	}
+	if config.Conf.Log.ErrorLog.FilePath != "" {
+		ErrorLogPath = config.Conf.Log.ErrorLog.FilePath
+	}
+
+	// access log
+	if config.Conf.Log.AccessLog.FilePath != "" {
+		AccessLogPath = config.Conf.Log.AccessLog.FilePath
+	}
+
+	if !filepath.IsAbs(ErrorLogPath) {
+		if strings.HasPrefix(ErrorLogPath, "winfile") {
+			return
+		}
+		ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
+		if err != nil {
+			panic(err)
+		}
+		if runtime.GOOS == "windows" {
+			ErrorLogPath = `winfile:///` + ErrorLogPath
+		}
+	}
+	if !filepath.IsAbs(AccessLogPath) {
+		if strings.HasPrefix(AccessLogPath, "winfile") {
+			return
+		}
+		AccessLogPath, err = filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
+		if err != nil {
+			panic(err)
+		}
+		if runtime.GOOS == "windows" {
+			AccessLogPath = `winfile:///` + AccessLogPath
+		}
+	}
+
+	AllowList = config.Conf.AllowList
+
+	// set degree of parallelism
+	initParallelism(config.Conf.MaxCpu)
+
+	// set authentication
+	initAuthentication(config.Authentication)
+
+	// set plugin
+	initPlugins(config.Plugins)
 }
 
-func setEnvironment() {
+func setupEnv() {
 	ENV = EnvPROD
 	if env := os.Getenv("ENV"); env != "" {
 		ENV = env

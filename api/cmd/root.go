@@ -30,7 +30,6 @@ import (
 )
 
 var (
-	configFile string
 	forceStart bool
 )
 
@@ -52,7 +51,7 @@ func init() {
 		}
 	})
 
-	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "./conf/conf.yml", "config file")
+	rootCmd.PersistentFlags().StringVarP(&conf.ConfigFile, "config", "c", "", "config file")
 	rootCmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
 	rootCmd.PersistentFlags().BoolVarP(&forceStart, "force", "f", false, "force start manager-api")
 

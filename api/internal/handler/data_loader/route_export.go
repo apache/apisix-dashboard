@@ -115,12 +115,12 @@ var (
 func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
 
-	if len(routelist.Rows) < 1 {
-		return nil, consts.ErrRouteData
-	}
-
 	if err != nil {
 		return nil, err
+	}
+
+	if len(routelist.Rows) < 1 {
+		return nil, consts.ErrRouteData
 	}
 
 	routes := []*entity.Route{}
@@ -412,7 +412,7 @@ func ParseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 				log.Errorf("Plugins MergeJson err: ", err)
 				return path, nil, nil, nil, err
 			}
-			err = json.Unmarshal([]byte(bytePlugins), &plugins)
+			err = json.Unmarshal(bytePlugins, &plugins)
 			if err != nil {
 				log.Errorf("JsonToMapDemo err: ", err)
 				return path, nil, nil, nil, err

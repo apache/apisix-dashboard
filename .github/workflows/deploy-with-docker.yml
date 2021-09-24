@@ -13,7 +13,7 @@ on:
       - 'docs/**'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/master' && github.run_number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -25,16 +25,28 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: Azure/docker-login@v1
-        if: ${{ github.event_name == 'push' }}
+      - uses: docker/setup-buildx-action@v1
+
+      - uses: actions/cache@v2
         with:
-          login-server: apisixacr.azurecr.cn
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-apisixdashboard-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-apisixdashboard-
+            ${{ runner.os }}-buildx-
 
       - name: Build Docker Image
-        run: |
-          docker build -t dashboard:ci . --build-arg APISIX_DASHBOARD_VERSION=master
+        uses: docker/build-push-action@v2
+        with:
+          load: true
+          tags: dashboard:ci
+          context: .
+          build-args: |
+            APISIX_DASHBOARD_VERSION=master
+          cache-from: |
+            type=local,src=/tmp/.buildx-cache
+          cache-to: |
+            type=local,dest=/tmp/.buildx-cache
 
       - name: Modify Config
         run: |
@@ -45,6 +57,15 @@ jobs:
           # So we need to configure `listen.host` so that it can be accessed outside docker
           sed -i '/port: 9000/i\    host: 0.0.0.0' ./api/conf/conf.yaml
 
+      - name: build docker images
+        working-directory: ./api/test/docker-deploy
+        continue-on-error: true
+        run: |
+          docker buildx bake --load \
+          -f docker-compose.yaml \
+          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
+          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
+
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
         run: |
@@ -54,6 +75,13 @@ jobs:
 
       - name: Run Test
         run: api/test/shell/manager_smoking.sh -s false
+
+      - uses: Azure/docker-login@v1
+        if: ${{ github.event_name == 'push' }}
+        with:
+          login-server: apisixacr.azurecr.cn
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Deploy
         if: ${{ github.event_name == 'push' }}

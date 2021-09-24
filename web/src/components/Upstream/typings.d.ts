@@ -35,6 +35,10 @@ declare namespace UpstreamComponent {
     priority?: number;
   };
 
+  type SubmitNode = {
+    [propName: string]: number;
+  };
+
   type Timeout = {
     connect: number;
     send: number;
@@ -42,7 +46,7 @@ declare namespace UpstreamComponent {
   };
 
   type ResponseData = {
-    nodes?: Node[];
+    nodes?: SubmitNode | Node[];
     retries?: number;
     timeout?: Timeout;
     tls?: TLS;
@@ -62,6 +66,8 @@ declare namespace UpstreamComponent {
     service_name?: string;
     id?: string;
     upstream_id?: string;
+    upstream_type?: string;
+
     // NOTE: custom field
     custom?: Record<string, any>;
   };

@@ -52,7 +52,7 @@ var _ = ginkgo.Describe("Schema Test", func() {
 			Path:         "/apisix/admin/schema/plugins/jwt-auth",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "{\"$comment\":\"this is a mark for our injected plugin schema\",\"additionalProperties\":false,\"properties\":{\"disable\":{\"type\":\"boolean\"}},\"type\":\"object\"}",
+			ExpectBody:   "{\"$comment\":\"this is a mark for our injected plugin schema\",\"properties\":{\"disable\":{\"type\":\"boolean\"}},\"type\":\"object\"}",
 			Sleep:        base.SleepTime,
 		}),
 		table.Entry("get schema of non-existent plugin", base.HttpTestCase{

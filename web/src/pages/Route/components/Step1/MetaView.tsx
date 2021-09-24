@@ -136,7 +136,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
                 }),
               },
               {
-                pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
+                pattern: new RegExp(/^.{0,100}$/, 'g'),
                 message: formatMessage({
                   id: 'page.route.form.itemRulesPatternMessage.apiNameRule',
                 }),
@@ -185,18 +185,17 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.Item>
   );
 
-  const WebSocket: React.FC = () =>
-    form.getFieldValue('redirectOption') === 'disabled' ? (
-      <Form.Item label="WebSocket">
-        <Row>
-          <Col>
-            <Form.Item noStyle valuePropName="checked" name="enable_websocket">
-              <Switch disabled={disabled} />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form.Item>
-    ) : null;
+  const WebSocket: React.FC = () => (
+    <Form.Item label="WebSocket">
+      <Row>
+        <Col>
+          <Form.Item noStyle valuePropName="checked" name="enable_websocket">
+            <Switch disabled={disabled} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  );
 
   const Redirect: React.FC = () => {
     const list = [
@@ -313,7 +312,12 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
         <Row>
           <Col span={5}>
             <Form.Item noStyle name="service_id">
-              <Select disabled={disabled}>
+              <Select
+                showSearch
+                disabled={disabled}
+                optionFilterProp="children"
+                filterOption={(input, option) => option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
                 {/* TODO: value === '' means  no service_id select, need to find a better way */}
                 <Select.Option value="" key={Math.random().toString(36).substring(7)}>
                   {formatMessage({ id: 'page.route.service.none' })}

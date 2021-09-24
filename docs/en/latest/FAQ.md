@@ -109,3 +109,30 @@ Note: You can use this method in development and test environment to allow all I
 ### 7. What is the default strategy when import a duplicate route?
 
 Currently we reject import duplicate route, that is to say when you import a route which has the same attributes, all of the `uri` `uris` `host` `hosts` `remote_addr` `remote_addrs` `priority` `vars` and `filter_func`, as the existing route, you will get an error while importing a route from OAS3.0.
+
+### 8. APISIX dashboard add grafana cross-domain problem
+
+Modifying the Grafana configuration:
+
+1. Enable anonymous access:
+
+```shell
+# grep 'auth.anonymous' -A 3 defaults.ini
+[auth.anonymous]
+# enable anonymous access
+enabled = true
+```
+
+2. Allow access via iframe
+
+```shell
+# grep 'allow_embedding' defaults.ini
+allow_embedding = true
+···
+```
+
+### 9. APISIX dashboard configured domain name, the embedded Grafana can't login
+
+If the domain name of the address is configured as HTTPS, the embedded grafana will jump to the login page after logging in. You can refer to this solution:
+
+It's best for Grafana to configure the domain name in the same way. Otherwise there will be problems with address resolution.

@@ -22,9 +22,9 @@ context('Create and delete route with referer-restriction form', () => {
     name: '#name',
     description: '#desc',
     pluginCardBordered: '.ant-card-bordered',
-    nodes_0_host: '#nodes_0_host',
-    nodes_0_port: '#nodes_0_port',
-    nodes_0_weight: '#nodes_0_weight',
+    nodes_0_host: '#submitNodes_0_host',
+    nodes_0_port: '#submitNodes_0_port',
+    nodes_0_weight: '#submitNodes_0_weight',
     disabledSwitcher: '#disable',
     checkedSwitcher: '.ant-switch-checked',
     drawer: '.ant-drawer-content',
@@ -33,6 +33,9 @@ context('Create and delete route with referer-restriction form', () => {
     deleteAlert: '.ant-modal-body',
     whitlist: '#whitelist_0',
     alert: '.ant-form-item-explain-error [role=alert]',
+    newAdd: '.ant-btn-dashed',
+    whitlist_1: '#whitelist_1',
+    passSwitcher: '#bypass_missing',
   };
 
   const data = {
@@ -41,6 +44,9 @@ context('Create and delete route with referer-restriction form', () => {
     weight: 1,
     deleteRouteSuccess: 'Delete Route Successfully',
     submitSuccess: 'Submit Successfully',
+    wrongIp: 'qq@',
+    correctIp: 'apisix-dashboard_1.com',
+    activeClass: 'ant-switch-checked',
   };
 
   beforeEach(() => {
@@ -75,7 +81,8 @@ context('Create and delete route with referer-restriction form', () => {
       .should('be.visible')
       .within(() => {
         cy.get(selector.disabledSwitcher).click();
-        cy.get(selector.checkedSwitcher).should('exist');
+        cy.get(selector.disabledSwitcher).should('have.class', data.activeClass);
+        cy.get(selector.passSwitcher).should('not.have.class', data.activeClass);
       });
 
     // config referer-restriction form without whitelist
@@ -90,8 +97,18 @@ context('Create and delete route with referer-restriction form', () => {
     cy.get(selector.notificationCloseIcon).click();
 
     // config referer-restriction form with whitelist
-    cy.get(selector.whitlist).type('127.0.0.1');
+    cy.get(selector.whitlist).type(data.wrongIp);
+    cy.get(selector.whitlist).closest('div').next().children('span').should('not.exist');
+    cy.get(selector.alert).should('exist');
+    cy.get(selector.whitlist).clear().type(data.correctIp);
     cy.get(selector.alert).should('not.exist');
+
+    cy.get(selector.newAdd).click();
+    cy.get(selector.whitlist).closest('div').next().children('span').should('exist');
+    cy.get(selector.whitlist_1).closest('div').next().children('span').should('exist');
+    cy.get(selector.whitlist_1).type(data.correctIp);
+    cy.get(selector.alert).should('not.exist');
+
     cy.get(selector.disabledSwitcher).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
