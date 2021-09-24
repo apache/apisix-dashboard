@@ -28,11 +28,14 @@ context('Enable request id via form submission', () => {
     disabledSwitcher: '#disable',
     checkedSwitcher: '.ant-switch-checked',
     includeInResponse: '[title="include_in_response"]',
+    headerName: '[title="header_name"]',
     lineContent: '.lines-content',
+    headerNameInput: '#header_name',
   };
 
   const data = {
-    reuestIdPlugin: 'request-id',
+    requestIdPlugin: 'request-id',
+    defaultHeaderName: 'X-Request-Id',
   };
 
   beforeEach(() => {
@@ -44,7 +47,7 @@ context('Enable request id via form submission', () => {
     cy.contains('Plugin').click();
     cy.contains('Enable').click();
 
-    cy.contains(data.reuestIdPlugin)
+    cy.contains(data.requestIdPlugin)
       .parents(selector.pluginCardBordered)
       .within(() => {
         cy.get('button').click({
@@ -56,6 +59,12 @@ context('Enable request id via form submission', () => {
       .invoke('text')
       .then((text) => {
         if (text === 'Form') {
+          // check requestId form fields
+          cy.get(selector.headerName).should('be.visible');
+          cy.get(selector.headerNameInput).should('have.value', data.defaultHeaderName);
+          cy.get(selector.includeInResponse).should('be.visible');
+
+          // using form to add values
           cy.get(selector.includeInResponse).click();
           cy.get(selector.checkedSwitcher).should('exist');
           cy.get(selector.monacoMode).click();
