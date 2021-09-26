@@ -254,6 +254,7 @@ type Service struct {
 	Script          string                 `json:"script,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
 	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
+	Hosts           []string               `json:"hosts,omitempty"`
 }
 
 type Script struct {
