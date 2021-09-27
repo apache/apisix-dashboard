@@ -109,7 +109,6 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
           min={properties.rejected_code.minimum}
         />
       </Form.Item>
-      `
       <Form.Item
         label="rejected_msg"
         name="rejected_msg"
