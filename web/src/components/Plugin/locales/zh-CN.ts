@@ -50,9 +50,13 @@ export default {
 
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':
-    "域名列表。域名开头可以用'*'作为通配符。",
+    "白名单域名列表。域名开头可以用'*'作为通配符。",
+  'component.pluginForm.referer-restriction.blacklist.tooltip':
+    "黑名单域名列表。域名开头可以用'*'作为通配符。",
+  'component.pluginForm.referer-restriction.listEmpty.tooltip': '列表为空',
   'component.pluginForm.referer-restriction.bypass_missing.tooltip':
     '当 Referer 不存在或格式有误时，是否绕过检查。',
+  'component.pluginForm.referer-restriction.message.tooltip': '在未允许访问的情况下返回的信息。',
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip': '不健康返回错误码。',

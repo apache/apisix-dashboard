@@ -52,8 +52,13 @@ export default {
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':
     'List of hostname to whitelist. The hostname can be started with * as a wildcard.',
+  'component.pluginForm.referer-restriction.blacklist.tooltip':
+    'List of hostname to blacklist. The hostname can be started with * as a wildcard.',
+  'component.pluginForm.referer-restriction.listEmpty.tooltip': 'List empty',
   'component.pluginForm.referer-restriction.bypass_missing.tooltip':
     'Whether to bypass the check when the Referer header is missing or malformed.',
+  'component.pluginForm.referer-restriction.message.tooltip':
+    'Message returned in case access is not allowed.',
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip':
