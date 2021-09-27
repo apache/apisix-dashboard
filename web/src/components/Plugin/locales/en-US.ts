@@ -73,6 +73,8 @@ export default {
   'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip':
     'address needs to contain schema: http or https, not URI part',
+  'component.pluginForm.proxy-mirror.sample_ratio.tooltip':
+    'the sample ratio that requests will be mirrored.',
 
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip':

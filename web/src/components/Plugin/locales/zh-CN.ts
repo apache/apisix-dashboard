@@ -69,6 +69,7 @@ export default {
   'component.pluginForm.proxy-mirror.host.extra': '例如：http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip':
     '地址中需要包含 schema ：http或https，不能包含 URI 部分',
+  'component.pluginForm.proxy-mirror.sample_ratio.tooltip': '镜像请求采样率',
 
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip':
