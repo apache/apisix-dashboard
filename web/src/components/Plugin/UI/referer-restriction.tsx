@@ -117,6 +117,7 @@ const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addWhitelist"
                   onClick={() => {
                     add();
                   }}
@@ -184,6 +185,7 @@ const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addBlacklist"
                   onClick={() => {
                     add();
                   }}
