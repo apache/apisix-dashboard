@@ -58,76 +58,88 @@ Cypress.Commands.add('configurePlugin', ({ name, cases }) => {
     return;
   }
 
-  cy.contains(name)
-    .parents(domSelector.parents)
-    .within(() => {
-      cy.get('button').click({
-        force: true,
-      });
+  cy.get(domSelector.name, { timeout }).then(function (cards) {
+    let needCheck = false;
+    [...cards].forEach((item) => {
+      if (name === item.innerText) needCheck = true;
     });
 
-  // NOTE: wait for the Drawer to appear on the DOM
-  cy.focused(domSelector.drawer).should('exist');
+    if (!needCheck) {
+      cy.log('non global plugin, skipping');
+      return;
+    }
 
-  cy.get(domSelector.monacoMode)
-    .invoke('text')
-    .then((text) => {
-      if (text === 'Form') {
-        cy.wait(1000);
-        cy.get(domSelector.monacoMode).should('be.visible');
-        cy.get(domSelector.monacoMode).click();
-        cy.get(domSelector.selectDropdown).should('be.visible');
-        cy.get(domSelector.selectJSON).click();
-      }
-    });
-
-  cy.get(domSelector.drawer, { timeout }).within(() => {
-    cy.get(domSelector.switch).click({
-      force: true,
-    });
-  });
-
-  cy.get(domSelector.monacoMode)
-    .invoke('text')
-    .then((text) => {
-      if (text === 'Form') {
-        // FIXME: https://github.com/cypress-io/cypress/issues/7306
-        cy.wait(1000);
-        cy.get(domSelector.monacoMode).should('be.visible');
-        cy.get(domSelector.monacoMode).click();
-        cy.get(domSelector.selectDropdown).should('be.visible');
-        cy.get(domSelector.selectJSON).click();
-      }
-    });
-  // edit monaco
-  cy.get(domSelector.monacoViewZones).should('exist').click({ force: true });
-  cy.window().then((window) => {
-    window.monacoEditor.setValue(JSON.stringify(data));
-
-    cy.get(domSelector.drawer, { timeout }).within(() => {
-      cy.contains('Submit').click({
-        force: true,
-      });
-      cy.get(domSelector.drawer).should('not.exist');
-    });
-  });
-
-  if (shouldValid === true) {
-    cy.get(domSelector.drawer).should('not.exist');
-  } else if (shouldValid === false) {
-    cy.get(domSelector.notification).should('contain', 'Invalid plugin data');
-
-    cy.get(domSelector.close).should('be.visible').click({
-      force: true,
-      multiple: true,
-    });
-
-    cy.get(domSelector.drawer, { timeout })
-      .invoke('show')
+    cy.contains(name)
+      .parents(domSelector.parents)
       .within(() => {
-        cy.contains('Cancel').click({
+        cy.get('button').click({
           force: true,
         });
       });
-  }
+
+    // NOTE: wait for the Drawer to appear on the DOM
+    cy.focused(domSelector.drawer).should('exist');
+
+    cy.get(domSelector.monacoMode)
+      .invoke('text')
+      .then((text) => {
+        if (text === 'Form') {
+          cy.wait(1000);
+          cy.get(domSelector.monacoMode).should('be.visible');
+          cy.get(domSelector.monacoMode).click();
+          cy.get(domSelector.selectDropdown).should('be.visible');
+          cy.get(domSelector.selectJSON).click();
+        }
+      });
+
+    cy.get(domSelector.drawer, { timeout }).within(() => {
+      cy.get(domSelector.switch).click({
+        force: true,
+      });
+    });
+
+    cy.get(domSelector.monacoMode)
+      .invoke('text')
+      .then((text) => {
+        if (text === 'Form') {
+          // FIXME: https://github.com/cypress-io/cypress/issues/7306
+          cy.wait(1000);
+          cy.get(domSelector.monacoMode).should('be.visible');
+          cy.get(domSelector.monacoMode).click();
+          cy.get(domSelector.selectDropdown).should('be.visible');
+          cy.get(domSelector.selectJSON).click();
+        }
+      });
+    // edit monaco
+    cy.get(domSelector.monacoViewZones).should('exist').click({ force: true });
+    cy.window().then((window) => {
+      window.monacoEditor.setValue(JSON.stringify(data));
+
+      cy.get(domSelector.drawer, { timeout }).within(() => {
+        cy.contains('Submit').click({
+          force: true,
+        });
+        cy.get(domSelector.drawer).should('not.exist');
+      });
+    });
+
+    if (shouldValid === true) {
+      cy.get(domSelector.drawer).should('not.exist');
+    } else if (shouldValid === false) {
+      cy.get(domSelector.notification).should('contain', 'Invalid plugin data');
+
+      cy.get(domSelector.close).should('be.visible').click({
+        force: true,
+        multiple: true,
+      });
+
+      cy.get(domSelector.drawer, { timeout })
+        .invoke('show')
+        .within(() => {
+          cy.contains('Cancel').click({
+            force: true,
+          });
+        });
+    }
+  });
 });
