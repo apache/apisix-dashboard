@@ -46,6 +46,7 @@ Cypress.Commands.add('configurePlugin', ({ name, cases }) => {
     monacoMode: '[data-cy="monaco-mode"]',
     selectJSON: '.ant-select-dropdown [label=JSON]',
     monacoViewZones: '.view-zones',
+    notification: '.ant-notification-notice-message',
   };
 
   const shouldValid = cases.shouldValid;
@@ -114,7 +115,7 @@ Cypress.Commands.add('configurePlugin', ({ name, cases }) => {
   if (shouldValid === true) {
     cy.get(domSelector.drawer).should('not.exist');
   } else if (shouldValid === false) {
-    cy.get(this.domSelector.notification).should('contain', 'Invalid plugin data');
+    cy.get(domSelector.notification).should('contain', 'Invalid plugin data');
 
     cy.get(domSelector.close).should('be.visible').click({
       force: true,
