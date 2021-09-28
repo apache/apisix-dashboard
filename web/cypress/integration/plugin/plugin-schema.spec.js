@@ -55,4 +55,35 @@ describe('Plugin Schema Test', () => {
       });
     });
   });
+
+  it('should edit the plugin', function () {
+    cy.visit('/plugin/list');
+
+    cy.get(this.domSelector.refresh).click();
+    cy.contains('Configure').click();
+    cy.get(this.domSelector.monacoScroll).should('exist');
+    cy.get(this.domSelector.disabledSwitcher).click();
+    cy.contains('button', 'Submit').click();
+  });
+
+  it('should delete plugin list', function () {
+    cy.visit('/plugin/list');
+    cy.get(this.domSelector.refresh).click();
+    cy.get(this.domSelector.paginationOptions).click();
+    cy.contains('50 / page').should('be.visible').click();
+    cy.get(this.domSelector.fiftyPerPage).should('exist');
+    cy.location('href').should('include', 'pageSize=50');
+
+    cy.get(this.domSelector.deleteButton, { timeout })
+      .should('exist')
+      .each(function ($el) {
+        cy.wrap($el).click().click({ timeout });
+        cy.contains('button', 'Confirm').click({ force: true });
+        cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
+        cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+      });
+
+    // check if plugin list is empty
+    cy.get(this.domSelector.empty).should('be.visible');
+  });
 });
