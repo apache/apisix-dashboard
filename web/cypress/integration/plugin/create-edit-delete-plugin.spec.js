@@ -26,17 +26,6 @@ context('Enable and Delete Plugin List', () => {
     cy.fixture('data.json').as('data');
   });
 
-  it('should visit plugin market', function () {
-    cy.visit('/');
-    cy.contains('Plugin').click();
-    cy.contains('Enable').click();
-
-    cy.fixture('plugin-dataset.json').as('cases');
-    cy.get('@cases').then((cases) => {
-      cy.configurePlugins(cases);
-    });
-  });
-
   it('should edit the plugin', function () {
     cy.visit('/plugin/list');
 

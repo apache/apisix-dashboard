@@ -16,15 +16,23 @@
  */
 /* eslint-disable */
 
-context('Enable and Delete Plugin List', () => {
+describe('Plugin Schema Test', () => {
   const timeout = 5000;
+  const cases = require('../../fixtures/plugin-dataset.json');
+  const pluginList = [];
+  const casesList = [];
 
-  beforeEach(function () {
+  // prepare plugin cases
+  let keys = Object.keys(cases);
+  let values = Object.values(cases);
+  pluginList.push(...keys);
+  casesList.push(...values);
+
+  beforeEach(() => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
     cy.fixture('data.json').as('data');
-    cy.fixture('plugin-dataset.json').as('cases');
   });
 
   it('should visit plugin market', function () {
@@ -33,41 +41,18 @@ context('Enable and Delete Plugin List', () => {
     cy.contains('Enable').click();
   });
 
-  for (let i = 0; i < 99; i++) {
-    it(`should ${i}`, function () {
-      cy.log(this.cases);
-      cy.wait(5000);
+  pluginList.forEach((plugin, pluginIndex) => {
+    const cases = casesList[pluginIndex];
+
+    if (cases.length <= 0) {
+      it(`${plugin} plugin no cases`);
+      return;
+    }
+
+    cases.forEach((c, caseIndex) => {
+      it(`${plugin} plugin #${caseIndex + 1} case`, function () {
+        cy.configurePlugin({ name: plugin, cases: c });
+      });
     });
-  }
-
-  /*it('should visit plugin market', function () {
-    cy.visit('/');
-    cy.contains('Plugin').click();
-    cy.contains('Enable').click();
-
-
-
-
-
-    cy.get('@cases').then((cases) => {
-      // cases structure
-      // { pluginName: [{task, task, task}] }
-      const pluginList = Object.keys(cases);
-      const casesList = Object.values(cases);
-
-      for (let i = 0; i < pluginList.length; i++) {
-        const pluginName = pluginList[i];
-        const pluginCases = casesList[i];
-
-        if (pluginCases <= 0) continue;
-
-        for (let j = 0; j < pluginCases; j++) {
-          it(`should test ${pluginName} plugin #${j} case`, function () {
-            cy.configurePlugin(plugins[i], pluginCases[i])
-          });
-        }
-
-      }
-    });
-  });*/
+  });
 });
