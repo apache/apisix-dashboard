@@ -853,12 +853,6 @@
   ],
   "proxy-mirror": [
     {
-      "shouldValid": false,
-      "data": {
-        "host": "127.0.0.1:1999"
-      }
-    },
-    {
       "shouldValid": true,
       "data": {
         "host": "http://127.0.0.1"
@@ -867,7 +861,27 @@
     {
       "shouldValid": false,
       "data": {
+        "host": "127.0.0.1:1999"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
         "host": "http://127.0.0.1:1999/invalid_uri"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "http://127.0.0.1",
+        "sample_ratio": 0.1
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "host": "http://127.0.0.1",
+        "sample_ratio": 2
       }
     }
   ],
@@ -1005,6 +1019,20 @@
       "data": {
         "bypass_missing": true,
         "whitelist": ["*.xx.com", "yy.com"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["*.xx.com", "yy.com"],
+        "message": ""
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["*.xx.com", "yy.com"],
+        "blacklist": ["*.xx.com", "yy.com"]
       }
     }
   ],
@@ -1381,6 +1409,13 @@
       "shouldValid": true,
       "data": {
         "block_rules": ["aa"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "block_rules": ["aa"],
+        "case_insensitive": true
       }
     }
   ],
