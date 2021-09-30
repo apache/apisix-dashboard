@@ -375,7 +375,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 }
               }}
               size="large"
-              data-cy="debug-protocol"
+              data-cy="debug-path"
               options={
                 props.data.uris
                   ? props.data.uris.map((path: string) => {
