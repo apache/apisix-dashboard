@@ -617,7 +617,7 @@ var _ = ginkgo.Describe("test service delete", func() {
 })
 
 var _ = ginkgo.Describe("test service with hosts", func() {
-	var createServiceBody map[string]interface{} = map[string]interface{}{
+	var createServiceBody = map[string]interface{}{
 		"name": "testservice",
 		"upstream": map[string]interface{}{
 			"type": "roundrobin",
@@ -656,9 +656,9 @@ var _ = ginkgo.Describe("test service with hosts", func() {
 		func(tc func() base.HttpTestCase) {
 			base.RunTestCase(tc())
 		},
-		table.Entry("create service without plugin", func() base.HttpTestCase {
+		table.Entry("create service with hosts params", func() base.HttpTestCase {
 			return base.HttpTestCase{
-				Desc:         "create service without plugin",
+				Desc:         "create service with hosts params",
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodPut,
 				Path:         "/apisix/admin/services/s1",
@@ -678,7 +678,7 @@ var _ = ginkgo.Describe("test service with hosts", func() {
 				ExpectStatus: http.StatusOK,
 			}
 		}),
-		table.Entry("hit route on apisix by test.com", func() base.HttpTestCase {
+		table.Entry("hit route by test.com", func() base.HttpTestCase {
 			return base.HttpTestCase{
 				Object: base.APISIXExpect(),
 				Method: http.MethodGet,
@@ -691,7 +691,7 @@ var _ = ginkgo.Describe("test service with hosts", func() {
 				Sleep:        base.SleepTime,
 			}
 		}),
-		table.Entry("hit route on apisix by test1.com", func() base.HttpTestCase {
+		table.Entry("hit route by test1.com", func() base.HttpTestCase {
 			return base.HttpTestCase{
 				Object: base.APISIXExpect(),
 				Method: http.MethodGet,
@@ -704,7 +704,7 @@ var _ = ginkgo.Describe("test service with hosts", func() {
 				Sleep:        base.SleepTime,
 			}
 		}),
-		table.Entry("hit route on apisix by test2.com", func() base.HttpTestCase {
+		table.Entry("hit route by test2.com", func() base.HttpTestCase {
 			return base.HttpTestCase{
 				Object: base.APISIXExpect(),
 				Method: http.MethodGet,
