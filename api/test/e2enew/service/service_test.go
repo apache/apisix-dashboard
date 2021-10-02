@@ -628,10 +628,10 @@ var _ = ginkgo.Describe("test service with hosts", func() {
 					"weight": 1,
 				},
 			},
-			"hosts": []string{
-				"test.com",
-				"test1.com",
-			},
+		},
+		"hosts": []string{
+			"test.com",
+			"test1.com",
 		},
 	}
 	_createServiceBody, err := json.Marshal(createServiceBody)
