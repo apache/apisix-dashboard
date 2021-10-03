@@ -31,10 +31,13 @@ context('Create and delete route with referer-restriction form', () => {
     notification: '.ant-notification-notice-message',
     notificationCloseIcon: '.ant-notification-close-icon',
     deleteAlert: '.ant-modal-body',
-    whitlist: '#whitelist_0',
+    whitelist: '#whitelist_0',
+    whitelist_1: '#whitelist_1',
+    blacklist: '#blacklist_0',
+    blacklist_1: '#blacklist_1',
     alert: '.ant-form-item-explain-error [role=alert]',
-    newAdd: '.ant-btn-dashed',
-    whitlist_1: '#whitelist_1',
+    newAddWhitelist: '[data-cy=addWhitelist]',
+    newAddBlacklist: '[data-cy=addBlacklist]',
     passSwitcher: '#bypass_missing',
   };
 
@@ -86,27 +89,26 @@ context('Create and delete route with referer-restriction form', () => {
       });
 
     // config referer-restriction form without whitelist
-    cy.get(selector.whitlist).click();
-    cy.get(selector.alert).contains('Please Enter whitelist');
+    cy.get(selector.whitelist).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
       });
     });
     cy.get(selector.notification).should('contain', 'Invalid plugin data');
-    cy.get(selector.notificationCloseIcon).click();
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
 
     // config referer-restriction form with whitelist
-    cy.get(selector.whitlist).type(data.wrongIp);
-    cy.get(selector.whitlist).closest('div').next().children('span').should('not.exist');
+    cy.get(selector.whitelist).type(data.wrongIp);
+    cy.get(selector.whitelist).closest('div').next().children('span').should('exist');
     cy.get(selector.alert).should('exist');
-    cy.get(selector.whitlist).clear().type(data.correctIp);
+    cy.get(selector.whitelist).clear().type(data.correctIp);
     cy.get(selector.alert).should('not.exist');
 
-    cy.get(selector.newAdd).click();
-    cy.get(selector.whitlist).closest('div').next().children('span').should('exist');
-    cy.get(selector.whitlist_1).closest('div').next().children('span').should('exist');
-    cy.get(selector.whitlist_1).type(data.correctIp);
+    cy.get(selector.newAddWhitelist).click();
+    cy.get(selector.whitelist).closest('div').next().children('span').should('exist');
+    cy.get(selector.whitelist_1).closest('div').next().children('span').should('exist');
+    cy.get(selector.whitelist_1).type(data.correctIp);
     cy.get(selector.alert).should('not.exist');
 
     cy.get(selector.disabledSwitcher).click();
@@ -117,6 +119,41 @@ context('Create and delete route with referer-restriction form', () => {
     });
     cy.get(selector.drawer).should('not.exist');
 
+    // reopen plugin drawer for blacklist test
+    cy.contains('referer-restriction')
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
+      });
+    cy.get(selector.drawer)
+      .should('be.visible')
+      .within(() => {
+        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.disabledSwitcher).should('have.class', data.activeClass);
+        cy.get(selector.passSwitcher).should('not.have.class', data.activeClass);
+      });
+    cy.get(selector.blacklist).type(data.correctIp);
+    cy.get(selector.newAddBlacklist).click();
+    cy.get(selector.blacklist_1).type(data.correctIp);
+    cy.get(selector.drawer).within(() => {
+      cy.contains('Submit').click({
+        force: true,
+      });
+    });
+    cy.get(selector.notification).should('contain', 'Invalid plugin data');
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
+    cy.get(selector.whitelist).closest('div').next().children('span').click();
+    cy.get(selector.whitelist).closest('div').next().children('span').click();
+    cy.get(selector.drawer).within(() => {
+      cy.contains('Submit').click({
+        force: true,
+      });
+    });
+    cy.get(selector.drawer).should('not.exist');
+
+    // create route
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
     cy.contains(data.submitSuccess);

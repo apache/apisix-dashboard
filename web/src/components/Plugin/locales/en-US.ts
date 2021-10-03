@@ -52,8 +52,13 @@ export default {
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':
     'List of hostname to whitelist. The hostname can be started with * as a wildcard.',
+  'component.pluginForm.referer-restriction.blacklist.tooltip':
+    'List of hostname to blacklist. The hostname can be started with * as a wildcard.',
+  'component.pluginForm.referer-restriction.listEmpty.tooltip': 'List empty',
   'component.pluginForm.referer-restriction.bypass_missing.tooltip':
     'Whether to bypass the check when the Referer header is missing or malformed.',
+  'component.pluginForm.referer-restriction.message.tooltip':
+    'Message returned in case access is not allowed.',
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip':
@@ -73,6 +78,8 @@ export default {
   'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip':
     'address needs to contain schema: http or https, not URI part',
+  'component.pluginForm.proxy-mirror.sample_ratio.tooltip':
+    'the sample ratio that requests will be mirrored.',
 
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip':
@@ -85,8 +92,12 @@ export default {
     'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests. Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
     'returned when the request exceeds conn + burst will be rejected.',
+  'component.pluginForm.limit-conn.rejected_msg.tooltip':
+    'the response body returned when the request exceeds conn + burst will be rejected.',
   'component.pluginForm.limit-conn.only_use_default_delay.tooltip':
     'enable the strict mode of the latency seconds. If you set this option to true, it will run strictly according to the latency seconds you set without additional calculation logic.',
+  'component.pluginForm.limit-conn.allow_degradation.tooltip':
+    'Whether to enable plugin degradation when the limit-conn function is temporarily unavailable. Allow requests to continue when the value is set to true, default false.',
 
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip':

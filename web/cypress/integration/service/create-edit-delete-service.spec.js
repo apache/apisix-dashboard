@@ -22,6 +22,9 @@ context('Create and Delete Service ', () => {
   const selector = {
     name: '#name',
     description: '#desc',
+    hosts_0: '#hosts_0',
+    hosts_1: '#hosts_1',
+    hosts_2: '#hosts_2',
     nodes_0_host: '#submitNodes_0_host',
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
@@ -64,6 +67,15 @@ context('Create and Delete Service ', () => {
 
     cy.get(selector.name).type(data.serviceName);
     cy.get(selector.description).type(data.description);
+
+    // add hosts
+    cy.get(selector.hosts_0).type('host0.com');
+    cy.get('[data-cy=addHost]').click();
+    cy.get(selector.hosts_1).type('host1.com');
+    cy.get('[data-cy=addHost]').click();
+    cy.get(selector.hosts_2).type('host2.com');
+
+    // add node
     cy.get(selector.nodes_0_host).click();
     cy.get(selector.nodes_0_host).type(data.ip1);
     cy.get(selector.nodes_0_port).clear().type(data.port0);

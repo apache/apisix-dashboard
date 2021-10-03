@@ -124,8 +124,9 @@ const PluginDetail: React.FC<Props> = ({
   }
 
   const getUIFormData = () => {
+    const formData = UIForm.getFieldsValue();
+
     if (name === 'cors') {
-      const formData = UIForm.getFieldsValue();
       const newMethods = formData.allow_methods.join(',');
       const compactAllowRegex = compact(formData.allow_origins_by_regex);
       // Note: default allow_origins_by_regex setted for UI is [''], but this is not allowed, omit it.
@@ -135,7 +136,23 @@ const PluginDetail: React.FC<Props> = ({
 
       return { ...formData, allow_methods: newMethods };
     }
-    return UIForm.getFieldsValue();
+
+    if (name === 'referer-restriction') {
+      if ('whitelist' in formData) {
+        formData.whitelist = formData.whitelist.filter((item: string) => !!item);
+        if (formData.whitelist <= 0) {
+          delete formData.whitelist;
+        }
+      }
+      if ('blacklist' in formData) {
+        formData.blacklist = formData.blacklist.filter((item: string) => !!item);
+        if (formData.blacklist <= 0) {
+          delete formData.blacklist;
+        }
+      }
+    }
+
+    return formData;
   };
 
   const setUIFormData = (formData: any) => {
