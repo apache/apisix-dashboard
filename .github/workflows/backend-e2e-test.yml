@@ -74,7 +74,10 @@ jobs:
         working-directory: ./api/test/docker
         run: |
           docker-compose up -d
-          sleep 5
+
+          # wait for services ready
+          ../shell/wait_for_services.sh
+
           docker logs docker_managerapi_1
           docker logs docker_apisix_1
 
@@ -106,7 +109,10 @@ jobs:
         working-directory: ./api/test/docker
         run: |
           docker-compose up -d --build
-          sleep 5
+
+          # wait for services ready
+          ../shell/wait_for_services.sh
+
           docker logs docker_managerapi_1
 
       - name: run test for plugin skywalking
