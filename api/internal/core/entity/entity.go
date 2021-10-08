@@ -58,14 +58,6 @@ func (info *BaseInfo) KeyCompat(key string) {
 	}
 }
 
-type BaseInfoSetter interface {
-	GetBaseInfo() *BaseInfo
-}
-
-type BaseInfoGetter interface {
-	GetBaseInfo() *BaseInfo
-}
-
 type Status uint8
 
 // swagger:model Route
