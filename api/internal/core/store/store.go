@@ -171,8 +171,8 @@ func NewListOutput() *ListOutput {
 }
 
 var defLessFunc = func(i, j interface{}) bool {
-	iBase := i.(entity.BaseInfoGetter).GetBaseInfo()
-	jBase := j.(entity.BaseInfoGetter).GetBaseInfo()
+	iBase := i.(entity.GetBaseInfo).GetBaseInfo()
+	jBase := j.(entity.GetBaseInfo).GetBaseInfo()
 	if iBase.CreateTime != jBase.CreateTime {
 		return iBase.CreateTime < jBase.CreateTime
 	}
@@ -259,7 +259,7 @@ func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 
 func (s *GenericStore) CreateCheck(obj interface{}) ([]byte, error) {
 
-	if setter, ok := obj.(entity.BaseInfoSetter); ok {
+	if setter, ok := obj.(entity.GetBaseInfo); ok {
 		info := setter.GetBaseInfo()
 		info.Creating()
 	}
@@ -288,7 +288,7 @@ func (s *GenericStore) CreateCheck(obj interface{}) ([]byte, error) {
 }
 
 func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}, error) {
-	if setter, ok := obj.(entity.BaseInfoSetter); ok {
+	if setter, ok := obj.(entity.GetBaseInfo); ok {
 		info := setter.GetBaseInfo()
 		info.Creating()
 	}
@@ -323,8 +323,8 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotE
 		return nil, fmt.Errorf("key: %s is not found", key)
 	}
 
-	if setter, ok := obj.(entity.BaseInfoGetter); ok {
-		storedGetter := storedObj.(entity.BaseInfoGetter)
+	if setter, ok := obj.(entity.GetBaseInfo); ok {
+		storedGetter := storedObj.(entity.GetBaseInfo)
 		storedInfo := storedGetter.GetBaseInfo()
 		info := setter.GetBaseInfo()
 		info.Updating(storedInfo)
@@ -365,7 +365,7 @@ func (s *GenericStore) StringToObjPtr(str, key string) (interface{}, error) {
 		return nil, fmt.Errorf("json unmarshal failed\n\tRelated Key:\t\t%s\n\tError Description:\t%s", key, err)
 	}
 
-	if setter, ok := ret.(entity.BaseInfoSetter); ok {
+	if setter, ok := ret.(entity.GetBaseInfo); ok {
 		info := setter.GetBaseInfo()
 		info.KeyCompat(key)
 	}
