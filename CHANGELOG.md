@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.9.0](#290)
 - [2.8.0](#280)
 - [2.7.1](#271)
 - [2.7.0](#270)
@@ -33,6 +34,33 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+# 2.9.0
+
+This release contains some features and bugfixes, and all the existing functionalities are compatible with Apache APISIX 2.10.0.
+
+### Core
+
+- feat(plugin): allowing basic-auth to dynamically adapt to the BE rules [#2086](https://github.com/apache/apisix-dashboard/pull/2149)
+- feat(plugin): allowing referer-restriction to dynamically adapt to the BE rules [#2001](https://github.com/apache/apisix-dashboard/pull/2001)
+- refactor: migrate to viper configure manage [#1946](https://github.com/apache/apisix-dashboard/pull/1946)
+- feat: basic support Apache APISIX 2.10 [#2149](https://github.com/apache/apisix-dashboard/pull/2149)
+- feat: support Manager API run on windows [#2125](https://github.com/apache/apisix-dashboard/pull/2125)
+
+### Bugfix
+
+- fix: supports search by name for service options when add router [#2066](https://github.com/apache/apisix-dashboard/pull/2066)
+- fix: gzip plugin schema typo [#2142](https://github.com/apache/apisix-dashboard/pull/2142)
+- fix: adjust buildx to fix Docker build failed [#2120](https://github.com/apache/apisix-dashboard/pull/2120)
+
+### Docs
+
+- docs: Update FAQ about Grafana can't login when APISIX dashboard configured domain name [#2126](https://github.com/apache/apisix-dashboard/pull/2126)
+
+### CI
+
+- ci: Only upload artifact at the release/** branch [#2137](https://github.com/apache/apisix-dashboard/pull/2137)
+- ci: optimize build rpm workflow with apisix-build-tools v2.2.0 [#2133](https://github.com/apache/apisix-dashboard/pull/2133)
 
 # 2.8.0
 

@@ -26,7 +26,7 @@ title: Deploy with RPM
 ## Install from RPM
 
 ```sh
-$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.8/apisix-dashboard-2.8.0-0.el7.x86_64.rpm
+$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.9.0/apisix-dashboard-2.9.0-0.el7.x86_64.rpm
 ```
 
 ## Run
