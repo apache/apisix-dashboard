@@ -60,6 +60,7 @@ func InitStore(key HubKey, opt GenericStoreOption) error {
 		}
 		opt.Validator = validator
 	}
+	opt.HubKey = key
 	s, err := NewGenericStore(opt)
 	if err != nil {
 		log.Errorf("NewGenericStore error: %s", err)
