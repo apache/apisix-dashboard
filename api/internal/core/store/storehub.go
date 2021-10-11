@@ -38,6 +38,7 @@ const (
 	HubKeyGlobalRule   HubKey = "global_rule"
 	HubKeyServerInfo   HubKey = "server_info"
 	HubKeyPluginConfig HubKey = "plugin_config"
+	HubKeyProto        HubKey = "proto"
 )
 
 var (
@@ -195,6 +196,18 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.PluginConfig{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.PluginConfig)
+			return utils.InterfaceToString(r.ID)
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyProto, GenericStoreOption{
+		BasePath: conf.ETCDConfig.Prefix + "/proto",
+		ObjType:  reflect.TypeOf(entity.Proto{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Proto)
 			return utils.InterfaceToString(r.ID)
 		},
 	})

@@ -283,3 +283,10 @@ type PluginConfig struct {
 	Plugins map[string]interface{} `json:"plugins"`
 	Labels  map[string]string      `json:"labels,omitempty"`
 }
+
+// swagger:model Proto
+type Proto struct {
+	BaseInfo
+	Desc    string `json:"desc,omitempty"`
+	Content string `json:"content"`
+}
