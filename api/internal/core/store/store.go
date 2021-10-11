@@ -42,6 +42,7 @@ type Pagination struct {
 }
 
 type Interface interface {
+	Type() HubKey
 	Get(ctx context.Context, key string) (interface{}, error)
 	List(ctx context.Context, input ListInput) (*ListOutput, error)
 	Create(ctx context.Context, obj interface{}) (interface{}, error)
@@ -64,6 +65,7 @@ type GenericStoreOption struct {
 	KeyFunc    func(obj interface{}) string
 	StockCheck func(obj interface{}, stockObj interface{}) error
 	Validator  Validator
+	HubKey     HubKey
 }
 
 func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
@@ -140,6 +142,10 @@ func (s *GenericStore) Init() error {
 	}()
 	s.cancel = cancel
 	return nil
+}
+
+func (s *GenericStore) Type() HubKey {
+	return s.opt.HubKey
 }
 
 func (s *GenericStore) Get(_ context.Context, key string) (interface{}, error) {
