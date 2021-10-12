@@ -90,9 +90,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	proto := r.(*entity.Proto)
-
-	return proto, nil
+	return r, nil
 }
 
 type ListInput struct {
@@ -109,10 +107,6 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 				return strings.Contains(obj.(*entity.Proto).Desc, input.Desc)
 			}
 			return true
-		},
-		Format: func(obj interface{}) interface{} {
-			upstream := obj.(*entity.Proto)
-			return upstream
 		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
@@ -224,31 +218,13 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDeleteInput)
 
 	ids := strings.Split(input.IDs, ",")
+	checklist := []store.Interface{h.routeStore, h.consumerStore, h.serviceStore, h.pluginConfigStore, h.globalRuleStore}
 
 	for _, id := range ids {
-		// check route plugin dependencies
-		if err := h.checkProtoUsed(c.Context(), h.routeStore, id); err != nil {
-			return handler.SpecCodeResponse(err), err
-		}
-
-		// check consumer plugin dependencies
-		if err := h.checkProtoUsed(c.Context(), h.consumerStore, id); err != nil {
-			return handler.SpecCodeResponse(err), err
-		}
-
-		// check service plugin dependencies
-		if err := h.checkProtoUsed(c.Context(), h.serviceStore, id); err != nil {
-			return handler.SpecCodeResponse(err), err
-		}
-
-		// check plugin template dependencies
-		if err := h.checkProtoUsed(c.Context(), h.pluginConfigStore, id); err != nil {
-			return handler.SpecCodeResponse(err), err
-		}
-
-		// check global plugin dependencies
-		if err := h.checkProtoUsed(c.Context(), h.globalRuleStore, id); err != nil {
-			return handler.SpecCodeResponse(err), err
+		for _, store := range checklist {
+			if err := h.checkProtoUsed(c.Context(), store, id); err != nil {
+				return handler.SpecCodeResponse(err), err
+			}
 		}
 	}
 
@@ -267,7 +243,7 @@ func (h *Handler) checkProtoUsed(ctx context.Context, storeInterface store.Inter
 				if _, ok := record.GetPlugins()[plugin]; ok {
 					configs := record.GetPlugins()[plugin].(map[string]interface{})
 					protoId := utils.InterfaceToString(configs["proto_id"])
-					if !configs["disable"].(bool) && protoId == key {
+					if protoId == key {
 						return true
 					}
 				}
