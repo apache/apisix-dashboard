@@ -182,7 +182,7 @@ var _ = ginkgo.Describe("Proto with grpc-transcode plugin", func() {
 		createRouteBody["upstream"] = map[string]interface{}{
 			"nodes": []map[string]interface{}{
 				{
-					"host":   "127.0.0.1",
+					"host":   base.UpstreamGrpcIp,
 					"port":   50051,
 					"weight": 1,
 				},
@@ -214,7 +214,8 @@ var _ = ginkgo.Describe("Proto with grpc-transcode plugin", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
-			Path:         "/grpc_test?name=world",
+			Path:         "/grpc_test",
+			Query:        "name=world",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectBody:   "{\"message\":\"Hello world\"}",
 			ExpectStatus: http.StatusOK,

@@ -37,6 +37,7 @@ var (
 	token string
 
 	UpstreamIp             = "172.16.238.20"
+	UpstreamGrpcIp         = "172.16.238.21"
 	APISIXHost             = "http://127.0.0.1:9080"
 	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
