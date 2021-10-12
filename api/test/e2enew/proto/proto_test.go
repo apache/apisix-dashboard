@@ -120,7 +120,7 @@ var _ = ginkgo.Describe("Proto", func() {
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/proto",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectBody:   "test_proto1",
+			ExpectBody:   "test_proto1_modify",
 			ExpectStatus: http.StatusOK,
 		})
 	})
@@ -177,32 +177,26 @@ var _ = ginkgo.Describe("Proto with grpc-transcode plugin", func() {
 		createRouteBody := make(map[string]interface{})
 		createRouteBody["id"] = 1
 		createRouteBody["name"] = "test_route"
-		createRouteBody["uri"] = "/*"
+		createRouteBody["uri"] = "/grpc_test"
 		createRouteBody["methods"] = []string{"GET", "POST"}
 		createRouteBody["upstream"] = map[string]interface{}{
 			"nodes": []map[string]interface{}{
 				{
-					"host":   "1.1.1.1",
-					"port":   1,
+					"host":   "127.0.0.1",
+					"port":   50051,
 					"weight": 1,
 				},
 			},
-			"timeout": map[string]interface{}{
-				"connect": 6, "send": 6, "read": 6,
-			},
-			"type":      "roundrobin",
-			"scheme":    "http",
-			"pass_host": "pass",
+			"type":   "roundrobin",
+			"scheme": "grpc",
 		}
 		createRouteBody["plugins"] = map[string]interface{}{
 			"grpc-transcode": map[string]interface{}{
-				"disable":  false,
 				"method":   "SayHello",
 				"proto_id": "1",
 				"service":  "helloworld.Greeter",
 			},
 		}
-		createRouteBody["status"] = 1
 
 		_createRouteBody, err := json.Marshal(createRouteBody)
 		gomega.Expect(err).To(gomega.BeNil())
@@ -213,6 +207,38 @@ var _ = ginkgo.Describe("Proto with grpc-transcode plugin", func() {
 			Path:         "/apisix/admin/routes",
 			Body:         string(_createRouteBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("hit GET route for grpc-transcode test", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/grpc_test?name=world",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   "{\"message\":\"Hello world\"}",
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("hit POST route for grpc-transcode test", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPost,
+			Path:         "/grpc_test",
+			Body:         "name=world",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   "{\"message\":\"Hello world\"}",
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("hit JSON POST route for grpc-transcode test", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPost,
+			Path:         "/grpc_test",
+			Body:         "{\"name\": \"world\"}",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   "{\"message\":\"Hello world\"}",
 			ExpectStatus: http.StatusOK,
 		})
 	})
