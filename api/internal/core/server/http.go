@@ -50,8 +50,8 @@ func (s *server) setupAPI() {
 	s.server = &http.Server{
 		Addr:         addr,
 		Handler:      r,
-		ReadTimeout:  time.Duration(1000) * time.Millisecond,
-		WriteTimeout: time.Duration(5000) * time.Millisecond,
+		ReadTimeout:  time.Duration(5000) * time.Millisecond,
+		WriteTimeout: time.Duration(60000) * time.Millisecond,
 	}
 
 	// HTTPS
@@ -60,8 +60,8 @@ func (s *server) setupAPI() {
 		s.serverSSL = &http.Server{
 			Addr:         addrSSL,
 			Handler:      r,
-			ReadTimeout:  time.Duration(1000) * time.Millisecond,
-			WriteTimeout: time.Duration(5000) * time.Millisecond,
+			ReadTimeout:  time.Duration(5000) * time.Millisecond,
+			WriteTimeout: time.Duration(60000) * time.Millisecond,
 			TLSConfig: &tls.Config{
 				// Causes servers to use Go's default ciphersuite preferences,
 				// which are tuned to avoid attacks. Does nothing on clients.
