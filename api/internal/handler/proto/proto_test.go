@@ -25,16 +25,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 )
 
-type testCase struct {
-	caseDesc   string
-	giveInput  interface{}
-	giveRet    interface{}
-	giveErr    error
-	wantErr    error
-	wantGetKey string
-	wantRet    interface{}
-}
-
 func TestStructUnmarshal(t *testing.T) {
 	// define and parse data
 	jsonStr := `{
