@@ -15,7 +15,7 @@ jobs:
           days-before-issue-stale: 30
           days-before-issue-close: 14
           stale-issue-message: >
-            This issue has been marked as stale due to 350 days of inactivity.
+            This issue has been marked as stale due to 30 days of inactivity.
             It will be closed in 2 weeks if no further activity occurs. If this
             issue is still relevant, please simply write any comment. Even if
             closed, you can still revive the issue at any time or discuss it
