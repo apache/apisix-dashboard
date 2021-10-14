@@ -140,15 +140,6 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			ExpectHeaders: map[string]string{"X-VERSION": "1.0"},
 			Sleep:         base.SleepTime,
 		}),
-		table.Entry("verify route that should be blocked", base.HttpTestCase{
-			Object:        base.APISIXExpect(),
-			Method:        http.MethodGet,
-			Path:          "/hello",
-			Query:         "name=;select%20from%20sys",
-			ExpectStatus:  http.StatusForbidden,
-			ExpectHeaders: map[string]string{"X-VERSION": "1.0"},
-			Sleep:         base.SleepTime,
-		}),
 		table.Entry("update plugin config by patch", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/plugin_configs/1",
@@ -176,15 +167,6 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			ExpectBody:    "hello world",
 			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
 			Sleep:         base.SleepTime,
-		}),
-		table.Entry("verify patch update(should not block)", base.HttpTestCase{
-			Object:        base.APISIXExpect(),
-			Method:        http.MethodGet,
-			Path:          "/hello",
-			Query:         "name=;select%20from%20sys",
-			ExpectStatus:  http.StatusOK,
-			ExpectBody:    "hello world",
-			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
 		}),
 		table.Entry("update plugin config by sub path patch", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),

@@ -138,7 +138,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v2.1.4
         with:
-          go-version: "1.13"
+          go-version: "1.17"
 
       - uses: docker/setup-buildx-action@v1
 
@@ -179,7 +179,7 @@ jobs:
           docker logs docker_managerapi_1
 
       - name: install ginkgo cli
-        run: go get github.com/onsi/ginkgo/ginkgo
+        run: go install github.com/onsi/ginkgo/ginkgo@v1.16.5
 
       - name: run test
         working-directory: ./api/test/e2enew
