@@ -25,7 +25,6 @@ const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
   antd: {},
-  mfsu: {},
   dva: {
     hmr: true,
   },
