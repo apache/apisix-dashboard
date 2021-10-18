@@ -46,6 +46,7 @@ apisix:
     ip: "0.0.0.0"
     port: 9090
   stream_proxy:
+    only: false
     tcp:
       - addr: 10090
       - addr: 10091
