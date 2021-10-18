@@ -49,10 +49,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Headers: map[string]string{"Authorization": base.GetToken()},
 			Body: `{
     "id": "sr1",
-    "remote_addr": "127.0.0.1",
-    "server_addr": "127.0.0.1",
     "server_port": 10091,
-    "sni": "test.com",
     "upstream": {
         "nodes": {
             "` + base.UpstreamIp + `:1980": 1
