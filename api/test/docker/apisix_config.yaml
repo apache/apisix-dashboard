@@ -45,6 +45,12 @@ apisix:
   control:
     ip: "0.0.0.0"
     port: 9090
+  router:
+    stream_proxy:
+      tcp:
+        - addr: "127.0.0.1:10090"
+        - addr: "127.0.0.1:10091"
+        - addr: "127.0.0.1:10092"
 
 nginx_config:
   error_log_level: "debug"

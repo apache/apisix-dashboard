@@ -24,6 +24,7 @@ import (
 	"net"
 	"net/http"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -78,6 +79,19 @@ func ManagerApiExpect() *httpexpect.Expect {
 func APISIXExpect() *httpexpect.Expect {
 	t := getTestingHandle()
 	return httpexpect.New(t, APISIXHost)
+}
+
+func APISIXStreamProxyExpect(port uint16, isHTTPS bool) *httpexpect.Expect {
+	if port == 0 {
+		port = 10090
+	}
+	t := getTestingHandle()
+
+	if isHTTPS {
+		return httpexpect.New(t, "https://" + net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
+	} else {
+		return httpexpect.New(t, "http://" + net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
+	}
 }
 
 func PrometheusExporterExpect() *httpexpect.Expect {
