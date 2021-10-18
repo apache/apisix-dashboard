@@ -32,7 +32,7 @@ func TestStreamRoute(t *testing.T) {
 }
 
 var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("stream_route")
+	base.CleanResource("stream_routes")
 	base.CleanResource("upstream")
 	time.Sleep(base.SleepTime)
 })
