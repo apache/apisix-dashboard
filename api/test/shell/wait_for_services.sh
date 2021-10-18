@@ -1,8 +1,5 @@
----
-title: Deploy with RPM
----
+#!/usr/bin/env bash
 
-<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -19,27 +16,15 @@ title: Deploy with RPM
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
--->
 
-**NOTE:** Only support CentOS 7 currently, for more information, please refer to [here](./deploy.md).
-
-## Install from RPM
-
-```sh
-$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.9.0/apisix-dashboard-2.9.0-0.el7.x86_64.rpm
-```
-
-## Run
-
-Before you start, make sure the following dependencies are installed and running in your environment.
-
-- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
-
-```sh
-$ sudo nohup manager-api -p /usr/local/apisix/dashboard/ &
-
-# or manager-api as a service
-$ sudo manager-api start -p /usr/local/apisix/dashboard/
-```
-
-Without changing the configuration, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
+i=1
+timeout=60
+while ! curl -s 127.0.0.1:12800 >/dev/null; do
+  if [[ "$i" -gt "$timeout" ]]; then
+    echo "timeout occurred after waiting $timeout seconds"
+    exit 1
+  fi
+  sleep 1
+  echo "waited skywalking for $i seconds.."
+  ((i++));
+done

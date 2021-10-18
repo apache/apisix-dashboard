@@ -22,6 +22,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
 };
 
 const FORM_ITEM_LAYOUT = {
@@ -46,11 +47,21 @@ const removeBtnStyle = {
   alignItems: 'center',
 };
 
-const RefererRestriction: React.FC<Props> = ({ form }) => {
+const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
+  const properties = schema?.properties;
+  const allowWhitelistMinLength = properties.whitelist.minItems;
+  const allowBlacklistMinLength = properties.blacklist.minItems;
+  const whiteInit = Array(allowWhitelistMinLength).join('.').split('.');
+  const blackInit = Array(allowBlacklistMinLength).join('.').split('.');
+
   return (
-    <Form form={form} {...FORM_ITEM_LAYOUT} initialValues={{ whitelist: [''] }}>
-      <Form.List name="whitelist">
+    <Form
+      form={form}
+      {...FORM_ITEM_LAYOUT}
+      initialValues={{ whitelist: whiteInit, blacklist: blackInit }}
+    >
+      <Form.List name="whitelist" initialValue={[]}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -62,9 +73,15 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                 tooltip={formatMessage({
                   id: 'component.pluginForm.referer-restriction.whitelist.tooltip',
                 })}
-                required
                 style={{ marginBottom: 0 }}
               >
+                {fields.length === 0 && (
+                  <span style={{ ...removeBtnStyle, marginLeft: 0 }}>
+                    {formatMessage({
+                      id: 'component.pluginForm.referer-restriction.listEmpty.tooltip',
+                    })}
+                  </span>
+                )}
                 {fields.map((field, index) => (
                   <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
                     <Col span={10}>
@@ -72,19 +89,12 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                         {...field}
                         validateTrigger={['onChange', 'onBlur', 'onClick']}
                         noStyle
-                        required
                         rules={[
                           {
                             message: formatMessage({
                               id: 'page.route.form.itemRulesPatternMessage.domain',
                             }),
-                            pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g'),
-                          },
-                          {
-                            required: true,
-                            message: `${formatMessage({
-                              id: 'component.global.pleaseEnter',
-                            })} whitelist`,
+                            pattern: new RegExp(`${properties.whitelist.items.pattern}`, 'g'),
                           },
                         ]}
                       >
@@ -92,14 +102,14 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                       </Form.Item>
                     </Col>
                     <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
-                      {fields.length > 1 ? (
+                      {fields.length > 0 && (
                         <MinusCircleOutlined
                           className="dynamic-delete-button"
                           onClick={() => {
                             remove(field.name);
                           }}
                         />
-                      ) : null}
+                      )}
                     </Col>
                   </Row>
                 ))}
@@ -107,6 +117,75 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addWhitelist"
+                  onClick={() => {
+                    add();
+                  }}
+                >
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
+                </Button>
+              </Form.Item>
+            </div>
+          );
+        }}
+      </Form.List>
+      <Form.List name="blacklist" initialValue={[]}>
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              <Form.Item
+                extra={formatMessage({
+                  id: 'component.pluginForm.referer-restriction.blacklist.tooltip',
+                })}
+                label="blacklist"
+                tooltip={formatMessage({
+                  id: 'component.pluginForm.referer-restriction.blacklist.tooltip',
+                })}
+                style={{ marginBottom: 0 }}
+              >
+                {fields.length === 0 && (
+                  <span style={{ ...removeBtnStyle, marginLeft: 0 }}>
+                    {formatMessage({
+                      id: 'component.pluginForm.referer-restriction.listEmpty.tooltip',
+                    })}
+                  </span>
+                )}
+                {fields.map((field, index) => (
+                  <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
+                    <Col span={10}>
+                      <Form.Item
+                        {...field}
+                        validateTrigger={['onChange', 'onBlur', 'onClick']}
+                        noStyle
+                        rules={[
+                          {
+                            message: formatMessage({
+                              id: 'page.route.form.itemRulesPatternMessage.domain',
+                            }),
+                            pattern: new RegExp(`${properties.blacklist.items.pattern}`, 'g'),
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
+                      {fields.length > 0 && (
+                        <MinusCircleOutlined
+                          className="dynamic-delete-button"
+                          onClick={() => {
+                            remove(field.name);
+                          }}
+                        />
+                      )}
+                    </Col>
+                  </Row>
+                ))}
+              </Form.Item>
+              <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                <Button
+                  type="dashed"
+                  data-cy="addBlacklist"
                   onClick={() => {
                     add();
                   }}
@@ -129,7 +208,14 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
         })}
         valuePropName="checked"
       >
-        <Switch />
+        <Switch defaultChecked={properties.bypass_missing.default} />
+      </Form.Item>
+      <Form.Item
+        label="message"
+        name="message"
+        tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.message.tooltip' })}
+      >
+        <Input min={1} max={1024} placeholder={properties.message.default} />
       </Form.Item>
     </Form>
   );

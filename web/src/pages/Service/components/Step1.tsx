@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Form, Input } from 'antd';
+import { Button, Col, Form, Input, Row } from 'antd';
 import { useIntl } from 'umi';
 
 import UpstreamForm from '@/components/Upstream';
 import { fetchUpstreamList } from '@/components/Upstream/service';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 
 const FORM_LAYOUT = {
   labelCol: {
@@ -67,6 +69,70 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
             placeholder={formatMessage({ id: 'component.global.description.required' })}
           />
         </Form.Item>
+        <Form.List name="hosts" initialValue={[undefined]}>
+          {(fields, { add, remove }) => {
+            return (
+              <div>
+                <Form.Item
+                  label={formatMessage({ id: 'page.service.fields.hosts' })}
+                  tooltip={formatMessage({ id: 'page.route.form.itemExtraMessage.domain' })}
+                  style={{ marginBottom: 0 }}
+                  wrapperCol={{ span: 24 }}
+                >
+                  {fields.map((field, index) => (
+                    <Row style={{ marginBottom: 10 }} key={index}>
+                      <Col span={9}>
+                        <Form.Item
+                          {...field}
+                          validateTrigger={['onChange', 'onBlur']}
+                          rules={[
+                            {
+                              // NOTE: https://github.com/apache/apisix/blob/master/apisix/schema_def.lua#L40
+                              pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g'),
+                              message: formatMessage({
+                                id: 'page.route.form.itemRulesPatternMessage.domain',
+                              }),
+                            },
+                          ]}
+                          noStyle
+                        >
+                          <Input
+                            placeholder={formatMessage({
+                              id: 'page.service.fields.hosts.placeholder',
+                            })}
+                            disabled={disabled}
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col style={{ marginLeft: 10, display: 'flex', alignItems: 'center' }}>
+                        {!disabled && fields.length > 1 ? (
+                          <MinusCircleOutlined
+                            className="dynamic-delete-button"
+                            onClick={() => {
+                              remove(field.name);
+                            }}
+                          />
+                        ) : null}
+                      </Col>
+                    </Row>
+                  ))}
+                </Form.Item>
+                {!disabled && (
+                  <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                    <Button
+                      data-cy="addHost"
+                      onClick={() => {
+                        add();
+                      }}
+                    >
+                      <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
+                    </Button>
+                  </Form.Item>
+                )}
+              </div>
+            );
+          }}
+        </Form.List>
       </Form>
       <UpstreamForm
         ref={upstreamRef}

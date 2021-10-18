@@ -14,32 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace ServiceModule {
-  type Entity = {
-    name: string;
-    desc: string;
-    hosts?: string[];
-    upstream: any;
-    upstream_id: string;
-    labels: string;
-    enable_websocket: boolean;
-    plugins: Record<string, any>;
-  };
+package entity
 
-  type ResponseBody = {
-    id: string;
-    plugins: Record<string, any>;
-    upstream_id: string;
-    upstream: Record<string, any>;
-    name: string;
-    desc: string;
-    enable_websocket: boolean;
-  };
+type GetBaseInfo interface {
+	GetBaseInfo() *BaseInfo
+}
 
-  type Step1PassProps = {
-    form: FormInstance;
-    upstreamForm: FormInstance;
-    disabled?: boolean;
-    upstreamRef: any;
-  };
+type GetPlugins interface {
+	GetPlugins() map[string]interface{}
+}
+
+func (r *Route) GetPlugins() map[string]interface{} {
+	return r.Plugins
+}
+
+func (s *Service) GetPlugins() map[string]interface{} {
+	return s.Plugins
+}
+
+func (c *Consumer) GetPlugins() map[string]interface{} {
+	return c.Plugins
+}
+
+func (g *GlobalPlugins) GetPlugins() map[string]interface{} {
+	return g.Plugins
+}
+
+func (p *PluginConfig) GetPlugins() map[string]interface{} {
+	return p.Plugins
 }

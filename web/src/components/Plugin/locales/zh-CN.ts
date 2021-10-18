@@ -50,9 +50,13 @@ export default {
 
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':
-    "域名列表。域名开头可以用'*'作为通配符。",
+    "白名单域名列表。域名开头可以用'*'作为通配符。",
+  'component.pluginForm.referer-restriction.blacklist.tooltip':
+    "黑名单域名列表。域名开头可以用'*'作为通配符。",
+  'component.pluginForm.referer-restriction.listEmpty.tooltip': '列表为空',
   'component.pluginForm.referer-restriction.bypass_missing.tooltip':
     '当 Referer 不存在或格式有误时，是否绕过检查。',
+  'component.pluginForm.referer-restriction.message.tooltip': '在未允许访问的情况下返回的信息。',
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip': '不健康返回错误码。',
@@ -69,6 +73,7 @@ export default {
   'component.pluginForm.proxy-mirror.host.extra': '例如：http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip':
     '地址中需要包含 schema ：http或https，不能包含 URI 部分',
+  'component.pluginForm.proxy-mirror.sample_ratio.tooltip': '镜像请求采样率',
 
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip':
@@ -80,8 +85,12 @@ export default {
     '用户指定的限制并发级别的关键字，可以是客户端 IP 或服务端 IP。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名的并发性。 否则，我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端用太多的并行连接或请求淹没我们的服务。当前接受的 key 有："remote_addr"（客户端 IP 地址）, "server_addr"（服务端 IP 地址）, 请求头中的"X-Forwarded-For" 或 "X-Real-IP", "consumer_name"（consumer 的 username）。',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
     '当请求超过 conn + burst 这个阈值时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-conn.rejected_msg.tooltip':
+    '当请求超过 conn + burst 这个阈值时，返回的响应体。',
   'component.pluginForm.limit-conn.only_use_default_delay.tooltip':
     '延迟时间的严格模式。 如果设置为true的话，将会严格按照设置的时间来进行延迟',
+  'component.pluginForm.limit-conn.allow_degradation.tooltip':
+    '当插件功能临时不可用时是否允许请求继续。当值设置为 true 时则自动允许请求继续，默认值是 false。',
 
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip':

@@ -14,32 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace ServiceModule {
-  type Entity = {
-    name: string;
-    desc: string;
-    hosts?: string[];
-    upstream: any;
-    upstream_id: string;
-    labels: string;
-    enable_websocket: boolean;
-    plugins: Record<string, any>;
-  };
+export const transformData = (data: ServiceModule.Entity): ServiceModule.Entity => {
+  const newData = data;
 
-  type ResponseBody = {
-    id: string;
-    plugins: Record<string, any>;
-    upstream_id: string;
-    upstream: Record<string, any>;
-    name: string;
-    desc: string;
-    enable_websocket: boolean;
-  };
+  if (newData.hosts) {
+    newData.hosts = newData.hosts.filter((item) => {
+      return !!item;
+    });
 
-  type Step1PassProps = {
-    form: FormInstance;
-    upstreamForm: FormInstance;
-    disabled?: boolean;
-    upstreamRef: any;
-  };
-}
+    if (newData.hosts.length <= 0) {
+      delete newData.hosts;
+    }
+  }
+
+  return newData;
+};

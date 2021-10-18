@@ -58,14 +58,6 @@ func (info *BaseInfo) KeyCompat(key string) {
 	}
 }
 
-type BaseInfoSetter interface {
-	GetBaseInfo() *BaseInfo
-}
-
-type BaseInfoGetter interface {
-	GetBaseInfo() *BaseInfo
-}
-
 type Status uint8
 
 // swagger:model Route
@@ -254,6 +246,7 @@ type Service struct {
 	Script          string                 `json:"script,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
 	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
+	Hosts           []string               `json:"hosts,omitempty"`
 }
 
 type Script struct {
@@ -291,6 +284,14 @@ type PluginConfig struct {
 	Labels  map[string]string      `json:"labels,omitempty"`
 }
 
+// swagger:model Proto
+type Proto struct {
+	BaseInfo
+	Desc    string `json:"desc,omitempty"`
+	Content string `json:"content"`
+}
+
+// swagger:model StreamRoute
 type StreamRoute struct {
 	BaseInfo
 	RemoteAddr string                 `json:"remote_addr,omitempty"`

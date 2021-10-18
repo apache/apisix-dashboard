@@ -463,7 +463,6 @@
         "conn": 1,
         "burst": 0,
         "default_conn_delay": 0.1,
-        "rejected_code": 503,
         "key": "remote_addr"
       }
     },
@@ -472,16 +471,15 @@
       "data": {
         "conn": 1,
         "default_conn_delay": 0.1,
-        "rejected_code": 503,
         "key": "remote_addr"
       }
     },
     {
       "shouldValid": false,
       "data": {
-        "burst": 0,
+        "conn": 1,
+        "burst": -1,
         "default_conn_delay": 0.1,
-        "rejected_code": 503,
         "key": "remote_addr"
       }
     },
@@ -489,24 +487,31 @@
       "shouldValid": false,
       "data": {
         "conn": -1,
-        "burst": 0,
+        "burst": 1,
         "default_conn_delay": 0.1,
-        "rejected_code": 503,
         "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "conn": 100,
+        "burst": 50,
+        "default_conn_delay": -1,
+        "key": "server_addr"
       }
     },
     {
       "shouldValid": true,
       "data": {
-        "conn": 100,
-        "burst": 50,
+        "conn": 5,
+        "burst": 1,
         "default_conn_delay": 0.1,
-        "rejected_code": 503,
-        "key": "server_addr"
+        "key": "consumer_name"
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "conn": 5,
         "burst": 1,
@@ -516,7 +521,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "conn": 5,
         "burst": 1,
@@ -528,10 +533,60 @@
     {
       "shouldValid": true,
       "data": {
-        "conn": 2,
+        "conn": 5,
         "burst": 1,
         "default_conn_delay": 0.1,
         "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "key": "server_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "key": "server_addr",
+        "rejected_code": 503,
+        "rejected_msg": "test"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "key": "server_addr",
+        "rejected_code": 600
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "key": "server_addr",
+        "rejected_msg": ""
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "key": "server_addr",
+        "allow_degradation": 1
       }
     }
   ],
@@ -798,12 +853,6 @@
   ],
   "proxy-mirror": [
     {
-      "shouldValid": false,
-      "data": {
-        "host": "127.0.0.1:1999"
-      }
-    },
-    {
       "shouldValid": true,
       "data": {
         "host": "http://127.0.0.1"
@@ -812,7 +861,27 @@
     {
       "shouldValid": false,
       "data": {
+        "host": "127.0.0.1:1999"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
         "host": "http://127.0.0.1:1999/invalid_uri"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "http://127.0.0.1",
+        "sample_ratio": 0.1
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "host": "http://127.0.0.1",
+        "sample_ratio": 2
       }
     }
   ],
@@ -950,6 +1019,20 @@
       "data": {
         "bypass_missing": true,
         "whitelist": ["*.xx.com", "yy.com"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["*.xx.com", "yy.com"],
+        "message": ""
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["*.xx.com", "yy.com"],
+        "blacklist": ["*.xx.com", "yy.com"]
       }
     }
   ],
@@ -1326,6 +1409,13 @@
       "shouldValid": true,
       "data": {
         "block_rules": ["aa"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "block_rules": ["aa"],
+        "case_insensitive": true
       }
     }
   ],

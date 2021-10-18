@@ -16,8 +16,17 @@
  */
 /* eslint-disable */
 
-context('Enable and Delete Plugin List', () => {
+describe('Plugin Schema Test', () => {
   const timeout = 5000;
+  const cases = require('../../fixtures/plugin-dataset.json');
+  const pluginList = [];
+  const casesList = [];
+
+  // prepare plugin cases
+  let keys = Object.keys(cases);
+  let values = Object.values(cases);
+  pluginList.push(...keys);
+  casesList.push(...values);
 
   beforeEach(() => {
     cy.login();
@@ -30,10 +39,20 @@ context('Enable and Delete Plugin List', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
     cy.contains('Enable').click();
+  });
 
-    cy.fixture('plugin-dataset.json').as('cases');
-    cy.get('@cases').then((cases) => {
-      cy.configurePlugins(cases);
+  pluginList.forEach((plugin, pluginIndex) => {
+    const cases = casesList[pluginIndex];
+
+    if (cases.length <= 0) {
+      it(`${plugin} plugin no cases`);
+      return;
+    }
+
+    cases.forEach((c, caseIndex) => {
+      it(`${plugin} plugin #${caseIndex + 1} case`, function () {
+        cy.configurePlugin({ name: plugin, cases: c });
+      });
     });
   });
 

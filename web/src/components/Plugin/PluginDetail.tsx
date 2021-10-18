@@ -107,7 +107,8 @@ const PluginDetail: React.FC<Props> = ({
   const [UIForm] = Form.useForm();
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.originType;
-  const pluginSchema = pluginList.find((item) => item.name === name)?.schema;
+  const schemaName = name === 'basic-auth' ? 'consumer_schema' : 'schema';
+  const pluginSchema = pluginList.find((item) => item.name === name)?.[schemaName];
   const [content, setContent] = useState<string>(JSON.stringify(data, null, 2));
   const [monacoMode, setMonacoMode] = useState<PluginComponent.MonacoLanguage>(monacoModeList.JSON);
   const modeOptions: { label: string; value: string }[] = [
@@ -123,8 +124,9 @@ const PluginDetail: React.FC<Props> = ({
   }
 
   const getUIFormData = () => {
+    const formData = UIForm.getFieldsValue();
+
     if (name === 'cors') {
-      const formData = UIForm.getFieldsValue();
       const newMethods = formData.allow_methods.join(',');
       const compactAllowRegex = compact(formData.allow_origins_by_regex);
       // Note: default allow_origins_by_regex setted for UI is [''], but this is not allowed, omit it.
@@ -134,7 +136,23 @@ const PluginDetail: React.FC<Props> = ({
 
       return { ...formData, allow_methods: newMethods };
     }
-    return UIForm.getFieldsValue();
+
+    if (name === 'referer-restriction') {
+      if ('whitelist' in formData) {
+        formData.whitelist = formData.whitelist.filter((item: string) => !!item);
+        if (formData.whitelist <= 0) {
+          delete formData.whitelist;
+        }
+      }
+      if ('blacklist' in formData) {
+        formData.blacklist = formData.blacklist.filter((item: string) => !!item);
+        if (formData.blacklist <= 0) {
+          delete formData.blacklist;
+        }
+      }
+    }
+
+    return formData;
   };
 
   const setUIFormData = (formData: any) => {

@@ -112,7 +112,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		}
 
 		_, err := http.Get("https://www.test2.com:9443")
-		gomega.Expect(fmt.Sprintf("%s", err)).Should(gomega.Equal("Get https://www.test2.com:9443: remote error: tls: internal error"))
+		gomega.Expect(fmt.Sprintf("%s", err)).Should(gomega.Equal("Get \"https://www.test2.com:9443\": remote error: tls: internal error"))
 	})
 
 	table.DescribeTable("test ssl basic", func(testCase base.HttpTestCase) {
@@ -240,7 +240,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		// try again after disable SSL, make a HTTPS request
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		_, err := http.Get("https://www.test2.com:9443")
-		gomega.Expect(fmt.Sprintf("%s", err)).Should(gomega.Equal("Get https://www.test2.com:9443: remote error: tls: internal error"))
+		gomega.Expect(fmt.Sprintf("%s", err)).Should(gomega.Equal("Get \"https://www.test2.com:9443\": remote error: tls: internal error"))
 	})
 
 	table.DescribeTable("test ssl basic", func(testCase base.HttpTestCase) {

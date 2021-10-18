@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, InputNumber, Select, Switch } from 'antd';
+import { Form, Input, InputNumber, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
@@ -27,7 +27,7 @@ type Props = {
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 6,
+    span: 8,
   },
   wrapperCol: {
     span: 8,
@@ -36,10 +36,14 @@ const FORM_ITEM_LAYOUT = {
 
 const LimitConn: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
-  const propertires = schema?.properties;
+  const properties = schema?.properties;
   const onlyUseDefaultDelay = form.getFieldValue('only_use_default_delay')
     ? form.getFieldValue('only_use_default_delay')
     : false;
+  const allowDegradation = form.getFieldValue('allow_degradation')
+    ? form.getFieldValue('allow_degradation')
+    : false;
+
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
@@ -48,7 +52,7 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
         name="conn"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.conn.tooltip' })}
       >
-        <InputNumber min={propertires.conn.exclusiveMinimum} required />
+        <InputNumber min={properties.conn.exclusiveMinimum} required />
       </Form.Item>
       <Form.Item
         label="burst"
@@ -56,7 +60,7 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
         name="burst"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.burst.tooltip' })}
       >
-        <InputNumber min={propertires.burst.minimum} required />
+        <InputNumber min={properties.burst.minimum} required />
       </Form.Item>
       <Form.Item
         label="default_conn_delay"
@@ -66,20 +70,18 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
           id: 'component.pluginForm.limit-conn.default_conn_delay.tooltip',
         })}
       >
-        <InputNumber step={0.001} min={propertires.default_conn_delay.exclusiveMinimum} required />
+        <InputNumber step={0.001} min={properties.default_conn_delay.exclusiveMinimum} required />
       </Form.Item>
-
       <Form.Item
         label="only_use_default_delay"
         name="only_use_default_delay"
-        initialValue={propertires.only_use_default_delay.default}
+        initialValue={properties.only_use_default_delay.default}
         tooltip={formatMessage({
           id: 'component.pluginForm.limit-conn.only_use_default_delay.tooltip',
         })}
       >
         <Switch defaultChecked={onlyUseDefaultDelay} />
       </Form.Item>
-
       <Form.Item
         label="key"
         required
@@ -87,7 +89,7 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.key.tooltip' })}
       >
         <Select>
-          {propertires.key.enum.map((item: string) => {
+          {properties.key.enum.map((item: string) => {
             return (
               <Select.Option value={item} key={item}>
                 {item}
@@ -95,6 +97,34 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
             );
           })}
         </Select>
+      </Form.Item>
+      <Form.Item
+        label="rejected_code"
+        name="rejected_code"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.rejected_code.tooltip' })}
+        initialValue={properties.rejected_code.default}
+      >
+        <InputNumber
+          max={properties.rejected_code.maximum}
+          min={properties.rejected_code.minimum}
+        />
+      </Form.Item>
+      <Form.Item
+        label="rejected_msg"
+        name="rejected_msg"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.rejected_msg.tooltip' })}
+      >
+        <Input min={1} />
+      </Form.Item>
+      <Form.Item
+        label="allow_degradation"
+        name="allow_degradation"
+        initialValue={properties.allow_degradation.default}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.limit-conn.only_use_default_delay.tooltip',
+        })}
+      >
+        <Switch defaultChecked={allowDegradation} />
       </Form.Item>
     </Form>
   );

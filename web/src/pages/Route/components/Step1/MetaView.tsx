@@ -312,7 +312,12 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
         <Row>
           <Col span={5}>
             <Form.Item noStyle name="service_id">
-              <Select disabled={disabled}>
+              <Select
+                showSearch
+                disabled={disabled}
+                optionFilterProp="children"
+                filterOption={(input, option) => option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
                 {/* TODO: value === '' means  no service_id select, need to find a better way */}
                 <Select.Option value="" key={Math.random().toString(36).substring(7)}>
                   {formatMessage({ id: 'page.route.service.none' })}

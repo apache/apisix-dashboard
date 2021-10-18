@@ -19,6 +19,8 @@
 
 # Table of Contents
 
+- [2.9.0](#290)
+- [2.8.0](#280)
 - [2.7.1](#271)
 - [2.7.0](#270)
 - [2.6.1](#261)
@@ -32,6 +34,63 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+# 2.9.0
+
+This release contains some features and bugfixes, and all the existing functionalities are compatible with Apache APISIX 2.10.0.
+
+### Core
+
+- feat(plugin): allowing basic-auth to dynamically adapt to the BE rules [#2086](https://github.com/apache/apisix-dashboard/pull/2149)
+- feat(plugin): allowing referer-restriction to dynamically adapt to the BE rules [#2001](https://github.com/apache/apisix-dashboard/pull/2001)
+- refactor: migrate to viper configure manage [#1946](https://github.com/apache/apisix-dashboard/pull/1946)
+- feat: basic support Apache APISIX 2.10 [#2149](https://github.com/apache/apisix-dashboard/pull/2149)
+- feat: support Manager API run on windows [#2125](https://github.com/apache/apisix-dashboard/pull/2125)
+
+### Bugfix
+
+- fix: supports search by name for service options when add router [#2066](https://github.com/apache/apisix-dashboard/pull/2066)
+- fix: gzip plugin schema typo [#2142](https://github.com/apache/apisix-dashboard/pull/2142)
+- fix: adjust buildx to fix Docker build failed [#2120](https://github.com/apache/apisix-dashboard/pull/2120)
+
+### Docs
+
+- docs: Update FAQ about Grafana can't login when APISIX dashboard configured domain name [#2126](https://github.com/apache/apisix-dashboard/pull/2126)
+
+### CI
+
+- ci: Only upload artifact at the release/** branch [#2137](https://github.com/apache/apisix-dashboard/pull/2137)
+- ci: optimize build rpm workflow with apisix-build-tools v2.2.0 [#2133](https://github.com/apache/apisix-dashboard/pull/2133)
+
+# 2.8.0
+
+This release contains some features and bugfixes, and all the existing functionalities are compatible with Apache APISIX 2.9.
+
+### Core
+
+- feat: add new route matching param position [#1984](https://github.com/apache/apisix-dashboard/pull/1984)
+- feat: add redis-cluster policy tips for limit-count [#2058](https://github.com/apache/apisix-dashboard/pull/2058)
+- feat: add service discovery config [#2081](https://github.com/apache/apisix-dashboard/pull/2081)
+- feat: Use build-tools v2.0.0 instead of master [#2083](https://github.com/apache/apisix-dashboard/pull/2083)
+- feat: basic support Apache APISIX 2.9 [#2117](https://github.com/apache/apisix-dashboard/pull/2117)
+- feat: upstream support FQDN [#2118](https://github.com/apache/apisix-dashboard/commit/1a0b12bf70489104cd996848ded19ad3bdc6902f)
+- feat: allowing api-breaker to dynamically adapt to the BE rules [#1974](https://github.com/apache/apisix-dashboard/pull/1974)
+- feat: allowing cors to dynamically adapt to the BE rules [#1994](https://github.com/apache/apisix-dashboard/pull/1994)
+- feat: allowing limit-count to dynamically adapt to the BE rules [#1998](https://github.com/apache/apisix-dashboard/pull/1998)
+- feat: allowing proxy-mirror to dynamically adapt to the BE rules [#2000](https://github.com/apache/apisix-dashboard/pull/2000)
+- feat: add cors method option [#2103](https://github.com/apache/apisix-dashboard/pull/2103)
+- feat: add el7 in package name [#2074](https://github.com/apache/apisix-dashboard/pull/2074)
+- feat: Bump apisix-build-tools to v2.1.0 [#2101](https://github.com/apache/apisix-dashboard/pull/2101)
+
+### Bugfix
+
+- fix: avoid nil pointer dereference in route export [#2061](https://github.com/apache/apisix-dashboard/pull/2061)
+- fix: after enable redirect HTTPS, websocket form field disappeared [#2115](https://github.com/apache/apisix-dashboard/pull/2115)
+- fix: make route name validate rules in Apisix Dashboard the same as Admin API [#2085](https://github.com/apache/apisix-dashboard/pull/2085)
+
+### Docs
+
+- docs: add how to integrate with grafana preview link [#1697](https://github.com/apache/apisix-dashboard/pull/1697)
 
 # 2.7.1
 
