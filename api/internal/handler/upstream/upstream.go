@@ -37,16 +37,18 @@ import (
 )
 
 type Handler struct {
-	upstreamStore store.Interface
-	routeStore    store.Interface
-	serviceStore  store.Interface
+	upstreamStore    store.Interface
+	routeStore       store.Interface
+	serviceStore     store.Interface
+	streamRouteStore store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
-		upstreamStore: store.GetStore(store.HubKeyUpstream),
-		routeStore:    store.GetStore(store.HubKeyRoute),
-		serviceStore:  store.GetStore(store.HubKeyService),
+		upstreamStore:    store.GetStore(store.HubKeyUpstream),
+		routeStore:       store.GetStore(store.HubKeyRoute),
+		serviceStore:     store.GetStore(store.HubKeyService),
+		streamRouteStore: store.GetStore(store.HubKeyStreamRoute),
 	}, nil
 }
 
@@ -258,6 +260,27 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	if ret.TotalSize > 0 {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 			fmt.Errorf("service: %s is using this upstream", ret.Rows[0].(*entity.Service).Name)
+	}
+
+	ret, err = h.streamRouteStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			streamRoute := obj.(*entity.StreamRoute)
+			if _, exist := mp[utils.InterfaceToString(streamRoute.UpstreamID)]; exist {
+				return true
+			}
+
+			return false
+		},
+		PageSize:   0,
+		PageNumber: 0,
+	})
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("stream route: %s is using this upstream", ret.Rows[0].(*entity.StreamRoute).ID)
 	}
 
 	if err = h.upstreamStore.BatchDelete(c.Context(), ids); err != nil {
