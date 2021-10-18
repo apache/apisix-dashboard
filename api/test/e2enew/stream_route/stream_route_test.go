@@ -26,7 +26,7 @@ import (
 )
 
 var _ = ginkgo.Describe("Stream Route", func() {
-	table.DescribeTable("test stream_route CURD",
+	table.DescribeTable("test stream route data CURD",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -35,18 +35,18 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/stream_routes",
 			Body: `{
-    "id": "sr1",
-    "remote_addr": "127.0.0.1",
-    "server_addr": "127.0.0.1",
-    "server_port": 10090,
-    "sni": "test.com",
-    "upstream": {
-        "nodes": {
-            "` + base.UpstreamIp + `:1980": 1
-        },
-        "type": "roundrobin"
-    }
-}`,
+				"id": "sr1",
+				"remote_addr": "127.0.0.1",
+				"server_addr": "127.0.0.1",
+				"server_port": 10090,
+				"sni": "test.com",
+				"upstream": {
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
@@ -64,15 +64,15 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Path:    "/apisix/admin/stream_routes/sr1",
 			Headers: map[string]string{"Authorization": base.GetToken()},
 			Body: `{
-    "id": "sr1",
-    "server_port": 10091,
-    "upstream": {
-        "nodes": {
-            "` + base.UpstreamIp + `:1980": 1
-        },
-        "type": "roundrobin"
-    }
-}`,
+				"id": "sr1",
+				"server_port": 10091,
+				"upstream": {
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"server_port":10091`,
 		}),
@@ -97,6 +97,24 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Path:         "/apisix/admin/stream_routes/sr1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+		}),
+	)
+
+	table.DescribeTable("test stream route data CURD exception",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("create stream route with upstream id not found", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/stream_routes",
+			Body: `{
+				"id": "sr1",
+				"server_port": 10090,
+				"upstream_id": "u1"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
 		}),
 	)
 })
