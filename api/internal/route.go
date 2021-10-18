@@ -18,7 +18,6 @@ package internal
 
 import (
 	"fmt"
-	"github.com/apisix/manager-api/internal/handler/stream_route"
 	"path/filepath"
 
 	"github.com/gin-contrib/pprof"
@@ -41,6 +40,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
+	"github.com/apisix/manager-api/internal/handler/stream_route"
 	"github.com/apisix/manager-api/internal/handler/tool"
 	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/apisix/manager-api/internal/log"
