@@ -100,6 +100,70 @@ var _ = ginkgo.Describe("Stream Route", func() {
 		}),
 	)
 
+	table.DescribeTable("test stream route with upstream",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("create upstream", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/upstreams",
+			Body: `{
+				"id": "u1",
+				"nodes": {
+					"` + base.UpstreamIp + `:1980": 1
+				},
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("create stream route", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/stream_routes",
+			Body: `{
+				"id": "sr1",
+				"remote_addr": "127.0.0.1",
+				"server_addr": "127.0.0.1",
+				"server_port": 10090,
+				"sni": "test.com",
+				"upstream_id": "u1"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("hit stream route", base.HttpTestCase{
+			Object:       base.APISIXStreamProxyExpect(10090, false),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+		}),
+		table.Entry("delete used upstream", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "stream route: sr1 is using this upstream",
+		}),
+		table.Entry("delete stream route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/stream_routes/sr1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("delete unused upstream", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+	)
+
 	table.DescribeTable("test stream route data CURD exception",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
