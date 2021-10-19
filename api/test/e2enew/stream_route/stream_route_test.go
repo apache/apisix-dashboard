@@ -17,10 +17,13 @@
 package stream_route
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
+	"github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
@@ -85,7 +88,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			ExpectBody:   `"server_port":10091`,
 		}),
 		table.Entry("hit stream route", base.HttpTestCase{
-			Object:       base.APISIXStreamProxyExpect(10091, false),
+			Object:       base.APISIXStreamProxyExpect(10091, ""),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
@@ -131,7 +134,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("hit stream route", base.HttpTestCase{
-			Object:       base.APISIXStreamProxyExpect(10090, false),
+			Object:       base.APISIXStreamProxyExpect(10090, ""),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
@@ -158,6 +161,53 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+		}),
+	)
+
+	// prepare ssl certificate
+	apisixCert, err := ioutil.ReadFile("../../certs/apisix.crt")
+	gomega.Expect(err).To(gomega.BeNil())
+	apisixKey, err := ioutil.ReadFile("../../certs/apisix.key")
+	gomega.Expect(err).To(gomega.BeNil())
+	apisixSSLBody, err := json.Marshal(map[string]string{"cert": string(apisixCert), "key": string(apisixKey)})
+	gomega.Expect(err).To(gomega.BeNil())
+
+	table.DescribeTable("test stream route with ssl",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("create ssl cert", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/ssl",
+			Body:         string(apisixSSLBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("create stream route", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/stream_routes",
+			Body: `{
+				"id": "sr1",
+				"server_port": 10093,
+				"sni": "test.com",
+				"upstream": {
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("hit stream route through https", base.HttpTestCase{
+			Object:       base.APISIXStreamProxyExpect(10093, "test.com"),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 		}),
 	)
 

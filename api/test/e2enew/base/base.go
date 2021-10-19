@@ -82,14 +82,31 @@ func APISIXExpect() *httpexpect.Expect {
 	return httpexpect.New(t, APISIXHost)
 }
 
-func APISIXStreamProxyExpect(port uint16, isHTTPS bool) *httpexpect.Expect {
+func APISIXStreamProxyExpect(port uint16, sni string) *httpexpect.Expect {
 	if port == 0 {
 		port = 10090
 	}
 	t := getTestingHandle()
 
-	if isHTTPS {
-		return httpexpect.New(t, "https://" + net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
+	if sni != "" {
+		addr := net.JoinHostPort(sni, strconv.Itoa(int(port)))
+		return httpexpect.WithConfig(httpexpect.Config{
+			BaseURL:  "https://" + addr,
+			Reporter: httpexpect.NewAssertReporter(t),
+			Client: &http.Client{
+				Transport: &http.Transport{
+					TLSClientConfig: &tls.Config{
+						// accept any certificate; for testing only!
+						InsecureSkipVerify: true,
+					},
+					DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+						addr = net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port)))
+						dialer := &net.Dialer{}
+						return dialer.DialContext(ctx, network, addr)
+					},
+				},
+			},
+		})
 	} else {
 		return httpexpect.New(t, "http://" + net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
 	}

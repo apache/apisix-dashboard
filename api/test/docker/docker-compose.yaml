@@ -156,6 +156,7 @@ services:
       - '10090:10090/tcp'
       - '10091:10091/tcp'
       - '10092:10092/tcp'
+      - '10093:10093/tcp'
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.30

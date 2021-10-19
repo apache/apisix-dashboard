@@ -51,6 +51,8 @@ apisix:
       - addr: 10090
       - addr: 10091
       - addr: 10092
+      - addr: 10093
+        tls: true
 
 nginx_config:
   error_log_level: "debug"
