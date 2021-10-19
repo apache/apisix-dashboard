@@ -124,10 +124,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Path:   "/apisix/admin/stream_routes",
 			Body: `{
 				"id": "sr1",
-				"remote_addr": "127.0.0.1",
-				"server_addr": "127.0.0.1",
 				"server_port": 10090,
-				"sni": "test.com",
 				"upstream_id": "u1"
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
