@@ -125,6 +125,16 @@ services:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.20
 
+  upstream_grpc:
+    image: grpc_server_example
+    restart: always
+    ports:
+      - '50051:50051'
+      - '50052:50052'
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.21
+
   apisix:
     hostname: apisix_server1
     image: apache/apisix:2.10.0-alpine

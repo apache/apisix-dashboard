@@ -35,6 +35,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/label"
 	"github.com/apisix/manager-api/internal/handler/migrate"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
+	"github.com/apisix/manager-api/internal/handler/proto"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/schema"
 	"github.com/apisix/manager-api/internal/handler/server_info"
@@ -77,6 +78,7 @@ func SetUpRouter() *gin.Engine {
 		tool.NewHandler,
 		plugin_config.NewHandler,
 		migrate.NewHandler,
+		proto.NewHandler,
 	}
 
 	for i := range factories {

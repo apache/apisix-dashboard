@@ -70,6 +70,13 @@ jobs:
           --set *.cache-from=type=local,src=/tmp/.buildx-cache \
           --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
+      - name: build and start grpc_server_example
+        working-directory: ./api/test/docker
+        run: |
+          wget https://github.com/api7/grpc_server_example/archive/refs/tags/20210819.tar.gz
+          tar -xzvf 20210819.tar.gz && cd grpc_server_example-20210819
+          docker build -t grpc_server_example:latest .
+
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |
@@ -170,6 +177,13 @@ jobs:
           -f docker-compose.yaml \
           --set *.cache-from=type=local,src=/tmp/.buildx-cache \
           --set *.cache-to=type=local,dest=/tmp/.buildx-cache
+
+      - name: build and start grpc_server_example
+        working-directory: ./api/test/docker
+        run: |
+          wget https://github.com/api7/grpc_server_example/archive/refs/tags/20210819.tar.gz
+          tar -xzvf 20210819.tar.gz && cd grpc_server_example-20210819
+          docker build -t grpc_server_example:latest .
 
       - name: run docker compose
         working-directory: ./api/test/docker
