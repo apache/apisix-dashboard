@@ -44,6 +44,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/tool"
 	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/apisix/manager-api/internal/log"
+	"github.com/gin-contrib/gzip"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -55,6 +56,7 @@ func SetUpRouter() *gin.Engine {
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
 	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
 	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
