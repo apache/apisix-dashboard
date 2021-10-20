@@ -31,9 +31,7 @@ var _ = ginkgo.Describe("Gzip enable", func() {
 			Method:        http.MethodGet,
 			Path:          "/",
 			Headers:       map[string]string{"Accept-Encoding": "gzip, deflate, br"},
-			ExpectStatus:  http.StatusOK,
 			ExpectHeaders: map[string]string{"Content-Encoding": "gzip"},
-			Sleep:         base.SleepTime,
 		})
 	})
 })
