@@ -25,5 +25,5 @@ import (
 
 func TestGzip(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Gzip Suite")
+	RunSpecs(t, "gzip suite")
 }
