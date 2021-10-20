@@ -307,4 +307,36 @@ context('Create and Delete Upstream', () => {
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
   });
+
+  it('should create upstream with Use the domain or IP from Node List', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains('Create').click();
+
+    cy.get(selector.name).type(data.upstreamName);
+    cy.get(selector.description).type(data.description);
+
+    cy.get(selector.nodes_0_host).type(data.ip1);
+    cy.get(selector.nodes_0_port).clear().type('7000');
+    cy.get(selector.nodes_0_weight).clear().type(1);
+
+    cy.get('[title="Keep the same Host from client request"]').click();
+    cy.get(selector.selectItem).within(() => {
+      cy.contains('Use the domain or IP from Node List').click();
+    });
+
+    cy.contains('Next').click();
+    cy.get(selector.input).should('be.disabled');
+    cy.contains('Submit').click();
+    cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
+  });
+
+  it('should delete the upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains(data.upstreamName).siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
+  });
 });

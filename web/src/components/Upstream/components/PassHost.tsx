@@ -87,7 +87,7 @@ const Component: React.FC<Props> = ({ form, readonly }) => {
 
           if (
             form.getFieldValue('pass_host') === 'node' &&
-            (form.getFieldValue('nodes') || []).length !== 1
+            (form.getFieldValue('submitNodes') || []).length !== 1
           ) {
             notification.warning({
               message: formatMessage({
