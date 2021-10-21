@@ -298,7 +298,7 @@ type StreamRoute struct {
 	RemoteAddr string                 `json:"remote_addr,omitempty"`
 	ServerAddr string                 `json:"server_addr,omitempty"`
 	ServerPort int                    `json:"server_port,omitempty"`
-	Sni        string                 `json:"sni,omitempty"`
+	SNI        string                 `json:"sni,omitempty"`
 	Upstream   *UpstreamDef           `json:"upstream,omitempty"`
 	UpstreamID interface{}            `json:"upstream_id,omitempty"`
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`

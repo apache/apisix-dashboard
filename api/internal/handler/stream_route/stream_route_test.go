@@ -65,7 +65,7 @@ func TestStructUnmarshal(t *testing.T) {
 	assert.Equal(t, streamRoute.RemoteAddr, "1.1.1.1")
 	assert.Equal(t, streamRoute.ServerAddr, "2.2.2.2")
 	assert.Equal(t, streamRoute.ServerPort, 9080)
-	assert.Equal(t, streamRoute.Sni, "example.com")
+	assert.Equal(t, streamRoute.SNI, "example.com")
 	assert.Equal(t, streamRoute.UpstreamID, float64(1))
 	assert.NotNil(t, streamRoute.Upstream)
 }

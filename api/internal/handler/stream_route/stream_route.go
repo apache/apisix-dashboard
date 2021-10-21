@@ -78,7 +78,7 @@ type ListInput struct {
 	RemoteAddr string `auto_read:"remote_addr,query"`
 	ServerAddr string `auto_read:"server_addr,query"`
 	ServerPort int    `auto_read:"server_port,query"`
-	Sni        string `auto_read:"sni,query"`
+	SNI        string `auto_read:"sni,query"`
 	store.Pagination
 }
 
@@ -98,7 +98,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 				return false
 			}
 
-			if input.Sni != "" && strings.Contains(obj.(*entity.StreamRoute).Sni, input.Sni) {
+			if input.SNI != "" && !strings.Contains(obj.(*entity.StreamRoute).SNI, input.SNI) {
 				return false
 			}
 
@@ -124,7 +124,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 					fmt.Errorf("upstream id: %s not found", streamRoute.UpstreamID)
 			}
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			return handler.SpecCodeResponse(err), err
 		}
 	}
 	create, err := h.streamRouteStore.Create(c.Context(), streamRoute)
