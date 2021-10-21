@@ -19,6 +19,7 @@ package stream_route
 import (
 	"encoding/json"
 	"io/ioutil"
+	"net"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
@@ -103,7 +104,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 		}),
 	)
 
-	table.DescribeTable("test stream route with upstream",
+	table.DescribeTable("test stream route with HTTP upstream",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -171,8 +172,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 	gomega.Expect(err).To(gomega.BeNil())
 	apisixSSLBody, err := json.Marshal(map[string]string{"cert": string(apisixCert), "key": string(apisixKey)})
 	gomega.Expect(err).To(gomega.BeNil())
-
-	table.DescribeTable("test stream route with ssl",
+	table.DescribeTable("test stream route with HTTPS upstream",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -210,6 +210,74 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			ExpectBody:   "hello world",
 		}),
 	)
+
+	ginkgo.Describe("test stream route with TCP upstream", func() {
+		ginkgo.It("create stream route", func() {
+			base.RunTestCase(base.HttpTestCase{
+				Object: base.ManagerApiExpect(),
+				Method: http.MethodPost,
+				Path:   "/apisix/admin/stream_routes",
+				Body: `{
+					"id": "sr1tcp",
+					"server_port": 10090,
+					"upstream": {
+						"nodes": {
+							"` + base.UpstreamEchoIp + `:3333": 1
+						},
+						"type": "roundrobin"
+					}
+				}`,
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+			})
+		})
+		ginkgo.It("hit stream route through tcp", func() {
+			conn, err := net.Dial("tcp", "127.0.0.1:10090")
+			gomega.Expect(err).To(gomega.BeNil())
+
+			_, err = conn.Write([]byte("a"))
+			gomega.Expect(err).To(gomega.BeNil())
+
+			result, err := ioutil.ReadAll(conn)
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(result).To(gomega.ContainSubstring("Container information"))
+
+			err = conn.Close()
+			gomega.Expect(err).To(gomega.BeNil())
+		})
+	})
+
+	ginkgo.Describe("test stream route with UDP upstream", func() {
+		ginkgo.It("create stream route", func() {
+			base.RunTestCase(base.HttpTestCase{
+				Object: base.ManagerApiExpect(),
+				Method: http.MethodPost,
+				Path:   "/apisix/admin/stream_routes",
+				Body: `{
+					"id": "sr1udp",
+					"server_port": 10095,
+					"upstream": {
+						"nodes": {
+							"` + base.UpstreamEchoIp + `:3333": 1
+						},
+						"type": "roundrobin"
+					}
+				}`,
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+			})
+		})
+		ginkgo.It("hit stream route through udp", func() {
+			conn, err := net.Dial("udp", "127.0.0.1:10095")
+			gomega.Expect(err).To(gomega.BeNil())
+
+			_, err = conn.Write([]byte("a"))
+			gomega.Expect(err).To(gomega.BeNil())
+
+			err = conn.Close()
+			gomega.Expect(err).To(gomega.BeNil())
+		})
+	})
 
 	table.DescribeTable("test stream route data CURD exception",
 		func(tc base.HttpTestCase) {

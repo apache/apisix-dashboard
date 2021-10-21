@@ -135,6 +135,16 @@ services:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.21
 
+  upstream_echo:
+    image: n0r1skcom/echo
+    restart: always
+    ports:
+      - '3333:3333/tcp'
+      - '3333:3333/udp'
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.22
+
   apisix:
     hostname: apisix_server1
     image: apache/apisix:2.10.0-alpine
@@ -157,6 +167,7 @@ services:
       - '10091:10091/tcp'
       - '10092:10092/tcp'
       - '10093:10093/tcp'
+      - '10095:10095/udp'
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.30
