@@ -18,6 +18,7 @@ package stream_route
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -238,9 +239,16 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			_, err = conn.Write([]byte("a"))
 			gomega.Expect(err).To(gomega.BeNil())
 
-			result, err := ioutil.ReadAll(conn)
-			gomega.Expect(err).To(gomega.BeNil())
-			gomega.Expect(result).To(gomega.ContainSubstring("Container information"))
+			result := make([]byte, 0, 4096)
+			tmp := make([]byte, 256)
+			for {
+				n, err := conn.Read(tmp)
+				if err == io.EOF {
+					break
+				}
+				result = append(result, tmp[:n]...)
+			}
+			gomega.Expect(string(result)).To(gomega.ContainSubstring("Container information"))
 
 			err = conn.Close()
 			gomega.Expect(err).To(gomega.BeNil())
