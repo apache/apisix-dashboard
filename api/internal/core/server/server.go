@@ -35,9 +35,7 @@ type server struct {
 	options   *Options
 }
 
-type Options struct {
-	ForceStart bool // force start new instance
-}
+type Options struct {}
 
 // NewServer Create a server manager
 func NewServer(options *Options) (*server, error) {
@@ -47,13 +45,6 @@ func NewServer(options *Options) (*server, error) {
 func (s *server) Start(errSig chan error) {
 	// initialize server
 	err := s.init()
-	if err != nil {
-		errSig <- err
-		return
-	}
-
-	// write daemon pid file
-	err = s.writePID()
 	if err != nil {
 		errSig <- err
 		return
@@ -100,22 +91,6 @@ func (s *server) init() error {
 
 	log.Info("Initialize Manager API server")
 	s.setupAPI()
-
-	return nil
-}
-
-func (s *server) writePID() error {
-	if err := utils.WritePID(conf.PIDPath, s.options.ForceStart); err != nil {
-		log.Errorf("failed to write pid: %s", err)
-		return err
-	}
-	utils.AppendToClosers(func() error {
-		if err := os.Remove(conf.PIDPath); err != nil {
-			log.Errorf("failed to remove pid path: %s", err)
-			return err
-		}
-		return nil
-	})
 
 	return nil
 }

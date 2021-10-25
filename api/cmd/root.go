@@ -29,12 +29,8 @@ import (
 	"github.com/apisix/manager-api/internal/log"
 )
 
-var (
-	forceStart bool
-)
-
 var rootCmd = &cobra.Command{
-	Use:   "manager-api [flags]",
+	Use:   "manager-api",
 	Short: "Apache APISIX Manager API",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		err := manageAPI()
@@ -43,31 +39,17 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	cobra.OnInitialize(func() {
-		var err error
-		service, err = createService()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error occurred while initializing service: %s", err)
-		}
-	})
-
 	rootCmd.PersistentFlags().StringVarP(&conf.ConfigFile, "config", "c", "", "config file")
 	rootCmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
-	rootCmd.PersistentFlags().BoolVarP(&forceStart, "force", "f", false, "force start manager-api")
 
 	rootCmd.AddCommand(
 		newVersionCommand(),
-		newInstallCommand(),
-		newRemoveCommand(),
-		newStartCommand(),
-		newStopCommand(),
-		newStatusCommand(),
 	)
 }
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		_, _ = fmt.Fprintln(os.Stderr, err.Error())
+		_, _ = fmt.Fprintln(os.Stderr, err)
 	}
 }
 
@@ -75,9 +57,7 @@ func manageAPI() error {
 	conf.InitConf()
 	log.InitLogger()
 
-	s, err := server.NewServer(&server.Options{
-		ForceStart: forceStart,
-	})
+	s, err := server.NewServer(&server.Options{})
 	if err != nil {
 		return err
 	}
@@ -94,7 +74,7 @@ func manageAPI() error {
 	case sig := <-quit:
 		log.Infof("The Manager API server receive %s and start shutting down", sig.String())
 		s.Stop()
-		log.Infof("The Manager API server exited")
+		log.Infof("See you next time!")
 	case err := <-errSig:
 		log.Errorf("The Manager API server start failed: %s", err.Error())
 		return err
