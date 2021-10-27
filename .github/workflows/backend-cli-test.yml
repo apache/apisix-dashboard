@@ -45,6 +45,11 @@ jobs:
           wget https://github.com/etcd-io/etcd/releases/download/v${{ matrix.etcd }}/etcd-v${{ matrix.etcd }}-linux-amd64.tar.gz
           tar zxvf etcd-v${{ matrix.etcd }}-linux-amd64.tar.gz
 
+      - name: install bats
+        run: |
+          git clone https://github.com/sstephenson/bats.git && cd bats
+          sudo ./install.sh /usr/local
+
       - name: run test
         working-directory: ./api
-        run: sudo ./test/shell/cli_test.sh
+        run: chmod +x ./test/shell/cli_test.sh && sudo ./test/shell/cli_test.sh
