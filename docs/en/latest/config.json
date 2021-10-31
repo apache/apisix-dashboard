@@ -9,7 +9,7 @@
     {
       "type": "category",
       "label": "Installation",
-      "items": ["deploy", "deploy-with-docker", "deploy-with-rpm"]
+      "items": ["install", "deploy-with-docker"]
     },
     {
       "type": "category",
