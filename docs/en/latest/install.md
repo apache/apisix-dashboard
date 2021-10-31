@@ -21,7 +21,7 @@ title: Basic Deploy
 #
 -->
 
-Installing Apache APISIX Dashboard on Linux is easy.  
+Installing Apache APISIX Dashboard on Linux is easy.
 Now, we provide Docker image and RPM installation package.
 
 ## Docker {#docker}
@@ -32,7 +32,7 @@ We recommend using Docker to run Dashboard:
 docker pull apache/apisix-dashboard
 docker run -d --name dashboard \
            -p 9000:9000        \
-           -v <CONFIG_FILE>:/usr/local/apisix-dashboard/conf/conf.yaml \ 
+           -v <CONFIG_FILE>:/usr/local/apisix-dashboard/conf/conf.yaml \
            apache/apisix-dashboard
 ```
 
@@ -41,6 +41,7 @@ Please replace `<CONFIG_FILE>` to your configure file path.
 :::
 
 ## RPM {#rpm}
+
 **NOTE:** Only support CentOS 7 currently, for more information, please refer to [here](./deploy.md).
 
 ### Install
@@ -73,14 +74,17 @@ The `manager-api` and `web` will be included in this build guide product.
 Before using source codes to build, make sure that the following dependencies are installed in your environment.
 
 For `manager-api`:
+
 1. [Golang](https://golang.org/dl/) 1.13+
 
 > Tip: For users in mainland China, you can use the following command to speed up the module downloads.
+
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
 For `web`:
+
 1. [Node.js](https://nodejs.org/en/download/) current LTS (14.x+)
 2. [Yarn](https://yarnpkg.com/getting-started/install)
 
@@ -126,6 +130,7 @@ cd ./output
 We provide a service file template for operating systems that use the Systemd service manager.
 
 Copy the following or use this [**file**](https://github.com/apache/apisix-dashboard/tree/master/service/apisix-dashboard.service) directly.
+
 ```text
 [Unit]
 Description=apisix-dashboard
