@@ -30,9 +30,9 @@
 
 VERSION=$(cat ./VERSION)
 KERNEL=$(uname -s)
-CONF_FILE="/usr/local/apisix/dashboard/conf/conf.yaml"
-LOG_FILE="/usr/local/apisix/dashboard/logs/error.log"
-ACCESS_LOG_FILE="/usr/local/apisix/dashboard/logs/access.log"
+CONF_FILE="/usr/local/apisix-dashboard/conf/conf.yaml"
+LOG_FILE="/usr/local/apisix-dashboard/logs/error.log"
+ACCESS_LOG_FILE="/usr/local/apisix-dashboard/logs/access.log"
 
 if [[ -f ../.githash ]]; then
   GITHASH=$(cat ../.githash)
@@ -45,7 +45,7 @@ else
 fi
 
 recover_conf() {
-  run cp -rf ./conf/conf.yaml /usr/local/apisix/dashboard/conf/conf.yaml
+  run cp -rf ./conf/conf.yaml /usr/local/apisix-dashboard/conf/conf.yaml
   [ "$status" -eq 0 ]
 }
 check_logfile() {
@@ -119,8 +119,8 @@ stop_dashboard() {
 #3
 @test "Check static file server" {
   # create html directory
-  mkdir -p /usr/local/apisix/dashboard/html
-  echo "hi~" >> /usr/local/apisix/dashboard/html/index.html
+  mkdir -p /usr/local/apisix-dashboard/html
+  echo "hi~" >> /usr/local/apisix-dashboard/html/index.html
 
   # start Manager API
   start_dashboard 3
@@ -141,7 +141,7 @@ stop_dashboard() {
   PORT=$(cat "$CONF_FILE" | awk '$1=="port:"{print $2}')
   start_dashboard 3
 
-  run systemctl status dashboard
+  run journalctl -u apisix-dashboard.service -n 30
 
   [ $(echo "$output" | grep -c "The manager-api is running successfully\!") -eq '1' ]
   [ $(echo "$output" | grep -c -w "${VERSION}") -eq '1' ]
@@ -154,7 +154,7 @@ stop_dashboard() {
 
 #5
 @test "Check version sub-command" {
-  run /usr/local/apisix/dashboard/manager-api version
+  run /usr/local/apisix-dashboard/manager-api version
 
   [ $(echo "$output" | grep -c "$VERSION") -eq '1' ]
   [ $(echo "$output" | grep -c "$GITHASH") -eq '1' ]
@@ -172,7 +172,7 @@ stop_dashboard() {
 
   start_dashboard 6
 
-  run journalctl -u dashboard.service -n 30
+  run journalctl -u apisix-dashboard.service -n 30
 
   [ $(echo "$output" | grep -c "Error while dialing dial tcp") -eq '1' ]
 
@@ -408,7 +408,7 @@ stop_dashboard() {
 
   start_dashboard 3
 
-  run journalctl -u dashboard.service -n 30
+  run journalctl -u apisix-dashboard.service -n 30
 
   [ $(echo "$output" | grep -c "Error occurred while initializing logical store:  /apisix/routes") -eq '1' ]
   [ $(echo "$output" | grep -c "Error: json unmarshal failed") -eq '1' ]
@@ -425,7 +425,7 @@ stop_dashboard() {
   pkill -f etcd
 
   # stop dashboard service
-  run systemctl stop dashboard
+  run systemctl stop apisix-dashboard
   [ "$status" -eq 0 ]
 
   # clean configure and log files
