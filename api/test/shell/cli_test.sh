@@ -33,6 +33,7 @@ KERNEL=$(uname -s)
 CONF_FILE="/usr/local/apisix-dashboard/conf/conf.yaml"
 LOG_FILE="/usr/local/apisix-dashboard/logs/error.log"
 ACCESS_LOG_FILE="/usr/local/apisix-dashboard/logs/access.log"
+SERVICE_NAME="apisix-dashboard"
 
 if [[ -f ../.githash ]]; then
   GITHASH=$(cat ../.githash)
@@ -45,7 +46,7 @@ else
 fi
 
 recover_conf() {
-  run cp -rf ./conf/conf.yaml /usr/local/apisix-dashboard/conf/conf.yaml
+  run cp -rf ./conf/conf.yaml ${CONF_FILE}
   [ "$status" -eq 0 ]
 }
 check_logfile() {
@@ -56,13 +57,13 @@ clean_logfile() {
 }
 
 start_dashboard() {
-  run systemctl start apisix-dashboard
+  run systemctl start ${SERVICE_NAME}
   [ "$status" -eq 0 ]
   sleep $1
 }
 
 stop_dashboard() {
-  run systemctl stop apisix-dashboard
+  run systemctl stop ${SERVICE_NAME}
   [ "$status" -eq 0 ]
   sleep $1
 }
@@ -79,7 +80,7 @@ stop_dashboard() {
   cp ./manager-api /usr/local/apisix-dashboard
 
   # create systemd service
-  cp ./service/apisix-dashboard.service /usr/lib/systemd/system/apisix-dashboard.service
+  cp ./service/apisix-dashboard.service /usr/lib/systemd/system/${SERVICE_NAME}.service
   run systemctl daemon-reload
   [ "$status" -eq 0 ]
 }
@@ -117,6 +118,32 @@ stop_dashboard() {
 }
 
 #3
+@test "Check start info" {
+  LOGLEVEL=$(cat "$CONF_FILE" | awk '$1=="level:"{print $2}')
+  HOST=$(cat "$CONF_FILE" | awk '$1=="host:"{print $2}')
+  PORT=$(cat "$CONF_FILE" | awk '$1=="port:"{print $2}')
+  start_dashboard 3
+
+  run systemctl status ${SERVICE_NAME}
+
+  [ $(echo "$output" | grep -c "The manager-api is running successfully\!") -eq '1' ]
+  [ $(echo "$output" | grep -c -w "${VERSION}") -eq '1' ]
+  [ $(echo "$output" | grep -c "${GITHASH}") -eq '1' ]
+  [ $(echo "$output" | grep -c "${LOGLEVEL}") -eq '1' ]
+  [ $(echo "$output" | grep -c "${HOST}:${PORT}") -eq '1' ]
+
+  stop_dashboard 6
+}
+
+#4
+@test "Check version sub-command" {
+  run /usr/local/apisix-dashboard/manager-api version
+
+  [ $(echo "$output" | grep -c "$VERSION") -eq '1' ]
+  [ $(echo "$output" | grep -c "$GITHASH") -eq '1' ]
+}
+
+#5
 @test "Check static file server" {
   # create html directory
   mkdir -p /usr/local/apisix-dashboard/html
@@ -134,32 +161,6 @@ stop_dashboard() {
   recover_conf
 }
 
-#4
-@test "Check start info" {
-  LOGLEVEL=$(cat "$CONF_FILE" | awk '$1=="level:"{print $2}')
-  HOST=$(cat "$CONF_FILE" | awk '$1=="host:"{print $2}')
-  PORT=$(cat "$CONF_FILE" | awk '$1=="port:"{print $2}')
-  start_dashboard 3
-
-  run journalctl -u apisix-dashboard.service -n 30
-
-  [ $(echo "$output" | grep -c "The manager-api is running successfully\!") -eq '1' ]
-  [ $(echo "$output" | grep -c -w "${VERSION}") -eq '1' ]
-  [ $(echo "$output" | grep -c "${GITHASH}") -eq '1' ]
-  [ $(echo "$output" | grep -c "${LOGLEVEL}") -eq '1' ]
-  [ $(echo "$output" | grep -c "${HOST}:${PORT}") -eq '1' ]
-
-  stop_dashboard 6
-}
-
-#5
-@test "Check version sub-command" {
-  run /usr/local/apisix-dashboard/manager-api version
-
-  [ $(echo "$output" | grep -c "$VERSION") -eq '1' ]
-  [ $(echo "$output" | grep -c "$GITHASH") -eq '1' ]
-}
-
 #6
 @test "Check invalid etcd endpoint" {
   recover_conf
@@ -172,7 +173,7 @@ stop_dashboard() {
 
   start_dashboard 6
 
-  run journalctl -u apisix-dashboard.service -n 30
+  run journalctl -u ${SERVICE_NAME}.service -n 30
 
   [ $(echo "$output" | grep -c "Error while dialing dial tcp") -eq '1' ]
 
@@ -408,7 +409,7 @@ stop_dashboard() {
 
   start_dashboard 3
 
-  run journalctl -u apisix-dashboard.service -n 30
+  run journalctl -u ${SERVICE_NAME}.service -n 30
 
   [ $(echo "$output" | grep -c "Error occurred while initializing logical store:  /apisix/routes") -eq '1' ]
   [ $(echo "$output" | grep -c "Error: json unmarshal failed") -eq '1' ]
@@ -425,12 +426,11 @@ stop_dashboard() {
   pkill -f etcd
 
   # stop dashboard service
-  run systemctl stop apisix-dashboard
-  [ "$status" -eq 0 ]
+  stop_dashboard 0
 
   # clean configure and log files
   rm -rf /usr/local/apisix-dashboard
-  rm /usr/lib/systemd/system/apisix-dashboard.service
+  rm /usr/lib/systemd/system/${SERVICE_NAME}.service
 
   # reload systemd services
   run systemctl daemon-reload
