@@ -56,13 +56,15 @@ clean_logfile() {
 }
 
 start_dashboard() {
-  run systemctl start dashboard
+  run systemctl start apisix-dashboard
   [ "$status" -eq 0 ]
+  sleep $1
 }
 
 stop_dashboard() {
-  run systemctl stop dashboard
+  run systemctl stop apisix-dashboard
   [ "$status" -eq 0 ]
+  sleep $1
 }
 
 ### Test Case
@@ -77,18 +79,16 @@ stop_dashboard() {
   cp ./manager-api /usr/local/apisix-dashboard
 
   # create systemd service
-  cp ./service/apisix-dashboard.service /usr/lib/systemd/system/
+  cp ./service/apisix-dashboard.service /usr/lib/systemd/system/apisix-dashboard.service
   run systemctl daemon-reload
   [ "$status" -eq 0 ]
 }
 
 #1
 @test "Check warn log level" {
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 
   check_logfile
 
@@ -105,11 +105,9 @@ stop_dashboard() {
     sed -i 's/level: warn/level: info/' ${CONF_FILE}
   fi
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 
   check_logfile
 
@@ -125,15 +123,13 @@ stop_dashboard() {
   echo "hi~" >> /usr/local/apisix/dashboard/html/index.html
 
   # start Manager API
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   # request index page
   result=$(curl "http://127.0.0.1:9000")
   [ "$result" = "hi~" ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 
   recover_conf
 }
@@ -143,8 +139,7 @@ stop_dashboard() {
   LOGLEVEL=$(cat "$CONF_FILE" | awk '$1=="level:"{print $2}')
   HOST=$(cat "$CONF_FILE" | awk '$1=="host:"{print $2}')
   PORT=$(cat "$CONF_FILE" | awk '$1=="port:"{print $2}')
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   run systemctl status dashboard
 
@@ -154,8 +149,7 @@ stop_dashboard() {
   [ $(echo "$output" | grep -c "${LOGLEVEL}") -eq '1' ]
   [ $(echo "$output" | grep -c "${HOST}:${PORT}") -eq '1' ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 }
 
 #5
@@ -176,29 +170,25 @@ stop_dashboard() {
     sed -i 's/127.0.0.1:2379/127.0.0.0:2379/' ${CONF_FILE}
   fi
 
-  start_dashboard
-  sleep 6
+  start_dashboard 6
 
   run journalctl -u dashboard.service -n 30
 
   [ $(echo "$output" | grep -c "Error while dialing dial tcp") -eq '1' ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 }
 
 #7
 @test "Check assess log" {
   recover_conf
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
   [ "$status" -eq 0 ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 
   [ $(grep -c "/apisix/admin/user/login" "${ACCESS_LOG_FILE}") -ne '0' ]
 }
@@ -213,14 +203,12 @@ stop_dashboard() {
     sed -i 's@- 127.0.0.1 @- 10.0.0.1 @' ${CONF_FILE}
   fi
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   run curl -k -i -m 20 -o /dev/null -s -w %{http_code} "http://127.0.0.1:9000"
   [ "$output" -eq 403 ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 }
 
 #9
@@ -239,14 +227,12 @@ stop_dashboard() {
     sed -i "s@#   key:  \"/tmp/cert/example.key\"@  key: \"$(pwd)/test/certs/test2.key\"@" ${CONF_FILE}
   fi
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   run curl -k -i -m 20 -o /dev/null -s -w %{http_code} --resolve 'www.test2.com:9001:127.0.0.1' "https://www.test2.com:9001/apisix/admin/tool/version"
   [ "$output" -eq 200 ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 }
 
 #10
@@ -265,13 +251,11 @@ stop_dashboard() {
   # enable auth
   curl -L http://localhost:2379/v3/auth/enable -d '{}'
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   [ $(grep -c "etcdserver: user name is empty" ${LOG_FILE}) -ne '0' ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 
   # modify etcd auth config
   if [[ $KERNEL = "Darwin" ]]; then
@@ -282,8 +266,7 @@ stop_dashboard() {
     sed -i '1,$s/# password: "123456"  # ignore etcd password if not enable etcd auth/password: "root"/g' ${CONF_FILE}
   fi
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   # validate process is right by requesting login api
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
@@ -306,8 +289,7 @@ stop_dashboard() {
 
   check_logfile
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 
   # disable etcd basic auth
   run curl -L http://localhost:2379/v3/auth/authenticate -X POST -d '{"name": "root", "password": "root"}'
@@ -322,8 +304,7 @@ stop_dashboard() {
 @test "Check etcd prefix" {
   recover_conf
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
   [ "$status" -eq 0 ]
@@ -344,8 +325,7 @@ stop_dashboard() {
   [ "$count" ]
   [ "$count" -eq 1 ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 
   recover_conf
 
@@ -356,8 +336,7 @@ stop_dashboard() {
     sed -i '1,$s/# prefix: \/apisix.*/prefix: \/apisix-test/g' ${CONF_FILE}
   fi
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
   [ "$status" -eq 0 ]
@@ -378,8 +357,7 @@ stop_dashboard() {
   [ "$count" ]
   [ "$count" -eq 1 ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 }
 
 #12
@@ -402,8 +380,7 @@ stop_dashboard() {
     sed -i 's/127.0.0.1:2379/127.0.0.1:3379/' ${CONF_FILE}
   fi
 
-  start_dashboard
-  sleep 3
+  start_dashboard 3
 
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
   [ "$status" -eq 0 ]
@@ -418,8 +395,7 @@ stop_dashboard() {
   [ "$respCode" = "0" ]
   [ "$respMessage" = "\"\"" ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 }
 
 #13
@@ -430,8 +406,7 @@ stop_dashboard() {
   [ "$status" -eq 0 ]
   sleep 2
 
-  start_dashboard
-  sleep 5
+  start_dashboard 3
 
   run journalctl -u dashboard.service -n 30
 
@@ -441,8 +416,7 @@ stop_dashboard() {
   run ./etcd-v3.4.14-linux-amd64/etcdctl del /apisix/routes/unique1
   [ "$status" -eq 0 ]
 
-  stop_dashboard
-  sleep 6
+  stop_dashboard 6
 }
 
 #post
