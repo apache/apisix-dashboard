@@ -29,6 +29,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: cache etcd
         id: cache-etcd
@@ -53,3 +55,7 @@ jobs:
       - name: run test
         working-directory: ./api
         run: chmod +x ./test/shell/cli_test.sh && sudo ./test/shell/cli_test.sh
+
+      - name: tmate debugger
+        if: ${{ failure() }}
+        uses: ./.github/actions/tmate-action
