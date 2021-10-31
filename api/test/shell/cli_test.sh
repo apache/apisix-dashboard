@@ -72,12 +72,12 @@ stop_dashboard() {
   [ "$status" -eq 0 ]
 
   # prepare service files
-  mkdir -p /usr/local/apisix/dashboard/conf /usr/local/apisix/dashboard/logs
-  cp ./conf/* /usr/local/apisix/dashboard/conf
-  cp ./manager-api /usr/local/apisix/dashboard
+  mkdir -p /usr/local/apisix-dashboard/conf /usr/local/apisix-dashboard/logs
+  cp ./conf/* /usr/local/apisix-dashboard/conf
+  cp ./manager-api /usr/local/apisix-dashboard
 
   # create systemd service
-  cp ./test/shell/dashboard.service /usr/lib/systemd/system/
+  cp ./service/apisix-dashboard.service /usr/lib/systemd/system/
   run systemctl daemon-reload
   [ "$status" -eq 0 ]
 }
@@ -455,9 +455,8 @@ stop_dashboard() {
   [ "$status" -eq 0 ]
 
   # clean configure and log files
-  rm -rf /usr/local/apisix/dashboard
-  rm -rf /usr/local/apisix/dashboard-other
-  rm /usr/lib/systemd/system/dashboard.service
+  rm -rf /usr/local/apisix-dashboard
+  rm /usr/lib/systemd/system/apisix-dashboard.service
 
   # reload systemd services
   run systemctl daemon-reload
