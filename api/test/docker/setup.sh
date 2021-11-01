@@ -17,7 +17,7 @@
 #
 
 #Executes commands from the intended directory "/api/test/docker".
-cd $(dirname $0)
+cd "$(dirname "$0")"
 
 main() {
   #welcome message & check machine configuration
@@ -57,7 +57,7 @@ main() {
   done
 
   if [ $UP -eq 1 ]; then
-    up $UPFLAG
+    up "$UPFLAG"
   fi
   echo "Execution complete."
 }
