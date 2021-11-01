@@ -129,7 +129,7 @@ cd ./output
 
 We provide a service file template for operating systems that use the Systemd service manager.
 
-Copy the following or use this [**file**](https://github.com/apache/apisix-dashboard/tree/master/service/apisix-dashboard.service) directly.
+Copy the following or use this [**file**](https://github.com/apache/apisix-dashboard/tree/master/service/apisix-dashboard.service) directly. 
 
 ```text
 [Unit]
@@ -141,6 +141,8 @@ After=network-online.target
 WorkingDirectory=/usr/local/apisix-dashboard
 ExecStart=/usr/local/apisix-dashboard/manager-api -c /usr/local/apisix-dashboard/conf/conf.yaml
 ```
+
+You need to copy it to the `/usr/lib/systemd/system` directory and execute the `systemctl daemon-reload` command.
 
 :::note
 You will first need to copy the entire contents of the `output` directory to the `/usr/local/apisix-dashboard` folder.
