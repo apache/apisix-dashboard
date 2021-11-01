@@ -123,27 +123,48 @@ cd ./output
 
 4. Without changing the configuration, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
 
-### Other {#source-other}
+### Service {#source-service}
 
-#### Service {#source-other-service}
+You will need to handle your own service management when deploying using the source code compilation method. We provide a service file template for operating systems that use the Systemd service manager.
 
-We provide a service file template for operating systems that use the Systemd service manager.
+1. Install
 
-Copy the following or use this [**file**](https://github.com/apache/apisix-dashboard/tree/master/service/apisix-dashboard.service) directly. 
+```shell
+mkdir -p /usr/local/apisix-dashboard
+cp -rf ./output/* /usr/local/apisix-dashboard
+```
 
-```text
-[Unit]
+2. Create service unit
+
+Copy the following or use this [**file**](https://github.com/apache/apisix-dashboard/tree/master/service/apisix-dashboard.service) directly, you need to copy it to the `/usr/lib/systemd/system` directory and execute the `systemctl daemon-reload` command.
+
+```shell
+# copy service unit
+cp ./api/service/apisix-dashboard.service /usr/lib/systemd/system/apisix-dashboard.service
+systemctl daemon-reload
+
+# or: If you need to modify the service unit, you can use the following command
+echo "[Unit]
 Description=apisix-dashboard
 Conflicts=apisix-dashboard.service
 After=network-online.target
 
 [Service]
 WorkingDirectory=/usr/local/apisix-dashboard
-ExecStart=/usr/local/apisix-dashboard/manager-api -c /usr/local/apisix-dashboard/conf/conf.yaml
+ExecStart=/usr/local/apisix-dashboard/manager-api -c /usr/local/apisix-dashboard/conf/conf.yaml" > /usr/lib/systemd/system/apisix-dashboard.service
 ```
 
-You need to copy it to the `/usr/lib/systemd/system` directory and execute the `systemctl daemon-reload` command.
+3. Manage service
 
-:::note
-You will first need to copy the entire contents of the `output` directory to the `/usr/local/apisix-dashboard` folder.
-:::
+You can use the following command to manage the service.
+
+```shell
+# start apisix-dashboard
+systemctl start apisix-dashboard
+
+# stop apisix-dashboard
+systemctl stop apisix-dashboard
+
+# check apisix-dashboard status
+systemctl status apisix-dashboard
+```
