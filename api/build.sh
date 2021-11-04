@@ -30,7 +30,7 @@ fi
 
 set -x
 export ENV=local
-pwd=`pwd`
+pwd=$(pwd)
 
 rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
 
