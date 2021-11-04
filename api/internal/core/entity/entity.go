@@ -290,3 +290,16 @@ type Proto struct {
 	Desc    string `json:"desc,omitempty"`
 	Content string `json:"content"`
 }
+
+// swagger:model StreamRoute
+type StreamRoute struct {
+	BaseInfo
+	Desc       string                 `json:"desc,omitempty"`
+	RemoteAddr string                 `json:"remote_addr,omitempty"`
+	ServerAddr string                 `json:"server_addr,omitempty"`
+	ServerPort int                    `json:"server_port,omitempty"`
+	SNI        string                 `json:"sni,omitempty"`
+	Upstream   *UpstreamDef           `json:"upstream,omitempty"`
+	UpstreamID interface{}            `json:"upstream_id,omitempty"`
+	Plugins    map[string]interface{} `json:"plugins,omitempty"`
+}

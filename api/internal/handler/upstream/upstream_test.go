@@ -1436,6 +1436,8 @@ func TestUpstreams_Delete(t *testing.T) {
 		routeMockErr    error
 		serviceMockData []*entity.Service
 		serviceMockErr  error
+		streamRouteMockData []*entity.Service
+		streamRouteMockErr  error
 		getCalled       bool
 	}{
 		{
@@ -1587,7 +1589,27 @@ func TestUpstreams_Delete(t *testing.T) {
 				}
 			}, tc.serviceMockErr)
 
-			h := Handler{upstreamStore: upstreamStore, routeStore: routeStore, serviceStore: serviceStore}
+			streamRouteStore := &store.MockInterface{}
+			streamRouteStore.On("List", mock.Anything).Return(func(input store.ListInput) *store.ListOutput {
+				var returnData []interface{}
+				for _, c := range tc.streamRouteMockData {
+					if input.Predicate(c) {
+						if input.Format == nil {
+							returnData = append(returnData, c)
+							continue
+						}
+
+						returnData = append(returnData, input.Format(c))
+					}
+				}
+
+				return &store.ListOutput{
+					Rows:      returnData,
+					TotalSize: len(returnData),
+				}
+			}, tc.streamRouteMockErr)
+
+			h := Handler{upstreamStore: upstreamStore, routeStore: routeStore, serviceStore: serviceStore, streamRouteStore: streamRouteStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.BatchDelete(ctx)

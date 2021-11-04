@@ -24,6 +24,7 @@ import (
 	"net"
 	"net/http"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -38,6 +39,7 @@ var (
 
 	UpstreamIp             = "172.16.238.20"
 	UpstreamGrpcIp         = "172.16.238.21"
+	UpstreamEchoIp         = "172.16.238.22"
 	APISIXHost             = "http://127.0.0.1:9080"
 	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
@@ -79,6 +81,36 @@ func ManagerApiExpect() *httpexpect.Expect {
 func APISIXExpect() *httpexpect.Expect {
 	t := getTestingHandle()
 	return httpexpect.New(t, APISIXHost)
+}
+
+func APISIXStreamProxyExpect(port uint16, sni string) *httpexpect.Expect {
+	if port == 0 {
+		port = 10090
+	}
+	t := getTestingHandle()
+
+	if sni != "" {
+		addr := net.JoinHostPort(sni, strconv.Itoa(int(port)))
+		return httpexpect.WithConfig(httpexpect.Config{
+			BaseURL:  "https://" + addr,
+			Reporter: httpexpect.NewAssertReporter(t),
+			Client: &http.Client{
+				Transport: &http.Transport{
+					TLSClientConfig: &tls.Config{
+						// accept any certificate; for testing only!
+						InsecureSkipVerify: true,
+					},
+					DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+						addr = net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port)))
+						dialer := &net.Dialer{}
+						return dialer.DialContext(ctx, network, addr)
+					},
+				},
+			},
+		})
+	} else {
+		return httpexpect.New(t, "http://" + net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
+	}
 }
 
 func PrometheusExporterExpect() *httpexpect.Expect {
