@@ -144,7 +144,7 @@ var _ = Describe("Global Rule", func() {
 			Object:        base.APISIXExpect(),
 			Method:        http.MethodGet,
 			Path:          "/hello",
-			Query:         "name=;select%20from%20sys",
+			Query:         "name=%3Bselect%20from%20sys",
 			ExpectStatus:  http.StatusForbidden,
 			ExpectHeaders: map[string]string{"X-VERSION": "1.0"},
 		}),
