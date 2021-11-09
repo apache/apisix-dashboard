@@ -26,7 +26,7 @@ import (
 )
 
 var _ = Describe("Consumer", func() {
-	DescribeTable("test stream route curd",
+	DescribeTable("test consumer curd",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -96,7 +96,7 @@ var _ = Describe("Consumer", func() {
 		}),
 	)
 
-	DescribeTable("test stream route data CURD exception",
+	DescribeTable("test consumer curd exception",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
