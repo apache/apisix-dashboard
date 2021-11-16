@@ -111,6 +111,7 @@
     "@types/react-helmet": "^6.1.4",
     "@types/styled-components": "^5.1.15",
     "@types/uuid": "8.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@umijs/fabric": "^2.8.1",
     "@umijs/plugin-blocks": "^2.0.5",
     "@umijs/plugin-esbuild": "^1.4.1",
