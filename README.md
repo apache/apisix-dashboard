@@ -77,9 +77,8 @@ Password: admin
 
 Support the following ways currently.
 
-- [Source Codes](./docs/en/latest/install.md#source-source)
-- [Docker](./docs/en/latest/deploy-with-docker.md)
-- [RPM package（only for CentOS 7）](./docs/en/latest/install.md#rpm-rpm)
+- [Docker, RPM, Source Codes](./docs/en/latest/install.md)
+- [Rebuild docker image](./docs/en/latest/deploy-with-docker.md)
 
 ## Development
 
