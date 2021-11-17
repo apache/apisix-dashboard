@@ -41,7 +41,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
           >
             {fields.map((field, index) => (
               <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
-                <Col span={5}>
+                <Col xs={9} sm={12} md={9} lg={10} xl={7} xxl={6}>
                   <Form.Item
                     label={formatMessage({ id: 'page.upstream.step.host' })}
                     style={{ marginBottom: 0 }}
