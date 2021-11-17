@@ -52,6 +52,7 @@ Dockerfile-apisix
 
 # backend unit test output
 api/coverage.txt
+api/coverage.html
 api/dag-to-lua/
 
 # frontend e2e test output
