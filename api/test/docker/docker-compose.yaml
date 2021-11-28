@@ -76,9 +76,7 @@ services:
       - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
       - ./apisix_logs:/usr/local/apisix/logs
     depends_on:
-      - node1
-      - node2
-      - node3
+      - etcd
     ports:
       - '9080:9080/tcp'
       - '9090:9090/tcp'
@@ -102,9 +100,7 @@ services:
       - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
       - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
     depends_on:
-      - node1
-      - node2
-      - node3
+      - etcd
     ports:
       - '9081:9080/tcp'
     networks:
@@ -120,9 +116,7 @@ services:
       - ../../conf/conf.yaml:/go/manager-api/conf/conf.yaml:ro
       - ../testdata:/go/manager-api/testdata
     depends_on:
-      - node1
-      - node2
-      - node3
+      - etcd
     ports:
       - '9000:9000/tcp'
     networks:
