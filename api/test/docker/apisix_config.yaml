@@ -20,8 +20,6 @@
 etcd:
   host:
     - "http://172.16.238.10:2379"
-    - "http://172.16.238.11:2379"
-    - "http://172.16.238.12:2379"
   resync_delay: 0  # sync data from etcd quickly for e2e test
 
 apisix:
