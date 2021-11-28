@@ -21,7 +21,8 @@ services:
     image: bitnami/etcd:3.4.0
     restart: unless-stopped
     environment:
-      ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
+      ALLOW_NONE_AUTHENTICATION: "yes"
     ports:
       - "2379:2379"
     expose:
