@@ -17,97 +17,18 @@
 version: "3.6"
 
 services:
-  node1:
-    image: gcr.io/etcd-development/etcd:v3.4.0
+  etcd:
+    image: bitnami/etcd:3.4.0
+    restart: unless-stopped
+    environment:
+      ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
     ports:
       - "2379:2379"
     expose:
       - 2379
-      - 2380
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.10
-    environment:
-      - ETCDCTL_API=3
-    command:
-      - /usr/local/bin/etcd
-      - --data-dir=/etcd-data
-      - --name
-      - node1
-      - --initial-advertise-peer-urls
-      - http://172.16.238.10:2380
-      - --listen-peer-urls
-      - http://0.0.0.0:2380
-      - --advertise-client-urls
-      - http://172.16.238.10:2379
-      - --listen-client-urls
-      - http://0.0.0.0:2379
-      - --initial-cluster
-      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
-      - --initial-cluster-state
-      - new
-      - --initial-cluster-token
-      - docker-etcd
-
-  node2:
-    image: gcr.io/etcd-development/etcd:v3.4.0
-    networks:
-      apisix_dashboard_e2e:
-        ipv4_address: 172.16.238.11
-    environment:
-      - ETCDCTL_API=3
-    expose:
-      - 2379
-      - 2380
-    command:
-      - /usr/local/bin/etcd
-      - --data-dir=/etcd-data
-      - --name
-      - node2
-      - --initial-advertise-peer-urls
-      - http://172.16.238.11:2380
-      - --listen-peer-urls
-      - http://0.0.0.0:2380
-      - --advertise-client-urls
-      - http://172.16.238.11:2379
-      - --listen-client-urls
-      - http://0.0.0.0:2379
-      - --initial-cluster
-      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
-      - --initial-cluster-state
-      - new
-      - --initial-cluster-token
-      - docker-etcd
-
-  node3:
-    image: gcr.io/etcd-development/etcd:v3.4.0
-    networks:
-      apisix_dashboard_e2e:
-        ipv4_address: 172.16.238.12
-    environment:
-      - ETCDCTL_API=3
-    expose:
-      - 2379
-      - 2380
-    command:
-      - /usr/local/bin/etcd
-      - --data-dir=/etcd-data
-      - --name
-      - node3
-      - --initial-advertise-peer-urls
-      - http://172.16.238.12:2380
-      - --listen-peer-urls
-      - http://0.0.0.0:2380
-      - --advertise-client-urls
-      - http://172.16.238.12:2379
-      - --listen-client-urls
-      - http://0.0.0.0:2379
-      - --initial-cluster
-      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
-      - --initial-cluster-state
-      - new
-      - --initial-cluster-token
-      - docker-etcd
 
   upstream:
     image: johz/upstream:v2.0
