@@ -172,24 +172,6 @@ services:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.30
 
-  apisix2:
-    hostname: apisix_server2
-    image: apache/apisix:2.7-alpine
-    restart: always
-    volumes:
-      - ./apisix_config2.yaml:/usr/local/apisix/conf/config.yaml:ro
-      - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
-      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
-    depends_on:
-      - node1
-      - node2
-      - node3
-    ports:
-      - '9081:9080/tcp'
-    networks:
-      apisix_dashboard_e2e:
-        ipv4_address: 172.16.238.31
-
   managerapi:
     build:
       context: ../../
@@ -225,5 +207,4 @@ networks:
     ipam:
       driver: default
       config:
-        -
-          subnet: 172.16.238.0/24
+        - subnet: 172.16.238.0/24
