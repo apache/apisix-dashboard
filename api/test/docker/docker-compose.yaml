@@ -147,7 +147,7 @@ services:
 
   apisix:
     hostname: apisix_server1
-    image: apache/apisix:2.10.0-alpine
+    image: apache/apisix:2.10.2-alpine
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -171,6 +171,24 @@ services:
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.30
+
+  apisix2:
+    hostname: apisix_server2
+    image: apache/apisix:2.10.2-alpine
+    restart: always
+    volumes:
+      - ./apisix_config2.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
+      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
+    depends_on:
+      - node1
+      - node2
+      - node3
+    ports:
+      - '9081:9080/tcp'
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.31
 
   managerapi:
     build:
