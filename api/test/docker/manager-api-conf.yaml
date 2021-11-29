@@ -23,6 +23,8 @@ conf:
   etcd:
     endpoints:               # supports defining multiple etcd host addresses for an etcd cluster
       - 172.16.238.10:2379   # ips here are defined in docker compose.
+      - 172.16.238.11:2379
+      - 172.16.238.12:2379
   log:
     error_log:                     # yamllint disable rule:comments-indentation
       level: warn                  # supports levels, lower to higher: debug, info, warn, error, panic, fatal
