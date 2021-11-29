@@ -124,6 +124,8 @@ services:
       - '1982:1982/tcp'
       - '1983:1983/tcp'
       - '1984:1984/tcp'
+      - '1991:1991/tcp'
+      - '1992:1992/udp'
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.20
