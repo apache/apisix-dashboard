@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"hash/crc32"
 	"net/http"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
@@ -255,6 +256,8 @@ func prepareConfigData() {
 }`)
 	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
 	gomega.Expect(err).Should(gomega.BeNil())
+
+	time.Sleep(time.Second * 1)
 }
 
 func deleteConfigData() {
