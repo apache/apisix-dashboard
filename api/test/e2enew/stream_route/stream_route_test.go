@@ -18,7 +18,6 @@ package stream_route_test
 
 import (
 	"encoding/json"
-	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -223,7 +222,7 @@ var _ = Describe("Stream Route", func() {
 					"server_port": 10090,
 					"upstream": {
 						"nodes": {
-							"` + base.UpstreamEchoIp + `:3333": 1
+							"` + base.UpstreamIp + `:1991": 1
 						},
 						"type": "roundrobin"
 					}
@@ -233,22 +232,17 @@ var _ = Describe("Stream Route", func() {
 			})
 		})
 		It("hit stream route through tcp", func() {
-			conn, err := net.Dial("tcp", "127.0.0.1:10090")
+			conn, err := net.Dial("tcp", "127.0.0.1:1991")
 			Expect(err).To(BeNil())
 
-			_, err = conn.Write([]byte("a"))
+			_, err = conn.Write([]byte("world"))
 			Expect(err).To(BeNil())
 
-			result := make([]byte, 0, 4096)
-			tmp := make([]byte, 256)
-			for {
-				n, err := conn.Read(tmp)
-				if err == io.EOF {
-					break
-				}
-				result = append(result, tmp[:n]...)
-			}
-			Expect(string(result)).To(ContainSubstring("Container information"))
+			result := make([]byte, 11)
+			n, err := conn.Read(result)
+			Expect(n).Should(BeNumerically("==", 11))
+			Expect(err).To(BeNil())
+			Expect(string(result)).To(ContainSubstring("hello world"))
 
 			err = conn.Close()
 			Expect(err).To(BeNil())
@@ -266,7 +260,7 @@ var _ = Describe("Stream Route", func() {
 					"server_port": 10095,
 					"upstream": {
 						"nodes": {
-							"` + base.UpstreamEchoIp + `:3333": 1
+							"` + base.UpstreamIp + `:1992": 1
 						},
 						"type": "roundrobin"
 					}
@@ -279,8 +273,14 @@ var _ = Describe("Stream Route", func() {
 			conn, err := net.Dial("udp", "127.0.0.1:10095")
 			Expect(err).To(BeNil())
 
-			_, err = conn.Write([]byte("a"))
+			_, err = conn.Write([]byte("world"))
 			Expect(err).To(BeNil())
+
+			result := make([]byte, 11)
+			n, err := conn.Read(result)
+			Expect(n).Should(BeNumerically("==", 11))
+			Expect(err).To(BeNil())
+			Expect(string(result)).To(ContainSubstring("hello world"))
 
 			err = conn.Close()
 			Expect(err).To(BeNil())
