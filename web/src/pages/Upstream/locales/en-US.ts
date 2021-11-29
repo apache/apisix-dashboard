@@ -104,9 +104,9 @@ export default {
   'page.upstream.checks.active.unhealthy.interval.description':
     'Interval between checks for unhealthy targets (in seconds)',
   'page.upstream.checks.passive.healthy.http_statuses.description':
-    'Which HTTP statuses to consider a failure',
-  'page.upstream.checks.passive.unhealthy.http_statuses.description':
     'Which HTTP statuses to consider a success',
+  'page.upstream.checks.passive.unhealthy.http_statuses.description':
+    'Which HTTP statuses to consider a failure',
   'page.upstream.checks.passive.unhealthy.http_failures.description':
     'Number of HTTP failures to consider a target unhealthy',
   'page.upstream.checks.passive.unhealthy.tcp_failures.description':
