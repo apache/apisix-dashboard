@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -235,6 +236,8 @@ var _ = Describe("Stream Route", func() {
 			conn, err := net.Dial("tcp", "127.0.0.1:1991")
 			Expect(err).To(BeNil())
 
+			_ = conn.SetDeadline(time.Now().Add(time.Second * 3))
+
 			_, err = conn.Write([]byte("world"))
 			Expect(err).To(BeNil())
 
@@ -272,6 +275,8 @@ var _ = Describe("Stream Route", func() {
 		It("hit stream route through udp", func() {
 			conn, err := net.Dial("udp", "127.0.0.1:10095")
 			Expect(err).To(BeNil())
+
+			_ = conn.SetDeadline(time.Now().Add(time.Second * 3))
 
 			_, err = conn.Write([]byte("world"))
 			Expect(err).To(BeNil())
