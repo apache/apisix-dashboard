@@ -194,7 +194,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyPluginConfig, GenericStoreOption{
-		BasePath: "/apisix/plugin_configs",
+		BasePath: conf.ETCDConfig.Prefix + "/plugin_configs",
 		ObjType:  reflect.TypeOf(entity.PluginConfig{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.PluginConfig)
