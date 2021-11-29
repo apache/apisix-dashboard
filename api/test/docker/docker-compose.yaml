@@ -17,19 +17,100 @@
 version: "3.6"
 
 services:
-  etcd:
-    image: bitnami/etcd:3.4.0
-    restart: unless-stopped
-    environment:
-      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
-      ALLOW_NONE_AUTHENTICATION: "yes"
+  node1:
+    image: bitnami/etcd:3.5.1
     ports:
       - "2379:2379"
     expose:
       - 2379
+      - 2380
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.10
+    environment:
+      - ETCDCTL_API=3
+      - ALLOW_NONE_AUTHENTICATION=yes
+    command:
+      - /usr/local/bin/etcd
+      - --data-dir=/etcd-data
+      - --name
+      - node1
+      - --initial-advertise-peer-urls
+      - http://172.16.238.10:2380
+      - --listen-peer-urls
+      - http://0.0.0.0:2380
+      - --advertise-client-urls
+      - http://172.16.238.10:2379
+      - --listen-client-urls
+      - http://0.0.0.0:2379
+      - --initial-cluster
+      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - --initial-cluster-state
+      - new
+      - --initial-cluster-token
+      - docker-etcd
+
+  node2:
+    image: bitnami/etcd:3.5.1
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.11
+    environment:
+      - ETCDCTL_API=3
+      - ALLOW_NONE_AUTHENTICATION=yes
+    expose:
+      - 2379
+      - 2380
+    command:
+      - /usr/local/bin/etcd
+      - --data-dir=/etcd-data
+      - --name
+      - node2
+      - --initial-advertise-peer-urls
+      - http://172.16.238.11:2380
+      - --listen-peer-urls
+      - http://0.0.0.0:2380
+      - --advertise-client-urls
+      - http://172.16.238.11:2379
+      - --listen-client-urls
+      - http://0.0.0.0:2379
+      - --initial-cluster
+      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - --initial-cluster-state
+      - new
+      - --initial-cluster-token
+      - docker-etcd
+
+  node3:
+    image: bitnami/etcd:3.5.1
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.12
+    environment:
+      - ETCDCTL_API=3
+      - ALLOW_NONE_AUTHENTICATION=yes
+    expose:
+      - 2379
+      - 2380
+    command:
+      - /usr/local/bin/etcd
+      - --data-dir=/etcd-data
+      - --name
+      - node3
+      - --initial-advertise-peer-urls
+      - http://172.16.238.12:2380
+      - --listen-peer-urls
+      - http://0.0.0.0:2380
+      - --advertise-client-urls
+      - http://172.16.238.12:2379
+      - --listen-client-urls
+      - http://0.0.0.0:2379
+      - --initial-cluster
+      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - --initial-cluster-state
+      - new
+      - --initial-cluster-token
+      - docker-etcd
 
   upstream:
     image: johz/upstream:v2.0
@@ -43,8 +124,6 @@ services:
       - '1982:1982/tcp'
       - '1983:1983/tcp'
       - '1984:1984/tcp'
-      - '1991:1991/tcp'
-      - '1992:1992/udp'
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.20
@@ -79,7 +158,9 @@ services:
       - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
       - ./apisix_logs:/usr/local/apisix/logs
     depends_on:
-      - etcd
+      - node1
+      - node2
+      - node3
     ports:
       - '9080:9080/tcp'
       - '9090:9090/tcp'
@@ -103,7 +184,9 @@ services:
       - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
       - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
     depends_on:
-      - etcd
+      - node1
+      - node2
+      - node3
     ports:
       - '9081:9080/tcp'
     networks:
@@ -119,7 +202,9 @@ services:
       - ../../conf/conf.yaml:/go/manager-api/conf/conf.yaml:ro
       - ../testdata:/go/manager-api/testdata
     depends_on:
-      - etcd
+      - node1
+      - node2
+      - node3
     ports:
       - '9000:9000/tcp'
     networks:
