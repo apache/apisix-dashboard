@@ -121,7 +121,7 @@ var _ = Describe("Stream Route", func() {
 		}),
 		Entry("create stream route", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
-			Method: http.MethodPost,
+			Method: http.MethodPut,
 			Path:   "/apisix/admin/stream_routes/test",
 			Body: `{
 				"server_port": 10090,
