@@ -17,17 +17,17 @@
 version: "3.6"
 
 services:
-  node1:
+  etcd1:
     image: bitnami/etcd:3.5.1
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
       - ETCD_DATA_DIR=/etcd-data
-      - ETCD_NAME=node1
+      - ETCD_NAME=etcd1
       - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://172.16.238.10:2380
       - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
       - ETCD_ADVERTISE_CLIENT_URLS=http://172.16.238.10:2379
       - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
-      - ETCD_INITIAL_CLUSTER=node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - ETCD_INITIAL_CLUSTER=etcd1=http://172.16.238.10:2380,etcd2=http://172.16.238.11:2380,etcd3=http://172.16.238.12:2380
       - ETCD_INITIAL_CLUSTER_STATE=new
       - ETCD_INITIAL_CLUSTER_TOKEN=docker-etcd
     ports:
@@ -39,17 +39,17 @@ services:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.10
 
-  node2:
+  etcd2:
     image: bitnami/etcd:3.5.1
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
       - ETCD_DATA_DIR=/etcd-data
-      - ETCD_NAME=node2
+      - ETCD_NAME=etcd2
       - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://172.16.238.11:2380
       - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
       - ETCD_ADVERTISE_CLIENT_URLS=http://172.16.238.11:2379
       - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
-      - ETCD_INITIAL_CLUSTER=node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - ETCD_INITIAL_CLUSTER=etcd1=http://172.16.238.10:2380,etcd2=http://172.16.238.11:2380,etcd3=http://172.16.238.12:2380
       - ETCD_INITIAL_CLUSTER_STATE=new
       - ETCD_INITIAL_CLUSTER_TOKEN=docker-etcd
     expose:
@@ -59,17 +59,17 @@ services:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.11
 
-  node3:
+  etcd3:
     image: bitnami/etcd:3.5.1
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
       - ETCD_DATA_DIR=/etcd-data
-      - ETCD_NAME=node3
+      - ETCD_NAME=etcd3
       - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://172.16.238.12:2380
       - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
       - ETCD_ADVERTISE_CLIENT_URLS=http://172.16.238.12:2379
       - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
-      - ETCD_INITIAL_CLUSTER=node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - ETCD_INITIAL_CLUSTER=etcd1=http://172.16.238.10:2380,etcd2=http://172.16.238.11:2380,etcd3=http://172.16.238.12:2380
       - ETCD_INITIAL_CLUSTER_STATE=new
       - ETCD_INITIAL_CLUSTER_TOKEN=docker-etcd
     expose:
@@ -127,9 +127,9 @@ services:
       - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
       - ./apisix_logs:/usr/local/apisix/logs
     depends_on:
-      - node1
-      - node2
-      - node3
+      - etcd1
+      - etcd2
+      - etcd3
     ports:
       - '9080:9080/tcp'
       - '9090:9090/tcp'
@@ -153,9 +153,9 @@ services:
       - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
       - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
     depends_on:
-      - node1
-      - node2
-      - node3
+      - etcd1
+      - etcd2
+      - etcd3
     ports:
       - '9081:9080/tcp'
     networks:
@@ -171,9 +171,9 @@ services:
       - ../../conf/conf.yaml:/go/manager-api/conf/conf.yaml:ro
       - ../testdata:/go/manager-api/testdata
     depends_on:
-      - node1
-      - node2
-      - node3
+      - etcd1
+      - etcd2
+      - etcd3
     ports:
       - '9000:9000/tcp'
     networks:
