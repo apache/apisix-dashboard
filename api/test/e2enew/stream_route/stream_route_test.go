@@ -109,20 +109,6 @@ var _ = Describe("Stream Route", func() {
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		Entry("create upstream", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPost,
-			Path:   "/apisix/admin/upstreams",
-			Body: `{
-				"id": "u1",
-				"nodes": {
-					"` + base.UpstreamIp + `:1980": 1
-				},
-				"type": "roundrobin"
-			}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
 		Entry("create stream route", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
@@ -130,7 +116,12 @@ var _ = Describe("Stream Route", func() {
 			Body: `{
 				"id": "sr1",
 				"server_port": 10090,
-				"upstream_id": "u1"
+				"upstream": {
+        			"nodes": {
+            			"` + base.UpstreamIp + `:1980": 1
+        			},
+        			"type": "roundrobin"
+    			}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
