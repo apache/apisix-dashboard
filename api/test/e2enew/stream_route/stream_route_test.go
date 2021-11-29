@@ -35,6 +35,7 @@ var _ = Describe("Stream Route", func() {
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
+		// base case
 		Entry("create stream route", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
@@ -103,6 +104,54 @@ var _ = Describe("Stream Route", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
+
+		// try to delete used upstream
+		Entry("create upstream", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/test",
+			Body: `{
+				"nodes": {
+					"` + base.UpstreamIp + `:1980": 1
+				},
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		Entry("create stream route", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/stream_routes/test",
+			Body: `{
+				"server_port": 10090,
+				"upstream_id": "test"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		Entry("delete used upstream", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/test",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "stream route: test is using this upstream",
+		}),
+		Entry("delete stream route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/stream_routes/test",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		Entry("delete unused upstream", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/test",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
 	)
 
 	DescribeTable("test stream route with HTTP upstream",
@@ -133,25 +182,10 @@ var _ = Describe("Stream Route", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
-		Entry("delete used upstream", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/u1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "stream route: sr1 is using this upstream",
-		}),
 		Entry("delete stream route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/stream_routes/sr1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		Entry("delete unused upstream", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
