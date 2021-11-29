@@ -19,6 +19,17 @@ version: "3.6"
 services:
   node1:
     image: bitnami/etcd:3.5.1
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_DATA_DIR=/etcd-data
+      - ETCD_NAME=node1
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://172.16.238.10:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_ADVERTISE_CLIENT_URLS=http://172.16.238.10:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_INITIAL_CLUSTER=node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_INITIAL_CLUSTER_TOKEN=docker-etcd
     ports:
       - "2379:2379"
     expose:
@@ -27,90 +38,46 @@ services:
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.10
-    environment:
-      - ETCDCTL_API=3
-      - ALLOW_NONE_AUTHENTICATION=yes
-    command:
-      - /usr/local/bin/etcd
-      - --data-dir=/etcd-data
-      - --name
-      - node1
-      - --initial-advertise-peer-urls
-      - http://172.16.238.10:2380
-      - --listen-peer-urls
-      - http://0.0.0.0:2380
-      - --advertise-client-urls
-      - http://172.16.238.10:2379
-      - --listen-client-urls
-      - http://0.0.0.0:2379
-      - --initial-cluster
-      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
-      - --initial-cluster-state
-      - new
-      - --initial-cluster-token
-      - docker-etcd
 
   node2:
     image: bitnami/etcd:3.5.1
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_DATA_DIR=/etcd-data
+      - ETCD_NAME=node2
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://172.16.238.11:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_ADVERTISE_CLIENT_URLS=http://172.16.238.11:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_INITIAL_CLUSTER=node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_INITIAL_CLUSTER_TOKEN=docker-etcd
+    expose:
+      - 2379
+      - 2380
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.11
-    environment:
-      - ETCDCTL_API=3
-      - ALLOW_NONE_AUTHENTICATION=yes
-    expose:
-      - 2379
-      - 2380
-    command:
-      - /usr/local/bin/etcd
-      - --data-dir=/etcd-data
-      - --name
-      - node2
-      - --initial-advertise-peer-urls
-      - http://172.16.238.11:2380
-      - --listen-peer-urls
-      - http://0.0.0.0:2380
-      - --advertise-client-urls
-      - http://172.16.238.11:2379
-      - --listen-client-urls
-      - http://0.0.0.0:2379
-      - --initial-cluster
-      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
-      - --initial-cluster-state
-      - new
-      - --initial-cluster-token
-      - docker-etcd
 
   node3:
     image: bitnami/etcd:3.5.1
-    networks:
-      apisix_dashboard_e2e:
-        ipv4_address: 172.16.238.12
     environment:
-      - ETCDCTL_API=3
       - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_DATA_DIR=/etcd-data
+      - ETCD_NAME=node3
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://172.16.238.12:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_ADVERTISE_CLIENT_URLS=http://172.16.238.12:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_INITIAL_CLUSTER=node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_INITIAL_CLUSTER_TOKEN=docker-etcd
     expose:
       - 2379
       - 2380
-    command:
-      - /usr/local/bin/etcd
-      - --data-dir=/etcd-data
-      - --name
-      - node3
-      - --initial-advertise-peer-urls
-      - http://172.16.238.12:2380
-      - --listen-peer-urls
-      - http://0.0.0.0:2380
-      - --advertise-client-urls
-      - http://172.16.238.12:2379
-      - --listen-client-urls
-      - http://0.0.0.0:2379
-      - --initial-cluster
-      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
-      - --initial-cluster-state
-      - new
-      - --initial-cluster-token
-      - docker-etcd
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.12
 
   upstream:
     image: johz/upstream:v2.0
