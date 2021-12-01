@@ -23,7 +23,7 @@ context('Create Route with advanced matching conditions', () => {
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     notification: '.ant-notification-notice-message',
     parameterPosition: '#position',
     ruleCard: '.ant-modal',
@@ -79,7 +79,7 @@ context('Create Route with advanced matching conditions', () => {
             .click()
             .then(() => {
               cy.get('.ant-select-dropdown').within(() => {
-                cy.contains('Build-in').should('be.visible').click();
+                cy.contains('Built-in').should('be.visible').click();
               });
             });
           cy.get(selector.ruleCard).within(() => {
@@ -94,7 +94,7 @@ context('Create Route with advanced matching conditions', () => {
     cy.get(selector.advancedMatchingTable).should('exist');
     cy.wrap(opreatorList).each((operator, index) => {
       cy.get(selector.advancedMatchingTableCell).within(() => {
-        cy.contains('td', 'Build-in Parameter').should('be.visible');
+        cy.contains('td', 'Built-in Parameter').should('be.visible');
         cy.contains('td', data.matchingParamName).should('be.visible');
         cy.contains('td', matchingValueList1[index]).should('be.visible');
       });
@@ -128,14 +128,14 @@ context('Create Route with advanced matching conditions', () => {
           });
       });
       cy.get(selector.ruleCard).within(() => {
-        cy.get(`[title="Build-in Parameter"]`).should('have.class', 'ant-select-selection-item');
+        cy.get(`[title="Built-in Parameter"]`).should('have.class', 'ant-select-selection-item');
         cy.get(selector.name).clear().type(data.matchingParamName);
         cy.get(`[title="${opreator}"]`).should('have.class', 'ant-select-selection-item');
         cy.get(selector.value).clear().type(matchingValueList2[index]);
         cy.contains('Confirm').click();
       });
       cy.get(selector.advancedMatchingTableCell).within(() => {
-        cy.contains('td', 'Build-in Parameter').should('be.visible');
+        cy.contains('td', 'Built-in Parameter').should('be.visible');
         cy.contains('td', data.matchingParamName).should('be.visible');
         cy.contains('td', matchingValueList2[index]).should('be.visible');
       });
