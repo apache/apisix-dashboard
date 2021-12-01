@@ -14,28 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package stream_route
+package stream_route_test
 
 import (
 	"encoding/json"
-	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/extensions/table"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var _ = ginkgo.Describe("Stream Route", func() {
-	table.DescribeTable("test stream route data CURD",
+var _ = Describe("Stream Route", func() {
+	DescribeTable("test stream route data CURD",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("create stream route", base.HttpTestCase{
+		// base case
+		Entry("create stream route", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/stream_routes",
@@ -55,7 +56,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("get stream route #1", base.HttpTestCase{
+		Entry("get stream route #1", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/stream_routes/sr1",
@@ -63,7 +64,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"server_port":10090`,
 		}),
-		table.Entry("update stream route", base.HttpTestCase{
+		Entry("update stream route", base.HttpTestCase{
 			Object:  base.ManagerApiExpect(),
 			Method:  http.MethodPut,
 			Path:    "/apisix/admin/stream_routes/sr1",
@@ -81,7 +82,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"server_port":10091`,
 		}),
-		table.Entry("get stream route #2", base.HttpTestCase{
+		Entry("get stream route #2", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/stream_routes/sr1",
@@ -89,14 +90,14 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"server_port":10091`,
 		}),
-		table.Entry("hit stream route", base.HttpTestCase{
+		Entry("hit stream route", base.HttpTestCase{
 			Object:       base.APISIXStreamProxyExpect(10091, ""),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
-		table.Entry("delete stream route", base.HttpTestCase{
+		Entry("delete stream route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/stream_routes/sr1",
@@ -105,62 +106,38 @@ var _ = ginkgo.Describe("Stream Route", func() {
 		}),
 	)
 
-	table.DescribeTable("test stream route with HTTP upstream",
+	DescribeTable("test stream route with HTTP upstream",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("create upstream", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPost,
-			Path:   "/apisix/admin/upstreams",
-			Body: `{
-				"id": "u1",
-				"nodes": {
-					"` + base.UpstreamIp + `:1980": 1
-				},
-				"type": "roundrobin"
-			}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("create stream route", base.HttpTestCase{
+		Entry("create stream route", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/stream_routes",
 			Body: `{
 				"id": "sr1",
 				"server_port": 10090,
-				"upstream_id": "u1"
+				"upstream": {
+        			"nodes": {
+            			"` + base.UpstreamIp + `:1980": 1
+        			},
+        			"type": "roundrobin"
+    			}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("hit stream route", base.HttpTestCase{
+		Entry("hit stream route", base.HttpTestCase{
 			Object:       base.APISIXStreamProxyExpect(10090, ""),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
-		table.Entry("delete used upstream", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/u1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "stream route: sr1 is using this upstream",
-		}),
-		table.Entry("delete stream route", base.HttpTestCase{
+		Entry("delete stream route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/stream_routes/sr1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("delete unused upstream", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
@@ -168,16 +145,16 @@ var _ = ginkgo.Describe("Stream Route", func() {
 
 	// prepare ssl certificate
 	apisixCert, err := ioutil.ReadFile("../../certs/apisix.crt")
-	gomega.Expect(err).To(gomega.BeNil())
+	Expect(err).To(BeNil())
 	apisixKey, err := ioutil.ReadFile("../../certs/apisix.key")
-	gomega.Expect(err).To(gomega.BeNil())
+	Expect(err).To(BeNil())
 	apisixSSLBody, err := json.Marshal(map[string]string{"cert": string(apisixCert), "key": string(apisixKey)})
-	gomega.Expect(err).To(gomega.BeNil())
-	table.DescribeTable("test stream route with HTTPS upstream",
+	Expect(err).To(BeNil())
+	DescribeTable("test stream route with HTTPS upstream",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("create ssl cert", base.HttpTestCase{
+		Entry("create ssl cert", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPost,
 			Path:         "/apisix/admin/ssl",
@@ -185,7 +162,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("create stream route", base.HttpTestCase{
+		Entry("create stream route", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/stream_routes",
@@ -203,7 +180,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("hit stream route through https", base.HttpTestCase{
+		Entry("hit stream route through https", base.HttpTestCase{
 			Object:       base.APISIXStreamProxyExpect(10093, "test.com"),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -212,8 +189,8 @@ var _ = ginkgo.Describe("Stream Route", func() {
 		}),
 	)
 
-	ginkgo.Describe("test stream route with TCP upstream", func() {
-		ginkgo.It("create stream route", func() {
+	Describe("test stream route with TCP upstream", func() {
+		It("create stream route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPost,
@@ -223,7 +200,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 					"server_port": 10090,
 					"upstream": {
 						"nodes": {
-							"` + base.UpstreamEchoIp + `:3333": 1
+							"` + base.UpstreamIp + `:1991": 1
 						},
 						"type": "roundrobin"
 					}
@@ -232,31 +209,28 @@ var _ = ginkgo.Describe("Stream Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit stream route through tcp", func() {
-			conn, err := net.Dial("tcp", "127.0.0.1:10090")
-			gomega.Expect(err).To(gomega.BeNil())
+		It("hit stream route through tcp", func() {
+			conn, err := net.Dial("tcp", "127.0.0.1:1991")
+			Expect(err).To(BeNil())
 
-			_, err = conn.Write([]byte("a"))
-			gomega.Expect(err).To(gomega.BeNil())
+			_ = conn.SetDeadline(time.Now().Add(time.Second * 3))
 
-			result := make([]byte, 0, 4096)
-			tmp := make([]byte, 256)
-			for {
-				n, err := conn.Read(tmp)
-				if err == io.EOF {
-					break
-				}
-				result = append(result, tmp[:n]...)
-			}
-			gomega.Expect(string(result)).To(gomega.ContainSubstring("Container information"))
+			_, err = conn.Write([]byte("world"))
+			Expect(err).To(BeNil())
+
+			result := make([]byte, 11)
+			n, err := conn.Read(result)
+			Expect(n).Should(BeNumerically("==", 11))
+			Expect(err).To(BeNil())
+			Expect(string(result)).To(ContainSubstring("hello world"))
 
 			err = conn.Close()
-			gomega.Expect(err).To(gomega.BeNil())
+			Expect(err).To(BeNil())
 		})
 	})
 
-	ginkgo.Describe("test stream route with UDP upstream", func() {
-		ginkgo.It("create stream route", func() {
+	Describe("test stream route with UDP upstream", func() {
+		It("create stream route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPost,
@@ -266,7 +240,7 @@ var _ = ginkgo.Describe("Stream Route", func() {
 					"server_port": 10095,
 					"upstream": {
 						"nodes": {
-							"` + base.UpstreamEchoIp + `:3333": 1
+							"` + base.UpstreamIp + `:1992": 1
 						},
 						"type": "roundrobin"
 					}
@@ -275,23 +249,31 @@ var _ = ginkgo.Describe("Stream Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit stream route through udp", func() {
+		It("hit stream route through udp", func() {
 			conn, err := net.Dial("udp", "127.0.0.1:10095")
-			gomega.Expect(err).To(gomega.BeNil())
+			Expect(err).To(BeNil())
 
-			_, err = conn.Write([]byte("a"))
-			gomega.Expect(err).To(gomega.BeNil())
+			_ = conn.SetDeadline(time.Now().Add(time.Second * 3))
+
+			_, err = conn.Write([]byte("world"))
+			Expect(err).To(BeNil())
+
+			result := make([]byte, 11)
+			n, err := conn.Read(result)
+			Expect(n).Should(BeNumerically("==", 11))
+			Expect(err).To(BeNil())
+			Expect(string(result)).To(ContainSubstring("hello world"))
 
 			err = conn.Close()
-			gomega.Expect(err).To(gomega.BeNil())
+			Expect(err).To(BeNil())
 		})
 	})
 
-	table.DescribeTable("test stream route data CURD exception",
+	DescribeTable("test stream route data CURD exception",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("create stream route with upstream id not found", base.HttpTestCase{
+		Entry("create stream route with upstream id not found", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/stream_routes",
