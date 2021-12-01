@@ -23,7 +23,7 @@ context('Create Route with advanced matching conditions', () => {
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     notification: '.ant-notification-notice-message',
     parameterPosition: '#position',
     ruleCard: '.ant-modal',

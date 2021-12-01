@@ -37,7 +37,7 @@ context('Create Route Both use uri and uris', () => {
     addUri: '[data-cy=addUri]',
     addRemoteAddr: '[data-cy=addRemoteAddr]',
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     notification: '.ant-notification-notice-message',
   };
 

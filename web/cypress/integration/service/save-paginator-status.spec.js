@@ -30,7 +30,7 @@ context('Save Paginator Status', () => {
     paginationOptions: '.ant-pagination-options',
     deleteButton: '.ant-btn-dangerous',
     notification: '.ant-notification-notice-message',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
   };
 
   const data = {

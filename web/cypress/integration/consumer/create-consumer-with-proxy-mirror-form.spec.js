@@ -26,7 +26,7 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
     notification: '.ant-notification-notice-message',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     max_age: '#max_age',
     allow_origins_by_regex: '#allow_origins_by_regex_0',
     host: '#host',

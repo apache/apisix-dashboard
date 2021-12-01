@@ -28,7 +28,7 @@ context('Can select service_id skip upstream in route', () => {
     nameSelector: '[title=Name]',
     serviceSelector: '[title=test_service]',
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     enable_websocket: '#enable_websocket',
   };
 

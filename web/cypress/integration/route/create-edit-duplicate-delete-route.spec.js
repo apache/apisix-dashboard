@@ -49,7 +49,7 @@ context('Create and Delete Route', () => {
     nameSelector: '[title=Name]',
     monacoScroll: '.monaco-scrollable-element',
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     notification: '.ant-notification-notice-message',
     addHost: '[data-cy=addHost]',
     schemaErrorMessage: '.ant-form-item-explain.ant-form-item-explain-error',

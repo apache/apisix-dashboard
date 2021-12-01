@@ -35,7 +35,7 @@ context('import and export routes', () => {
     deleteAlert: '.ant-modal-body',
     refresh: '.anticon-reload',
     notification: '.ant-notification-notice-message',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     fileSelector: '[type=file]',
     notificationDesc: '.ant-notification-notice-description',
   };

@@ -29,7 +29,7 @@ context('Create and delete route with cors form', () => {
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     notification: '.ant-notification-notice-message',
     allow_credential: '#allow_credential',
     allow_origins_by_regex0: '#allow_origins_by_regex_0',

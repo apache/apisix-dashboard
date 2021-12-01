@@ -26,7 +26,7 @@ context('Edit Service with not select Upstream', () => {
     input: ':input',
     notification: '.ant-notification-notice-message',
     nameSearch: '[title=Name]',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
   };
 
   const data = {

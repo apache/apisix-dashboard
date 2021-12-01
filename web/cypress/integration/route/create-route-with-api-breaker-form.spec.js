@@ -31,7 +31,7 @@ context('Create and delete route with api-breaker form', () => {
     break_response_code: '#break_response_code',
     alert: '.ant-form-item-explain-error [role=alert]',
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     notification: '.ant-notification-notice-message',
   };
 

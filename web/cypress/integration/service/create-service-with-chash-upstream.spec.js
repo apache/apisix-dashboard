@@ -31,7 +31,7 @@ context('Create and Edit Service with Custom CHash Key Upstream', () => {
     chash_key: '#key',
     notification: '.ant-notification-notice-message',
     nameSearch: '[title=Name]',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
   };
 
   const data = {

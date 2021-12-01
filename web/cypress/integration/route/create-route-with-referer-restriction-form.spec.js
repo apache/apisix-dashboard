@@ -29,7 +29,7 @@ context('Create and delete route with referer-restriction form', () => {
     checkedSwitcher: '.ant-switch-checked',
     drawer: '.ant-drawer-content',
     notification: '.ant-notification-notice-message',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     deleteAlert: '.ant-modal-body',
     whitelist: '#whitelist_0',
     whitelist_1: '#whitelist_1',

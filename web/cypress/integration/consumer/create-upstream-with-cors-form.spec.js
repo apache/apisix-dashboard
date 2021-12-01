@@ -26,7 +26,7 @@ context('Create and Delete Consumer', () => {
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
     notification: '.ant-notification-notice-message',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     rate: '#rate',
     burst: '#burst',
     key: '#key',

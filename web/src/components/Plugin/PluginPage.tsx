@@ -94,7 +94,7 @@ const PluginPage: React.FC<Props> = ({
   }, []);
 
   const PluginList = () => (
-    <>
+    <Layout>
       <style>
         {`
           .ant-card-body .icon {
@@ -249,7 +249,7 @@ const PluginPage: React.FC<Props> = ({
           {formatMessage({ id: 'component.plugin.tip2' })}
         </a>
       </Content>
-    </>
+    </Layout>
   );
 
   const Plugin = () => (
@@ -280,17 +280,15 @@ const PluginPage: React.FC<Props> = ({
     />
   );
   return (
-    <>
+    <div>
       <style>{`
         .ant-avatar {
           background-color: transparent;
         }
       `}</style>
-      <Layout>
-        <PluginList />
-        <Plugin />
-      </Layout>
-    </>
+      <PluginList />
+      <Plugin />
+    </div>
   );
 };
 

@@ -31,7 +31,7 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
     nameSelector: '[title=Name]',
     chash_key: '#key',
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     notification: '.ant-notification-notice-message',
   };
 

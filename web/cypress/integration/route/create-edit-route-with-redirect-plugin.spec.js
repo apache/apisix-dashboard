@@ -29,7 +29,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     customRedirectCode: '[data-cy=redirect_code]',
     customRedirectLabel: "[title='Custom Redirect']",
     deleteAlert: '.ant-modal-body',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    notificationCloseIcon: '.ant-notification-notice-close-icon',
     notification: '.ant-notification-notice-message',
     webSocketSelector: '[title=WebSocket]',
     enable_websocket_button: '#enable_websocket',

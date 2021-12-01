@@ -4,7 +4,7 @@
   "dropdown": ".rc-virtual-list",
   "notification": ".ant-notification-notice-message",
   "drawerBody": ".ant-drawer-wrapper-body",
-  "notificationCloseIcon": ".ant-notification-close-icon",
+  "notificationCloseIcon": ".ant-notification-notice-close-icon",
   "notificationDesc": ".ant-notification-notice-description",
   "errorNotification:": ".ant-notification-notice-error",
   "pluginCard": ".ant-card",
