@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { Button, Table, Modal, Form, Select, Input, Space, notification } from 'antd';
+import { Button, Table, Modal, Form, Select, Input, Space, notification, Typography } from 'antd';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
+
+const { Title, Text } = Typography;
 
 const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   advancedMatchingRules,
@@ -113,11 +115,14 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
           case 'arg':
             renderText = formatMessage({ id: 'page.route.requestParameter' });
             break;
+          case 'post_arg':
+            renderText = formatMessage({ id: 'page.route.postRequestParameter' });
+            break;
           case 'cookie':
             renderText = 'Cookie';
             break;
           case 'buildin':
-            renderText = formatMessage({ id: 'page.route.buildinParameter' });
+            renderText = formatMessage({ id: 'page.route.builtinParameter' });
             break;
           default:
             renderText = '';
@@ -208,8 +213,13 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             >
               <Option value="http">{formatMessage({ id: 'page.route.httpRequestHeader' })}</Option>
               <Option value="arg">{formatMessage({ id: 'page.route.requestParameter' })}</Option>
+              <Option value="post_arg">
+                {formatMessage({ id: 'page.route.postRequestParameter' })}
+              </Option>
               <Option value="cookie">Cookie</Option>
-              <Option value="buildin">{formatMessage({ id: 'page.route.buildinParameter' })}</Option>
+              <Option value="buildin">
+                {formatMessage({ id: 'page.route.builtinParameter' })}
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -289,6 +299,16 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
           >
             <Input />
           </Form.Item>
+          <Typography>
+            <Title level={5}>{formatMessage({ id: 'page.route.advanced-match.message' })}</Title>
+            <Text>
+              {formatMessage({ id: 'page.route.advanced-match.tips.requestParameter' })}
+              <br />
+              {formatMessage({ id: 'page.route.advanced-match.tips.postRequestParameter' })}
+              <br />
+              {formatMessage({ id: 'page.route.advanced-match.tips.builtinParameter' })}
+            </Text>
+          </Typography>
         </Form>
       </Modal>
     );
