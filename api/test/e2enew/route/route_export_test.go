@@ -1785,27 +1785,337 @@ var _ = ginkgo.Describe("Route", func() {
 
 		time.Sleep(base.SleepTime)
 
-		exportStrAuth := `"data": {
-				 "components": {
-					 "securitySchemes": {
-						 "api_key": {
-							 "in": "header",
-							 "name": "X-XSRF-TOKEN",
-							 "type": "apiKey"
-						 },
-						 "basicAuth": {
-							 "in": "header",
-							 "name": "basicAuth",
-							 "type": "basicAuth"
-						 }
-					 }
-				 },
-				 "info": {
-					 "title": "RoutesExport",
-					 "version": "3.0.0"
-				 },
-				 "openapi": "3.0.0",
-			 }`
+		exportStrAuth := `{
+			"components": {
+			  "securitySchemes": {
+				"api_key": {
+				  "in": "header",
+				  "name": "X-XSRF-TOKEN",
+				  "type": "apiKey"
+				},
+				"basicAuth": {
+				  "in": "header",
+				  "name": "basicAuth",
+				  "type": "basicAuth"
+				}
+			  }
+			},
+			"info": {
+			  "title": "RoutesExport",
+			  "version": "3.0.0"
+			},
+			"openapi": "3.0.0",
+			"paths": {
+			  "/hello": {
+				"connect": {
+				  "operationId": "route1CONNECT",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				},
+				"delete": {
+				  "operationId": "route1DELETE",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				},
+				"get": {
+				  "operationId": "route1GET",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				},
+				"head": {
+				  "operationId": "route1HEAD",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				},
+				"options": {
+				  "operationId": "route1OPTIONS",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				},
+				"patch": {
+				  "operationId": "route1PATCH",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				},
+				"post": {
+				  "operationId": "route1POST",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				},
+				"put": {
+				  "operationId": "route1PUT",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				},
+				"trace": {
+				  "operationId": "route1TRACE",
+				  "requestBody": {},
+				  "responses": {
+					"default": {
+					  "description": ""
+					}
+				  },
+				  "security": [
+					{
+					  "api_key": [
+						" "
+					  ]
+					},
+					{
+					  "basicAuth": [
+						" "
+					  ]
+					}
+				  ],
+				  "x-apisix-enable_websocket": false,
+				  "x-apisix-priority": 0,
+				  "x-apisix-status": 1,
+				  "x-apisix-upstream": {
+					"nodes": [
+					  {
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					  }
+					],
+					"type": "roundrobin"
+				  }
+				}
+			  }
+			}
+		  }`
 		time.Sleep(base.SleepTime)
 
 		exportStrAuth = replaceStr(exportStrAuth)
