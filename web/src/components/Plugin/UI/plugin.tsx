@@ -36,14 +36,14 @@ type Props = {
 };
 
 export const PLUGIN_UI_LIST = [
-  // 'api-breaker',
-  // 'basic-auth',
-  // 'cors',
-  // 'limit-req',
-  // 'limit-conn',
-  // 'proxy-mirror',
-  // 'referer-restriction',
-  // 'limit-count',
+  'api-breaker',
+  'basic-auth',
+  'cors',
+  'limit-req',
+  'limit-conn',
+  'proxy-mirror',
+  'referer-restriction',
+  'limit-count',
 ];
 
 export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) => {
