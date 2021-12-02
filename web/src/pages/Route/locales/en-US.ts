@@ -111,7 +111,7 @@ export default {
   'page.route.form.itemLabel.template': 'Template',
   'page.route.form.itemLabel.URIRewriteType': 'URI Override',
   'page.route.form.itemLabel.hostRewriteType': 'Host Override',
-  'page.route.form.itemLabel.methodRewriteType': 'Method Override',
+  'page.route.form.itemLabel.methodRewrite': 'Method Override',
   'page.route.form.itemLabel.redirectURI': 'Redirect URI',
   'page.route.input.placeholder.newPath': 'For example: /foo/bar/index.html',
 
