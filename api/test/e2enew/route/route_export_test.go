@@ -1513,9 +1513,7 @@ var _ = ginkgo.Describe("Route", func() {
 					 "version": "3.0.0"
 				 },
 				 "openapi": "3.0.0",
-				 "paths": {
-					 "/hello": {}
-				 }`
+				 `
 			exportStrJWT = replaceStr(exportStrJWT)
 			// verify token and clean test data
 		})
@@ -1594,9 +1592,7 @@ var _ = ginkgo.Describe("Route", func() {
 				 "version": "3.0.0"
 			 },
 			 "openapi": "3.0.0",
-			 "paths": {
-				 "/hello": {}
-			 }`
+			 `
 		exportStrJWTNoAlgorithm = replaceStr(exportStrJWTNoAlgorithm)
 
 		ginkgo.It("create consumer with jwt (no algorithm)", func() {
@@ -1809,11 +1805,7 @@ var _ = ginkgo.Describe("Route", func() {
 					 "version": "3.0.0"
 				 },
 				 "openapi": "3.0.0",
-				 "paths": {
-					 "/hello": {}
-				 }
 			 }`
-
 		time.Sleep(base.SleepTime)
 
 		exportStrAuth = replaceStr(exportStrAuth)
@@ -2206,7 +2198,6 @@ var _ = ginkgo.Describe("Route", func() {
 						 "summary": "所有",
 						 "x-apisix-enable_websocket": false,
 						 "x-apisix-hosts": ["test.com"],
-						 "x-apisix-plugins": {},
 						 "x-apisix-priority": 0,
 						 "x-apisix-status": 1
 					 }
@@ -2311,7 +2302,6 @@ var _ = ginkgo.Describe("Route", func() {
 						 "summary": "所有",
 						 "x-apisix-enable_websocket": false,
 						 "x-apisix-hosts": ["test.com"],
-						 "x-apisix-plugins": {},
 						 "x-apisix-priority": 0,
 						 "x-apisix-status": 1,
 						 "x-apisix-upstream": {
@@ -2334,7 +2324,6 @@ var _ = ginkgo.Describe("Route", func() {
 						 "summary": "所有1",
 						 "x-apisix-enable_websocket": false,
 						 "x-apisix-hosts": ["test.com"],
-						 "x-apisix-plugins": {},
 						 "x-apisix-priority": 0,
 						 "x-apisix-status": 1,
 						 "x-apisix-upstream": {
@@ -2357,7 +2346,6 @@ var _ = ginkgo.Describe("Route", func() {
 						 "summary": "所有2",
 						 "x-apisix-enable_websocket": false,
 						 "x-apisix-hosts": ["test.com"],
-						 "x-apisix-plugins": {},
 						 "x-apisix-priority": 0,
 						 "x-apisix-status": 1,
 						 "x-apisix-upstream": {
