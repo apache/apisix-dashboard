@@ -160,6 +160,9 @@ export const transformStepData = ({
         case 'arg':
           key = `arg_${name}`;
           break;
+        case 'post_arg':
+          key = `post_arg_${name}`;
+          break;
         default:
           key = `${name}`;
       }
@@ -272,11 +275,11 @@ const transformVarsToRules = (
   data.map(([key, operator, value]) => {
     let position = '';
     let name = '';
-    const regex = new RegExp('^(cookie|http|arg)_.+');
+    const regex = new RegExp('^(cookie|http|arg|post_arg)_.+');
     if (regex.test(key)) {
-      [, position, name] = key.split(/^(cookie|http|arg)_/);
-    }else {
-      position = "buildin";
+      [, position, name] = key.split(/^(cookie|http|arg|post_arg)_/);
+    } else {
+      position = 'buildin';
       name = key;
     }
     return {

@@ -19,7 +19,8 @@ export default {
   'page.route.parameterPosition': '参数位置',
   'page.route.httpRequestHeader': 'HTTP 请求头',
   'page.route.requestParameter': '请求参数',
-  'page.route.buildinParameter': '内置参数',
+  'page.route.postRequestParameter': 'POST 请求参数',
+  'page.route.builtinParameter': '内置参数',
   'page.route.parameterName': '参数名称',
   'page.route.operationalCharacter': '运算符',
   'page.route.equal': '等于（==）',
@@ -178,6 +179,11 @@ export default {
   'page.route.fields.service_id.without-upstream': '如果不绑定服务，则必须设置上游服务（步骤 2）',
   'page.route.advanced-match.tooltip':
     '支持通过请求头，请求参数、Cookie 进行路由匹配，可应用于灰度发布，蓝绿测试等场景。',
+  'page.route.advanced-match.message': '提示',
+  'page.route.advanced-match.tips.requestParameter': '请求参数：请求 URL 中的 Query 部分',
+  'page.route.advanced-match.tips.postRequestParameter':
+    'POST 请求参数：仅支持 POST x-www-form-urlencoded 表单',
+  'page.route.advanced-match.tips.builtinParameter': '内置参数：Nginx 内部参数',
 
   'page.route.fields.custom.redirectOption.tooltip': '在此配置 redirect 插件',
   'page.route.fields.service_id.tooltip': '绑定服务（Service）对象，以便复用其中的配置。',
