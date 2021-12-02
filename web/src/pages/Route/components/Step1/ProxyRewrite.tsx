@@ -304,7 +304,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
           wrapperCol={{ span: 3 }}
           initialValue=""
         >
-          <Select>
+          <Select data-cy="proxyRewrite-method">
             <Select.Option value="">
               {formatMessage({ id: 'page.route.select.option.methodRewriteNone' })}
             </Select.Option>
