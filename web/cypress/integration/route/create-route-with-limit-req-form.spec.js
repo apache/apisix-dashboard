@@ -34,7 +34,6 @@ context('Create and delete route with limit-req form', () => {
     rate: '#rate',
     burst: '#burst',
     key: '#key',
-    remote_addr: '[title=remote_addr]',
   };
 
   const data = {
@@ -42,6 +41,7 @@ context('Create and delete route with limit-req form', () => {
     submitSuccess: 'Submit Successfully',
     port: '80',
     weight: 1,
+    key: 'remote_addr',
   };
 
   beforeEach(() => {
@@ -91,8 +91,7 @@ context('Create and delete route with limit-req form', () => {
     // config limit-req form
     cy.get(selector.rate).type(1);
     cy.get(selector.burst).type(0);
-    cy.get(selector.key).click();
-    cy.get(selector.remote_addr).click();
+    cy.get(selector.key).type(data.key);
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
