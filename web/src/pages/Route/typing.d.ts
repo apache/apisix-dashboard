@@ -17,7 +17,7 @@
 declare namespace RouteModule {
   type Operator = '==' | '~=' | '>' | '<' | '~~' | '~*' | 'IN' | 'HAS' | '!';
 
-  type VarPosition = 'arg' | 'http' | 'cookie' | 'buildin';
+  type VarPosition = 'arg' | 'post_arg' | 'http' | 'cookie' | 'buildin';
 
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
