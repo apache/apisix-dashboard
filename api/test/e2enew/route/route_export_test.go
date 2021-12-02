@@ -1785,7 +1785,8 @@ var _ = ginkgo.Describe("Route", func() {
 
 		time.Sleep(base.SleepTime)
 
-		exportStrAuth := `{
+		exportStrAuth := `
+		{
 			"components": {
 			  "securitySchemes": {
 				"api_key": {
