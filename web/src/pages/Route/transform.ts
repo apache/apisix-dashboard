@@ -84,6 +84,7 @@ const transformProxyRewrite2Formdata = (pluginsData: any) => {
         case 'uri':
         case 'regex_uri':
         case 'host':
+        case 'method':
           proxyRewriteData[key] = pluginsData[key];
           break;
         case 'headers':
