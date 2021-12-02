@@ -1482,9 +1482,10 @@ var _ = ginkgo.Describe("Route", func() {
 			})
 		})
 
-		var jwtToken string
-		var exportStrJWT string
+		jwtToken := ""
+		exportStrJWT := ""
 		ginkgo.It("sign jwt token", func() {
+			time.Sleep(base.SleepTime)
 			// sign jwt token
 			t := ginkgo.GinkgoT()
 			body, status, err := base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key", nil)
