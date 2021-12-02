@@ -23,11 +23,15 @@ import { convertToFormData } from '@/components/Upstream/service';
 export const transformProxyRewrite2Plugin = (
   data: RouteModule.ProxyRewrite,
 ): RouteModule.ProxyRewrite => {
-  let omitFieldsList: string[] = ['kvHeaders'];
+  const omitFieldsList: string[] = ['kvHeaders'];
   let headers: Record<string, string> = {};
 
   if (data.scheme !== 'http' && data.scheme !== 'https') {
-    omitFieldsList = [...omitFieldsList, 'scheme'];
+    omitFieldsList.push('scheme');
+  }
+
+  if (data.method === '') {
+    omitFieldsList.push('method');
   }
 
   (data.kvHeaders || []).forEach((kvHeader) => {
