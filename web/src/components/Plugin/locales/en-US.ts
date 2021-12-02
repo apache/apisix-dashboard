@@ -108,8 +108,7 @@ export default {
     'The number of excessive requests per second allowed to be delayed. Requests exceeding this hard limit will get rejected immediately.',
   'component.pluginForm.limit-req.key_type.tooltip':
     'The key type, support: "var" (single var) and "var_combination" (combine var)',
-  'component.pluginForm.limit-req.key.tooltip':
-    'The user specified key to limit the rate, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
+  'component.pluginForm.limit-req.key.tooltip': 'The user specified key to limit the rate.',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected.',
   'component.pluginForm.limit-req.nodelay.tooltip':
