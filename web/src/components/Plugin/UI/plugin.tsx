@@ -36,14 +36,14 @@ type Props = {
 };
 
 export const PLUGIN_UI_LIST = [
-  'api-breaker',
-  'basic-auth',
-  'cors',
-  'limit-req',
-  'limit-conn',
-  'proxy-mirror',
-  'referer-restriction',
-  'limit-count',
+  // 'api-breaker',
+  // 'basic-auth',
+  // 'cors',
+  // 'limit-req',
+  // 'limit-conn',
+  // 'proxy-mirror',
+  // 'referer-restriction',
+  // 'limit-count',
 ];
 
 export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) => {
@@ -60,21 +60,21 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
 
   switch (name) {
     case 'api-breaker':
-      return <ApiBreaker form={form} schema={schema} />
+      return <ApiBreaker form={form} schema={schema} />;
     case 'basic-auth':
       return <BasicAuth form={form} schema={schema} />;
     case 'limit-count':
-      return <LimitCount form={form} schema={schema} />
+      return <LimitCount form={form} schema={schema} />;
     case 'cors':
-      return <Cors form={form} schema={schema} />
+      return <Cors form={form} schema={schema} />;
     case 'limit-req':
       return <LimitReq form={form} schema={schema} />;
     case 'proxy-mirror':
-      return <ProxyMirror form={form} schema={schema} />
+      return <ProxyMirror form={form} schema={schema} />;
     case 'limit-conn':
       return <LimitConn form={form} schema={schema} />;
     case 'referer-restriction':
-      return <RefererRestriction form={form} schema={schema} />
+      return <RefererRestriction form={form} schema={schema} />;
     default:
       return null;
   }
