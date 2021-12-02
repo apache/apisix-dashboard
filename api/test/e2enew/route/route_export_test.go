@@ -1490,7 +1490,6 @@ var _ = ginkgo.Describe("Route", func() {
 			t := ginkgo.GinkgoT()
 			body, status, err := base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key", nil)
 			assert.Nil(t, err)
-			assert.Equal(t, body, "test")
 			assert.Equal(t, http.StatusOK, status)
 			jwtToken = string(body)
 
