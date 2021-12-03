@@ -137,6 +137,7 @@ declare namespace RouteModule {
     uri?: string;
     regex_uri?: string[];
     host?: string;
+    method?: string;
     kvHeaders?: Kvobject[];
     headers?: Record<string, string>;
   };

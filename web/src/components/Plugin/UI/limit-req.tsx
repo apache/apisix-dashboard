@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, InputNumber, Select, Switch } from 'antd';
+import { Form, Input, InputNumber, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
@@ -36,7 +36,7 @@ export const FORM_ITEM_LAYOUT = {
 
 const LimitReq: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
-  const propertires = schema?.properties;
+  const properties = schema?.properties;
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
@@ -51,7 +51,7 @@ const LimitReq: React.FC<Props> = ({ form, schema }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rate.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={propertires.rate.exclusiveMinimum} required />
+        <InputNumber min={properties.rate.exclusiveMinimum} required />
       </Form.Item>
       <Form.Item
         label="burst"
@@ -65,22 +65,16 @@ const LimitReq: React.FC<Props> = ({ form, schema }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.burst.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={propertires.burst.minimum} required />
+        <InputNumber min={properties.burst.minimum} required />
       </Form.Item>
       <Form.Item
-        label="key"
-        name="key"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} key`,
-          },
-        ]}
-        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.key.tooltip' })}
-        validateTrigger={['onChange', 'onBlur', 'onClick']}
+        label="key_type"
+        name="key_type"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.key_type.tooltip' })}
+        initialValue={properties.key_type.default}
       >
         <Select>
-          {propertires.key.enum.map((item: string) => {
+          {properties.key_type.enum.map((item: string) => {
             return (
               <Select.Option value={item} key={item}>
                 {item}
@@ -90,14 +84,22 @@ const LimitReq: React.FC<Props> = ({ form, schema }) => {
         </Select>
       </Form.Item>
       <Form.Item
+        label="key"
+        name="key"
+        required
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.key.tooltip' })}
+      >
+        <Input min={1} />
+      </Form.Item>
+      <Form.Item
         label="rejected_code"
         name="rejected_code"
-        initialValue={propertires.rejected_code.default}
+        initialValue={properties.rejected_code.default}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rejected_code.tooltip' })}
       >
         <InputNumber
-          min={propertires.rejected_code.minimum}
-          max={propertires.rejected_code.maximum}
+          min={properties.rejected_code.minimum}
+          max={properties.rejected_code.maximum}
         />
       </Form.Item>
       <Form.Item

@@ -596,7 +596,7 @@
       "data": { "count": 2, "time_window": 60, "rejected_code": 503, "key": "remote_addr" }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "count": 2,
         "time_window": 60,

@@ -27,7 +27,7 @@ type Props = {
 
 type PolicyProps = 'local' | 'redis' | 'redis-cluster';
 
-type FormsProps={
+type FormsProps = {
   schema: Record<string, any> | undefined;
 };
 
@@ -57,56 +57,74 @@ const RedisForm: React.FC<FormsProps> = ({ schema }) => {
   const { formatMessage } = useIntl();
   const properties = schema?.properties;
 
-  return (<>
-    <Form.Item
-      label="redis_host"
-      name="redis_host"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_host.tooltip' })}
-      rules={[
-        { required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_host` },
-        { min: properties.redis_host.minLength, message: formatMessage({ id: 'component.pluginForm.limit-count.atLeast2Characters.rule' }) }
-      ]}
-      validateTrigger={['onChange', 'onBlur', 'onClick']}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item
-      initialValue={properties.redis_port.default}
-      label="redis_port"
-      name="redis_port"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_port.tooltip' })}
-    >
-      <InputNumber min={properties.redis_port.minimum} max={properties.redis_port.maximum || 65535} />
-    </Form.Item>
-    <Form.Item
-      label="redis_password"
-      name="redis_password"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_password.tooltip' })}
-      rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_password` }]}
-      validateTrigger={['onChange', 'onBlur', 'onClick']}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item
-      initialValue={properties.redis_database.default}
-      label="redis_database"
-      name="redis_database"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_database.tooltip' })}
-    >
-      <InputNumber min={properties.redis_database.minimum} />
-    </Form.Item>
-    <Form.Item
-      initialValue={properties.redis_timeout.default}
-      label="redis_timeout"
-      name="redis_timeout"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_timeout.tooltip' })}
-    >
-      <InputNumber min={properties.redis_timeout.minimum} />
-    </Form.Item>
-  </>)
-}
+  return (
+    <>
+      <Form.Item
+        label="redis_host"
+        name="redis_host"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_host.tooltip' })}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_host`,
+          },
+          {
+            min: properties.redis_host.minLength,
+            message: formatMessage({
+              id: 'component.pluginForm.limit-count.atLeast2Characters.rule',
+            }),
+          },
+        ]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        initialValue={properties.redis_port.default}
+        label="redis_port"
+        name="redis_port"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_port.tooltip' })}
+      >
+        <InputNumber
+          min={properties.redis_port.minimum}
+          max={properties.redis_port.maximum || 65535}
+        />
+      </Form.Item>
+      <Form.Item
+        label="redis_password"
+        name="redis_password"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_password.tooltip' })}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_password`,
+          },
+        ]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        initialValue={properties.redis_database.default}
+        label="redis_database"
+        name="redis_database"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_database.tooltip' })}
+      >
+        <InputNumber min={properties.redis_database.minimum} />
+      </Form.Item>
+      <Form.Item
+        initialValue={properties.redis_timeout.default}
+        label="redis_timeout"
+        name="redis_timeout"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_timeout.tooltip' })}
+      >
+        <InputNumber min={properties.redis_timeout.minimum} />
+      </Form.Item>
+    </>
+  );
+};
 
-const RedisClusterForm: React.FC <FormsProps> = ({ schema }) => {
+const RedisClusterForm: React.FC<FormsProps> = ({ schema }) => {
   const { formatMessage } = useIntl();
   const properties = schema?.properties;
   const nodesPro = properties.redis_cluster_nodes;
@@ -169,28 +187,30 @@ const RedisClusterForm: React.FC <FormsProps> = ({ schema }) => {
                       </Form.Item>
                     </Col>
                     <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
-                      {fields.length > minLength &&
+                      {fields.length > minLength && (
                         <MinusCircleOutlined
                           className="dynamic-delete-button"
                           onClick={() => {
                             remove(field.name);
                           }}
                         />
-                      }
+                      )}
                     </Col>
                   </Row>
                 ))}
               </Form.Item>
 
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                {fields.length < maxLength && <Button
-                  type="dashed"
-                  onClick={() => {
-                    add();
-                  }}
-                >
-                  <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
-                </Button>}
+                {fields.length < maxLength && (
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      add();
+                    }}
+                  >
+                    <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
+                  </Button>
+                )}
               </Form.Item>
             </div>
           );
@@ -216,9 +236,9 @@ const RedisClusterForm: React.FC <FormsProps> = ({ schema }) => {
 };
 
 const LimitCount: React.FC<Props> = ({ form, schema }) => {
-  const propertires = schema?.properties;
-  const [policy, setPoicy] = useState<PolicyProps>(propertires.policy.default);
-  const { formatMessage } = useIntl()
+  const properties = schema?.properties;
+  const [policy, setPoicy] = useState<PolicyProps>(properties.policy.default);
+  const { formatMessage } = useIntl();
   const dependSchema = schema?.dependencies.policy.oneOf;
 
   return (
@@ -235,7 +255,7 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.count.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={propertires.count.exclusiveMinimum} />
+        <InputNumber min={properties.count.exclusiveMinimum} />
       </Form.Item>
       <Form.Item
         label="time_window"
@@ -249,25 +269,41 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.time_window.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={propertires.time_window.exclusiveMinimum} />
+        <InputNumber min={properties.time_window.exclusiveMinimum} />
       </Form.Item>
       <Form.Item
-        initialValue={propertires.key.default}
+        label="key_type"
+        name="key_type"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.key_type.tooltip' })}
+        initialValue={properties.key_type.default}
+      >
+        <Select>
+          {properties.key_type.enum.map((item: string) => {
+            return (
+              <Select.Option value={item} key={item}>
+                {item}
+              </Select.Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
+      <Form.Item
         label="key"
         name="key"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.key.tooltip' })}
       >
-        <Select>
-          {propertires.key.enum.map((item: string) => (<Select.Option value={item} key={item}>{item}</Select.Option>))}
-        </Select>
+        <Input min={1} />
       </Form.Item>
       <Form.Item
-        initialValue={propertires.rejected_code.default}
+        initialValue={properties.rejected_code.default}
         label="rejected_code"
         name="rejected_code"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.rejected_code.tooltip' })}
       >
-        <InputNumber min={propertires.rejected_code.minimum} max={propertires.rejected_code.maximum} />
+        <InputNumber
+          min={properties.rejected_code.minimum}
+          max={properties.rejected_code.maximum}
+        />
       </Form.Item>
       <Form.Item
         initialValue={policy}
@@ -275,8 +311,16 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
         name="policy"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.policy.tooltip' })}
       >
-        <Select onChange={(e: PolicyProps) => { setPoicy(e) }}>
-          {propertires.policy.enum.map((item: string) => (<Select.Option value={item} key={item}>{item}</Select.Option>))}
+        <Select
+          onChange={(e: PolicyProps) => {
+            setPoicy(e);
+          }}
+        >
+          {properties.policy.enum.map((item: string) => (
+            <Select.Option value={item} key={item}>
+              {item}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
       <Form.Item

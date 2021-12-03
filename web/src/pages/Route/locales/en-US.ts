@@ -98,6 +98,7 @@ export default {
   'page.route.unpublished': 'UnPublished',
 
   'page.route.select.option.inputManually': 'Input Manually',
+  'page.route.select.option.methodRewriteNone': 'Not modify',
   'page.route.form.itemLabel.domainNameOrIp': 'Domain Name/IP',
   'page.route.form.itemExtraMessage.domainNameOrIp':
     'When using Domain Name, it will analysis the local: /etc/resolv.conf by default',
@@ -110,6 +111,7 @@ export default {
   'page.route.form.itemLabel.template': 'Template',
   'page.route.form.itemLabel.URIRewriteType': 'URI Override',
   'page.route.form.itemLabel.hostRewriteType': 'Host Override',
+  'page.route.form.itemLabel.methodRewrite': 'Method Override',
   'page.route.form.itemLabel.redirectURI': 'Redirect URI',
   'page.route.input.placeholder.newPath': 'For example: /foo/bar/index.html',
 
