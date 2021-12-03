@@ -309,7 +309,9 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
               {formatMessage({ id: 'page.route.select.option.methodRewriteNone' })}
             </Select.Option>
             {methods.map((method) => (
-              <Select.Option value={method}>{method}</Select.Option>
+              <Select.Option value={method} key={method}>
+                {method}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>
