@@ -43,7 +43,7 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
         rules={[
           { required: true },
           {
-            pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_]{0,100}$/, 'g'),
+            pattern: new RegExp(/^[a-zA-Z0-9_]+$/, 'g'),
             message: formatMessage({ id: 'page.consumer.form.itemRuleMessage.username' }),
           },
         ]}
