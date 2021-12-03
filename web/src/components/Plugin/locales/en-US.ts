@@ -125,8 +125,7 @@ export default {
     'The time window in seconds before the request count is reset.',
   'component.pluginForm.limit-count.key_type.tooltip':
     'The key type, support: "var" (single var) and "var_combination" (combine var)',
-  'component.pluginForm.limit-count.key.tooltip':
-    'The user specified key to limit the count, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username) and "service_id".',
+  'component.pluginForm.limit-count.key.tooltip': 'The user specified key to limit the count.',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected, default 503.',
   'component.pluginForm.limit-count.policy.tooltip':

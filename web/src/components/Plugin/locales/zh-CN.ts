@@ -118,7 +118,7 @@ export default {
   'component.pluginForm.limit-count.key_type.tooltip':
     '关键字类型，支持：var（单变量）和 var_combination（组合变量）',
   'component.pluginForm.limit-count.key.tooltip':
-    '用来做请求计数的有效值。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名规定时间内的请求次数。我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端规定时间内多次的连接我们的服务。当前接受的 key 有："remote_addr"（客户端 IP 地址）, "server_addr"（服务端 IP 地址）, 请求头中的"X-Forwarded-For" 或 "X-Real-IP", "consumer_name"（consumer 的 username）, "service_id" 。',
+    '用来做请求计数的有效值。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名规定时间内的请求次数。我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端规定时间内多次的连接我们的服务。',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     '当请求超过阈值被拒绝时，返回的 HTTP 状态码。',
   'component.pluginForm.limit-count.policy.tooltip':
