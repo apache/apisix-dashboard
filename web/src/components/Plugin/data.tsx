@@ -224,4 +224,22 @@ export const PLUGIN_LIST = {
     type: PluginType.other,
     hidden: true,
   },
+  'authz-casbin': {
+    type: PluginType.authentication,
+  },
+  'ldap-auth': {
+    type: PluginType.authentication,
+  },
+  datadog: {
+    type: PluginType.observability,
+  },
+  'skywalking-logger': {
+    type: PluginType.observability,
+  },
+  'azure-functions': {
+    type: PluginType.serverless,
+  },
+  'ua-restriction': {
+    type: PluginType.security,
+  },
 };

@@ -83,13 +83,13 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
         <Switch defaultChecked={onlyUseDefaultDelay} />
       </Form.Item>
       <Form.Item
-        label="key"
-        required
-        name="key"
-        tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.key.tooltip' })}
+        label="key_type"
+        name="key_type"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.key_type.tooltip' })}
+        initialValue={properties.key_type.default}
       >
         <Select>
-          {properties.key.enum.map((item: string) => {
+          {properties.key_type.enum.map((item: string) => {
             return (
               <Select.Option value={item} key={item}>
                 {item}
@@ -97,6 +97,14 @@ const LimitConn: React.FC<Props> = ({ form, schema }) => {
             );
           })}
         </Select>
+      </Form.Item>
+      <Form.Item
+        label="key"
+        name="key"
+        required
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.key.tooltip' })}
+      >
+        <Input min={1} />
       </Form.Item>
       <Form.Item
         label="rejected_code"

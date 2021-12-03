@@ -88,8 +88,10 @@ export default {
     'the number of excessive concurrent requests (or connections) allowed to be delayed.',
   'component.pluginForm.limit-conn.default_conn_delay.tooltip':
     'the latency seconds of request when concurrent requests exceeding conn but below (conn + burst).',
+  'component.pluginForm.limit-conn.key_type.tooltip':
+    'The key type, support: "var" (single var) and "var_combination" (combine var)',
   'component.pluginForm.limit-conn.key.tooltip':
-    'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests. Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
+    'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests.',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
     'returned when the request exceeds conn + burst will be rejected.',
   'component.pluginForm.limit-conn.rejected_msg.tooltip':
@@ -104,8 +106,9 @@ export default {
     'The specified request rate (number per second) threshold. Requests exceeding this rate (and below burst) will get delayed to conform to the rate.',
   'component.pluginForm.limit-req.burst.tooltip':
     'The number of excessive requests per second allowed to be delayed. Requests exceeding this hard limit will get rejected immediately.',
-  'component.pluginForm.limit-req.key.tooltip':
-    'The user specified key to limit the rate, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
+  'component.pluginForm.limit-req.key_type.tooltip':
+    'The key type, support: "var" (single var) and "var_combination" (combine var)',
+  'component.pluginForm.limit-req.key.tooltip': 'The user specified key to limit the rate.',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected.',
   'component.pluginForm.limit-req.nodelay.tooltip':
@@ -120,8 +123,9 @@ export default {
   'component.pluginForm.limit-count.count.tooltip': 'The specified number of requests threshold.',
   'component.pluginForm.limit-count.time_window.tooltip':
     'The time window in seconds before the request count is reset.',
-  'component.pluginForm.limit-count.key.tooltip':
-    'The user specified key to limit the count, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username) and "service_id".',
+  'component.pluginForm.limit-count.key_type.tooltip':
+    'The key type, support: "var" (single var) and "var_combination" (combine var)',
+  'component.pluginForm.limit-count.key.tooltip': 'The user specified key to limit the count.',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected, default 503.',
   'component.pluginForm.limit-count.policy.tooltip':

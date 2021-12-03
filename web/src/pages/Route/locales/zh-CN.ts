@@ -74,6 +74,7 @@ export default {
   'page.route.form.itemLabel.redirectCustom': '自定义重定向',
   'page.route.form.itemLabel.URIRewriteType': '路径改写',
   'page.route.form.itemLabel.hostRewriteType': '域名改写',
+  'page.route.form.itemLabel.methodRewrite': 'HTTP 方法改写',
   'page.route.form.itemLabel.headerRewrite': '请求头改写',
   'page.route.form.itemLabel.redirectURI': '重定向路径',
   'page.route.form.itemExtraMessage.domain': '路由匹配的域名列表。支持泛域名，如：*.test.com',
@@ -97,6 +98,7 @@ export default {
   'page.route.select.option.redirect301': '301（永久重定向）',
   'page.route.select.option.redirect302': '302（临时重定向）',
   'page.route.select.option.inputManually': '手动填写',
+  'page.route.select.option.methodRewriteNone': '不改写',
 
   // steps
   'page.route.steps.stepTitle.defineApiRequest': '设置路由信息',

@@ -60,7 +60,7 @@ context('Create and Delete Consumer', () => {
     cy.contains('Next').click();
     cy.get(selector.notification).should(
       'contain',
-      'Please enable at least one of the following authentication plugin: basic-auth, hmac-auth, jwt-auth, key-auth, wolf-rbac',
+      'Please enable at least one of the following authentication plugin: basic-auth, hmac-auth, jwt-auth, key-auth, ldap-auth, wolf-rbac',
     );
     cy.get(selector.notificationCloseIcon).click().should('not.exist');
 
