@@ -1785,28 +1785,25 @@ var _ = ginkgo.Describe("Route", func() {
 
 		time.Sleep(base.SleepTime)
 
-		exportStrAuth := `
-		{
-			"components": {
-			  "securitySchemes": {
-				"api_key": {
-				  "in": "header",
-				  "name": "X-XSRF-TOKEN",
-				  "type": "apiKey"
-				},
-				"basicAuth": {
-				  "in": "header",
-				  "name": "basicAuth",
-				  "type": "basicAuth"
-				}
-			  }
-			},
-			"info": {
-			  "title": "RoutesExport",
-			  "version": "3.0.0"
-			},
-			"openapi": "3.0.0"
-		}`
+		exportStrAuth := `"components": {
+							"securitySchemes": {
+								"api_key": {
+									"in": "header",
+									"name": "X-XSRF-TOKEN",
+									"type": "apiKey"
+								},
+								"basicAuth": {
+									"in": "header",
+									"name": "basicAuth",
+									"type": "basicAuth"
+								}
+								}
+							},
+								"info": {
+								"title": "RoutesExport",
+								"version": "3.0.0"
+								},
+							"openapi": "3.0.0"`
 		time.Sleep(base.SleepTime)
 
 		exportStrAuth = replaceStr(exportStrAuth)
