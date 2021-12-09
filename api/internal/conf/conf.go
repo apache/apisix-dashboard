@@ -149,9 +149,14 @@ func InitConf() {
 }
 
 func setupConfig() {
+	file := "conf"
+	if profile := os.Getenv("APISIX_PROFILE"); profile != "" {
+		file = file + "-" + profile
+	}
+
 	// setup config file path
 	if ConfigFile == "" {
-		viper.SetConfigName("conf")
+		viper.SetConfigName(file)
 		viper.SetConfigType("yaml")
 		viper.AddConfigPath(WorkDir + "/conf")
 	} else {
