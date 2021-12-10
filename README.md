@@ -47,7 +47,7 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 ## Demo
 
 ```text
-URL: http://139.217.190.60/
+URL: http://106.55.144.26/
 Username: admin
 Password: admin
 ```
