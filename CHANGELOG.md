@@ -19,7 +19,6 @@
 
 # Table of Contents
 
-- [2.10.0](#2100)
 - [2.9.0](#290)
 - [2.8.0](#280)
 - [2.7.1](#271)
@@ -35,31 +34,6 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
-
-# 2.10.0
-
-This release contains some features and bugfixes, and all the existing functionalities are compatible with Apache APISIX 2.11.0.
-
-### Core
-
-- feat: basic support Apache APISIX 2.11 [#2233](https://github.com/apache/apisix-dashboard/pull/2233)
-- feat: support post args advanced match [#2231](https://github.com/apache/apisix-dashboard/pull/2231)
-- feat: Setting default language to english in APISIX Dashboard [#2212](https://github.com/apache/apisix-dashboard/pull/2212)
-- feat: add gzip middleware [#2178](https://github.com/apache/apisix-dashboard/pull/2178)
-- feat: add Type function to store interface [#2160](https://github.com/apache/apisix-dashboard/pull/2160)
-
-### Bugfix
-
-- fix: cp consumer name regx different with dp [#2232](https://github.com/apache/apisix-dashboard/pull/2232)
-- fix: plugin_configs should store with etcd prefix [#2226](https://github.com/apache/apisix-dashboard/pull/2226)
-- fix: correct the property name for tcp_failures [#2221](https://github.com/apache/apisix-dashboard/pull/2221)
-- fix: login repeat 2 times [#2179](https://github.com/apache/apisix-dashboard/pull/2179)
-- fix: select Use the domain or IP from Node List [#2168](https://github.com/apache/apisix-dashboard/pull/2168)
-
-### CI
-
-- ci: clean up the E2E test environment [#2225](https://github.com/apache/apisix-dashboard/pull/2225)
-- ci: add issue stale processor [#2169](https://github.com/apache/apisix-dashboard/pull/2169)
 
 # 2.9.0
 
