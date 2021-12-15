@@ -137,7 +137,7 @@ func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 }
 
 //RouteToOpenAPI3 Pass in route list parameter: []*entity.Route, convert route data to openapi3 and export processing function
-func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*openapi3.Swagger, error) {
+func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*openapi3.T, error) {
 	paths := openapi3.Paths{}
 	paramsRefs := []*openapi3.ParameterRef{}
 	requestBody := &openapi3.RequestBody{}
@@ -278,7 +278,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 	}
 
 	components.SecuritySchemes = secSchemas
-	swagger := openapi3.Swagger{
+	swagger := openapi3.T{
 		OpenAPI:    openApi,
 		Info:       &openapi3.Info{Title: title, Version: openApi},
 		Paths:      paths,

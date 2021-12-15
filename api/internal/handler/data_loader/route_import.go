@@ -87,7 +87,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 		return nil, fmt.Errorf("the file size exceeds the limit; limit %d", conf.ImportSizeLimit)
 	}
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(input.FileContent)
+	swagger, err := openapi3.NewLoader().LoadFromData(input.FileContent)
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +133,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 
 		if _, err := h.routeStore.CreateCheck(route); err != nil {
 			return handler.SpecCodeResponse(err),
-				fmt.Errorf("create route(uris:%v) failed: %s", route.Uris, err)
+				fmt.Errorf("222create route(uris:%v) failed: %s", route.Uris, err)
 		}
 	}
 
@@ -147,7 +147,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 		} else {
 			if _, err := h.routeStore.Create(c.Context(), route); err != nil {
 				return handler.SpecCodeResponse(err),
-					fmt.Errorf("create route(uris:%v) failed: %s", route.Uris, err)
+					fmt.Errorf("111create route(uris:%v) failed: %s", route.Uris, err)
 			}
 		}
 	}
@@ -215,7 +215,7 @@ type PathValue struct {
 	Value  *openapi3.Operation
 }
 
-func mergePathValue(key string, values []PathValue, swagger *openapi3.Swagger) (map[string]*entity.Route, error) {
+func mergePathValue(key string, values []PathValue, swagger *openapi3.T) (map[string]*entity.Route, error) {
 	var parsed []PathValue
 	var routes = map[string]*entity.Route{}
 	for _, value := range values {
@@ -244,7 +244,7 @@ func mergePathValue(key string, values []PathValue, swagger *openapi3.Swagger) (
 	return routes, nil
 }
 
-func OpenAPI3ToRoute(swagger *openapi3.Swagger) ([]*entity.Route, error) {
+func OpenAPI3ToRoute(swagger *openapi3.T) ([]*entity.Route, error) {
 	var routes []*entity.Route
 	paths := swagger.Paths
 	var upstream *entity.UpstreamDef
@@ -349,7 +349,7 @@ func parseParameters(parameters openapi3.Parameters, plugins map[string]interfac
 	plugins["request-validation"] = requestValidation
 }
 
-func parseRequestBody(requestBody *openapi3.RequestBodyRef, swagger *openapi3.Swagger, plugins map[string]interface{}) {
+func parseRequestBody(requestBody *openapi3.RequestBodyRef, swagger *openapi3.T, plugins map[string]interface{}) {
 	schema := requestBody.Value.Content
 	requestValidation := make(map[string]interface{})
 	if rv, ok := plugins["request-validation"]; ok {
@@ -457,7 +457,7 @@ func parseSecurity(security openapi3.SecurityRequirements, securitySchemes opena
 	}
 }
 
-func getRouteFromPaths(method, key string, value *openapi3.Operation, swagger *openapi3.Swagger) (*entity.Route, error) {
+func getRouteFromPaths(method, key string, value *openapi3.Operation, swagger *openapi3.T) (*entity.Route, error) {
 	// transform /path/{var} to  /path/*
 	foundStr := regPathVar.FindString(key)
 	if foundStr != "" {
