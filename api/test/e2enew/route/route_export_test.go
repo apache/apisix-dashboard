@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package route
 
 import (
@@ -5,9 +21,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
 	"github.com/onsi/ginkgo"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
 var _ = ginkgo.Describe("Route", func() {
@@ -154,74 +171,74 @@ var _ = ginkgo.Describe("Route", func() {
 		})
 		// 2.Export data as the route of URI host
 		exportStrR2 := `
-		"/hello2": {
-			"get": {
-				"operationId": "aaaa2GET",
-				"requestBody": {},
-				"responses": {
-					"default": {
-						"description": ""
-					}
-				},
-				"security": [],
-				"x-apisix-enable_websocket": false,
-				"x-apisix-host": "*.bar.com",
-				"x-apisix-labels": {
-					"build": "16",
-					"env": "production",
-					"version": "v2"
-				},
-				"x-apisix-plugins": {
-					"limit-count": {
-						"count": 2,
-						"key": "remote_addr",
-						"rejected_code": 503,
-						"time_window": 60
-					}
-				},
-				"x-apisix-priority": 0,
-				"x-apisix-status": 1,
-				"x-apisix-upstream": {
-					"nodes": {
-						"` + base.UpstreamIp + `:1980": 1
+			"/hello2": {
+				"get": {
+					"operationId": "aaaa2GET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
 					},
-					"type": "roundrobin"
-				}
-			},
-			"post": {
-				"operationId": "aaaa2POST",
-				"requestBody": {},
-				"responses": {
-					"default": {
-						"description": ""
-					}
-				},
-				"security": [],
-				"x-apisix-enable_websocket": false,
-				"x-apisix-host": "*.bar.com",
-				"x-apisix-labels": {
-					"build": "16",
-					"env": "production",
-					"version": "v2"
-				},
-				"x-apisix-plugins": {
-					"limit-count": {
-						"count": 2,
-						"key": "remote_addr",
-						"rejected_code": 503,
-						"time_window": 60
-					}
-				},
-				"x-apisix-priority": 0,
-				"x-apisix-status": 1,
-				"x-apisix-upstream": {
-					"nodes": {
-						"` + base.UpstreamIp + `:1980": 1
+					"security": [],
+					"x-apisix-enable_websocket": false,
+					"x-apisix-host": "*.bar.com",
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
 					},
-					"type": "roundrobin"
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 2,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"` + base.UpstreamIp + `:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"post": {
+					"operationId": "aaaa2POST",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"x-apisix-enable_websocket": false,
+					"x-apisix-host": "*.bar.com",
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
+					},
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 2,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"` + base.UpstreamIp + `:1980": 1
+						},
+						"type": "roundrobin"
+					}
 				}
-			}
-		}`
+			}`
 		exportStrR2 = replaceStr(exportStrR2)
 
 		ginkgo.It("hit route2 that not exist", func() {
@@ -368,51 +385,50 @@ var _ = ginkgo.Describe("Route", func() {
 			`
 		serviceStrS1 = replaceStr(serviceStrS1)
 
-		exportStrR3 := `{
-							"components": {},
-							"info": {
-								"title": "RoutesExport",
-								"version": "3.0.0"
-							},
-							"openapi": "3.0.0",
-							"paths": {
-								"/hello3": {
-									"get": {
-										"operationId": "route3GET",
-										"requestBody": {},
-										"responses": {
-											"default": {
-												"description": ""
-											}
-										},
-										"x-apisix-enable_websocket": false,
-										"x-apisix-labels": {
-											"build": "16",
-											"env": "production",
-											"version": "v2"
-										},
-										"x-apisix-plugins": {
-											"limit-count": {
-												"count": 100,
-												"key": "remote_addr",
-												"rejected_code": 503,
-												"time_window": 60
-											}
-										},
-										"x-apisix-priority": 0,
-										"x-apisix-status": 1,
-										"x-apisix-upstream": {
-											"nodes": [{
-												"host": "` + base.UpstreamIp + `",
-												"port": 1980,
-												"weight": 1
-											}],
-											"type": "roundrobin"
-										}
-									}
-								}
+		exportStrR3 := `
+			"components": {},
+			"info": {
+				"title": "RoutesExport",
+				"version": "3.0.0"
+			},
+			"openapi": "3.0.0",
+			"paths": {
+				"/hello3": {
+					"get": {
+						"operationId": "route3GET",
+						"requestBody": {},
+						"responses": {
+							"default": {
+								"description": ""
 							}
-				}`
+						},
+						"x-apisix-enable_websocket": false,
+						"x-apisix-labels": {
+							"build": "16",
+							"env": "production",
+							"version": "v2"
+						},
+						"x-apisix-plugins": {
+							"limit-count": {
+								"count": 100,
+								"key": "remote_addr",
+								"rejected_code": 503,
+								"time_window": 60
+							}
+						},
+						"x-apisix-priority": 0,
+						"x-apisix-status": 1,
+						"x-apisix-upstream": {
+							"nodes": [{
+								"host": "` + base.UpstreamIp + `",
+								"port": 1980,
+								"weight": 1
+							}],
+							"type": "roundrobin"
+						}
+					}
+				}
+			}`
 		exportStrR3 = replaceStr(exportStrR3)
 
 		ginkgo.It("create service with all options", func() {
@@ -422,33 +438,33 @@ var _ = ginkgo.Describe("Route", func() {
 				Path:    "/apisix/admin/services/s1",
 				Headers: map[string]string{"Authorization": base.GetToken()},
 				Body: `{
-					"name": "testservice",
-					"desc": "testservice_desc",
-					"labels": {
-						"build":"16",
-						"env":"production",
-						"version":"v2"
-					},
-					"enable_websocket":true,
-					"plugins": {
-						"limit-count": {
-							"count": 100,
-							"time_window": 60,
-							"rejected_code": 503,
-							"key": "remote_addr"
-						}
-					},
-					"upstream": {
-						"type": "roundrobin",
-						"create_time":1602883670,
-						"update_time":1602893670,
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
+					 "name": "testservice",
+					 "desc": "testservice_desc",
+					 "labels": {
+						 "build":"16",
+						 "env":"production",
+						 "version":"v2"
+					 },
+					 "enable_websocket":true,
+					 "plugins": {
+						 "limit-count": {
+							 "count": 100,
+							 "time_window": 60,
+							 "rejected_code": 503,
+							 "key": "remote_addr"
+						 }
+					 },
+					 "upstream": {
+						 "type": "roundrobin",
+						 "create_time":1602883670,
+						 "update_time":1602893670,
+						 "nodes": [{
+							 "host": "` + base.UpstreamIp + `",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				 }`,
 				ExpectStatus: http.StatusOK,
 			})
 		})
@@ -468,11 +484,11 @@ var _ = ginkgo.Describe("Route", func() {
 				Method: http.MethodPut,
 				Path:   "/apisix/admin/routes/r3",
 				Body: `{
-					"name": "route3",
-					"methods": ["GET"],
-					"uri": "/hello3",
-					"service_id": "s1"
-				}`,
+					 "name": "route3",
+					 "methods": ["GET"],
+					 "uri": "/hello3",
+					 "service_id": "s1"
+				 }`,
 				Headers:    map[string]string{"Authorization": base.GetToken()},
 				ExpectCode: http.StatusOK,
 				Sleep:      base.SleepTime,
@@ -485,7 +501,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Path:       "/apisix/admin/export/routes/r3",
 				Headers:    map[string]string{"Authorization": base.GetToken()},
 				ExpectCode: http.StatusOK,
-				ExpectBody: "{\"code\":0,\"message\":\"\",\"data\":" + exportStrR3,
+				ExpectBody: exportStrR3,
 			})
 		})
 		ginkgo.It("delete the route3 just created", func() {
@@ -522,33 +538,33 @@ var _ = ginkgo.Describe("Route", func() {
 		// However, if the data in the service plugins does not exist in the route, it will be fused and exported.
 		// If it exists, the data in route will be used first
 		serviceStrS2 := `
-				"name": "testservice",
-				"desc": "testservice_desc",
-				"upstream": {
-					"nodes": [{
-						"host": "` + base.UpstreamIp + `",
-						"port": 1980,
-						"weight": 1
-					}],
-					"type": "roundrobin"
-				},
-				"plugins": {
-					"limit-count": {
-						"count": 100,
-						"key": "remote_addr",
-						"rejected_code": 503,
-						"time_window": 60
-					}
-				},
-				"labels": {
-					"build": "16",
-					"env": "production",
-					"version": "v2"
-				},
-				"enable_websocket": true`
+			"name": "testservice",
+			"desc": "testservice_desc",
+			"upstream": {
+				"nodes": [{
+					"host": "` + base.UpstreamIp + `",
+					"port": 1980,
+					"weight": 1
+				}],
+				"type": "roundrobin"
+			},
+			"plugins": {
+				"limit-count": {
+					"count": 100,
+					"key": "remote_addr",
+					"rejected_code": 503,
+					"time_window": 60
+				}
+			},
+			"labels": {
+				"build": "16",
+				"env": "production",
+				"version": "v2"
+			},
+			"enable_websocket": true`
 		serviceStrS2 = replaceStr(serviceStrS2)
 
-		exportStrR4 := `{
+		exportStrR4 := `
 			"components": {},
 			"info": {
 				"title": "RoutesExport",
@@ -595,8 +611,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					}
 				}
-			}
-		}`
+			}`
 		exportStrR4 = replaceStr(exportStrR4)
 
 		ginkgo.It("create service with all options", func() {
@@ -737,51 +752,50 @@ var _ = ginkgo.Describe("Route", func() {
 			"enable_websocket": true`
 		serviceStrS3 = replaceStr(serviceStrS3)
 
-		exportStrR5 := `{
-				"components": {},
-				"info": {
-					"title": "RoutesExport",
-					"version": "3.0.0"
-				},
-				"openapi": "3.0.0",
-				"paths": {
-					"/hello5": {
-						"get": {
-							"operationId": "route5GET",
-							"requestBody": {},
-							"responses": {
-								"default": {
-									"description": ""
-								}
-							},
-							"security": [],
-							"x-apisix-enable_websocket": false,
-							"x-apisix-labels": {
-								"build": "16",
-								"env": "production",
-								"version": "v2"
-							},
-							"x-apisix-plugins": {
-								"limit-count": {
-									"count": 100,
-									"key": "remote_addr",
-									"rejected_code": 503,
-									"time_window": 60
-								},
-								"prometheus": {
-									"disable": false
-								}
-							},
-							"x-apisix-priority": 0,
-							"x-apisix-status": 1,
-							"x-apisix-upstream": {
-								"nodes": [{
-									"host": "` + base.UpstreamIp + `",
-									"port": 1981,
-									"weight": 1
-								}],
-								"type": "roundrobin"
+		exportStrR5 := `
+			"components": {},
+			"info": {
+				"title": "RoutesExport",
+				"version": "3.0.0"
+			},
+			"openapi": "3.0.0",
+			"paths": {
+				"/hello5": {
+					"get": {
+						"operationId": "route5GET",
+						"requestBody": {},
+						"responses": {
+							"default": {
+								"description": ""
 							}
+						},
+						"security": [],
+						"x-apisix-enable_websocket": false,
+						"x-apisix-labels": {
+							"build": "16",
+							"env": "production",
+							"version": "v2"
+						},
+						"x-apisix-plugins": {
+							"limit-count": {
+								"count": 100,
+								"key": "remote_addr",
+								"rejected_code": 503,
+								"time_window": 60
+							},
+							"prometheus": {
+								"disable": false
+							}
+						},
+						"x-apisix-priority": 0,
+						"x-apisix-status": 1,
+						"x-apisix-upstream": {
+							"nodes": [{
+								"host": "` + base.UpstreamIp + `",
+								"port": 1981,
+								"weight": 1
+							}],
+							"type": "roundrobin"
 						}
 					}
 				}
@@ -881,7 +895,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Path:         "/apisix/admin/export/routes/r5",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"code\":0,\"message\":\"\",\"data\":" + exportStrR5,
+				ExpectBody:   exportStrR5,
 			})
 		})
 		ginkgo.It("delete the route5 just created", func() {
@@ -922,7 +936,7 @@ var _ = ginkgo.Describe("Route", func() {
 			})
 		})
 		// 8.Create and export route according to upstream ID
-		exportStrR8 := `{
+		exportStrR8 := `
 			"components": {},
 			"info": {
 				"title": "RoutesExport",
@@ -949,7 +963,8 @@ var _ = ginkgo.Describe("Route", func() {
 						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
-							"id": "3"`
+							"id": "3"
+				`
 		exportStrR8 = replaceStr(exportStrR8)
 
 		ginkgo.It("create upstream3", func() {
@@ -960,9 +975,9 @@ var _ = ginkgo.Describe("Route", func() {
 				Body: `{
 					"nodes": [
 						{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
+						"host": "` + base.UpstreamIp + `",
+						"port": 1980,
+						"weight": 1
 						}
 					],
 					"type": "roundrobin"
@@ -1042,7 +1057,7 @@ var _ = ginkgo.Describe("Route", func() {
 			"enable_websocket": true`
 		serviceStrS4 = replaceStr(serviceStrS4)
 
-		exportStrR9 := `{
+		exportStrR9 := `
 			"components": {},
 			"info": {
 				"title": "RoutesExport",
@@ -1074,7 +1089,8 @@ var _ = ginkgo.Describe("Route", func() {
 						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
-							"id": "5"`
+							"id": "5"
+						`
 		exportStrR9 = replaceStr(exportStrR9)
 
 		ginkgo.It("create upstream4", func() {
@@ -1240,7 +1256,7 @@ var _ = ginkgo.Describe("Route", func() {
 			"enable_websocket": true`
 		serviceStrS5 = replaceStr(serviceStrS5)
 
-		exportStrR10 := `{
+		exportStrR10 := `
 			"components": {},
 			"info": {
 				"title": "RoutesExport",
@@ -1272,7 +1288,8 @@ var _ = ginkgo.Describe("Route", func() {
 						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
-							"id": "6"`
+							"id": "6"
+						`
 		exportStrR10 = replaceStr(exportStrR10)
 		ginkgo.It("create upstream6", func() {
 			base.RunTestCase(base.HttpTestCase{
@@ -1417,19 +1434,19 @@ var _ = ginkgo.Describe("Route", func() {
 				Path:   "/apisix/admin/routes/r1",
 				Body: `{
 					"name": "route1",
-					 "uri": "/hello",
-					 "plugins": {
-						 "jwt-auth": {}
-					 },
-					 "upstream": {
-						 "type": "roundrobin",
+					"uri": "/hello",
+					"plugins": {
+						"jwt-auth": {}
+					},
+					"upstream": {
+						"type": "roundrobin",
 						"nodes": [{
 							"host": "` + base.UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
-					 }
-				 }`,
+					}
+				}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
 				ExpectBody:   `"code":0`,
@@ -1468,6 +1485,7 @@ var _ = ginkgo.Describe("Route", func() {
 		jwtToken := ""
 		exportStrJWT := ""
 		ginkgo.It("sign jwt token", func() {
+			time.Sleep(base.SleepTime)
 			// sign jwt token
 			t := ginkgo.GinkgoT()
 			body, status, err := base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key", nil)
@@ -1480,7 +1498,7 @@ var _ = ginkgo.Describe("Route", func() {
 			assert.Nil(t, err)
 			assert.Equal(t, http.StatusNotFound, status)
 
-			exportStrJWT = `{
+			exportStrJWT = `
 				"components": {
 					"securitySchemes": {
 						"bearerAuth": {
@@ -1495,9 +1513,7 @@ var _ = ginkgo.Describe("Route", func() {
 					"version": "3.0.0"
 				},
 				"openapi": "3.0.0",
-				"paths": {
-					"/hello": {}
-				}`
+				`
 			exportStrJWT = replaceStr(exportStrJWT)
 			// verify token and clean test data
 		})
@@ -1561,7 +1577,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		exportStrJWTNoAlgorithm := `{
+		exportStrJWTNoAlgorithm := `
 			"components": {
 				"securitySchemes": {
 					"bearerAuth": {
@@ -1576,9 +1592,7 @@ var _ = ginkgo.Describe("Route", func() {
 				"version": "3.0.0"
 			},
 			"openapi": "3.0.0",
-			"paths": {
-				"/hello": {}
-			}`
+			`
 		exportStrJWTNoAlgorithm = replaceStr(exportStrJWTNoAlgorithm)
 
 		ginkgo.It("create consumer with jwt (no algorithm)", func() {
@@ -1718,20 +1732,20 @@ var _ = ginkgo.Describe("Route", func() {
 				Path:   "/apisix/admin/routes/r1",
 				Body: `{
 					"name": "route1",
-					 "uri": "/hello",
-					 "plugins": {
-						 "key-auth": {},
-						 "basic-auth": {}
-					 },
-					 "upstream": {
-						 "type": "roundrobin",
+					"uri": "/hello",
+					"plugins": {
+						"key-auth": {},
+						"basic-auth": {}
+					},
+					"upstream": {
+						"type": "roundrobin",
 						"nodes": [{
 							"host": "` + base.UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
-					 }
-				 }`,
+					}
+				}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectBody:   `"code":0`,
 				ExpectStatus: http.StatusOK,
@@ -1771,31 +1785,26 @@ var _ = ginkgo.Describe("Route", func() {
 
 		time.Sleep(base.SleepTime)
 
-		exportStrAuth := `"data": {
-				"components": {
-					"securitySchemes": {
-						"api_key": {
-							"in": "header",
-							"name": "X-XSRF-TOKEN",
-							"type": "apiKey"
-						},
-						"basicAuth": {
-							"in": "header",
-							"name": "basicAuth",
-							"type": "basicAuth"
-						}
+		exportStrAuth := `
+			"components": {
+				"securitySchemes": {
+					"api_key": {
+						"in": "header",
+						"name": "X-XSRF-TOKEN",
+						"type": "apiKey"
+					},
+					"basicAuth": {
+						"in": "header",
+						"name": "basicAuth",
+						"type": "basicAuth"
+					}
 					}
 				},
-				"info": {
-					"title": "RoutesExport",
-					"version": "3.0.0"
-				},
-				"openapi": "3.0.0",
-				"paths": {
-					"/hello": {}
-				}
-			}`
-
+			"info": {
+				"title": "RoutesExport",
+				"version": "3.0.0"
+			},
+			"openapi": "3.0.0"`
 		time.Sleep(base.SleepTime)
 
 		exportStrAuth = replaceStr(exportStrAuth)
@@ -1873,7 +1882,7 @@ var _ = ginkgo.Describe("Route", func() {
 			"enable_websocket": true`
 		serviceStrS1 = replaceStr(serviceStrS1)
 
-		exportStrR1 := `{
+		exportStrR1 := `
 			"components": {},
 			"info": {
 				"title": "RoutesExport",
@@ -2015,7 +2024,7 @@ var _ = ginkgo.Describe("Route", func() {
 			"enable_websocket": true`
 		serviceStrS2 = replaceStr(serviceStrS2)
 
-		exportStrR2 := `{
+		exportStrR2 := `
 			"components": {},
 			"info": {
 				"title": "RoutesExport",
@@ -2143,7 +2152,7 @@ var _ = ginkgo.Describe("Route", func() {
 	})
 	ginkgo.Context("test route export request validation", func() {
 		// 12.Test export route request_ validation data correctness
-		exportStrR1 := `{
+		exportStrR1 := `
 			"components": {},
 			"info": {
 				"title": "RoutesExport",
@@ -2188,13 +2197,11 @@ var _ = ginkgo.Describe("Route", func() {
 						"summary": "所有",
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
-						"x-apisix-plugins": {},
 						"x-apisix-priority": 0,
 						"x-apisix-status": 1
 					}
 				}
-			}
-		}`
+			}`
 		exportStrR1 = replaceStr(exportStrR1)
 
 		ginkgo.It("Create a route containing request_ validation data", func() {
@@ -2235,7 +2242,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"status": 1
-			}`,
+			 	}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
 				Sleep:        base.SleepTime,
@@ -2273,7 +2280,7 @@ var _ = ginkgo.Describe("Route", func() {
 	})
 	ginkgo.Context("test route export equal uri", func() {
 		// 13.Add suffix when testing the same URI export
-		exportStrAll := `{
+		exportStrAll := `
 			"components": {},
 			"info": {
 				"title": "RoutesExport",
@@ -2293,7 +2300,6 @@ var _ = ginkgo.Describe("Route", func() {
 						"summary": "所有",
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
-						"x-apisix-plugins": {},
 						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
@@ -2316,7 +2322,6 @@ var _ = ginkgo.Describe("Route", func() {
 						"summary": "所有1",
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
-						"x-apisix-plugins": {},
 						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
@@ -2339,7 +2344,6 @@ var _ = ginkgo.Describe("Route", func() {
 						"summary": "所有2",
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
-						"x-apisix-plugins": {},
 						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
@@ -2350,8 +2354,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					}
 				}
-			}
-		}`
+			}`
 		exportStrAll = replaceStr(exportStrAll)
 
 		ginkgo.It("Create a route", func() {
@@ -2369,10 +2372,10 @@ var _ = ginkgo.Describe("Route", func() {
 				"upstream": {
 					"nodes": {
 						"` + base.UpstreamIp + `:1980": 1
-					},
+						},
 					"type": "roundrobin"
-				}
-		}`,
+				 	}
+		 		}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
 				Sleep:        base.SleepTime,
@@ -2396,7 +2399,7 @@ var _ = ginkgo.Describe("Route", func() {
 						},
 						"type": "roundrobin"
 					}
-			}`,
+			 	}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
 				Sleep:        base.SleepTime,
@@ -2420,7 +2423,7 @@ var _ = ginkgo.Describe("Route", func() {
 						},
 						"type": "roundrobin"
 					}
-			}`,
+			 	}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
 				Sleep:        base.SleepTime,

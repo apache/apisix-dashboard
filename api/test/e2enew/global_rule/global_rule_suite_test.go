@@ -14,26 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package stream_route_test
+package global_rule_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-func TestStreamRoute(t *testing.T) {
-	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "stream route suite")
+func TestGlobalRule(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Global Rule Suite")
 }
 
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("stream_routes")
-	base.CleanResource("upstreams")
-	base.CleanResource("ssl")
+var _ = AfterSuite(func() {
+	base.CleanResource("routes")
+	base.CleanResource("global_rules")
 	time.Sleep(base.SleepTime)
 })
