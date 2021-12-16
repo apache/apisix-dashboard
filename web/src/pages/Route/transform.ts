@@ -23,11 +23,15 @@ import { convertToFormData } from '@/components/Upstream/service';
 export const transformProxyRewrite2Plugin = (
   data: RouteModule.ProxyRewrite,
 ): RouteModule.ProxyRewrite => {
-  let omitFieldsList: string[] = ['kvHeaders'];
+  const omitFieldsList: string[] = ['kvHeaders'];
   let headers: Record<string, string> = {};
 
   if (data.scheme !== 'http' && data.scheme !== 'https') {
-    omitFieldsList = [...omitFieldsList, 'scheme'];
+    omitFieldsList.push('scheme');
+  }
+
+  if (data.method === '') {
+    omitFieldsList.push('method');
   }
 
   (data.kvHeaders || []).forEach((kvHeader) => {
@@ -84,6 +88,7 @@ const transformProxyRewrite2Formdata = (pluginsData: any) => {
         case 'uri':
         case 'regex_uri':
         case 'host':
+        case 'method':
           proxyRewriteData[key] = pluginsData[key];
           break;
         case 'headers':
@@ -159,6 +164,9 @@ export const transformStepData = ({
           break;
         case 'arg':
           key = `arg_${name}`;
+          break;
+        case 'post_arg':
+          key = `post_arg_${name}`;
           break;
         default:
           key = `${name}`;
@@ -272,11 +280,11 @@ const transformVarsToRules = (
   data.map(([key, operator, value]) => {
     let position = '';
     let name = '';
-    const regex = new RegExp('^(cookie|http|arg)_.+');
+    const regex = new RegExp('^(cookie|http|arg|post_arg)_.+');
     if (regex.test(key)) {
-      [, position, name] = key.split(/^(cookie|http|arg)_/);
-    }else {
-      position = "buildin";
+      [, position, name] = key.split(/^(cookie|http|arg|post_arg)_/);
+    } else {
+      position = 'buildin';
       name = key;
     }
     return {

@@ -36,7 +36,7 @@ const TCPFailures: React.FC<Props> = ({ readonly }) => {
       })}
     >
       <Form.Item
-        name={['checks', 'active', 'unhealthy', 'tcp_Failures']}
+        name={['checks', 'active', 'unhealthy', 'tcp_failures']}
         noStyle
         rules={[
           {
