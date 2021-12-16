@@ -57,6 +57,7 @@ declare namespace RouteModule {
     ret_code?: number;
     uri?: string;
     http_to_https?: boolean;
+    append_query_string?: boolean;
   };
 
   // Request Body or Response Data for API
@@ -118,7 +119,7 @@ declare namespace RouteModule {
     uris: string[];
     remote_addrs: string[];
     methods: HttpMethod[];
-    redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
+    redirectOption: 'forceHttps' | 'customRedirect' | 'disabled' | 'appendQueryString';
     redirectURI?: string;
     ret_code?: number;
     status: number;

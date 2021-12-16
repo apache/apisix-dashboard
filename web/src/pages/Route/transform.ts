@@ -358,6 +358,8 @@ export const transformRouteData = (data: RouteModule.Body) => {
     form1Data.redirectOption = 'customRedirect';
     form1Data.ret_code = redirect?.ret_code;
     form1Data.redirectURI = redirect?.uri;
+  } else if(redirect?.append_query_string) {
+    form1Data.redirectOption = 'appendQueryString';
   } else {
     form1Data.redirectOption = 'disabled';
   }

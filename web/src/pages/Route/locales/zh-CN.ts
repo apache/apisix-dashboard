@@ -99,6 +99,7 @@ export default {
   'page.route.select.option.redirect302': '302（临时重定向）',
   'page.route.select.option.inputManually': '手动填写',
   'page.route.select.option.methodRewriteNone': '不改写',
+  'page.route.select.option.appendQueryString': '插入query字符串',
 
   // steps
   'page.route.steps.stepTitle.defineApiRequest': '设置路由信息',

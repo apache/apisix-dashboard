@@ -64,6 +64,8 @@ export default {
   'page.route.form.itemLabel.scheme': 'Scheme',
   'page.route.form.itemLabel.priority': 'Priority',
   'page.route.form.itemLabel.redirect': 'Redirect',
+
+
   'page.route.select.option.enableHttps': 'Enable HTTPS',
   'page.route.select.option.configCustom': 'Custom',
   'page.route.select.option.forbidden': 'Forbidden',
@@ -71,6 +73,8 @@ export default {
   'page.route.input.placeholder.redirectCustom': 'For example: /foo/index.html',
   'page.route.select.option.redirect301': '301(Permanent Redirect)',
   'page.route.select.option.redirect302': '302(Temporary Redirect)',
+  'page.route.select.option.appendQueryString': 'append query string',
+
   'page.route.form.itemLabel.username': 'Username',
   'page.route.form.itemLabel.password': 'Password',
   'page.route.form.itemLabel.token': 'Token',

@@ -211,6 +211,10 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
         value: 'disabled',
         label: formatMessage({ id: 'page.route.select.option.forbidden' }),
       },
+      {
+        value: 'appendQueryString',
+        label: formatMessage({ id: 'page.route.select.option.appendQueryString' }),
+      },
     ];
 
     return (
