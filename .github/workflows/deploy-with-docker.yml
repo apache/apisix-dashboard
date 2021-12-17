@@ -75,16 +75,3 @@ jobs:
 
       - name: Run Test
         run: api/test/shell/manager_smoking.sh -s false
-
-      - uses: Azure/docker-login@v1
-        if: ${{ github.event_name == 'push' }}
-        with:
-          login-server: apisixacr.azurecr.cn
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
-      - name: Deploy
-        if: ${{ github.event_name == 'push' }}
-        run: |
-          docker tag dashboard:ci apisixacr.azurecr.cn/dashboard:${{ github.sha }}
-          docker push apisixacr.azurecr.cn/dashboard:${{ github.sha }}
