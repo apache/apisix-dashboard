@@ -24,7 +24,7 @@ export default {
   'component.plugin.pluginTemplate.tip2':
     '2. The same plugin in the plugin template will override one in the plugins.',
   'component.plugin.enable': 'Enable',
-  'component.plugin.disable': 'Disable',
+  'component.plugin.disable': 'Edit',
   'component.plugin.authentication': 'Authentication',
   'component.plugin.security': 'Security',
   'component.plugin.traffic': 'Traffic Control',
