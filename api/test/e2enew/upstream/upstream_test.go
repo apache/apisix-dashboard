@@ -279,13 +279,13 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
 		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
-			Object:  base.ManagerApiExpect(),
-			Method:  http.MethodPut,
-			Path:    "/apisix/admin/upstreams/1",
-			Body:    string(_createUpstreamBody),
-			Headers: map[string]string{"Authorization": base.GetToken()},
-			//ExpectStatus: http.StatusOK,
-			ExpectBody: `"code":0`,
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"code":0`,
 		})
 	})
 	ginkgo.It("create route using the upstream(use proxy rewriteproxy rewrite plugin)", func() {
@@ -319,6 +319,7 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 			},
 		}
 		createUpstreamBody["type"] = "roundrobin"
+		createUpstreamBody["pass_host"] = "node"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
 		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
