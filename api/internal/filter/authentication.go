@@ -18,6 +18,7 @@ package filter
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,7 @@ func Authentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.URL.Path == "/apisix/admin/user/login" ||
 			c.Request.URL.Path == "/apisix/admin/tool/version" ||
-			c.Request.URL.Path == "/ping" {
+			!strings.HasPrefix(c.Request.URL.Path, "/apisix") {
 			c.Next()
 			return
 		}
