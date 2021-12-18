@@ -27,8 +27,11 @@ import (
 	"github.com/apisix/manager-api/internal/log"
 )
 
-func performRequest(r http.Handler, method, path string) *httptest.ResponseRecorder {
+func performRequest(r http.Handler, method, path string, headers map[string]string) *httptest.ResponseRecorder {
 	req := httptest.NewRequest(method, path, nil)
+	for key, val := range headers {
+		req.Header.Add(key, val)
+	}
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 	return w
@@ -41,6 +44,6 @@ func TestRequestLogHandler(t *testing.T) {
 	r.GET("/", func(c *gin.Context) {
 	})
 
-	w := performRequest(r, "GET", "/")
+	w := performRequest(r, "GET", "/", nil)
 	assert.Equal(t, 200, w.Code)
 }

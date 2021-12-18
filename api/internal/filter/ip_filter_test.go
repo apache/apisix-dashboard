@@ -35,7 +35,7 @@ func TestIPFilter_Handle(t *testing.T) {
 	r.GET("/", func(c *gin.Context) {
 	})
 
-	w := performRequest(r, "GET", "/")
+	w := performRequest(r, "GET", "/", nil)
 	assert.Equal(t, 200, w.Code)
 
 	// should forbidden
@@ -45,7 +45,7 @@ func TestIPFilter_Handle(t *testing.T) {
 	r.GET("/fbd", func(c *gin.Context) {
 	})
 
-	w = performRequest(r, "GET", "/fbd")
+	w = performRequest(r, "GET", "/fbd", nil)
 	assert.Equal(t, 403, w.Code)
 
 	// should allowed
@@ -54,7 +54,7 @@ func TestIPFilter_Handle(t *testing.T) {
 	r.Use(IPFilter())
 	r.GET("/test", func(c *gin.Context) {
 	})
-	w = performRequest(r, "GET", "/test")
+	w = performRequest(r, "GET", "/test", nil)
 	assert.Equal(t, 200, w.Code)
 
 	// should forbidden

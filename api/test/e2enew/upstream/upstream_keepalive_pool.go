@@ -39,8 +39,8 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		createUpstreamBody["keepalive_pool"] = map[string]interface{}{
-			"size": 320,
-			"requests": 1000,
+			"size":         320,
+			"requests":     1000,
 			"idle_timeout": 60,
 		}
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
