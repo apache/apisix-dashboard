@@ -132,6 +132,7 @@ var _ = Describe("Migrate", func() {
 
 	It("export config success", func() {
 		req := base.ManagerApiExpect().GET("/apisix/admin/migrate/export")
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		exportData = []byte(resp.Body().Raw())
@@ -145,6 +146,7 @@ var _ = Describe("Migrate", func() {
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "return"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		rsp := &response{}

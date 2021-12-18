@@ -39,7 +39,7 @@ func Authentication() gin.HandlerFunc {
 
 			errResp := gin.H{
 				"code":    010013,
-				"message": "Request Unauthorized",
+				"message": "request unauthorized",
 			}
 
 			if err != nil || token == nil || !token.Valid {
