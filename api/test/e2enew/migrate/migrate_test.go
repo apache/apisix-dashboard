@@ -128,6 +128,22 @@ var _ = Describe("Migrate", func() {
 			ExpectStatus: http.StatusOK,
 			Sleep:        time.Second * 1,
 		}),
+		Entry("migrate export auth test", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/migrate/export",
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "request unauthorized",
+			Sleep:        base.SleepTime,
+		}),
+		Entry("migrate import auth test", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/migrate/import",
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "request unauthorized",
+			Sleep:        base.SleepTime,
+		}),
 	)
 
 	It("export config success", func() {
