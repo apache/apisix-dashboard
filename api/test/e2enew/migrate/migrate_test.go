@@ -161,6 +161,7 @@ var _ = Describe("Migrate", func() {
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "skip"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		rsp := &response{}
@@ -174,6 +175,7 @@ var _ = Describe("Migrate", func() {
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "overwrite"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		rsp := &response{}
@@ -245,6 +247,7 @@ var _ = Describe("Migrate", func() {
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "return"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		rsp := &response{}
