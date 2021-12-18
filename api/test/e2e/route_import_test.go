@@ -351,7 +351,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/get",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `/get"`,
+			ExpectBody:   `/get`,
 			Sleep:        sleepTime,
 		},
 		{
@@ -360,7 +360,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Method:       http.MethodPost,
 			Path:         "/post",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `/post"`,
+			ExpectBody:   `/post`,
 			Sleep:        sleepTime,
 		},
 	}

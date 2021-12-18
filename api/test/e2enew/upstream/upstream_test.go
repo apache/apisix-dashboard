@@ -279,12 +279,13 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
 		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/upstreams/1",
-			Body:         string(_createUpstreamBody),
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
+			Object:  base.ManagerApiExpect(),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/upstreams/1",
+			Body:    string(_createUpstreamBody),
+			Headers: map[string]string{"Authorization": base.GetToken()},
+			//ExpectStatus: http.StatusOK,
+			ExpectBody: `"code":0`,
 		})
 	})
 	ginkgo.It("create route using the upstream(use proxy rewriteproxy rewrite plugin)", func() {
@@ -294,11 +295,11 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
 				"name": "route1",
-				 "uri": "/get",
+				 "uri": "/*",
 				 "upstream_id": "1",
 				 "plugins": {
 					"proxy-rewrite": {
-						"uri": "/get",
+						"uri": "/",
 						"scheme": "https"
 					}
 				}
@@ -312,7 +313,7 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
-				"host":   "httpbin.org",
+				"host":   "www.google.com",
 				"port":   443,
 				"weight": 1,
 			},
@@ -333,9 +334,9 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
-			Path:         "/get",
+			Path:         "/",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\n  \"url\": \"https://127.0.0.1/get\"\n}\n",
+			ExpectBody:   "google",
 			Sleep:        base.SleepTime,
 		})
 	})
