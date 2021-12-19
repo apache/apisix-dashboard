@@ -128,10 +128,27 @@ var _ = Describe("Migrate", func() {
 			ExpectStatus: http.StatusOK,
 			Sleep:        time.Second * 1,
 		}),
+		Entry("migrate export auth test", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/migrate/export",
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "request unauthorized",
+			Sleep:        base.SleepTime,
+		}),
+		Entry("migrate import auth test", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/migrate/import",
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "request unauthorized",
+			Sleep:        base.SleepTime,
+		}),
 	)
 
 	It("export config success", func() {
 		req := base.ManagerApiExpect().GET("/apisix/admin/migrate/export")
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		exportData = []byte(resp.Body().Raw())
@@ -145,6 +162,7 @@ var _ = Describe("Migrate", func() {
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "return"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		rsp := &response{}
@@ -161,6 +179,7 @@ var _ = Describe("Migrate", func() {
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "skip"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		rsp := &response{}
@@ -174,6 +193,7 @@ var _ = Describe("Migrate", func() {
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "overwrite"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		rsp := &response{}
@@ -245,6 +265,7 @@ var _ = Describe("Migrate", func() {
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "return"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
+		req.WithHeader("Authorization", base.GetToken())
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		rsp := &response{}

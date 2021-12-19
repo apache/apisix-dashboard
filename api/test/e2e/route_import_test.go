@@ -317,9 +317,9 @@ func TestImport_with_multi_routes(t *testing.T) {
 				Headers:      map[string]string{"Authorization": token},
 				ExpectStatus: http.StatusOK,
 				ExpectBody: []string{`"methods":["GET","POST","HEAD","PUT","PATCH","DELETE"]`,
-					`"proxy-rewrite":{"disable":false,"scheme":"https"}`,
+					`"proxy-rewrite":{"disable":false,"scheme":"http"}`,
 					`"labels":{"API_VERSION":"v2","dev":"test"}`,
-					`"upstream":{"nodes":[{"host":"httpbin.org","port":443,"weight":1}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
+					`"upstream":{"nodes":[{"host":"172.16.238.20","port":80,"weight":1}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
 				},
 				Sleep: sleepTime,
 			}
@@ -333,9 +333,9 @@ func TestImport_with_multi_routes(t *testing.T) {
 				Headers:      map[string]string{"Authorization": token},
 				ExpectStatus: http.StatusOK,
 				ExpectBody: []string{`"methods":["POST"]`,
-					`"proxy-rewrite":{"disable":false,"scheme":"https"}`,
+					`"proxy-rewrite":{"disable":false,"scheme":"http"}`,
 					`"labels":{"API_VERSION":"v1","version":"v1"}`,
-					`"upstream":{"nodes":[{"host":"httpbin.org","port":443,"weight":1}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
+					`"upstream":{"nodes":[{"host":"172.16.238.20","port":80,"weight":1}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
 				},
 				Sleep: sleepTime,
 			}
@@ -351,7 +351,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/get",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"url": "https://127.0.0.1/get"`,
+			ExpectBody:   `/get`,
 			Sleep:        sleepTime,
 		},
 		{
@@ -360,7 +360,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Method:       http.MethodPost,
 			Path:         "/post",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"url": "https://127.0.0.1/post"`,
+			ExpectBody:   `/post`,
 			Sleep:        sleepTime,
 		},
 	}

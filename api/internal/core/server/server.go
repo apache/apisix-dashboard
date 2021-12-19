@@ -35,7 +35,7 @@ type server struct {
 	options   *Options
 }
 
-type Options struct {}
+type Options struct{}
 
 // NewServer Create a server manager
 func NewServer(options *Options) (*server, error) {

@@ -108,7 +108,7 @@ func APISIXStreamProxyExpect(port uint16, sni string) *httpexpect.Expect {
 			},
 		})
 	} else {
-		return httpexpect.New(t, "http://" + net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
+		return httpexpect.New(t, "http://"+net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
 	}
 }
 

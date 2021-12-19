@@ -17,16 +17,12 @@
 package filter
 
 import (
-	"errors"
 	"net/http"
-	"net/url"
 	"testing"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/data"
-	"github.com/shiningrush/droplet/middleware"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/apisix/manager-api/internal/conf"
@@ -44,73 +40,35 @@ func genToken(username string, issueAt, expireAt int64) string {
 	return signedToken
 }
 
-type mockMiddleware struct {
-	middleware.BaseMiddleware
-}
-
-func (mw *mockMiddleware) Handle(ctx droplet.Context) error {
-	return errors.New("next middleware")
-}
-
-func testPanic(t *testing.T, mw AuthenticationMiddleware, ctx droplet.Context) {
-	defer func() {
-		panicErr := recover()
-		assert.Contains(t, panicErr.(error).Error(), "input middleware cannot get http request")
-	}()
-	_ = mw.Handle(ctx)
-}
-
 func TestAuthenticationMiddleware_Handle(t *testing.T) {
-	ctx := droplet.NewContext()
-	fakeReq, _ := http.NewRequest(http.MethodGet, "", nil)
-	expectOutput := &data.SpecCodeResponse{
-		Response: data.Response{
-			Code:    010013,
-			Message: "request unauthorized",
-		},
-		StatusCode: http.StatusUnauthorized,
-	}
+	r := gin.New()
+	r.Use(Authentication())
+	r.GET("/*path", func(c *gin.Context) {
+	})
 
-	mw := AuthenticationMiddleware{}
-	mockMw := mockMiddleware{}
-	mw.SetNext(&mockMw)
+	w := performRequest(r, "GET", "/apisix/admin/user/login", nil)
+	assert.Equal(t, http.StatusOK, w.Code)
 
-	// test without http.Request
-	testPanic(t, mw, ctx)
-
-	ctx.Set(middleware.KeyHttpRequest, fakeReq)
-
-	// test without token check
-	fakeReq.URL = &url.URL{Path: "/apisix/admin/user/login"}
-	assert.Equal(t, mw.Handle(ctx), errors.New("next middleware"))
-
-	// test without authorization header
-	fakeReq.URL = &url.URL{Path: "/apisix/admin/routes"}
-	assert.Nil(t, mw.Handle(ctx))
-	assert.Equal(t, expectOutput, ctx.Output().(*data.SpecCodeResponse))
+	w = performRequest(r, "GET", "/apisix/admin/routes", nil)
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
 
 	// test with token expire
 	expireToken := genToken("admin", time.Now().Unix(), time.Now().Unix()-60*3600)
-	fakeReq.Header.Set("Authorization", expireToken)
-	assert.Nil(t, mw.Handle(ctx))
-	assert.Equal(t, expectOutput, ctx.Output().(*data.SpecCodeResponse))
+	w = performRequest(r, "GET", "/apisix/admin/routes", map[string]string{"Authorization": expireToken})
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
 
-	// test with temp subject
-	tempSubjectToken := genToken("", time.Now().Unix(), time.Now().Unix()+60*3600)
-	fakeReq.Header.Set("Authorization", tempSubjectToken)
-	assert.Nil(t, mw.Handle(ctx))
-	assert.Equal(t, expectOutput, ctx.Output().(*data.SpecCodeResponse))
+	// test with empty subject
+	emptySubjectToken := genToken("", time.Now().Unix(), time.Now().Unix()+60*3600)
+	w = performRequest(r, "GET", "/apisix/admin/routes", map[string]string{"Authorization": emptySubjectToken})
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
 
-	// test username doesn't exist
-	userToken := genToken("user1", time.Now().Unix(), time.Now().Unix()+60*3600)
-	fakeReq.Header.Set("Authorization", userToken)
-	assert.Nil(t, mw.Handle(ctx))
-	assert.Equal(t, expectOutput, ctx.Output().(*data.SpecCodeResponse))
+	// test token with nonexistent username
+	nonexistentUserToken := genToken("user1", time.Now().Unix(), time.Now().Unix()+60*3600)
+	w = performRequest(r, "GET", "/apisix/admin/routes", map[string]string{"Authorization": nonexistentUserToken})
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
 
 	// test auth success
-	adminToken := genToken("admin", time.Now().Unix(), time.Now().Unix()+60*3600)
-	fakeReq.Header.Set("Authorization", adminToken)
-	ctx.SetOutput("test data")
-	assert.Equal(t, mw.Handle(ctx), errors.New("next middleware"))
-	assert.Equal(t, "test data", ctx.Output().(string))
+	validToken := genToken("admin", time.Now().Unix(), time.Now().Unix()+60*3600)
+	w = performRequest(r, "GET", "/apisix/admin/routes", map[string]string{"Authorization": validToken})
+	assert.Equal(t, http.StatusOK, w.Code)
 }
