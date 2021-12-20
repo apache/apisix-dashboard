@@ -132,12 +132,27 @@ export const transformStepData = ({
   if (form1Data.redirectOption === 'disabled') {
     step3DataCloned.plugins = omit(step3Data.plugins, ['redirect']);
   } else if (form1Data.redirectOption === 'forceHttps') {
-    redirect = { http_to_https: true };
+    if (form1Data.append_query_string) {
+        redirect = { http_to_https: true,
+        append_query_string:true,
+     };
+    } else {
+      redirect = { http_to_https: true}
+    }
+
   } else if (form1Data.redirectURI !== '') {
-    redirect = {
-      ret_code: form1Data.ret_code,
-      uri: form1Data.redirectURI,
-    };
+    if (form1Data.append_query_string) {
+      redirect = {
+        ret_code: form1Data.ret_code,
+        uri: form1Data.redirectURI,
+        append_query_string: true,
+      };
+    } else {
+      redirect = {
+        ret_code: form1Data.ret_code,
+        uri: form1Data.redirectURI,
+      };
+    }
   }
 
   const labels: Record<string, string> = {};
@@ -358,8 +373,6 @@ export const transformRouteData = (data: RouteModule.Body) => {
     form1Data.redirectOption = 'customRedirect';
     form1Data.ret_code = redirect?.ret_code;
     form1Data.redirectURI = redirect?.uri;
-  } else if(redirect?.append_query_string) {
-    form1Data.redirectOption = 'appendQueryString';
   } else {
     form1Data.redirectOption = 'disabled';
   }

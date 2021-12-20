@@ -115,11 +115,12 @@ declare namespace RouteModule {
     custom_normal_labels: string[];
     priority: number;
     websocket: boolean;
+    append_query_string: boolean;
     hosts: string[];
     uris: string[];
     remote_addrs: string[];
     methods: HttpMethod[];
-    redirectOption: 'forceHttps' | 'customRedirect' | 'disabled' | 'appendQueryString';
+    redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
     ret_code?: number;
     status: number;

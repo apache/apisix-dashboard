@@ -65,6 +65,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   uris: ['/*'],
   remote_addrs: [''],
   redirectOption: 'disabled',
+  append_query_string: false,
   redirectURI: '',
   ret_code: 302,
   methods: HTTP_METHOD_OPTION_LIST,

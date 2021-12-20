@@ -196,6 +196,8 @@ export default {
   'page.route.advanced-match.tips.builtinParameter':
     'Build-in Parameter：Nginx internal parameters',
 
+  'page.route.append_query_string':'append_query_string',
+  'page.route.append_query_string.toolip': 'enable append_query_string in redirect plugin',
   'page.route.fields.custom.redirectOption.tooltip': 'This is related to redirect plugin',
   'page.route.fields.service_id.tooltip': 'Bind Service object to reuse their configuration.',
 

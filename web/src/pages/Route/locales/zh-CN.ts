@@ -188,6 +188,8 @@ export default {
     'POST 请求参数：仅支持 POST x-www-form-urlencoded 表单',
   'page.route.advanced-match.tips.builtinParameter': '内置参数：Nginx 内部参数',
 
+  'page.route.append_query_string':'append_query_string',
+  'page.route.append_query_string.toolip': '是否开启 redirect 插件 append_query_string 配置',
   'page.route.fields.custom.redirectOption.tooltip': '在此配置 redirect 插件',
   'page.route.fields.service_id.tooltip': '绑定服务（Service）对象，以便复用其中的配置。',
 

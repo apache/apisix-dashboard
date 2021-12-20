@@ -197,6 +197,21 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.Item>
   );
 
+  const Append_Query_String: React.FC = () => (
+    <Form.Item
+      label={formatMessage({ id: 'page.route.append_query_string' })}
+      tooltip={formatMessage({ id: 'page.route.append_query_string.toolip' })}
+    >
+      <Row>
+        <Col>
+          <Form.Item noStyle name="append_query_string" valuePropName="checked">
+            <Switch disabled={disabled} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  );
+
   const Redirect: React.FC = () => {
     const list = [
       {
@@ -210,10 +225,6 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
       {
         value: 'disabled',
         label: formatMessage({ id: 'page.route.select.option.forbidden' }),
-      },
-      {
-        value: 'appendQueryString',
-        label: formatMessage({ id: 'page.route.select.option.appendQueryString' }),
       },
     ];
 
@@ -374,7 +385,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
       <CustomRedirect />
 
       <ServiceSelector />
-
+      <Append_Query_String />
       <WebSocket />
       <Publish />
     </PanelSection>
