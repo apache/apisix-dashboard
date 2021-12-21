@@ -197,7 +197,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.Item>
   );
 
-  const Append_Query_String: React.FC = () => (
+  const AppendQueryString: React.FC = () => (
     <Form.Item
       label={formatMessage({ id: 'page.route.append_query_string' })}
       tooltip={formatMessage({ id: 'page.route.append_query_string.toolip' })}
@@ -385,7 +385,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
       <CustomRedirect />
 
       <ServiceSelector />
-      <Append_Query_String />
+      <AppendQueryString />
       <WebSocket />
       <Publish />
     </PanelSection>
