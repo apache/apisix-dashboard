@@ -133,11 +133,12 @@ export const transformStepData = ({
     step3DataCloned.plugins = omit(step3Data.plugins, ['redirect']);
   } else if (form1Data.redirectOption === 'forceHttps') {
     if (form1Data.append_query_string) {
-        redirect = { http_to_https: true,
-        append_query_string:true,
+        redirect = {
+          http_to_https: true,
+          append_query_string: true,
      };
     } else {
-      redirect = { http_to_https: true}
+      redirect = { http_to_https: true }
     }
 
   } else if (form1Data.redirectURI !== '') {
