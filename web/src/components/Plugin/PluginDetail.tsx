@@ -115,6 +115,7 @@ const PluginDetail: React.FC<Props> = ({
     { label: monacoModeList.JSON, value: monacoModeList.JSON },
     { label: monacoModeList.YAML, value: monacoModeList.YAML },
   ];
+  const targetPluginName = pluginList.find((item) => item.name === name)?.name;
 
   if (PLUGIN_UI_LIST.includes(name)) {
     modeOptions.push({
@@ -308,7 +309,7 @@ const PluginDetail: React.FC<Props> = ({
   };
 
   const isNoConfigurationRequired =
-    pluginType === 'auth' && schemaType !== 'consumer' && monacoMode !== monacoModeList.UIForm;
+    pluginType === 'auth' && schemaType !== 'consumer' && monacoMode !== monacoModeList.UIForm && targetPluginName !== 'key-auth';
 
   return (
     <Drawer
