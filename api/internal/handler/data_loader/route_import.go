@@ -133,7 +133,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 
 		if _, err := h.routeStore.CreateCheck(route); err != nil {
 			return handler.SpecCodeResponse(err),
-				fmt.Errorf("222create route(uris:%v) failed: %s", route.Uris, err)
+				fmt.Errorf("create route(uris:%v) failed: %s", route.Uris, err)
 		}
 	}
 
@@ -147,7 +147,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 		} else {
 			if _, err := h.routeStore.Create(c.Context(), route); err != nil {
 				return handler.SpecCodeResponse(err),
-					fmt.Errorf("111create route(uris:%v) failed: %s", route.Uris, err)
+					fmt.Errorf("create route(uris:%v) failed: %s", route.Uris, err)
 			}
 		}
 	}
@@ -219,7 +219,12 @@ func mergePathValue(key string, values []PathValue, swagger *openapi3.T) (map[st
 	var parsed []PathValue
 	var routes = map[string]*entity.Route{}
 	for _, value := range values {
-		value.Value.OperationID = strings.Replace(value.Value.OperationID, value.Method, "", 1)
+		if len(value.Value.OperationID) == 0 {
+			// import file is not export from apisix dashboard. so this OperationID is empty
+			value.Value.OperationID = regPathRepeat.ReplaceAllString(value.Value.Summary, "")
+		} else {
+			value.Value.OperationID = strings.Replace(value.Value.OperationID, value.Method, "", 1)
+		}
 		var eq = false
 		for _, v := range parsed {
 			if utils.ValueEqual(v.Value, value.Value) {
