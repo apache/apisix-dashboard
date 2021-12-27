@@ -303,3 +303,8 @@ type StreamRoute struct {
 	UpstreamID interface{}            `json:"upstream_id,omitempty"`
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`
 }
+
+type PluginMetadata struct {
+	BaseInfo
+	MetaData map[string]interface{} `json:"plugin_metadata"`
+}

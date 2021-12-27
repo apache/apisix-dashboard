@@ -29,17 +29,18 @@ import (
 type HubKey string
 
 const (
-	HubKeyConsumer     HubKey = "consumer"
-	HubKeyRoute        HubKey = "route"
-	HubKeyService      HubKey = "service"
-	HubKeySsl          HubKey = "ssl"
-	HubKeyUpstream     HubKey = "upstream"
-	HubKeyScript       HubKey = "script"
-	HubKeyGlobalRule   HubKey = "global_rule"
-	HubKeyServerInfo   HubKey = "server_info"
-	HubKeyPluginConfig HubKey = "plugin_config"
-	HubKeyProto        HubKey = "proto"
-	HubKeyStreamRoute  HubKey = "stream_route"
+	HubKeyConsumer       HubKey = "consumer"
+	HubKeyRoute          HubKey = "route"
+	HubKeyService        HubKey = "service"
+	HubKeySsl            HubKey = "ssl"
+	HubKeyUpstream       HubKey = "upstream"
+	HubKeyScript         HubKey = "script"
+	HubKeyGlobalRule     HubKey = "global_rule"
+	HubKeyServerInfo     HubKey = "server_info"
+	HubKeyPluginConfig   HubKey = "plugin_config"
+	HubKeyProto          HubKey = "proto"
+	HubKeyStreamRoute    HubKey = "stream_route"
+	HubKeyPluginMetaData HubKey = "plugin_metadata"
 )
 
 var (
@@ -48,13 +49,14 @@ var (
 
 func InitStore(key HubKey, opt GenericStoreOption) error {
 	hubsNeedCheck := map[HubKey]bool{
-		HubKeyConsumer:    true,
-		HubKeyRoute:       true,
-		HubKeySsl:         true,
-		HubKeyService:     true,
-		HubKeyUpstream:    true,
-		HubKeyGlobalRule:  true,
-		HubKeyStreamRoute: true,
+		HubKeyConsumer:       true,
+		HubKeyRoute:          true,
+		HubKeySsl:            true,
+		HubKeyService:        true,
+		HubKeyUpstream:       true,
+		HubKeyGlobalRule:     true,
+		HubKeyStreamRoute:    true,
+		HubKeyPluginMetaData: true,
 	}
 	if _, ok := hubsNeedCheck[key]; ok {
 		validator, err := NewAPISIXJsonSchemaValidator("main." + string(key))
@@ -222,6 +224,18 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.StreamRoute{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.StreamRoute)
+			return utils.InterfaceToString(r.ID)
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyPluginMetaData, GenericStoreOption{
+		BasePath: conf.ETCDConfig.Prefix + "/plugin_metadata",
+		ObjType:  reflect.TypeOf(entity.PluginMetadata{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.PluginMetadata)
 			return utils.InterfaceToString(r.ID)
 		},
 	})
