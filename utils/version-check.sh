@@ -32,9 +32,9 @@ matched=`grep "apisix-dashboard-v[0-9][0-9.]*" -r docs/`
 expected=`grep "apisix-dashboard-v$ver" -r docs/`
 
 if [ "$matched" = "$expected" ]; then
-    echo -e "${green}passed: (doc) apisix $ver ${NC}"
+    echo -e "${green}passed: (doc) apisix-dashboard $ver ${NC}"
 else
-    echo -e "${RED}failed: (doc) apisix $ver ${NC}" 1>&2
+    echo -e "${RED}failed: (doc) apisix-dashboard $ver ${NC}" 1>&2
     echo
     echo "-----maybe wrong version-----"
     echo "$matched"
@@ -45,9 +45,9 @@ matched=`grep "git clone -b v[0-9][0-9.]*" -r docs/`
 expected=`grep "git clone -b v$ver" -r docs/`
 
 if [ "$matched" = "$expected" ]; then
-    echo -e "${green}passed: (doc) apisix $ver ${NC}"
+    echo -e "${green}passed: (doc) apisix-dashboard $ver ${NC}"
 else
-    echo -e "${RED}failed: (doc) apisix $ver ${NC}" 1>&2
+    echo -e "${RED}failed: (doc) apisix-dashboard $ver ${NC}" 1>&2
     echo
     echo "-----maybe wrong version-----"
     echo "$matched"
