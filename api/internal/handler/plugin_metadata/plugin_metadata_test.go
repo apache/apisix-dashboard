@@ -1,1 +1,1 @@
-package pluginmetadata
+package plugin_metadata

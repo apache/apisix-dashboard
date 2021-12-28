@@ -1,4 +1,4 @@
-package pluginmetadata
+package plugin_metadata
 
 import (
 	"reflect"
@@ -18,16 +18,16 @@ type Handler struct {
 }
 
 type GetInput struct {
-	ID string `auto_read:"id" validate:"required"`
+	ID string `auto_read:"id,path"`
 }
 
 type UpdateInput struct {
-	ID string `auto_read:"id"  validate:"required"`
+	ID string `auto_read:"id,path"`
 	entity.Upstream
 }
 
 type BatchDelete struct {
-	IDs string `auto_read:"id"  validate:"required"`
+	IDs string `auto_read:"id,path"`
 }
 
 func NewHandler() (handler.RouteRegister, error) {
@@ -46,8 +46,13 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 }
 
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
-	//TODO
-	return nil, nil
+	input := c.Input().(*GetInput)
+
+	r, err := h.metadataStore.Get(c.Context(), input.ID)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+	return r, nil
 }
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {

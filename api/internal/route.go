@@ -35,6 +35,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/label"
 	"github.com/apisix/manager-api/internal/handler/migrate"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
+	"github.com/apisix/manager-api/internal/handler/plugin_metadata"
 	"github.com/apisix/manager-api/internal/handler/proto"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/schema"
@@ -83,6 +84,7 @@ func SetUpRouter() *gin.Engine {
 		migrate.NewHandler,
 		proto.NewHandler,
 		stream_route.NewHandler,
+		plugin_metadata.NewHandler,
 	}
 
 	for i := range factories {

@@ -6,6 +6,8 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 
 replace github.com/coreos/bbolt => go.etcd.io/bbolt v1.3.5
 
+replace "github.com/apisix/manager-api/internal/handler/plugin_metadata" => "/Users/kusaka/Code/apisix-dashboard/api/internal/handler/plugin_metadata"
+
 require (
 	github.com/coreos/bbolt v1.3.2 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
