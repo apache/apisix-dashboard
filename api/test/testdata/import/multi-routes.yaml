@@ -45,6 +45,7 @@ paths:
           - host: 172.16.238.20
             port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -73,6 +74,7 @@ paths:
           - host: 172.16.238.20
             port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -101,6 +103,7 @@ paths:
           - host: 172.16.238.20
             port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -129,6 +132,7 @@ paths:
           - host: 172.16.238.20
             port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -157,6 +161,7 @@ paths:
           - host: 172.16.238.20
             port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -185,6 +190,7 @@ paths:
           - host: 172.16.238.20
             port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -215,6 +221,7 @@ paths:
           - host: 172.16.238.20
             port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000

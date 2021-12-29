@@ -21,7 +21,8 @@
             {
               "host": "172.16.238.20",
               "port": 1980,
-              "weight": 1
+              "weight": 1,
+              "priority": 10
             }
           ]
         },
