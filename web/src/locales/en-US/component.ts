@@ -67,6 +67,7 @@ export default {
   'component.global.sendTimeout': 'Send Timeout',
   'component.global.receiveTimeout': 'Receive Timeout',
   'component.global.name': 'Name',
+  'component.global.id': 'ID',
   'component.global.updateTime': 'Update Time',
   'component.global.form.itemExtraMessage.nameGloballyUnique': 'Name should be globally unique',
   'component.global.input.placeholder.description':

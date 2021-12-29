@@ -56,6 +56,7 @@ export default {
   'component.global.sendTimeout': '发送超时时间',
   'component.global.receiveTimeout': '接收超时时间',
   'component.global.name': '名称',
+  'component.global.id': 'ID',
   'component.global.updateTime': '更新时间',
 
   'component.global.popconfirm.title.delete': '确定删除该条记录吗？',
