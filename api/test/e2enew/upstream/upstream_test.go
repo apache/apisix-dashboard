@@ -270,9 +270,10 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		createUpstreamBody["name"] = "upstream1"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
-				"host":   base.UpstreamIp,
-				"port":   1980,
-				"weight": 1,
+				"host":     base.UpstreamIp,
+				"port":     1980,
+				"weight":   1,
+				"priority": 10,
 			},
 		}
 		createUpstreamBody["type"] = "roundrobin"
@@ -313,9 +314,10 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
-				"host":   "www.google.com",
-				"port":   443,
-				"weight": 1,
+				"host":     "www.google.com",
+				"port":     443,
+				"weight":   1,
+				"priority": 10,
 			},
 		}
 		createUpstreamBody["type"] = "roundrobin"
@@ -748,9 +750,10 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
-				"host":   base.UpstreamIp,
-				"port":   1981,
-				"weight": 1,
+				"host":     base.UpstreamIp,
+				"port":     1981,
+				"weight":   1,
+				"priority": 10,
 			},
 		}
 		createUpstreamBody["type"] = "roundrobin"
@@ -772,15 +775,16 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1981,\"weight\":1}],\"type\":\"roundrobin\"}",
+			ExpectBody:   "nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1981,\"weight\":1,\"priority\":10}],\"type\":\"roundrobin\"}",
 		})
 	})
 	ginkgo.It("Upstream update use patch method", func() {
 		var nodes []map[string]interface{} = []map[string]interface{}{
 			{
-				"host":   base.UpstreamIp,
-				"port":   1980,
-				"weight": 1,
+				"host":     base.UpstreamIp,
+				"port":     1980,
+				"weight":   1,
+				"priority": 10,
 			},
 		}
 		_nodes, err := json.Marshal(nodes)
@@ -805,7 +809,7 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}",
+			ExpectBody:   "nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1,\"priority\":10}],\"type\":\"roundrobin\"}",
 		})
 	})
 	ginkgo.It("delete upstream", func() {
