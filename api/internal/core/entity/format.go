@@ -79,10 +79,12 @@ func NodesFormat(obj interface{}) interface{} {
 		for _, v := range list {
 			val := v.(map[string]interface{})
 			node := &Node{
-				Host:     val["host"].(string),
-				Port:     int(val["port"].(float64)),
-				Weight:   int(val["weight"].(float64)),
-				Priority: int(val["priority"].(float64)),
+				Host:   val["host"].(string),
+				Port:   int(val["port"].(float64)),
+				Weight: int(val["weight"].(float64)),
+			}
+			if _, ok := val["priority"]; ok {
+				node.Priority = int(val["priority"].(float64))
 			}
 			nodes = append(nodes, node)
 		}
