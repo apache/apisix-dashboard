@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
 	"github.com/apisix/manager-api/internal/handler/migrate"
+	"github.com/apisix/manager-api/internal/handler/overview"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
 	"github.com/apisix/manager-api/internal/handler/proto"
 	"github.com/apisix/manager-api/internal/handler/route"
@@ -45,7 +47,6 @@ import (
 	"github.com/apisix/manager-api/internal/handler/tool"
 	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/apisix/manager-api/internal/log"
-	"github.com/gin-contrib/gzip"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -83,6 +84,7 @@ func SetUpRouter() *gin.Engine {
 		migrate.NewHandler,
 		proto.NewHandler,
 		stream_route.NewHandler,
+		overview.NewHandler,
 	}
 
 	for i := range factories {
