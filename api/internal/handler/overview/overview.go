@@ -84,25 +84,25 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	apisixVersion, err := h.GetApisixVersion()
+	dashboardVersion, err := h.GetApisixVersion()
 	if err != nil {
 		return nil, err
 	}
 
-	serverSummary, err := h.GetServerSummary(c)
+	serverInfo, err := h.GetServerInfo(c)
 	if err != nil {
 		return nil, err
 	}
 
 	res := &entity.DashboardInfo{
-		RouteCnt:        routerCnt,
-		OnlineRouterCnt: onlineRouterCnt,
-		UpstreamCnt:     upstreamCnt,
-		ServiceCnt:      serviceCnt,
-		CertificateCnt:  certificateCnt,
-		Plugins:         plugins,
-		ApisixVersion:   apisixVersion,
-		ServerSummary:   serverSummary,
+		RouteCnt:         routerCnt,
+		OnlineRouterCnt:  onlineRouterCnt,
+		UpstreamCnt:      upstreamCnt,
+		ServiceCnt:       serviceCnt,
+		CertificateCnt:   certificateCnt,
+		DashboardVersion: dashboardVersion,
+		GatewayInfo:      serverInfo,
+		Plugins:          plugins,
 	}
 
 	return res, nil
@@ -140,7 +140,7 @@ func (h *Handler) GetPlugins(_ droplet.Context) ([]string, error) {
 	return res, nil
 }
 
-func (h *Handler) GetServerSummary(c droplet.Context) ([]*entity.ServerInfo, error) {
+func (h *Handler) GetServerInfo(c droplet.Context) ([]*entity.ServerInfo, error) {
 	ret, err := h.serverInfoStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			return true
@@ -152,20 +152,10 @@ func (h *Handler) GetServerSummary(c droplet.Context) ([]*entity.ServerInfo, err
 	if err != nil {
 		return nil, err
 	}
+	var res [](*entity.ServerInfo)
 
-	var res []*entity.ServerInfo
-	for _, row := range ret.Rows {
-		item := row.(*entity.ServerInfo)
-		temp := &entity.ServerInfo{
-			BaseInfo:       item.BaseInfo,
-			LastReportTime: item.LastReportTime,
-			UpTime:         item.UpTime,
-			BootTime:       item.BootTime,
-			EtcdVersion:    item.EtcdVersion,
-			Hostname:       item.Hostname,
-			Version:        item.Version,
-		}
-		res = append(res, temp)
+	for _, item := range ret.Rows {
+		res = append(res, item.(*entity.ServerInfo))
 	}
 
 	return res, nil
