@@ -19,6 +19,7 @@ package upstream
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
@@ -57,6 +58,115 @@ var _ = ginkgo.Describe("Upstream priority", func() {
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/priority",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+})
+
+//test node priority
+var _ = ginkgo.FDescribe("Upstream priority", func() {
+	ginkgo.It("create upstream with priority", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
+			Body: `{
+				"nodes":[
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1980,
+						"weight": 1,
+						"priority": 1
+					},
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1981,
+						"weight": 1,
+						"priority": 2
+					}
+				],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("create route using the upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
+			Body: `{
+				 "name": "route1",
+				  "uri": "/server_port",
+				  "upstream_id": "1"
+			  }`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("batch test /server_port api", func() {
+		// sleep for etcd sync
+		time.Sleep(time.Duration(300) * time.Millisecond)
+
+		// batch test /server_port api
+		res := base.BatchTestServerPort(12, nil, "")
+
+		gomega.Expect(res["1980"]).Should(gomega.Equal(0))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(12))
+	})
+	ginkgo.It("update upstream with priority", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
+			Body: `{
+				"nodes":[
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1980,
+						"weight": 1,
+						"priority": 3
+					},
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1981,
+						"weight": 1,
+						"priority": 2
+					}
+				],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("batch test /server_port api", func() {
+		// sleep for etcd sync
+		time.Sleep(time.Duration(300) * time.Millisecond)
+
+		// batch test /server_port api
+		res := base.BatchTestServerPort(12, nil, "")
+
+		gomega.Expect(res["1980"]).Should(gomega.Equal(12))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(0))
+	})
+	ginkgo.It("delete route", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("delete upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
