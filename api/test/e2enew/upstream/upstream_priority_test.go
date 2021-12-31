@@ -65,7 +65,7 @@ var _ = ginkgo.Describe("Upstream priority", func() {
 })
 
 //test node priority
-var _ = ginkgo.FDescribe("Upstream priority", func() {
+var _ = ginkgo.Describe("Upstream priority", func() {
 	ginkgo.It("create upstream with priority", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
