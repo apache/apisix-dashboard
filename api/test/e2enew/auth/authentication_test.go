@@ -14,43 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package auth_test
 
 import (
 	"net/http"
-	"testing"
+
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/extensions/table"
+
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-func TestAuthentication_token(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:         "Access with valid authentication token",
-			Object:       ManagerApiExpect(t),
+var _ = ginkgo.Describe("Authentication", func() {
+
+	table.DescribeTable("test auth module",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("Access with valid authentication token", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "Access with malformed authentication token",
-			Object:       ManagerApiExpect(t),
+			ExpectBody:   `"code":0`,
+		}),
+		table.Entry("Access with malformed authentication token", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
 			Headers:      map[string]string{"Authorization": "Not-A-Valid-Token"},
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   "\"message\":\"request unauthorized\"",
-		},
-		{
-			Desc:         "Access without authentication token",
-			Object:       ManagerApiExpect(t),
+			ExpectBody:   `"message":"request unauthorized"`,
+		}),
+		table.Entry("Access without authentication token", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   "\"message\":\"request unauthorized\"",
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
-	}
-}
+			ExpectBody:   `"message":"request unauthorized"`,
+		}),
+	)
+})
