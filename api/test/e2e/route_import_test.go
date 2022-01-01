@@ -319,7 +319,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 				ExpectBody: []string{`"methods":["GET","POST","HEAD","PUT","PATCH","DELETE"]`,
 					`"proxy-rewrite":{"disable":false,"scheme":"http"}`,
 					`"labels":{"API_VERSION":"v2","dev":"test"}`,
-					`"upstream":{"nodes":[{"host":"172.16.238.20","port":80,"weight":1}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
+					`"upstream":{"nodes":[{"host":"172.16.238.20","port":80,"weight":1,"priority":10}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
 				},
 				Sleep: sleepTime,
 			}
@@ -335,7 +335,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 				ExpectBody: []string{`"methods":["POST"]`,
 					`"proxy-rewrite":{"disable":false,"scheme":"http"}`,
 					`"labels":{"API_VERSION":"v1","version":"v1"}`,
-					`"upstream":{"nodes":[{"host":"172.16.238.20","port":80,"weight":1}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
+					`"upstream":{"nodes":[{"host":"172.16.238.20","port":80,"weight":1,"priority":10}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
 				},
 				Sleep: sleepTime,
 			}
