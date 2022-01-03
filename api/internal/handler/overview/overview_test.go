@@ -100,8 +100,8 @@ func TestDashboard(t *testing.T) {
 								Nodes: []map[string]interface{}{
 									{
 										"host":   "39.97.63.215",
-										"port":   float64(80),
-										"weight": float64(1),
+										"port":   80,
+										"weight": 1,
 									},
 								},
 							},
@@ -216,7 +216,7 @@ func TestDashboard(t *testing.T) {
 					UpstreamCnt:      3,
 					ServiceCnt:       4,
 					CertificateCnt:   3,
-					Plugins:          []string{"api-breaker", "authz-casbin", "authz-keycloak", "basic-auth", "batch-requests", "client-control", "consumer-restriction", "cors", "dubbo-proxy", "echo", "error-log-logger", "example-plugin", "ext-plugin-post-req", "ext-plugin-pre-req", "fault-injection", "grpc-transcode", "gzip", "hmac-auth", "http-logger", "ip-restriction", "jwt-auth", "kafka-logger", "key-auth", "limit-conn", "limit-count", "limit-req", "log-rotate", "mqtt-proxy", "node-status", "openid-connect", "prometheus", "proxy-cache", "proxy-mirror", "proxy-rewrite", "real-ip", "redirect", "referer-restriction", "request-id", "request-validation", "response-rewrite", "server-info", "serverless-post-function", "serverless-pre-function", "skywalking", "sls-logger", "syslog", "tcp-logger", "traffic-split", "ua-restriction", "udp-logger", "uri-blocker", "wolf-rbac", "zipkin"},
+					Plugins:          []string{"api-breaker", "authz-casbin", "authz-keycloak", "azure-functions", "basic-auth", "batch-requests", "client-control", "consumer-restriction", "cors", "datadog", "dubbo-proxy", "echo", "error-log-logger", "example-plugin", "ext-plugin-post-req", "ext-plugin-pre-req", "fault-injection", "grpc-transcode", "gzip", "hmac-auth", "http-logger", "ip-restriction", "jwt-auth", "kafka-logger", "key-auth", "ldap-auth", "limit-conn", "limit-count", "limit-req", "log-rotate", "node-status", "openid-connect", "prometheus", "proxy-cache", "proxy-mirror", "proxy-rewrite", "real-ip", "redirect", "referer-restriction", "request-id", "request-validation", "response-rewrite", "server-info", "serverless-post-function", "serverless-pre-function", "skywalking", "skywalking-logger", "sls-logger", "syslog", "tcp-logger", "traffic-split", "ua-restriction", "udp-logger", "uri-blocker", "wolf-rbac", "zipkin"},
 					DashboardVersion: version,
 					GatewayInfo: []*entity.ServerInfo{
 						{
