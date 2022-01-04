@@ -337,6 +337,7 @@ const Page: React.FC = () => {
     },
     {
       title: formatMessage({ id: 'component.global.id' }),
+      hideInSearch: true,
       dataIndex: 'id',
     },
     {
