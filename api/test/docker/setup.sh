@@ -97,12 +97,21 @@ up() {
 
   fi
 
+  if [ ! -d "grpc-server-example" ]; then
+    wget https://github.com/api7/grpc_server_example/archive/refs/tags/20210819.tar.gz
+    mkdir grpc-server-example
+    tar -xzvf 20210819.tar.gz -C grpc-server-example
+    docker build -t grpc_server_example:latest ./grpc-server-example/grpc_server_example-20210819
+  fi
+
   #Spinning up services
   if [ -z "$1" ]; then
     docker-compose up
   else
     docker-compose up "$1"
   fi
+
+  ../shell/wait_for_services.sh
 }
 
 down() {
@@ -141,7 +150,7 @@ welcome() {
   echo "Services: "
   echo "1. Three etcd nodes."
   echo "2. Two apisix nodes."
-  echo -e "3. Single node of\n\t manager-api \n\t skywalking \n\t upstream-node"
+  echo -e "3. Single node of\n\t manager-api \n\t skywalking \n\t upstream-node \n\t upstream-grpc \n\t upstream-echo"
   echo -e "=====================================================\n"
 }
 

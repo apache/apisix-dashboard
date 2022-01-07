@@ -24,7 +24,8 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
-	"path"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -93,8 +94,12 @@ func ReadFile(t *testing.T, filePath string) []byte {
 	pwd, err := os.Getwd()
 	assert.Nil(t, err)
 
-	apiDir := path.Join(strings.Split(pwd,"/api/")[0], "/api/")
-	fileContent, err := ioutil.ReadFile(path.Join(apiDir, filePath))
+	bound := "/api/"
+	if runtime.GOOS == "windows" {
+		bound = `\api\`
+	}
+	apiDir := filepath.Join(strings.Split(pwd,bound)[0], bound)
+	fileContent, err := ioutil.ReadFile(filepath.Join(apiDir, filePath))
 	assert.Nil(t, err)
 
 	return fileContent
