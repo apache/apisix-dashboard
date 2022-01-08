@@ -153,6 +153,23 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.Item>
   );
 
+  const Id: React.FC = () => {
+    if (isEdit) {
+      return (
+        <Form.Item label={formatMessage({ id: 'component.global.id' })}>
+          <Row>
+            <Col span={10}>
+              <Form.Item noStyle name="id">
+                <Input disabled={true} />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form.Item>
+      );
+    }
+    return null;
+  };
+
   const Description: React.FC = () => (
     <Form.Item label={formatMessage({ id: 'component.global.description' })}>
       <Row>
@@ -316,7 +333,9 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
                 showSearch
                 disabled={disabled}
                 optionFilterProp="children"
-                filterOption={(input, option) => option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                filterOption={(input, option) =>
+                  option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
               >
                 {/* TODO: value === '' means  no service_id select, need to find a better way */}
                 <Select.Option value="" key={Math.random().toString(36).substring(7)}>
@@ -361,6 +380,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
       <Name />
+      <Id />
       <NormalLabelComponent />
       <VersionLabelComponent />
 

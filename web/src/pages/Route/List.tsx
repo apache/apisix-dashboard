@@ -336,6 +336,11 @@ const Page: React.FC = () => {
       fixed: 'left',
     },
     {
+      title: formatMessage({ id: 'component.global.id' }),
+      hideInSearch: true,
+      dataIndex: 'id',
+    },
+    {
       title: formatMessage({ id: 'page.route.host' }),
       hideInSearch: true,
       render: (_, record) => {
