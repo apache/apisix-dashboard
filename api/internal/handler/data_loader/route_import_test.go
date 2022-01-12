@@ -23,7 +23,9 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
-	"os/exec"
+	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -89,22 +91,25 @@ func TestImport_invalid_content(t *testing.T) {
 }
 
 func ReadFile(t *testing.T, filePath string) []byte {
-	cmd := exec.Command("pwd")
-	pwdByte, err := cmd.CombinedOutput()
-	pwd := string(pwdByte)
-	pwd = strings.Replace(pwd, "\n", "", 1)
-	dir := pwd[:strings.Index(pwd, "/api/")] + "/api/"
-	bytes, err := ioutil.ReadFile(dir + filePath)
+	pwd, err := os.Getwd()
 	assert.Nil(t, err)
 
-	return bytes
+	bound := "/api/"
+	if runtime.GOOS == "windows" {
+		bound = `\api\`
+	}
+	apiDir := filepath.Join(strings.Split(pwd,bound)[0], bound)
+	fileContent, err := ioutil.ReadFile(filepath.Join(apiDir, filePath))
+	assert.Nil(t, err)
+
+	return fileContent
 }
 
 func TestImport_with_service_id(t *testing.T) {
-	bytes := ReadFile(t, "test/testdata/import/with-service-id.yaml")
+	fileContent := ReadFile(t, "test/testdata/import/with-service-id.yaml")
 	input := &ImportInput{}
 	input.FileName = "file1.json"
-	input.FileContent = bytes
+	input.FileContent = fileContent
 
 	mStore := &store.MockInterface{}
 	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
@@ -139,10 +144,10 @@ func TestImport_with_service_id(t *testing.T) {
 }
 
 func TestImport_with_upstream_id(t *testing.T) {
-	bytes := ReadFile(t, "test/testdata/import/with-upstream-id.yaml")
+	fileContent := ReadFile(t, "test/testdata/import/with-upstream-id.yaml")
 	input := &ImportInput{}
 	input.FileName = "file1.json"
-	input.FileContent = bytes
+	input.FileContent = fileContent
 
 	mStore := &store.MockInterface{}
 	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
