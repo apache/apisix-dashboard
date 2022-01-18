@@ -58,7 +58,7 @@ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download
 sudo manager-api -p /usr/local/apisix/dashboard/
 
 # or run dashboard as a service
-systemctl apisix-dashboard start
+systemctl start apisix-dashboard
 ```
 
 Without changing the configuration, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
