@@ -359,6 +359,7 @@ const PluginDetail: React.FC<Props> = ({
                     editorData = yaml2json(content, false).data;
                   } else {
                     editorData = getUIFormData();
+                    console.log(editorData );
                   }
 
                   validateData(name, editorData).then((value) => {
