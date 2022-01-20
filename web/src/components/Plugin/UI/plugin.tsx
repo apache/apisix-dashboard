@@ -28,6 +28,7 @@ import LimitConn from './limit-conn';
 import RefererRestriction from './referer-restriction';
 import Cors from './cors';
 import AuthzCasbin from './authz-casbin';
+import AuthzKeycloak from './authz-keycloak';
 
 type Props = {
   name: string;
@@ -46,6 +47,7 @@ export const PLUGIN_UI_LIST = [
   'referer-restriction',
   'limit-count',
   'authz-casbin',
+  'authz-keycloak'
 ];
 
 export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) => {
@@ -79,6 +81,9 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
       return <RefererRestriction form={form} schema={schema} />;
     case 'authz-casbin':
       return <AuthzCasbin form={form} schema={schema} />;
+      case 'authz-keycloak':
+      return <AuthzKeycloak form={form} schema={schema} />;
+      
     default:
       return null;
   }

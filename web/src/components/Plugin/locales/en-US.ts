@@ -151,4 +151,10 @@ export default {
   'compoenet.pauginForm.authz-casbin.model.tooltip':'The Casbin model configuration in text format.',
   'compoenet.pauginForm.authz-casbin.policy.tooltip': 'The Casbin model configuration in text format.',
   'compoenet.pauginForm.authz-casbin.username.tooltip': 'The header you will be using in request to pass the username (subject).',
+   // authz-keycloak
+   'component.pauginForm.authz-keycloak.token_endpoint.tooltip':'A OAuth2-compliant Token Endpoint that supports the urn:ietf:params:oauth:grant-type:uma-ticket grant type. Overrides value from discovery, if given.',
+   'component.pauginForm.authz-keycloak.audience.tooltip': 'Legacy parameter now replaced by client_id. Kept for backwards compatibility. One of client_id or audience is required.',
+   'component.pauginForm.authz-keycloak.permissions.tooltip': 'Static permission to request, an array of strings each representing a resources and optionally one or more scopes the client is seeking access.',
+   'component.pauginForm.authz-keycloak.timeout.tooltip': 'Timeout(ms) for the http connection with the Identity Server.',
+   'component.pauginForm.authz-keycloak.ssl_verify.tooltip' :'Verify if TLS certificate matches hostname.',
 };

@@ -144,4 +144,10 @@ export default {
   'compoenet.pauginForm.authz-casbin.model.tooltip':'Casbin 鉴权模型的文本定义',
   'compoenet.pauginForm.authz-casbin.policy.tooltip': 'Casbin 鉴权策略的文本定义',
   'compoenet.pauginForm.authz-casbin.username.tooltip': '描述请求中有可以通过访问控制的用户名',
+  // authz-keycloak
+  'component.pauginForm.authz-keycloak.token_endpoint.tooltip':'接受 OAuth2 兼容 token 的接口，需要支持 urn:ietf:params:oauth:grant-type:uma-ticket 授权类型',
+  'component.pauginForm.authz-keycloak.audience.tooltip': '客户端应用访问相应的资源服务器时所需提供的身份信息。当 permissions 参数有值时这个参数是必填的。',
+  'component.pauginForm.authz-keycloak.permissions.tooltip': '描述客户端应用所需访问的资源和权限范围的字符串。格式必须为：RESOURCE_ID#SCOPE_ID',
+  'component.pauginForm.authz-keycloak.timeout.tooltip': '与身份认证服务器的 http 连接的超时时间',
+  'component.pauginForm.authz-keycloak.ssl_verify.tooltip' :'验证 SSL 证书与主机名是否匹配',
 };

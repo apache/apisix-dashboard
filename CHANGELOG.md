@@ -50,7 +50,7 @@ This release contains some features and bugfixes, and all the existing functiona
 ### Bugfix
 
 - fix: supports search by name for service options when add router [#2066](https://github.com/apache/apisix-dashboard/pull/2066)
-- fix: gzip plugin schema typo [#2142](https://github.com/apache/apisix-dashboard/pull/2142)
+- fix: gzip schema typo [#2142](https://github.com/apache/apisix-dashboard/pull/2142)
 - fix: adjust buildx to fix Docker build failed [#2120](https://github.com/apache/apisix-dashboard/pull/2120)
 
 ### Docs

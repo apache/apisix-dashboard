@@ -18,7 +18,6 @@ const FORM_ITEM_LAYOUT = {
     },
 };
 
-
 const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
     const { formatMessage } = useIntl();
     const properties = schema?.properties
