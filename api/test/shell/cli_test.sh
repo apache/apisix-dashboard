@@ -56,6 +56,12 @@ clean_logfile() {
   echo > $LOG_FILE
 }
 
+recover_service_file() {
+  run cp ./service/apisix-dashboard.service /usr/lib/systemd/system/${SERVICE_NAME}.service
+  run systemctl daemon-reload
+  [ "$status" -eq 0 ]
+}
+
 start_dashboard() {
   run systemctl start ${SERVICE_NAME}
   [ "$status" -eq 0 ]
@@ -237,6 +243,29 @@ stop_dashboard() {
 }
 
 #10
+@test "Check APISIX_PROFILE" {
+  recover_conf
+
+  start_dashboard 3
+
+  run journalctl -u ${SERVICE_NAME}.service -n 30
+  [ $(echo "$output" | grep -c "conf.yaml") -eq '1' ]
+
+  stop_dashboard 3
+
+  echo "Environment=APISIX_PROFILE=test" > /usr/lib/systemd/system/${SERVICE_NAME}.service
+
+  start_dashboard 3
+
+  run journalctl -u ${SERVICE_NAME}.service -n 30
+  [ $(echo "$output" | grep -c "conf-test.yaml") -eq '1' ]
+
+  stop_dashboard 3
+
+  recover_service_file
+}
+
+#11
 @test "Check etcd basic auth" {
   recover_conf
 
@@ -301,7 +330,7 @@ stop_dashboard() {
   [ "$status" -eq 0 ]
 }
 
-#11
+#12
 @test "Check etcd prefix" {
   recover_conf
 
@@ -361,7 +390,7 @@ stop_dashboard() {
   stop_dashboard 6
 }
 
-#12
+#13
 @test "Check etcd mTLS" {
   recover_conf
 
@@ -399,7 +428,7 @@ stop_dashboard() {
   stop_dashboard 6
 }
 
-#13
+#14
 @test "Check etcd bad data" {
   recover_conf
 
@@ -418,28 +447,6 @@ stop_dashboard() {
   [ "$status" -eq 0 ]
 
   stop_dashboard 6
-}
-
-@test "Check APISIX_PROFILE" {
-  recover_conf
-
-  start_dashboard 3
-
-  run journalctl -u ${SERVICE_NAME}.service -n 30
-  [ $(echo "$output" | grep -c "conf.yaml") -eq '1' ]
-
-  stop_dashboard 3
-
-  export APISIX_PROFILE=test
-
-  start_dashboard 3
-
-  run journalctl -u ${SERVICE_NAME}.service -n 30
-  [ $(echo "$output" | grep -c "conf-test.yaml") -eq '1' ]
-
-  stop_dashboard 3
-
-  unset APISIX_PROFILE
 }
 
 #post
