@@ -57,7 +57,7 @@ clean_logfile() {
 }
 
 recover_service_file() {
-  run cp ./service/apisix-dashboard.service /usr/lib/systemd/system/${SERVICE_NAME}.service
+  run cp -f ./service/apisix-dashboard.service /usr/lib/systemd/system/${SERVICE_NAME}.service
   run systemctl daemon-reload
   [ "$status" -eq 0 ]
 }
