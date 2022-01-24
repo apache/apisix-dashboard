@@ -253,7 +253,8 @@ stop_dashboard() {
 
   stop_dashboard 3
 
-  echo "Environment=APISIX_PROFILE=test" > /usr/lib/systemd/system/${SERVICE_NAME}.service
+  sed -i '$a\Environment=APISIX_PROFILE=test' /usr/lib/systemd/system/${SERVICE_NAME}.service
+  run systemctl daemon-reload
 
   start_dashboard 3
 
