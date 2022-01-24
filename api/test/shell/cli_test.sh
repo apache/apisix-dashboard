@@ -420,6 +420,28 @@ stop_dashboard() {
   stop_dashboard 6
 }
 
+@test "Check APISIX_PROFILE" {
+  recover_conf
+
+  start_dashboard 3
+
+  run journalctl -u ${SERVICE_NAME}.service -n 30
+  [ $(echo "$output" | grep -c "conf.yaml") -eq '1' ]
+
+  stop_dashboard 3
+
+  export APISIX_PROFILE=test
+
+  start_dashboard 3
+
+  run journalctl -u ${SERVICE_NAME}.service -n 30
+  [ $(echo "$output" | grep -c "conf-test.yaml") -eq '1' ]
+
+  stop_dashboard 3
+
+  unset APISIX_PROFILE
+}
+
 #post
 @test "Clean test environment" {
   # kill etcd
