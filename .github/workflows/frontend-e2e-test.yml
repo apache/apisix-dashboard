@@ -49,7 +49,7 @@ jobs:
           cache-dependency-path: web/yarn.lock
 
       - name: Setup golang environment
-        uses: actions/setup-go@v2.1.4
+        uses: actions/setup-go@v2.1.5
         with:
           go-version: '1.13'
 
