@@ -119,4 +119,14 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 			UnexpectBody: `"retries"`,
 		})
 	})
+	ginkgo.It("delete upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/zero-retry",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+
 })
