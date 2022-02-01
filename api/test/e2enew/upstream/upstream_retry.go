@@ -60,4 +60,73 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
+	ginkgo.It("zero retry field", func() {
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			}}
+		createUpstreamBody["type"] = "roundrobin"
+		createUpstreamBody["retries"] = 0
+		createUpstreamBody["retry_timeout"] = 5.5
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		gomega.Expect(err).To(gomega.BeNil())
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/zero-retry",
+			Body:         string(_createUpstreamBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/upstreams/zero-retry",
+			Body:         string(_createUpstreamBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"retries":0`,
+		})
+	})
+	ginkgo.It("nil retry field", func() {
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			}}
+		createUpstreamBody["type"] = "roundrobin"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		gomega.Expect(err).To(gomega.BeNil())
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/zero-retry",
+			Body:         string(_createUpstreamBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/upstreams/zero-retry",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			UnexpectBody: `"retries"`,
+		})
+	})
+	ginkgo.It("delete upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/zero-retry",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+
 })
