@@ -204,3 +204,28 @@ func Test_Idle_Timeout_nil_and_zero(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, string(marshaledNil), `{}`)
 }
+
+func TestUpstream_nil_and_zero_retries(t *testing.T) {
+	ud0 := UpstreamDef{}
+	// Unmarshal from zero value
+	err := json.Unmarshal([]byte(`{"retries":0}`), &ud0)
+	assert.Nil(t, err)
+	assert.Equal(t, *ud0.Retries, 0)
+
+	// Marshal with zero value
+	marshaled, err := json.Marshal(ud0)
+	assert.Nil(t, err)
+	assert.Contains(t, string(marshaled), `"retries":0`)
+
+	udNull := UpstreamDef{}
+
+	// Unmarshal from null value
+	err = json.Unmarshal([]byte(`{}`), &udNull)
+	assert.Nil(t, err)
+	assert.Nil(t, udNull.Retries)
+
+	// Marshal to null value
+	marshaledNull, err := json.Marshal(udNull)
+	assert.Nil(t, err)
+	assert.Equal(t, string(marshaledNull), `{}`)
+}
