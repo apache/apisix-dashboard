@@ -73,20 +73,17 @@ var _ = ginkgo.Describe("Test Upstream keepalive pool", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/zero_idle_timeout",
 			Body: `{
-					"id": "zero_idle_timeout",
 					"name":"upstream1",
-					"nodes":[
-						{
-							"host":"` + base.UpstreamIp + `",
-							"port":1980,
-							"weight":1
-						}
-					],
+					"nodes":[{
+							"host": "` + base.UpstreamIp + `",
+							"port": 1980,
+							"weight": 1
+						}],
 					"keepalive_pool":{
 						"size":         320,
 						"requests":     1000,
 						"idle_timeout": 0
-					}
+					},
 					"type":"roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -111,19 +108,16 @@ var _ = ginkgo.Describe("Test Upstream keepalive pool", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/nil_idle_timeout",
 			Body: `{
-					"id": "nil_idle_timeout",
 					"name":"upstream2",
-					"nodes":[
-						{
+					"nodes":[{
 							"host":"` + base.UpstreamIp + `",
 							"port":1980,
 							"weight":1
-						}
-					],
+					}],
 					"keepalive_pool":{
 						"size":         320,
 						"requests":     1000
-					}
+					},
 					"type":"roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
