@@ -50,7 +50,7 @@ endif
 .PHONY: api-default
 api-default:
 ifeq ("$(wildcard $(GO_EXEC))", "")
-	@echo "ERROR: Need to install golang 1.13+ first"
+	@echo "ERROR: Need to install golang 1.15+ first"
 	exit 1
 endif
 
