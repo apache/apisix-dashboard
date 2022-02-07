@@ -156,9 +156,9 @@ type UpstreamTLS struct {
 }
 
 type UpstreamKeepalivePool struct {
-	IdleTimeout TimeoutValue `json:"idle_timeout,omitempty"`
-	Requests    int          `json:"requests,omitempty"`
-	Size        int          `json:"size"`
+	IdleTimeout *TimeoutValue `json:"idle_timeout,omitempty"`
+	Requests    int           `json:"requests,omitempty"`
+	Size        int           `json:"size"`
 }
 
 type UpstreamDef struct {

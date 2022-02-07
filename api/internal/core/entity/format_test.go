@@ -180,6 +180,31 @@ func TestNodesFormat_no_nodes(t *testing.T) {
 	assert.Contains(t, jsonStr, `null`)
 }
 
+func Test_Idle_Timeout_nil_and_zero(t *testing.T) {
+	ukp0 := UpstreamKeepalivePool{}
+	// Unmarshal from zero value
+	err := json.Unmarshal([]byte(`{"idle_timeout":0}`), &ukp0)
+	assert.Nil(t, err)
+	assert.Equal(t, *ukp0.IdleTimeout, TimeoutValue(0))
+
+	// Marshal with zero value
+	marshaled, err := json.Marshal(ukp0)
+	assert.Nil(t, err)
+	assert.Contains(t, string(marshaled), `"idle_timeout":0`)
+
+	ukpNil := UpstreamKeepalivePool{}
+
+	// Unmarshal from nil value
+	err = json.Unmarshal([]byte(`{}`), &ukpNil)
+	assert.Nil(t, err)
+	assert.Nil(t, ukpNil.IdleTimeout)
+
+	// Marshal with nil value
+	marshaledNil, err := json.Marshal(ukpNil)
+	assert.Nil(t, err)
+	assert.Equal(t, string(marshaledNil), `{"size":0}`)
+}
+
 func TestUpstream_nil_and_zero_retries(t *testing.T) {
 	ud0 := UpstreamDef{}
 	// Unmarshal from zero value
