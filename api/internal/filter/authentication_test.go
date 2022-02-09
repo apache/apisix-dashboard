@@ -53,7 +53,7 @@ func TestAuthenticationMiddleware_Handle(t *testing.T) {
 	assert.Equal(t, http.StatusUnauthorized, w.Code)
 
 	// test with token expire
-	expireToken := genToken("admin", time.Now(), 60*3600)
+	expireToken := genToken("admin", time.Now(), -60*3600)
 	w = performRequest(r, "GET", "/apisix/admin/routes", map[string]string{"Authorization": expireToken})
 	assert.Equal(t, http.StatusUnauthorized, w.Code)
 
