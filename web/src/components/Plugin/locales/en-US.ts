@@ -111,6 +111,8 @@ export default {
   'component.pluginForm.limit-req.key.tooltip': 'The user specified key to limit the rate.',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected.',
+  'component.pluginForm.limit-req.rejected_msg.tooltip':
+    'The response body returned when the request exceeds the threshold is rejected.',
   'component.pluginForm.limit-req.nodelay.tooltip':
     'If nodelay flag is true, bursted requests will not get delayed',
 
