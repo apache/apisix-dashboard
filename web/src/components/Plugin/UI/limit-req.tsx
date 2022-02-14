@@ -27,7 +27,7 @@ type Props = {
 
 export const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 4,
+    span: 5,
   },
   wrapperCol: {
     span: 8,
