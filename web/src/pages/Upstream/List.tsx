@@ -52,6 +52,11 @@ const Page: React.FC = () => {
 
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
+      title: 'ID',
+      dataIndex: 'id',
+      hideInSearch: true,
+    },
+    {
       title: formatMessage({ id: 'page.upstream.list.name' }),
       dataIndex: 'name',
     },
