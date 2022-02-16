@@ -54,6 +54,11 @@ export const getMenuData = (): MenuDataItem[] => {
       icon: <IconFont name="iconconsumer" />,
     },
     {
+      name: 'proto',
+      path: '/proto/list',
+      icon: <IconFont name="iconserver" />,
+    },
+    {
       name: 'plugin',
       path: '/plugin/list',
       icon: <IconFont name="iconplugin" />,

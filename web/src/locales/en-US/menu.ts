@@ -70,6 +70,7 @@ export default {
   'menu.consumer': 'Consumer',
   'menu.plugin': 'Plugin',
   'menu.service': 'Service',
+  'menu.proto': 'Proto',
   'menu.setting': 'Settings',
   'menu.serverinfo': 'System Info',
   'menu.advanced-feature': 'Advanced',

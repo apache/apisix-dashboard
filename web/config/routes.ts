@@ -100,6 +100,10 @@ const routes = [
     component: './Service/Create',
   },
   {
+    path: '/proto/list',
+    component: './Proto/List',
+  },
+  {
     path: '/settings',
     component: './Setting',
   },
