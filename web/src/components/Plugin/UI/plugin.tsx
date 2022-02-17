@@ -81,9 +81,9 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
       return <RefererRestriction form={form} schema={schema} />;
     case 'authz-casbin':
       return <AuthzCasbin form={form} schema={schema} />;
-      case 'authz-keycloak':
+    case 'authz-keycloak':
       return <AuthzKeycloak form={form} schema={schema} />;
-      
+
     default:
       return null;
   }

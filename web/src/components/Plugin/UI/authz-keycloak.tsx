@@ -14,7 +14,7 @@ const FORM_ITEM_LAYOUT = {
         span: 7,
     },
     wrapperCol: {
-        span: 8,
+        span: 10,
     },
 };
 
@@ -89,4 +89,4 @@ const AuthzKeycloak: React.FC<Props> = ({ form, schema }) => {
     )
 }
 
-export default AuthzKeycloak
+export default AuthzKeycloak 
