@@ -64,7 +64,7 @@ const Page: React.FC = (props) => {
             username
               ? formatMessage({ id: 'component.global.edit' })
               : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({
+          }${formatMessage({ id: 'menu.consumer' })}${formatMessage({
             id: 'component.status.success',
           })}`,
         });

@@ -64,7 +64,7 @@ export default {
   'component.global.steps.stepTitle.preview': '预览',
   'component.global.steps.stepTitle.pluginConfig': '插件配置',
   'component.global.input.ruleMessage.name': '仅支持字母、数字、- 和 _，且只能以字母开头',
-  'component.global.form.itemExtraMessage.nameGloballyUnique': '名称需全局唯一',
+  'component.global.form.itemExtraMessage.nameGloballyUnique': '消费者名称需全局唯一',
   'component.global.input.placeholder.description': '请输入路由描述（内容不超过 256 个字符）',
 
   // User component

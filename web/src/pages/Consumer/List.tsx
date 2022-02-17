@@ -96,9 +96,9 @@ const Page: React.FC = () => {
             onConfirm={() => {
               remove(record.username).then(() => {
                 notification.success({
-                  message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                  message: `${formatMessage({ id: 'component.global.delete' })}${formatMessage({
                     id: 'menu.consumer',
-                  })} ${formatMessage({ id: 'component.status.success' })}`,
+                  })}${formatMessage({ id: 'component.status.success' })}`,
                 });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
@@ -111,6 +111,10 @@ const Page: React.FC = () => {
           </Popconfirm>
         </>
       ),
+    },
+    {
+      title: formatMessage({ id: 'menu.plugin' }),
+      dataIndex: 'plugins.disble',
     },
   ];
 

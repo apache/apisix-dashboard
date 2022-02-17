@@ -541,6 +541,10 @@ const Page: React.FC = () => {
         </>
       ),
     },
+    {
+      title: formatMessage({ id: 'menu.plugin' }),
+      dataIndex: 'plugins',
+    },
   ];
 
   return (
