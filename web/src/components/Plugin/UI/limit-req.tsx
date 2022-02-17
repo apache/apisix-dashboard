@@ -103,6 +103,13 @@ const LimitReq: React.FC<Props> = ({ form, schema }) => {
         />
       </Form.Item>
       <Form.Item
+        label="rejected_msg"
+        name="rejected_msg"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rejected_msg.tooltip' })}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
         label="nodelay"
         name="nodelay"
         valuePropName="checked"

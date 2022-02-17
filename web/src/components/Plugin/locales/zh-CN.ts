@@ -104,6 +104,7 @@ export default {
   'component.pluginForm.limit-req.key.tooltip': '用来做请求计数的依据',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     '当请求超过阈值被拒绝时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-req.rejected_msg.tooltip': '当请求超过阈值被拒绝时，返回的响应体。',
   'component.pluginForm.limit-req.nodelay.tooltip': '开启后突发的请求不会延迟',
 
   'component.plugin.form': '表单',
