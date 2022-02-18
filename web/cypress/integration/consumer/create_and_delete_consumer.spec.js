@@ -30,6 +30,7 @@ context('Create and Delete Consumer', () => {
     monacoScroll: '.monaco-scrollable-element',
     monacoViewZones: '.view-zones',
     notificationCloseIcon: '.ant-notification-close-icon',
+    DetectionofPluginfields: '.ant-tabel-cell',
   };
 
   const data = {
@@ -95,6 +96,7 @@ context('Create and Delete Consumer', () => {
 
     cy.get(selector.nameSelector).type(data.consumerName);
     cy.contains('Search').click();
+    cy.contains('key-auth').should('be.visible');
     cy.contains(data.consumerName).siblings().contains('View').click();
     cy.get(selector.drawer).should('be.visible');
 

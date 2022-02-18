@@ -60,7 +60,7 @@ export default {
   'component.global.updateTime': '更新时间',
   'component.global.create.consumer.success': '创建消费者成功',
   'component.global.delete.consumer.success': '删除消费者成功',
-  'component.global.edit.consumer.succes': '配置消费者成功',
+  'component.global.edit.consumer.success': '配置消费者成功',
 
   'component.global.popconfirm.title.delete': '确定删除该条记录吗？',
   'component.global.steps.stepTitle.basicInformation': '基础信息',
