@@ -102,9 +102,7 @@ const Page: React.FC = () => {
             onConfirm={() => {
               remove(record.username).then(() => {
                 notification.success({
-                  message: `${formatMessage({ id: 'component.global.delete' })}${formatMessage({
-                    id: 'menu.consumer',
-                  })}${formatMessage({ id: 'component.status.success' })}`,
+                  message: `${formatMessage({ id: 'component.global.delete.consumer.success' })}`,
                 });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
