@@ -30,7 +30,6 @@ context('Create and Delete Consumer', () => {
     monacoScroll: '.monaco-scrollable-element',
     monacoViewZones: '.view-zones',
     notificationCloseIcon: '.ant-notification-close-icon',
-    DetectionofPluginfields: '.ant-tabel-cell',
   };
 
   const data = {
