@@ -339,7 +339,7 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
         })}
         valuePropName="checked"
       >
-        <Switch defaultChecked={properties.allow_degradation.default} />
+        <Switch />
       </Form.Item>
       <Form.Item
         initialValue={properties.show_limit_quota_header.default}
@@ -350,7 +350,7 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
         })}
         valuePropName="checked"
       >
-        <Switch defaultChecked={properties.show_limit_quota_header.default} />
+        <Switch />
       </Form.Item>
       <Form.Item
         shouldUpdate={(prev, next) => prev.policy !== next.policy}
