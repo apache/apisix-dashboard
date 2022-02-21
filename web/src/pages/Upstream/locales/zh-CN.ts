@@ -96,7 +96,7 @@ export default {
   'page.upstream.type.least_conn': '最小连接数（least_conn）',
 
   'page.upstream.list.content':
-    '上游列表包含了已创建的上游服务（即后端服务），可以对上游服务的多个目标节点进行负载均衡和健康检查。',
+    '上游是虚拟主机抽象，上游列表包含了已创建的上游服务（即后端服务），您可以按照配置规则，对上游服务的多个目标节点配置负载均衡和健康检查。',
 
   'page.upstream.checks.active.timeout.description': '主动健康检查的套接字的超时时间',
   'page.upstream.checks.active.unhealthy.interval.description':

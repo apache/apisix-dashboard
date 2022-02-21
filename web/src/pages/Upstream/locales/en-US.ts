@@ -97,7 +97,7 @@ export default {
   'page.upstream.type.least_conn': 'Least conn',
 
   'page.upstream.list.content':
-    'The upstream list contains the created upstream services (i.e., backend services) and allows load balancing and health checking of multiple target nodes of the upstream services.',
+    'Upstream is an abstraction of virtual hosts.The upstream list contains the created upstream services (i.e., backend services). You can configure load balancing and health checking of multiple target nodes of the upstream services according to configuration rules.',
 
   'page.upstream.checks.active.timeout.description':
     'Socket timeout for active checks (in seconds)',
