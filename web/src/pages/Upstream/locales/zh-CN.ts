@@ -75,6 +75,7 @@ export default {
   'page.upstream.create.basic.info': '基础信息',
   'page.upstream.create.preview': '预览',
 
+  'page.upstream.list.id': 'ID',
   'page.upstream.list.name': '名称',
   'page.upstream.list.type': '类型',
   'page.upstream.list.description': '描述',
