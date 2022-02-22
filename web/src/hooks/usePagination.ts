@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 import { useEffect, useState } from 'react';
-import { useLocation } from 'umi';
-import { history } from 'umi';
+import { useLocation, history } from 'umi';
 import querystring from 'query-string';
 
 export default function usePagination() {
