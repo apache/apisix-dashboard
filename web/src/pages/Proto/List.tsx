@@ -22,8 +22,8 @@ import ProtoDrawer from './components/ProtoDrawer';
 import { Button, notification, Popconfirm, Space } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-
 import querystring from 'query-string';
+
 import { timestampToLocaleString } from '@/helpers';
 import { fetchList, remove } from './service';
 
@@ -106,7 +106,7 @@ const Page: React.FC = () => {
               okText={formatMessage({ id: 'page.upstream.list.confirm' })}
               cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
               onConfirm={() => {
-                remove(record.id!).then(() => {
+                remove(record.id).then(() => {
                   notification.success({
                     message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
                   });
@@ -126,7 +126,10 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <>
+    <PageHeaderWrapper
+      title={formatMessage({ id: 'page.proto.list' })}
+      content={formatMessage({ id: 'page.proto.list.description' })}
+    >
       <ProtoDrawer
         protoData={protoData as ProtoModule.ProtoData}
         setProtoData={setProtoData}
@@ -134,36 +137,31 @@ const Page: React.FC = () => {
         setVisible={setDrawerVisible}
         editMode={editMode}
         refreshTable={refreshTable}
-      ></ProtoDrawer>
-      <PageHeaderWrapper
-        title={formatMessage({ id: 'page.proto.list' })}
-        content={formatMessage({ id: 'page.proto.list.description' })}
-      >
-        <ProTable<ProtoModule.ResponseBody>
-          actionRef={ref}
-          rowKey="id"
-          columns={columns}
-          request={fetchList}
-          pagination={{
-            onChange: (page, pageSize?) => savePageList(page, pageSize),
-            pageSize: paginationConfig.pageSize,
-            current: paginationConfig.current,
-          }}
-          search={{
-            searchText: formatMessage({ id: 'component.global.search' }),
-            resetText: formatMessage({ id: 'component.global.reset' }),
-          }}
-          toolBarRender={() => [
-            <Button type="primary" onClick={() => showDrawer(emptyProtoData, 'create')}>
-              <PlusOutlined />
-              {formatMessage({ id: 'component.global.create' })}
-            </Button>,
-          ]}
-          tableAlertRender={false}
-          scroll={{ x: 1300 }}
-        />
-      </PageHeaderWrapper>
-    </>
+      />
+      <ProTable<ProtoModule.ResponseBody>
+        actionRef={ref}
+        rowKey="id"
+        columns={columns}
+        request={fetchList}
+        pagination={{
+          onChange: (page, pageSize?) => savePageList(page, pageSize),
+          pageSize: paginationConfig.pageSize,
+          current: paginationConfig.current,
+        }}
+        search={{
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
+        }}
+        toolBarRender={() => [
+          <Button type="primary" onClick={() => showDrawer(emptyProtoData, 'create')}>
+            <PlusOutlined />
+            {formatMessage({ id: 'component.global.create' })}
+          </Button>,
+        ]}
+        tableAlertRender={false}
+        scroll={{ x: 1300 }}
+      />
+    </PageHeaderWrapper>
   );
 };
 

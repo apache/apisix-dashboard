@@ -19,6 +19,7 @@ import { Button, Drawer, Form, notification, Space } from 'antd';
 import { useIntl } from 'umi';
 import Editor from '@monaco-editor/react';
 import { Input } from 'antd';
+
 import { create, update } from '../../service';
 import styles from './index.less';
 
@@ -43,11 +44,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
     if (editMode === 'create') {
       create(formData).then(() => {
         notification.success({
-          message: `${formatMessage({ id: 'component.global.create' })} ${formatMessage({
-            id: 'menu.proto',
-          })} ${formatMessage({
-            id: 'component.status.success',
-          })}`,
+          message: formatMessage({ id: 'page.proto.drawer.create.successfully' }),
         });
         setVisible(false);
         refreshTable();
@@ -55,11 +52,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
     } else {
       update(formData);
       notification.success({
-        message: `${formatMessage({ id: 'component.global.edit' })} ${formatMessage({
-          id: 'menu.proto',
-        })} ${formatMessage({
-          id: 'component.status.success',
-        })}`,
+        message: formatMessage({ id: 'page.proto.drawer.edit.successfully' }),
       });
       setVisible(false);
       refreshTable();
@@ -136,11 +129,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
             height="60vh"
             value={protoData.content}
             onChange={(text) => {
-              if (text) {
-                setProtoData({ ...protoData, content: text });
-              } else {
-                setProtoData({ ...protoData, content: '' });
-              }
+              setProtoData({ ...protoData, content: text || '' });
             }}
             language="proto"
             options={{

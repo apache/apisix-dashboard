@@ -29,4 +29,6 @@ export default {
 
   'page.proto.drawer.create': 'Create proto',
   'page.proto.drawer.edit': 'Configure proto',
+  'page.proto.drawer.create.successfully': 'Create proto Successfully',
+  'page.proto.drawer.edit.successfully': 'Configure proto Successfully',
 };

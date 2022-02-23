@@ -29,4 +29,6 @@ export default {
 
   'page.proto.drawer.create': '创建 proto',
   'page.proto.drawer.edit': '配置 proto',
+  'page.proto.drawer.create.successfully': '创建 proto 成功',
+  'page.proto.drawer.edit.successfully': '配置 proto',
 };
