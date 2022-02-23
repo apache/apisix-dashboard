@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
+import { Anchor, Layout, Card, Button, Form, Select, Alert, Switch, Row, Col } from 'antd';
 import { omit, orderBy } from 'lodash';
 import { useIntl } from 'umi';
 
@@ -68,7 +68,7 @@ const PluginPage: React.FC<Props> = ({
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
   const [plugins, setPlugins] = useState({});
-
+  const [showAll,setShowAll] = useState(true)
   useEffect(() => {
     setPlugins(initialData);
     fetchList().then((data) => {
@@ -179,6 +179,11 @@ const PluginPage: React.FC<Props> = ({
             />
           </>
         )}
+        <Row>
+          <Col span={4} offset={20}>
+        <Switch checked={!showAll} checkedChildren='已启用' unCheckedChildren='全部' onClick = {checked => setShowAll(!checked) }/>
+        </Col>
+        </Row>
         {typeList.map((typeItem) => {
           return (
             <PanelSection
@@ -224,7 +229,7 @@ const PluginPage: React.FC<Props> = ({
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
-                  style={{ width: 200 }}
+                  style={{ width: 200 ,display: showAll || initialData[item.name] && !initialData[item.name].disable ? ' ' : 'NONE'}}
                 >
                   {Boolean(PLUGIN_ICON_LIST[item.name]) && PLUGIN_ICON_LIST[item.name]}
                   {Boolean(!PLUGIN_ICON_LIST[item.name]) && (
