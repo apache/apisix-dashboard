@@ -281,7 +281,11 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     };
 
     return (
-      <Form form={form} labelCol={{ span: 3 }}>
+      <Form
+        initialValues={{ upstream_id: required ? 'Custom' : 'None' }}
+        form={form}
+        labelCol={{ span: 3 }}
+      >
         {showSelector && (
           <UpstreamSelector
             list={list}
