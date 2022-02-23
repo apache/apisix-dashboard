@@ -132,6 +132,12 @@ export default {
     'The HTTP status code returned when the request exceeds the threshold is rejected, default 503.',
   'component.pluginForm.limit-count.policy.tooltip':
     'The rate-limiting policies to use for retrieving and incrementing the limits. Available values are local(the counters will be stored locally in-memory on the node) and redis(counters are stored on a Redis server and will be shared across the nodes, usually use it to do the global speed limit) and redis-cluster(the same function as redis, only use Redis cluster pattern).',
+  'component.pluginForm.limit-count.allow_degradation.tooltip':
+    'Whether to enable plugin degradation when the limit-count function is temporarily unavailable(e.g. redis timeout). Allow requests to continue when the value is set to true',
+  'component.pluginForm.limit-count.show_limit_quota_header.tooltip':
+    'Whether show X-RateLimit-Limit and X-RateLimit-Remaining (which mean the total number of requests and the remaining number of requests that can be sent) in the response header',
+  'component.pluginForm.limit-count.group.tooltip':
+    'Route configured with the same group will share the same counter',
   'component.pluginForm.limit-count.redis_host.tooltip':
     'When using the redis policy, this property specifies the address of the Redis server.',
   'component.pluginForm.limit-count.redis_port.tooltip':

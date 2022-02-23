@@ -36,6 +36,7 @@ context('Create and delete route with limit-count form', () => {
     key: '#key',
     rejected_code: '#rejected_code',
     policy: '#policy',
+    group: '#group',
     redis_host: '#redis_host',
     redis_port: '#redis_port',
     redis_password: '#redis_password',
@@ -85,6 +86,7 @@ context('Create and delete route with limit-count form', () => {
     cy.get(selector.count).type(1);
     cy.get(selector.time_window).type(1);
     cy.get(selector.rejected_code).type(500);
+    cy.get(selector.group).type('test_group');
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
