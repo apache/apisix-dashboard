@@ -50,7 +50,11 @@ const UpstreamSelector: React.FC<Props> = ({ onChange, list = [], disabled, requ
         </Select.Option>
         {[
           {
-            name: formatMessage({ id: 'page.upstream.step.select.upstream.select.option' }),
+            name: formatMessage({
+              id: `page.upstream.step.select.upstream.select.option${
+                required ? '' : '.serviceSelected'
+              }`,
+            }),
             id: 'Custom',
           },
           ...list,
