@@ -39,8 +39,8 @@ required string name = 1;
 required int32 id = 2;
 optional string email = 3;
 }`,
-    createProtoSuccess: 'Create Proto Successfully',
-    configureProtoSuccess: 'Configure Proto Successfully',
+    createProtoSuccess: 'Create proto Successfully',
+    configureProtoSuccess: 'Configure proto Successfully',
     deleteProtoDelete: 'Delete Upstream Successfully',
   };
 
