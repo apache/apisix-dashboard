@@ -20,7 +20,6 @@ import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
-
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
 
@@ -44,6 +43,15 @@ const Page: React.FC = (props) => {
           }
         }
 
+        if (newData?.checks?.active) {
+          const host = newData?.checks?.active.host;
+          const http_path = newData?.checks?.active.http_path;
+          const url = host + http_path;
+          const { active: activeData } = newData.checks;
+          delete newData?.checks?.active.http_path;
+          delete newData?.checks?.active.host;
+          activeData.url = url;
+        }
         form1.setFieldsValue(newData);
       });
     }
@@ -60,6 +68,15 @@ const Page: React.FC = (props) => {
       }
 
       const { id } = (props as any).match.params;
+
+      const urlData = data.checks.active.url;
+      const hostData = urlData.split('/')[0];
+      const pathData = urlData.slice(hostData.length);
+      const newData = data;
+      newData.checks.active.host = hostData;
+      newData.checks.active.http_path = pathData;
+      delete newData.checks.active.url;
+
       (id ? update(id, data) : create(data)).then(() => {
         notification.success({
           message: `${

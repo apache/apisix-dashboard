@@ -27,12 +27,12 @@ const Component: React.FC<Props> = ({ readonly }) => {
 
   return (
     <Form.Item
-      label={formatMessage({ id: 'component.upstream.fields.checks.active.http_path' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.url' })}
       tooltip={formatMessage({
         id: 'component.upstream.fields.checks.active.http_path.tooltip',
       })}
     >
-      <Form.Item name={['checks', 'active', 'http_path']} noStyle initialValue="/">
+      <Form.Item name={['checks', 'active', 'url']} noStyle initialValue="">
         <Input
           disabled={readonly}
           placeholder={formatMessage({

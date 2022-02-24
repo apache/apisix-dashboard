@@ -163,7 +163,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.Item>
         <ActiveCheck.Timeout readonly={readonly} />
         <ActiveCheck.Concurrency readonly={readonly} />
-        <ActiveCheck.Host readonly={readonly} />
+
         <ActiveCheck.Port readonly={readonly} />
         <ActiveCheck.HttpPath readonly={readonly} />
         <ActiveCheck.ReqHeaders readonly={readonly} />
