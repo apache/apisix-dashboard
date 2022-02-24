@@ -105,7 +105,10 @@ context('Create Route with search service name', () => {
     cy.get(selector.priority).type(data.priority);
     cy.contains('Next').click();
     // select upstream with None
-    cy.get(selector.upstreamSelector).click({ force: true }).type(`${data.upstreamName}\n`);
+    cy.get('.ant-select-selector')
+      .find(selector.upstreamSelector)
+      .type(`${data.upstreamName}\n`, { force: true });
+
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
