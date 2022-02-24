@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import { Form, Select } from 'antd';
-import { useIntl } from 'umi';
+import { useIntl, useLocation } from 'umi';
 
 type Upstream = {
   name?: string;
@@ -32,6 +32,7 @@ type Props = {
 
 const UpstreamSelector: React.FC<Props> = ({ onChange, list = [], disabled, required }) => {
   const { formatMessage } = useIntl();
+  const location = useLocation();
 
   return (
     <Form.Item
@@ -52,7 +53,7 @@ const UpstreamSelector: React.FC<Props> = ({ onChange, list = [], disabled, requ
           {
             name: formatMessage({
               id: `page.upstream.step.select.upstream.select.option${
-                required ? '' : '.serviceSelected'
+                !required && location.pathname === '/routes/create' ? '.serviceSelected' : ''
               }`,
             }),
             id: 'Custom',
