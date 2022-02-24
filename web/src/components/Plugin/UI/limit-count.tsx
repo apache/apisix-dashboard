@@ -16,7 +16,7 @@
  */
 import React, { useState } from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Switch } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
@@ -322,6 +322,35 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
             </Select.Option>
           ))}
         </Select>
+      </Form.Item>
+      <Form.Item
+        label="group"
+        name="group"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.key.tooltip' })}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        initialValue={properties.allow_degradation.default}
+        label="allow_degradation"
+        name="allow_degradation"
+        tooltip={formatMessage({
+          id: 'component.pluginForm.limit-count.allow_degradation.tooltip',
+        })}
+        valuePropName="checked"
+      >
+        <Switch />
+      </Form.Item>
+      <Form.Item
+        initialValue={properties.show_limit_quota_header.default}
+        label="show_limit_quota_header"
+        name="show_limit_quota_header"
+        tooltip={formatMessage({
+          id: 'component.pluginForm.limit-count.show_limit_quota_header.tooltip',
+        })}
+        valuePropName="checked"
+      >
+        <Switch />
       </Form.Item>
       <Form.Item
         shouldUpdate={(prev, next) => prev.policy !== next.policy}

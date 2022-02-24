@@ -31,6 +31,7 @@
 VERSION=$(cat ./VERSION)
 KERNEL=$(uname -s)
 CONF_FILE="/usr/local/apisix-dashboard/conf/conf.yaml"
+APISIX_PROFILE_CONF_FILE="/usr/local/apisix-dashboard/conf/conf-test.yaml"
 LOG_FILE="/usr/local/apisix-dashboard/logs/error.log"
 ACCESS_LOG_FILE="/usr/local/apisix-dashboard/logs/access.log"
 SERVICE_NAME="apisix-dashboard"
@@ -47,6 +48,7 @@ fi
 
 recover_conf() {
   run cp -rf ./conf/conf.yaml ${CONF_FILE}
+  run cp -rf ./conf/conf.yaml ${APISIX_PROFILE_CONF_FILE}
   [ "$status" -eq 0 ]
 }
 check_logfile() {
@@ -54,6 +56,12 @@ check_logfile() {
 }
 clean_logfile() {
   echo > $LOG_FILE
+}
+
+recover_service_file() {
+  run cp -f ./service/apisix-dashboard.service /usr/lib/systemd/system/${SERVICE_NAME}.service
+  run systemctl daemon-reload
+  [ "$status" -eq 0 ]
 }
 
 start_dashboard() {
@@ -99,7 +107,7 @@ stop_dashboard() {
 }
 
 #2
-@test "Check info log leve and signal" {
+@test "Check info log level and signal" {
   if [[ $KERNEL = "Darwin" ]]; then
     sed -i "" 's/level: warn/level: info/' ${CONF_FILE}
   else
@@ -241,7 +249,7 @@ stop_dashboard() {
   recover_conf
 
   # add root user
-  curl -L http://localhost:2379/v3/auth/user/add -d '{"name": "root", "password": "root"}'
+  curl -L http://localhost:2379/v3/auth/user/add -X POST -d '{"name": "root", "password": "root"}'
 
   # add root role
   curl -L http://localhost:2379/v3/auth/role/add -d '{"name": "root"}'
@@ -418,6 +426,32 @@ stop_dashboard() {
   [ "$status" -eq 0 ]
 
   stop_dashboard 6
+}
+
+
+#14
+@test "Check APISIX_PROFILE" {
+  recover_conf
+
+  start_dashboard 3
+
+  run journalctl -u ${SERVICE_NAME}.service -n 30
+  [ $(echo "$output" | grep -c "conf.yaml") -eq '1' ]
+
+  stop_dashboard 3
+
+  sed -i 's#-c /usr/local/apisix-dashboard/conf/conf.yaml##g' /usr/lib/systemd/system/${SERVICE_NAME}.service
+  sed -i '$a\Environment=APISIX_PROFILE=test' /usr/lib/systemd/system/${SERVICE_NAME}.service
+  run systemctl daemon-reload
+
+  start_dashboard 3
+
+  run journalctl -u ${SERVICE_NAME}.service -n 30
+  [ $(echo "$output" | grep -c "conf-test.yaml") -eq '1' ]
+
+  stop_dashboard 3
+
+  recover_service_file
 }
 
 #post
