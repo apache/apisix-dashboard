@@ -76,6 +76,7 @@ export default {
   'page.upstream.create.basic.info': 'Basic Information',
   'page.upstream.create.preview': 'Preview',
 
+  'page.upstream.list.id': 'ID',
   'page.upstream.list.name': 'Name',
   'page.upstream.list.type': 'Type',
   'page.upstream.list.description': 'Description',
