@@ -48,9 +48,10 @@ const Page: React.FC = (props) => {
           const http_path = newData?.checks?.active.http_path;
           const url = host + http_path;
           const { active: activeData } = newData.checks;
-          delete newData?.checks?.active.http_path;
-          delete newData?.checks?.active.host;
+          delete activeData.host;
+          delete activeData.http_path;
           activeData.url = url;
+          console.log('activeData:', activeData);
         }
         form1.setFieldsValue(newData);
       });
