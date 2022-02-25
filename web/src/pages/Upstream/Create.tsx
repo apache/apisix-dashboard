@@ -51,7 +51,6 @@ const Page: React.FC = (props) => {
           delete activeData.host;
           delete activeData.http_path;
           activeData.url = url;
-          console.log('activeData:', activeData);
         }
         form1.setFieldsValue(newData);
       });
@@ -67,9 +66,6 @@ const Page: React.FC = (props) => {
         });
         return;
       }
-
-      const { id } = (props as any).match.params;
-
       const urlData = data.checks.active.url;
       const hostData = urlData.split('/')[0];
       const pathData = urlData.slice(hostData.length);
@@ -78,6 +74,7 @@ const Page: React.FC = (props) => {
       newData.checks.active.http_path = pathData;
       delete newData.checks.active.url;
 
+      const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
         notification.success({
           message: `${
