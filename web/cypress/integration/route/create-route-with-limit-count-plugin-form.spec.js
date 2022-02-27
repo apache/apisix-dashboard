@@ -35,6 +35,7 @@ context('Create and delete route with limit-count form', () => {
     redis_timeout: '#time_window',
     key: '#key',
     rejected_code: '#rejected_code',
+    rejected_msg: '#rejected_msg',
     policy: '#policy',
     group: '#group',
     redis_host: '#redis_host',
@@ -52,6 +53,7 @@ context('Create and delete route with limit-count form', () => {
     submitSuccess: 'Submit Successfully',
     port: '80',
     weight: 1,
+    rejected_msg: 'Requests are too frequent, please try again later.',
     redisClusterName: 'Please Enter redis_cluster_name',
     redisClusterNode: 'Please Enter redis_cluster_node',
   };
@@ -86,6 +88,7 @@ context('Create and delete route with limit-count form', () => {
     cy.get(selector.count).type(1);
     cy.get(selector.time_window).type(1);
     cy.get(selector.rejected_code).type(500);
+    cy.get(selector.rejected_msg).type(data.rejected_msg);
     cy.get(selector.group).type('test_group');
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({

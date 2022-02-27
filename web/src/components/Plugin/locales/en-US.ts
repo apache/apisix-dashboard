@@ -130,6 +130,8 @@ export default {
   'component.pluginForm.limit-count.key.tooltip': 'The user specified key to limit the count.',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected, default 503.',
+  'component.pluginForm.limit-count.rejected_msg.tooltip':
+    'The response body returned when the request exceeds the threshold is rejected.',
   'component.pluginForm.limit-count.policy.tooltip':
     'The rate-limiting policies to use for retrieving and incrementing the limits. Available values are local(the counters will be stored locally in-memory on the node) and redis(counters are stored on a Redis server and will be shared across the nodes, usually use it to do the global speed limit) and redis-cluster(the same function as redis, only use Redis cluster pattern).',
   'component.pluginForm.limit-count.allow_degradation.tooltip':

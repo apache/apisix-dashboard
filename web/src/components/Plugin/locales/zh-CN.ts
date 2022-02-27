@@ -122,6 +122,7 @@ export default {
     '用来做请求计数的有效值。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名规定时间内的请求次数。我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端规定时间内多次的连接我们的服务。',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     '当请求超过阈值被拒绝时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-count.rejected_msg.tooltip': '当请求超过阈值被拒绝时，返回的响应体。',
   'component.pluginForm.limit-count.policy.tooltip':
     '用于检索和增加限制的速率限制策略。可选的值有：local(计数器被以内存方式保存在节点本地，默认选项) 和 redis(计数器保存在 Redis 服务节点上，从而可以跨节点共享结果，通常用它来完成全局限速)；以及redis-cluster，跟 redis 功能一样，只是使用 redis 集群方式。',
   'component.pluginForm.limit-count.allow_degradation.tooltip':
