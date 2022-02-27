@@ -66,13 +66,15 @@ const Page: React.FC = (props) => {
         });
         return;
       }
-      const urlData = data.checks.active.url;
-      const hostData = urlData.split('/')[0];
-      const pathData = urlData.slice(hostData.length);
-      const newData = data;
-      newData.checks.active.host = hostData;
-      newData.checks.active.http_path = pathData;
-      delete newData.checks.active.url;
+      if (data?.checks?.active) {
+        const urlData = data.checks.active.url;
+        const hostData = urlData.split('/')[0];
+        const pathData = urlData.slice(hostData.length);
+        const newData = data;
+        newData.checks.active.host = hostData;
+        newData.checks.active.http_path = pathData;
+        delete newData.checks.active.url;
+      }
 
       const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
