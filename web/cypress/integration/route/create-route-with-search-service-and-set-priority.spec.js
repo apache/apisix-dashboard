@@ -32,7 +32,6 @@ context('Create Route with search service name', () => {
     serviceSelector: '[title="None"]',
     upstreamSelector: '#upstream_id',
     deleteAlert: '.ant-modal-body',
-    drawer: '.ant-drawer-content',
   };
 
   const data = {
@@ -52,7 +51,7 @@ context('Create Route with search service name', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
     routeName: 'route_test1',
     searchServiceName: 'service_test2',
-    upstreamName: 'None',
+    upstreamName: 'None (Only available when binding the service)',
   };
 
   beforeEach(() => {
@@ -101,12 +100,15 @@ context('Create Route with search service name', () => {
 
     // set name
     cy.get(selector.name).type(data.routeName);
-    cy.get(selector.serviceSelector).type(data.serviceName2 + '\n');
+    cy.get(selector.serviceSelector).type(`${data.serviceName2}\n`);
     // set priority
     cy.get(selector.priority).type(data.priority);
     cy.contains('Next').click();
     // select upstream with None
-    cy.get(selector.upstreamSelector).type(data.upstreamName + '\n');
+    cy.get('.ant-select-selector')
+      .find(selector.upstreamSelector)
+      .type(`${data.upstreamName}\n`, { force: true });
+
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -117,7 +119,7 @@ context('Create Route with search service name', () => {
     let serviceUuid = '';
     cy.visit('/');
     cy.contains('Service').click();
-    cy.get(selector.name).type(data.serviceName2 + '\n');
+    cy.get(selector.name).type(`${data.serviceName2}\n`);
     cy.contains(data.serviceName2)
       .siblings()
       .first()
@@ -126,7 +128,7 @@ context('Create Route with search service name', () => {
       });
     cy.visit('/');
     cy.contains('Route').click();
-    cy.get(selector.name).type(data.routeName + '\n');
+    cy.get(selector.name).type(`${data.routeName}\n`);
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('View').click();
     cy.get(selector.drawer).should('be.visible');
@@ -139,7 +141,7 @@ context('Create Route with search service name', () => {
   it('should delete the route and services', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.get(selector.name).type(data.routeName + '\n');
+    cy.get(selector.name).type(`${data.routeName}\n`);
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
