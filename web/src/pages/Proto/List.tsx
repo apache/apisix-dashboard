@@ -16,8 +16,7 @@
  */
 import React, { useRef, useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProtoDrawer from './components/ProtoDrawer';
 import { Button, notification, Popconfirm, Space } from 'antd';
 import { history, useIntl } from 'umi';
@@ -91,36 +90,34 @@ const Page: React.FC = () => {
       fixed: 'right',
       hideInSearch: true,
       render: (_, record) => (
-        <>
-          <Space align="baseline">
-            <Button
-              type="primary"
-              onClick={() =>
-                showDrawer({ id: record.id, content: record.content, desc: record.desc }, 'update')
-              }
-            >
-              {formatMessage({ id: 'component.global.edit' })}
-            </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
-              okText={formatMessage({ id: 'page.upstream.list.confirm' })}
-              cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
-              onConfirm={() => {
-                remove(record.id).then(() => {
-                  notification.success({
-                    message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
-                  });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
+        <Space align="baseline">
+          <Button
+            type="primary"
+            onClick={() =>
+              showDrawer({ id: record.id, content: record.content, desc: record.desc }, 'update')
+            }
+          >
+            {formatMessage({ id: 'component.global.edit' })}
+          </Button>
+          <Popconfirm
+            title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
+            okText={formatMessage({ id: 'page.upstream.list.confirm' })}
+            cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
+            onConfirm={() => {
+              remove(record.id).then(() => {
+                notification.success({
+                  message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
                 });
-              }}
-            >
-              <Button type="primary" danger>
-                {formatMessage({ id: 'page.upstream.list.delete' })}
-              </Button>
-            </Popconfirm>
-          </Space>
-        </>
+                /* eslint-disable no-unused-expressions */
+                ref.current?.reload();
+              });
+            }}
+          >
+            <Button type="primary" danger>
+              {formatMessage({ id: 'page.upstream.list.delete' })}
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];

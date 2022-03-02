@@ -101,7 +101,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
           ]}
           validateTrigger={['onChange', 'onBlur', 'onClick']}
         >
-          <Input disabled={editMode === 'update'} required></Input>
+          <Input disabled={editMode === 'update'} required />
         </Form.Item>
         <Form.Item
           label="desc"
@@ -109,7 +109,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
           tooltip={formatMessage({ id: 'page.proto.desc.tooltip' })}
           validateTrigger={['onChange', 'onBlur', 'onClick']}
         >
-          <Input></Input>
+          <Input />
         </Form.Item>
         <Form.Item
           label="content"
