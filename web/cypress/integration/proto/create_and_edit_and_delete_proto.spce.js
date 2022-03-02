@@ -41,7 +41,7 @@ optional string email = 3;
 }`,
     createProtoSuccess: 'Create proto Successfully',
     configureProtoSuccess: 'Configure proto Successfully',
-    deleteProtoDelete: 'Delete Upstream Successfully',
+    deleteProtoSuccess: 'Delete Upstream Successfully',
   };
 
   beforeEach(() => {
@@ -62,6 +62,7 @@ optional string email = 3;
         cy.contains('Submit').click();
       });
     cy.get(selector.notification).should('contain', data.createProtoSuccess);
+    cy.get('.ant-notification-close-x').click();
   });
 
   it('should edit the proto', () => {
@@ -77,6 +78,7 @@ optional string email = 3;
         cy.contains('Submit').click();
       });
     cy.get(selector.notification).should('contain', data.configureProtoSuccess);
+    cy.get('.ant-notification-close-x').click();
   });
 
   it('should delete the proto', () => {
@@ -84,6 +86,7 @@ optional string email = 3;
     cy.contains('Proto').click();
     cy.contains(data.id).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(selector.notification).should('contain', data.deleteProtoDelete);
+    cy.get(selector.notification).should('contain', data.deleteProtoSuccess);
+    cy.get('.ant-notification-close-x').click();
   });
 });
