@@ -83,6 +83,7 @@ context('Create and Delete Upstream With Custom CHash Key', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
+    cy.contains('.ant-table-cell', 'ID').should('be.visible');
     cy.url().should('contains', 'upstream/list');
   });
 

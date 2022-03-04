@@ -33,19 +33,21 @@ import {
   Divider,
   Menu,
   Dropdown,
+  Tooltip,
 } from 'antd';
 import { history, useIntl } from 'umi';
+import usePagination from '@/hooks/usePagination';
 import { PlusOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
 import { saveAs } from 'file-saver';
-import querystring from 'query-string';
 import { omit } from 'lodash';
 
 import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
 import type { RcFile } from 'antd/lib/upload';
+
 import {
   update,
   create,
@@ -85,21 +87,12 @@ const Page: React.FC = () => {
   const [rawData, setRawData] = useState<Record<string, any>>({});
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
-  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
+  const { paginationConfig, savePageList } = usePagination();
   const [debugDrawVisible, setDebugDrawVisible] = useState(false);
-
-  const savePageList = (page = 1, pageSize = 10) => {
-    history.replace(`/routes/list?page=${page}&pageSize=${pageSize}`);
-  };
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
   }, []);
-
-  useEffect(() => {
-    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
-    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
-  }, [window.location.search]);
 
   const rowSelection: any = {
     selectedRowKeys,
@@ -328,7 +321,12 @@ const Page: React.FC = () => {
       </Popconfirm>
     );
   };
-
+  const tagStyle = {
+    maxWidth: '200px',
+    overflow: 'hidden',
+    WhiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  };
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
       title: formatMessage({ id: 'component.global.name' }),
@@ -339,30 +337,37 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.id' }),
       hideInSearch: true,
       dataIndex: 'id',
+      width: 200,
     },
     {
       title: formatMessage({ id: 'page.route.host' }),
       hideInSearch: true,
+      width: 224,
       render: (_, record) => {
         const list = record.hosts || (record.host && [record.host]) || [];
 
         return list.map((item) => (
-          <Tag key={item} color="geekblue">
-            {item}
-          </Tag>
+          <Tooltip placement="topLeft" title={item}>
+            <Tag key={item} color="geekblue" style={tagStyle}>
+              {item}
+            </Tag>
+          </Tooltip>
         ));
       },
     },
     {
       title: formatMessage({ id: 'page.route.path' }),
       dataIndex: 'uri',
+      width: 224,
       render: (_, record) => {
         const list = record.uris || (record.uri && [record.uri]) || [];
 
         return list.map((item) => (
-          <Tag key={item} color="geekblue">
-            {item}
-          </Tag>
+          <Tooltip placement="topLeft" title={item}>
+            <Tag key={item} color="geekblue" style={tagStyle}>
+              {item}
+            </Tag>
+          </Tooltip>
         ));
       },
     },
@@ -370,6 +375,8 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
       hideInSearch: true,
+      ellipsis: true,
+      width: 200,
     },
     {
       title: formatMessage({ id: 'component.global.labels' }),
@@ -423,6 +430,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.version' }),
       dataIndex: 'API_VERSION',
+      width: 100,
       render: (_, record) => {
         return Object.keys(record.labels || {})
           .filter((item) => item === 'API_VERSION')
@@ -460,6 +468,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'page.route.status' }),
       dataIndex: 'status',
+      width: 100,
       render: (_, record) => (
         <>
           {record.status ? (
@@ -496,6 +505,7 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       hideInSearch: true,
+      width: 200,
       render: (text) => timestampToLocaleString(text as number),
     },
     {
@@ -503,6 +513,7 @@ const Page: React.FC = () => {
       valueType: 'option',
       fixed: 'right',
       hideInSearch: true,
+      width: 240,
       render: (_, record) => (
         <>
           <Space align="baseline">

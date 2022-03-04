@@ -17,6 +17,8 @@
 export default {
   'page.upstream.step.select.upstream': 'Select Upstream',
   'page.upstream.step.select.upstream.select.option': 'Custom',
+  'page.upstream.step.select.upstream.select.option.serviceSelected':
+    'Custom (The current configuration will override the bound service)',
   'page.upstream.step.select.upstream.select.none': 'None',
   'page.upstream.step.backend.server.domain.or.ip': 'Backend Server Host/IP',
   'page.upstream.form.item-label.node.domain.or.ip': 'Targets',
@@ -76,6 +78,7 @@ export default {
   'page.upstream.create.basic.info': 'Basic Information',
   'page.upstream.create.preview': 'Preview',
 
+  'page.upstream.list.id': 'ID',
   'page.upstream.list.name': 'Name',
   'page.upstream.list.type': 'Type',
   'page.upstream.list.description': 'Description',

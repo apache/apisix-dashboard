@@ -242,4 +242,31 @@ export const PLUGIN_LIST = {
   'ua-restriction': {
     type: PluginType.security,
   },
+  'splunk-hec-logging': {
+    type: PluginType.observability,
+  },
+  'rocketmq-logger': {
+    type: PluginType.observability,
+  },
+  'proxy-control': {
+    type: PluginType.other,
+  },
+  openwhisk: {
+    type: PluginType.serverless,
+  },
+  opa: {
+    type: PluginType.authentication,
+  },
+  'grpc-web': {
+    type: PluginType.other,
+  },
+  'google-cloud-logging': {
+    type: PluginType.observability,
+  },
+  'forward-auth': {
+    type: PluginType.authentication,
+  },
+  'aws-lambda': {
+    type: PluginType.serverless,
+  },
 };

@@ -14,31 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag } from 'antd';
 import { useIntl, history } from 'umi';
+import usePagination from '@/hooks/usePagination';
 import { PlusOutlined } from '@ant-design/icons';
-import querystring from 'query-string';
-
 import { fetchList, remove as removeSSL } from '@/pages/SSL/service';
 import { timestampToLocaleString } from '@/helpers';
 
 const Page: React.FC = () => {
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
-  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
-
-  const savePageList = (page = 1, pageSize = 10) => {
-    history.replace(`/ssl/list?page=${page}&pageSize=${pageSize}`);
-  };
-
-  useEffect(() => {
-    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
-    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
-  }, [window.location.search]);
+  const { paginationConfig, savePageList } = usePagination();
 
   const columns: ProColumns<SSLModule.ResponseBody>[] = [
     {
