@@ -17,7 +17,7 @@
 export default {
   'page.proto.list': 'Proto 列表',
   'page.proto.list.description':
-    'Protocol Buffers 是 Google 用于序列化结构化数据的框架，它具有语言中立、平台中立、可扩展机制的特性，您只需定义一次数据的结构化方式，然后就可以使用各种语言通过特殊生成的源代码轻松地将结构化数据写入和读取各种数据流。',
+    'Protocol Buffers 列表包含了已创建的 proto 文件，在启用 grpc-transcode 插件时可配置 ID 读取对应的 proto 文件内容。',
 
   'page.proto.id.tooltip': '.proto 文件的 id',
 
