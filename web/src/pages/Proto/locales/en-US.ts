@@ -17,7 +17,7 @@
 export default {
   'page.proto.list': 'Proto List',
   'page.proto.list.description':
-    "The protocol buffers list contains the created proto files. When the grpc transcode plug-in is enabled, the ID can be configured to read the contents of the corresponding proto files.",
+    "Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data.You define how you want your data to be structured once, then you can use special generated source code to easily write and read your structured data to and from a variety of data streams and using a variety of languages.The protocol buffers list contains the created proto files. When the grpc transcode plug-in is enabled, the ID can be configured to read the contents of the corresponding proto files.",
 
   'page.proto.id.tooltip': ".proto file's id",
 
