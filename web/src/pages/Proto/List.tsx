@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProtoDrawer from './components/ProtoDrawer';
 import { Button, notification, Popconfirm, Space } from 'antd';
-import { history, useIntl } from 'umi';
+import { useIntl } from 'umi';
+import usePagination from '@/hooks/usePagination';
+
 import { PlusOutlined } from '@ant-design/icons';
-import querystring from 'query-string';
 
 import { timestampToLocaleString } from '@/helpers';
 import { fetchList, remove } from './service';
@@ -30,6 +31,7 @@ const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const { paginationConfig, savePageList } = usePagination();
   const emptyProtoData = {
     id: null,
     content: '',
@@ -37,20 +39,10 @@ const Page: React.FC = () => {
   };
   const [protoData, setProtoData] = useState<ProtoModule.ProtoData>(emptyProtoData);
   const [editMode, setEditMode] = useState<ProtoModule.EditMode>('create');
-  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
 
   const refreshTable = () => {
     ref.current?.reload();
   };
-
-  const savePageList = (page = 1, pageSize = 10) => {
-    history.replace(`/proto/list?page=${page}&pageSize=${pageSize}`);
-  };
-
-  useEffect(() => {
-    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
-    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
-  }, [window.location.search]);
 
   const showDrawer = (data: ProtoModule.ProtoData, mode: ProtoModule.EditMode) => {
     setDrawerVisible(true);
