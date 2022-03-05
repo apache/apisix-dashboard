@@ -138,18 +138,18 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	}
 
 	// merge route
-	nameRoute := make(map[string]*entity.Route)
+	idRoute := make(map[string]*entity.Route)
 	for _, route := range routes {
-		if existRoute, ok := nameRoute[route.Name]; ok {
+		if existRoute, ok := idRoute[route.RouteId]; ok {
 			uris := append(existRoute.Uris, route.Uris...)
 			existRoute.Uris = uris
 		} else {
-			nameRoute[route.Name] = route
+			idRoute[route.RouteId] = route
 		}
 	}
 
-	routes = make([]*entity.Route, 0, len(nameRoute))
-	for _, route := range nameRoute {
+	routes = make([]*entity.Route, 0, len(idRoute))
+	for _, route := range idRoute {
 		routes = append(routes, route)
 	}
 
