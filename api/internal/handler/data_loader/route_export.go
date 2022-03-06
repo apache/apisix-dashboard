@@ -224,6 +224,10 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 			extensions["x-apisix-vars"] = route.Vars
 		}
 
+		if route.ID != nil {
+			extensions["x-apisix-route_id"] = route.ID
+		}
+
 		// Parse Route URIs
 		paths, paramsRefs = ParseRouteUris(route, paths, paramsRefs, pathItem, _pathNumber())
 
@@ -242,7 +246,6 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		extensions["x-apisix-priority"] = route.Priority
 		extensions["x-apisix-status"] = route.Status
 		extensions["x-apisix-enable_websocket"] = route.EnableWebsocket
-		extensions["x-apisix-route_id"] = route.ID
 		path.Extensions = extensions
 		path.Parameters = paramsRefs
 		path.RequestBody = &openapi3.RequestBodyRef{Value: requestBody}
