@@ -143,7 +143,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 		if route.RouteId == "" {
 			route.RouteId = route.ID.(string)
 		}
-
+		//
 		if existRoute, ok := idRoute[route.RouteId]; ok {
 			uris := append(existRoute.Uris, route.Uris...)
 			existRoute.Uris = uris
@@ -188,7 +188,25 @@ func checkRouteExist(ctx context.Context, routeStore *store.GenericStore, route 
 				return false
 			}
 
-			if !(item.Host == route.Host && item.URI == route.URI && utils.StringSliceEqual(item.Uris, route.Uris) &&
+			itemUris := item.Uris
+			if item.URI != "" {
+				if itemUris == nil {
+					itemUris = []string{item.URI}
+				} else {
+					itemUris = append(itemUris, item.URI)
+				}
+			}
+
+			routeUris := route.Uris
+			if route.URI != "" {
+				if routeUris == nil {
+					routeUris = []string{route.URI}
+				} else {
+					routeUris = append(routeUris, route.URI)
+				}
+			}
+
+			if !(item.Host == route.Host && utils.StringSliceContains(itemUris, routeUris) &&
 				utils.StringSliceEqual(item.RemoteAddrs, route.RemoteAddrs) && item.RemoteAddr == route.RemoteAddr &&
 				utils.StringSliceEqual(item.Hosts, route.Hosts) && item.Priority == route.Priority &&
 				utils.ValueEqual(item.Vars, route.Vars) && item.FilterFunc == route.FilterFunc) {
