@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 export default {
-  'page.upstream.step.select.upstream': 'Select Upstream',
+  'page.upstream.step.select.upstream': 'Upstream',
   'page.upstream.step.select.upstream.select.option': 'Custom',
   'page.upstream.step.select.upstream.select.option.serviceSelected':
     'Custom (The current configuration will override the bound service)',
