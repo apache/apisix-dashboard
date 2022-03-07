@@ -591,7 +591,7 @@ func TestRoute_export_import_merge(t *testing.T) {
 					"uris": ["/test1", "/test2"],
 					"name": "route_all",
 					"desc": "所有",
-					"methods": ["GET"],
+					"methods": ["GET","POST","PUT","DELETE"],
 					"hosts": ["test.com"],
 					"status": 1,
 					"upstream": {
@@ -681,7 +681,7 @@ func TestRoute_export_import_merge(t *testing.T) {
 			Path:         "/apisix/admin/routes/" + route["id"].(string),
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody: []string{`"methods":["GET"]`,
+			ExpectBody: []string{`"methods":["GET","POST","PUT","DELETE"]`,
 				`"uris":["/test1","/test2"]`,
 				`"desc":"所有`,
 				`"hosts":["test.com"]`,
