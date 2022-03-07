@@ -153,8 +153,8 @@ export const transformStepData = ({
     labels,
     ...step3DataCloned,
     vars: advancedMatchingRules.map((rule) => {
-      const { operator, position, name, value } = rule;
-      let key = '';
+      const { reverse, operator, position, name, value } = rule;
+      let key: string;
       switch (position) {
         case 'cookie':
           key = `cookie_${name}`;
@@ -175,7 +175,7 @@ export const transformStepData = ({
       if (operator === 'IN') {
         finalValue = JSON.parse(value as string);
       }
-      return [key, operator, finalValue];
+      return reverse ? [key, '!', operator, finalValue] : [key, operator, finalValue];
     }),
     // @ts-ignore
     methods: form1Data.methods.includes('ALL') ? [] : form1Data.methods,
@@ -274,12 +274,15 @@ export const transformStepData = ({
   ]);
 };
 
-const transformVarsToRules = (
-  data: [string, RouteModule.Operator, string | any[]][] = [],
-): RouteModule.MatchingRule[] =>
-  data.map(([key, operator, value]) => {
-    let position = '';
-    let name = '';
+const transformVarsToRules = (data: RouteModule.VarTuple[] = []): RouteModule.MatchingRule[] =>
+  data.map((varTuple) => {
+    const key = varTuple[0];
+    const reverse = varTuple[1] === '!';
+    const operator = varTuple[1] === '!' ? varTuple[2] : varTuple[1];
+    const value = varTuple[varTuple.length - 1];
+
+    let position: string;
+    let name: string;
     const regex = new RegExp('^(cookie|http|arg|post_arg)_.+');
     if (regex.test(key)) {
       [, position, name] = key.split(/^(cookie|http|arg|post_arg)_/);
@@ -291,6 +294,7 @@ const transformVarsToRules = (
       position: position as RouteModule.VarPosition,
       name,
       value: typeof value === 'object' ? JSON.stringify(value) : value,
+      reverse,
       operator,
       key: Math.random().toString(36).slice(2),
     };
