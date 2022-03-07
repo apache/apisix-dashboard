@@ -17,21 +17,12 @@
 package system_config
 
 import (
-	"testing"
-	"time"
-
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
-
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"testing"
 )
 
-func TestStreamRoute(t *testing.T) {
+func TestSystemConfig(t *testing.T) {
 	gomega.RegisterFailHandler(ginkgo.Fail)
 	ginkgo.RunSpecs(t, "system config suite")
 }
-
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("system_config")
-	time.Sleep(base.SleepTime)
-})
