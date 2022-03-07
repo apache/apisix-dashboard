@@ -17,9 +17,10 @@
 package system_config
 
 import (
+	"net/http"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
-	"net/http"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
