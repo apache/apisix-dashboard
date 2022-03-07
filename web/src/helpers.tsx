@@ -17,7 +17,7 @@
 import React from 'react';
 import { notification } from 'antd';
 import type { MenuDataItem } from '@ant-design/pro-layout';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, FileTextOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import moment from 'moment';
 import YAML from 'yaml';
@@ -52,6 +52,11 @@ export const getMenuData = (): MenuDataItem[] => {
       name: 'consumer',
       path: '/consumer/list',
       icon: <IconFont name="iconconsumer" />,
+    },
+    {
+      name: 'proto',
+      path: '/proto/list',
+      icon: <FileTextOutlined />,
     },
     {
       name: 'plugin',

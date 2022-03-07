@@ -15,83 +15,88 @@
  * limitations under the License.
  */
 import React, { useRef, useState } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Popconfirm, Button, notification, Space } from 'antd';
-import { history, useIntl } from 'umi';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
+import ProtoDrawer from './components/ProtoDrawer';
+import { Button, notification, Popconfirm, Space } from 'antd';
+import { useIntl } from 'umi';
+import usePagination from '@/hooks/usePagination';
 
 import { PlusOutlined } from '@ant-design/icons';
-import { omit } from 'lodash';
-import usePagination from '@/hooks/usePagination';
-import { DELETE_FIELDS } from '@/constants';
 
-import { RawDataEditor } from '@/components/RawDataEditor';
 import { timestampToLocaleString } from '@/helpers';
-
-import { fetchList, remove, create, update } from './service';
+import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [visible, setVisible] = useState(false);
-  const [rawData, setRawData] = useState<Record<string, any>>({});
-  const [id, setId] = useState('');
-  const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
-  const { paginationConfig, savePageList } = usePagination();
   const { formatMessage } = useIntl();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const { paginationConfig, savePageList } = usePagination();
+  const emptyProtoData = {
+    id: null,
+    content: '',
+    desc: '',
+  };
+  const [protoData, setProtoData] = useState<ProtoModule.ProtoData>(emptyProtoData);
+  const [editMode, setEditMode] = useState<ProtoModule.EditMode>('create');
 
-  const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
+  const refreshTable = () => {
+    ref.current?.reload();
+  };
+
+  const showDrawer = (data: ProtoModule.ProtoData, mode: ProtoModule.EditMode) => {
+    setDrawerVisible(true);
+    setProtoData(data);
+    setEditMode(mode);
+  };
+
+  const columns: ProColumns<ProtoModule.ResponseBody>[] = [
     {
-      title: formatMessage({ id: 'page.upstream.list.id' }),
+      title: formatMessage({ id: 'component.global.id' }),
+      hideInSearch: true,
       dataIndex: 'id',
-      hideInSearch: true,
+      width: 100,
     },
     {
-      title: formatMessage({ id: 'page.upstream.list.name' }),
-      dataIndex: 'name',
-    },
-    {
-      title: formatMessage({ id: 'page.upstream.list.type' }),
-      dataIndex: 'type',
-      hideInSearch: true,
-    },
-    {
-      title: formatMessage({ id: 'page.upstream.list.description' }),
+      title: formatMessage({ id: 'page.proto.desc' }),
       dataIndex: 'desc',
-      hideInSearch: true,
+      ellipsis: true,
+      width: 200,
     },
     {
-      title: formatMessage({ id: 'page.upstream.list.edit.time' }),
+      title: formatMessage({ id: 'page.proto.content' }),
+      hideInSearch: true,
+      dataIndex: 'content',
+      ellipsis: true,
+    },
+    {
+      title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       hideInSearch: true,
       render: (text) => timestampToLocaleString(text as number),
+      width: 200,
     },
     {
-      title: formatMessage({ id: 'page.upstream.list.operation' }),
+      title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
+      fixed: 'right',
       hideInSearch: true,
       render: (_, record) => (
         <Space align="baseline">
-          <Button type="primary" onClick={() => history.push(`/upstream/${record.id}/edit`)}>
-            {formatMessage({ id: 'page.upstream.list.edit' })}
-          </Button>
           <Button
             type="primary"
-            onClick={() => {
-              setId(record.id);
-              setRawData(omit(record, DELETE_FIELDS));
-              setVisible(true);
-              setEditorMode('update');
-            }}
+            onClick={() =>
+              showDrawer({ id: record.id, content: record.content, desc: record.desc }, 'update')
+            }
           >
-            {formatMessage({ id: 'component.global.view' })}
+            {formatMessage({ id: 'component.global.edit' })}
           </Button>
           <Popconfirm
             title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
             okText={formatMessage({ id: 'page.upstream.list.confirm' })}
             cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
             onConfirm={() => {
-              remove(record.id!).then(() => {
+              remove(record.id).then(() => {
                 notification.success({
                   message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
                 });
@@ -110,14 +115,22 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer
-      title={formatMessage({ id: 'page.upstream.list' })}
-      content={formatMessage({ id: 'page.upstream.list.content' })}
+    <PageHeaderWrapper
+      title={formatMessage({ id: 'page.proto.list' })}
+      content={formatMessage({ id: 'page.proto.list.description' })}
     >
-      <ProTable<UpstreamModule.ResponseBody>
+      <ProtoDrawer
+        protoData={protoData as ProtoModule.ProtoData}
+        setProtoData={setProtoData}
+        visible={drawerVisible}
+        setVisible={setDrawerVisible}
+        editMode={editMode}
+        refreshTable={refreshTable}
+      />
+      <ProTable<ProtoModule.ResponseBody>
         actionRef={ref}
-        columns={columns}
         rowKey="id"
+        columns={columns}
         request={fetchList}
         pagination={{
           onChange: (page, pageSize?) => savePageList(page, pageSize),
@@ -129,38 +142,15 @@ const Page: React.FC = () => {
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => history.push(`/upstream/create`)}>
+          <Button type="primary" onClick={() => showDrawer(emptyProtoData, 'create')}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Button
-            type="default"
-            onClick={() => {
-              setVisible(true);
-              setEditorMode('create');
-              setRawData({});
-            }}
-          >
-            {formatMessage({ id: 'component.global.data.editor' })}
-          </Button>,
         ]}
+        tableAlertRender={false}
+        scroll={{ x: 1300 }}
       />
-      <RawDataEditor
-        visible={visible}
-        type="upstream"
-        readonly={false}
-        data={rawData}
-        onClose={() => {
-          setVisible(false);
-        }}
-        onSubmit={(data: any) => {
-          (editorMode === 'create' ? create(data) : update(id, data)).then(() => {
-            setVisible(false);
-            ref.current?.reload();
-          });
-        }}
-      />
-    </PageContainer>
+    </PageHeaderWrapper>
   );
 };
 
