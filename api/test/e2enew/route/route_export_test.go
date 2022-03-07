@@ -70,6 +70,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"x-apisix-priority": 0,
+					"x-apisix-route_id":"r1",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
@@ -103,6 +104,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"x-apisix-priority": 0,
+					"x-apisix-route_id":"r1",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
@@ -197,6 +199,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"x-apisix-priority": 0,
+					"x-apisix-route_id":"r2",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
@@ -230,6 +233,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"x-apisix-priority": 0,
+					"x-apisix-route_id":"r2",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
@@ -417,6 +421,7 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r3",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": [{
@@ -600,6 +605,7 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r4",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": [{
@@ -788,6 +794,7 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r5",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": [{
@@ -961,6 +968,7 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r8",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"id": "3"
@@ -1087,6 +1095,7 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r9",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"id": "5"
@@ -1286,6 +1295,7 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r10",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"id": "6"
@@ -1907,6 +1917,7 @@ var _ = ginkgo.Describe("Route", func() {
 							"version": "v2"
 						},
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r1",
 						"x-apisix-status": 1,
 						"x-apisix-vars":[
 							[
@@ -2049,6 +2060,7 @@ var _ = ginkgo.Describe("Route", func() {
 							"version": "v2"
 						},
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r2",
 						"x-apisix-status": 1,
 						"x-apisix-vars":[
 							[
@@ -2198,6 +2210,7 @@ var _ = ginkgo.Describe("Route", func() {
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r1",
 						"x-apisix-status": 1
 					}
 				}
@@ -2301,6 +2314,7 @@ var _ = ginkgo.Describe("Route", func() {
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r1",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": {
@@ -2323,6 +2337,7 @@ var _ = ginkgo.Describe("Route", func() {
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r2",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": {
@@ -2345,6 +2360,7 @@ var _ = ginkgo.Describe("Route", func() {
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
 						"x-apisix-priority": 0,
+						"x-apisix-route_id":"r3",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": {
