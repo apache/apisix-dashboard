@@ -24,7 +24,7 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var _ = Describe("Stream Route", func() {
+var _ = Describe("system config", func() {
 	DescribeTable("test system config data CURD",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
@@ -35,7 +35,7 @@ var _ = Describe("Stream Route", func() {
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/system_config/grafana",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusBadRequest,
+			ExpectStatus: http.StatusNotFound,
 		}),
 
 		Entry("create system config should success", base.HttpTestCase{
@@ -44,14 +44,11 @@ var _ = Describe("Stream Route", func() {
 			Path:   "/apisix/admin/system_config",
 			Body: `{
 				"config_name": "grafana",
-				"payload": {"url":"http://127.0.0.1:3000"},
+				"payload": {"url":"http://127.0.0.1:3000"}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody: `{
-				"config_name": "grafana",
-				"payload": {"url":"http://127.0.0.1:3000"},
-			}`,
+			ExpectBody:   "\"config_name\":\"grafana\",\"payload\":{\"url\":\"http://127.0.0.1:3000\"}",
 		}),
 
 		Entry("after create system config get config should success", base.HttpTestCase{
@@ -60,10 +57,7 @@ var _ = Describe("Stream Route", func() {
 			Path:         "/apisix/admin/system_config/grafana",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody: `{
-				"config_name": "grafana",
-				"payload": {"url":"http://127.0.0.1:3000"},
-			}`,
+			ExpectBody:   "\"config_name\":\"grafana\",\"payload\":{\"url\":\"http://127.0.0.1:3000\"}",
 		}),
 
 		Entry("update system config should success", base.HttpTestCase{
@@ -72,14 +66,11 @@ var _ = Describe("Stream Route", func() {
 			Path:   "/apisix/admin/system_config",
 			Body: `{
 				"config_name": "grafana",
-				"payload": {"url":"http://127.0.0.1:2000"},
+				"payload": {"url":"http://127.0.0.1:2000"}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody: `{
-				"config_name": "grafana",
-				"payload": {"url":"http://127.0.0.1:2000"},
-			}`,
+			ExpectBody:   "\"config_name\":\"grafana\",\"payload\":{\"url\":\"http://127.0.0.1:2000\"}",
 		}),
 
 		Entry("delete ", base.HttpTestCase{
@@ -95,7 +86,7 @@ var _ = Describe("Stream Route", func() {
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/system_config/grafana",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusBadRequest,
+			ExpectStatus: http.StatusNotFound,
 		}),
 	)
 })

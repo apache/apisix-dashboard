@@ -25,13 +25,13 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/apisix/dashboard/system_config/:config_name", wgin.Wraps(h.Get,
+	r.GET("/apisix/admin/system_config/:config_name", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
-	r.POST("/apisix/dashboard/system_config", wgin.Wraps(h.Post,
-		wrapper.InputType(reflect.TypeOf(PostInput{}))))
-	r.PUT("/apisix/dashboard/system_config", wgin.Wraps(h.Put,
-		wrapper.InputType(reflect.TypeOf(PutInput{}))))
-	r.DELETE("/apisix/dashboard/system_config/:config_name", wgin.Wraps(h.Delete,
+	r.POST("/apisix/admin/system_config", wgin.Wraps(h.Post,
+		wrapper.InputType(reflect.TypeOf(entity.SystemConfig{}))))
+	r.PUT("/apisix/admin/system_config", wgin.Wraps(h.Put,
+		wrapper.InputType(reflect.TypeOf(entity.SystemConfig{}))))
+	r.DELETE("/apisix/admin/system_config/:config_name", wgin.Wraps(h.Delete,
 		wrapper.InputType(reflect.TypeOf(DeleteInput{}))))
 }
 
@@ -50,12 +50,8 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	return r, nil
 }
 
-type PostInput struct {
-	entity.SystemConfig
-}
-
 func (h *Handler) Post(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*PostInput)
+	input := c.Input().(*entity.SystemConfig)
 	input.CreateTime = time.Now().Unix()
 	input.UpdateTime = time.Now().Unix()
 
@@ -68,12 +64,8 @@ func (h *Handler) Post(c droplet.Context) (interface{}, error) {
 	return res, nil
 }
 
-type PutInput struct {
-	entity.SystemConfig
-}
-
 func (h *Handler) Put(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*PutInput)
+	input := c.Input().(*entity.SystemConfig)
 	input.UpdateTime = time.Now().Unix()
 
 	// update

@@ -70,7 +70,7 @@ func TestSystem_Post(t *testing.T) {
 	t.Parallel()
 	type testCase struct {
 		caseDesc  string
-		giveInput *PostInput
+		giveInput *entity.SystemConfig
 		wantErr   error
 		wantRet   interface{}
 		mockStore store.Interface
@@ -87,7 +87,7 @@ func TestSystem_Post(t *testing.T) {
 	cases := []*testCase{
 		{
 			caseDesc:  "create system config error",
-			giveInput: &PostInput{systemConfig},
+			giveInput: &systemConfig,
 			wantErr:   errors.New("mock error"),
 			mockFunc: func(tc *testCase) {
 				mockStore := &store.MockInterface{}
@@ -97,7 +97,7 @@ func TestSystem_Post(t *testing.T) {
 		},
 		{
 			caseDesc:  "create system config success",
-			giveInput: &PostInput{systemConfig},
+			giveInput: &systemConfig,
 			wantErr:   nil,
 			wantRet: entity.SystemConfig{
 				ConfigName: "grafana",
@@ -132,7 +132,7 @@ func TestSystem_Put(t *testing.T) {
 	t.Parallel()
 	type testCase struct {
 		caseDesc  string
-		giveInput *PutInput
+		giveInput *entity.SystemConfig
 		wantErr   error
 		wantRet   interface{}
 		mockStore store.Interface
@@ -149,7 +149,7 @@ func TestSystem_Put(t *testing.T) {
 	cases := []*testCase{
 		{
 			caseDesc:  "update system config error",
-			giveInput: &PutInput{systemConfig},
+			giveInput: &systemConfig,
 			wantErr:   errors.New("mock error"),
 			mockFunc: func(tc *testCase) {
 				mockStore := &store.MockInterface{}
@@ -159,7 +159,7 @@ func TestSystem_Put(t *testing.T) {
 		},
 		{
 			caseDesc:  "update system config success",
-			giveInput: &PutInput{systemConfig},
+			giveInput: &systemConfig,
 			wantErr:   nil,
 			wantRet: entity.SystemConfig{
 				ConfigName: "grafana",
