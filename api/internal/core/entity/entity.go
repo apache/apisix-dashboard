@@ -304,3 +304,12 @@ type StreamRoute struct {
 	UpstreamID interface{}            `json:"upstream_id,omitempty"`
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`
 }
+
+// swagger:model SystemConfig
+type SystemConfig struct {
+	ConfigName string                 `json:"config_name"`
+	Desc       string                 `json:"desc,omitempty"`
+	Payload    map[string]interface{} `json:"payload,omitempty"`
+	CreateTime int64                  `json:"create_time,omitempty"`
+	UpdateTime int64                  `json:"update_time,omitempty"`
+}
