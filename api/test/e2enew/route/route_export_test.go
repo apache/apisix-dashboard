@@ -27,7 +27,7 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var _ = ginkgo.Describe("Route", func() {
+var _ = ginkgo.FDescribe("Route", func() {
 	ginkgo.Context("test route export data empty", func() {
 		ginkgo.It("Export route when data is empty", func() {
 			base.RunTestCase(base.HttpTestCase{
@@ -56,6 +56,7 @@ var _ = ginkgo.Describe("Route", func() {
 					"security": [],
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["foo.com", "*.bar.com"],
+					"x-apisix-id":"r1",
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -70,7 +71,6 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"x-apisix-priority": 0,
-					"x-apisix-id":"r1",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
@@ -90,6 +90,7 @@ var _ = ginkgo.Describe("Route", func() {
 					"security": [],
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["foo.com", "*.bar.com"],
+					"x-apisix-id":"r1",
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -104,7 +105,6 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"x-apisix-priority": 0,
-					"x-apisix-id":"r1",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
@@ -185,6 +185,7 @@ var _ = ginkgo.Describe("Route", func() {
 					"security": [],
 					"x-apisix-enable_websocket": false,
 					"x-apisix-host": "*.bar.com",
+					"x-apisix-id":"r2",
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -199,7 +200,6 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"x-apisix-priority": 0,
-					"x-apisix-id":"r2",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
@@ -219,6 +219,7 @@ var _ = ginkgo.Describe("Route", func() {
 					"security": [],
 					"x-apisix-enable_websocket": false,
 					"x-apisix-host": "*.bar.com",
+					"x-apisix-id":"r2",
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -233,7 +234,6 @@ var _ = ginkgo.Describe("Route", func() {
 						}
 					},
 					"x-apisix-priority": 0,
-					"x-apisix-id":"r2",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
@@ -407,6 +407,7 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-enable_websocket": false,
+						"x-apisix-id":"r3",
 						"x-apisix-labels": {
 							"build": "16",
 							"env": "production",
@@ -421,7 +422,6 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
-						"x-apisix-id":"r3",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": [{
@@ -588,6 +588,7 @@ var _ = ginkgo.Describe("Route", func() {
 						},
 						"security": [],
 						"x-apisix-enable_websocket": false,
+						"x-apisix-id":"r4",
 						"x-apisix-labels": {
 							"build": "16",
 							"env": "production",
@@ -605,7 +606,6 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
-						"x-apisix-id":"r4",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": [{
@@ -777,6 +777,7 @@ var _ = ginkgo.Describe("Route", func() {
 						},
 						"security": [],
 						"x-apisix-enable_websocket": false,
+						"x-apisix-id":"r5",
 						"x-apisix-labels": {
 							"build": "16",
 							"env": "production",
@@ -794,7 +795,6 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
-						"x-apisix-id":"r5",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": [{
@@ -962,13 +962,13 @@ var _ = ginkgo.Describe("Route", func() {
 						},
 						"security": [],
 						"x-apisix-enable_websocket": false,
+						"x-apisix-id":"r8",
 						"x-apisix-plugins": {
 							"prometheus": {
 								"disable": false
 							}
 						},
 						"x-apisix-priority": 0,
-						"x-apisix-id":"r8",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"id": "3"
@@ -1085,6 +1085,7 @@ var _ = ginkgo.Describe("Route", func() {
 						"security": [],
 						"summary": "所有",
 						"x-apisix-enable_websocket": false,
+						"x-apisix-id":"r9",
 						"x-apisix-labels": {
 							"API_VERSION": "v1",
 							"test": "1"
@@ -1095,7 +1096,6 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
-						"x-apisix-id":"r9",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"id": "5"
@@ -1285,6 +1285,7 @@ var _ = ginkgo.Describe("Route", func() {
 						"security": [],
 						"summary": "所有",
 						"x-apisix-enable_websocket": false,
+						"x-apisix-id":"r10",
 						"x-apisix-labels": {
 							"API_VERSION": "v1",
 							"test": "1"
@@ -1295,7 +1296,6 @@ var _ = ginkgo.Describe("Route", func() {
 							}
 						},
 						"x-apisix-priority": 0,
-						"x-apisix-id":"r10",
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"id": "6"
@@ -1911,13 +1911,13 @@ var _ = ginkgo.Describe("Route", func() {
 						},
 						"summary": "所有",
 						"x-apisix-enable_websocket": false,
+						"x-apisix-id":"r1",
 						"x-apisix-labels": {
 							"build": "16",
 							"env": "production",
 							"version": "v2"
 						},
 						"x-apisix-priority": 0,
-						"x-apisix-id":"r1",
 						"x-apisix-status": 1,
 						"x-apisix-vars":[
 							[
@@ -2054,13 +2054,13 @@ var _ = ginkgo.Describe("Route", func() {
 						},
 						"summary": "所有",
 						"x-apisix-enable_websocket": false,
+						"x-apisix-id":"r2",
 						"x-apisix-labels": {
 							"build": "16",
 							"env": "production",
 							"version": "v2"
 						},
 						"x-apisix-priority": 0,
-						"x-apisix-id":"r2",
 						"x-apisix-status": 1,
 						"x-apisix-vars":[
 							[
@@ -2209,8 +2209,8 @@ var _ = ginkgo.Describe("Route", func() {
 						"summary": "所有",
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
-						"x-apisix-priority": 0,
 						"x-apisix-id":"r1",
+						"x-apisix-priority": 0,
 						"x-apisix-status": 1
 					}
 				}
@@ -2313,8 +2313,8 @@ var _ = ginkgo.Describe("Route", func() {
 						"summary": "所有",
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
-						"x-apisix-priority": 0,
 						"x-apisix-id":"r1",
+						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": {
@@ -2336,8 +2336,8 @@ var _ = ginkgo.Describe("Route", func() {
 						"summary": "所有1",
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
-						"x-apisix-priority": 0,
 						"x-apisix-id":"r2",
+						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": {
@@ -2359,8 +2359,8 @@ var _ = ginkgo.Describe("Route", func() {
 						"summary": "所有2",
 						"x-apisix-enable_websocket": false,
 						"x-apisix-hosts": ["test.com"],
-						"x-apisix-priority": 0,
 						"x-apisix-id":"r3",
+						"x-apisix-priority": 0,
 						"x-apisix-status": 1,
 						"x-apisix-upstream": {
 							"nodes": {
