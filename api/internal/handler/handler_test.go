@@ -38,7 +38,7 @@ func TestSpecCodeResponse(t *testing.T) {
 	resp = SpecCodeResponse(err)
 	assert.Equal(t, &data.SpecCodeResponse{StatusCode: http.StatusNotFound}, resp)
 
-	err = errors.New("system_config error")
+	err = errors.New("system error")
 	resp = SpecCodeResponse(err)
 	assert.Equal(t, &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, resp)
 }

@@ -39,6 +39,18 @@ var _ = Describe("system config", func() {
 			ExpectStatus: http.StatusNotFound,
 		}),
 
+		Entry("create system config should get schema validate failed error", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/system_config",
+			Body: `{
+				"config_name": "",
+				"payload": {"url":"http://127.0.0.1:3000"}
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+		}),
+
 		Entry("create system config should success", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
@@ -52,13 +64,25 @@ var _ = Describe("system config", func() {
 			ExpectBody:   "\"config_name\":\"grafana\",\"payload\":{\"url\":\"http://127.0.0.1:3000\"}",
 		}),
 
-		Entry("after create system config get config should success", base.HttpTestCase{
+		Entry("after create system config get config should succeed", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/system_config/grafana",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"config_name\":\"grafana\",\"payload\":{\"url\":\"http://127.0.0.1:3000\"}",
+		}),
+
+		Entry("update system config should get schema validate failed error", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/system_config",
+			Body: `{
+				"config_name": "",
+				"payload": {"url":"http://127.0.0.1:2000"}
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
 		}),
 
 		Entry("update system config should success", base.HttpTestCase{
@@ -74,7 +98,16 @@ var _ = Describe("system config", func() {
 			ExpectBody:   "\"config_name\":\"grafana\",\"payload\":{\"url\":\"http://127.0.0.1:2000\"}",
 		}),
 
-		Entry("delete ", base.HttpTestCase{
+		Entry("after update system config get config should succeed", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/system_config/grafana",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"config_name\":\"grafana\",\"payload\":{\"url\":\"http://127.0.0.1:2000\"}",
+		}),
+
+		Entry("delete system config should success", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/system_config/grafana",

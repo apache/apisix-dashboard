@@ -17,17 +17,17 @@
 package system_config
 
 import (
+	"reflect"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/wrapper"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
+
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/gin-gonic/gin"
-	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/data"
-	"github.com/shiningrush/droplet/wrapper"
-	wgin "github.com/shiningrush/droplet/wrapper/gin"
-	"net/http"
-	"reflect"
-	"time"
 )
 
 type Handler struct {
@@ -60,7 +60,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	r, err := h.systemConfig.Get(c.Context(), input.ConfigName)
 
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound}, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return r, nil

@@ -49,13 +49,14 @@ var (
 
 func InitStore(key HubKey, opt GenericStoreOption) error {
 	hubsNeedCheck := map[HubKey]bool{
-		HubKeyConsumer:    true,
-		HubKeyRoute:       true,
-		HubKeySsl:         true,
-		HubKeyService:     true,
-		HubKeyUpstream:    true,
-		HubKeyGlobalRule:  true,
-		HubKeyStreamRoute: true,
+		HubKeyConsumer:     true,
+		HubKeyRoute:        true,
+		HubKeySsl:          true,
+		HubKeyService:      true,
+		HubKeyUpstream:     true,
+		HubKeyGlobalRule:   true,
+		HubKeyStreamRoute:  true,
+		HubKeySystemConfig: true,
 	}
 	if _, ok := hubsNeedCheck[key]; ok {
 		validator, err := NewAPISIXJsonSchemaValidator("main." + string(key))
@@ -235,7 +236,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.SystemConfig{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.SystemConfig)
-			return utils.InterfaceToString(r.ConfigName)
+			return r.ConfigName
 		},
 	})
 	if err != nil {
