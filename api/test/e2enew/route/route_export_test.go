@@ -27,7 +27,7 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var _ = ginkgo.FDescribe("Route", func() {
+var _ = ginkgo.Describe("Route", func() {
 	ginkgo.Context("test route export data empty", func() {
 		ginkgo.It("Export route when data is empty", func() {
 			base.RunTestCase(base.HttpTestCase{
