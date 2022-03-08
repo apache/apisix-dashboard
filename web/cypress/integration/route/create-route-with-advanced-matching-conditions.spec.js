@@ -26,6 +26,7 @@ context('Create Route with advanced matching conditions', () => {
     notification: '.ant-notification-notice-message',
     parameterPosition: '#position',
     ruleCard: '.ant-modal',
+    reverse: '#reverse',
     operator: '#operator',
     value: '#value',
     advancedMatchingTable: '.ant-table-row.ant-table-row-level-0',
@@ -84,6 +85,14 @@ context('Create Route with advanced matching conditions', () => {
           cy.get(selector.ruleCard).within(() => {
             cy.get(selector.name).type(data.matchingParamName);
           });
+          // reverse switch should exist
+          cy.get(selector.reverse)
+            .should('exist')
+            .and('be.visible')
+            .should('have.class', 'ant-switch')
+            .and('not.have.class', 'ant-switch-checked')
+            .click()
+            .and('have.class', 'ant-switch-checked');
           cy.get(selector.operator).click();
           cy.get(`[title="${opreator}"]`).should('be.visible').click();
           cy.get(selector.value).type(matchingValueList1[index]);
@@ -93,6 +102,7 @@ context('Create Route with advanced matching conditions', () => {
     cy.get(selector.advancedMatchingTable).should('exist');
     cy.wrap(opreatorList).each((operator, index) => {
       cy.get(selector.advancedMatchingTableCell).within(() => {
+        cy.contains('th', 'Reverse the result(!)').should('be.visible');
         cy.contains('td', 'Built-in Parameter').should('be.visible');
         cy.contains('td', data.matchingParamName).should('be.visible');
         cy.contains('td', matchingValueList1[index]).should('be.visible');
@@ -129,11 +139,13 @@ context('Create Route with advanced matching conditions', () => {
       cy.get(selector.ruleCard).within(() => {
         cy.get(`[title="Built-in Parameter"]`).should('have.class', 'ant-select-selection-item');
         cy.get(selector.name).clear().type(data.matchingParamName);
+        cy.get(selector.reverse).should('have.class', 'ant-switch-checked');
         cy.get(`[title="${opreator}"]`).should('have.class', 'ant-select-selection-item');
         cy.get(selector.value).clear().type(matchingValueList2[index]);
         cy.contains('Confirm').click();
       });
       cy.get(selector.advancedMatchingTableCell).within(() => {
+        cy.contains('th', 'Reverse the result(!)').should('be.visible');
         cy.contains('td', 'Built-in Parameter').should('be.visible');
         cy.contains('td', data.matchingParamName).should('be.visible');
         cy.contains('td', matchingValueList2[index]).should('be.visible');
