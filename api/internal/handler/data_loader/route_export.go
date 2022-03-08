@@ -225,7 +225,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		}
 
 		if route.ID != nil {
-			extensions["x-apisix-route_id"] = route.ID
+			extensions["x-apisix-id"] = route.ID
 		}
 
 		// Parse Route URIs

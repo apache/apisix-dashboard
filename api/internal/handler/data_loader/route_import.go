@@ -140,15 +140,11 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	// merge route
 	idRoute := make(map[string]*entity.Route)
 	for _, route := range routes {
-		if route.RouteId == "" {
-			route.RouteId = route.ID.(string)
-		}
-		//
-		if existRoute, ok := idRoute[route.RouteId]; ok {
+		if existRoute, ok := idRoute[route.ID.(string)]; ok {
 			uris := append(existRoute.Uris, route.Uris...)
 			existRoute.Uris = uris
 		} else {
-			idRoute[route.RouteId] = route
+			idRoute[route.ID.(string)] = route
 		}
 	}
 

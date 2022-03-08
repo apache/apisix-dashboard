@@ -85,7 +85,6 @@ type Route struct {
 	ServiceProtocol string                 `json:"service_protocol,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
 	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
-	RouteId         string                 `json:"route_id,omitempty"`
 	Status          Status                 `json:"status"`
 }
 
