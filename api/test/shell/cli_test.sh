@@ -462,7 +462,7 @@ stop_dashboard() {
 
   # check response header without custom header
   run curl -i http://127.0.0.1:9000
-  
+
   [ $(echo "$output" | grep -c "X-Frame-Options: deny") -eq '1' ]
 
   stop_dashboard 6
