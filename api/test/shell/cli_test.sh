@@ -200,6 +200,9 @@ stop_dashboard() {
   stop_dashboard 6
 
   [ $(grep -c "/apisix/admin/user/login" "${ACCESS_LOG_FILE}") -ne '0' ]
+
+  # check logging middleware
+  [ $(grep -c "filter/logging.go" "${ACCESS_LOG_FILE}") -ne '0' ]
 }
 
 #8
