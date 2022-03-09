@@ -31,7 +31,7 @@ const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const { paginationConfig, savePageList } = usePagination();
+  const { paginationConfig, savePageList, checkPageList } = usePagination();
   const emptyProtoData = {
     id: null,
     content: '',
@@ -101,7 +101,7 @@ const Page: React.FC = () => {
                   message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
                 });
                 /* eslint-disable no-unused-expressions */
-                ref.current?.reload();
+                checkPageList(ref);
               });
             }}
           >
