@@ -62,11 +62,9 @@ const Page: React.FC = (props) => {
         notification.success({
           message: `${
             username
-              ? formatMessage({ id: 'component.global.edit' })
-              : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({
-            id: 'component.status.success',
-          })}`,
+              ? formatMessage({ id: 'component.global.edit.consumer.success' })
+              : formatMessage({ id: 'component.global.create.consumer.success' })
+          }`,
         });
         history.push('/consumer/list');
       })

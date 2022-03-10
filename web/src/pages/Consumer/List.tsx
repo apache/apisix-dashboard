@@ -56,6 +56,12 @@ const Page: React.FC = () => {
       render: (text) => timestampToLocaleString(text as number),
     },
     {
+      title: formatMessage({ id: 'menu.plugin' }),
+      dataIndex: 'plugins',
+      hideInSearch: true,
+      render: (_, record) => Object.keys(record.plugins).join(','),
+    },
+    {
       title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
       hideInSearch: true,
@@ -87,9 +93,7 @@ const Page: React.FC = () => {
             onConfirm={() => {
               remove(record.username).then(() => {
                 notification.success({
-                  message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                    id: 'menu.consumer',
-                  })} ${formatMessage({ id: 'component.status.success' })}`,
+                  message: `${formatMessage({ id: 'component.global.delete.consumer.success' })}`,
                 });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();

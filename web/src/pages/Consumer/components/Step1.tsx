@@ -40,6 +40,7 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
       <Form.Item
         label={formatMessage({ id: 'page.consumer.username' })}
         name="username"
+        help={formatMessage({ id: 'component.global.form.itemExtraMessage.nameGloballyUnique' })}
         rules={[
           { required: true },
           {

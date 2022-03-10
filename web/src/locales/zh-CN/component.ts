@@ -58,13 +58,16 @@ export default {
   'component.global.name': '名称',
   'component.global.id': 'ID',
   'component.global.updateTime': '更新时间',
+  'component.global.create.consumer.success': '创建消费者成功',
+  'component.global.delete.consumer.success': '删除消费者成功',
+  'component.global.edit.consumer.success': '配置消费者成功',
 
   'component.global.popconfirm.title.delete': '确定删除该条记录吗？',
   'component.global.steps.stepTitle.basicInformation': '基础信息',
   'component.global.steps.stepTitle.preview': '预览',
   'component.global.steps.stepTitle.pluginConfig': '插件配置',
   'component.global.input.ruleMessage.name': '仅支持字母、数字、- 和 _，且只能以字母开头',
-  'component.global.form.itemExtraMessage.nameGloballyUnique': '名称需全局唯一',
+  'component.global.form.itemExtraMessage.nameGloballyUnique': '消费者名称需全局唯一',
   'component.global.input.placeholder.description': '请输入路由描述（内容不超过 256 个字符）',
 
   // User component
