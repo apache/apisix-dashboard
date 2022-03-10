@@ -92,11 +92,15 @@ const PluginPage: React.FC<Props> = ({
       form.setFieldsValue({ plugin_config_id });
     });
   }, []);
-  const openPlugin = pluginList.filter((item) => initialData[item.name]);
+  console.log('initialData: ', initialData);
+  const openPlugin = pluginList.filter(
+    (item) => initialData[item.name] && !initialData[item.name].disable,
+  );
   const openPluginType = openPlugin.map((item) => item.type);
-  const new_openPluginType = openPluginType.filter((elem, index, self) => {
+  const newOpenPluginType = openPluginType.filter((elem, index, self) => {
     return index === self.indexOf(elem);
   });
+
   const PluginList = () => (
     <>
       <style>
@@ -184,7 +188,7 @@ const PluginPage: React.FC<Props> = ({
           </>
         )}
         {readonly
-          ? new_openPluginType.map((typeItem) => {
+          ? newOpenPluginType.map((typeItem) => {
               return (
                 <PanelSection
                   title={formatMessage({ id: `component.plugin.${typeItem}` })}
