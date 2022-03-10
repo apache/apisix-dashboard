@@ -18,6 +18,10 @@ package loader
 
 import "github.com/apisix/manager-api/internal/core/entity"
 
+// DataSets are intermediate structures used to handle
+// import and export data with APISIX entities.
+// On import, raw data will be parsed as DataSets
+// On export, DataSets will be encoded to raw data
 type DataSets struct {
 	Routes        []entity.Route
 	Upstreams     []entity.Upstream
