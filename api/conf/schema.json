@@ -3022,34 +3022,6 @@
 		"upstream_hash_vars_schema": {
 			"pattern": "^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$",
 			"type": "string"
-		},
-		"system_config":{
-			"properties":{
-				"config_name":{
-					"maxLength":100,
-					"minLength":1,
-					"pattern":"^[a-zA-Z0-9_]+$",
-					"type":"string"
-				},
-				"desc":{
-					"maxLength":256,
-					"type":"string"
-				},
-				"payload":{
-					"type":"object"
-				},
-				"create_time":{
-					"type":"integer"
-				},
-				"update_time":{
-					"type":"integer"
-				}
-			},
-			"required":[
-				"config_name",
-				"payload"
-			],
-			"type":"object"
 		}
 	},
 	"plugins": {
