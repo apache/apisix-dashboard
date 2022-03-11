@@ -246,7 +246,8 @@
         "cache_ttl_seconds": 1000,
         "keepalive": true,
         "keepalive_timeout": 10000,
-        "keepalive_pool": 5
+        "keepalive_pool": 5,
+        "token_generation_endpoint": "/api/token"
       }
     },
     {
