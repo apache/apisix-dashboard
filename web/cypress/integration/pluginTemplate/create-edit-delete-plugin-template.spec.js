@@ -29,6 +29,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     notification: '.ant-notification-notice-message',
     refresh: '.anticon-reload',
     descriptionSelector: '[title=Description]',
+    pluginTitle: '.ant-divider-inner-text',
   };
 
   const data = {
@@ -74,6 +75,8 @@ context('Create Configure and Delete PluginTemplate', () => {
 
     cy.contains('Submit').click();
     cy.contains('Next').click();
+    cy.contains(selector.pluginCard, 'basic-auth').should('be.visible');
+    cy.contains(selector.pluginTitle, 'Authentication').should('be.visible');
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createPluginTemplateSuccess);
   });
@@ -88,6 +91,8 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.get(selector.description).clear().type(data.pluginTemplateName2);
     cy.contains('Next').click();
     cy.contains('Next').click();
+    cy.contains(selector.pluginCard, 'basic-auth').should('be.visible');
+    cy.contains(selector.pluginTitle, 'Authentication').should('be.visible');
     cy.contains('Submit').click();
 
     cy.get(selector.notification).should('contain', data.editPluginTemplateSuccess);

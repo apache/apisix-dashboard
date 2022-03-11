@@ -187,131 +187,70 @@ const PluginPage: React.FC<Props> = ({
             />
           </>
         )}
-        {readonly
-          ? newOpenPluginType.map((typeItem) => {
-              return (
-                <PanelSection
-                  title={formatMessage({ id: `component.plugin.${typeItem}` })}
-                  key={typeItem}
-                  style={PanelSectionStyle}
-                  id={`plugin-category-${typeItem}`}
-                >
-                  {orderBy(
-                    pluginList.filter(
-                      (item) => item.type === typeItem && !item.hidden && initialData[item.name],
-                    ),
-                    'name',
-                    'asc',
-                  ).map((item) => (
-                    <Card
-                      key={item.name}
-                      actions={[
-                        <Button
-                          type={
-                            initialData[item.name] && !initialData[item.name].disable
-                              ? 'primary'
-                              : 'default'
-                          }
-                          danger={initialData[item.name] && !initialData[item.name].disable}
-                          onClick={() => {
-                            setName(item.name);
-                          }}
-                        >
-                          {initialData[item.name] && !initialData[item.name].disable
-                            ? formatMessage({ id: 'component.plugin.disable' })
-                            : formatMessage({ id: 'component.plugin.enable' })}
-                        </Button>,
-                      ]}
-                      title={[
-                        <div style={{ width: '100%', textAlign: 'center' }} key={1}>
-                          <span key={2} data-cy-plugin-name={item.name}>
-                            {item.name}
-                          </span>
-                        </div>,
-                      ]}
-                      bodyStyle={{
-                        minHeight: 151,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+        {(readonly ? newOpenPluginType : typeList).map((typeItem) => {
+          return (
+            <PanelSection
+              title={formatMessage({ id: `component.plugin.${typeItem}` })}
+              key={typeItem}
+              style={PanelSectionStyle}
+              id={`plugin-category-${typeItem}`}
+            >
+              {orderBy(
+                pluginList.filter(
+                  readonly
+                    ? (item) => item.type === typeItem && !item.hidden && initialData[item.name]
+                    : (item) => item.type === typeItem && !item.hidden,
+                ),
+                'name',
+                'asc',
+              ).map((item) => (
+                <Card
+                  key={item.name}
+                  actions={[
+                    <Button
+                      type={
+                        initialData[item.name] && !initialData[item.name].disable
+                          ? 'primary'
+                          : 'default'
+                      }
+                      danger={initialData[item.name] && !initialData[item.name].disable}
+                      onClick={() => {
+                        setName(item.name);
                       }}
-                      style={{ width: 200 }}
                     >
-                      {Boolean(PLUGIN_ICON_LIST[item.name]) && PLUGIN_ICON_LIST[item.name]}
-                      {Boolean(!PLUGIN_ICON_LIST[item.name]) && (
-                        <img
-                          alt="pluginImg"
-                          src={defaultPluginImg}
-                          style={{ width: 50, height: 50, opacity: 0.2 }}
-                        />
-                      )}
-                    </Card>
-                  ))}
-                </PanelSection>
-              );
-            })
-          : typeList.map((typeItem) => {
-              return (
-                <PanelSection
-                  title={formatMessage({ id: `component.plugin.${typeItem}` })}
-                  key={typeItem}
-                  style={PanelSectionStyle}
-                  id={`plugin-category-${typeItem}`}
+                      {initialData[item.name] && !initialData[item.name].disable
+                        ? formatMessage({ id: 'component.plugin.disable' })
+                        : formatMessage({ id: 'component.plugin.enable' })}
+                    </Button>,
+                  ]}
+                  title={[
+                    <div style={{ width: '100%', textAlign: 'center' }} key={1}>
+                      <span key={2} data-cy-plugin-name={item.name}>
+                        {item.name}
+                      </span>
+                    </div>,
+                  ]}
+                  bodyStyle={{
+                    minHeight: 151,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  style={{ width: 200 }}
                 >
-                  {orderBy(
-                    pluginList.filter(
-                      (item) => item.type === typeItem.toLowerCase() && !item.hidden,
-                    ),
-                    'name',
-                    'asc',
-                  ).map((item) => (
-                    <Card
-                      key={item.name}
-                      actions={[
-                        <Button
-                          type={
-                            initialData[item.name] && !initialData[item.name].disable
-                              ? 'primary'
-                              : 'default'
-                          }
-                          danger={initialData[item.name] && !initialData[item.name].disable}
-                          onClick={() => {
-                            setName(item.name);
-                          }}
-                        >
-                          {initialData[item.name] && !initialData[item.name].disable
-                            ? formatMessage({ id: 'component.plugin.disable' })
-                            : formatMessage({ id: 'component.plugin.enable' })}
-                        </Button>,
-                      ]}
-                      title={[
-                        <div style={{ width: '100%', textAlign: 'center' }} key={1}>
-                          <span key={2} data-cy-plugin-name={item.name}>
-                            {item.name}
-                          </span>
-                        </div>,
-                      ]}
-                      bodyStyle={{
-                        minHeight: 151,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                      style={{ width: 200 }}
-                    >
-                      {Boolean(PLUGIN_ICON_LIST[item.name]) && PLUGIN_ICON_LIST[item.name]}
-                      {Boolean(!PLUGIN_ICON_LIST[item.name]) && (
-                        <img
-                          alt="pluginImg"
-                          src={defaultPluginImg}
-                          style={{ width: 50, height: 50, opacity: 0.2 }}
-                        />
-                      )}
-                    </Card>
-                  ))}
-                </PanelSection>
-              );
-            })}
+                  {Boolean(PLUGIN_ICON_LIST[item.name]) && PLUGIN_ICON_LIST[item.name]}
+                  {Boolean(!PLUGIN_ICON_LIST[item.name]) && (
+                    <img
+                      alt="pluginImg"
+                      src={defaultPluginImg}
+                      style={{ width: 50, height: 50, opacity: 0.2 }}
+                    />
+                  )}
+                </Card>
+              ))}
+            </PanelSection>
+          );
+        })}
         <br />
         {formatMessage({ id: 'component.plugin.tip1' })}&nbsp;
         <a
