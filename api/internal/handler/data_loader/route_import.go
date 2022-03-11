@@ -216,47 +216,47 @@ func (ImportHandler) convertToImportResult(data *loader.DataSets, errs map[store
 	return map[store.HubKey]ImportResult{
 		store.HubKeyRoute: {
 			Total:  len(data.Routes),
-			Failed: len(data.Routes) - len(errs[store.HubKeyRoute]),
+			Failed: len(errs[store.HubKeyRoute]),
 			Errors: errs[store.HubKeyRoute],
 		},
 		store.HubKeyUpstream: {
 			Total:  len(data.Upstreams),
-			Failed: len(data.Upstreams) - len(errs[store.HubKeyUpstream]),
+			Failed: len(errs[store.HubKeyUpstream]),
 			Errors: errs[store.HubKeyUpstream],
 		},
 		store.HubKeyService: {
 			Total:  len(data.Services),
-			Failed: len(data.Services) - len(errs[store.HubKeyService]),
+			Failed: len(errs[store.HubKeyService]),
 			Errors: errs[store.HubKeyService],
 		},
 		store.HubKeyConsumer: {
 			Total:  len(data.Consumers),
-			Failed: len(data.Consumers) - len(errs[store.HubKeyConsumer]),
+			Failed: len(errs[store.HubKeyConsumer]),
 			Errors: errs[store.HubKeyConsumer],
 		},
 		store.HubKeySsl: {
 			Total:  len(data.SSLs),
-			Failed: len(data.SSLs) - len(errs[store.HubKeySsl]),
+			Failed: len(errs[store.HubKeySsl]),
 			Errors: errs[store.HubKeySsl],
 		},
 		store.HubKeyStreamRoute: {
 			Total:  len(data.StreamRoutes),
-			Failed: len(data.StreamRoutes) - len(errs[store.HubKeyStreamRoute]),
+			Failed: len(errs[store.HubKeyStreamRoute]),
 			Errors: errs[store.HubKeyStreamRoute],
 		},
 		store.HubKeyGlobalRule: {
 			Total:  len(data.GlobalPlugins),
-			Failed: len(data.GlobalPlugins) - len(errs[store.HubKeyGlobalRule]),
+			Failed: len(errs[store.HubKeyGlobalRule]),
 			Errors: errs[store.HubKeyGlobalRule],
 		},
 		store.HubKeyPluginConfig: {
 			Total:  len(data.PluginConfigs),
-			Failed: len(data.PluginConfigs) - len(errs[store.HubKeyPluginConfig]),
+			Failed: len(errs[store.HubKeyPluginConfig]),
 			Errors: errs[store.HubKeyPluginConfig],
 		},
 		store.HubKeyProto: {
 			Total:  len(data.Protos),
-			Failed: len(data.Protos) - len(errs[store.HubKeyProto]),
+			Failed: len(errs[store.HubKeyProto]),
 			Errors: errs[store.HubKeyProto],
 		},
 	}
