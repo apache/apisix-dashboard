@@ -23,21 +23,16 @@ info:
   description: test desc
   license:
     name: Apache License 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
   title: test title
+servers:
+  - url: http://172.16.238.20:1980
 paths:
-  /hello:
+  /get:
     get:
       x-api-limit: 20
-      description: hello world.
+      summary: hello world
       operationId: hello
-      x-apisix-upstream:
-        type: roundrobin
-        nodes:
-          - host: 172.16.238.20
-            port: 1980
-            weight: 1
-            priority: 10
       responses:
         '200':
           description: list response
