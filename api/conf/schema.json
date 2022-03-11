@@ -3407,7 +3407,7 @@
 						"default": 3000,
 						"minimum": 100,
 						"type": "integer"
-					}
+					},
 					"token_generation_endpoint": 
 					{
 						"type" : "string", 
