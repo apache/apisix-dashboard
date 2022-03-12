@@ -30,8 +30,8 @@ context('Create Configure and Delete PluginTemplate', () => {
     refresh: '.anticon-reload',
     descriptionSelector: '[title=Description]',
     pluginTitle: '.ant-divider-inner-text',
+    pluginBtn: 'ant-btn-primary',
   };
-
   const data = {
     pluginTemplateName: 'test_plugin_template1',
     pluginTemplateName2: 'test_plugin_template2',
@@ -77,6 +77,15 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.contains('Next').click();
     cy.contains(selector.pluginCard, 'basic-auth').should('be.visible');
     cy.contains(selector.pluginTitle, 'Authentication').should('be.visible');
+    cy.contains(
+      selector.pluginTitle,
+      'Security',
+      'Traffic Control',
+      'Serverless',
+      'Observability',
+      'Other',
+    ).should('not.exist');
+    cy.contains(selector.pluginBtn, 'Enable').should('not.exist');
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createPluginTemplateSuccess);
   });
@@ -93,6 +102,15 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.contains('Next').click();
     cy.contains(selector.pluginCard, 'basic-auth').should('be.visible');
     cy.contains(selector.pluginTitle, 'Authentication').should('be.visible');
+    cy.contains(
+      selector.pluginTitle,
+      'Security',
+      'Traffic Control',
+      'Serverless',
+      'Observability',
+      'Other',
+    ).should('not.exist');
+    cy.contains(selector.pluginBtn, 'Enable').should('not.exist');
     cy.contains('Submit').click();
 
     cy.get(selector.notification).should('contain', data.editPluginTemplateSuccess);
