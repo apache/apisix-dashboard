@@ -17,9 +17,9 @@
 import { useEffect, useState } from 'react';
 import { useLocation, history } from 'umi';
 import querystring from 'query-string';
-import { PageInfo } from '@ant-design/pro-table/lib/typing';
-import { ActionType } from '@ant-design/pro-table';
-import { MutableRefObject } from 'react';
+import type { PageInfo } from '@ant-design/pro-table/lib/typing';
+import type { ActionType } from '@ant-design/pro-table';
+import type { MutableRefObject } from 'react';
 
 export default function usePagination() {
   const location = useLocation();
@@ -34,14 +34,13 @@ export default function usePagination() {
   };
 
   const checkPageList = (ref: MutableRefObject<ActionType | undefined>) => {
-    const { current, pageSize, total } = ref.current!.pageInfo as PageInfo
+    const { current, pageSize, total } = ref.current!.pageInfo as PageInfo;
     if (current > pageSize / total && current > 1) {
-      savePageList(paginationConfig.current - 1, paginationConfig.pageSize)
-    }
-    else {
+      savePageList(paginationConfig.current - 1, paginationConfig.pageSize);
+    } else {
       ref.current?.reload();
     }
-  }
+  };
 
   return { paginationConfig, savePageList, checkPageList };
 }

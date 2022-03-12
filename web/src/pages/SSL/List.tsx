@@ -75,7 +75,6 @@ const Page: React.FC = () => {
                 notification.success({
                   message: formatMessage({ id: 'component.ssl.removeSSLSuccess' }),
                 });
-                /* eslint-disable no-unused-expressions */
                 requestAnimationFrame(() => checkPageList(tableRef));
               })
             }

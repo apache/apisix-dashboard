@@ -95,7 +95,6 @@ const Page: React.FC = () => {
                 notification.success({
                   message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
                 });
-                /* eslint-disable no-unused-expressions */
                 checkPageList(ref);
               });
             }}

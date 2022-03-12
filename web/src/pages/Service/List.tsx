@@ -82,7 +82,6 @@ const Page: React.FC = () => {
                       id: 'menu.service',
                     })} ${formatMessage({ id: 'component.status.success' })}`,
                   });
-                  /* eslint-disable no-unused-expressions */
                   checkPageList(ref);
                 });
               }}

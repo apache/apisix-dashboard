@@ -91,7 +91,6 @@ const Page: React.FC = () => {
                     id: 'menu.consumer',
                   })} ${formatMessage({ id: 'component.status.success' })}`,
                 });
-                /* eslint-disable no-unused-expressions */
                 checkPageList(ref);
               });
             }}

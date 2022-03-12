@@ -41,7 +41,7 @@ optional string email = 3;
 }`,
     createProtoSuccess: 'Create proto Successfully',
     configureProtoSuccess: 'Configure proto Successfully',
-    deleteProtoSuccess: 'Delete Upstream Successfully',
+    deleteProtoSuccess: 'Delete proto Successfully',
   };
 
   beforeEach(() => {
