@@ -64,6 +64,7 @@ context('Create and Search Route', () => {
     desc2: 'desc2',
     value0: 'value0',
     label0_value0: 'label0:value0',
+    url_input: 'localhost:8000/test/asd',
   };
 
   beforeEach(() => {
@@ -102,6 +103,8 @@ context('Create and Search Route', () => {
       });
       cy.get(selector.nodes_0_port).type(data.port);
       cy.get(selector.nodes_0_weight).type(data.weight);
+      cy.get('#custom_checks_active').click();
+      cy.get('#checks_active_url').type(data.url_input);
       cy.contains('Next').click();
       cy.contains('Next').click();
       cy.contains('Submit').click();
