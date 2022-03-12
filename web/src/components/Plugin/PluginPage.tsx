@@ -92,7 +92,6 @@ const PluginPage: React.FC<Props> = ({
       form.setFieldsValue({ plugin_config_id });
     });
   }, []);
-  console.log('initialData: ', initialData);
   const openPlugin = pluginList.filter(
     (item) => initialData[item.name] && !initialData[item.name].disable,
   );
