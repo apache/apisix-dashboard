@@ -148,7 +148,7 @@ components:
         - $ref: '#/components/schemas/NewPet'
         - type: object
           required:
-          - id
+            - id
           properties:
             id:
               type: integer
@@ -157,12 +157,12 @@ components:
     NewPet:
       type: object
       required:
-        - name  
+        - name
       properties:
         name:
           type: string
         tag:
-          type: string    
+          type: string
 
     Error:
       type: object
