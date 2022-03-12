@@ -30,7 +30,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     refresh: '.anticon-reload',
     descriptionSelector: '[title=Description]',
     pluginTitle: '.ant-divider-inner-text',
-    pluginBtn: 'ant-btn-primary',
+    pluginBtn: '.ant-btn-primary',
   };
   const data = {
     pluginTemplateName: 'test_plugin_template1',
