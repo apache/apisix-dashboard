@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
+import usePagination from '@/hooks/usePagination';
 import { PlusOutlined } from '@ant-design/icons';
-import querystring from 'query-string';
 import { omit } from 'lodash';
 
 import { DELETE_FIELDS } from '@/constants';
@@ -37,16 +37,7 @@ const Page: React.FC = () => {
   const [rawData, setRawData] = useState<Record<string, any>>({});
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
-  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
-
-  const savePageList = (page = 1, pageSize = 10) => {
-    history.replace(`/consumer/list?page=${page}&pageSize=${pageSize}`);
-  };
-
-  useEffect(() => {
-    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
-    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
-  }, [window.location.search]);
+  const { paginationConfig, savePageList } = usePagination();
 
   const columns: ProColumns<ConsumerModule.ResEntity>[] = [
     {

@@ -16,7 +16,7 @@
  */
 import { Divider, Form, notification, Switch } from 'antd';
 import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
-import { useIntl } from 'umi';
+import { useIntl, useLocation } from 'umi';
 import type { FormInstance } from 'antd/es/form';
 
 import PanelSection from '@/components/PanelSection';
@@ -67,6 +67,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     },
     ref,
   ) => {
+    const location = useLocation();
     const { formatMessage } = useIntl();
     const [readonly, setReadonly] = useState(false);
     const [hiddenForm, setHiddenForm] = useState(false);
@@ -281,7 +282,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     };
 
     return (
-      <Form form={form} labelCol={{ span: 3 }}>
+      <Form
+        initialValues={{
+          upstream_id: !required && location.pathname === '/routes/create' ? 'None' : 'Custom',
+        }}
+        form={form}
+        labelCol={{ span: 3 }}
+      >
         {showSelector && (
           <UpstreamSelector
             list={list}
