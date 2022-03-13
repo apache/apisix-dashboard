@@ -58,8 +58,10 @@ const Page: React.FC = (props) => {
         });
         return;
       }
-      if (data.checks.active.req_headers?.length === 0) {
-        delete data.checks.active.req_headers;
+      if (data.checks) {
+        if (data.checks.active.req_headers?.length === 0) {
+          delete data.checks.active.req_headers;
+        }
       }
       const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
