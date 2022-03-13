@@ -44,6 +44,8 @@ This release contains some features and bugfixes, and all the existing functiona
 
 ### Core
 
+feat: add data loader framework [#2371](https://github.com/apache/apisix-dashboard/pull/2371)
+feat: support protobuf on Web [#2320](https://github.com/apache/apisix-dashboard/pull/2320)
 feat: basic support Apache APISIX 2.12.1 [#2315](https://github.com/apache/apisix-dashboard/pull/2315)
 feat: Add more fields to limit-count plugin [#2322](https://github.com/apache/apisix-dashboard/pull/2322)
 feat: support APISIX_PROFILE for env-specific configuration [#2293](https://github.com/apache/apisix-dashboard/pull/2293)
@@ -59,6 +61,7 @@ style: add ellipsis for route table [#2317](https://github.com/apache/apisix-das
 
 ### Bugfix
 
+fix: ! (reverse) operator not handled correctly [#2364](https://github.com/apache/apisix-dashboard/pull/2364)
 fix: idle_timeout filed to support set zero value [#2296](https://github.com/apache/apisix-dashboard/pull/2296)
 fix: retries field to support zero value [#2298](https://github.com/apache/apisix-dashboard/pull/2298)
 fix: get current dir error [#2283](https://github.com/apache/apisix-dashboard/pull/2283)
