@@ -14,20 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package Dashboard
+package overview
 
 import (
+	"reflect"
+	"sort"
+
+	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/wrapper"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
+
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/gin-gonic/gin"
-	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/wrapper"
-	wgin "github.com/shiningrush/droplet/wrapper/gin"
-	"reflect"
-	"sort"
 )
 
 type Handler struct {
@@ -49,7 +51,7 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/apisix/admin/dashboard", wgin.Wraps(h.List,
+	r.GET("/apisix/admin/overview", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 }
 
@@ -82,25 +84,25 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	apisixVersion, err := h.GetApisixVersion()
+	dashboardVersion, err := h.GetApisixVersion()
 	if err != nil {
 		return nil, err
 	}
 
-	serverSummary, err := h.GetServerSummary(c)
+	serverInfo, err := h.GetServerInfo(c)
 	if err != nil {
 		return nil, err
 	}
 
-	res := &entity.DashboardInfo{
-		RouteCnt:        routerCnt,
-		OnlineRouterCnt: onlineRouterCnt,
-		UpstreamCnt:     upstreamCnt,
-		ServiceCnt:      serviceCnt,
-		CertificateCnt:  certificateCnt,
-		Plugins:         plugins,
-		ApisixVersion:   apisixVersion,
-		ServerSummary:   serverSummary,
+	res := &entity.Overview{
+		RouteCnt:         routerCnt,
+		OnlineRouterCnt:  onlineRouterCnt,
+		UpstreamCnt:      upstreamCnt,
+		ServiceCnt:       serviceCnt,
+		CertificateCnt:   certificateCnt,
+		DashboardVersion: dashboardVersion,
+		GatewayInfo:      serverInfo,
+		Plugins:          plugins,
 	}
 
 	return res, nil
@@ -138,7 +140,7 @@ func (h *Handler) GetPlugins(_ droplet.Context) ([]string, error) {
 	return res, nil
 }
 
-func (h *Handler) GetServerSummary(c droplet.Context) ([]*entity.ServerInfo, error) {
+func (h *Handler) GetServerInfo(c droplet.Context) ([]*entity.ServerInfo, error) {
 	ret, err := h.serverInfoStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			return true
@@ -150,20 +152,10 @@ func (h *Handler) GetServerSummary(c droplet.Context) ([]*entity.ServerInfo, err
 	if err != nil {
 		return nil, err
 	}
+	var res [](*entity.ServerInfo)
 
-	var res []*entity.ServerInfo
-	for _, row := range ret.Rows {
-		item := row.(*entity.ServerInfo)
-		temp := &entity.ServerInfo{
-			BaseInfo:       item.BaseInfo,
-			LastReportTime: item.LastReportTime,
-			UpTime:         item.UpTime,
-			BootTime:       item.BootTime,
-			EtcdVersion:    item.EtcdVersion,
-			Hostname:       item.Hostname,
-			Version:        item.Version,
-		}
-		res = append(res, temp)
+	for _, item := range ret.Rows {
+		res = append(res, item.(*entity.ServerInfo))
 	}
 
 	return res, nil

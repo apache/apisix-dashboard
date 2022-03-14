@@ -291,13 +291,13 @@ type PluginConfig struct {
 	Labels  map[string]string      `json:"labels,omitempty"`
 }
 
-type DashboardInfo struct {
-	RouteCnt        int64        `json:"router_cnt,omitempty"`
-	OnlineRouterCnt int64        `json:"online_router_cnt,omitempty"`
-	UpstreamCnt     int64        `json:"upstream_cnt,omitempty"`
-	ServiceCnt      int64        `json:"service_cnt,omitempty"`
-	CertificateCnt  int64        `json:"certificate_cnt,omitempty"`
-	Plugins         []string     `json:"plugins,omitempty"`
-	ApisixVersion   string       `json:"apisix_version,omitempty"`
-	ServerSummary   []*ServerInfo `json:"ServerSummary,omitempty"`
+type Overview struct {
+	RouteCnt         int64         `json:"router_cnt,omitempty"`
+	OnlineRouterCnt  int64         `json:"online_router_cnt,omitempty"`
+	UpstreamCnt      int64         `json:"upstream_cnt,omitempty"`
+	ServiceCnt       int64         `json:"service_cnt,omitempty"`
+	CertificateCnt   int64         `json:"certificate_cnt,omitempty"`
+	DashboardVersion string        `json:"dashboard_version,omitempty"`
+	GatewayInfo      []*ServerInfo `json:"gateway_info,omitempty"`
+	Plugins          []string      `json:"plugins,omitempty"`
 }

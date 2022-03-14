@@ -29,12 +29,12 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/authentication"
 	"github.com/apisix/manager-api/internal/handler/consumer"
-	"github.com/apisix/manager-api/internal/handler/dashboard"
 	"github.com/apisix/manager-api/internal/handler/data_loader"
 	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
 	"github.com/apisix/manager-api/internal/handler/migrate"
+	"github.com/apisix/manager-api/internal/handler/overview"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/schema"
@@ -78,7 +78,7 @@ func SetUpRouter() *gin.Engine {
 		tool.NewHandler,
 		plugin_config.NewHandler,
 		migrate.NewHandler,
-		Dashboard.NewHandler,
+		overview.NewHandler,
 	}
 
 	for i := range factories {
