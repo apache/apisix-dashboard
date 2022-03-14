@@ -57,8 +57,16 @@ const Page: React.FC = () => {
               description: response.message,
               duration: 1,
               onClose: () => {
-                const redirect = getUrlQuery('redirect');
-                history.replace(redirect ? decodeURIComponent(redirect) : '/');
+                let redirect = getUrlQuery('redirect');
+                if (redirect) {
+                  redirect = decodeURIComponent(redirect);
+                  if (redirect === '/user/logout') {
+                    redirect = '/';
+                  }
+                } else {
+                  redirect = '/';
+                }
+                history.replace(redirect);
               },
             });
           }

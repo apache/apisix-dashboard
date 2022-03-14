@@ -23,7 +23,8 @@ export default {
   'page.route.parameterPosition': 'Parameter Position',
   'page.route.httpRequestHeader': 'HTTP Request Header',
   'page.route.requestParameter': 'Request Parameter',
-  'page.route.buildinParameter': 'Build-in Parameter',
+  'page.route.postRequestParameter': 'POST Request Parameter',
+  'page.route.builtinParameter': 'Built-in Parameter',
   'page.route.parameterName': 'Parameter Name',
   'page.route.operationalCharacter': 'Operational Character',
   'page.route.equal': 'Equal(==)',
@@ -97,6 +98,7 @@ export default {
   'page.route.unpublished': 'UnPublished',
 
   'page.route.select.option.inputManually': 'Input Manually',
+  'page.route.select.option.methodRewriteNone': 'Not modify',
   'page.route.form.itemLabel.domainNameOrIp': 'Domain Name/IP',
   'page.route.form.itemExtraMessage.domainNameOrIp':
     'When using Domain Name, it will analysis the local: /etc/resolv.conf by default',
@@ -109,6 +111,7 @@ export default {
   'page.route.form.itemLabel.template': 'Template',
   'page.route.form.itemLabel.URIRewriteType': 'URI Override',
   'page.route.form.itemLabel.hostRewriteType': 'Host Override',
+  'page.route.form.itemLabel.methodRewrite': 'Method Override',
   'page.route.form.itemLabel.redirectURI': 'Redirect URI',
   'page.route.input.placeholder.newPath': 'For example: /foo/bar/index.html',
 
@@ -182,6 +185,12 @@ export default {
     'If you do not bind the service, you must set the Upstream (Step 2)',
   'page.route.advanced-match.tooltip':
     'It supports route matching through request headers, request parameters and cookies, and can be applied to scenarios such as grayscale publishing and blue-green testing.',
+  'page.route.advanced-match.message': 'Tips',
+  'page.route.advanced-match.tips.requestParameter': 'Request Parameter：Query of the request URL',
+  'page.route.advanced-match.tips.postRequestParameter':
+    'POST Request Parameter：Only support x-www-form-urlencoded form',
+  'page.route.advanced-match.tips.builtinParameter':
+    'Build-in Parameter：Nginx internal parameters',
 
   'page.route.fields.custom.redirectOption.tooltip': 'This is related to redirect plugin',
   'page.route.fields.service_id.tooltip': 'Bind Service object to reuse their configuration.',

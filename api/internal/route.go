@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/gin-contrib/pprof"
+	// "github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -36,14 +36,17 @@ import (
 	"github.com/apisix/manager-api/internal/handler/migrate"
 	"github.com/apisix/manager-api/internal/handler/overview"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
+	"github.com/apisix/manager-api/internal/handler/proto"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/schema"
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
+	"github.com/apisix/manager-api/internal/handler/stream_route"
 	"github.com/apisix/manager-api/internal/handler/tool"
 	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/apisix/manager-api/internal/log"
+	"github.com/gin-contrib/gzip"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -54,7 +57,8 @@ func SetUpRouter() *gin.Engine {
 	}
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
-	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
+	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler(), filter.Authentication())
 	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
@@ -79,6 +83,8 @@ func SetUpRouter() *gin.Engine {
 		plugin_config.NewHandler,
 		migrate.NewHandler,
 		overview.NewHandler,
+		proto.NewHandler,
+		stream_route.NewHandler,
 	}
 
 	for i := range factories {
@@ -89,7 +95,7 @@ func SetUpRouter() *gin.Engine {
 		h.ApplyRoute(r)
 	}
 
-	pprof.Register(r)
+	// pprof.Register(r)
 
 	return r
 }

@@ -15,9 +15,15 @@
  * limitations under the License.
  */
 declare namespace RouteModule {
-  type Operator = '==' | '~=' | '>' | '<' | '~~' | '~*' | 'IN' | 'HAS' | '!';
+  type OperatorNot = '!';
 
-  type VarPosition = 'arg' | 'http' | 'cookie' | 'buildin';
+  type Operator = '==' | '~=' | '>' | '<' | '~~' | '~*' | 'IN' | 'HAS';
+
+  type VarTuple =
+    | [string, RouteModule.Operator, string | any[]]
+    | [string, RouteModule.OperatorNot, RouteModule.Operator, string | any[]];
+
+  type VarPosition = 'arg' | 'post_arg' | 'http' | 'cookie' | 'buildin';
 
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
@@ -75,7 +81,7 @@ declare namespace RouteModule {
     remote_addr?: string;
     remote_addrs?: string[];
     upstream: UpstreamComponent.ResponseData;
-    vars: [string, Operator, string | any[]][];
+    vars: VarTuple[];
     upstream_path?: {
       type?: string;
       from?: string;
@@ -93,6 +99,7 @@ declare namespace RouteModule {
   type MatchingRule = {
     position: VarPosition;
     name: string;
+    reverse: boolean;
     operator: Operator;
     value: string | any[];
     key: string;
@@ -137,6 +144,7 @@ declare namespace RouteModule {
     uri?: string;
     regex_uri?: string[];
     host?: string;
+    method?: string;
     kvHeaders?: Kvobject[];
     headers?: Record<string, string>;
   };

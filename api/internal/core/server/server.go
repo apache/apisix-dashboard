@@ -23,6 +23,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/spf13/viper"
+
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
@@ -35,9 +37,7 @@ type server struct {
 	options   *Options
 }
 
-type Options struct {
-	ForceStart bool // force start new instance
-}
+type Options struct{}
 
 // NewServer Create a server manager
 func NewServer(options *Options) (*server, error) {
@@ -47,13 +47,6 @@ func NewServer(options *Options) (*server, error) {
 func (s *server) Start(errSig chan error) {
 	// initialize server
 	err := s.init()
-	if err != nil {
-		errSig <- err
-		return
-	}
-
-	// write daemon pid file
-	err = s.writePID()
 	if err != nil {
 		errSig <- err
 		return
@@ -104,22 +97,6 @@ func (s *server) init() error {
 	return nil
 }
 
-func (s *server) writePID() error {
-	if err := utils.WritePID(conf.PIDPath, s.options.ForceStart); err != nil {
-		log.Errorf("failed to write pid: %s", err)
-		return err
-	}
-	utils.AppendToClosers(func() error {
-		if err := os.Remove(conf.PIDPath); err != nil {
-			log.Errorf("failed to remove pid path: %s", err)
-			return err
-		}
-		return nil
-	})
-
-	return nil
-}
-
 func (s *server) shutdownServer(server *http.Server) {
 	if server != nil {
 		ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
@@ -134,6 +111,7 @@ func (s *server) shutdownServer(server *http.Server) {
 func (s *server) printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
 	utils.PrintVersion()
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Config File", viper.ConfigFileUsed())
 	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
 	if conf.SSLCert != "" && conf.SSLKey != "" {
 		fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "HTTPS Listen", conf.SSLHost, conf.SSLPort)

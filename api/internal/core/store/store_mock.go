@@ -25,6 +25,11 @@ import (
 
 type MockInterface struct {
 	mock.Mock
+	HubKey HubKey
+}
+
+func (m *MockInterface) Type() HubKey {
+	return m.HubKey
 }
 
 func (m *MockInterface) Get(_ context.Context, key string) (interface{}, error) {

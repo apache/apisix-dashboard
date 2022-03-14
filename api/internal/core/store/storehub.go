@@ -38,6 +38,8 @@ const (
 	HubKeyGlobalRule   HubKey = "global_rule"
 	HubKeyServerInfo   HubKey = "server_info"
 	HubKeyPluginConfig HubKey = "plugin_config"
+	HubKeyProto        HubKey = "proto"
+	HubKeyStreamRoute  HubKey = "stream_route"
 )
 
 var (
@@ -46,12 +48,13 @@ var (
 
 func InitStore(key HubKey, opt GenericStoreOption) error {
 	hubsNeedCheck := map[HubKey]bool{
-		HubKeyConsumer:   true,
-		HubKeyRoute:      true,
-		HubKeySsl:        true,
-		HubKeyService:    true,
-		HubKeyUpstream:   true,
-		HubKeyGlobalRule: true,
+		HubKeyConsumer:    true,
+		HubKeyRoute:       true,
+		HubKeySsl:         true,
+		HubKeyService:     true,
+		HubKeyUpstream:    true,
+		HubKeyGlobalRule:  true,
+		HubKeyStreamRoute: true,
 	}
 	if _, ok := hubsNeedCheck[key]; ok {
 		validator, err := NewAPISIXJsonSchemaValidator("main." + string(key))
@@ -60,6 +63,7 @@ func InitStore(key HubKey, opt GenericStoreOption) error {
 		}
 		opt.Validator = validator
 	}
+	opt.HubKey = key
 	s, err := NewGenericStore(opt)
 	if err != nil {
 		log.Errorf("NewGenericStore error: %s", err)
@@ -190,10 +194,34 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyPluginConfig, GenericStoreOption{
-		BasePath: "/apisix/plugin_configs",
+		BasePath: conf.ETCDConfig.Prefix + "/plugin_configs",
 		ObjType:  reflect.TypeOf(entity.PluginConfig{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.PluginConfig)
+			return utils.InterfaceToString(r.ID)
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyProto, GenericStoreOption{
+		BasePath: conf.ETCDConfig.Prefix + "/proto",
+		ObjType:  reflect.TypeOf(entity.Proto{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Proto)
+			return utils.InterfaceToString(r.ID)
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyStreamRoute, GenericStoreOption{
+		BasePath: conf.ETCDConfig.Prefix + "/stream_routes",
+		ObjType:  reflect.TypeOf(entity.StreamRoute{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.StreamRoute)
 			return utils.InterfaceToString(r.ID)
 		},
 	})

@@ -30,7 +30,6 @@ context('Create and Delete Consumer', () => {
     burst: '#burst',
     key: '#key',
     nodelay: '#nodelay',
-    remote_addr: '[title=remote_addr]',
     monacoViewZones: '.view-zones',
   };
 
@@ -40,6 +39,7 @@ context('Create and Delete Consumer', () => {
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
     time: 2,
+    key: 'remote_addr',
   };
 
   beforeEach(() => {
@@ -87,8 +87,7 @@ context('Create and Delete Consumer', () => {
 
     cy.get(selector.rate).type(data.time);
     cy.get(selector.burst).type(data.time);
-    cy.get(selector.key).click();
-    cy.get(selector.remote_addr).click();
+    cy.get(selector.key).type(data.key);
     cy.get(selector.nodelay).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({

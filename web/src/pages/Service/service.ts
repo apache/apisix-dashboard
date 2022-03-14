@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { request } from 'umi';
+import { transformData } from './transform';
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
   request('/services', {
@@ -31,13 +32,13 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
 export const create = (data: ServiceModule.Entity) =>
   request('/services', {
     method: 'POST',
-    data,
+    data: transformData(data),
   });
 
 export const update = (serviceId: string, data: ServiceModule.Entity) =>
   request(`/services/${serviceId}`, {
     method: 'PUT',
-    data,
+    data: transformData(data),
   });
 
 export const remove = (serviceId: string) =>

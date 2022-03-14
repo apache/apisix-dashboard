@@ -59,9 +59,9 @@ var (
 	AuthConf         Authentication
 	SSLDefaultStatus = 1 //enable ssl by default
 	ImportSizeLimit  = 10 * 1024 * 1024
-	PIDPath          = "/tmp/manager-api.pid"
 	AllowList        []string
 	Plugins          = map[string]bool{}
+	SecurityConf     Security
 )
 
 type MTLS struct {
@@ -111,6 +111,7 @@ type Conf struct {
 	Log       Log
 	AllowList []string `mapstructure:"allow_list"`
 	MaxCpu    int      `mapstructure:"max_cpu"`
+	Security  Security
 }
 
 type User struct {
@@ -128,6 +129,15 @@ type Config struct {
 	Conf           Conf
 	Authentication Authentication
 	Plugins        []string
+}
+
+type Security struct {
+	AllowCredentials      string `mapstructure:"access_control_allow_credentials"`
+	AllowOrigin           string `mapstructure:"access_control_allow_origin"`
+	AllowMethods          string `mapstructure:"access_control-allow_methods"`
+	AllowHeaders          string `mapstructure:"access_control_allow_headers"`
+	XFrameOptions         string `mapstructure:"x_frame_options"`
+	ContentSecurityPolicy string `mapstructure:"content_security_policy"`
 }
 
 // TODO: we should no longer use init() function after remove all handler's integration tests
@@ -152,7 +162,11 @@ func InitConf() {
 func setupConfig() {
 	// setup config file path
 	if ConfigFile == "" {
-		viper.SetConfigName("conf")
+		ConfigFile = "conf.yaml"
+		if profile := os.Getenv("APISIX_PROFILE"); profile != "" {
+			ConfigFile = "conf" + "-" + profile + ".yaml"
+		}
+		viper.SetConfigName(ConfigFile)
 		viper.SetConfigType("yaml")
 		viper.AddConfigPath(WorkDir + "/conf")
 	} else {
@@ -161,11 +175,7 @@ func setupConfig() {
 
 	// load config
 	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			panic(fmt.Sprintf("fail to find configuration: %s", ConfigFile))
-		} else {
-			panic(fmt.Sprintf("fail to read configuration: %s, err: %s", ConfigFile, err.Error()))
-		}
+		panic(fmt.Sprintf("fail to read configuration, err: %s", err.Error()))
 	}
 
 	// unmarshal config
@@ -247,6 +257,9 @@ func setupConfig() {
 
 	// set plugin
 	initPlugins(config.Plugins)
+
+	// security configuration
+	initSecurity(config.Conf.Security)
 }
 
 func setupEnv() {
@@ -316,4 +329,25 @@ func initParallelism(choiceCores int) {
 		choiceCores = maxSupportedCores
 	}
 	runtime.GOMAXPROCS(choiceCores)
+}
+
+// initialize security settings
+func initSecurity(conf Security) {
+	var se Security
+	// if conf == se, then conf is empty, we should use default value
+	if conf != se {
+		SecurityConf = conf
+		if conf.ContentSecurityPolicy == "" {
+			SecurityConf.ContentSecurityPolicy = "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
+		}
+		if conf.XFrameOptions == "" {
+			SecurityConf.XFrameOptions = "deny"
+		}
+		return
+	}
+
+	SecurityConf = Security{
+		XFrameOptions:         "deny",
+		ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'",
+	}
 }

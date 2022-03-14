@@ -461,9 +461,10 @@ func TestRoute_List(t *testing.T) {
 			Upstream: &entity.UpstreamDef{
 				Nodes: []interface{}{
 					map[string]interface{}{
-						"host":   "39.97.63.215",
-						"port":   float64(80),
-						"weight": float64(1),
+						"host":     "39.97.63.215",
+						"port":     float64(80),
+						"weight":   float64(1),
+						"priority": float64(10),
 					},
 				},
 			},
@@ -640,9 +641,10 @@ func TestRoute_List(t *testing.T) {
 						Upstream: &entity.UpstreamDef{
 							Nodes: []*entity.Node{
 								{
-									Host:   "39.97.63.215",
-									Port:   80,
-									Weight: 1,
+									Host:     "39.97.63.215",
+									Port:     80,
+									Weight:   1,
+									Priority: 10,
 								},
 							},
 						},

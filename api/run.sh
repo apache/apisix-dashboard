@@ -17,8 +17,8 @@
 #
 
 export ENV=local
-pwd=`pwd`
+pwd=$(pwd)
 
-cd ./output
+cd ./output || exit
 
 exec ./manager-api

@@ -43,6 +43,7 @@ var resources = map[string]string{
 	"consumers":    "consumer",
 	"ssl":          "ssl",
 	"global_rules": "global_rule",
+	"proto":        "proto",
 }
 
 const (

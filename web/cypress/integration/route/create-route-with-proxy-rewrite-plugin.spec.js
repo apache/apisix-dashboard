@@ -35,6 +35,8 @@ context('create route with proxy-rewrite plugin', () => {
     uriRewriteReg: '#proxyRewrite_regex_uri_0',
     uriRewriteTemp: '#proxyRewrite_regex_uri_1',
     newHost: '#proxyRewrite_host',
+    methodRewriteSelect: '[data-cy=proxyRewrite-method]',
+    methodRewriteSelectOption: '.ant-select-item-option',
     buttonCreateNewRewriteHeader: '[data-cy=create-new-rewrite-header]',
     rewriteHeaderKey1: '#proxyRewrite_kvHeaders_0_key',
     rewriteHeaderValue1: '#proxyRewrite_kvHeaders_0_value',
@@ -93,6 +95,10 @@ context('create route with proxy-rewrite plugin', () => {
     cy.get(selector.keepHost).click();
     cy.get(selector.newHost).should('not.exist');
 
+    // method rewrite
+    cy.get(selector.methodRewriteSelect).click();
+    cy.get(selector.methodRewriteSelectOption).contains('POST').click();
+
     // new header key value input after createNewRewriteHeader button clicked
     cy.get(selector.buttonCreateNewRewriteHeader).click();
     cy.get(selector.rewriteHeaderKey1).should('be.visible').type(data.rewriteHeaderKey1);
@@ -129,6 +135,8 @@ context('create route with proxy-rewrite plugin', () => {
     cy.get(selector.newUri).should('have.value', data.rewriteUri);
 
     cy.get(selector.newHost).should('not.exist');
+
+    cy.get(selector.methodRewriteSelect).contains('POST').should('exist');
 
     cy.get(selector.rewriteHeaderKey1).should('have.value', data.rewriteHeaderKey1);
     cy.get(selector.rewriteHeaderValue1).should('have.value', data.rewriteHeaderValue1);

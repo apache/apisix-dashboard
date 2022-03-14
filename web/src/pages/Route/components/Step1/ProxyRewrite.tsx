@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Button, Input, Radio, Row, Col } from 'antd';
+import { Button, Input, Radio, Row, Col, Select } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
@@ -279,6 +279,46 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
     );
   };
 
+  const MethodRewriteType: React.FC = () => {
+    const methods = [
+      'GET',
+      'POST',
+      'PUT',
+      'DELETE',
+      'PATCH',
+      'OPTIONS',
+      'HEAD',
+      'TRACE',
+      'MKCOL',
+      'COPY',
+      'MOVE',
+      'PROPFIND',
+      'LOCK',
+      'UNLOCK',
+    ];
+    return (
+      <React.Fragment>
+        <Form.Item
+          label={formatMessage({ id: 'page.route.form.itemLabel.methodRewrite' })}
+          name={['proxyRewrite', 'method']}
+          wrapperCol={{ span: 3 }}
+          initialValue=""
+        >
+          <Select data-cy="proxyRewrite-method">
+            <Select.Option value="">
+              {formatMessage({ id: 'page.route.select.option.methodRewriteNone' })}
+            </Select.Option>
+            {methods.map((method) => (
+              <Select.Option value={method} key={method}>
+                {method}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+      </React.Fragment>
+    );
+  };
+
   const Headers: React.FC = () => {
     return (
       <Form.List name={['proxyRewrite', 'kvHeaders']} initialValue={[{}]}>
@@ -351,6 +391,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
       <SchemeComponent />
       <URIRewriteType />
       <HostRewriteType />
+      <MethodRewriteType />
       <Headers />
     </PanelSection>
   );

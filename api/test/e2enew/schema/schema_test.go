@@ -36,15 +36,8 @@ var _ = ginkgo.Describe("Schema Test", func() {
 			Query:        "schema_type=consumer",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody: "{\"dependencies\":{\"algorithm\":{\"oneOf\":[{\"properties\":{\"algorithm\":" +
-				"{\"default\":\"HS256\",\"enum\":[\"HS256\",\"HS512\"]}}},{\"properties\":{\"algorithm\":" +
-				"{\"enum\":[\"RS256\"]},\"private_key\":{\"type\":\"string\"},\"public_key\":{\"type\":\"string\"}}," +
-				"\"required\":[\"private_key\",\"public_key\"]}]}},\"properties\":{\"algorithm\":{\"default\":" +
-				"\"HS256\",\"enum\":[\"HS256\",\"HS512\",\"RS256\"],\"type\":\"string\"},\"base64_secret\"" +
-				":{\"default\":false,\"type\":\"boolean\"},\"exp\":{\"default\":86400,\"minimum\":1,\"type\":" +
-				"\"integer\"},\"key\":{\"type\":\"string\"},\"secret\":{\"type\":\"string\"}}," +
-				"\"required\":[\"key\"],\"type\":\"object\"}",
-			Sleep: base.SleepTime,
+			ExpectBody:   "{\"dependencies\":{\"algorithm\":{\"oneOf\":[{\"properties\":{\"algorithm\":{\"default\":\"HS256\",\"enum\":[\"HS256\",\"HS512\"]}}},{\"properties\":{\"algorithm\":{\"enum\":[\"RS256\"]},\"private_key\":{\"type\":\"string\"},\"public_key\":{\"type\":\"string\"}},\"required\":[\"private_key\",\"public_key\"]},{\"properties\":{\"algorithm\":{\"enum\":[\"RS256\"]},\"vault\":{\"properties\":{},\"type\":\"object\"}},\"required\":[\"vault\"]}]}},\"properties\":{\"algorithm\":{\"default\":\"HS256\",\"enum\":[\"HS256\",\"HS512\",\"RS256\"],\"type\":\"string\"},\"base64_secret\":{\"default\":false,\"type\":\"boolean\"},\"exp\":{\"default\":86400,\"minimum\":1,\"type\":\"integer\"},\"key\":{\"type\":\"string\"},\"secret\":{\"type\":\"string\"},\"vault\":{\"properties\":{},\"type\":\"object\"}},\"required\":[\"key\"],\"type\":\"object\"}",
+			Sleep:        base.SleepTime,
 		}),
 		table.Entry("get schema of plugin `require-id`", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),

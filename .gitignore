@@ -40,6 +40,8 @@ build
 /compose/**/nginx.pid
 /compose/etcd_data
 manager-api
+grpc-server-example/
+api/test/docker/*tar.gz*
 
 output
 apisix_logs
@@ -52,6 +54,7 @@ Dockerfile-apisix
 
 # backend unit test output
 api/coverage.txt
+api/coverage.html
 api/dag-to-lua/
 
 # frontend e2e test output

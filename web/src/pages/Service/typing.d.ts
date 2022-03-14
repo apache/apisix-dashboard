@@ -18,6 +18,7 @@ declare namespace ServiceModule {
   type Entity = {
     name: string;
     desc: string;
+    hosts?: string[];
     upstream: any;
     upstream_id: string;
     labels: string;

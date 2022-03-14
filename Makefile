@@ -50,7 +50,7 @@ endif
 .PHONY: api-default
 api-default:
 ifeq ("$(wildcard $(GO_EXEC))", "")
-	@echo "ERROR: Need to install golang 1.13+ first"
+	@echo "ERROR: Need to install golang 1.15+ first"
 	exit 1
 endif
 
@@ -69,7 +69,7 @@ endif
 ### api-test:		Run the tests of manager-api
 .PHONY: api-test
 api-test: api-default dag-lib
-	cd api/ && APISIX_API_WORKDIR=$$PWD ENV=test go test -v -count=1 -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+	cd api/ && APISIX_API_WORKDIR=$$PWD ENV=test go test -v -count=1 -race -cover -coverprofile=coverage.txt -covermode=atomic ./... && go tool cover -html=coverage.txt -o coverage.html
 
 
 ### api-run:		Run the manager-api in develop mode

@@ -1,5 +1,5 @@
 ---
-title: Deploy with Docker
+title: Rebuild Docker image
 ---
 
 <!--

@@ -24,7 +24,7 @@ export default {
   'component.plugin.pluginTemplate.tip2':
     '2. The same plugin in the plugin template will override one in the plugins.',
   'component.plugin.enable': 'Enable',
-  'component.plugin.disable': 'Disable',
+  'component.plugin.disable': 'Edit',
   'component.plugin.authentication': 'Authentication',
   'component.plugin.security': 'Security',
   'component.plugin.traffic': 'Traffic Control',
@@ -52,8 +52,13 @@ export default {
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':
     'List of hostname to whitelist. The hostname can be started with * as a wildcard.',
+  'component.pluginForm.referer-restriction.blacklist.tooltip':
+    'List of hostname to blacklist. The hostname can be started with * as a wildcard.',
+  'component.pluginForm.referer-restriction.listEmpty.tooltip': 'List empty',
   'component.pluginForm.referer-restriction.bypass_missing.tooltip':
     'Whether to bypass the check when the Referer header is missing or malformed.',
+  'component.pluginForm.referer-restriction.message.tooltip':
+    'Message returned in case access is not allowed.',
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip':
@@ -73,6 +78,8 @@ export default {
   'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip':
     'address needs to contain schema: http or https, not URI part',
+  'component.pluginForm.proxy-mirror.sample_ratio.tooltip':
+    'the sample ratio that requests will be mirrored.',
 
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip':
@@ -81,22 +88,31 @@ export default {
     'the number of excessive concurrent requests (or connections) allowed to be delayed.',
   'component.pluginForm.limit-conn.default_conn_delay.tooltip':
     'the latency seconds of request when concurrent requests exceeding conn but below (conn + burst).',
+  'component.pluginForm.limit-conn.key_type.tooltip':
+    'The key type, support: "var" (single var) and "var_combination" (combine var)',
   'component.pluginForm.limit-conn.key.tooltip':
-    'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests. Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
+    'to limit the concurrency level. For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests.',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
     'returned when the request exceeds conn + burst will be rejected.',
+  'component.pluginForm.limit-conn.rejected_msg.tooltip':
+    'the response body returned when the request exceeds conn + burst will be rejected.',
   'component.pluginForm.limit-conn.only_use_default_delay.tooltip':
     'enable the strict mode of the latency seconds. If you set this option to true, it will run strictly according to the latency seconds you set without additional calculation logic.',
+  'component.pluginForm.limit-conn.allow_degradation.tooltip':
+    'Whether to enable plugin degradation when the limit-conn function is temporarily unavailable. Allow requests to continue when the value is set to true, default false.',
 
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip':
     'The specified request rate (number per second) threshold. Requests exceeding this rate (and below burst) will get delayed to conform to the rate.',
   'component.pluginForm.limit-req.burst.tooltip':
     'The number of excessive requests per second allowed to be delayed. Requests exceeding this hard limit will get rejected immediately.',
-  'component.pluginForm.limit-req.key.tooltip':
-    'The user specified key to limit the rate, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
+  'component.pluginForm.limit-req.key_type.tooltip':
+    'The key type, support: "var" (single var) and "var_combination" (combine var)',
+  'component.pluginForm.limit-req.key.tooltip': 'The user specified key to limit the rate.',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected.',
+  'component.pluginForm.limit-req.rejected_msg.tooltip':
+    'The response body returned when the request exceeds the threshold is rejected.',
   'component.pluginForm.limit-req.nodelay.tooltip':
     'If nodelay flag is true, bursted requests will not get delayed',
 
@@ -109,12 +125,21 @@ export default {
   'component.pluginForm.limit-count.count.tooltip': 'The specified number of requests threshold.',
   'component.pluginForm.limit-count.time_window.tooltip':
     'The time window in seconds before the request count is reset.',
-  'component.pluginForm.limit-count.key.tooltip':
-    'The user specified key to limit the count, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username) and "service_id".',
+  'component.pluginForm.limit-count.key_type.tooltip':
+    'The key type, support: "var" (single var) and "var_combination" (combine var)',
+  'component.pluginForm.limit-count.key.tooltip': 'The user specified key to limit the count.',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected, default 503.',
+  'component.pluginForm.limit-count.rejected_msg.tooltip':
+    'The response body returned when the request exceeds the threshold is rejected.',
   'component.pluginForm.limit-count.policy.tooltip':
     'The rate-limiting policies to use for retrieving and incrementing the limits. Available values are local(the counters will be stored locally in-memory on the node) and redis(counters are stored on a Redis server and will be shared across the nodes, usually use it to do the global speed limit) and redis-cluster(the same function as redis, only use Redis cluster pattern).',
+  'component.pluginForm.limit-count.allow_degradation.tooltip':
+    'Whether to enable plugin degradation when the limit-count function is temporarily unavailable(e.g. redis timeout). Allow requests to continue when the value is set to true',
+  'component.pluginForm.limit-count.show_limit_quota_header.tooltip':
+    'Whether show X-RateLimit-Limit and X-RateLimit-Remaining (which mean the total number of requests and the remaining number of requests that can be sent) in the response header',
+  'component.pluginForm.limit-count.group.tooltip':
+    'Route configured with the same group will share the same counter',
   'component.pluginForm.limit-count.redis_host.tooltip':
     'When using the redis policy, this property specifies the address of the Redis server.',
   'component.pluginForm.limit-count.redis_port.tooltip':

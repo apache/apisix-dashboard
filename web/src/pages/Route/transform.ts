@@ -23,11 +23,15 @@ import { convertToFormData } from '@/components/Upstream/service';
 export const transformProxyRewrite2Plugin = (
   data: RouteModule.ProxyRewrite,
 ): RouteModule.ProxyRewrite => {
-  let omitFieldsList: string[] = ['kvHeaders'];
+  const omitFieldsList: string[] = ['kvHeaders'];
   let headers: Record<string, string> = {};
 
   if (data.scheme !== 'http' && data.scheme !== 'https') {
-    omitFieldsList = [...omitFieldsList, 'scheme'];
+    omitFieldsList.push('scheme');
+  }
+
+  if (data.method === '') {
+    omitFieldsList.push('method');
   }
 
   (data.kvHeaders || []).forEach((kvHeader) => {
@@ -84,6 +88,7 @@ const transformProxyRewrite2Formdata = (pluginsData: any) => {
         case 'uri':
         case 'regex_uri':
         case 'host':
+        case 'method':
           proxyRewriteData[key] = pluginsData[key];
           break;
         case 'headers':
@@ -148,8 +153,8 @@ export const transformStepData = ({
     labels,
     ...step3DataCloned,
     vars: advancedMatchingRules.map((rule) => {
-      const { operator, position, name, value } = rule;
-      let key = '';
+      const { reverse, operator, position, name, value } = rule;
+      let key: string;
       switch (position) {
         case 'cookie':
           key = `cookie_${name}`;
@@ -160,6 +165,9 @@ export const transformStepData = ({
         case 'arg':
           key = `arg_${name}`;
           break;
+        case 'post_arg':
+          key = `post_arg_${name}`;
+          break;
         default:
           key = `${name}`;
       }
@@ -167,7 +175,7 @@ export const transformStepData = ({
       if (operator === 'IN') {
         finalValue = JSON.parse(value as string);
       }
-      return [key, operator, finalValue];
+      return reverse ? [key, '!', operator, finalValue] : [key, operator, finalValue];
     }),
     // @ts-ignore
     methods: form1Data.methods.includes('ALL') ? [] : form1Data.methods,
@@ -266,23 +274,27 @@ export const transformStepData = ({
   ]);
 };
 
-const transformVarsToRules = (
-  data: [string, RouteModule.Operator, string | any[]][] = [],
-): RouteModule.MatchingRule[] =>
-  data.map(([key, operator, value]) => {
-    let position = '';
-    let name = '';
-    const regex = new RegExp('^(cookie|http|arg)_.+');
+const transformVarsToRules = (data: RouteModule.VarTuple[] = []): RouteModule.MatchingRule[] =>
+  data.map((varTuple) => {
+    const key = varTuple[0];
+    const reverse = varTuple[1] === '!';
+    const operator = varTuple[1] === '!' ? varTuple[2] : varTuple[1];
+    const value = varTuple[varTuple.length - 1];
+
+    let position: string;
+    let name: string;
+    const regex = new RegExp('^(cookie|http|arg|post_arg)_.+');
     if (regex.test(key)) {
-      [, position, name] = key.split(/^(cookie|http|arg)_/);
-    }else {
-      position = "buildin";
+      [, position, name] = key.split(/^(cookie|http|arg|post_arg)_/);
+    } else {
+      position = 'buildin';
       name = key;
     }
     return {
       position: position as RouteModule.VarPosition,
       name,
       value: typeof value === 'object' ? JSON.stringify(value) : value,
+      reverse,
       operator,
       key: Math.random().toString(36).slice(2),
     };
@@ -306,6 +318,7 @@ export const transformUpstreamNodes = (
 export const transformRouteData = (data: RouteModule.Body) => {
   const {
     name,
+    id,
     desc,
     labels = {},
     methods = [],
@@ -326,6 +339,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
+    id,
     desc,
     status,
     hosts: hosts || (host && [host]) || [''],

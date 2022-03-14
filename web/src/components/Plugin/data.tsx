@@ -224,4 +224,49 @@ export const PLUGIN_LIST = {
     type: PluginType.other,
     hidden: true,
   },
+  'authz-casbin': {
+    type: PluginType.authentication,
+  },
+  'ldap-auth': {
+    type: PluginType.authentication,
+  },
+  datadog: {
+    type: PluginType.observability,
+  },
+  'skywalking-logger': {
+    type: PluginType.observability,
+  },
+  'azure-functions': {
+    type: PluginType.serverless,
+  },
+  'ua-restriction': {
+    type: PluginType.security,
+  },
+  'splunk-hec-logging': {
+    type: PluginType.observability,
+  },
+  'rocketmq-logger': {
+    type: PluginType.observability,
+  },
+  'proxy-control': {
+    type: PluginType.other,
+  },
+  openwhisk: {
+    type: PluginType.serverless,
+  },
+  opa: {
+    type: PluginType.authentication,
+  },
+  'grpc-web': {
+    type: PluginType.other,
+  },
+  'google-cloud-logging': {
+    type: PluginType.observability,
+  },
+  'forward-auth': {
+    type: PluginType.authentication,
+  },
+  'aws-lambda': {
+    type: PluginType.serverless,
+  },
 };

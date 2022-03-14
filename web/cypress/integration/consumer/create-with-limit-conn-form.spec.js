@@ -33,7 +33,6 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     only_use_default_delay: '#only_use_default_delay',
     key: '#key',
     rejected_code: '#rejected_code',
-    title: '[title="remote_addr"]',
     monacoViewZones: '.view-zones',
   };
 
@@ -91,11 +90,7 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     cy.get(selector.burst).type(data.burst);
     cy.get(selector.default_conn_delay).type(data.default_conn_delay);
     cy.get(selector.only_use_default_delay).click();
-    cy.get(selector.key).click();
-    cy.get(selector.selectDropdown).should('be.visible');
-    cy.get(selector.title).click({
-      timeout: 5000,
-    });
+    cy.get(selector.key).type(data.key);
     cy.get(selector.disabledSwitcher).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({

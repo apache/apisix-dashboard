@@ -24,9 +24,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: setup go
-        uses: actions/setup-go@v2.1.4
+        uses: actions/setup-go@v2.1.5
         with:
-          go-version: "1.13"
+          go-version: "1.15"
           submodules: recursive
 
       - uses: actions/cache@v2
@@ -70,11 +70,21 @@ jobs:
           --set *.cache-from=type=local,src=/tmp/.buildx-cache \
           --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
+      - name: build and start grpc_server_example
+        working-directory: ./api/test/docker
+        run: |
+          wget https://github.com/api7/grpc_server_example/archive/refs/tags/20210819.tar.gz
+          tar -xzvf 20210819.tar.gz && cd grpc_server_example-20210819
+          docker build -t grpc_server_example:latest .
+
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |
           docker-compose up -d
-          sleep 5
+
+          # wait for services ready
+          ../shell/wait_for_services.sh
+
           docker logs docker_managerapi_1
           docker logs docker_apisix_1
 
@@ -82,36 +92,11 @@ jobs:
         working-directory: ./api/test/e2e
         run: go test -v
 
-      - name: re-generate json schema
-        working-directory: ./api/
-        run: |
-          curl 127.0.0.1:9090/v1/schema > ./conf/schema.json
-
       - name: stop docker compose
         working-directory: ./api/test/docker
         run: |
           docker-compose down
           sleep 10
-
-      - name: re-build docker images
-        working-directory: ./api/test/docker
-        continue-on-error: true
-        run: |
-          docker buildx bake --load \
-          -f docker-compose.yaml \
-          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
-          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
-
-      - name: re-run docker compose
-        working-directory: ./api/test/docker
-        run: |
-          docker-compose up -d --build
-          sleep 5
-          docker logs docker_managerapi_1
-
-      - name: run test for plugin skywalking
-        working-directory: ./api/test/e2e/skywalking
-        run: go test -v
 
       - name: output test coverage
         working-directory: ./api/test/testdata
@@ -130,9 +115,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: setup go
-        uses: actions/setup-go@v2.1.4
+        uses: actions/setup-go@v2.1.5
         with:
-          go-version: "1.13"
+          go-version: "1.17"
 
       - uses: docker/setup-buildx-action@v1
 
@@ -165,6 +150,13 @@ jobs:
           --set *.cache-from=type=local,src=/tmp/.buildx-cache \
           --set *.cache-to=type=local,dest=/tmp/.buildx-cache
 
+      - name: build and start grpc_server_example
+        working-directory: ./api/test/docker
+        run: |
+          wget https://github.com/api7/grpc_server_example/archive/refs/tags/20210819.tar.gz
+          tar -xzvf 20210819.tar.gz && cd grpc_server_example-20210819
+          docker build -t grpc_server_example:latest .
+
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |
@@ -173,7 +165,7 @@ jobs:
           docker logs docker_managerapi_1
 
       - name: install ginkgo cli
-        run: go get github.com/onsi/ginkgo/ginkgo
+        run: go install github.com/onsi/ginkgo/ginkgo@v1.16.5
 
       - name: run test
         working-directory: ./api/test/e2enew

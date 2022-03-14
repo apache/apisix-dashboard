@@ -58,14 +58,6 @@ func (info *BaseInfo) KeyCompat(key string) {
 	}
 }
 
-type BaseInfoSetter interface {
-	GetBaseInfo() *BaseInfo
-}
-
-type BaseInfoGetter interface {
-	GetBaseInfo() *BaseInfo
-}
-
 type Status uint8
 
 // swagger:model Route
@@ -109,6 +101,7 @@ type Node struct {
 	Port     int         `json:"port,omitempty"`
 	Weight   int         `json:"weight"`
 	Metadata interface{} `json:"metadata,omitempty"`
+	Priority int         `json:"priority,omitempty"`
 }
 
 type K8sInfo struct {
@@ -163,14 +156,14 @@ type UpstreamTLS struct {
 }
 
 type UpstreamKeepalivePool struct {
-	IdleTimeout TimeoutValue `json:"idle_timeout,omitempty"`
-	Requests    int          `json:"requests,omitempty"`
-	Size        int          `json:"size"`
+	IdleTimeout *TimeoutValue `json:"idle_timeout,omitempty"`
+	Requests    int           `json:"requests,omitempty"`
+	Size        int           `json:"size"`
 }
 
 type UpstreamDef struct {
 	Nodes         interface{}            `json:"nodes,omitempty"`
-	Retries       int                    `json:"retries,omitempty"`
+	Retries       *int                   `json:"retries,omitempty"`
 	Timeout       *Timeout               `json:"timeout,omitempty"`
 	Type          string                 `json:"type,omitempty"`
 	Checks        interface{}            `json:"checks,omitempty"`
@@ -254,6 +247,7 @@ type Service struct {
 	Script          string                 `json:"script,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
 	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
+	Hosts           []string               `json:"hosts,omitempty"`
 }
 
 type Script struct {
@@ -291,6 +285,7 @@ type PluginConfig struct {
 	Labels  map[string]string      `json:"labels,omitempty"`
 }
 
+// swagger:model Overview
 type Overview struct {
 	RouteCnt         int64         `json:"router_cnt,omitempty"`
 	OnlineRouterCnt  int64         `json:"online_router_cnt,omitempty"`
@@ -300,4 +295,24 @@ type Overview struct {
 	DashboardVersion string        `json:"dashboard_version,omitempty"`
 	GatewayInfo      []*ServerInfo `json:"gateway_info,omitempty"`
 	Plugins          []string      `json:"plugins,omitempty"`
+}
+
+// swagger:model Proto
+type Proto struct {
+	BaseInfo
+	Desc    string `json:"desc,omitempty"`
+	Content string `json:"content"`
+}
+
+// swagger:model StreamRoute
+type StreamRoute struct {
+	BaseInfo
+	Desc       string                 `json:"desc,omitempty"`
+	RemoteAddr string                 `json:"remote_addr,omitempty"`
+	ServerAddr string                 `json:"server_addr,omitempty"`
+	ServerPort int                    `json:"server_port,omitempty"`
+	SNI        string                 `json:"sni,omitempty"`
+	Upstream   *UpstreamDef           `json:"upstream,omitempty"`
+	UpstreamID interface{}            `json:"upstream_id,omitempty"`
+	Plugins    map[string]interface{} `json:"plugins,omitempty"`
 }

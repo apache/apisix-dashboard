@@ -23,7 +23,7 @@ export default {
     '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
   'component.plugin.enable': '启用',
-  'component.plugin.disable': '禁用',
+  'component.plugin.disable': '编辑',
   'component.plugin.authentication': '身份验证',
   'component.plugin.security': '安全防护',
   'component.plugin.traffic': '流量控制',
@@ -50,9 +50,13 @@ export default {
 
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':
-    "域名列表。域名开头可以用'*'作为通配符。",
+    "白名单域名列表。域名开头可以用'*'作为通配符。",
+  'component.pluginForm.referer-restriction.blacklist.tooltip':
+    "黑名单域名列表。域名开头可以用'*'作为通配符。",
+  'component.pluginForm.referer-restriction.listEmpty.tooltip': '列表为空',
   'component.pluginForm.referer-restriction.bypass_missing.tooltip':
     '当 Referer 不存在或格式有误时，是否绕过检查。',
+  'component.pluginForm.referer-restriction.message.tooltip': '在未允许访问的情况下返回的信息。',
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip': '不健康返回错误码。',
@@ -69,6 +73,7 @@ export default {
   'component.pluginForm.proxy-mirror.host.extra': '例如：http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip':
     '地址中需要包含 schema ：http或https，不能包含 URI 部分',
+  'component.pluginForm.proxy-mirror.sample_ratio.tooltip': '镜像请求采样率',
 
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip':
@@ -76,22 +81,30 @@ export default {
   'component.pluginForm.limit-conn.burst.tooltip': '允许被延迟处理的并发请求数。',
   'component.pluginForm.limit-conn.default_conn_delay.tooltip':
     '默认的典型连接（或请求）的处理延迟时间。',
+  'component.pluginForm.limit-conn.key_type.tooltip':
+    '关键字类型，支持：var（单变量）和 var_combination（组合变量）',
   'component.pluginForm.limit-conn.key.tooltip':
-    '用户指定的限制并发级别的关键字，可以是客户端 IP 或服务端 IP。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名的并发性。 否则，我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端用太多的并行连接或请求淹没我们的服务。当前接受的 key 有："remote_addr"（客户端 IP 地址）, "server_addr"（服务端 IP 地址）, 请求头中的"X-Forwarded-For" 或 "X-Real-IP", "consumer_name"（consumer 的 username）。',
+    '用户指定的限制并发级别的关键字，可以是客户端 IP 或服务端 IP。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名的并发性。 否则，我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端用太多的并行连接或请求淹没我们的服务。',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
     '当请求超过 conn + burst 这个阈值时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-conn.rejected_msg.tooltip':
+    '当请求超过 conn + burst 这个阈值时，返回的响应体。',
   'component.pluginForm.limit-conn.only_use_default_delay.tooltip':
     '延迟时间的严格模式。 如果设置为true的话，将会严格按照设置的时间来进行延迟',
+  'component.pluginForm.limit-conn.allow_degradation.tooltip':
+    '当插件功能临时不可用时是否允许请求继续。当值设置为 true 时则自动允许请求继续，默认值是 false。',
 
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip':
     '指定的请求速率（以秒为单位），请求速率超过 rate 但没有超过 （rate + brust）的请求会被加上延时。',
   'component.pluginForm.limit-req.burst.tooltip':
     '请求速率超过（rate + brust）的请求会被直接拒绝。',
-  'component.pluginForm.limit-req.key.tooltip':
-    '用来做请求计数的依据，当前接受的 key 有："remote_addr"(客户端IP地址), "server_addr"(服务端 IP 地址), 请求头中的"X-Forwarded-For" 或 "X-Real-IP"，"consumer_name"(consumer 的 username).',
+  'component.pluginForm.limit-req.key_type.tooltip':
+    '关键字类型，支持：var（单变量）和 var_combination（组合变量）',
+  'component.pluginForm.limit-req.key.tooltip': '用来做请求计数的依据',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     '当请求超过阈值被拒绝时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-req.rejected_msg.tooltip': '当请求超过阈值被拒绝时，返回的响应体。',
   'component.pluginForm.limit-req.nodelay.tooltip': '开启后突发的请求不会延迟',
 
   'component.plugin.form': '表单',
@@ -103,12 +116,21 @@ export default {
   'component.pluginForm.limit-count.count.tooltip': '指定时间窗口内的请求数量阈值。',
   'component.pluginForm.limit-count.time_window.tooltip':
     '时间窗口的大小（以秒为单位），超过这个时间就会重置。',
+  'component.pluginForm.limit-count.key_type.tooltip':
+    '关键字类型，支持：var（单变量）和 var_combination（组合变量）',
   'component.pluginForm.limit-count.key.tooltip':
-    '用来做请求计数的有效值。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名规定时间内的请求次数。我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端规定时间内多次的连接我们的服务。当前接受的 key 有："remote_addr"（客户端 IP 地址）, "server_addr"（服务端 IP 地址）, 请求头中的"X-Forwarded-For" 或 "X-Real-IP", "consumer_name"（consumer 的 username）, "service_id" 。',
+    '用来做请求计数的有效值。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名规定时间内的请求次数。我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端规定时间内多次的连接我们的服务。',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     '当请求超过阈值被拒绝时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-count.rejected_msg.tooltip': '当请求超过阈值被拒绝时，返回的响应体。',
   'component.pluginForm.limit-count.policy.tooltip':
     '用于检索和增加限制的速率限制策略。可选的值有：local(计数器被以内存方式保存在节点本地，默认选项) 和 redis(计数器保存在 Redis 服务节点上，从而可以跨节点共享结果，通常用它来完成全局限速)；以及redis-cluster，跟 redis 功能一样，只是使用 redis 集群方式。',
+  'component.pluginForm.limit-count.allow_degradation.tooltip':
+    '当限流插件功能临时不可用时（例如，Redis 超时）是否允许请求继续。当值设置为 true 时则自动允许请求继续',
+  'component.pluginForm.limit-count.show_limit_quota_header.tooltip':
+    '是否在响应头中显示 X-RateLimit-Limit 和 X-RateLimit-Remaining （限制的总请求数和剩余还可以发送的请求数）',
+  'component.pluginForm.limit-count.group.tooltip':
+    '配置同样的 group 的 Route 将共享同样的限流计数器',
   'component.pluginForm.limit-count.redis_host.tooltip':
     '当使用 redis 限速策略时，该属性是 Redis 服务节点的地址。',
   'component.pluginForm.limit-count.redis_port.tooltip':
