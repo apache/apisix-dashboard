@@ -44,28 +44,28 @@ This release contains some features and bugfixes, and all the existing functiona
 
 ### Core
 
-feat: add data loader framework [#2371](https://github.com/apache/apisix-dashboard/pull/2371)
-feat: support protobuf on Web [#2320](https://github.com/apache/apisix-dashboard/pull/2320)
-feat: basic support Apache APISIX 2.12.1 [#2315](https://github.com/apache/apisix-dashboard/pull/2315)
-feat: Add more fields to limit-count plugin [#2322](https://github.com/apache/apisix-dashboard/pull/2322)
-feat: support APISIX_PROFILE for env-specific configuration [#2293](https://github.com/apache/apisix-dashboard/pull/2293)
-feat(upstream): add upstream priority field [#2271](https://github.com/apache/apisix-dashboard/pull/2271)
-feat(route): show route id in list and edit views [#2269](https://github.com/apache/apisix-dashboard/pull/2269)
-feat(route): remove key-auth plugin tip [#2261](https://github.com/apache/apisix-dashboard/pull/2261)
-feat: add rejected_msg field to limit-count plugin form [#2328](https://github.com/apache/apisix-dashboard/pull/2328)
-feat: add rejected_msg field to limit-req plugin form [#2312](https://github.com/apache/apisix-dashboard/pull/2312)
-chore: Create route form optimization [#2336](https://github.com/apache/apisix-dashboard/pull/2336)
-chore: add loading in route page [#2287](https://github.com/apache/apisix-dashboard/pull/2287)
-chore(upstream): remove default port for upstream health check [#2278](https://github.com/apache/apisix-dashboard/pull/2278)
-style: add ellipsis for route table [#2317](https://github.com/apache/apisix-dashboard/pull/2317)
+- feat: add data loader framework [#2371](https://github.com/apache/apisix-dashboard/pull/2371)
+- feat: support protobuf on Web [#2320](https://github.com/apache/apisix-dashboard/pull/2320)
+- feat: basic support Apache APISIX 2.12.1 [#2315](https://github.com/apache/apisix-dashboard/pull/2315)
+- feat: Add more fields to limit-count plugin [#2322](https://github.com/apache/apisix-dashboard/pull/2322)
+- feat: support APISIX_PROFILE for env-specific configuration [#2293](https://github.com/apache/apisix-dashboard/pull/2293)
+- feat(upstream): add upstream priority field [#2271](https://github.com/apache/apisix-dashboard/pull/2271)
+- feat(route): show route id in list and edit views [#2269](https://github.com/apache/apisix-dashboard/pull/2269)
+- feat(route): remove key-auth plugin tip [#2261](https://github.com/apache/apisix-dashboard/pull/2261)
+- feat: add rejected_msg field to limit-count plugin form [#2328](https://github.com/apache/apisix-dashboard/pull/2328)
+- feat: add rejected_msg field to limit-req plugin form [#2312](https://github.com/apache/apisix-dashboard/pull/2312)
+- chore: Create route form optimization [#2336](https://github.com/apache/apisix-dashboard/pull/2336)
+- chore: add loading in route page [#2287](https://github.com/apache/apisix-dashboard/pull/2287)
+- chore(upstream): remove default port for upstream health check [#2278](https://github.com/apache/apisix-dashboard/pull/2278)
+- style: add ellipsis for route table [#2317](https://github.com/apache/apisix-dashboard/pull/2317)
 
 ### Bugfix
 
-fix: ! (reverse) operator not handled correctly [#2364](https://github.com/apache/apisix-dashboard/pull/2364)
-fix: idle_timeout filed to support set zero value [#2296](https://github.com/apache/apisix-dashboard/pull/2296)
-fix: retries field to support zero value [#2298](https://github.com/apache/apisix-dashboard/pull/2298)
-fix: get current dir error [#2283](https://github.com/apache/apisix-dashboard/pull/2283)
-style: remove extra margin value [#2300](https://github.com/apache/apisix-dashboard/pull/2300)
+- fix: ! (reverse) operator not handled correctly [#2364](https://github.com/apache/apisix-dashboard/pull/2364)
+- fix: idle_timeout filed to support set zero value [#2296](https://github.com/apache/apisix-dashboard/pull/2296)
+- fix: retries field to support zero value [#2298](https://github.com/apache/apisix-dashboard/pull/2298)
+- fix: get current dir error [#2283](https://github.com/apache/apisix-dashboard/pull/2283)
+- style: remove extra margin value [#2300](https://github.com/apache/apisix-dashboard/pull/2300)
 
 # 2.10.1
 
