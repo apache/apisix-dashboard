@@ -16,14 +16,37 @@
  */
 package filter
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+
+	"github.com/apisix/manager-api/internal/conf"
+)
 
 func CORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Authorization")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
+		if conf.SecurityConf.AllowOrigin != "" {
+			c.Writer.Header().Set("Access-Control-Allow-Origin", conf.SecurityConf.AllowOrigin)
+		}
+
+		if conf.SecurityConf.AllowHeaders != "" {
+			c.Writer.Header().Set("Access-Control-Allow-Headers", conf.SecurityConf.AllowHeaders)
+		}
+
+		if conf.SecurityConf.AllowMethods != "" {
+			c.Writer.Header().Set("Access-Control-Allow-Methods", conf.SecurityConf.AllowMethods)
+		}
+
+		if conf.SecurityConf.AllowCredentials != "" {
+			c.Writer.Header().Set("Access-Control-Allow-Credentials", conf.SecurityConf.AllowCredentials)
+		}
+
+		if conf.SecurityConf.XFrameOptions != "" {
+			c.Writer.Header().Set("X-Frame-Options", conf.SecurityConf.XFrameOptions)
+		}
+
+		if conf.SecurityConf.ContentSecurityPolicy != "" {
+			c.Writer.Header().Set("Content-Security-Policy", conf.SecurityConf.ContentSecurityPolicy)
+		}
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return
