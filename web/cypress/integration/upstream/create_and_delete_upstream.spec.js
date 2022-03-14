@@ -55,7 +55,7 @@ context('Create and Delete Upstream', () => {
     weight0: '2',
     port1: '7001',
     weight1: '2',
-    url_input: 'www.baidu.com/test/asd',
+    url_input: '11.11.11.11/test/asd',
   };
 
   beforeEach(() => {

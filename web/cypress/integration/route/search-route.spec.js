@@ -64,7 +64,7 @@ context('Create and Search Route', () => {
     desc2: 'desc2',
     value0: 'value0',
     label0_value0: 'label0:value0',
-    url_input: 'localhost:8000/test/asd',
+    url_input: '11.11.11.11/test/asd',
   };
 
   beforeEach(() => {
