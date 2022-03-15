@@ -74,8 +74,9 @@ context('Batch Create Service And Delete Service', () => {
   it('should delete the service', () => {
     cy.visit('/');
     cy.contains('Service').click();
+    cy.wait(500);
     cy.get(selector.page_item).click();
-    cy.wait(1000);
+    cy.wait(500);
     deleteService();
     cy.url().should('contains', '/service/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((service) => {

@@ -72,8 +72,9 @@ context('Batch Create Upstream And Delete Upstream', () => {
   it('should delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
+    cy.wait(500);
     cy.get(selector.page_item).click();
-    cy.wait(1000);
+    cy.wait(500);
     deleteUpstream();
     cy.url().should('contains', '/upstream/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((upstream) => {

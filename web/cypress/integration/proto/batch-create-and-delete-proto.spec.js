@@ -58,8 +58,9 @@ context('Batch Create Proto And Delete Proto', () => {
   it('should delete the proto', () => {
     cy.visit('/');
     cy.contains('Proto').click();
-    cy.wait(1000);
+    cy.wait(500);
     cy.get(selector.page_item).click();
+    cy.wait(500);
     deleteProto();
     cy.url().should('contains', '/proto/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((proto) => {

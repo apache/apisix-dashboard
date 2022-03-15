@@ -72,8 +72,9 @@ context('Batch Create And Delete Consumer', () => {
   it('should delete the consumer', () => {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(1000);
+    cy.wait(500);
     cy.get(selector.page_item).click();
+    cy.wait(500);
     deleteConsumer(data.consumerName + 10);
     cy.url().should('contains', '/consumer/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((consumer) => {

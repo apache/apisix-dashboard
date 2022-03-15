@@ -87,8 +87,9 @@ context('Batch Create Route And Delete Route', () => {
   it('should delete the route', () => {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(500);
     cy.get(selector.page_item).click();
-    cy.wait(1000);
+    cy.wait(500);
     deleteRoute();
     cy.url().should('contains', '/routes/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((route) => {
