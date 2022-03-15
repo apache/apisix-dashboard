@@ -22,6 +22,7 @@ import { history, useIntl } from 'umi';
 import ActionBar from '@/components/ActionBar';
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
+import { omit } from 'lodash';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -47,10 +48,9 @@ const Page: React.FC = (props) => {
           const host = newData?.checks?.active.host;
           const http_path = newData?.checks?.active.http_path;
           const url = host + http_path;
-          const { active: activeData } = newData.checks;
-          delete activeData.host;
-          delete activeData.http_path;
-          activeData.url = url;
+          newData.checks.active.url = url;
+          newData.checks.active = omit(newData.checks.active, 'host');
+          newData.checks.active = omit(newData.checks.active, 'http_path');
         }
         form1.setFieldsValue(newData);
       });
@@ -73,7 +73,7 @@ const Page: React.FC = (props) => {
         const newData = data;
         newData.checks.active.host = hostData;
         newData.checks.active.http_path = pathData;
-        delete newData.checks.active.url;
+        newData.checks.active = omit(newData.checks.active, 'url');
       }
 
       const { id } = (props as any).match.params;
