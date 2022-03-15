@@ -39,8 +39,8 @@ context('Batch Create And Delete Consumer', () => {
     deleteConsumerSuccess: 'Delete Consumer Successfully',
   };
 
-  const deleteConsumer = (consumerName) => {
-    cy.contains(consumerName).siblings().contains('Delete').click({ force: true });
+  const deleteConsumer = () => {
+    cy.contains('Delete').click({ force: true });
     cy.get(selector.popoper)
       .not(selector.popoprerHiden)
       .contains('Confirm')
@@ -65,7 +65,7 @@ context('Batch Create And Delete Consumer', () => {
           },
         },
       };
-      cy.requestWithToken({ method: 'PUT', payload, url: '/apisix/admin/consumers', delay: 800 });
+      cy.requestWithToken({ method: 'PUT', payload, url: '/apisix/admin/consumers' });
     });
   });
 
@@ -79,10 +79,11 @@ context('Batch Create And Delete Consumer', () => {
     cy.get(selector.table_row).should((consumer) => {
       expect(consumer).to.have.length(10);
     });
-    Array.from({ length: 10 }).forEach((value, key) => {
+
+    cy.get(`.ant-table-cell:contains(${data.consumerName})`).each((elem) => {
       cy.requestWithToken({
         method: 'DELETE',
-        url: `/apisix/admin/consumers/${data.consumerName + (9 - key)}`,
+        url: `/apisix/admin/consumers/${elem.text()}`,
       });
     });
   });

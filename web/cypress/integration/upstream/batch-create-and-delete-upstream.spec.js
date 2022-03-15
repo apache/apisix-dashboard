@@ -33,8 +33,8 @@ context('Batch Create Upstream And Delete Upstream', () => {
     deleteUpstreamSuccess: 'Delete Upstream Successfully',
   };
 
-  const deleteUpstream = (upstreamName) => {
-    cy.contains(upstreamName).siblings().contains('Delete').click();
+  const deleteUpstream = () => {
+    cy.contains('upstreamName').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
     cy.get('.ant-notification-close-x').click();
@@ -72,19 +72,19 @@ context('Batch Create Upstream And Delete Upstream', () => {
   it('should delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(1000);
     cy.get(selector.page_item).click();
-    deleteUpstream('upstreamName10');
+    cy.wait(1000);
+    deleteUpstream();
     cy.url().should('contains', '/upstream/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((upstream) => {
       expect(upstream).to.have.length(10);
     });
-    Array.from({ length: 10 }).forEach((value, key) => {
-      cy.contains(`upstreamName${9 - key}`)
-        .prev()
-        .then(function ($elem) {
-          cy.requestWithToken({ method: 'DELETE', url: `/apisix/admin/upstreams/${$elem.text()}` });
-        });
+
+    cy.get('.ant-table-cell:contains(upstreamName)').each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/upstreams/${elem.prev().text()}`,
+      });
     });
   });
 });

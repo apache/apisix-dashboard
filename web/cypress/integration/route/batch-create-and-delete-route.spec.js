@@ -32,8 +32,8 @@ context('Batch Create Route And Delete Route', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
   };
 
-  const deleteRoute = (routeName) => {
-    cy.contains(routeName).siblings().contains('More').click();
+  const deleteRoute = () => {
+    cy.contains('routeName').siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
       .should('be.visible')
@@ -87,19 +87,19 @@ context('Batch Create Route And Delete Route', () => {
   it('should delete the route', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(1000);
     cy.get(selector.page_item).click();
-    deleteRoute('routeName10');
+    cy.wait(1000);
+    deleteRoute();
     cy.url().should('contains', '/routes/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((route) => {
       expect(route).to.have.length(10);
     });
-    Array.from({ length: 10 }).forEach((value, key) => {
-      cy.contains(`routeName${9 - key}`)
-        .next()
-        .then(function ($elem) {
-          cy.requestWithToken({ method: 'DELETE', url: `/apisix/admin/routes/${$elem.text()}` });
-        });
+
+    cy.get('.ant-table-cell:contains(routeName)').each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/routes/${elem.next().text()}`,
+      });
     });
   });
 });

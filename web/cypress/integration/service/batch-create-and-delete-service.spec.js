@@ -32,8 +32,8 @@ context('Batch Create Service And Delete Service', () => {
     deleteServiceSuccess: 'Delete Service Successfully',
   };
 
-  const deleteService = (serviceName) => {
-    cy.contains(serviceName).siblings().contains('Delete').click();
+  const deleteService = () => {
+    cy.contains('serviceName').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
     cy.get(selector.notificationCloseIcon).click();
@@ -74,19 +74,19 @@ context('Batch Create Service And Delete Service', () => {
   it('should delete the service', () => {
     cy.visit('/');
     cy.contains('Service').click();
-    cy.wait(1000);
     cy.get(selector.page_item).click();
-    deleteService('serviceName10');
+    cy.wait(1000);
+    deleteService();
     cy.url().should('contains', '/service/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((service) => {
       expect(service).to.have.length(10);
     });
-    Array.from({ length: 10 }).forEach((value, key) => {
-      cy.contains(`serviceName${9 - key}`)
-        .prev()
-        .then(function ($elem) {
-          cy.requestWithToken({ method: 'DELETE', url: `/apisix/admin/services/${$elem.text()}` });
-        });
+
+    cy.get('.ant-table-cell:contains(serviceName)').each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/services/${elem.prev().text()}`,
+      });
     });
   });
 });

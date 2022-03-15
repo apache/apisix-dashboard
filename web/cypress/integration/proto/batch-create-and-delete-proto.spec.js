@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
-
 context('Batch Create Proto And Delete Proto', () => {
   const selector = {
     id: '#id',
@@ -33,9 +32,9 @@ context('Batch Create Proto And Delete Proto', () => {
     deleteProtoSuccess: 'Delete proto Successfully',
   };
 
-  const deleteProto = (protoId) => {
+  const deleteProto = () => {
     cy.wait(500);
-    cy.contains(protoId).siblings().contains('Delete').click();
+    cy.contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteProtoSuccess);
     cy.get(selector.notificationCloseIcon).click();
@@ -50,7 +49,7 @@ context('Batch Create Proto And Delete Proto', () => {
       const payload = {
         content: 'test',
         desc: '',
-        id: `id${key}`,
+        id: `protoId${key}`,
       };
       cy.requestWithToken({ method: 'POST', payload, url: '/apisix/admin/proto' });
     });
@@ -61,13 +60,17 @@ context('Batch Create Proto And Delete Proto', () => {
     cy.contains('Proto').click();
     cy.wait(1000);
     cy.get(selector.page_item).click();
-    deleteProto('id10');
+    deleteProto();
     cy.url().should('contains', '/proto/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((proto) => {
       expect(proto).to.have.length(10);
     });
-    Array.from({ length: 10 }).forEach((value, key) => {
-      cy.requestWithToken({ method: 'DELETE', url: `/apisix/admin/proto/id${9 - key}` });
+
+    cy.get('.ant-table-cell:contains(protoId)').each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/proto/${elem.text()}`,
+      });
     });
   });
 });
