@@ -52,22 +52,35 @@ context('Batch Create Route And Delete Route', () => {
   });
 
   it('should batch create eleven route', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
     Array.from({ length: 11 }).forEach((value, key) => {
-      cy.contains('Create').click();
-      cy.contains('Next').click().click();
-      cy.get(selector.name).type(`routeName${key}`);
-      cy.contains('Next').click().click();
-      cy.get(selector.nodes_0_host).type('127.0.0.1');
-      cy.contains('Next').click().click();
-      cy.contains('button', 'Submit').click();
-      cy.contains(data.submitSuccess);
-      cy.get(selector.notificationCloseIcon).click();
-      // back to route list page
-      cy.contains('Goto List').click();
-      cy.url().should('contains', 'routes/list');
+      const payload = {
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'],
+        priority: 0,
+        name: `routeName${key}`,
+        desc: '',
+        status: 1,
+        labels: {},
+        uri: '/*',
+        upstream: {
+          type: 'roundrobin',
+          pass_host: 'pass',
+          scheme: 'http',
+          timeout: {
+            connect: 6,
+            send: 6,
+            read: 6,
+          },
+          keepalive_pool: {
+            size: 320,
+            idle_timeout: 60,
+            requests: 1000,
+          },
+          nodes: {
+            '127.0.0.1': 1,
+          },
+        },
+      };
+      cy.requestWithToken({ method: 'POST', payload, url: '/apisix/admin/routes' });
     });
   });
 
@@ -82,7 +95,11 @@ context('Batch Create Route And Delete Route', () => {
       expect(route).to.have.length(10);
     });
     Array.from({ length: 10 }).forEach((value, key) => {
-      deleteRoute(`routeName${9 - key}`);
+      cy.contains(`routeName${9 - key}`)
+        .next()
+        .then(function ($elem) {
+          cy.requestWithToken({ method: 'DELETE', url: `/apisix/admin/routes/${$elem.text()}` });
+        });
     });
   });
 });

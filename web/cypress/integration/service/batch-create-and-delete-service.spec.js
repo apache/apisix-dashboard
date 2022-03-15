@@ -44,18 +44,30 @@ context('Batch Create Service And Delete Service', () => {
   });
 
   it('should batch create eleven service', () => {
-    cy.visit('/');
-    cy.contains('Service').click();
-
     Array.from({ length: 11 }).forEach((value, key) => {
-      cy.contains('Create').click();
-      cy.contains('Next').click().click();
-      cy.get(selector.name).type(`serviceName${key}`);
-      cy.get(selector.nodes_0_host).type('127.0.0.1');
-      cy.contains('Next').click().click();
-      cy.contains('button', 'Submit').click();
-      cy.get(selector.notification).should('contain', data.createServiceSuccess);
-      cy.get(selector.notificationCloseIcon).click();
+      const payload = {
+        name: `serviceName${key}`,
+        plugins: {},
+        upstream: {
+          type: 'roundrobin',
+          pass_host: 'pass',
+          scheme: 'http',
+          timeout: {
+            connect: 6,
+            send: 6,
+            read: 6,
+          },
+          keepalive_pool: {
+            size: 320,
+            idle_timeout: 60,
+            requests: 1000,
+          },
+          nodes: {
+            '127.0.0.1': 1,
+          },
+        },
+      };
+      cy.requestWithToken({ method: 'POST', payload, url: '/apisix/admin/services' });
     });
   });
 
@@ -70,7 +82,11 @@ context('Batch Create Service And Delete Service', () => {
       expect(service).to.have.length(10);
     });
     Array.from({ length: 10 }).forEach((value, key) => {
-      deleteService(`serviceName${9 - key}`);
+      cy.contains(`serviceName${9 - key}`)
+        .prev()
+        .then(function ($elem) {
+          cy.requestWithToken({ method: 'DELETE', url: `/apisix/admin/services/${$elem.text()}` });
+        });
     });
   });
 });

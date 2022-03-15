@@ -55,47 +55,17 @@ context('Batch Create And Delete Consumer', () => {
   });
 
   it('should batch create eleven consumer', () => {
-    cy.visit('/');
-    cy.contains('Consumer').click();
-
     Array.from({ length: 11 }).forEach((value, key) => {
-      cy.wait(500);
-      cy.contains('Create').click();
-      cy.get(selector.username).type(data.consumerName + key);
-      cy.contains('Next').click();
-
-      cy.contains('Next').click();
-      cy.get(selector.notification).should(
-        'contain',
-        'Please enable at least one of the following authentication plugin: basic-auth, hmac-auth, jwt-auth, key-auth, ldap-auth, wolf-rbac',
-      );
-      cy.get(selector.notificationCloseIcon).click().should('not.exist');
-
-      // plugin config
-      cy.contains(selector.pluginCard, 'key-auth').within(() => {
-        cy.contains('Enable').click({
-          force: true,
-        });
-      });
-      cy.focused(selector.drawer).should('exist');
-      cy.get(selector.disabledSwitcher).click();
-
-      // edit monaco
-      cy.get(selector.monacoViewZones).should('exist').click({
-        force: true,
-      });
-      cy.window().then((window) => {
-        window.monacoEditor.setValue(
-          JSON.stringify({
+      const payload = {
+        username: data.consumerName + key,
+        plugins: {
+          'key-auth': {
             key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
-      cy.contains('button', 'Next').click();
-      cy.contains('button', 'Submit').click();
-      cy.get(selector.notification).should('contain', data.createConsumerSuccess);
-      cy.get(selector.notificationCloseIcon).click();
+            disable: false,
+          },
+        },
+      };
+      cy.requestWithToken({ method: 'PUT', payload, url: '/apisix/admin/consumers', delay: 800 });
     });
   });
 
@@ -109,10 +79,11 @@ context('Batch Create And Delete Consumer', () => {
     cy.get(selector.table_row).should((consumer) => {
       expect(consumer).to.have.length(10);
     });
-    cy.wait(1000);
     Array.from({ length: 10 }).forEach((value, key) => {
-      deleteConsumer(data.consumerName + (9 - key));
-      console.log(9 - key);
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/consumers/${data.consumerName + (9 - key)}`,
+      });
     });
   });
 });

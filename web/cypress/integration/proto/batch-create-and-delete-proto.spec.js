@@ -46,21 +46,13 @@ context('Batch Create Proto And Delete Proto', () => {
   });
 
   it('should batch create eleven proto', () => {
-    cy.visit('/');
-    cy.contains('Proto').click();
-
-    Array.from({ length: 11 }).forEach((value, key) => {
-      cy.wait(500);
-      cy.contains('Create').click();
-      cy.get(selector.draw)
-        .should('be.visible')
-        .within(() => {
-          cy.get(selector.id).type(`id${key}`);
-          cy.get(selector.content).type('test_content');
-          cy.contains('Submit').click();
-        });
-      cy.get(selector.notification).should('contain', data.createProtoSuccess);
-      cy.get('.ant-notification-close-x').click();
+    Array.from({ length: 11 }).forEach(async (value, key) => {
+      const payload = {
+        content: 'test',
+        desc: '',
+        id: `id${key}`,
+      };
+      cy.requestWithToken({ method: 'POST', payload, url: '/apisix/admin/proto' });
     });
   });
 
@@ -75,7 +67,7 @@ context('Batch Create Proto And Delete Proto', () => {
       expect(proto).to.have.length(10);
     });
     Array.from({ length: 10 }).forEach((value, key) => {
-      deleteProto(`id${9 - key}`);
+      cy.requestWithToken({ method: 'DELETE', url: `/apisix/admin/proto/id${9 - key}` });
     });
   });
 });
