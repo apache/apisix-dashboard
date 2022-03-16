@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
 
 context('Table Auto Jump When No Data', () => {
   const selector = {
@@ -30,18 +29,6 @@ context('Table Auto Jump When No Data', () => {
   const data = {
     submitSuccess: 'Submit Successfully',
     deleteRouteSuccess: 'Delete Route Successfully',
-  };
-
-  const deleteRoute = () => {
-    cy.contains('routeName').siblings().contains('More').click();
-    cy.contains('Delete').click();
-    cy.get(selector.deleteAlert)
-      .should('be.visible')
-      .within(() => {
-        cy.contains('OK').click({ force: true });
-      });
-    cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(selector.notificationCloseIcon).click();
   };
 
   beforeEach(() => {
@@ -78,27 +65,29 @@ context('Table Auto Jump When No Data', () => {
     });
   });
 
-  afterEach(() => {
+  it('should delete last data and jump to first page', () => {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.get(selector.page_item).click();
+    cy.wait(1000);
+    cy.contains('routeName').siblings().contains('More').click();
+    cy.contains('Delete').click();
+    cy.get(selector.deleteAlert)
+      .should('be.visible')
+      .within(() => {
+        cy.contains('OK').click({ force: true });
+      });
+    cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(selector.notificationCloseIcon).click();
+    cy.url().should('contains', '/routes/list?page=1&pageSize=10');
+    cy.get(selector.table_row).should((route) => {
+      expect(route).to.have.length(10);
+    });
     cy.get('.ant-table-cell:contains(routeName)').each((elem) => {
       cy.requestWithToken({
         method: 'DELETE',
         url: `/apisix/admin/routes/${elem.next().text()}`,
       });
-    });
-  });
-
-  it('should delete last data and jump to first page', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-    cy.wait(500);
-    cy.get(selector.page_item).click();
-    cy.wait(500);
-    deleteRoute();
-    cy.url().should('contains', '/routes/list?page=1&pageSize=10');
-    cy.get(selector.table_row).should((route) => {
-      expect(route).to.have.length(10);
     });
   });
 });

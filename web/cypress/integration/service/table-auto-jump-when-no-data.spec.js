@@ -32,13 +32,6 @@ context('Table Auto Jump When No Data', () => {
     deleteServiceSuccess: 'Delete Service Successfully',
   };
 
-  const deleteService = () => {
-    cy.contains('serviceName').siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
-    cy.get(selector.notificationCloseIcon).click();
-  };
-
   beforeEach(() => {
     cy.login();
     Array.from({ length: 11 }).forEach((value, key) => {
@@ -68,27 +61,24 @@ context('Table Auto Jump When No Data', () => {
     });
   });
 
-  afterEach(() => {
+  it('should delete last data and jump to first page', () => {
     cy.visit('/');
     cy.contains('Service').click();
+    cy.get(selector.page_item).click();
+    cy.wait(1000);
+    cy.contains('serviceName').siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
+    cy.get(selector.notificationCloseIcon).click();
+    cy.url().should('contains', '/service/list?page=1&pageSize=10');
+    cy.get(selector.table_row).should((service) => {
+      expect(service).to.have.length(10);
+    });
     cy.get('.ant-table-cell:contains(serviceName)').each((elem) => {
       cy.requestWithToken({
         method: 'DELETE',
         url: `/apisix/admin/services/${elem.prev().text()}`,
       });
-    });
-  });
-
-  it('should delete the service', () => {
-    cy.visit('/');
-    cy.contains('Service').click();
-    cy.wait(500);
-    cy.get(selector.page_item).click();
-    cy.wait(500);
-    deleteService();
-    cy.url().should('contains', '/service/list?page=1&pageSize=10');
-    cy.get(selector.table_row).should((service) => {
-      expect(service).to.have.length(10);
     });
   });
 });

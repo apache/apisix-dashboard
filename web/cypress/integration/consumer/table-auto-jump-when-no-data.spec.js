@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
 
 context('Table Auto Jump When No Data', () => {
   const selector = {
@@ -39,17 +38,6 @@ context('Table Auto Jump When No Data', () => {
     deleteConsumerSuccess: 'Delete Consumer Successfully',
   };
 
-  const deleteConsumer = () => {
-    cy.contains('Delete').click({ force: true });
-    cy.get(selector.popoper)
-      .not(selector.popoprerHiden)
-      .contains('Confirm')
-      .should('be.visible')
-      .click({ force: true });
-    cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
-    cy.get(selector.notificationCloseIcon).click();
-  };
-
   beforeEach(() => {
     cy.login();
     Array.from({ length: 11 }).forEach((value, key) => {
@@ -66,27 +54,28 @@ context('Table Auto Jump When No Data', () => {
     });
   });
 
-  afterEach(() => {
+  it('should delete last data and jump to first page', () => {
     cy.visit('/');
     cy.contains('Consumer').click();
+    cy.get(selector.page_item).click();
+    cy.wait(1000);
+    cy.contains('Delete').click({ force: true });
+    cy.get(selector.popoper)
+      .not(selector.popoprerHiden)
+      .contains('Confirm')
+      .should('be.visible')
+      .click({ force: true });
+    cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
+    cy.get(selector.notificationCloseIcon).click();
+    cy.url().should('contains', '/consumer/list?page=1&pageSize=10');
+    cy.get(selector.table_row).should((consumer) => {
+      expect(consumer).to.have.length(10);
+    });
     cy.get(`.ant-table-cell:contains(${data.consumerName})`).each((elem) => {
       cy.requestWithToken({
         method: 'DELETE',
         url: `/apisix/admin/consumers/${elem.text()}`,
       });
-    });
-  });
-
-  it('should delete last data and jump to first page', () => {
-    cy.visit('/');
-    cy.contains('Consumer').click();
-    cy.wait(500);
-    cy.get(selector.page_item).click();
-    cy.wait(500);
-    deleteConsumer(data.consumerName + 10);
-    cy.url().should('contains', '/consumer/list?page=1&pageSize=10');
-    cy.get(selector.table_row).should((consumer) => {
-      expect(consumer).to.have.length(10);
     });
   });
 });

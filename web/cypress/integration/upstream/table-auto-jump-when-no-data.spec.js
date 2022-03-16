@@ -33,13 +33,6 @@ context('Table Auto Jump When No Data', () => {
     deleteUpstreamSuccess: 'Delete Upstream Successfully',
   };
 
-  const deleteUpstream = () => {
-    cy.contains('upstreamName').siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
-    cy.get('.ant-notification-close-x').click();
-  };
-
   beforeEach(() => {
     cy.login();
     Array.from({ length: 11 }).forEach((value, key) => {
@@ -66,27 +59,24 @@ context('Table Auto Jump When No Data', () => {
     });
   });
 
-  afterEach(() => {
+  it('should delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
+    cy.get(selector.page_item).click();
+    cy.wait(1000);
+    cy.contains('upstreamName').siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
+    cy.get('.ant-notification-close-x').click();
+    cy.url().should('contains', '/upstream/list?page=1&pageSize=10');
+    cy.get(selector.table_row).should((upstream) => {
+      expect(upstream).to.have.length(10);
+    });
     cy.get('.ant-table-cell:contains(upstreamName)').each((elem) => {
       cy.requestWithToken({
         method: 'DELETE',
         url: `/apisix/admin/upstreams/${elem.prev().text()}`,
       });
-    });
-  });
-
-  it('should delete the upstream', () => {
-    cy.visit('/');
-    cy.contains('Upstream').click();
-    cy.wait(500);
-    cy.get(selector.page_item).click();
-    cy.wait(500);
-    deleteUpstream();
-    cy.url().should('contains', '/upstream/list?page=1&pageSize=10');
-    cy.get(selector.table_row).should((upstream) => {
-      expect(upstream).to.have.length(10);
     });
   });
 });
