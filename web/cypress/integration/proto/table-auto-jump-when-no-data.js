@@ -64,6 +64,8 @@ context('Batch Create Proto And Delete Proto', () => {
   });
 
   it('should delete last data and jump to first page', () => {
+    cy.visit('/');
+    cy.contains('Proto').click();
     cy.wait(500);
     cy.get(selector.page_item).click();
     cy.wait(500);
