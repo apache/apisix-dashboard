@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Batch Create And Delete Consumer', () => {
+context('Table Auto Jump When No Data', () => {
   const selector = {
     username: '#username',
     page_item: '.ant-pagination-item-2',
@@ -52,9 +52,6 @@ context('Batch Create And Delete Consumer', () => {
 
   beforeEach(() => {
     cy.login();
-  });
-
-  it('should batch create eleven consumer', () => {
     Array.from({ length: 11 }).forEach((value, key) => {
       const payload = {
         username: data.consumerName + key,
@@ -69,7 +66,18 @@ context('Batch Create And Delete Consumer', () => {
     });
   });
 
-  it('should delete the consumer', () => {
+  afterEach(() => {
+    cy.visit('/');
+    cy.contains('Consumer').click();
+    cy.get(`.ant-table-cell:contains(${data.consumerName})`).each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/consumers/${elem.text()}`,
+      });
+    });
+  });
+
+  it('should delete last data and jump to first page', () => {
     cy.visit('/');
     cy.contains('Consumer').click();
     cy.wait(500);
@@ -79,13 +87,6 @@ context('Batch Create And Delete Consumer', () => {
     cy.url().should('contains', '/consumer/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((consumer) => {
       expect(consumer).to.have.length(10);
-    });
-
-    cy.get(`.ant-table-cell:contains(${data.consumerName})`).each((elem) => {
-      cy.requestWithToken({
-        method: 'DELETE',
-        url: `/apisix/admin/consumers/${elem.text()}`,
-      });
     });
   });
 });

@@ -42,9 +42,6 @@ context('Batch Create Proto And Delete Proto', () => {
 
   beforeEach(() => {
     cy.login();
-  });
-
-  it('should batch create eleven proto', () => {
     Array.from({ length: 11 }).forEach(async (value, key) => {
       const payload = {
         content: 'test',
@@ -55,9 +52,18 @@ context('Batch Create Proto And Delete Proto', () => {
     });
   });
 
-  it('should delete the proto', () => {
+  afterEach(() => {
     cy.visit('/');
     cy.contains('Proto').click();
+    cy.get('.ant-table-cell:contains(protoId)').each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/proto/${elem.text()}`,
+      });
+    });
+  });
+
+  it('should delete last data and jump to first page', () => {
     cy.wait(500);
     cy.get(selector.page_item).click();
     cy.wait(500);
@@ -65,13 +71,6 @@ context('Batch Create Proto And Delete Proto', () => {
     cy.url().should('contains', '/proto/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((proto) => {
       expect(proto).to.have.length(10);
-    });
-
-    cy.get('.ant-table-cell:contains(protoId)').each((elem) => {
-      cy.requestWithToken({
-        method: 'DELETE',
-        url: `/apisix/admin/proto/${elem.text()}`,
-      });
     });
   });
 });

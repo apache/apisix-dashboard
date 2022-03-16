@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Batch Create Upstream And Delete Upstream', () => {
+context('Table Auto Jump When No Data', () => {
   const selector = {
     id: '#id',
     name: '#name',
@@ -42,9 +42,6 @@ context('Batch Create Upstream And Delete Upstream', () => {
 
   beforeEach(() => {
     cy.login();
-  });
-
-  it('should batch create eleven upstream', () => {
     Array.from({ length: 11 }).forEach((value, key) => {
       const payload = {
         name: `upstreamName${key}`,
@@ -69,6 +66,17 @@ context('Batch Create Upstream And Delete Upstream', () => {
     });
   });
 
+  afterEach(() => {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.get('.ant-table-cell:contains(upstreamName)').each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/upstreams/${elem.prev().text()}`,
+      });
+    });
+  });
+
   it('should delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
@@ -79,13 +87,6 @@ context('Batch Create Upstream And Delete Upstream', () => {
     cy.url().should('contains', '/upstream/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((upstream) => {
       expect(upstream).to.have.length(10);
-    });
-
-    cy.get('.ant-table-cell:contains(upstreamName)').each((elem) => {
-      cy.requestWithToken({
-        method: 'DELETE',
-        url: `/apisix/admin/upstreams/${elem.prev().text()}`,
-      });
     });
   });
 });

@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Batch Create Route And Delete Route', () => {
+context('Table Auto Jump When No Data', () => {
   const selector = {
     name: '#name',
     nodes_0_host: '#submitNodes_0_host',
@@ -46,9 +46,6 @@ context('Batch Create Route And Delete Route', () => {
 
   beforeEach(() => {
     cy.login();
-  });
-
-  it('should batch create eleven route', () => {
     Array.from({ length: 11 }).forEach((value, key) => {
       const payload = {
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'],
@@ -81,7 +78,18 @@ context('Batch Create Route And Delete Route', () => {
     });
   });
 
-  it('should delete the route', () => {
+  afterEach(() => {
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get('.ant-table-cell:contains(routeName)').each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/routes/${elem.next().text()}`,
+      });
+    });
+  });
+
+  it('should delete last data and jump to first page', () => {
     cy.visit('/');
     cy.contains('Route').click();
     cy.wait(500);
@@ -91,13 +99,6 @@ context('Batch Create Route And Delete Route', () => {
     cy.url().should('contains', '/routes/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((route) => {
       expect(route).to.have.length(10);
-    });
-
-    cy.get('.ant-table-cell:contains(routeName)').each((elem) => {
-      cy.requestWithToken({
-        method: 'DELETE',
-        url: `/apisix/admin/routes/${elem.next().text()}`,
-      });
     });
   });
 });

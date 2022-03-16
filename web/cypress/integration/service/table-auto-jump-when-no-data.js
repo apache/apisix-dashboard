@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Batch Create Service And Delete Service', () => {
+context('Table Auto Jump When No Data', () => {
   const selector = {
     name: '#name',
     nodes_0_host: '#submitNodes_0_host',
@@ -41,9 +41,6 @@ context('Batch Create Service And Delete Service', () => {
 
   beforeEach(() => {
     cy.login();
-  });
-
-  it('should batch create eleven service', () => {
     Array.from({ length: 11 }).forEach((value, key) => {
       const payload = {
         name: `serviceName${key}`,
@@ -71,6 +68,17 @@ context('Batch Create Service And Delete Service', () => {
     });
   });
 
+  afterEach(() => {
+    cy.visit('/');
+    cy.contains('Service').click();
+    cy.get('.ant-table-cell:contains(serviceName)').each((elem) => {
+      cy.requestWithToken({
+        method: 'DELETE',
+        url: `/apisix/admin/services/${elem.prev().text()}`,
+      });
+    });
+  });
+
   it('should delete the service', () => {
     cy.visit('/');
     cy.contains('Service').click();
@@ -81,13 +89,6 @@ context('Batch Create Service And Delete Service', () => {
     cy.url().should('contains', '/service/list?page=1&pageSize=10');
     cy.get(selector.table_row).should((service) => {
       expect(service).to.have.length(10);
-    });
-
-    cy.get('.ant-table-cell:contains(serviceName)').each((elem) => {
-      cy.requestWithToken({
-        method: 'DELETE',
-        url: `/apisix/admin/services/${elem.prev().text()}`,
-      });
     });
   });
 });
