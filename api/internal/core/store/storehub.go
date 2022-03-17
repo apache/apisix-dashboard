@@ -40,6 +40,7 @@ const (
 	HubKeyPluginConfig HubKey = "plugin_config"
 	HubKeyProto        HubKey = "proto"
 	HubKeyStreamRoute  HubKey = "stream_route"
+	HubKeySystemConfig HubKey = "system_config"
 )
 
 var (
@@ -223,6 +224,18 @@ func InitStores() error {
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.StreamRoute)
 			return utils.InterfaceToString(r.ID)
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeySystemConfig, GenericStoreOption{
+		BasePath: conf.ETCDConfig.Prefix + "/system_config",
+		ObjType:  reflect.TypeOf(entity.SystemConfig{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.SystemConfig)
+			return r.ConfigName
 		},
 	})
 	if err != nil {

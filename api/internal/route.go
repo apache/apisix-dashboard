@@ -21,6 +21,7 @@ import (
 	"path/filepath"
 
 	// "github.com/gin-contrib/pprof"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -42,10 +43,10 @@ import (
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
 	"github.com/apisix/manager-api/internal/handler/stream_route"
+	"github.com/apisix/manager-api/internal/handler/system_config"
 	"github.com/apisix/manager-api/internal/handler/tool"
 	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/apisix/manager-api/internal/log"
-	"github.com/gin-contrib/gzip"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -83,6 +84,7 @@ func SetUpRouter() *gin.Engine {
 		migrate.NewHandler,
 		proto.NewHandler,
 		stream_route.NewHandler,
+		system_config.NewHandler,
 	}
 
 	for i := range factories {
