@@ -48,7 +48,8 @@ const Page: React.FC = (props) => {
           const host = newData?.checks?.active.host;
           const http_path = newData?.checks?.active.http_path;
           const url = host + http_path;
-          newData.checks.active.url = url;
+          const { active: activeData } = newData.checks;
+          activeData.url = url;
           newData.checks.active = omit(newData.checks.active, 'host');
           newData.checks.active = omit(newData.checks.active, 'http_path');
         }
