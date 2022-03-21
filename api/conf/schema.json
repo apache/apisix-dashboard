@@ -3407,6 +3407,11 @@
 						"default": 3000,
 						"minimum": 100,
 						"type": "integer"
+					},
+					"password_grant_token_generation_incoming_uri": {
+						"type" : "string", 
+						"minLength" : 1, 
+						"maxLength" : 4096
 					}
 				},
 				"required": [
