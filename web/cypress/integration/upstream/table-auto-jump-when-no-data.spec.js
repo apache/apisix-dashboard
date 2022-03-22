@@ -50,7 +50,6 @@ context('Table Auto Jump When No Data', () => {
           size: 320,
           idle_timeout: 60,
           requests: 1000,
-          ß,
         },
         nodes: {
           '127.0.0.1': 1,
