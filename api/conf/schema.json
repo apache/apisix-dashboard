@@ -3333,6 +3333,11 @@
 						"maxLength": 4096,
 						"minLength": 1,
 						"type": "string"
+					},
+					"password_grant_token_generation_incoming_uri": {
+						"type": "string", 
+						"minLength": 1, 
+						"maxLength": 4096
 					}
 				},
 				"type": "object"
