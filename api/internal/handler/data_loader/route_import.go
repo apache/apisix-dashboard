@@ -137,6 +137,22 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 		}
 	}
 
+	// merge route
+	idRoute := make(map[string]*entity.Route)
+	for _, route := range routes {
+		if existRoute, ok := idRoute[route.ID.(string)]; ok {
+			uris := append(existRoute.Uris, route.Uris...)
+			existRoute.Uris = uris
+		} else {
+			idRoute[route.ID.(string)] = route
+		}
+	}
+
+	routes = make([]*entity.Route, 0, len(idRoute))
+	for _, route := range idRoute {
+		routes = append(routes, route)
+	}
+
 	// create route
 	for _, route := range routes {
 		if Force && route.ID != nil {
@@ -168,7 +184,25 @@ func checkRouteExist(ctx context.Context, routeStore *store.GenericStore, route 
 				return false
 			}
 
-			if !(item.Host == route.Host && item.URI == route.URI && utils.StringSliceEqual(item.Uris, route.Uris) &&
+			itemUris := item.Uris
+			if item.URI != "" {
+				if itemUris == nil {
+					itemUris = []string{item.URI}
+				} else {
+					itemUris = append(itemUris, item.URI)
+				}
+			}
+
+			routeUris := route.Uris
+			if route.URI != "" {
+				if routeUris == nil {
+					routeUris = []string{route.URI}
+				} else {
+					routeUris = append(routeUris, route.URI)
+				}
+			}
+
+			if !(item.Host == route.Host && utils.StringSliceContains(itemUris, routeUris) &&
 				utils.StringSliceEqual(item.RemoteAddrs, route.RemoteAddrs) && item.RemoteAddr == route.RemoteAddr &&
 				utils.StringSliceEqual(item.Hosts, route.Hosts) && item.Priority == route.Priority &&
 				utils.ValueEqual(item.Vars, route.Vars) && item.FilterFunc == route.FilterFunc) {

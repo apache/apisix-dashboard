@@ -172,6 +172,22 @@ func ValidateLuaCode(code string) error {
 	return err
 }
 
+func StringSliceContains(a, b []string) bool {
+	if (a == nil) != (b == nil) {
+		return false
+	}
+
+	for i := range a {
+		for j := range b {
+			if a[i] == b[j] {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 //
 func StringSliceEqual(a, b []string) bool {
 	if (a == nil) != (b == nil) {
