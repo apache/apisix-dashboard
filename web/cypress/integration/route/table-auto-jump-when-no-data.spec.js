@@ -31,7 +31,7 @@ context('Table Auto Jump When No Data', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
   };
 
-  beforeEach(() => {
+  before(() => {
     cy.login();
     Array.from({ length: 11 }).forEach((value, key) => {
       const payload = {
@@ -75,7 +75,7 @@ context('Table Auto Jump When No Data', () => {
     cy.get(selector.deleteAlert)
       .should('be.visible')
       .within(() => {
-        cy.contains('OK').click({ force: true });
+        cy.contains('OK').click();
       });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
     cy.get(selector.notificationCloseIcon).click();

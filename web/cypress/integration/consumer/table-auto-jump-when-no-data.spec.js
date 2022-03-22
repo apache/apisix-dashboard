@@ -38,7 +38,7 @@ context('Table Auto Jump When No Data', () => {
     deleteConsumerSuccess: 'Delete Consumer Successfully',
   };
 
-  beforeEach(() => {
+  before(() => {
     cy.login();
     Array.from({ length: 11 }).forEach((value, key) => {
       const payload = {
@@ -59,12 +59,12 @@ context('Table Auto Jump When No Data', () => {
     cy.contains('Consumer').click();
     cy.get(selector.page_item).click();
     cy.wait(1000);
-    cy.contains('Delete').click({ force: true });
+    cy.contains('Delete').click();
     cy.get(selector.popoper)
       .not(selector.popoprerHiden)
       .contains('Confirm')
       .should('be.visible')
-      .click({ force: true });
+      .click();
     cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
     cy.get(selector.notificationCloseIcon).click();
     cy.url().should('contains', '/consumer/list?page=1&pageSize=10');

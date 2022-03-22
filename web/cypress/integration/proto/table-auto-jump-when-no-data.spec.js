@@ -32,7 +32,7 @@ context('Batch Create Proto And Delete Proto', () => {
     deleteProtoSuccess: 'Delete proto Successfully',
   };
 
-  beforeEach(() => {
+  before(() => {
     cy.login();
     Array.from({ length: 11 }).forEach(async (value, key) => {
       const payload = {
