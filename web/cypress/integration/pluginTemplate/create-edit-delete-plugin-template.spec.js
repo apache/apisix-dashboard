@@ -29,6 +29,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     notification: '.ant-notification-notice-message',
     refresh: '.anticon-reload',
     descriptionSelector: '[title=Description]',
+    monacoScroll: '.monaco-scrollable-element',
   };
 
   const data = {
@@ -76,6 +77,19 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createPluginTemplateSuccess);
+  });
+  it('should view the service', function () {
+    cy.visit('plugin-template/list');
+    cy.get(selector.refresh).click();
+    cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
+    cy.contains('button', 'Search').click();
+    cy.contains(data.pluginTemplateName).siblings().contains('View').click();
+    cy.get(selector.drawer).should('be.visible');
+
+    cy.get(selector.monacoScroll).within(() => {
+      cy.contains('plugins').should('exist');
+      cy.contains(data.pluginTemplateName).should('exist');
+    });
   });
 
   it('should edit the pluginTemplate', function () {
