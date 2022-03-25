@@ -53,7 +53,7 @@ jobs:
         with:
           go-version: '1.15'
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.cache/go-build
@@ -69,7 +69,7 @@ jobs:
           nohup go run ./main.go &
 
       - name: Cache Cypress binary
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3
         id: cypress-binary-cache
         with:
           path: '*/cypress/cache'
