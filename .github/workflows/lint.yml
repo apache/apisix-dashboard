@@ -7,7 +7,7 @@ jobs:
     name: 🍇 Markdown
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: 🚀 Use Node.js
         uses: actions/setup-node@v3
         with:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code.
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: Install
         run: |
           wget -O - -q https://git.io/misspell | sh -s -- -b .
@@ -33,7 +33,7 @@ jobs:
     name: 🍏 YAML
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v2.3.2
         with:
           python-version: '3.x'  # Version range or exact version of a Python version to use, using SemVer's version range syntax
@@ -50,6 +50,6 @@ jobs:
     name: Trailing whitespace
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Check for trailing whitespace
         run: "! git grep -EIn $'[ \t]+$'"
