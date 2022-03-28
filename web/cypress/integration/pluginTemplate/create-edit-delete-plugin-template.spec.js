@@ -78,7 +78,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createPluginTemplateSuccess);
   });
-  it('should view the service', function () {
+  it('should view the plugin-template', function () {
     cy.visit('plugin-template/list');
     cy.get(selector.refresh).click();
     cy.get(selector.descriptionSelector).type(data.pluginTemplateName);

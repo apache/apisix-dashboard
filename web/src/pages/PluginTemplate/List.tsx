@@ -182,8 +182,8 @@ const Page: React.FC = () => {
       />
       <RawDataEditor
         visible={visible}
-        type="service"
-        readonly={true}
+        type="PluginTemplate"
+        readonly={false}
         data={rawData}
         onClose={() => {
           setVisible(false);
