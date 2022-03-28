@@ -38,7 +38,6 @@ context('Create and Delete Upstream', () => {
     drawer: '.ant-drawer-content',
     monacoScroll: '.monaco-scrollable-element',
     description: '#desc',
-    delete: '.ant-col',
   };
 
   const data = {
