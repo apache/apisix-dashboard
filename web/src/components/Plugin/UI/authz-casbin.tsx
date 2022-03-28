@@ -43,13 +43,13 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
     setValue(e.target.value);
   };
 
-  const [dian, setDian] = useState('houmian')
+  const [value1, setValue1] = useState('Option1')
   const aa = () => {
-    setDian('houmian')
+    setValue1('Option1')
   }
 
   const bb = () => {
-    setDian('qianmian')
+    setValue1('Option2')
   }
 
   return (
@@ -58,7 +58,7 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
         <Radio value={1} onClick={aa}>A</Radio>
         <Radio value={2} onClick={bb}>B</Radio>
       </Radio.Group>
-      {dian === 'houmian' ?
+      {value1 === 'Option1' ?
         <>
           < Form.Item
             name="model_path"
