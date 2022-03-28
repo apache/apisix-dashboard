@@ -38,6 +38,7 @@ context('Create and Delete Upstream', () => {
     drawer: '.ant-drawer-content',
     monacoScroll: '.monaco-scrollable-element',
     description: '#desc',
+    delete: '.ant-col',
   };
 
   const data = {
@@ -55,6 +56,7 @@ context('Create and Delete Upstream', () => {
     weight0: '2',
     port1: '7001',
     weight1: '2',
+    request_header: 'text/html',
   };
 
   beforeEach(() => {
@@ -193,6 +195,8 @@ context('Create and Delete Upstream', () => {
 
     cy.get('#custom_checks_active').click();
     cy.get('#checks_active_port').clear();
+    cy.contains('Health Check').parent().siblings().contains('Add').click();
+    cy.get('#checks_active_req_headers_0').type(data.request_header);
     cy.contains('Next').click();
     cy.get(selector.input).should('be.disabled');
     cy.contains('Submit').click();
@@ -218,6 +222,8 @@ context('Create and Delete Upstream', () => {
     cy.get(selector.service_name).clear().type(`another.${data.serviceName}`);
     cy.get(selector.discovery_type_group_name).type(data.groupName);
     cy.get(selector.discovery_type_namespace_id).type(data.namespaceId);
+
+    cy.get('#checks_active_req_headers_0').clear();
 
     cy.contains('Next').click();
     cy.contains('Submit').click();
