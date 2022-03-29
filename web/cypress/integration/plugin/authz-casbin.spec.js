@@ -67,13 +67,13 @@ context('text authz casbin plugin', () => {
         cy.get(selector.disabledSwitcher).click();
         cy.get(selector.checkedSwitcher).should('exist');
       })
-    cy.contains('There is path').click();
+    cy.contains('Config Path').click();
     cy.get(selector.conmodelPath).type(data.conmodelPath);
     cy.get(selector.conpolicyPath).type(data.conpolicyPath);
     cy.get(selector.username).type(data.conusername);
     cy.contains('Button', 'Submit').click();
     cy.contains('Button', 'Disable').click();
-    cy.contains('No path').click();
+    cy.contains('Custom text').click();
     cy.get(selector.conmodel).type(data.conmodel);
     cy.get(selector.conpolicy).type(data.conpolicy);
     cy.get(selector.username).type(data.conusername);

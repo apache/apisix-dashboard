@@ -38,29 +38,22 @@ const FORM_ITEM_LAYOUT = {
 const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
   const properties = schema?.properties
-  const [value, setValue] = useState(1);
+  const [radioValue, setRadioValue] = useState('path');
   const onChange = (e: any) => {
-    setValue(e.target.value);
+    setRadioValue(e.target.value);
   };
 
   const [radio, setRadio] = useState('Options with path')
-  const aa = () => {
-    setRadio('Options with path')
-  }
-
-  const bb = () => {
-    setRadio('Options without path')
-  }
 
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item style={{ margin: '0% 0% 10% 35%' }}>
-        <Radio.Group onChange={onChange} value={value}>
-          <Radio value={1} onClick={aa}>There is path</Radio>
-          <Radio value={2} onClick={bb}>No path</Radio>
+        <Radio.Group onChange={onChange} value={radioValue}>
+          <Radio value={'path'} onClick={() => setRadio('Options with path')}>Config Path</Radio>
+          <Radio value={'custom'} onClick={() => setRadio('Options without path')}>Custom text</Radio>
         </Radio.Group>
       </Form.Item>
-      {radio === 'Option1' ?
+      {radio === 'Options with path' ?
         <>
           < Form.Item
             name="model_path"
