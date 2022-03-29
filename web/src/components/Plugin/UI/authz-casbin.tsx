@@ -43,17 +43,15 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
     setRadioValue(e.target.value);
   };
 
-  const [radio, setRadio] = useState('Options with path')
-
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item style={{ margin: '0% 0% 10% 35%' }}>
         <Radio.Group onChange={onChange} value={radioValue}>
-          <Radio value={'path'} onClick={() => setRadio('Options with path')}>Config Path</Radio>
-          <Radio value={'custom'} onClick={() => setRadio('Options without path')}>Custom text</Radio>
+          <Radio value={'path'} onClick={() => setRadioValue('path')}>Config Path</Radio>
+          <Radio value={'custom'} onClick={() => setRadioValue('Without path')}>Custom text</Radio>
         </Radio.Group>
       </Form.Item>
-      {radio === 'Options with path' ?
+      {radioValue === 'path' ?
         <>
           < Form.Item
             name="model_path"
