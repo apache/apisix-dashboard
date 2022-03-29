@@ -38,6 +38,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     createPluginTemplateSuccess: 'Create Plugin Template Successfully',
     editPluginTemplateSuccess: 'Configure Plugin Template Successfully',
     deletePluginTemplateSuccess: 'Delete Plugin Template Successfully',
+    submitPluginTemplateSuccess: 'Submit Successfully',
   };
 
   beforeEach(() => {
@@ -88,8 +89,21 @@ context('Create Configure and Delete PluginTemplate', () => {
 
     cy.get(selector.monacoScroll).within(() => {
       cy.contains('plugins').should('exist');
-      cy.contains(data.pluginTemplateName).should('exist');
     });
+    cy.window().then((window) => {
+      window.monacoEditor.setValue(
+        JSON.stringify({
+          plugins: {
+            'jwt-auth': {
+              disable: false,
+            },
+          },
+        }),
+      );
+    });
+    cy.contains('button', 'Submit').click();
+
+    cy.get(selector.notification).should('contain', data.submitPluginTemplateSuccess);
   });
 
   it('should edit the pluginTemplate', function () {
