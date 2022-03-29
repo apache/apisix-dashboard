@@ -39,7 +39,7 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
   const properties = schema?.properties
   const [value, setValue] = useState(1);
-  const onChange = (e:any) => {
+  const onChange = (e: any) => {
     setValue(e.target.value);
   };
 
@@ -54,10 +54,12 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
 
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
-      <Radio.Group onChange={onChange} value={value}>
-        <Radio value={1} onClick={aa}>A</Radio>
-        <Radio value={2} onClick={bb}>B</Radio>
-      </Radio.Group>
+      <Form.Item style={{ margin: '0% 0% 10% 35%' }}>
+        <Radio.Group onChange={onChange} value={value}>
+          <Radio value={1} onClick={aa}>There is path</Radio>
+          <Radio value={2} onClick={bb}>No path</Radio>
+        </Radio.Group>
+      </Form.Item>
       {value1 === 'Option1' ?
         <>
           < Form.Item

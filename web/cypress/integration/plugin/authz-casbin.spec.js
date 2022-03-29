@@ -32,6 +32,8 @@ context('text authz casbin plugin', () => {
     empty: '.ant-empty-normal',
     conmodelPath: '#model_path',
     conpolicyPath: '#policy_path',
+    conmodel: '#model',
+    conpolicy: '#policy',
     username: '#username'
   };
 
@@ -39,6 +41,8 @@ context('text authz casbin plugin', () => {
     authzCasbin: 'authz-casbin',
     conmodelPath: '#/path/to/model.conf',
     conpolicyPath: '#/path/to/policy.csv',
+    conmodel: '#/to/model.conf',
+    conpolicy: '#/to/policy.csv',
     conusername: '#user',
   };
 
@@ -63,8 +67,15 @@ context('text authz casbin plugin', () => {
         cy.get(selector.disabledSwitcher).click();
         cy.get(selector.checkedSwitcher).should('exist');
       })
-    cy.get(selector.conmodePpath).type(data.conmodelPath);
+    cy.contains('There is path').click();
+    cy.get(selector.conmodelPath).type(data.conmodelPath);
     cy.get(selector.conpolicyPath).type(data.conpolicyPath);
+    cy.get(selector.username).type(data.conusername);
+    cy.contains('Button', 'Submit').click();
+    cy.contains('Button', 'Disable').click();
+    cy.contains('No path').click();
+    cy.get(selector.conmodel).type(data.conmodel);
+    cy.get(selector.conpolicy).type(data.conpolicy);
     cy.get(selector.username).type(data.conusername);
     cy.contains('Button', 'Submit').click();
     cy.contains('Plugin').click();
