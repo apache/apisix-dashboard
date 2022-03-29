@@ -43,13 +43,13 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
     setValue(e.target.value);
   };
 
-  const [value1, setValue1] = useState('Option1')
+  const [radio, setRadio] = useState('Options with path')
   const aa = () => {
-    setValue1('Option1')
+    setRadio('Options with path')
   }
 
   const bb = () => {
-    setValue1('Option2')
+    setRadio('Options without path')
   }
 
   return (
@@ -60,7 +60,7 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
           <Radio value={2} onClick={bb}>No path</Radio>
         </Radio.Group>
       </Form.Item>
-      {value1 === 'Option1' ?
+      {radio === 'Option1' ?
         <>
           < Form.Item
             name="model_path"
