@@ -34,7 +34,7 @@ export default function usePagination() {
   };
 
   const checkPageList = (ref: MutableRefObject<ActionType | undefined>) => {
-    const { current, pageSize, total } = ref.current!.pageInfo as PageInfo;
+    const { current, pageSize, total } = ref.current?.pageInfo as PageInfo;
     if (current > pageSize / total && current > 1) {
       savePageList(paginationConfig.current - 1, paginationConfig.pageSize);
     } else {
