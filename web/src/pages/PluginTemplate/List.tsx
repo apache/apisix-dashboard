@@ -189,13 +189,11 @@ const Page: React.FC = () => {
           setVisible(false);
         }}
         onSubmit={(data: any) => {
-          handleTableActionSuccessResponse(
-            `${formatMessage({ id: 'component.global.submit' })} ${formatMessage({
-              id: 'component.status.success',
-            })}`,
-          );
           (editorMode === 'create' ? create(data) : update(id, data)).then(() => {
             setVisible(false);
+            handleTableActionSuccessResponse(
+              `${formatMessage({ id: 'component.global.submit.success' })}`,
+            );
             ref.current?.reload();
           });
         }}
