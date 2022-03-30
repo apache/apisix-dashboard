@@ -45,8 +45,12 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
 
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
-      <Form.Item style={{ margin: '0% 0% 10% 35%' }}>
-        <Radio.Group onChange={onChange} value={radioValue}>
+      <Form.Item
+        name="Select"
+        label="Select"
+        
+      >
+        <Radio.Group onChange={onChange} value={radioValue}  style={{width:'110%'}}>
           <Radio value={'path'} onClick={() => setRadioValue('path')}>Config Path</Radio>
           <Radio value={'custom'} onClick={() => setRadioValue('Without path')}>Custom text</Radio>
         </Radio.Group>
