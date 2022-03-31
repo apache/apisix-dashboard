@@ -23,7 +23,7 @@ type Props = {
   form: FormInstance;
   schema: Record<string, any> | undefined;
   ref?: any;
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 const FORM_ITEM_LAYOUT = {
@@ -48,7 +48,6 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
       <Form.Item
         name="Select"
         label="Select"
-        
       >
         <Radio.Group onChange={onChange} value={radioValue}  style={{width:'110%'}}>
           <Radio value={'path'} onClick={() => setRadioValue('path')}>Config Path</Radio>
@@ -116,7 +115,7 @@ const AuthzCasbin: React.FC<Props> = ({ form, schema }) => {
             ]}
             initialValue={properties.model_path.default}
             tooltip={formatMessage({ id: 'compoenet.pauginForm.authz-casbin.model.tooltip' })}
-          >{ }
+          >
             <Input />
           </Form.Item>
           <Form.Item
