@@ -57,6 +57,19 @@ func InitStore(key HubKey, opt GenericStoreOption) error {
 		HubKeyGlobalRule:  true,
 		HubKeyStreamRoute: true,
 	}
+
+	hubsNeedCheckByCustomize := map[HubKey]bool{
+		HubKeySystemConfig: true,
+	}
+
+	if _, ok := hubsNeedCheckByCustomize[key]; ok {
+		validator, err := NewJsonSchemaValidator("customize." + string(key))
+		if err != nil {
+			return err
+		}
+		opt.Validator = validator
+	}
+
 	if _, ok := hubsNeedCheck[key]; ok {
 		validator, err := NewAPISIXJsonSchemaValidator("main." + string(key))
 		if err != nil {
