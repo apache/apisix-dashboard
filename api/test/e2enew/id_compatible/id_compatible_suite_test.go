@@ -33,5 +33,7 @@ func TestIdCompatible(t *testing.T) {
 
 var _ = AfterSuite(func() {
 	base.CleanResource("routes")
+	base.CleanResource("upstreams")
+	base.CleanResource("services")
 	time.Sleep(base.SleepTime)
 })
