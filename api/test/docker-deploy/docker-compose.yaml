@@ -44,7 +44,7 @@ services:
       - http://0.0.0.0:2379
 
   managerapi:
-    image: dashboard:ci
+    image: apache/apisix-dashboard:2.11-alpine
     restart: always
     volumes:
       - ../../conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml:ro
