@@ -25,7 +25,7 @@ The Dashboard contains both `manager-api` and `web` parts, so you need to start 
 
 ## Prerequisites
 
-Before development, refer to this [guide](./deploy.md) to install dependencies.
+Before development, refer to this [guide](./install.md) to install dependencies.
 
 ## Clone the project
 
