@@ -23,19 +23,19 @@ func Test_mergeSchema(t *testing.T) {
 			name: "should failed when have duplicates key",
 			args: args{
 				apisixSchema:    []byte(`{"main":{"a":1,"b":2},"plugins":{"a":1}}`),
-				customizeSchema: []byte(`{"main":{"c":1},"customize":{"a":1}}`),
+				customizeSchema: []byte(`{"main":{"b":1}}`),
 			},
 			wantErr:        true,
-			wantErrMessage: "duplicates key: main between schema.json and customize_schema.json",
+			wantErrMessage: "duplicates key: main.b between schema.json and customize_schema.json",
 		},
 		{
 			name: "should success",
 			args: args{
 				apisixSchema:    []byte(`{"main":{"a":1,"b":2},"plugins":{"a":1}}`),
-				customizeSchema: []byte(`{"customize":{"a":1}}`),
+				customizeSchema: []byte(`{"main":{"c":3}}`),
 			},
 			wantErr: false,
-			wantRes: []byte(`{"main":{"a":1,"b":2},"plugins":{"a":1},"customize":{"a":1}}`),
+			wantRes: []byte(`{"main":{"a":1,"b":2,"c":3},"plugins":{"a":1}}`),
 		},
 	}
 	for _, tt := range tests {

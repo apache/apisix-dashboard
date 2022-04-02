@@ -49,25 +49,14 @@ var (
 
 func InitStore(key HubKey, opt GenericStoreOption) error {
 	hubsNeedCheck := map[HubKey]bool{
-		HubKeyConsumer:    true,
-		HubKeyRoute:       true,
-		HubKeySsl:         true,
-		HubKeyService:     true,
-		HubKeyUpstream:    true,
-		HubKeyGlobalRule:  true,
-		HubKeyStreamRoute: true,
-	}
-
-	hubsNeedCheckByCustomize := map[HubKey]bool{
+		HubKeyConsumer:     true,
+		HubKeyRoute:        true,
+		HubKeySsl:          true,
+		HubKeyService:      true,
+		HubKeyUpstream:     true,
+		HubKeyGlobalRule:   true,
+		HubKeyStreamRoute:  true,
 		HubKeySystemConfig: true,
-	}
-
-	if _, ok := hubsNeedCheckByCustomize[key]; ok {
-		validator, err := NewJsonSchemaValidator("customize." + string(key))
-		if err != nil {
-			return err
-		}
-		opt.Validator = validator
 	}
 
 	if _, ok := hubsNeedCheck[key]; ok {

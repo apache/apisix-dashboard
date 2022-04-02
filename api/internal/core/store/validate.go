@@ -20,6 +20,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
 
@@ -36,12 +38,11 @@ type JsonSchemaValidator struct {
 }
 
 func NewJsonSchemaValidator(jsonPath string) (Validator, error) {
-	schemaDef := conf.Schema.Get(jsonPath).String()
-	if schemaDef == "" {
-		log.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
-		return nil, fmt.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
+	bs, err := ioutil.ReadFile(jsonPath)
+	if err != nil {
+		return nil, fmt.Errorf("get abs path failed: %s", err)
 	}
-	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(string(bs)))
 	if err != nil {
 		return nil, fmt.Errorf("new schema failed: %s", err)
 	}

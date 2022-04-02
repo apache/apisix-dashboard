@@ -316,8 +316,8 @@ func initSchema() {
 
 func mergeSchema(apisixSchema, customizeSchema []byte) ([]byte, error) {
 	var (
-		apisixSchemaMap    map[string]interface{}
-		customizeSchemaMap map[string]interface{}
+		apisixSchemaMap    map[string]map[string]interface{}
+		customizeSchemaMap map[string]map[string]interface{}
 	)
 
 	if err := json.Unmarshal(apisixSchema, &apisixSchemaMap); err != nil {
@@ -327,14 +327,14 @@ func mergeSchema(apisixSchema, customizeSchema []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	for key := range apisixSchemaMap {
-		if _, ok := customizeSchemaMap[key]; ok {
-			return nil, fmt.Errorf("duplicates key: %s between schema.json and customize_schema.json", key)
+	for key := range apisixSchemaMap["main"] {
+		if _, ok := customizeSchemaMap["main"][key]; ok {
+			return nil, fmt.Errorf("duplicates key: main.%s between schema.json and customize_schema.json", key)
 		}
 	}
 
-	for k, v := range customizeSchemaMap {
-		apisixSchemaMap[k] = v
+	for k, v := range customizeSchemaMap["main"] {
+		apisixSchemaMap["main"][k] = v
 	}
 
 	return json.Marshal(apisixSchemaMap)

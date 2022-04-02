@@ -1,5 +1,5 @@
 {
-    "customize": {
+    "main": {
         "system_config": {
             "properties": {
                 "config_name": {
