@@ -187,6 +187,101 @@ var _ = ginkgo.Describe("Route", func() {
 		}),
 	)
 
+	table.DescribeTable("update routes with hosts",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("hit route that not exist", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		}),
+		table.Entry("create route with host foo.com", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+			"name": "route1",
+			"uri": "/hello",
+			"methods": ["GET"],
+			"hosts": ["foo.com"],
+			"upstream": {
+				"type": "roundrobin",
+				"nodes": [{
+					"host": "` + base.UpstreamIp + `",
+					"port": 1980,
+					"weight": 1
+				}]
+			}
+		}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"r1\"", "\"hosts\":[\"foo.com\"]"},
+		}),
+		table.Entry("hit the route just create", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("update route with host bar.com", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"name": "route1",
+				"uri": "/hello",
+				"hosts": ["bar.com"],
+				"upstream": {
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"r1\"", "\"hosts\":[\"bar.com\"]"},
+		}),
+		table.Entry("hit the route with host foo.com", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("hit the route just updated", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Host": "bar.com"},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world\n",
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("hit the route just deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Host": "bar.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		}),
+	)
+
 	table.DescribeTable("test route with empty array",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
