@@ -20,7 +20,7 @@ import { DefaultFooter } from '@ant-design/pro-layout';
 
 export default () => (
   <DefaultFooter
-    copyright=`${new Date().getFullYear()} Apache APISIX`
+    copyright={`${new Date().getFullYear()} Apache APISIX`}
     links={[
       {
         key: 'GitHub',
