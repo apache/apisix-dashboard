@@ -133,7 +133,7 @@ type Active struct {
 	Host                   string       `json:"host,omitempty"`
 	Port                   int          `json:"port,omitempty"`
 	HTTPPath               string       `json:"http_path,omitempty"`
-	HTTPSVerifyCertificate string       `json:"https_verify_certificate,omitempty"`
+	HTTPSVerifyCertificate bool         `json:"https_verify_certificate,omitempty"`
 	Healthy                Healthy      `json:"healthy,omitempty"`
 	UnHealthy              UnHealthy    `json:"unhealthy,omitempty"`
 	ReqHeaders             []string     `json:"req_headers,omitempty"`
