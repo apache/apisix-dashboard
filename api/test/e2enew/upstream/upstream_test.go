@@ -88,6 +88,24 @@ var _ = ginkgo.Describe("Upstream", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
+	ginkgo.It("create upstream3 success when pass host is 'node' and nodes without port", func() {
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["name"] = "upstream3"
+		createUpstreamBody["nodes"] = map[string]float64{base.UpstreamIp: 100}
+		createUpstreamBody["type"] = "roundrobin"
+		createUpstreamBody["pass_host"] = "node"
+
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		gomega.Expect(err).To(gomega.BeNil())
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/3",
+			Body:         string(_createUpstreamBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
 	ginkgo.It("create upstream failed, name existed", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["name"] = "upstream2"
@@ -248,6 +266,15 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/2",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("delete upstream3", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/3",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})

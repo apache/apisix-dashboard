@@ -166,8 +166,11 @@ func checkUpstream(upstream *entity.UpstreamDef) error {
 	}
 
 	if upstream.PassHost == "node" && upstream.Nodes != nil {
-		if nodes := entity.NodesFormat(upstream.Nodes); len(nodes.([]*entity.Node)) != 1 {
-			return fmt.Errorf("only support single node for `node` mode currently")
+		nodes, ok := entity.NodesFormat(upstream.Nodes).([]*entity.Node)
+		if !ok {
+			return fmt.Errorf("upstrams nodes not support value %v when `pass_host` is `node`", nodes)
+		} else if len(nodes) != 1 {
+			return fmt.Errorf("only support single node for `node` mode currentlywhen `pass_host` is `node`")
 		}
 	}
 
