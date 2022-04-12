@@ -17,7 +17,6 @@
 package system_config
 
 import (
-	"errors"
 	"reflect"
 	"time"
 
@@ -72,11 +71,6 @@ func (h *Handler) Post(c droplet.Context) (interface{}, error) {
 	input.CreateTime = time.Now().Unix()
 	input.UpdateTime = time.Now().Unix()
 
-	// TODO use json schema to do it
-	if err := h.checkSystemConfig(input); err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-
 	// create
 	res, err := h.systemConfig.Create(c.Context(), input)
 	if err != nil {
@@ -89,11 +83,6 @@ func (h *Handler) Post(c droplet.Context) (interface{}, error) {
 func (h *Handler) Put(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.SystemConfig)
 	input.UpdateTime = time.Now().Unix()
-
-	// TODO use json schema to do it
-	if err := h.checkSystemConfig(input); err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
 
 	// update
 	res, err := h.systemConfig.Update(c.Context(), input, false)
@@ -117,16 +106,4 @@ func (h *Handler) Delete(c droplet.Context) (interface{}, error) {
 	}
 
 	return nil, nil
-}
-
-func (h *Handler) checkSystemConfig(input *entity.SystemConfig) error {
-	if len(input.ConfigName) < 1 || len(input.ConfigName) > 100 {
-		return errors.New("invalid params: config_name length must be between 1 and 100")
-	}
-
-	if len(input.Payload) < 1 {
-		return errors.New("invalid params: payload is required")
-	}
-
-	return nil
 }

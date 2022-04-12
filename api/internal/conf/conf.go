@@ -17,6 +17,7 @@
 package conf
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -289,12 +290,54 @@ func initPlugins(plugins []string) {
 }
 
 func initSchema() {
-	filePath := WorkDir + "/conf/schema.json"
-	if schemaContent, err := ioutil.ReadFile(filePath); err != nil {
-		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
-	} else {
-		Schema = gjson.ParseBytes(schemaContent)
+	var (
+		apisixSchemaPath       = WorkDir + "/conf/schema.json"
+		customizeSchemaPath    = WorkDir + "/conf/customize_schema.json"
+		apisixSchemaContent    []byte
+		customizeSchemaContent []byte
+		err                    error
+	)
+
+	if apisixSchemaContent, err = ioutil.ReadFile(apisixSchemaPath); err != nil {
+		panic(fmt.Errorf("fail to read configuration: %s, error: %s", apisixSchemaPath, err.Error()))
 	}
+
+	if customizeSchemaContent, err = ioutil.ReadFile(customizeSchemaPath); err != nil {
+		panic(fmt.Errorf("fail to read configuration: %s, error: %s", customizeSchemaPath, err.Error()))
+	}
+
+	content, err := mergeSchema(apisixSchemaContent, customizeSchemaContent)
+	if err != nil {
+		panic(err)
+	}
+
+	Schema = gjson.ParseBytes(content)
+}
+
+func mergeSchema(apisixSchema, customizeSchema []byte) ([]byte, error) {
+	var (
+		apisixSchemaMap    map[string]map[string]interface{}
+		customizeSchemaMap map[string]map[string]interface{}
+	)
+
+	if err := json.Unmarshal(apisixSchema, &apisixSchemaMap); err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(customizeSchema, &customizeSchemaMap); err != nil {
+		return nil, err
+	}
+
+	for key := range apisixSchemaMap["main"] {
+		if _, ok := customizeSchemaMap["main"][key]; ok {
+			return nil, fmt.Errorf("duplicates key: main.%s between schema.json and customize_schema.json", key)
+		}
+	}
+
+	for k, v := range customizeSchemaMap["main"] {
+		apisixSchemaMap["main"][k] = v
+	}
+
+	return json.Marshal(apisixSchemaMap)
 }
 
 // initialize etcd config
