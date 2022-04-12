@@ -251,10 +251,10 @@ func TestMapKV2Node(t *testing.T) {
 		wantRes    *Node
 	}{
 		{
-			name:       "address typo error",
+			name:       "invalid upstream node",
 			key:        "127.0.0.1:0:0",
 			wantErr:    true,
-			errMessage: "address typo error",
+			errMessage: "invalid upstream node",
 		},
 		{
 			name:    "when address contains port convert should succeed",
