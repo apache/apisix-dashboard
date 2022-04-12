@@ -31,7 +31,7 @@ func mapKV2Node(key string, val float64) (*Node, error) {
 	port := "0"
 
 	if len(hp) > 2 {
-		return nil, errors.New("address typo error")
+		return nil, errors.New("invalid upstream node")
 	} else if len(hp) == 2 {
 		port = hp[1]
 	}
