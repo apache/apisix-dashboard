@@ -158,7 +158,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.list' })}>
+    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.template' })}>
       <ProTable<PluginTemplateModule.ResEntity>
         actionRef={ref}
         rowKey="id"
