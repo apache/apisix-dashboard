@@ -22,9 +22,11 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, notification, Popconfirm, Select, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import usePagination from '@/hooks/usePagination';
+import { omit } from 'lodash';
+
 import { fetchList, remove, create, fetchLabelList, update } from './service';
 import { RawDataEditor } from '@/components/RawDataEditor';
-import { omit } from 'lodash';
+
 import { DELETE_FIELDS } from '@/constants';
 
 const Page: React.FC = () => {
@@ -192,7 +194,7 @@ const Page: React.FC = () => {
           (editorMode === 'create' ? create(data) : update(id, data)).then(() => {
             setVisible(false);
             handleTableActionSuccessResponse(
-              `${formatMessage({ id: 'component.global.submit.success' })}`,
+              formatMessage({ id: 'component.global.submit.success' }),
             );
             ref.current?.reload();
           });
