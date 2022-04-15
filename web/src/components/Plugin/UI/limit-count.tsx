@@ -239,7 +239,8 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
   const properties = schema?.properties;
   const [policy, setPoicy] = useState<PolicyProps>(properties.policy.default);
   const { formatMessage } = useIntl();
-  const dependSchema = schema?.dependencies.policy.oneOf;
+  const redisSchema = schema?.then;
+  const redisClusterSchema = schema?.else.then;
 
   return (
     <Form form={form} {...FORM_ITEM_LAYOUT}>
@@ -367,8 +368,8 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
           setPoicy(form.getFieldValue('policy'));
         }}
       </Form.Item>
-      {Boolean(policy === 'redis') && <RedisForm schema={dependSchema[1]} />}
-      {Boolean(policy === 'redis-cluster') && <RedisClusterForm schema={dependSchema[2]} />}
+      {Boolean(policy === 'redis') && <RedisForm schema={redisSchema} />}
+      {Boolean(policy === 'redis-cluster') && <RedisClusterForm schema={redisClusterSchema} />}
     </Form>
   );
 };

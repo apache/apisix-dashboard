@@ -46,6 +46,8 @@ export default {
     'Maximum number of seconds the results can be cached. Within this time range, the browser will reuse the last check result. -1 means no cache. Please note that the maximum value is depended on browser, please refer to MDN for details.',
   'component.pluginForm.cors.allow_credential.tooltip':
     "If you set this option to true, you can not use '*' for other options.",
+  'component.pluginForm.cors.allow_origins_by_metadata.tooltip':
+    'Match which origin is allowed to enable CORS by referencing allow_origins set in plugin metadata.',
   'component.pluginForm.cors.allow_origins_by_regex.tooltip':
     'Use regex expressions to match which origin is allowed to enable CORS, for example, [".*.test.com"] can use to match all subdomain of test.com.',
 
@@ -78,6 +80,9 @@ export default {
   'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip':
     'address needs to contain schema: http or https, not URI part',
+  'component.pluginForm.proxy-mirror.path.tooltip':
+    "Specify the mirror request's path part. Without it the current path will be used.",
+  'component.pluginForm.proxy-mirror.path.ruletip': 'Please enter the correct path, e.g. /path',
   'component.pluginForm.proxy-mirror.sample_ratio.tooltip':
     'the sample ratio that requests will be mirrored.',
 

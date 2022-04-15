@@ -11,7 +11,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -97,7 +96,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -378,7 +376,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -931,7 +928,6 @@
 						},
 						"labels": {
 							"description": "key/value pairs to specify attributes",
-							"maxProperties": 16,
 							"patternProperties": {
 								".*": {
 									"description": "value of label",
@@ -1161,7 +1157,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -1555,7 +1550,6 @@
 						},
 						"labels": {
 							"description": "key/value pairs to specify attributes",
-							"maxProperties": 16,
 							"patternProperties": {
 								".*": {
 									"description": "value of label",
@@ -1815,7 +1809,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -2316,7 +2309,6 @@
 						},
 						"labels": {
 							"description": "key/value pairs to specify attributes",
-							"maxProperties": 16,
 							"patternProperties": {
 								".*": {
 									"description": "value of label",
@@ -2857,7 +2849,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -3237,6 +3228,21 @@
 					}
 				],
 				"properties": {
+					"access_denied_redirect_uri": {
+						"maxLength": 2048,
+						"minLength": 1,
+						"type": "string"
+					},
+					"access_token_expires_in": {
+						"default": 300,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"access_token_expires_leeway": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
 					"audience": {
 						"description": "Deprecated, use `client_id` instead.",
 						"maxLength": 100,
@@ -3314,6 +3320,16 @@
 							"PERMISSIVE"
 						],
 						"type": "string"
+					},
+					"refresh_token_expires_in": {
+						"default": 3600,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"refresh_token_expires_leeway": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
 					},
 					"resource_registration_endpoint": {
 						"maxLength": 4096,
@@ -3517,29 +3533,95 @@
 			"type": "auth",
 			"version": 0.1
 		},
-		"batch-requests": {
+		"clickhouse-logger": {
 			"metadata_schema": {
 				"properties": {
-					"max_body_size": {
-						"default": 1048576,
-						"description": "max pipeline body size in bytes",
-						"exclusiveMinimum": 0,
-						"type": "integer"
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
 					}
 				},
 				"type": "object"
 			},
-			"priority": 4010,
+			"priority": 398,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"database": {
+						"default": "",
+						"type": "string"
+					},
 					"disable": {
 						"type": "boolean"
+					},
+					"endpoint_addr": {
+						"pattern": "^[^\\/]+:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?",
+						"type": "string"
+					},
+					"inactive_timeout": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"logtable": {
+						"default": "",
+						"type": "string"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "clickhouse-logger",
+						"type": "string"
+					},
+					"password": {
+						"default": "",
+						"type": "string"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"ssl_verify": {
+						"default": true,
+						"type": "boolean"
+					},
+					"timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"user": {
+						"default": "",
+						"type": "string"
 					}
 				},
+				"required": [
+					"database",
+					"endpoint_addr",
+					"logtable",
+					"password",
+					"user"
+				],
 				"type": "object"
 			},
-			"scope": "global",
 			"version": 0.1
 		},
 		"client-control": {
@@ -3651,6 +3733,18 @@
 			"version": 0.1
 		},
 		"cors": {
+			"metadata_schema": {
+				"properties": {
+					"allow_origins": {
+						"additionalProperties": {
+							"pattern": "^(\\*|\\*\\*|null|\\w+://[^,]+(,\\w+://[^,]+)*)$",
+							"type": "string"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
 			"priority": 4000,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
@@ -3675,6 +3769,17 @@
 						"description": "you can use '*' to allow all origins when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple origin use ',' to split. default: *.",
 						"pattern": "^(\\*|\\*\\*|null|\\w+://[^,]+(,\\w+://[^,]+)*)$",
 						"type": "string"
+					},
+					"allow_origins_by_metadata": {
+						"description": "set allowed origins by referencing origins in plugin metadata",
+						"items": {
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array",
+						"uniqueItems": true
 					},
 					"allow_origins_by_regex": {
 						"description": "you can use regex to allow specific origins when no credentials,for example use [.*\\.test.com] to allow a.test.com and b.test.com",
@@ -3701,6 +3806,36 @@
 						"type": "integer"
 					}
 				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"csrf": {
+			"priority": 2980,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"expires": {
+						"default": 7200,
+						"description": "expires time(s) for csrf token",
+						"type": "integer"
+					},
+					"key": {
+						"description": "use to generate csrf token",
+						"type": "string"
+					},
+					"name": {
+						"default": "apisix-csrf-token",
+						"description": "the csrf token name",
+						"type": "string"
+					}
+				},
+				"required": [
+					"key"
+				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -3778,35 +3913,6 @@
 			},
 			"version": 0.1
 		},
-		"dubbo-proxy": {
-			"priority": 507,
-			"schema": {
-				"$comment": "this is a mark for our injected plugin schema",
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					},
-					"method": {
-						"minLength": 1,
-						"type": "string"
-					},
-					"service_name": {
-						"minLength": 1,
-						"type": "string"
-					},
-					"service_version": {
-						"pattern": "^\\d+\\.\\d+\\.\\d+",
-						"type": "string"
-					}
-				},
-				"required": [
-					"service_name",
-					"service_version"
-				],
-				"type": "object"
-			},
-			"version": 0.1
-		},
 		"echo": {
 			"priority": 412,
 			"schema": {
@@ -3853,159 +3959,6 @@
 				},
 				"type": "object"
 			},
-			"version": 0.1
-		},
-		"error-log-logger": {
-			"metadata_schema": {
-				"oneOf": [
-					{
-						"required": [
-							"skywalking"
-						]
-					},
-					{
-						"required": [
-							"tcp"
-						]
-					},
-					{
-						"required": [
-							"host",
-							"port"
-						]
-					}
-				],
-				"properties": {
-					"batch_max_size": {
-						"default": 1000,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"buffer_duration": {
-						"default": 60,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"host": {
-						"1": {
-							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
-							"type": "string"
-						},
-						"description": "Deprecated, use `tcp.host` instead."
-					},
-					"inactive_timeout": {
-						"default": 3,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"keepalive": {
-						"default": 30,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"level": {
-						"default": "WARN",
-						"enum": [
-							"ALERT",
-							"CRIT",
-							"DEBUG",
-							"EMERG",
-							"ERR",
-							"ERROR",
-							"INFO",
-							"NOTICE",
-							"STDERR",
-							"WARN"
-						],
-						"type": "string"
-					},
-					"max_retry_count": {
-						"default": 0,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"name": {
-						"default": "error-log-logger",
-						"type": "string"
-					},
-					"port": {
-						"description": "Deprecated, use `tcp.port` instead.",
-						"minimum": 0,
-						"type": "integer"
-					},
-					"retry_delay": {
-						"default": 1,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"skywalking": {
-						"properties": {
-							"endpoint_addr": {
-								"default": "http://127.0.0.1:12900/v3/logs"
-							},
-							"service_instance_name": {
-								"default": "APISIX Service Instance",
-								"type": "string"
-							},
-							"service_name": {
-								"default": "APISIX",
-								"type": "string"
-							}
-						},
-						"type": "object"
-					},
-					"tcp": {
-						"properties": {
-							"host": {
-								"pattern": "^\\*?[0-9a-zA-Z-._]+$",
-								"type": "string"
-							},
-							"port": {
-								"minimum": 0,
-								"type": "integer"
-							},
-							"tls": {
-								"default": false,
-								"type": "boolean"
-							},
-							"tls_server_name": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"host",
-							"port"
-						],
-						"type": "object"
-					},
-					"timeout": {
-						"default": 3,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"tls": {
-						"default": false,
-						"description": "Deprecated, use `tcp.tls` instead.",
-						"type": "boolean"
-					},
-					"tls_server_name": {
-						"description": "Deprecated, use `tcp.tls_server_name` instead.",
-						"type": "string"
-					}
-				},
-				"type": "object"
-			},
-			"priority": 1091,
-			"schema": {
-				"$comment": "this is a mark for our injected plugin schema",
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					}
-				},
-				"type": "object"
-			},
-			"scope": "global",
 			"version": 0.1
 		},
 		"example-plugin": {
@@ -4195,6 +4148,38 @@
 						"type": "boolean"
 					}
 				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"file-logger": {
+			"metadata_schema": {
+				"properties": {
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 399,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"path": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"path"
+				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -4717,6 +4702,10 @@
 						"minimum": 0,
 						"type": "integer"
 					},
+					"ssl_verify": {
+						"default": false,
+						"type": "boolean"
+					},
 					"timeout": {
 						"default": 3,
 						"minimum": 1,
@@ -4914,8 +4903,20 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"cookie": {
+						"default": "jwt",
+						"type": "string"
+					},
 					"disable": {
 						"type": "boolean"
+					},
+					"header": {
+						"default": "authorization",
+						"type": "string"
+					},
+					"query": {
+						"default": "jwt",
+						"type": "string"
 					}
 				},
 				"type": "object"
@@ -5090,49 +5091,6 @@
 			"type": "auth",
 			"version": 0.1
 		},
-		"ldap-auth": {
-			"consumer_schema": {
-				"properties": {
-					"user_dn": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"user_dn"
-				],
-				"title": "work with consumer object",
-				"type": "object"
-			},
-			"priority": 2540,
-			"schema": {
-				"$comment": "this is a mark for our injected plugin schema",
-				"properties": {
-					"base_dn": {
-						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
-					},
-					"ldap_uri": {
-						"type": "string"
-					},
-					"uid": {
-						"type": "string"
-					},
-					"use_tls": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"base_dn",
-					"ldap_uri"
-				],
-				"title": "work with route or service object",
-				"type": "object"
-			},
-			"type": "auth",
-			"version": 0.1
-		},
 		"limit-conn": {
 			"priority": 1003,
 			"schema": {
@@ -5197,88 +5155,53 @@
 			"priority": 1002,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
-				"dependencies": {
-					"policy": {
-						"oneOf": [
-							{
-								"properties": {
-									"policy": {
-										"enum": [
-											"local"
-										]
-									}
-								}
-							},
-							{
-								"properties": {
-									"policy": {
-										"enum": [
-											"redis"
-										]
-									},
-									"redis_database": {
-										"default": 0,
-										"minimum": 0,
-										"type": "integer"
-									},
-									"redis_host": {
-										"minLength": 2,
-										"type": "string"
-									},
-									"redis_password": {
-										"minLength": 0,
-										"type": "string"
-									},
-									"redis_port": {
-										"default": 6379,
-										"minimum": 1,
-										"type": "integer"
-									},
-									"redis_timeout": {
-										"default": 1000,
-										"minimum": 1,
-										"type": "integer"
-									}
-								},
-								"required": [
-									"redis_host"
-								]
-							},
-							{
-								"properties": {
-									"policy": {
-										"enum": [
-											"redis-cluster"
-										]
-									},
-									"redis_cluster_name": {
-										"type": "string"
-									},
-									"redis_cluster_nodes": {
-										"items": {
-											"maxLength": 100,
-											"minLength": 2,
-											"type": "string"
-										},
-										"minItems": 2,
-										"type": "array"
-									},
-									"redis_password": {
-										"minLength": 0,
-										"type": "string"
-									},
-									"redis_timeout": {
-										"default": 1000,
-										"minimum": 1,
-										"type": "integer"
-									}
-								},
-								"required": [
-									"redis_cluster_name",
-									"redis_cluster_nodes"
+				"else": {
+					"if": {
+						"properties": {
+							"policy": {
+								"enum": [
+									"redis-cluster"
 								]
 							}
+						}
+					},
+					"then": {
+						"properties": {
+							"redis_cluster_name": {
+								"type": "string"
+							},
+							"redis_cluster_nodes": {
+								"items": {
+									"maxLength": 100,
+									"minLength": 2,
+									"type": "string"
+								},
+								"minItems": 2,
+								"type": "array"
+							},
+							"redis_password": {
+								"minLength": 0,
+								"type": "string"
+							},
+							"redis_timeout": {
+								"default": 1000,
+								"minimum": 1,
+								"type": "integer"
+							}
+						},
+						"required": [
+							"redis_cluster_name",
+							"redis_cluster_nodes"
 						]
+					}
+				},
+				"if": {
+					"properties": {
+						"policy": {
+							"enum": [
+								"redis"
+							]
+						}
 					}
 				},
 				"properties": {
@@ -5341,6 +5264,36 @@
 					"count",
 					"time_window"
 				],
+				"then": {
+					"properties": {
+						"redis_database": {
+							"default": 0,
+							"minimum": 0,
+							"type": "integer"
+						},
+						"redis_host": {
+							"minLength": 2,
+							"type": "string"
+						},
+						"redis_password": {
+							"minLength": 0,
+							"type": "string"
+						},
+						"redis_port": {
+							"default": 6379,
+							"minimum": 1,
+							"type": "integer"
+						},
+						"redis_timeout": {
+							"default": 1000,
+							"minimum": 1,
+							"type": "integer"
+						}
+					},
+					"required": [
+						"redis_host"
+					]
+				},
 				"type": "object"
 			},
 			"version": 0.4
@@ -5400,32 +5353,164 @@
 			},
 			"version": 0.1
 		},
-		"log-rotate": {
-			"priority": 100,
-			"schema": {
-				"$comment": "this is a mark for our injected plugin schema",
+		"loggly": {
+			"metadata_schema": {
 				"properties": {
-					"disable": {
-						"type": "boolean"
+					"host": {
+						"default": "logs-01.loggly.com",
+						"type": "string"
+					},
+					"log_format": {
+						"type": "object"
+					},
+					"port": {
+						"default": 514,
+						"type": "integer"
+					},
+					"protocol": {
+						"default": "syslog",
+						"enum": [
+							"http",
+							"https",
+							"syslog"
+						],
+						"type": "string"
+					},
+					"timeout": {
+						"default": 5000,
+						"minimum": 1,
+						"type": "integer"
 					}
 				},
 				"type": "object"
 			},
-			"scope": "global",
-			"version": 0.1
-		},
-		"node-status": {
-			"priority": 1000,
+			"priority": 411,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"customer_token": {
+						"type": "string"
+					},
 					"disable": {
 						"type": "boolean"
+					},
+					"inactive_timeout": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"include_req_body": {
+						"default": false,
+						"type": "boolean"
+					},
+					"include_resp_body": {
+						"default": false,
+						"type": "boolean"
+					},
+					"include_resp_body_expr": {
+						"items": {
+							"type": "array"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "loggly",
+						"type": "string"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"severity": {
+						"default": "INFO",
+						"description": "base severity log level",
+						"enum": [
+							"ALERT",
+							"CRIT",
+							"DEBUG",
+							"EMEGR",
+							"ERR",
+							"INFO",
+							"NOTICE",
+							"WARNING",
+							"alert",
+							"crit",
+							"debug",
+							"emegr",
+							"err",
+							"info",
+							"notice",
+							"warning"
+						],
+						"type": "string"
+					},
+					"severity_map": {
+						"additionalProperties": false,
+						"description": "upstream response code vs syslog severity mapping",
+						"patternProperties": {
+							"^[1-5][0-9]{2}$": {
+								"description": "keys are HTTP status code, values are severity",
+								"enum": [
+									"ALERT",
+									"CRIT",
+									"DEBUG",
+									"EMEGR",
+									"ERR",
+									"INFO",
+									"NOTICE",
+									"WARNING",
+									"alert",
+									"crit",
+									"debug",
+									"emegr",
+									"err",
+									"info",
+									"notice",
+									"warning"
+								],
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					"ssl_verify": {
+						"default": true,
+						"type": "boolean"
+					},
+					"tags": {
+						"default": [
+							"apisix"
+						],
+						"items": {
+							"pattern": "^(?!tag=)[ -~]*",
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
 					}
 				},
+				"required": [
+					"customer_token"
+				],
 				"type": "object"
 			},
-			"scope": "global",
 			"version": 0.1
 		},
 		"opa": {
@@ -5523,6 +5608,10 @@
 					},
 					"logout_path": {
 						"default": "/logout",
+						"type": "string"
+					},
+					"post_logout_redirect_uri": {
+						"description": "the URI will be redirect when request logout_path",
 						"type": "string"
 					},
 					"public_key": {
@@ -5793,7 +5882,11 @@
 						"type": "boolean"
 					},
 					"host": {
-						"pattern": "^http(s)?:\\/\\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$",
+						"pattern": "^http(s)?:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?$",
+						"type": "string"
+					},
+					"path": {
+						"pattern": "^/[^?&]+$",
 						"type": "string"
 					},
 					"sample_ratio": {
@@ -5872,6 +5965,22 @@
 						"maxLength": 4096,
 						"minLength": 1,
 						"pattern": "^\\/.*",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"public-api": {
+			"priority": 501,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"uri": {
 						"type": "string"
 					}
 				},
@@ -6148,128 +6257,6 @@
 			},
 			"version": 0.1
 		},
-		"rocketmq-logger": {
-			"metadata_schema": {
-				"properties": {
-					"log_format": {
-						"default": {
-							"@timestamp": "$time_iso8601",
-							"client_ip": "$remote_addr",
-							"host": "$host"
-						},
-						"type": "object"
-					}
-				},
-				"type": "object"
-			},
-			"priority": 402,
-			"schema": {
-				"$comment": "this is a mark for our injected plugin schema",
-				"properties": {
-					"access_key": {
-						"default": "",
-						"type": "string"
-					},
-					"batch_max_size": {
-						"default": 1000,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"buffer_duration": {
-						"default": 60,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
-					},
-					"inactive_timeout": {
-						"default": 5,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"include_req_body": {
-						"default": false,
-						"type": "boolean"
-					},
-					"include_req_body_expr": {
-						"items": {
-							"type": "array"
-						},
-						"minItems": 1,
-						"type": "array"
-					},
-					"include_resp_body": {
-						"default": false,
-						"type": "boolean"
-					},
-					"include_resp_body_expr": {
-						"items": {
-							"type": "array"
-						},
-						"minItems": 1,
-						"type": "array"
-					},
-					"key": {
-						"type": "string"
-					},
-					"max_retry_count": {
-						"default": 0,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"meta_format": {
-						"default": "default",
-						"enum": [
-							"default",
-							"origin"
-						],
-						"type": "string"
-					},
-					"name": {
-						"default": "rocketmq logger",
-						"type": "string"
-					},
-					"nameserver_list": {
-						"items": {
-							"type": "string"
-						},
-						"minItems": 1,
-						"type": "array"
-					},
-					"retry_delay": {
-						"default": 1,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"secret_key": {
-						"default": "",
-						"type": "string"
-					},
-					"tag": {
-						"type": "string"
-					},
-					"timeout": {
-						"default": 3,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"topic": {
-						"type": "string"
-					},
-					"use_tls": {
-						"default": false,
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"nameserver_list",
-					"topic"
-				],
-				"type": "object"
-			},
-			"version": 0.1
-		},
 		"server-info": {
 			"priority": 990,
 			"schema": {
@@ -6350,25 +6337,6 @@
 				"required": [
 					"functions"
 				],
-				"type": "object"
-			},
-			"version": 0.1
-		},
-		"skywalking": {
-			"priority": -1100,
-			"schema": {
-				"$comment": "this is a mark for our injected plugin schema",
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					},
-					"sample_ratio": {
-						"default": 1,
-						"maximum": 1,
-						"minimum": 0.00001,
-						"type": "number"
-					}
-				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -6647,7 +6615,6 @@
 						"type": "integer"
 					},
 					"max_retry_times": {
-						"default": 1,
 						"minimum": 1,
 						"type": "integer"
 					},
@@ -6669,7 +6636,6 @@
 						"type": "integer"
 					},
 					"retry_interval": {
-						"default": 1,
 						"minimum": 0,
 						"type": "integer"
 					},
@@ -7164,7 +7130,6 @@
 													},
 													"labels": {
 														"description": "key/value pairs to specify attributes",
-														"maxProperties": 16,
 														"patternProperties": {
 															".*": {
 																"description": "value of label",
@@ -7525,7 +7490,7 @@
 			"version": 0.1
 		},
 		"zipkin": {
-			"priority": 11011,
+			"priority": 12011,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {

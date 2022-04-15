@@ -45,6 +45,8 @@ export default {
     '浏览器缓存 CORS 结果的最大时间，单位为秒，在这个时间范围内浏览器会复用上一次的检查结果，-1 表示不缓存。',
   'component.pluginForm.cors.allow_credential.tooltip':
     '是否允许跨域访问的请求方携带凭据（如 Cookie 等）。根据 CORS 规范，如果设置该选项为 true，那么将不能在其他选项中使用 * 。',
+  'component.pluginForm.cors.allow_origins_by_metadata.tooltip':
+    '通过引用插件元数据的 allow_origins 配置允许跨域访问的 Origin。',
   'component.pluginForm.cors.allow_origins_by_regex.tooltip':
     '使用正则表达式数组来匹配允许跨域访问的 Origin, 如[".*.test.com"] 可以匹配任何test.com的子域名 * 。',
 
@@ -73,6 +75,9 @@ export default {
   'component.pluginForm.proxy-mirror.host.extra': '例如：http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip':
     '地址中需要包含 schema ：http或https，不能包含 URI 部分',
+  'component.pluginForm.proxy-mirror.path.tooltip':
+    '指定镜像请求的路径。如不指定，当前路径将被使用。',
+  'component.pluginForm.proxy-mirror.path.ruletip': '请输入正确的路径，例如： /path',
   'component.pluginForm.proxy-mirror.sample_ratio.tooltip': '镜像请求采样率',
 
   // limit-conn
