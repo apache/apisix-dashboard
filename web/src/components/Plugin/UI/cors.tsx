@@ -176,7 +176,6 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                   {fields.length < metadataMaxLength && (
                     <Button
                       type="dashed"
-                      data-cy="add-allow_origins_by_regex"
                       onClick={() => {
                         add();
                       }}

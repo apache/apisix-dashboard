@@ -593,7 +593,13 @@
   "limit-count": [
     {
       "shouldValid": true,
-      "data": { "count": 2, "time_window": 60, "rejected_code": 503, "key": "remote_addr" }
+      "data": {
+        "count": 2,
+        "time_window": 60,
+        "rejected_code": 503,
+        "key": "remote_addr",
+        "policy": "local"
+      }
     },
     {
       "shouldValid": true,
@@ -601,14 +607,16 @@
         "count": 2,
         "time_window": 60,
         "rejected_code": 503,
-        "key": "host"
+        "key": "host",
+        "policy": "local"
       }
     },
     {
       "shouldValid": false,
       "data": {
         "time_window": 60,
-        "rejected_code": 503
+        "rejected_code": 503,
+        "policy": "local"
       }
     },
     {
@@ -617,7 +625,8 @@
         "count": -100,
         "time_window": 60,
         "rejected_code": 503,
-        "key": "remote_addr"
+        "key": "remote_addr",
+        "policy": "local"
       }
     },
     {
@@ -626,7 +635,8 @@
         "count": 2,
         "time_window": 60,
         "rejected_code": 503,
-        "key": "server_addr"
+        "key": "server_addr",
+        "policy": "local"
       }
     },
     {
@@ -634,7 +644,8 @@
       "data": {
         "count": 2,
         "time_window": 60,
-        "key": "remote_addr"
+        "key": "remote_addr",
+        "policy": "local"
       }
     }
   ],

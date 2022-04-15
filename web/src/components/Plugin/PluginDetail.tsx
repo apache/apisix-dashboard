@@ -129,10 +129,16 @@ const PluginDetail: React.FC<Props> = ({
 
     if (name === 'cors') {
       const newMethods = formData.allow_methods.join(',');
-      const compactAllowRegex = compact(formData.allow_origins_by_regex);
-      // Note: default allow_origins_by_regex setted for UI is [''], but this is not allowed, omit it.
-      if (compactAllowRegex.length === 0) {
-        return omit({ ...formData, allow_methods: newMethods }, ['allow_origins_by_regex']);
+      const isFilterAllowRegex = compact(formData.allow_origins_by_regex).length === 0;
+      const isFilterAllowMetadata = compact(formData.allow_origins_by_metadata).length === 0;
+      // Note: default allow_origins_by_regex and allow_origins_by_metadata setted for UI is [''], but this is not allowed, omit it.
+      if (isFilterAllowRegex || isFilterAllowMetadata) {
+        const filterAllowRegex = (isFilterAllowRegex && 'allow_origins_by_regex') || '';
+        const filterAllowMetadata = (isFilterAllowMetadata && 'allow_origins_by_metadata') || '';
+        return omit({ ...formData, allow_methods: newMethods }, [
+          filterAllowRegex,
+          filterAllowMetadata,
+        ]);
       }
 
       return { ...formData, allow_methods: newMethods };
@@ -309,7 +315,10 @@ const PluginDetail: React.FC<Props> = ({
   };
 
   const isNoConfigurationRequired =
-    pluginType === 'auth' && schemaType !== 'consumer' && monacoMode !== monacoModeList.UIForm && targetPluginName !== 'key-auth';
+    pluginType === 'auth' &&
+    schemaType !== 'consumer' &&
+    monacoMode !== monacoModeList.UIForm &&
+    targetPluginName !== 'key-auth';
 
   return (
     <Drawer
