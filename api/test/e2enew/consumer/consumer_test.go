@@ -41,7 +41,8 @@ var _ = Describe("Consumer", func() {
 						"count": 2,
 						"time_window": 60,
 						"rejected_code": 503,
-						"key": "remote_addr"
+						"key": "remote_addr",
+						"policy": "local"
 					}
 				},
 				"desc": "test description"
@@ -69,7 +70,8 @@ var _ = Describe("Consumer", func() {
 						"count": 2,
 						"time_window": 60,
 						"rejected_code": 504,
-						"key": "remote_addr"
+						"key": "remote_addr",
+						"policy": "local"
 					}
 				},
 				"desc": "test description"
@@ -111,7 +113,8 @@ var _ = Describe("Consumer", func() {
 					"count": 2,
 					"time_window": 60,
 					"rejected_code": 503,
-					"key": "remote_addr"
+					"key": "remote_addr",
+					"policy": "local"
 					}
 				},
 				"desc": "test description"
