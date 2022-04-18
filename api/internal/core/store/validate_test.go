@@ -78,12 +78,13 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	reqBody := `{
 		"username": "jack",
 		"plugins": {
-		  "limit-count": {
-		      "count": 2,
-		      "time_window": 60,
-		      "rejected_code": 503,
-		      "key": "remote_addr"
-		  }
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr",
+				"policy": "local"
+			}
 		},
 		"desc": "test description"
 	}`
@@ -92,12 +93,12 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	err = validator.Validate(consumer)
 	assert.Nil(t, err)
 
-	//check nil obj
+	// check nil obj
 	err = validator.Validate(nil)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "schema validate failed: (root): Invalid type. Expected: object, given: null")
 
-	//plugin schema fail
+	// plugin schema fail
 	consumer3 := &entity.Consumer{}
 	reqBody = `{
 		"username": "jack",
@@ -105,7 +106,8 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 			"limit-count": {
 				"time_window": 60,
 				"rejected_code": 503,
-				"key": "remote_addr"
+				"key": "remote_addr",
+				"policy": "local"
 			}
 		},
 		"desc": "test description"
