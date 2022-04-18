@@ -23,6 +23,7 @@ import ActionBar from '@/components/ActionBar';
 
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
+import { omit } from 'lodash';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -60,9 +61,10 @@ const Page: React.FC = (props) => {
       }
       if (data.checks) {
         if (data.checks.active.req_headers?.length === 0) {
-          delete data.checks.active.req_headers;
+          data.checks.active = omit(data.checks.active, 'req_headers');
         }
       }
+      console.log(data);
       const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
         notification.success({
