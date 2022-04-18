@@ -219,6 +219,7 @@ paths:
           time_window: 60
           rejected_code: 503
           key: remote_addr
+          policy: local
       responses:
         '200':
           description: list response
