@@ -18,12 +18,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
+import { omit } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
-import { omit } from 'lodash';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
