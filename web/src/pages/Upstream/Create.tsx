@@ -64,7 +64,6 @@ const Page: React.FC = (props) => {
           data.checks.active = omit(data.checks.active, 'req_headers');
         }
       }
-      console.log(data);
       const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
         notification.success({
