@@ -193,7 +193,7 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 					"time_window":   60,
 					"rejected_code": 503,
 					"key":           "remote_addr",
-					"policy":        "local"
+					"policy":        "local",
 				},
 			},
 			"upstream": map[string]interface{}{
@@ -307,7 +307,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 					"time_window":   60,
 					"rejected_code": 503,
 					"key":           "remote_addr",
-					"policy": "local"
+					"policy":        "local",
 				},
 			},
 			"upstream": map[string]interface{}{
