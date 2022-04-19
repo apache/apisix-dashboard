@@ -84,7 +84,7 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 		      "rejected_code": 503,
 		      "key": "remote_addr",
 			  "policy": "local"
-		  }
+		  	}
 		},
 		"desc": "test description"
 	}`
