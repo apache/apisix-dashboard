@@ -66,9 +66,9 @@ var _ = ginkgo.Describe("Route", func() {
 						"limit-count": {
 							"count": 2,
 							"key": "remote_addr",
+							"policy": "local",
 							"rejected_code": 503,
-							"time_window": 60,
-							"policy": "local"
+							"time_window": 60
 						}
 					},
 					"x-apisix-priority": 0,
@@ -101,9 +101,9 @@ var _ = ginkgo.Describe("Route", func() {
 						"limit-count": {
 							"count": 2,
 							"key": "remote_addr",
+							"policy": "local",
 							"rejected_code": 503,
-							"time_window": 60,
-							"policy": "local"
+							"time_window": 60
 						}
 					},
 					"x-apisix-priority": 0,
@@ -198,9 +198,9 @@ var _ = ginkgo.Describe("Route", func() {
 						"limit-count": {
 							"count": 2,
 							"key": "remote_addr",
+							"policy": "local",
 							"rejected_code": 503,
-							"time_window": 60,
-							"policy": "local"
+							"time_window": 60
 						}
 					},
 					"x-apisix-priority": 0,
@@ -424,9 +424,9 @@ var _ = ginkgo.Describe("Route", func() {
 							"limit-count": {
 								"count": 100,
 								"key": "remote_addr",
+								"policy": "local",
 								"rejected_code": 503,
-								"time_window": 60,
-								"policy": "local"
+								"time_window": 60
 							}
 						},
 						"x-apisix-priority": 0,
@@ -463,9 +463,9 @@ var _ = ginkgo.Describe("Route", func() {
 						 "limit-count": {
 							 "count": 100,
 							 "time_window": 60,
+							 "policy": "local",
 							 "rejected_code": 503,
-							 "key": "remote_addr",
-							 "policy": "local"
+							 "key": "remote_addr"
 						 }
 					 },
 					 "upstream": {
@@ -566,9 +566,9 @@ var _ = ginkgo.Describe("Route", func() {
 				"limit-count": {
 					"count": 100,
 					"key": "remote_addr",
+					"policy": "local",
 					"rejected_code": 503,
-					"time_window": 60,
-					"policy": "local"
+					"time_window": 60
 				}
 			},
 			"labels": {
@@ -608,9 +608,9 @@ var _ = ginkgo.Describe("Route", func() {
 							"limit-count": {
 								"count": 100,
 								"key": "remote_addr",
+								"policy": "local",
 								"rejected_code": 503,
-								"time_window": 60,
-								"policy": "local"
+								"time_window": 60
 							},
 							"prometheus": {
 								"disable": false
@@ -758,9 +758,9 @@ var _ = ginkgo.Describe("Route", func() {
 				"limit-count": {
 					"count": 100,
 					"key": "remote_addr",
+					"policy": "local",
 					"rejected_code": 503,
-					"time_window": 60,
-					"policy": "local"
+					"time_window": 60
 				}
 			},
 			"labels": {
@@ -800,9 +800,9 @@ var _ = ginkgo.Describe("Route", func() {
 							"limit-count": {
 								"count": 100,
 								"key": "remote_addr",
+								"policy": "local",
 								"rejected_code": 503,
-								"time_window": 60,
-								"policy": "local"
+								"time_window": 60
 							},
 							"prometheus": {
 								"disable": false
