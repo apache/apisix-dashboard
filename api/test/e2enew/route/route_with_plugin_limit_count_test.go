@@ -366,7 +366,7 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 					   "rejected_code": 503,
 					   "key": "remote_addr",
 					   "disable": true,
-					   "policy": "local",
+					   "policy": "local"
 				   }
 			   },
 			   "upstream": {
