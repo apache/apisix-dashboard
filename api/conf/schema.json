@@ -3913,6 +3913,35 @@
 			},
 			"version": 0.1
 		},
+		"dubbo-proxy": {
+			"priority": 507,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"method": {
+						"minLength": 1,
+						"type": "string"
+					},
+					"service_name": {
+						"minLength": 1,
+						"type": "string"
+					},
+					"service_version": {
+						"pattern": "^\\d+\\.\\d+\\.\\d+",
+						"type": "string"
+					}
+				},
+				"required": [
+					"service_name",
+					"service_version"
+				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"echo": {
 			"priority": 412,
 			"schema": {
@@ -3959,6 +3988,159 @@
 				},
 				"type": "object"
 			},
+			"version": 0.1
+		},
+		"error-log-logger": {
+			"metadata_schema": {
+				"oneOf": [
+					{
+						"required": [
+							"skywalking"
+						]
+					},
+					{
+						"required": [
+							"tcp"
+						]
+					},
+					{
+						"required": [
+							"host",
+							"port"
+						]
+					}
+				],
+				"properties": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"host": {
+						"1": {
+							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+							"type": "string"
+						},
+						"description": "Deprecated, use `tcp.host` instead."
+					},
+					"inactive_timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"keepalive": {
+						"default": 30,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"level": {
+						"default": "WARN",
+						"enum": [
+							"ALERT",
+							"CRIT",
+							"DEBUG",
+							"EMERG",
+							"ERR",
+							"ERROR",
+							"INFO",
+							"NOTICE",
+							"STDERR",
+							"WARN"
+						],
+						"type": "string"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "error-log-logger",
+						"type": "string"
+					},
+					"port": {
+						"description": "Deprecated, use `tcp.port` instead.",
+						"minimum": 0,
+						"type": "integer"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"skywalking": {
+						"properties": {
+							"endpoint_addr": {
+								"default": "http://127.0.0.1:12900/v3/logs"
+							},
+							"service_instance_name": {
+								"default": "APISIX Service Instance",
+								"type": "string"
+							},
+							"service_name": {
+								"default": "APISIX",
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					"tcp": {
+						"properties": {
+							"host": {
+								"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+								"type": "string"
+							},
+							"port": {
+								"minimum": 0,
+								"type": "integer"
+							},
+							"tls": {
+								"default": false,
+								"type": "boolean"
+							},
+							"tls_server_name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"host",
+							"port"
+						],
+						"type": "object"
+					},
+					"timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"tls": {
+						"default": false,
+						"description": "Deprecated, use `tcp.tls` instead.",
+						"type": "boolean"
+					},
+					"tls_server_name": {
+						"description": "Deprecated, use `tcp.tls_server_name` instead.",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 1091,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"scope": "global",
 			"version": 0.1
 		},
 		"example-plugin": {
@@ -6257,6 +6439,128 @@
 			},
 			"version": 0.1
 		},
+		"rocketmq-logger": {
+			"metadata_schema": {
+				"properties": {
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 402,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"access_key": {
+						"default": "",
+						"type": "string"
+					},
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"inactive_timeout": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"include_req_body": {
+						"default": false,
+						"type": "boolean"
+					},
+					"include_req_body_expr": {
+						"items": {
+							"type": "array"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"include_resp_body": {
+						"default": false,
+						"type": "boolean"
+					},
+					"include_resp_body_expr": {
+						"items": {
+							"type": "array"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"key": {
+						"type": "string"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"meta_format": {
+						"default": "default",
+						"enum": [
+							"default",
+							"origin"
+						],
+						"type": "string"
+					},
+					"name": {
+						"default": "rocketmq logger",
+						"type": "string"
+					},
+					"nameserver_list": {
+						"items": {
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"secret_key": {
+						"default": "",
+						"type": "string"
+					},
+					"tag": {
+						"type": "string"
+					},
+					"timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"topic": {
+						"type": "string"
+					},
+					"use_tls": {
+						"default": false,
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"nameserver_list",
+					"topic"
+				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"server-info": {
 			"priority": 990,
 			"schema": {
@@ -6337,6 +6641,25 @@
 				"required": [
 					"functions"
 				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"skywalking": {
+			"priority": -1100,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"sample_ratio": {
+						"default": 1,
+						"maximum": 1,
+						"minimum": 0.00001,
+						"type": "number"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -7618,6 +7941,49 @@
 				},
 				"type": "object"
 			},
+			"version": 0.1
+		},
+		"ldap-auth": {
+			"consumer_schema": {
+				"properties": {
+					"user_dn": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user_dn"
+				],
+				"title": "work with consumer object",
+				"type": "object"
+			},
+			"priority": 2540,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"base_dn": {
+						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"ldap_uri": {
+						"type": "string"
+					},
+					"uid": {
+						"type": "string"
+					},
+					"use_tls": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"base_dn",
+					"ldap_uri"
+				],
+				"title": "work with route or service object",
+				"type": "object"
+			},
+			"type": "auth",
 			"version": 0.1
 		},
 		"limit-conn": {
