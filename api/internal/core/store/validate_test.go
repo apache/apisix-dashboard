@@ -428,6 +428,82 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 	}
 }
 
+func TestAPISIXSchemaValidator_SystemConfig(t *testing.T) {
+	tests := []struct {
+		name            string
+		givePath        string
+		giveObj         interface{}
+		wantNewErr      bool
+		wantValidateErr bool
+		wantErrMessage  string
+	}{
+		{
+			name:           "new json schema validator failed",
+			givePath:       "main.xxx",
+			wantNewErr:     true,
+			wantErrMessage: "schema validate failed: schema not found, path: main.xxx",
+		},
+		{
+			name:     "invalid configName (configName is empty)",
+			givePath: "main.system_config",
+			giveObj: &entity.SystemConfig{
+				Payload: map[string]interface{}{"a": 1},
+			},
+			wantValidateErr: true,
+			wantErrMessage:  "schema validate failed: config_name: String length must be greater than or equal to 1\nconfig_name: Does not match pattern '^[a-zA-Z0-9_]+$'",
+		},
+		{
+			name:     "invalid configName (configName do not match regex)",
+			givePath: "main.system_config",
+			giveObj: &entity.SystemConfig{
+				ConfigName: "1@2",
+				Payload:    map[string]interface{}{"a": 1},
+			},
+			wantValidateErr: true,
+			wantErrMessage:  "schema validate failed: config_name: Does not match pattern '^[a-zA-Z0-9_]+$'",
+		},
+		{
+			name:     "invalid payload",
+			givePath: "main.system_config",
+			giveObj: &entity.SystemConfig{
+				ConfigName: "cc",
+			},
+			wantValidateErr: true,
+			wantErrMessage:  "schema validate failed: (root): payload is required",
+		},
+		{
+			name:     "validate should succeed",
+			givePath: "main.system_config",
+			giveObj: &entity.SystemConfig{
+				ConfigName: "aaa",
+				Payload:    map[string]interface{}{"a": 1},
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		validator, err := NewAPISIXSchemaValidator(tc.givePath)
+		if tc.wantNewErr {
+			assert.Error(t, err)
+			assert.Equal(t, tc.wantErrMessage, err.Error())
+			continue
+		}
+
+		assert.NoError(t, err)
+		assert.NotNil(t, validator)
+
+		req, err := json.Marshal(tc.giveObj)
+		assert.NoError(t, err)
+		err = validator.Validate(req)
+		if tc.wantValidateErr {
+			assert.Error(t, err)
+			assert.Equal(t, tc.wantErrMessage, err.Error())
+			continue
+		}
+		assert.NoError(t, err)
+	}
+}
+
 func TestAPISIXSchemaValidator_Validate(t *testing.T) {
 	validator, err := NewAPISIXSchemaValidator("main.consumer")
 	assert.Nil(t, err)

@@ -48,7 +48,7 @@ Please replace `<CONFIG_FILE>` to your configure file path.
 
 ```shell
 # 1. install RPM package
-sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.9.0/apisix-dashboard-2.9.0-0.el7.x86_64.rpm
+sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.11.0/apisix-dashboard-2.11.0-0.el7.x86_64.rpm
 ```
 
 ### Launch
@@ -58,7 +58,7 @@ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download
 sudo manager-api -p /usr/local/apisix/dashboard/
 
 # or run dashboard as a service
-systemctl apisix-dashboard start
+systemctl start apisix-dashboard
 ```
 
 Without changing the configuration, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
@@ -91,7 +91,7 @@ For `web`:
 ### Download {#source-download}
 
 ```shell
-git clone -b release/2.9.0 https://github.com/apache/apisix-dashboard.git && cd apisix-dashboard
+git clone -b release/2.10.1 https://github.com/apache/apisix-dashboard.git && cd apisix-dashboard
 ```
 
 ### Build {#source-build}

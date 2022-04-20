@@ -1,19 +1,19 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string",
-      "minLength": 10
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 10
+        },
+        "email": {
+            "type": "string",
+            "maxLength": 10
+        },
+        "age": {
+            "type": "integer",
+            "minimum": 0
+        }
     },
-    "email": {
-      "type": "string",
-      "maxLength": 10
-    },
-    "age": {
-      "type": "integer",
-      "minimum": 0
-    }
-  },
-  "additionalProperties": false
+    "additionalProperties": false
 }

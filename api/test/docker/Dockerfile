@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-FROM golang:1.13.8 AS build-env
+FROM golang:1.15 AS build-env
 
 WORKDIR /go/src/github.com/apisix/manager-api
 
@@ -26,6 +26,7 @@ RUN mkdir -p /go/manager-api/conf \
     && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
     && mv /go/src/github.com/apisix/manager-api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
     && mv /go/src/github.com/apisix/manager-api/conf/schema.json /go/manager-api/conf/schema.json \
+    && mv /go/src/github.com/apisix/manager-api/conf/customize_schema.json /go/manager-api/conf/customize_schema.json \
     && rm -rf /go/src/github.com/apisix/manager-api \
     && rm -rf /etc/localtime \
     && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \

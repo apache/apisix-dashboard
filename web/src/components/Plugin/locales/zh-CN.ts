@@ -23,7 +23,7 @@ export default {
     '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
   'component.plugin.enable': '启用',
-  'component.plugin.disable': '禁用',
+  'component.plugin.disable': '编辑',
   'component.plugin.authentication': '身份验证',
   'component.plugin.security': '安全防护',
   'component.plugin.traffic': '流量控制',
@@ -104,6 +104,7 @@ export default {
   'component.pluginForm.limit-req.key.tooltip': '用来做请求计数的依据',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     '当请求超过阈值被拒绝时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-req.rejected_msg.tooltip': '当请求超过阈值被拒绝时，返回的响应体。',
   'component.pluginForm.limit-req.nodelay.tooltip': '开启后突发的请求不会延迟',
 
   'component.plugin.form': '表单',
@@ -121,8 +122,15 @@ export default {
     '用来做请求计数的有效值。例如，可以使用主机名（或服务器区域）作为关键字，以便限制每个主机名规定时间内的请求次数。我们也可以使用客户端地址作为关键字，这样我们就可以避免单个客户端规定时间内多次的连接我们的服务。',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     '当请求超过阈值被拒绝时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-count.rejected_msg.tooltip': '当请求超过阈值被拒绝时，返回的响应体。',
   'component.pluginForm.limit-count.policy.tooltip':
     '用于检索和增加限制的速率限制策略。可选的值有：local(计数器被以内存方式保存在节点本地，默认选项) 和 redis(计数器保存在 Redis 服务节点上，从而可以跨节点共享结果，通常用它来完成全局限速)；以及redis-cluster，跟 redis 功能一样，只是使用 redis 集群方式。',
+  'component.pluginForm.limit-count.allow_degradation.tooltip':
+    '当限流插件功能临时不可用时（例如，Redis 超时）是否允许请求继续。当值设置为 true 时则自动允许请求继续',
+  'component.pluginForm.limit-count.show_limit_quota_header.tooltip':
+    '是否在响应头中显示 X-RateLimit-Limit 和 X-RateLimit-Remaining （限制的总请求数和剩余还可以发送的请求数）',
+  'component.pluginForm.limit-count.group.tooltip':
+    '配置同样的 group 的 Route 将共享同样的限流计数器',
   'component.pluginForm.limit-count.redis_host.tooltip':
     '当使用 redis 限速策略时，该属性是 Redis 服务节点的地址。',
   'component.pluginForm.limit-count.redis_port.tooltip':

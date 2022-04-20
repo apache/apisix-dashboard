@@ -1,0 +1,33 @@
+{
+    "main": {
+        "system_config": {
+            "properties": {
+                "config_name": {
+                    "maxLength":100,
+                    "minLength":1,
+                    "pattern":"^[a-zA-Z0-9_]+$",
+                    "type":"string"
+                },
+                "desc": {
+                    "maxLength":256,
+                    "type":"string"
+                },
+                "payload": {
+                    "type":"object",
+                    "minProperties":1
+                },
+                "create_time": {
+                    "type":"integer"
+                },
+                "update_time": {
+                    "type":"integer"
+                }
+            },
+            "required": [
+                "config_name",
+                "payload"
+            ],
+            "type":"object"
+        }
+   }
+}

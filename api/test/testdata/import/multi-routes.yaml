@@ -37,14 +37,15 @@ paths:
       x-apisix-plugins:
         proxy-rewrite:
           disable: false
-          scheme: https
+          scheme: http
       x-apisix-priority: 0
       x-apisix-status: 1
       x-apisix-upstream:
         nodes:
-          - host: httpbin.org
-            port: 443
+          - host: 172.16.238.20
+            port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -65,14 +66,15 @@ paths:
       x-apisix-plugins:
         proxy-rewrite:
           disable: false
-          scheme: https
+          scheme: http
       x-apisix-priority: 0
       x-apisix-status: 1
       x-apisix-upstream:
         nodes:
-          - host: httpbin.org
-            port: 443
+          - host: 172.16.238.20
+            port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -93,14 +95,15 @@ paths:
       x-apisix-plugins:
         proxy-rewrite:
           disable: false
-          scheme: https
+          scheme: http
       x-apisix-priority: 0
       x-apisix-status: 1
       x-apisix-upstream:
         nodes:
-          - host: httpbin.org
-            port: 443
+          - host: 172.16.238.20
+            port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -121,14 +124,15 @@ paths:
       x-apisix-plugins:
         proxy-rewrite:
           disable: false
-          scheme: https
+          scheme: http
       x-apisix-priority: 0
       x-apisix-status: 1
       x-apisix-upstream:
         nodes:
-          - host: httpbin.org
-            port: 443
+          - host: 172.16.238.20
+            port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -149,14 +153,15 @@ paths:
       x-apisix-plugins:
         proxy-rewrite:
           disable: false
-          scheme: https
+          scheme: http
       x-apisix-priority: 0
       x-apisix-status: 1
       x-apisix-upstream:
         nodes:
-          - host: httpbin.org
-            port: 443
+          - host: 172.16.238.20
+            port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -177,14 +182,15 @@ paths:
       x-apisix-plugins:
         proxy-rewrite:
           disable: false
-          scheme: https
+          scheme: http
       x-apisix-priority: 0
       x-apisix-status: 1
       x-apisix-upstream:
         nodes:
-          - host: httpbin.org
-            port: 443
+          - host: 172.16.238.20
+            port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000
@@ -207,14 +213,15 @@ paths:
       x-apisix-plugins:
         proxy-rewrite:
           disable: false
-          scheme: https
+          scheme: http
       x-apisix-priority: 0
       x-apisix-status: 1
       x-apisix-upstream:
         nodes:
-          - host: httpbin.org
-            port: 443
+          - host: 172.16.238.20
+            port: 80
             weight: 1
+            priority: 10
         timeout:
           connect: 6000
           read: 6000

@@ -25,12 +25,12 @@ The Dashboard contains both `manager-api` and `web` parts, so you need to start 
 
 ## Prerequisites
 
-Before development, refer to this [guide](./deploy.md) to install dependencies.
+Before development, refer to this [guide](./install.md) to install dependencies.
 
 ## Clone the project
 
 ```sh
-$ git clone -b release/2.9.0 https://github.com/apache/apisix-dashboard.git
+$ git clone -b release/2.11.0 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Start developing

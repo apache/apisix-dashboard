@@ -21,12 +21,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: setup go
-        uses: actions/setup-go@v2.1.4
+        uses: actions/setup-go@v3
         with:
-          go-version: "1.13"
+          go-version: "1.15"
           submodules: recursive
 
       - uses: actions/cache@v2
@@ -92,39 +92,11 @@ jobs:
         working-directory: ./api/test/e2e
         run: go test -v
 
-      - name: re-generate json schema
-        working-directory: ./api/
-        run: |
-          curl 127.0.0.1:9090/v1/schema > ./conf/schema.json
-
       - name: stop docker compose
         working-directory: ./api/test/docker
         run: |
           docker-compose down
           sleep 10
-
-      - name: re-build docker images
-        working-directory: ./api/test/docker
-        continue-on-error: true
-        run: |
-          docker buildx bake --load \
-          -f docker-compose.yaml \
-          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
-          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
-
-      - name: re-run docker compose
-        working-directory: ./api/test/docker
-        run: |
-          docker-compose up -d --build
-
-          # wait for services ready
-          ../shell/wait_for_services.sh
-
-          docker logs docker_managerapi_1
-
-      - name: run test for plugin skywalking
-        working-directory: ./api/test/e2e/skywalking
-        run: go test -v
 
       - name: output test coverage
         working-directory: ./api/test/testdata
@@ -140,10 +112,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: setup go
-        uses: actions/setup-go@v2.1.4
+        uses: actions/setup-go@v3
         with:
           go-version: "1.17"
 

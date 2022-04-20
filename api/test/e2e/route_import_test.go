@@ -317,9 +317,9 @@ func TestImport_with_multi_routes(t *testing.T) {
 				Headers:      map[string]string{"Authorization": token},
 				ExpectStatus: http.StatusOK,
 				ExpectBody: []string{`"methods":["GET","POST","HEAD","PUT","PATCH","DELETE"]`,
-					`"proxy-rewrite":{"disable":false,"scheme":"https"}`,
+					`"proxy-rewrite":{"disable":false,"scheme":"http"}`,
 					`"labels":{"API_VERSION":"v2","dev":"test"}`,
-					`"upstream":{"nodes":[{"host":"httpbin.org","port":443,"weight":1}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
+					`"upstream":{"nodes":[{"host":"172.16.238.20","port":80,"weight":1,"priority":10}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
 				},
 				Sleep: sleepTime,
 			}
@@ -333,9 +333,9 @@ func TestImport_with_multi_routes(t *testing.T) {
 				Headers:      map[string]string{"Authorization": token},
 				ExpectStatus: http.StatusOK,
 				ExpectBody: []string{`"methods":["POST"]`,
-					`"proxy-rewrite":{"disable":false,"scheme":"https"}`,
+					`"proxy-rewrite":{"disable":false,"scheme":"http"}`,
 					`"labels":{"API_VERSION":"v1","version":"v1"}`,
-					`"upstream":{"nodes":[{"host":"httpbin.org","port":443,"weight":1}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
+					`"upstream":{"nodes":[{"host":"172.16.238.20","port":80,"weight":1,"priority":10}],"timeout":{"connect":6000,"send":6000,"read":6000},"type":"roundrobin","pass_host":"node"}`,
 				},
 				Sleep: sleepTime,
 			}
@@ -351,7 +351,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/get",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"url": "https://127.0.0.1/get"`,
+			ExpectBody:   `/get`,
 			Sleep:        sleepTime,
 		},
 		{
@@ -360,7 +360,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Method:       http.MethodPost,
 			Path:         "/post",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"url": "https://127.0.0.1/post"`,
+			ExpectBody:   `/post`,
 			Sleep:        sleepTime,
 		},
 	}
@@ -550,6 +550,140 @@ func TestRoute_export_import(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody: []string{`"methods":["GET"]`,
+				`"desc":"所有`,
+				`"hosts":["test.com"]`,
+				`"upstream":{"nodes":[{"host":"` + UpstreamIp + `","port":1980,"weight":1}],"type":"roundrobin"}`,
+			},
+			Sleep: sleepTime,
+		}
+		tests = append(tests, tcDataVerify)
+	}
+
+	// delete test data
+	for _, item := range list {
+		route := item.(map[string]interface{})
+		tc := HttpTestCase{
+			Desc:         "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/" + route["id"].(string),
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		}
+		tests = append(tests, tc)
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
+
+func TestRoute_export_import_merge(t *testing.T) {
+	// create routes
+	tests := []HttpTestCase{
+		{
+			Desc:   "Create a route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					"id": "r1",
+					"uris": ["/test1", "/test2"],
+					"name": "route_all",
+					"desc": "所有",
+					"methods": ["GET","POST","PUT","DELETE"],
+					"hosts": ["test.com"],
+					"status": 1,
+					"upstream": {
+						"nodes": {
+							"` + UpstreamIp + `:1980": 1
+						},
+						"type": "roundrobin"
+					}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	// export routes
+	time.Sleep(sleepTime)
+	tmpPath := "/tmp/export.json"
+	headers := map[string]string{
+		"Authorization": token,
+	}
+	body, status, err := httpGet(ManagerAPIHost+"/apisix/admin/export/routes", headers)
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, status)
+
+	content := gjson.Get(string(body), "data")
+	err = ioutil.WriteFile(tmpPath, []byte(content.Raw), 0644)
+	assert.Nil(t, err)
+
+	// import routes (should failed -- duplicate)
+	files := []UploadFile{
+		{Name: "file", Filepath: tmpPath},
+	}
+	respBody, status, err := PostFile(ManagerAPIHost+"/apisix/admin/import/routes", nil, files, headers)
+	assert.Nil(t, err)
+	assert.Equal(t, 400, status)
+	assert.True(t, strings.Contains(string(respBody), "duplicate"))
+	time.Sleep(sleepTime)
+
+	// delete routes
+	tests = []HttpTestCase{
+		{
+			Desc:         "delete the route1 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	// import again
+	time.Sleep(sleepTime)
+	respBody, status, err = PostFile(ManagerAPIHost+"/apisix/admin/import/routes", nil, files, headers)
+	assert.Nil(t, err)
+	assert.Equal(t, 200, status)
+	assert.True(t, strings.Contains(string(respBody), `"data":{"paths":2,"routes":1}`))
+	time.Sleep(sleepTime)
+
+	// sleep for data sync
+	time.Sleep(sleepTime)
+
+	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
+	request.Header.Add("Authorization", token)
+	resp, err := http.DefaultClient.Do(request)
+	assert.Nil(t, err)
+	defer resp.Body.Close()
+	respBody, _ = ioutil.ReadAll(resp.Body)
+	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
+
+	assert.Equal(t, 1, len(list))
+
+	// verify route data
+	tests = []HttpTestCase{}
+	for _, item := range list {
+		route := item.(map[string]interface{})
+		tcDataVerify := HttpTestCase{
+			Desc:         "verify data of route2",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/routes/" + route["id"].(string),
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody: []string{`"methods":["GET","POST","PUT","DELETE"]`,
+				`"/test1"`,
+				`"/test2"`,
 				`"desc":"所有`,
 				`"hosts":["test.com"]`,
 				`"upstream":{"nodes":[{"host":"` + UpstreamIp + `","port":1980,"weight":1}],"type":"roundrobin"}`,

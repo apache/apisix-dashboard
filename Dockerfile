@@ -24,7 +24,7 @@ RUN set -x \
     && cd /usr/local/apisix-dashboard && git clean -Xdf \
     && rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 
-FROM golang:1.14 as api-builder
+FROM golang:1.15 as api-builder
 
 ARG ENABLE_PROXY=false
 
@@ -46,7 +46,7 @@ COPY --from=pre-build /usr/local/apisix-dashboard .
 
 WORKDIR /usr/local/apisix-dashboard/web
 
-RUN if [ "$ENABLE_PROXY" = "true" ] ; then yarn config set registry https://registry.npm.taobao.org/ ; fi \
+RUN if [ "$ENABLE_PROXY" = "true" ] ; then yarn config set registry https://registry.npmmirror.com/ ; fi \
     && yarn install \
     && yarn build
 

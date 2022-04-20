@@ -51,6 +51,9 @@ export default {
   'component.status.fail': 'Failed',
   'component.global.popconfirm.title.delete': 'Are you sure to delete this record ?',
   'component.global.notification.success.message.deleteSuccess': 'Deleted Successfully',
+  'component.global.create.consumer.success': 'Create Consumer Successfully',
+  'component.global.delete.consumer.success': 'Delete Consumer Successfully',
+  'component.global.edit.consumer.success': 'Edit Consumer Successfully',
 
   'component.global.steps.stepTitle.basicInformation': 'Basic Information',
   'component.global.steps.stepTitle.preview': 'Preview',
@@ -67,6 +70,7 @@ export default {
   'component.global.sendTimeout': 'Send Timeout',
   'component.global.receiveTimeout': 'Receive Timeout',
   'component.global.name': 'Name',
+  'component.global.id': 'ID',
   'component.global.updateTime': 'Update Time',
   'component.global.form.itemExtraMessage.nameGloballyUnique': 'Name should be globally unique',
   'component.global.input.placeholder.description':

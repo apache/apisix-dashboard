@@ -195,7 +195,7 @@ var _ = ginkgo.Describe("route create with service", func() {
 		time.Sleep(time.Duration(300) * time.Millisecond)
 
 		// batch test /server_port api
-		res := base.BatchTestServerPort(18)
+		res := base.BatchTestServerPort(18, nil, "")
 
 		gomega.Expect(res["1980"]).Should(gomega.Equal(6))
 		gomega.Expect(res["1981"]).Should(gomega.Equal(6))
@@ -287,7 +287,7 @@ var _ = ginkgo.Describe("route create upstream", func() {
 		time.Sleep(time.Duration(300) * time.Millisecond)
 
 		// batch test /server_port api
-		res := base.BatchTestServerPort(12)
+		res := base.BatchTestServerPort(12, nil, "")
 
 		gomega.Expect(res["1980"]).Should(gomega.Equal(4))
 		gomega.Expect(res["1981"]).Should(gomega.Equal(4))
@@ -390,7 +390,7 @@ var _ = ginkgo.Describe("route create with service that contains upstream", func
 		time.Sleep(time.Duration(300) * time.Millisecond)
 
 		// batch test /server_port api
-		res := base.BatchTestServerPort(18)
+		res := base.BatchTestServerPort(18, nil, "")
 
 		gomega.Expect(res["1980"]).Should(gomega.Equal(6))
 		gomega.Expect(res["1981"]).Should(gomega.Equal(6))

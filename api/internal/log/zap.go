@@ -43,16 +43,18 @@ func InitLogger() {
 func GetLogger(logType Type) *zap.SugaredLogger {
 	_ = zap.RegisterSink("winfile", newWinFileSink)
 
+	skip := 2
 	writeSyncer := fileWriter(logType)
 	encoder := getEncoder(logType)
 	logLevel := getLogLevel()
 	if logType == AccessLog {
 		logLevel = zapcore.InfoLevel
+		skip = 0
 	}
 
 	core := zapcore.NewCore(encoder, writeSyncer, logLevel)
 
-	zapLogger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(2))
+	zapLogger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(skip))
 
 	return zapLogger.Sugar()
 }

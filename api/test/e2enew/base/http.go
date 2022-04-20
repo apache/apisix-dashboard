@@ -84,13 +84,16 @@ func httpRequest(method, url string, headers map[string]string, reqBody string) 
 	return body, resp.StatusCode, nil
 }
 
-func BatchTestServerPort(times int) map[string]int {
+func BatchTestServerPort(times int, headers map[string]string, queryString string) map[string]int {
 	t := getTestingHandle()
 	url := APISIXSingleWorkerHost + "/server_port"
-	res := map[string]int{}
+	if queryString != "" {
+		url = url + "?" + queryString
+	}
 
+	res := map[string]int{}
 	for i := 0; i < times; i++ {
-		bodyByte, status, err := HttpGet(url, nil)
+		bodyByte, status, err := HttpGet(url, headers)
 		assert.Nil(t, err)
 		assert.Equal(t, 200, status)
 

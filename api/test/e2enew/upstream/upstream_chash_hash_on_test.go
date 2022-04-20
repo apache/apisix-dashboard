@@ -31,14 +31,16 @@ import (
 
 var nodes []map[string]interface{} = []map[string]interface{}{
 	{
-		"host":   base.UpstreamIp,
-		"port":   1980,
-		"weight": 1,
+		"host":     base.UpstreamIp,
+		"port":     1980,
+		"weight":   1,
+		"priority": 10,
 	},
 	{
-		"host":   base.UpstreamIp,
-		"port":   1981,
-		"weight": 1,
+		"host":     base.UpstreamIp,
+		"port":     1981,
+		"weight":   1,
+		"priority": 10,
 	},
 }
 
@@ -496,7 +498,7 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1},{\"host\":\"" + base.UpstreamIp + "\",\"port\":1981,\"weight\":1}],\"type\":\"chash\",\"hash_on\":\"vars\",\"key\":\"arg_device_id\"",
+			ExpectBody:   "\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1,\"priority\":10},{\"host\":\"" + base.UpstreamIp + "\",\"port\":1981,\"weight\":1,\"priority\":10}],\"type\":\"chash\",\"hash_on\":\"vars\",\"key\":\"arg_device_id\"",
 			Sleep:        base.SleepTime,
 		})
 	})

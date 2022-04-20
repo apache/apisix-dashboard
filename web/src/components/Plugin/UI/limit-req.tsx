@@ -27,7 +27,7 @@ type Props = {
 
 export const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 4,
+    span: 5,
   },
   wrapperCol: {
     span: 8,
@@ -101,6 +101,13 @@ const LimitReq: React.FC<Props> = ({ form, schema }) => {
           min={properties.rejected_code.minimum}
           max={properties.rejected_code.maximum}
         />
+      </Form.Item>
+      <Form.Item
+        label="rejected_msg"
+        name="rejected_msg"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rejected_msg.tooltip' })}
+      >
+        <Input />
       </Form.Item>
       <Form.Item
         label="nodelay"

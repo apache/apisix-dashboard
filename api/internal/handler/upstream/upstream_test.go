@@ -1085,7 +1085,7 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream2",
-					Timeout:  &entity.Timeout{
+					Timeout: &entity.Timeout{
 						Connect: 20,
 						Send:    20,
 						Read:    20,
@@ -1138,7 +1138,7 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream2",
-					Timeout:  &entity.Timeout{
+					Timeout: &entity.Timeout{
 						Connect: 20,
 						Send:    20,
 						Read:    20,
@@ -1186,7 +1186,7 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream2",
-					Timeout:  &entity.Timeout{
+					Timeout: &entity.Timeout{
 						Connect: 20,
 						Send:    20,
 						Read:    20,
@@ -1243,7 +1243,7 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout:  &entity.Timeout{
+					Timeout: &entity.Timeout{
 						Connect: 20,
 						Send:    20,
 						Read:    20,
@@ -1291,7 +1291,7 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout:  &entity.Timeout{
+					Timeout: &entity.Timeout{
 						Connect: 15,
 						Send:    15,
 						Read:    15,
@@ -1339,7 +1339,7 @@ func TestUpstream_Patch(t *testing.T) {
 				},
 				UpstreamDef: entity.UpstreamDef{
 					Name: "upstream1",
-					Timeout:  &entity.Timeout{
+					Timeout: &entity.Timeout{
 						Connect: 20,
 						Send:    20,
 						Read:    20,
@@ -1426,19 +1426,19 @@ func TestUpstream_Patch(t *testing.T) {
 
 func TestUpstreams_Delete(t *testing.T) {
 	tests := []struct {
-		caseDesc        string
-		giveInput       *BatchDelete
-		giveErr         error
-		wantInput       []string
-		wantErr         error
-		wantRet         interface{}
-		routeMockData   []*entity.Route
-		routeMockErr    error
-		serviceMockData []*entity.Service
-		serviceMockErr  error
+		caseDesc            string
+		giveInput           *BatchDelete
+		giveErr             error
+		wantInput           []string
+		wantErr             error
+		wantRet             interface{}
+		routeMockData       []*entity.Route
+		routeMockErr        error
+		serviceMockData     []*entity.Service
+		serviceMockErr      error
 		streamRouteMockData []*entity.Service
 		streamRouteMockErr  error
-		getCalled       bool
+		getCalled           bool
 	}{
 		{
 			caseDesc: "delete success",

@@ -15,7 +15,18 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { Button, Table, Modal, Form, Select, Input, Space, notification, Typography } from 'antd';
+import {
+  Button,
+  Table,
+  Modal,
+  Form,
+  Select,
+  Input,
+  Space,
+  notification,
+  Typography,
+  Switch,
+} from 'antd';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
@@ -99,7 +110,6 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     '~*': formatMessage({ id: 'page.route.caseInsensitiveRegexMatch' }),
     IN: formatMessage({ id: 'page.route.in' }),
     HAS: formatMessage({ id: 'page.route.has' }),
-    '!': formatMessage({ id: 'page.route.reverse' }),
   };
 
   const columns = [
@@ -134,6 +144,11 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
       title: formatMessage({ id: 'page.route.parameterName' }),
       dataIndex: 'name',
       key: 'name',
+    },
+    {
+      title: formatMessage({ id: 'page.route.reverse' }),
+      key: 'reverse',
+      render: (text: RouteModule.MatchingRule) => text.reverse.toString(),
     },
     {
       title: formatMessage({ id: 'page.route.operationalCharacter' }),
@@ -243,6 +258,14 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             extra={namePlaceholder}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label={formatMessage({ id: 'page.route.reverse' })}
+            name={'reverse'}
+            valuePropName={'checked'}
+            required
+          >
+            <Switch />
           </Form.Item>
           <Form.Item
             label={formatMessage({ id: 'page.route.operationalCharacter' })}

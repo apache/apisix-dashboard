@@ -210,6 +210,7 @@ var _ = Describe("Stream Route", func() {
 			})
 		})
 		It("hit stream route through tcp", func() {
+			time.Sleep(base.SleepTime)
 			conn, err := net.Dial("tcp", "127.0.0.1:1991")
 			Expect(err).To(BeNil())
 
@@ -250,6 +251,7 @@ var _ = Describe("Stream Route", func() {
 			})
 		})
 		It("hit stream route through udp", func() {
+			time.Sleep(base.SleepTime)
 			conn, err := net.Dial("udp", "127.0.0.1:10095")
 			Expect(err).To(BeNil())
 

@@ -32,7 +32,7 @@
 
 - The master version should be used with Apache APISIX master version.
 
-- The latest released version is [2.9.0](https://apisix.apache.org/downloads/) and is compatible with [Apache APISIX 2.10.0](https://apisix.apache.org/downloads/).
+- The latest released version is [2.11.0](https://apisix.apache.org/downloads/) and is compatible with [Apache APISIX 2.12.1](https://apisix.apache.org/downloads/).
 
 ## What's Apache APISIX Dashboard
 
@@ -46,8 +46,9 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 
 ## Demo
 
+[Online Playground](http://20.210.250.99:9000/)
+
 ```text
-URL: http://106.55.144.26/
 Username: admin
 Password: admin
 ```

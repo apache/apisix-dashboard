@@ -20,7 +20,7 @@ export default {
   'component.plugin-flow.text.condition2': 'Condition',
   'component.plugin-flow.text.condition.placeholder': 'Please enter the rule',
   'component.plugin-flow.text.without-data': 'Found node without configuration',
-  'component.plugin-flow.text.plugin-without-data.description': 'Please condigure plugin: ',
+  'component.plugin-flow.text.plugin-without-data.description': 'Please configure plugin: ',
   'component.plugin-flow.text.no-start-node': 'Please connect the start node',
   'component.plugin-flow.text.no-root-node': 'Root node not found',
   'component.plugin-flow.text.start-node': 'Start',

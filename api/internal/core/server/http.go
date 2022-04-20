@@ -27,7 +27,6 @@ import (
 
 	"github.com/apisix/manager-api/internal"
 	"github.com/apisix/manager-api/internal/conf"
-	"github.com/apisix/manager-api/internal/filter"
 	"github.com/apisix/manager-api/internal/handler"
 )
 
@@ -37,7 +36,7 @@ func (s *server) setupAPI() {
 		var newMws []droplet.Middleware
 		// default middleware order: resp_reshape, auto_input, traffic_log
 		// We should put err_transform at second to catch all error
-		newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{}, &filter.AuthenticationMiddleware{})
+		newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{})
 		newMws = append(newMws, mws[1:]...)
 		return newMws
 	}

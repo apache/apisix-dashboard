@@ -135,7 +135,7 @@ export default {
   'component.upstream.fields.checks.active.unhealthy.interval.tooltip':
     'Interval between active health checks for unhealthy targets (in seconds). A value of zero indicates that active probes for healthy targets should not be performed.',
   'component.upstream.fields.checks.active.unhealthy.required':
-    'Please enter the unhelthy interval',
+    'Please enter the unhealthy interval',
 
   'component.upstream.fields.checks.passive.healthy.successes': 'Successes',
   'component.upstream.fields.checks.passive.healthy.successes.tooltip':
@@ -147,7 +147,7 @@ export default {
   'component.upstream.fields.checks.passive.unhealthy.timeouts.tooltip':
     'Number of timeouts in proxied traffic to consider a target unhealthy, as observed by passive health checks.',
 
-  'component.upstream.other.none': 'None',
+  'component.upstream.other.none': 'None (Only available when binding the service)',
   'component.upstream.other.pass_host-with-multiple-nodes.title':
     'Please check the target node configuration',
   'component.upstream.other.pass_host-with-multiple-nodes':

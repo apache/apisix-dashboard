@@ -17,6 +17,8 @@
 export default {
   'page.upstream.step.select.upstream': '选择上游服务',
   'page.upstream.step.select.upstream.select.option': '手动填写',
+  'page.upstream.step.select.upstream.select.option.serviceSelected':
+    '手动填写（当前配置将会覆盖已绑定的服务）',
   'page.upstream.step.select.upstream.select.none': '无',
   'page.upstream.step.backend.server.domain.or.ip': '后端服务域名或 IP',
   'page.upstream.form.item-label.node.domain.or.ip': '目标节点',
@@ -75,6 +77,7 @@ export default {
   'page.upstream.create.basic.info': '基础信息',
   'page.upstream.create.preview': '预览',
 
+  'page.upstream.list.id': 'ID',
   'page.upstream.list.name': '名称',
   'page.upstream.list.type': '类型',
   'page.upstream.list.description': '描述',
