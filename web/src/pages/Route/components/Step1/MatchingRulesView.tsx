@@ -36,7 +36,7 @@ const { Title, Text } = Typography;
 const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   advancedMatchingRules,
   disabled,
-  onChange = () => {},
+  onChange = () => { },
 }) => {
   const [visible, setVisible] = useState(false);
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
@@ -148,7 +148,11 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     {
       title: formatMessage({ id: 'page.route.reverse' }),
       key: 'reverse',
-      render: (text: RouteModule.MatchingRule) => text.reverse.toString(),
+      render: (text: RouteModule.MatchingRule) => {
+        text.reverse === undefined
+          ? text.reverse
+          : text.reverse.toString()
+      }
     },
     {
       title: formatMessage({ id: 'page.route.operationalCharacter' }),
@@ -163,19 +167,19 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     disabled
       ? {}
       : {
-          title: formatMessage({ id: 'component.global.operation' }),
-          key: 'action',
-          render: (_: any, record: RouteModule.MatchingRule) => (
-            <Space size="middle">
-              <a onClick={() => handleEdit(record)}>
-                {formatMessage({ id: 'component.global.edit' })}
-              </a>
-              <a onClick={() => handleRemove(record.key)}>
-                {formatMessage({ id: 'component.global.delete' })}
-              </a>
-            </Space>
-          ),
-        },
+        title: formatMessage({ id: 'component.global.operation' }),
+        key: 'action',
+        render: (_: any, record: RouteModule.MatchingRule) => (
+          <Space size="middle">
+            <a onClick={() => handleEdit(record)}>
+              {formatMessage({ id: 'component.global.edit' })}
+            </a>
+            <a onClick={() => handleRemove(record.key)}>
+              {formatMessage({ id: 'component.global.delete' })}
+            </a>
+          </Space>
+        ),
+      },
   ].filter((item) => Object.keys(item).length);
 
   const renderModal = () => {
