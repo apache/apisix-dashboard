@@ -299,4 +299,10 @@ export const PLUGIN_LIST = {
   'real-ip': {
     type: PluginType.other,
   },
+  'authz-casdoor': {
+    type: PluginType.authentication,
+  },
+  mocking: {
+    type: PluginType.other,
+  },
 };

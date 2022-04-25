@@ -398,6 +398,7 @@
 							"OPTIONS",
 							"PATCH",
 							"POST",
+							"PURGE",
 							"PUT",
 							"TRACE"
 						],
@@ -1879,6 +1880,35 @@
 				"plugins": {
 					"type": "object"
 				},
+				"protocol": {
+					"properties": {
+						"conf": {
+							"description": "protocol-specific configuration",
+							"type": "object"
+						},
+						"name": {
+							"type": "string"
+						},
+						"superior_id": {
+							"anyOf": [
+								{
+									"maxLength": 64,
+									"minLength": 1,
+									"pattern": "^[a-zA-Z0-9-_.]+$",
+									"type": "string"
+								},
+								{
+									"minimum": 1,
+									"type": "integer"
+								}
+							]
+						}
+					},
+					"required": [
+						"name"
+					],
+					"type": "object"
+				},
 				"remote_addr": {
 					"anyOf": [
 						{
@@ -3159,6 +3189,39 @@
 			},
 			"version": 0.1
 		},
+		"authz-casdoor": {
+			"priority": 2559,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"callback_url": {
+						"pattern": "^[^%?]+[^/]$",
+						"type": "string"
+					},
+					"client_id": {
+						"type": "string"
+					},
+					"client_secret": {
+						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"endpoint_addr": {
+						"pattern": "^[^%?]+[^/]$",
+						"type": "string"
+					}
+				},
+				"required": [
+					"callback_url",
+					"client_id",
+					"client_secret",
+					"endpoint_addr"
+				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"authz-keycloak": {
 			"priority": 2000,
 			"schema": {
@@ -3302,6 +3365,11 @@
 					"lazy_load_paths": {
 						"default": false,
 						"type": "boolean"
+					},
+					"password_grant_token_generation_incoming_uri": {
+						"maxLength": 4096,
+						"minLength": 1,
+						"type": "string"
 					},
 					"permissions": {
 						"default": {},
@@ -3677,6 +3745,7 @@
 											"OPTIONS",
 											"PATCH",
 											"POST",
+											"PURGE",
 											"PUT",
 											"TRACE"
 										],
@@ -4403,6 +4472,15 @@
 							"type": "string"
 						},
 						"type": "array"
+					},
+					"request_method": {
+						"default": "GET",
+						"description": "the method for client to request the authorization service",
+						"enum": [
+							"GET",
+							"POST"
+						],
+						"type": "string"
 					},
 					"ssl_verify": {
 						"default": true,
@@ -5263,11 +5341,58 @@
 						"default": "apikey",
 						"type": "string"
 					},
+					"hide_credentials": {
+						"default": false,
+						"type": "boolean"
+					},
 					"query": {
 						"default": "apikey",
 						"type": "string"
 					}
 				},
+				"type": "object"
+			},
+			"type": "auth",
+			"version": 0.1
+		},
+		"ldap-auth": {
+			"consumer_schema": {
+				"properties": {
+					"user_dn": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user_dn"
+				],
+				"title": "work with consumer object",
+				"type": "object"
+			},
+			"priority": 2540,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"base_dn": {
+						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"ldap_uri": {
+						"type": "string"
+					},
+					"uid": {
+						"type": "string"
+					},
+					"use_tls": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"base_dn",
+					"ldap_uri"
+				],
+				"title": "work with route or service object",
 				"type": "object"
 			},
 			"type": "auth",
@@ -5691,6 +5816,54 @@
 				"required": [
 					"customer_token"
 				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"mocking": {
+			"priority": 10900,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"anyOf": [
+					{
+						"required": [
+							"response_example"
+						]
+					},
+					{
+						"required": [
+							"response_schema"
+						]
+					}
+				],
+				"properties": {
+					"content_type": {
+						"default": "application/json;charset=utf8",
+						"type": "string"
+					},
+					"delay": {
+						"default": 0,
+						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"response_example": {
+						"type": "string"
+					},
+					"response_schema": {
+						"type": "object"
+					},
+					"response_status": {
+						"default": 200,
+						"minimum": 100,
+						"type": "integer"
+					},
+					"with_mock_header": {
+						"default": true,
+						"type": "boolean"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -6338,6 +6511,7 @@
 					"algorithm": {
 						"default": "uuid",
 						"enum": [
+							"nanoid",
 							"snowflake",
 							"uuid"
 						],
@@ -6420,11 +6594,53 @@
 					"disable": {
 						"type": "boolean"
 					},
+					"filters": {
+						"description": "a group of filters that modify response bodyby replacing one specified string by another",
+						"items": {
+							"description": "filter that modifies response body",
+							"properties": {
+								"options": {
+									"default": "jo",
+									"description": "regex options",
+									"type": "string"
+								},
+								"regex": {
+									"description": "match pattern on response body",
+									"minLength": 1,
+									"type": "string"
+								},
+								"replace": {
+									"description": "regex substitution content",
+									"type": "string"
+								},
+								"scope": {
+									"default": "once",
+									"description": "regex substitution range",
+									"enum": [
+										"global",
+										"once"
+									],
+									"type": "string"
+								}
+							},
+							"required": [
+								"regex",
+								"replace"
+							],
+							"type": "object"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
 					"headers": {
 						"description": "new headers for response",
 						"minProperties": 1,
 						"type": "object"
 					},
+					"oneOf": [
+						"body",
+						"filters"
+					],
 					"status_code": {
 						"description": "new status code for response",
 						"maximum": 598,
@@ -6971,7 +7187,7 @@
 						"type": "string"
 					},
 					"timeout": {
-						"default": 3,
+						"default": 3000,
 						"minimum": 1,
 						"type": "integer"
 					},
