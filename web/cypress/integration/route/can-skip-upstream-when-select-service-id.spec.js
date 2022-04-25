@@ -30,6 +30,12 @@ context('Can select service_id skip upstream in route', () => {
     deleteAlert: '.ant-modal-body',
     notificationCloseIcon: '.ant-notification-close-icon',
     enable_websocket: '#enable_websocket',
+    addbtn: '.ant-btn-primary',
+    selectItem: '.ant-select-item-option-content',
+    position: '#position',
+    value: '#value',
+    operator: '#operator',
+    rowcard: '.ant-table-row-level-0',
   };
 
   const data = {
@@ -45,6 +51,8 @@ context('Can select service_id skip upstream in route', () => {
     ip1: '127.0.0.1',
     port0: '7000',
     weight0: '1',
+    parameterName: 'text_Parameter',
+    value: '["1", "2"]',
   };
 
   beforeEach(() => {
@@ -95,6 +103,21 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('None').click();
     cy.contains(data.serviceName).click();
     cy.get(selector.enable_websocket).click();
+
+    cy.get(selector.addbtn).contains('Add').click();
+    cy.get(selector.position).click();
+    cy.get(selector.selectItem).within(() => {
+      cy.contains('HTTP Request Header').click();
+    });
+    cy.get('.ant-form-item-control-input-content > #name').type(data.parameterName);
+    cy.get(selector.operator).click();
+    cy.get(selector.selectItem).within(() => {
+      cy.contains('IN').click();
+    });
+    cy.get(selector.value).type(data.value);
+    cy.contains('Confirm').click();
+    cy.get(selector.rowcard).should('be.visible');
+    cy.get(selector.rowcard).get('tr>td').eq(2).should('have.value', '');
     cy.contains('Next').click();
 
     // make sure upstream data can be saved
@@ -103,7 +126,9 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(selector.input).should('be.disabled');
 
     cy.contains(data.upstreamName).click();
-    cy.contains('None').click({ force: true });
+    cy.contains('None').click({
+      force: true,
+    });
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
