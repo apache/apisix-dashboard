@@ -29,8 +29,9 @@ context('Create Configure and Delete PluginTemplate', () => {
     notification: '.ant-notification-notice-message',
     refresh: '.anticon-reload',
     descriptionSelector: '[title=Description]',
+    pluginTitle: '.ant-divider-inner-text',
+    pluginBtn: '.ant-btn-primary',
   };
-
   const data = {
     pluginTemplateName: 'test_plugin_template1',
     pluginTemplateName2: 'test_plugin_template2',
@@ -74,6 +75,14 @@ context('Create Configure and Delete PluginTemplate', () => {
 
     cy.contains('Submit').click();
     cy.contains('Next').click();
+    cy.contains(selector.pluginCard, 'basic-auth').should('be.visible');
+    cy.contains(selector.pluginTitle, 'Authentication').should('be.visible');
+    cy.contains(selector.pluginTitle, 'Security').should('not.exist');
+    cy.contains(selector.pluginTitle, 'Traffic Control').should('not.exist');
+    cy.contains(selector.pluginTitle, 'Serverless').should('not.exist');
+    cy.contains(selector.pluginTitle, 'Observability').should('not.exist');
+    cy.contains(selector.pluginTitle, 'Other').should('not.exist');
+    cy.contains(selector.pluginBtn, 'Enable').should('not.exist');
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createPluginTemplateSuccess);
   });
@@ -88,6 +97,14 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.get(selector.description).clear().type(data.pluginTemplateName2);
     cy.contains('Next').click();
     cy.contains('Next').click();
+    cy.contains(selector.pluginCard, 'basic-auth').should('be.visible');
+    cy.contains(selector.pluginTitle, 'Authentication').should('be.visible');
+    cy.contains(selector.pluginTitle, 'Security').should('not.exist');
+    cy.contains(selector.pluginTitle, 'Traffic Control').should('not.exist');
+    cy.contains(selector.pluginTitle, 'Serverless').should('not.exist');
+    cy.contains(selector.pluginTitle, 'Observability').should('not.exist');
+    cy.contains(selector.pluginTitle, 'Other').should('not.exist');
+    cy.contains(selector.pluginBtn, 'Enable').should('not.exist');
     cy.contains('Submit').click();
 
     cy.get(selector.notification).should('contain', data.editPluginTemplateSuccess);

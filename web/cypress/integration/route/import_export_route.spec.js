@@ -131,16 +131,19 @@ context('import and export routes', () => {
       cy.log(`found file ${jsonFile}`);
       cy.log('**confirm downloaded json file**');
       cy.readFile(jsonFile).then((fileContent) => {
-        expect(JSON.stringify(fileContent)).to.equal(JSON.stringify(this.exportFile.jsonFile));
+        const json = fileContent;
+        delete json['paths']['/{params}']['post']['x-apisix-id'];
+        expect(JSON.stringify(json)).to.equal(JSON.stringify(this.exportFile.jsonFile));
       });
     });
     cy.task('findFile', data.yamlMask).then((yamlFile) => {
       cy.log(`found file ${yamlFile}`);
       cy.log('**confirm downloaded yaml file**');
       cy.readFile(yamlFile).then((fileContent) => {
-        expect(JSON.stringify(yaml.load(fileContent), null, null)).to.equal(
-          JSON.stringify(this.exportFile.yamlFile),
-        );
+        const json = yaml.load(fileContent);
+        delete json['paths']['/{params}']['post']['x-apisix-id'];
+        delete json['paths']['/{params}-APISIX-REPEAT-URI-2']['post']['x-apisix-id'];
+        expect(JSON.stringify(json, null, null)).to.equal(JSON.stringify(this.exportFile.yamlFile));
       });
     });
   });

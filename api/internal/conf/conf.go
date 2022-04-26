@@ -17,6 +17,7 @@
 package conf
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -61,6 +62,7 @@ var (
 	ImportSizeLimit  = 10 * 1024 * 1024
 	AllowList        []string
 	Plugins          = map[string]bool{}
+	SecurityConf     Security
 )
 
 type MTLS struct {
@@ -110,6 +112,7 @@ type Conf struct {
 	Log       Log
 	AllowList []string `mapstructure:"allow_list"`
 	MaxCpu    int      `mapstructure:"max_cpu"`
+	Security  Security
 }
 
 type User struct {
@@ -127,6 +130,15 @@ type Config struct {
 	Conf           Conf
 	Authentication Authentication
 	Plugins        []string
+}
+
+type Security struct {
+	AllowCredentials      string `mapstructure:"access_control_allow_credentials"`
+	AllowOrigin           string `mapstructure:"access_control_allow_origin"`
+	AllowMethods          string `mapstructure:"access_control-allow_methods"`
+	AllowHeaders          string `mapstructure:"access_control_allow_headers"`
+	XFrameOptions         string `mapstructure:"x_frame_options"`
+	ContentSecurityPolicy string `mapstructure:"content_security_policy"`
 }
 
 // TODO: we should no longer use init() function after remove all handler's integration tests
@@ -246,6 +258,9 @@ func setupConfig() {
 
 	// set plugin
 	initPlugins(config.Plugins)
+
+	// security configuration
+	initSecurity(config.Conf.Security)
 }
 
 func setupEnv() {
@@ -275,12 +290,54 @@ func initPlugins(plugins []string) {
 }
 
 func initSchema() {
-	filePath := WorkDir + "/conf/schema.json"
-	if schemaContent, err := ioutil.ReadFile(filePath); err != nil {
-		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
-	} else {
-		Schema = gjson.ParseBytes(schemaContent)
+	var (
+		apisixSchemaPath       = WorkDir + "/conf/schema.json"
+		customizeSchemaPath    = WorkDir + "/conf/customize_schema.json"
+		apisixSchemaContent    []byte
+		customizeSchemaContent []byte
+		err                    error
+	)
+
+	if apisixSchemaContent, err = ioutil.ReadFile(apisixSchemaPath); err != nil {
+		panic(fmt.Errorf("fail to read configuration: %s, error: %s", apisixSchemaPath, err.Error()))
 	}
+
+	if customizeSchemaContent, err = ioutil.ReadFile(customizeSchemaPath); err != nil {
+		panic(fmt.Errorf("fail to read configuration: %s, error: %s", customizeSchemaPath, err.Error()))
+	}
+
+	content, err := mergeSchema(apisixSchemaContent, customizeSchemaContent)
+	if err != nil {
+		panic(err)
+	}
+
+	Schema = gjson.ParseBytes(content)
+}
+
+func mergeSchema(apisixSchema, customizeSchema []byte) ([]byte, error) {
+	var (
+		apisixSchemaMap    map[string]map[string]interface{}
+		customizeSchemaMap map[string]map[string]interface{}
+	)
+
+	if err := json.Unmarshal(apisixSchema, &apisixSchemaMap); err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(customizeSchema, &customizeSchemaMap); err != nil {
+		return nil, err
+	}
+
+	for key := range apisixSchemaMap["main"] {
+		if _, ok := customizeSchemaMap["main"][key]; ok {
+			return nil, fmt.Errorf("duplicates key: main.%s between schema.json and customize_schema.json", key)
+		}
+	}
+
+	for k, v := range customizeSchemaMap["main"] {
+		apisixSchemaMap["main"][k] = v
+	}
+
+	return json.Marshal(apisixSchemaMap)
 }
 
 // initialize etcd config
@@ -315,4 +372,25 @@ func initParallelism(choiceCores int) {
 		choiceCores = maxSupportedCores
 	}
 	runtime.GOMAXPROCS(choiceCores)
+}
+
+// initialize security settings
+func initSecurity(conf Security) {
+	var se Security
+	// if conf == se, then conf is empty, we should use default value
+	if conf != se {
+		SecurityConf = conf
+		if conf.ContentSecurityPolicy == "" {
+			SecurityConf.ContentSecurityPolicy = "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
+		}
+		if conf.XFrameOptions == "" {
+			SecurityConf.XFrameOptions = "deny"
+		}
+		return
+	}
+
+	SecurityConf = Security{
+		XFrameOptions:         "deny",
+		ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'",
+	}
 }

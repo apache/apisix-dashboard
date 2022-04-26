@@ -60,6 +60,14 @@ conf:
                          # such as absolute path on Windows: winfile:///C:\access.log
                          # log example: 2020-12-09T16:38:09.039+0800	INFO	filter/logging.go:46	/apisix/admin/routes/r1	{"status": 401, "host": "127.0.0.1:9000", "query": "asdfsafd=adf&a=a", "requestId": "3d50ecb8-758c-46d1-af5b-cd9d1c820156", "latency": 0, "remoteIP": "127.0.0.1", "method": "PUT", "errs": []}
   max_cpu: 0             # supports tweaking with the number of OS threads are going to be used for parallelism. Default value: 0 [will use max number of available cpu cores considering hyperthreading (if any)]. If the value is negative, is will not touch the existing parallelism profile.
+  # security:
+  #   access_control_allow_origin: "http://httpbin.org"
+  #   access_control_allow_credentials: true          # support using custom cors configration
+  #   access_control_allow_headers: "Authorization"
+  #   access_control-allow_methods: "*"
+  #   x_frame_options: "deny"
+  #   content_security_policy: ""default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'""
+
 
 authentication:
   secret:

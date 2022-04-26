@@ -92,6 +92,13 @@ const PluginPage: React.FC<Props> = ({
       form.setFieldsValue({ plugin_config_id });
     });
   }, []);
+  const openPluginList = pluginList.filter(
+    (item) => initialData[item.name] && !initialData[item.name].disable,
+  );
+  const openPluginType = openPluginList.map((item) => item.type);
+  const newOpenPluginType = openPluginType.filter((elem, index, self) => {
+    return index === self.indexOf(elem);
+  });
 
   const PluginList = () => (
     <>
@@ -179,7 +186,7 @@ const PluginPage: React.FC<Props> = ({
             />
           </>
         )}
-        {typeList.map((typeItem) => {
+        {(readonly ? newOpenPluginType : typeList).map((typeItem) => {
           return (
             <PanelSection
               title={formatMessage({ id: `component.plugin.${typeItem}` })}
@@ -188,7 +195,11 @@ const PluginPage: React.FC<Props> = ({
               id={`plugin-category-${typeItem}`}
             >
               {orderBy(
-                pluginList.filter((item) => item.type === typeItem.toLowerCase() && !item.hidden),
+                pluginList.filter(
+                  readonly
+                    ? (item) => item.type === typeItem && !item.hidden && initialData[item.name]
+                    : (item) => item.type === typeItem && !item.hidden,
+                ),
                 'name',
                 'asc',
               ).map((item) => (

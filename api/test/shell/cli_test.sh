@@ -200,6 +200,9 @@ stop_dashboard() {
   stop_dashboard 6
 
   [ $(grep -c "/apisix/admin/user/login" "${ACCESS_LOG_FILE}") -ne '0' ]
+
+  # check logging middleware
+  [ $(grep -c "filter/logging.go" "${ACCESS_LOG_FILE}") -ne '0' ]
 }
 
 #8
@@ -452,6 +455,32 @@ stop_dashboard() {
   stop_dashboard 3
 
   recover_service_file
+}
+
+#15
+@test "Check Security configuration" {
+  recover_conf
+
+  start_dashboard 3
+
+  # check response header without custom header
+  run curl -i http://127.0.0.1:9000
+
+  [ $(echo "$output" | grep -c "X-Frame-Options: deny") -eq '1' ]
+
+  stop_dashboard 6
+
+  sed -i 's@# security:@security:@' ${CONF_FILE}
+  sed -i 's@#   x_frame_options: "deny"@  x_frame_options: "test"@' ${CONF_FILE}
+
+  start_dashboard 3
+
+  # check response header with custom header
+  run curl -i http://127.0.0.1:9000
+
+[ $(echo "$output" | grep -c "X-Frame-Options: test") -eq '1' ]
+
+  stop_dashboard 6
 }
 
 #post

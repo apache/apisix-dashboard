@@ -14,20 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { GithubOutlined } from '@ant-design/icons';
-import { DefaultFooter } from '@ant-design/pro-layout';
+package system_config
 
-export default () => (
-  <DefaultFooter
-    copyright={`${new Date().getFullYear()} Apache APISIX`}
-    links={[
-      {
-        key: 'GitHub',
-        title: <GithubOutlined />,
-        href: 'https://github.com/apache/apisix',
-        blankTarget: true,
-      },
-    ]}
-  />
-);
+import (
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/gomega"
+	"testing"
+)
+
+func TestSystemConfig(t *testing.T) {
+	gomega.RegisterFailHandler(ginkgo.Fail)
+	ginkgo.RunSpecs(t, "system config suite")
+}
