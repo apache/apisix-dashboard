@@ -85,7 +85,7 @@ context('Create and Delete Route', () => {
     cy.login();
   });
 
-  it.only('should not create route with name above 100 characters', function () {
+  it('should not create route with name above 100 characters', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(selector.empty).should('be.visible');
@@ -315,9 +315,9 @@ context('Create and Delete Route', () => {
         .within(() => {
           cy.contains('OK').click();
         });
-      cy.get(selector.deleteAlert).within(()=>{
+      cy.get(selector.deleteAlert).within(() => {
         cy.get('.ant-btn-loading-icon').should('be.visible');
-      })
+      });
       cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
       cy.get(selector.notificationCloseIcon).click();
     });
