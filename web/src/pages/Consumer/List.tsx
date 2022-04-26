@@ -59,7 +59,7 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'menu.plugin' }),
       dataIndex: 'plugins',
       hideInSearch: true,
-      render: (_, record) => Object.keys(record.plugins).join(','),
+      render: (_, record) => Object.keys(record.plugins || []).join(','),
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
