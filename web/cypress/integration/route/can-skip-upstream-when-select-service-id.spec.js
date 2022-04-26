@@ -36,6 +36,7 @@ context('Can select service_id skip upstream in route', () => {
     value: '#value',
     operator: '#operator',
     rowcard: '.ant-table-row-level-0',
+    reverse: '#reverse',
   };
 
   const data = {
@@ -103,21 +104,6 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('None').click();
     cy.contains(data.serviceName).click();
     cy.get(selector.enable_websocket).click();
-
-    cy.get(selector.addbtn).contains('Add').click();
-    cy.get(selector.position).click();
-    cy.get(selector.selectItem).within(() => {
-      cy.contains('HTTP Request Header').click();
-    });
-    cy.get('.ant-form-item-control-input-content > #name').type(data.parameterName);
-    cy.get(selector.operator).click();
-    cy.get(selector.selectItem).within(() => {
-      cy.contains('IN').click();
-    });
-    cy.get(selector.value).type(data.value);
-    cy.contains('Confirm').click();
-    cy.get(selector.rowcard).should('be.visible');
-    cy.get(selector.rowcard).get('tr>td').eq(2).should('have.value', '');
     cy.contains('Next').click();
 
     // make sure upstream data can be saved
@@ -133,6 +119,37 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains('Goto List').click();
+  });
+  it('should Add Advanced Routing Matching Conditions', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    cy.get(selector.nameSelector).type(data.routeName);
+    cy.contains('Search').click();
+    cy.contains(data.routeName).siblings().contains('Configure').click();
+    cy.get(selector.addbtn).contains('Add').click();
+    cy.get(selector.position).click();
+    cy.get(selector.selectItem).within(() => {
+      cy.contains('HTTP Request Header').click();
+    });
+    cy.get('.ant-form-item-control-input-content > #name').type(data.parameterName);
+    cy.get(selector.operator).click();
+    cy.get(selector.selectItem).within(() => {
+      cy.contains('IN').click();
+    });
+    cy.get(selector.value).type(data.value);
+    cy.contains('Confirm').click();
+    cy.get(selector.rowcard).should('be.visible');
+    cy.get(selector.rowcard).get('tr>td').eq(2).should('have.value', '');
+    cy.get(selector.rowcard).contains('Configure').click();
+    cy.get(selector.reverse).click();
+    cy.contains('Confirm').click();
+    cy.get(selector.rowcard).get('tr>td').eq(2).contains('true').should('be.visible');
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.contains(data.submitSuccess);
   });
 
   it('should skip upstream module after service is selected when editing route', function () {
