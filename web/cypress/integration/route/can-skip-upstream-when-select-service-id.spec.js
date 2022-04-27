@@ -133,6 +133,7 @@ context('Can select service_id skip upstream in route', () => {
       cy.contains('HTTP Request Header').click();
     });
     cy.get('.ant-form-item-control-input-content > #name').type(data.parameterName);
+    cy.get(selector.reverse).click();
     cy.get(selector.operator).click();
     cy.get(selector.selectItem).within(() => {
       cy.contains('IN').click();
@@ -140,11 +141,11 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(selector.value).type(data.value);
     cy.contains('Confirm').click();
     cy.get(selector.rowcard).should('be.visible');
-    cy.get(selector.rowcard).get('tr>td').eq(2).should('have.value', '');
+    cy.get(selector.rowcard).get('tr>td').eq(2).contains('true').should('be.visible');
     cy.get(selector.rowcard).contains('Configure').click();
     cy.get(selector.reverse).click();
     cy.contains('Confirm').click();
-    cy.get(selector.rowcard).get('tr>td').eq(2).contains('true').should('be.visible');
+    cy.get(selector.rowcard).get('tr>td').eq(2).contains('false').should('be.visible');
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Next').click();
