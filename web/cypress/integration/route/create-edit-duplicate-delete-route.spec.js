@@ -85,7 +85,7 @@ context('Create and Delete Route', () => {
     cy.login();
   });
 
-  it('should not create route with name above 100 characters', function () {
+  it.only('should not create route with name above 100 characters', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(selector.empty).should('be.visible');
