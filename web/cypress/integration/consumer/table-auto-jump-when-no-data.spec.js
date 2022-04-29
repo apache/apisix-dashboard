@@ -39,18 +39,19 @@ context('Table Auto Jump When No Data', () => {
   };
 
   before(() => {
-    cy.login();
-    Array.from({ length: 11 }).forEach((value, key) => {
-      const payload = {
-        username: data.consumerName + key,
-        plugins: {
-          'key-auth': {
-            key: 'test',
-            disable: false,
+    cy.login().then(() => {
+      Array.from({ length: 11 }).forEach((value, key) => {
+        const payload = {
+          username: data.consumerName + key,
+          plugins: {
+            'key-auth': {
+              key: 'test',
+              disable: false,
+            },
           },
-        },
-      };
-      cy.requestWithToken({ method: 'PUT', payload, url: '/apisix/admin/consumers' });
+        };
+        cy.requestWithToken({ method: 'PUT', payload, url: '/apisix/admin/consumers' });
+      });
     });
   });
 

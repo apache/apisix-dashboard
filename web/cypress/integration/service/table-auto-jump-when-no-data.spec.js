@@ -33,31 +33,32 @@ context('Table Auto Jump When No Data', () => {
   };
 
   beforeEach(() => {
-    cy.login();
-    Array.from({ length: 11 }).forEach((value, key) => {
-      const payload = {
-        name: `serviceName${key}`,
-        plugins: {},
-        upstream: {
-          type: 'roundrobin',
-          pass_host: 'pass',
-          scheme: 'http',
-          timeout: {
-            connect: 6,
-            send: 6,
-            read: 6,
+    cy.login().then(() => {
+      Array.from({ length: 11 }).forEach((value, key) => {
+        const payload = {
+          name: `serviceName${key}`,
+          plugins: {},
+          upstream: {
+            type: 'roundrobin',
+            pass_host: 'pass',
+            scheme: 'http',
+            timeout: {
+              connect: 6,
+              send: 6,
+              read: 6,
+            },
+            keepalive_pool: {
+              size: 320,
+              idle_timeout: 60,
+              requests: 1000,
+            },
+            nodes: {
+              '127.0.0.1': 1,
+            },
           },
-          keepalive_pool: {
-            size: 320,
-            idle_timeout: 60,
-            requests: 1000,
-          },
-          nodes: {
-            '127.0.0.1': 1,
-          },
-        },
-      };
-      cy.requestWithToken({ method: 'POST', payload, url: '/apisix/admin/services' });
+        };
+        cy.requestWithToken({ method: 'POST', payload, url: '/apisix/admin/services' });
+      });
     });
   });
 

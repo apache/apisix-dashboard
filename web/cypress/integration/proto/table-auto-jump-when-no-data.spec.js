@@ -33,14 +33,15 @@ context('Batch Create Proto And Delete Proto', () => {
   };
 
   before(() => {
-    cy.login();
-    Array.from({ length: 11 }).forEach(async (value, key) => {
-      const payload = {
-        content: 'test',
-        desc: '',
-        id: `protoId${key}`,
-      };
-      cy.requestWithToken({ method: 'POST', payload, url: '/apisix/admin/proto' });
+    cy.login().then(() => {
+      Array.from({ length: 11 }).forEach(async (value, key) => {
+        const payload = {
+          content: 'test',
+          desc: '',
+          id: `protoId${key}`,
+        };
+        cy.requestWithToken({ method: 'POST', payload, url: '/apisix/admin/proto' });
+      });
     });
   });
 
