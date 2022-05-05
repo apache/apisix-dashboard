@@ -305,4 +305,7 @@ export const PLUGIN_LIST = {
   mocking: {
     type: PluginType.other,
   },
+  opentelemetry: {
+    type: PluginType.observability,
+  },
 };

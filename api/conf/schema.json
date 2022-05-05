@@ -3189,39 +3189,6 @@
 			},
 			"version": 0.1
 		},
-		"authz-casdoor": {
-			"priority": 2559,
-			"schema": {
-				"$comment": "this is a mark for our injected plugin schema",
-				"properties": {
-					"callback_url": {
-						"pattern": "^[^%?]+[^/]$",
-						"type": "string"
-					},
-					"client_id": {
-						"type": "string"
-					},
-					"client_secret": {
-						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
-					},
-					"endpoint_addr": {
-						"pattern": "^[^%?]+[^/]$",
-						"type": "string"
-					}
-				},
-				"required": [
-					"callback_url",
-					"client_id",
-					"client_secret",
-					"endpoint_addr"
-				],
-				"type": "object"
-			},
-			"version": 0.1
-		},
 		"authz-keycloak": {
 			"priority": 2000,
 			"schema": {
@@ -3365,11 +3332,6 @@
 					"lazy_load_paths": {
 						"default": false,
 						"type": "boolean"
-					},
-					"password_grant_token_generation_incoming_uri": {
-						"maxLength": 4096,
-						"minLength": 1,
-						"type": "string"
 					},
 					"permissions": {
 						"default": {},
@@ -3601,6 +3563,31 @@
 			"type": "auth",
 			"version": 0.1
 		},
+		"batch-requests": {
+			"metadata_schema": {
+				"properties": {
+					"max_body_size": {
+						"default": 1048576,
+						"description": "max pipeline body size in bytes",
+						"exclusiveMinimum": 0,
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 4010,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"scope": "global",
+			"version": 0.1
+		},
 		"clickhouse-logger": {
 			"metadata_schema": {
 				"properties": {
@@ -3745,7 +3732,6 @@
 											"OPTIONS",
 											"PATCH",
 											"POST",
-											"PURGE",
 											"PUT",
 											"TRACE"
 										],
@@ -4074,6 +4060,11 @@
 					},
 					{
 						"required": [
+							"clickhouse"
+						]
+					},
+					{
+						"required": [
 							"host",
 							"port"
 						]
@@ -4089,6 +4080,41 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
+					},
+					"clickhouse": {
+						"properties": {
+							"database": {
+								"default": "",
+								"type": "string"
+							},
+							"endpoint_addr": {
+								"1": {
+									"pattern": "^[^\\/]+:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?",
+									"type": "string"
+								},
+								"default": "http://127.0.0.1:8123"
+							},
+							"logtable": {
+								"default": "",
+								"type": "string"
+							},
+							"password": {
+								"default": "",
+								"type": "string"
+							},
+							"user": {
+								"default": "default",
+								"type": "string"
+							}
+						},
+						"required": [
+							"database",
+							"endpoint_addr",
+							"logtable",
+							"password",
+							"user"
+						],
+						"type": "object"
 					},
 					"host": {
 						"1": {
@@ -4472,15 +4498,6 @@
 							"type": "string"
 						},
 						"type": "array"
-					},
-					"request_method": {
-						"default": "GET",
-						"description": "the method for client to request the authorization service",
-						"enum": [
-							"GET",
-							"POST"
-						],
-						"type": "string"
 					},
 					"ssl_verify": {
 						"default": true,
@@ -5341,10 +5358,6 @@
 						"default": "apikey",
 						"type": "string"
 					},
-					"hide_credentials": {
-						"default": false,
-						"type": "boolean"
-					},
 					"query": {
 						"default": "apikey",
 						"type": "string"
@@ -5660,6 +5673,20 @@
 			},
 			"version": 0.1
 		},
+		"log-rotate": {
+			"priority": 100,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"scope": "global",
+			"version": 0.1
+		},
 		"loggly": {
 			"metadata_schema": {
 				"properties": {
@@ -5868,6 +5895,20 @@
 			},
 			"version": 0.1
 		},
+		"node-status": {
+			"priority": 1000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"scope": "global",
+			"version": 0.1
+		},
 		"opa": {
 			"priority": 2001,
 			"schema": {
@@ -6018,6 +6059,102 @@
 					"client_secret",
 					"discovery"
 				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"opentelemetry": {
+			"priority": 12009,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"additional_attributes": {
+						"items": {
+							"minLength": 1,
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"sampler": {
+						"default": {
+							"name": "always_off",
+							"options": {
+								"fraction": 0,
+								"root": {
+									"name": "always_off"
+								}
+							}
+						},
+						"properties": {
+							"name": {
+								"default": "always_off",
+								"enum": [
+									"always_off",
+									"always_on",
+									"parent_base",
+									"trace_id_ratio"
+								],
+								"title": "sampling strategy",
+								"type": "string"
+							},
+							"options": {
+								"default": {
+									"fraction": 0,
+									"root": {
+										"name": "always_off"
+									}
+								},
+								"properties": {
+									"fraction": {
+										"default": 0,
+										"title": "trace_id_ratio fraction",
+										"type": "number"
+									},
+									"root": {
+										"default": {
+											"name": "always_off",
+											"options": {
+												"fraction": 0
+											}
+										},
+										"properties": {
+											"name": {
+												"default": "always_off",
+												"enum": [
+													"always_off",
+													"always_on",
+													"trace_id_ratio"
+												],
+												"title": "sampling strategy",
+												"type": "string"
+											},
+											"options": {
+												"default": {
+													"fraction": 0
+												},
+												"properties": {
+													"fraction": {
+														"default": 0,
+														"title": "trace_id_ratio fraction parameter",
+														"type": "number"
+													}
+												},
+												"type": "object"
+											}
+										},
+										"title": "parent_base root sampler",
+										"type": "object"
+									}
+								},
+								"type": "object"
+							}
+						},
+						"type": "object"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -6511,7 +6648,6 @@
 					"algorithm": {
 						"default": "uuid",
 						"enum": [
-							"nanoid",
 							"snowflake",
 							"uuid"
 						],
@@ -6594,53 +6730,11 @@
 					"disable": {
 						"type": "boolean"
 					},
-					"filters": {
-						"description": "a group of filters that modify response bodyby replacing one specified string by another",
-						"items": {
-							"description": "filter that modifies response body",
-							"properties": {
-								"options": {
-									"default": "jo",
-									"description": "regex options",
-									"type": "string"
-								},
-								"regex": {
-									"description": "match pattern on response body",
-									"minLength": 1,
-									"type": "string"
-								},
-								"replace": {
-									"description": "regex substitution content",
-									"type": "string"
-								},
-								"scope": {
-									"default": "once",
-									"description": "regex substitution range",
-									"enum": [
-										"global",
-										"once"
-									],
-									"type": "string"
-								}
-							},
-							"required": [
-								"regex",
-								"replace"
-							],
-							"type": "object"
-						},
-						"minItems": 1,
-						"type": "array"
-					},
 					"headers": {
 						"description": "new headers for response",
 						"minProperties": 1,
 						"type": "object"
 					},
-					"oneOf": [
-						"body",
-						"filters"
-					],
 					"status_code": {
 						"description": "new status code for response",
 						"maximum": 598,
@@ -6862,7 +6956,7 @@
 			"version": 0.1
 		},
 		"skywalking": {
-			"priority": -1100,
+			"priority": 12010,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
@@ -7187,7 +7281,7 @@
 						"type": "string"
 					},
 					"timeout": {
-						"default": 3000,
+						"default": 3,
 						"minimum": 1,
 						"type": "integer"
 					},
