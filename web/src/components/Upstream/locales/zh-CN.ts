@@ -31,6 +31,7 @@ export default {
   'component.upstream.fields.discovery_type.type.consul_kv': 'Consul KV',
   'component.upstream.fields.discovery_type.type.nacos': 'Nacos',
   'component.upstream.fields.discovery_type.type.eureka': 'Eureka',
+  'component.upstream.fields.discovery_type.type.kubernetes': 'Kubernetes',
 
   'component.upstream.fields.discovery_args.group_name': '分组名',
   'component.upstream.fields.discovery_args.group_name.tooltip': '分组名',
