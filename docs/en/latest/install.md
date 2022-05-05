@@ -42,7 +42,7 @@ Please replace `<CONFIG_FILE>` to your configure file path.
 
 ## RPM {#rpm}
 
-**NOTE:** Only CentOS 7 is supported currently, for more information, please refer to [here](./deploy.md).
+**NOTE:** Only CentOS 7 is supported currently.
 
 ### Install
 
