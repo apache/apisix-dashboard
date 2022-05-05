@@ -398,7 +398,6 @@
 							"OPTIONS",
 							"PATCH",
 							"POST",
-							"PURGE",
 							"PUT",
 							"TRACE"
 						],
@@ -1878,35 +1877,6 @@
 					]
 				},
 				"plugins": {
-					"type": "object"
-				},
-				"protocol": {
-					"properties": {
-						"conf": {
-							"description": "protocol-specific configuration",
-							"type": "object"
-						},
-						"name": {
-							"type": "string"
-						},
-						"superior_id": {
-							"anyOf": [
-								{
-									"maxLength": 64,
-									"minLength": 1,
-									"pattern": "^[a-zA-Z0-9-_.]+$",
-									"type": "string"
-								},
-								{
-									"minimum": 1,
-									"type": "integer"
-								}
-							]
-						}
-					},
-					"required": [
-						"name"
-					],
 					"type": "object"
 				},
 				"remote_addr": {
@@ -8251,49 +8221,6 @@
 				},
 				"type": "object"
 			},
-			"version": 0.1
-		},
-		"ldap-auth": {
-			"consumer_schema": {
-				"properties": {
-					"user_dn": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"user_dn"
-				],
-				"title": "work with consumer object",
-				"type": "object"
-			},
-			"priority": 2540,
-			"schema": {
-				"$comment": "this is a mark for our injected plugin schema",
-				"properties": {
-					"base_dn": {
-						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
-					},
-					"ldap_uri": {
-						"type": "string"
-					},
-					"uid": {
-						"type": "string"
-					},
-					"use_tls": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"base_dn",
-					"ldap_uri"
-				],
-				"title": "work with route or service object",
-				"type": "object"
-			},
-			"type": "auth",
 			"version": 0.1
 		},
 		"limit-conn": {
