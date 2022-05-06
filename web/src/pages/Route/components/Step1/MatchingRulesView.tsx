@@ -148,8 +148,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     {
       title: formatMessage({ id: 'page.route.reverse' }),
       key: 'reverse',
-      render: (text: RouteModule.MatchingRule) =>
-        text.reverse === undefined ? text.reverse : text.reverse.toString(),
+      render: (text: RouteModule.MatchingRule) => text.reverse.toString(),
     },
     {
       title: formatMessage({ id: 'page.route.operationalCharacter' }),
@@ -265,6 +264,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             name={'reverse'}
             valuePropName={'checked'}
             required
+            initialValue={false}
           >
             <Switch />
           </Form.Item>
