@@ -35,7 +35,7 @@ const Page: React.FC = () => {
   const [initialData, setInitialData] = useState({});
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState('');
-  const { paginationConfig, savePageList } = usePagination();
+  const { paginationConfig, savePageList, checkPageList } = usePagination();
 
   useEffect(() => {
     fetchPluginList().then(setPluginList);
@@ -85,7 +85,7 @@ const Page: React.FC = () => {
                       id: 'menu.plugin',
                     })} ${formatMessage({ id: 'component.status.success' })}`,
                   });
-                  ref.current?.reload();
+                  checkPageList(ref);
                   setInitialData(plugins);
                   setName('');
                 });

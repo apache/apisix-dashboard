@@ -37,7 +37,7 @@ const Page: React.FC = () => {
   const [rawData, setRawData] = useState<Record<string, any>>({});
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
-  const { paginationConfig, savePageList } = usePagination();
+  const { paginationConfig, savePageList, checkPageList } = usePagination();
   const { formatMessage } = useIntl();
 
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
@@ -95,8 +95,7 @@ const Page: React.FC = () => {
                 notification.success({
                   message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
                 });
-                /* eslint-disable no-unused-expressions */
-                ref.current?.reload();
+                checkPageList(ref);
               });
             }}
           >

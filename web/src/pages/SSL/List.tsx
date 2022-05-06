@@ -28,7 +28,7 @@ import { timestampToLocaleString } from '@/helpers';
 const Page: React.FC = () => {
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
-  const { paginationConfig, savePageList } = usePagination();
+  const { paginationConfig, savePageList, checkPageList } = usePagination();
 
   const columns: ProColumns<SSLModule.ResponseBody>[] = [
     {
@@ -75,8 +75,7 @@ const Page: React.FC = () => {
                 notification.success({
                   message: formatMessage({ id: 'component.ssl.removeSSLSuccess' }),
                 });
-                /* eslint-disable no-unused-expressions */
-                requestAnimationFrame(() => tableRef.current?.reload());
+                requestAnimationFrame(() => checkPageList(tableRef));
               })
             }
             cancelText={formatMessage({ id: 'component.global.cancel' })}
