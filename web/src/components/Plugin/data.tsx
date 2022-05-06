@@ -269,4 +269,43 @@ export const PLUGIN_LIST = {
   'aws-lambda': {
     type: PluginType.serverless,
   },
+  'clickhouse-logger': {
+    type: PluginType.observability,
+  },
+  'client-control': {
+    type: PluginType.traffic,
+  },
+  csrf: {
+    type: PluginType.security,
+  },
+  'ext-plugin-post-req': {
+    type: PluginType.other,
+  },
+  'ext-plugin-pre-req': {
+    type: PluginType.other,
+  },
+  'file-logger': {
+    type: PluginType.observability,
+  },
+  gzip: {
+    type: PluginType.other,
+  },
+  loggly: {
+    type: PluginType.observability,
+  },
+  'public-api': {
+    type: PluginType.security,
+  },
+  'real-ip': {
+    type: PluginType.other,
+  },
+  'authz-casdoor': {
+    type: PluginType.authentication,
+  },
+  mocking: {
+    type: PluginType.other,
+  },
+  opentelemetry: {
+    type: PluginType.observability,
+  },
 };

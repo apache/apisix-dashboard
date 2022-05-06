@@ -50,7 +50,8 @@ var _ = ginkgo.Describe("route with limit plugin", func() {
 						"count": 2,
 						"time_window": 2,
 						"rejected_code": 503,
-						"key": "remote_addr"
+						"key": "remote_addr",
+						"policy": "local"
 					}
 				},
 				"upstream": {
@@ -137,7 +138,8 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 					   "count": 2,
 					   "time_window": 2,
 					   "rejected_code": 503,
-					   "key": "consumer_name"
+					   "key": "consumer_name",
+					   "policy": "local"
 				   }
 			   },
 			   "upstream": {
@@ -305,7 +307,8 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 					   "time_window": 2,
 					   "rejected_code": 503,
 					   "key": "remote_addr",
-					   "disable": false
+					   "disable": false,
+					   "policy": "local"
 				   }
 			   },
 			   "upstream": {
@@ -362,7 +365,8 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 					   "time_window": 2,
 					   "rejected_code": 503,
 					   "key": "remote_addr",
-					   "disable": true
+					   "disable": true,
+					   "policy": "local"
 				   }
 			   },
 			   "upstream": {

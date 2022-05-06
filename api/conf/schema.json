@@ -11,7 +11,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -97,7 +96,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -378,7 +376,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -931,7 +928,6 @@
 						},
 						"labels": {
 							"description": "key/value pairs to specify attributes",
-							"maxProperties": 16,
 							"patternProperties": {
 								".*": {
 									"description": "value of label",
@@ -1161,7 +1157,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -1555,7 +1550,6 @@
 						},
 						"labels": {
 							"description": "key/value pairs to specify attributes",
-							"maxProperties": 16,
 							"patternProperties": {
 								".*": {
 									"description": "value of label",
@@ -1815,7 +1809,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -2316,7 +2309,6 @@
 						},
 						"labels": {
 							"description": "key/value pairs to specify attributes",
-							"maxProperties": 16,
 							"patternProperties": {
 								".*": {
 									"description": "value of label",
@@ -2857,7 +2849,6 @@
 				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
-					"maxProperties": 16,
 					"patternProperties": {
 						".*": {
 							"description": "value of label",
@@ -3237,6 +3228,21 @@
 					}
 				],
 				"properties": {
+					"access_denied_redirect_uri": {
+						"maxLength": 2048,
+						"minLength": 1,
+						"type": "string"
+					},
+					"access_token_expires_in": {
+						"default": 300,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"access_token_expires_leeway": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
 					"audience": {
 						"description": "Deprecated, use `client_id` instead.",
 						"maxLength": 100,
@@ -3314,6 +3320,16 @@
 							"PERMISSIVE"
 						],
 						"type": "string"
+					},
+					"refresh_token_expires_in": {
+						"default": 3600,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"refresh_token_expires_leeway": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
 					},
 					"resource_registration_endpoint": {
 						"maxLength": 4096,
@@ -3542,6 +3558,97 @@
 			"scope": "global",
 			"version": 0.1
 		},
+		"clickhouse-logger": {
+			"metadata_schema": {
+				"properties": {
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 398,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"database": {
+						"default": "",
+						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"endpoint_addr": {
+						"pattern": "^[^\\/]+:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?",
+						"type": "string"
+					},
+					"inactive_timeout": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"logtable": {
+						"default": "",
+						"type": "string"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "clickhouse-logger",
+						"type": "string"
+					},
+					"password": {
+						"default": "",
+						"type": "string"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"ssl_verify": {
+						"default": true,
+						"type": "boolean"
+					},
+					"timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"user": {
+						"default": "",
+						"type": "string"
+					}
+				},
+				"required": [
+					"database",
+					"endpoint_addr",
+					"logtable",
+					"password",
+					"user"
+				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"client-control": {
 			"priority": 22000,
 			"schema": {
@@ -3651,6 +3758,18 @@
 			"version": 0.1
 		},
 		"cors": {
+			"metadata_schema": {
+				"properties": {
+					"allow_origins": {
+						"additionalProperties": {
+							"pattern": "^(\\*|\\*\\*|null|\\w+://[^,]+(,\\w+://[^,]+)*)$",
+							"type": "string"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
 			"priority": 4000,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
@@ -3675,6 +3794,17 @@
 						"description": "you can use '*' to allow all origins when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple origin use ',' to split. default: *.",
 						"pattern": "^(\\*|\\*\\*|null|\\w+://[^,]+(,\\w+://[^,]+)*)$",
 						"type": "string"
+					},
+					"allow_origins_by_metadata": {
+						"description": "set allowed origins by referencing origins in plugin metadata",
+						"items": {
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array",
+						"uniqueItems": true
 					},
 					"allow_origins_by_regex": {
 						"description": "you can use regex to allow specific origins when no credentials,for example use [.*\\.test.com] to allow a.test.com and b.test.com",
@@ -3701,6 +3831,36 @@
 						"type": "integer"
 					}
 				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"csrf": {
+			"priority": 2980,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"expires": {
+						"default": 7200,
+						"description": "expires time(s) for csrf token",
+						"type": "integer"
+					},
+					"key": {
+						"description": "use to generate csrf token",
+						"type": "string"
+					},
+					"name": {
+						"default": "apisix-csrf-token",
+						"description": "the csrf token name",
+						"type": "string"
+					}
+				},
+				"required": [
+					"key"
+				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -3870,6 +4030,11 @@
 					},
 					{
 						"required": [
+							"clickhouse"
+						]
+					},
+					{
+						"required": [
 							"host",
 							"port"
 						]
@@ -3885,6 +4050,41 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
+					},
+					"clickhouse": {
+						"properties": {
+							"database": {
+								"default": "",
+								"type": "string"
+							},
+							"endpoint_addr": {
+								"1": {
+									"pattern": "^[^\\/]+:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?",
+									"type": "string"
+								},
+								"default": "http://127.0.0.1:8123"
+							},
+							"logtable": {
+								"default": "",
+								"type": "string"
+							},
+							"password": {
+								"default": "",
+								"type": "string"
+							},
+							"user": {
+								"default": "default",
+								"type": "string"
+							}
+						},
+						"required": [
+							"database",
+							"endpoint_addr",
+							"logtable",
+							"password",
+							"user"
+						],
+						"type": "object"
 					},
 					"host": {
 						"1": {
@@ -4195,6 +4395,38 @@
 						"type": "boolean"
 					}
 				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"file-logger": {
+			"metadata_schema": {
+				"properties": {
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 399,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"path": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"path"
+				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -4717,6 +4949,10 @@
 						"minimum": 0,
 						"type": "integer"
 					},
+					"ssl_verify": {
+						"default": false,
+						"type": "boolean"
+					},
 					"timeout": {
 						"default": 3,
 						"minimum": 1,
@@ -4914,8 +5150,20 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"cookie": {
+						"default": "jwt",
+						"type": "string"
+					},
 					"disable": {
 						"type": "boolean"
+					},
+					"header": {
+						"default": "authorization",
+						"type": "string"
+					},
+					"query": {
+						"default": "jwt",
+						"type": "string"
 					}
 				},
 				"type": "object"
@@ -5197,88 +5445,53 @@
 			"priority": 1002,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
-				"dependencies": {
-					"policy": {
-						"oneOf": [
-							{
-								"properties": {
-									"policy": {
-										"enum": [
-											"local"
-										]
-									}
-								}
-							},
-							{
-								"properties": {
-									"policy": {
-										"enum": [
-											"redis"
-										]
-									},
-									"redis_database": {
-										"default": 0,
-										"minimum": 0,
-										"type": "integer"
-									},
-									"redis_host": {
-										"minLength": 2,
-										"type": "string"
-									},
-									"redis_password": {
-										"minLength": 0,
-										"type": "string"
-									},
-									"redis_port": {
-										"default": 6379,
-										"minimum": 1,
-										"type": "integer"
-									},
-									"redis_timeout": {
-										"default": 1000,
-										"minimum": 1,
-										"type": "integer"
-									}
-								},
-								"required": [
-									"redis_host"
-								]
-							},
-							{
-								"properties": {
-									"policy": {
-										"enum": [
-											"redis-cluster"
-										]
-									},
-									"redis_cluster_name": {
-										"type": "string"
-									},
-									"redis_cluster_nodes": {
-										"items": {
-											"maxLength": 100,
-											"minLength": 2,
-											"type": "string"
-										},
-										"minItems": 2,
-										"type": "array"
-									},
-									"redis_password": {
-										"minLength": 0,
-										"type": "string"
-									},
-									"redis_timeout": {
-										"default": 1000,
-										"minimum": 1,
-										"type": "integer"
-									}
-								},
-								"required": [
-									"redis_cluster_name",
-									"redis_cluster_nodes"
+				"else": {
+					"if": {
+						"properties": {
+							"policy": {
+								"enum": [
+									"redis-cluster"
 								]
 							}
+						}
+					},
+					"then": {
+						"properties": {
+							"redis_cluster_name": {
+								"type": "string"
+							},
+							"redis_cluster_nodes": {
+								"items": {
+									"maxLength": 100,
+									"minLength": 2,
+									"type": "string"
+								},
+								"minItems": 2,
+								"type": "array"
+							},
+							"redis_password": {
+								"minLength": 0,
+								"type": "string"
+							},
+							"redis_timeout": {
+								"default": 1000,
+								"minimum": 1,
+								"type": "integer"
+							}
+						},
+						"required": [
+							"redis_cluster_name",
+							"redis_cluster_nodes"
 						]
+					}
+				},
+				"if": {
+					"properties": {
+						"policy": {
+							"enum": [
+								"redis"
+							]
+						}
 					}
 				},
 				"properties": {
@@ -5341,6 +5554,36 @@
 					"count",
 					"time_window"
 				],
+				"then": {
+					"properties": {
+						"redis_database": {
+							"default": 0,
+							"minimum": 0,
+							"type": "integer"
+						},
+						"redis_host": {
+							"minLength": 2,
+							"type": "string"
+						},
+						"redis_password": {
+							"minLength": 0,
+							"type": "string"
+						},
+						"redis_port": {
+							"default": 6379,
+							"minimum": 1,
+							"type": "integer"
+						},
+						"redis_timeout": {
+							"default": 1000,
+							"minimum": 1,
+							"type": "integer"
+						}
+					},
+					"required": [
+						"redis_host"
+					]
+				},
 				"type": "object"
 			},
 			"version": 0.4
@@ -5412,6 +5655,214 @@
 				"type": "object"
 			},
 			"scope": "global",
+			"version": 0.1
+		},
+		"loggly": {
+			"metadata_schema": {
+				"properties": {
+					"host": {
+						"default": "logs-01.loggly.com",
+						"type": "string"
+					},
+					"log_format": {
+						"type": "object"
+					},
+					"port": {
+						"default": 514,
+						"type": "integer"
+					},
+					"protocol": {
+						"default": "syslog",
+						"enum": [
+							"http",
+							"https",
+							"syslog"
+						],
+						"type": "string"
+					},
+					"timeout": {
+						"default": 5000,
+						"minimum": 1,
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 411,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"customer_token": {
+						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"inactive_timeout": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"include_req_body": {
+						"default": false,
+						"type": "boolean"
+					},
+					"include_resp_body": {
+						"default": false,
+						"type": "boolean"
+					},
+					"include_resp_body_expr": {
+						"items": {
+							"type": "array"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "loggly",
+						"type": "string"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"severity": {
+						"default": "INFO",
+						"description": "base severity log level",
+						"enum": [
+							"ALERT",
+							"CRIT",
+							"DEBUG",
+							"EMEGR",
+							"ERR",
+							"INFO",
+							"NOTICE",
+							"WARNING",
+							"alert",
+							"crit",
+							"debug",
+							"emegr",
+							"err",
+							"info",
+							"notice",
+							"warning"
+						],
+						"type": "string"
+					},
+					"severity_map": {
+						"additionalProperties": false,
+						"description": "upstream response code vs syslog severity mapping",
+						"patternProperties": {
+							"^[1-5][0-9]{2}$": {
+								"description": "keys are HTTP status code, values are severity",
+								"enum": [
+									"ALERT",
+									"CRIT",
+									"DEBUG",
+									"EMEGR",
+									"ERR",
+									"INFO",
+									"NOTICE",
+									"WARNING",
+									"alert",
+									"crit",
+									"debug",
+									"emegr",
+									"err",
+									"info",
+									"notice",
+									"warning"
+								],
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					"ssl_verify": {
+						"default": true,
+						"type": "boolean"
+					},
+					"tags": {
+						"default": [
+							"apisix"
+						],
+						"items": {
+							"pattern": "^(?!tag=)[ -~]*",
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
+					}
+				},
+				"required": [
+					"customer_token"
+				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"mocking": {
+			"priority": 10900,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"anyOf": [
+					{
+						"required": [
+							"response_example"
+						]
+					},
+					{
+						"required": [
+							"response_schema"
+						]
+					}
+				],
+				"properties": {
+					"content_type": {
+						"default": "application/json;charset=utf8",
+						"type": "string"
+					},
+					"delay": {
+						"default": 0,
+						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"response_example": {
+						"type": "string"
+					},
+					"response_schema": {
+						"type": "object"
+					},
+					"response_status": {
+						"default": 200,
+						"minimum": 100,
+						"type": "integer"
+					},
+					"with_mock_header": {
+						"default": true,
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
 			"version": 0.1
 		},
 		"node-status": {
@@ -5525,6 +5976,10 @@
 						"default": "/logout",
 						"type": "string"
 					},
+					"post_logout_redirect_uri": {
+						"description": "the URI will be redirect when request logout_path",
+						"type": "string"
+					},
 					"public_key": {
 						"type": "string"
 					},
@@ -5574,6 +6029,102 @@
 					"client_secret",
 					"discovery"
 				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"opentelemetry": {
+			"priority": 12009,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"additional_attributes": {
+						"items": {
+							"minLength": 1,
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"sampler": {
+						"default": {
+							"name": "always_off",
+							"options": {
+								"fraction": 0,
+								"root": {
+									"name": "always_off"
+								}
+							}
+						},
+						"properties": {
+							"name": {
+								"default": "always_off",
+								"enum": [
+									"always_off",
+									"always_on",
+									"parent_base",
+									"trace_id_ratio"
+								],
+								"title": "sampling strategy",
+								"type": "string"
+							},
+							"options": {
+								"default": {
+									"fraction": 0,
+									"root": {
+										"name": "always_off"
+									}
+								},
+								"properties": {
+									"fraction": {
+										"default": 0,
+										"title": "trace_id_ratio fraction",
+										"type": "number"
+									},
+									"root": {
+										"default": {
+											"name": "always_off",
+											"options": {
+												"fraction": 0
+											}
+										},
+										"properties": {
+											"name": {
+												"default": "always_off",
+												"enum": [
+													"always_off",
+													"always_on",
+													"trace_id_ratio"
+												],
+												"title": "sampling strategy",
+												"type": "string"
+											},
+											"options": {
+												"default": {
+													"fraction": 0
+												},
+												"properties": {
+													"fraction": {
+														"default": 0,
+														"title": "trace_id_ratio fraction parameter",
+														"type": "number"
+													}
+												},
+												"type": "object"
+											}
+										},
+										"title": "parent_base root sampler",
+										"type": "object"
+									}
+								},
+								"type": "object"
+							}
+						},
+						"type": "object"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -5793,7 +6344,11 @@
 						"type": "boolean"
 					},
 					"host": {
-						"pattern": "^http(s)?:\\/\\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$",
+						"pattern": "^http(s)?:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?$",
+						"type": "string"
+					},
+					"path": {
+						"pattern": "^/[^?&]+$",
 						"type": "string"
 					},
 					"sample_ratio": {
@@ -5872,6 +6427,22 @@
 						"maxLength": 4096,
 						"minLength": 1,
 						"pattern": "^\\/.*",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"public-api": {
+			"priority": 501,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"uri": {
 						"type": "string"
 					}
 				},
@@ -6355,7 +6926,7 @@
 			"version": 0.1
 		},
 		"skywalking": {
-			"priority": -1100,
+			"priority": 12010,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
@@ -6647,7 +7218,6 @@
 						"type": "integer"
 					},
 					"max_retry_times": {
-						"default": 1,
 						"minimum": 1,
 						"type": "integer"
 					},
@@ -6669,7 +7239,6 @@
 						"type": "integer"
 					},
 					"retry_interval": {
-						"default": 1,
 						"minimum": 0,
 						"type": "integer"
 					},
@@ -7164,7 +7733,6 @@
 													},
 													"labels": {
 														"description": "key/value pairs to specify attributes",
-														"maxProperties": 16,
 														"patternProperties": {
 															".*": {
 																"description": "value of label",
@@ -7525,7 +8093,7 @@
 			"version": 0.1
 		},
 		"zipkin": {
-			"priority": 11011,
+			"priority": 12011,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {

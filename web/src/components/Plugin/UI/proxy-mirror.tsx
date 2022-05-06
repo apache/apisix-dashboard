@@ -26,7 +26,7 @@ type Props = {
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 4,
+    span: 6,
   },
   wrapperCol: {
     span: 10,
@@ -42,12 +42,27 @@ const ProxyMirror: React.FC<Props> = ({ form, schema }) => {
       <Form.Item
         label="host"
         name="host"
+        required
         extra={formatMessage({ id: 'component.pluginForm.proxy-mirror.host.extra' })}
         tooltip={formatMessage({ id: 'component.pluginForm.proxy-mirror.host.tooltip' })}
         rules={[
           {
+            required: true,
             pattern: new RegExp(`${properties.host.pattern}`, 'g'),
             message: formatMessage({ id: 'component.pluginForm.proxy-mirror.host.ruletip' }),
+          },
+        ]}
+      >
+        <Input required />
+      </Form.Item>
+      <Form.Item
+        label="path"
+        name="path"
+        tooltip={formatMessage({ id: 'component.pluginForm.proxy-mirror.path.tooltip' })}
+        rules={[
+          {
+            pattern: new RegExp(`${properties.path.pattern}`, 'g'),
+            message: formatMessage({ id: 'component.pluginForm.proxy-mirror.path.ruletip' }),
           },
         ]}
       >

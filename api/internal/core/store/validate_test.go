@@ -82,8 +82,9 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 		      "count": 2,
 		      "time_window": 60,
 		      "rejected_code": 503,
-		      "key": "remote_addr"
-		  }
+		      "key": "remote_addr",
+			  "policy": "local"
+		  	}
 		},
 		"desc": "test description"
 	}`
@@ -105,7 +106,8 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 			"limit-count": {
 				"time_window": 60,
 				"rejected_code": 503,
-				"key": "remote_addr"
+				"key": "remote_addr",
+				"policy": "local"
 			}
 		},
 		"desc": "test description"

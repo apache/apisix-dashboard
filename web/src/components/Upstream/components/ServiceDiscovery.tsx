@@ -32,6 +32,7 @@ const discoveryType = {
     args: ['group_name', 'namespace_id'],
   },
   eureka: {},
+  kubernetes: {},
 };
 
 const ServiceDiscovery: React.FC<Props> = ({ readonly, form }) => {

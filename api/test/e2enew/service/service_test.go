@@ -193,6 +193,7 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 					"time_window":   60,
 					"rejected_code": 503,
 					"key":           "remote_addr",
+					"policy":        "local",
 				},
 			},
 			"upstream": map[string]interface{}{
@@ -225,7 +226,7 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 			Path:       "/apisix/admin/services/s1",
 			Headers:    map[string]string{"Authorization": base.GetToken()},
 			ExpectCode: http.StatusOK,
-			ExpectBody: "\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}}",
+			ExpectBody: "\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"policy\":\"local\",\"rejected_code\":503,\"time_window\":60}}",
 			Sleep:      base.SleepTime,
 		})
 	})
@@ -306,6 +307,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 					"time_window":   60,
 					"rejected_code": 503,
 					"key":           "remote_addr",
+					"policy":        "local",
 				},
 			},
 			"upstream": map[string]interface{}{
@@ -341,7 +343,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Path:       "/apisix/admin/services/s2",
 			Headers:    map[string]string{"Authorization": base.GetToken()},
 			ExpectCode: http.StatusOK,
-			ExpectBody: "\"name\":\"testservice22\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+			ExpectBody: "\"name\":\"testservice22\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"policy\":\"local\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
 			Sleep:      base.SleepTime,
 		})
 	})

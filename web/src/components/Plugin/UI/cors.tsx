@@ -28,7 +28,7 @@ type Props = {
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 7,
+    span: 8,
   },
   wrapperCol: {
     span: 8,
@@ -37,16 +37,20 @@ const FORM_ITEM_LAYOUT = {
 
 export const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    sm: { span: 8, offset: 7 },
+    sm: { span: 8, offset: 8 },
   },
 };
 
 const Cors: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
-  const properties = schema?.properties
-  const regexPro = properties.allow_origins_by_regex
-  const { minLength, maxLength } = regexPro.items
-  const regexInit = Array(regexPro.minItems).join('.').split('.')
+  const properties = schema?.properties;
+  const regexPro = properties.allow_origins_by_regex;
+  const metadataPro = properties.allow_origins_by_metadata;
+
+  const { minLength, maxLength } = regexPro.items;
+  const { minLength: metadataMinLength, maxLength: metadataMaxLength } = metadataPro.items;
+  const regexInit = Array(regexPro.minItems).join('.').split('.');
+  const metadataInit = Array(metadataPro.minItems).join('.').split('.');
 
   const HTTPMethods: React.FC = () => (
     <Form.Item
@@ -55,10 +59,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
     >
       <Row>
         <Col span={24}>
-          <Form.Item
-            name="allow_methods"
-            initialValue={[properties.allow_methods.default]}
-          >
+          <Form.Item name="allow_methods" initialValue={[properties.allow_methods.default]}>
             <Select
               mode="multiple"
               optionLabelProp="label"
@@ -143,7 +144,53 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
         <Switch />
       </Form.Item>
 
-      <Form.List name='allow_origins_by_regex' initialValue={regexInit}>
+      <Form.List name="allow_origins_by_metadata" initialValue={metadataInit}>
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              {fields.map((field, index) => (
+                <Form.Item
+                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                  label={index === 0 && 'allow_origins_by_metadata'}
+                  key={field.key}
+                  tooltip={formatMessage({
+                    id: 'component.pluginForm.cors.allow_origins_by_metadata.tooltip',
+                  })}
+                >
+                  <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
+                    <Input style={{ width: '80%' }} />
+                  </Form.Item>
+                  {fields.length > metadataMinLength && (
+                    <MinusCircleOutlined
+                      className="dynamic-delete-button"
+                      style={{ margin: '0 8px' }}
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                    />
+                  )}
+                </Form.Item>
+              ))}
+              {
+                <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                  {fields.length < metadataMaxLength && (
+                    <Button
+                      type="dashed"
+                      onClick={() => {
+                        add();
+                      }}
+                    >
+                      <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
+                    </Button>
+                  )}
+                </Form.Item>
+              }
+            </div>
+          );
+        }}
+      </Form.List>
+
+      <Form.List name="allow_origins_by_regex" initialValue={regexInit}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -159,7 +206,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                   <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
-                  {fields.length > minLength &&
+                  {fields.length > minLength && (
                     <MinusCircleOutlined
                       className="dynamic-delete-button"
                       style={{ margin: '0 8px' }}
@@ -167,20 +214,22 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                         remove(field.name);
                       }}
                     />
-                  }
+                  )}
                 </Form.Item>
               ))}
               {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                  {fields.length < maxLength && <Button
-                    type="dashed"
-                    data-cy="add-allow_origins_by_regex"
-                    onClick={() => {
-                      add();
-                    }}
-                  >
-                    <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
-                  </Button>}
+                  {fields.length < maxLength && (
+                    <Button
+                      type="dashed"
+                      data-cy="add-allow_origins_by_regex"
+                      onClick={() => {
+                        add();
+                      }}
+                    >
+                      <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
+                    </Button>
+                  )}
                 </Form.Item>
               }
             </div>
