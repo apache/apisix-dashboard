@@ -35,7 +35,7 @@ const Page: React.FC = () => {
   const [rawData, setRawData] = useState<Record<string, any>>({});
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
-  const { paginationConfig, savePageList } = usePagination();
+  const { paginationConfig, savePageList, checkPageList } = usePagination();
 
   const columns: ProColumns<ServiceModule.ResponseBody>[] = [
     {
@@ -82,8 +82,7 @@ const Page: React.FC = () => {
                       id: 'menu.service',
                     })} ${formatMessage({ id: 'component.status.success' })}`,
                   });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
+                  checkPageList(ref);
                 });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}

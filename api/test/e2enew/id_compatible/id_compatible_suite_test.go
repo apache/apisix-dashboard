@@ -14,20 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { GithubOutlined } from '@ant-design/icons';
-import { DefaultFooter } from '@ant-design/pro-layout';
+package id_compatible_test
 
-export default () => (
-  <DefaultFooter
-    copyright={`${new Date().getFullYear()} Apache APISIX`}
-    links={[
-      {
-        key: 'GitHub',
-        title: <GithubOutlined />,
-        href: 'https://github.com/apache/apisix',
-        blankTarget: true,
-      },
-    ]}
-  />
-);
+import (
+	"testing"
+	"time"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
+	"github.com/apisix/manager-api/test/e2enew/base"
+)
+
+func TestIdCompatible(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Id Compatible Suite")
+}
+
+var _ = AfterSuite(func() {
+	base.CleanResource("routes")
+	base.CleanResource("upstreams")
+	base.CleanResource("services")
+	time.Sleep(base.SleepTime)
+})

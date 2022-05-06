@@ -42,13 +42,13 @@ Please replace `<CONFIG_FILE>` to your configure file path.
 
 ## RPM {#rpm}
 
-**NOTE:** Only CentOS 7 is supported currently, for more information, please refer to [here](./deploy.md).
+**NOTE:** Only CentOS 7 is supported currently.
 
 ### Install
 
 ```shell
 # 1. install RPM package
-sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.11.0/apisix-dashboard-2.11.0-0.el7.x86_64.rpm
+sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.11/apisix-dashboard-2.11-0.el7.x86_64.rpm
 ```
 
 ### Launch

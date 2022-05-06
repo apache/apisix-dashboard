@@ -24,7 +24,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import usePagination from '@/hooks/usePagination';
 import { omit } from 'lodash';
 
-import { fetchList, remove, create, fetchLabelList, update } from './service';
+import { fetchList, remove, fetchLabelList, update } from './service';
 import { RawDataEditor } from '@/components/RawDataEditor';
 
 import { DELETE_FIELDS } from '@/constants';
@@ -36,7 +36,7 @@ const Page: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [rawData, setRawData] = useState<Record<string, any>>({});
   const [id, setId] = useState('');
-  const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
+  const [, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList } = usePagination();
 
   useEffect(() => {
@@ -191,7 +191,7 @@ const Page: React.FC = () => {
           setVisible(false);
         }}
         onSubmit={(data: any) => {
-          (editorMode === 'create' ? create(data) : update(id, data)).then(() => {
+          update(id, data).then(() => {
             setVisible(false);
             handleTableActionSuccessResponse(
               formatMessage({ id: 'component.global.submit.success' }),

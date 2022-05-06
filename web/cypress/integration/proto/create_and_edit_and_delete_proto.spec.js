@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
 
 context('Create and Delete Proto', () => {
   const selector = {
@@ -41,7 +40,7 @@ optional string email = 3;
 }`,
     createProtoSuccess: 'Create proto Successfully',
     configureProtoSuccess: 'Configure proto Successfully',
-    deleteProtoSuccess: 'Delete Upstream Successfully',
+    deleteProtoSuccess: 'Delete proto Successfully',
   };
 
   beforeEach(() => {
