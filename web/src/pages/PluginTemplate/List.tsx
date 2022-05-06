@@ -26,7 +26,6 @@ import { omit } from 'lodash';
 
 import { fetchList, remove, fetchLabelList, update } from './service';
 import { RawDataEditor } from '@/components/RawDataEditor';
-
 import { DELETE_FIELDS } from '@/constants';
 
 const Page: React.FC = () => {
