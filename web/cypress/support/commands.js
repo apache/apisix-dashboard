@@ -143,3 +143,17 @@ Cypress.Commands.add('configurePlugin', ({ name, cases }) => {
     }
   });
 });
+
+Cypress.Commands.add('requestWithToken', ({ method, url, payload }) => {
+  const { SERVE_ENV = 'dev' } = Cypress.env();
+  // Make sure the request is synchronous
+  cy.request({
+    method,
+    url: defaultSettings.serveUrlMap[SERVE_ENV] + url,
+    body: payload,
+    headers: { Authorization: localStorage.getItem('token') },
+  }).then((res) => {
+    expect(res.body.code).to.equal(0);
+    return res;
+  });
+});

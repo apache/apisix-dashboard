@@ -16,7 +16,8 @@
  */
 import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import ProtoDrawer from './components/ProtoDrawer';
 import { Button, notification, Popconfirm, Space } from 'antd';
 import { useIntl } from 'umi';
@@ -31,7 +32,7 @@ const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const { paginationConfig, savePageList } = usePagination();
+  const { paginationConfig, savePageList, checkPageList } = usePagination();
   const emptyProtoData = {
     id: null,
     content: '',
@@ -92,21 +93,20 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.edit' })}
           </Button>
           <Popconfirm
-            title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
-            okText={formatMessage({ id: 'page.upstream.list.confirm' })}
-            cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
+            title={formatMessage({ id: 'page.proto.list.confirm.delete' })}
+            okText={formatMessage({ id: 'page.proto.list.confirm' })}
+            cancelText={formatMessage({ id: 'page.proto.list.cancel' })}
             onConfirm={() => {
               remove(record.id).then(() => {
                 notification.success({
-                  message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
+                  message: formatMessage({ id: 'page.proto.list.delete.successfully' }),
                 });
-                /* eslint-disable no-unused-expressions */
-                ref.current?.reload();
+                checkPageList(ref);
               });
             }}
           >
             <Button type="primary" danger>
-              {formatMessage({ id: 'page.upstream.list.delete' })}
+              {formatMessage({ id: 'page.proto.list.delete' })}
             </Button>
           </Popconfirm>
         </Space>

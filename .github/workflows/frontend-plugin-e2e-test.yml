@@ -86,7 +86,7 @@ jobs:
         run: yarn test-plugin:e2e
 
       - name: Archive code coverage results
-        uses: actions/upload-artifact@v2.3.0
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: cypress-report
