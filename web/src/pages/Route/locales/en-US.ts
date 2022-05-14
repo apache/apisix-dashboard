@@ -142,7 +142,7 @@ export default {
   'page.route.exportRoutesTips': 'Please choose the type of file you want to export',
   'page.route.button.importOpenApi': 'Import OpenAPI',
   'page.route.button.selectFile': 'Please Select File',
-  'page.route.list': 'Route List',
+  'page.route.list': 'Routes',
   'page.route.panelSection.title.requestOverride': 'Request Override',
   'page.route.form.itemLabel.headerRewrite': 'Header Override',
   'page.route.tooltip.pluginOrchOnlySupportChrome': 'Plugin orchestration only supports Chrome.',
