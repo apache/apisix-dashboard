@@ -18,6 +18,7 @@ package filter
 
 import (
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -28,10 +29,14 @@ import (
 )
 
 func Authentication() gin.HandlerFunc {
+	skipPath := map[string]struct{}{
+		filepath.Join("/", conf.RoutePrefix, "/apisix/admin/user/login"):   {},
+		filepath.Join("/", conf.RoutePrefix, "/apisix/admin/user/version"): {},
+	}
+
 	return func(c *gin.Context) {
-		if c.Request.URL.Path == "/apisix/admin/user/login" ||
-			c.Request.URL.Path == "/apisix/admin/tool/version" ||
-			!strings.HasPrefix(c.Request.URL.Path, "/apisix") {
+		if _, ok := skipPath[c.Request.URL.Path]; ok ||
+			!strings.HasPrefix(c.Request.URL.Path, filepath.Join("/", conf.RoutePrefix, "/apisix")) {
 			c.Next()
 			return
 		}
