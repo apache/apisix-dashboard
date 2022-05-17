@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 export default {
-  'page.dashboard.empty.description.grafanaNotConfig': 'You have not configured Grafana',
-  'page.dashboard.button.grafanaConfig': 'Configure',
-  'page.dashboard.tip': 'Use browser localStorage to store monitor page URL, local only.',
+  'page.dashboard.empty.description.grafanaNotConfig': 'Grafanayı yapılandımardınız.',
+  'page.dashboard.button.grafanaConfig': 'Yapılandır',
+  'page.dashboard.tip': 'Tarayıcı localStorage\'ında yönetim sayfası URL\'sini saklar, yalnızca yerel.',
 };

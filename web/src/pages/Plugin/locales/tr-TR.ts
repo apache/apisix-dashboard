@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 export default {
-  'page.plugin.drawer.popconfirm.title.delete': 'Are you sure to delete this item?',
-  'page.plugin.list': 'Plugin List',
-  'page.plugin.list.enabled': 'List of enabled plugins',
-  'page.plugin.market.config': 'Global Plugin List',
+  'page.plugin.drawer.popconfirm.title.delete': 'Bunu silmek istediğinizden emin misiniz?',
+  'page.plugin.list': 'Eklenti Listesi',
+  'page.plugin.list.enabled': 'Aktif eklentilerin listesi',
+  'page.plugin.market.config': 'Genel Eklenti Listesi',
 };

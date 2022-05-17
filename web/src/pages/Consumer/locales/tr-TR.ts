@@ -16,16 +16,16 @@
  */
 export default {
   'page.consumer.form.itemRuleMessage.username':
-    'Maximum length is 100, only letters, numbers and _ are supported.',
-  'page.consumer.form.itemExtraMessage.username': 'Name should be unique',
+    'Maksimum uzunluk 100dür yalnızca harfler ve sayılar desteklenir.',
+  'page.consumer.form.itemExtraMessage.username': 'Adının tekil olması gerekir',
   'page.consumer.notification.warning.enableAuthenticationPlugin':
-    'Please enable at least one of the following authentication plugin:',
-  'page.consumer.username': 'Name',
-  'page.consumer.username.required': "Please enter the Consumer's name",
-  'page.consumer.updateTime': 'Update Time',
-  'page.consumer.list': 'Consumer List',
+    'Lütfen aşağıdaki kimlik doğrulama eklentisinden en az birini etkinleştirin:',
+  'page.consumer.username': 'Ad',
+  'page.consumer.username.required': "Lütfen kullanıcının adını girin",
+  'page.consumer.updateTime': 'Güncelleme Zamanı',
+  'page.consumer.list': 'Kullanıcı Listesi',
   'page.consumer.description':
-    'Consumers are the consumers of Routes, e.g developers, end users, API calls, etc. When creating a consumer, you need to bind at least one Authentication plugin.',
-  'page.consumer.create': 'Create Consumer',
-  'page.consumer.configure': 'Configure Consumer',
+  'Tüketiciler, örneğin geliştiriciler, son kullanıcılar, API çağrıları vb. gibi Routesın tüketicileridir. Bir tüketici oluştururken, en az bir Kimlik Doğrulama eklentisi bağlamanız gerekir.',
+  'page.consumer.create': 'Kullanıcı Oluştur',
+  'page.consumer.configure': 'Kullanıcı Yapılandır',
 };

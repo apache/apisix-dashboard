@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 export default {
-  'page.systemStatus.pageContainer.title': 'System Info',
-  'page.systemStatus.select.placeholder': 'Please select a apache apisix node',
-  'page.systemStatus.desc': 'The relevant plugin needs to be enabled to report server info.',
-  'page.systemStatus.link': 'How to enable?',
-  'page.systemStatus.dashboardInfo': 'Dashboard',
-  'page.systemStatus.nodeInfo': 'APISIX Nodes',
+  'page.systemStatus.pageContainer.title': 'Sistem Bilgisi',
+  'page.systemStatus.select.placeholder': 'Lütfen apache apisix düğümü seçin',
+  'page.systemStatus.desc': 'İlgili eklenti sistem bilgisi göstermek için etkinleştirilmelidir.',
+  'page.systemStatus.link': 'Nasıl etkinleştirilir?',
+  'page.systemStatus.dashboardInfo': 'Gösterge Paneli',
+  'page.systemStatus.nodeInfo': 'APISIX Düğümleri',
 };

@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 export default {
-  'page.service.steps.stepTitle.basicInformation': 'Basic',
-  'page.service.steps.stepTitle.pluginConfig': 'Plugin',
-  'page.service.steps.stepTitle.preview': 'Preview',
-  'page.service.list': 'Service List',
+  'page.service.steps.stepTitle.basicInformation': 'Temel',
+  'page.service.steps.stepTitle.pluginConfig': 'Eklenti',
+  'page.service.steps.stepTitle.preview': 'Önizleme',
+  'page.service.list': 'Hizmet Listesi',
   'page.service.description':
-    'A service consists of a combination of public plugin configuration and upstream target information in a route. Services are associated with Routes and Upstreams, and a service can correspond to a set of upstream nodes and can be bound by multiple routes.',
-  'page.service.fields.name.required': 'Please enter service name',
-  'page.service.fields.hosts': 'Hosts',
-  'page.service.fields.hosts.placeholder': 'Please enter service hosts',
-  'page.service.create': 'Create Service',
-  'page.service.configure': 'Configure Service',
+  'Bir hizmet, bir rotadaki genel eklenti yapılandırması ve yukarı akış hedef bilgilerinin bir kombinasyonundan oluşur. Hizmetler, Yollar ve Yukarı Akışlar ile ilişkilidir ve bir hizmet, bir dizi yukarı akış düğümüne karşılık gelebilir ve birden çok yolla bağlanabilir.',
+  'page.service.fields.name.required': 'Lütfen hizmet adını girin',
+  'page.service.fields.hosts': 'Hostlar',
+  'page.service.fields.hosts.placeholder': 'Lütfen hizmet hostlarını girin',
+  'page.service.create': 'Hizmet oluştur',
+  'page.service.configure': 'Hizmeti yapılandır',
 };

@@ -16,16 +16,16 @@
  */
 
 export default {
-  'component.user.login': 'Login',
-  'component.user.loginMethodPassword': 'Username & Password',
-  'component.user.loginMethodPassword.username': 'Username',
-  'component.user.loginMethodPassword.password': 'Password',
-  'component.user.loginMethodPassword.inputUsername': 'Please input username',
-  'component.user.loginMethodPassword.inputPassword': 'Please input password',
-  'component.user.loginMethodPassword.incorrectPassword': 'Incorrect username or password',
-  'component.user.loginMethodPassword.fieldInvalid': 'Please check username and password',
-  'component.user.loginMethodPassword.success': 'Login Success',
-  'component.user.loginMethodPassword.changeDefaultAccount': 'How to update username/password?',
+  'component.user.login': 'Giriş Yap',
+  'component.user.loginMethodPassword': 'Kullanıcı Adı & Şifre',
+  'component.user.loginMethodPassword.username': 'Kullanıcı Adı',
+  'component.user.loginMethodPassword.password': 'Şifre',
+  'component.user.loginMethodPassword.inputUsername': 'Lütfen kullanıcı adı girin',
+  'component.user.loginMethodPassword.inputPassword': 'Lütfen şifre girin',
+  'component.user.loginMethodPassword.incorrectPassword': 'Kullanıcı adı veya şifre yanlış',
+  'component.user.loginMethodPassword.fieldInvalid': 'Lütfen kullanıcı adı ve şifreyi kontrol edin',
+  'component.user.loginMethodPassword.success': 'Giriş Başarılı',
+  'component.user.loginMethodPassword.changeDefaultAccount': 'Kullanıcı adı ve şifreyi değiştirmek nasıl yapılır?',
   'component.user.loginMethodPassword.modificationMethod':
-    'Please modify the users field in the /api/conf/conf.yaml file',
+    'Lütfen /api/conf/conf.yaml dosyasındaki kullanıcılar alanını değiştirin',
 };
