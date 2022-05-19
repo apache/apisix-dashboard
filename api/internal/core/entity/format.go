@@ -17,17 +17,23 @@
 package entity
 
 import (
-	"net"
+	"errors"
 	"strconv"
+	"strings"
 
 	"github.com/apisix/manager-api/internal/log"
 )
 
 func mapKV2Node(key string, val float64) (*Node, error) {
-	host, port, err := net.SplitHostPort(key)
-	if err != nil {
-		log.Errorf("split host port fail: %s", err)
-		return nil, err
+	hp := strings.Split(key, ":")
+	host := hp[0]
+	//  according to APISIX upstream nodes policy, port is optional
+	port := "0"
+
+	if len(hp) > 2 {
+		return nil, errors.New("invalid upstream node")
+	} else if len(hp) == 2 {
+		port = hp[1]
 	}
 
 	portInt, err := strconv.Atoi(port)

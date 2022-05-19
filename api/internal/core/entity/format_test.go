@@ -180,6 +180,17 @@ func TestNodesFormat_no_nodes(t *testing.T) {
 	assert.Contains(t, jsonStr, `null`)
 }
 
+func TestNodesFormat_nodes_without_port(t *testing.T) {
+	nodes := map[string]float64{"127.0.0.1": 0}
+	// nodes format
+	formattedNodes := NodesFormat(nodes)
+
+	// json encode for client
+	res, err := json.Marshal(formattedNodes)
+	assert.Nil(t, err)
+	assert.Equal(t, res, []byte(`[{"host":"127.0.0.1","weight":0}]`))
+}
+
 func Test_Idle_Timeout_nil_and_zero(t *testing.T) {
 	ukp0 := UpstreamKeepalivePool{}
 	// Unmarshal from zero value
@@ -228,4 +239,57 @@ func TestUpstream_nil_and_zero_retries(t *testing.T) {
 	marshaledNull, err := json.Marshal(udNull)
 	assert.Nil(t, err)
 	assert.Equal(t, string(marshaledNull), `{}`)
+}
+
+func TestMapKV2Node(t *testing.T) {
+	testCases := []struct {
+		name       string
+		key        string
+		value      float64
+		wantErr    bool
+		errMessage string
+		wantRes    *Node
+	}{
+		{
+			name:       "invalid upstream node",
+			key:        "127.0.0.1:0:0",
+			wantErr:    true,
+			errMessage: "invalid upstream node",
+		},
+		{
+			name:    "when address contains port convert should succeed",
+			key:     "127.0.0.1:8080",
+			value:   100,
+			wantErr: false,
+			wantRes: &Node{
+				Host:   "127.0.0.1",
+				Port:   8080,
+				Weight: 100,
+			},
+		},
+		{
+			name:    "when address without port convert should succeed",
+			key:     "127.0.0.1",
+			wantErr: false,
+			wantRes: &Node{
+				Host:   "127.0.0.1",
+				Port:   0,
+				Weight: 0,
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := mapKV2Node(tc.key, tc.value)
+			if tc.wantErr {
+				assert.NotNil(t, err)
+				assert.Contains(t, err.Error(), tc.errMessage)
+				return
+			}
+
+			assert.Nil(t, err)
+			assert.Equal(t, tc.wantRes, got)
+		})
+	}
 }

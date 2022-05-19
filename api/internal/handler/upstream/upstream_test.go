@@ -534,6 +534,75 @@ func TestUpstream_Create(t *testing.T) {
 			wantErr: nil,
 		},
 		{
+			caseDesc:  "when nodes address without port and pass host is node, create should succeed",
+			getCalled: true,
+			giveInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
+					},
+					Key:      "server_addr",
+					Nodes:    map[string]float64{"127.0.0.1": 100},
+					PassHost: "node",
+				},
+			},
+			giveRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
+					},
+					Key:      "server_addr",
+					Nodes:    map[string]float64{"127.0.0.1": 100},
+					PassHost: "node",
+				},
+			},
+			wantInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
+					},
+					Key:      "server_addr",
+					Nodes:    map[string]float64{"127.0.0.1": 100},
+					PassHost: "node",
+				},
+			},
+			wantRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: &entity.Timeout{
+						Connect: 15,
+						Send:    15,
+						Read:    15,
+					},
+					Key:      "server_addr",
+					Nodes:    map[string]float64{"127.0.0.1": 100},
+					PassHost: "node",
+				},
+			},
+			wantErr: nil,
+		},
+		{
 			caseDesc:  "create failed, create return error",
 			getCalled: true,
 			giveInput: &entity.Upstream{
