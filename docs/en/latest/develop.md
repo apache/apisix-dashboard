@@ -67,10 +67,11 @@ $ make api-stop
 $ cd ./web
 ```
 
-2. Please change the `manager-api` address in the `config/defaultSettings.ts` file. If you follow this guidelines, the address may need to be set as follows:  
+2. Please change the `manager-api` address in the `config/defaultSettings.ts` file. If you follow this guidelines, the address may need to be set as below.
+
 ```
 serveUrlMap:{
-    dev: 'http://localhost:9000' 
+    dev: 'http://localhost:9000'
 }
 ```
 
