@@ -179,7 +179,7 @@ func handleDefaultValue(resource string, reqBody []byte) ([]byte, error) {
 
 func SchemaCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		pathPrefix := filepath.Join("/", conf.RoutePrefix, "/apisix/admin/")
+		pathPrefix := filepath.Join("/", conf.RoutePrefix, "/apisix/admin") + "/"
 		resource := strings.TrimPrefix(c.Request.URL.Path, pathPrefix)
 		idx := strings.LastIndex(resource, "/")
 		if idx > 1 {
