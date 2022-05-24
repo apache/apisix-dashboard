@@ -31,7 +31,6 @@ export default {
   'component.plugin.serverless': 'Sunucusuz Mimari',
   'component.plugin.observability': 'Gözlemlenebilirlik',
   'component.plugin.other': 'Diğer',
-
   // cors
   'component.pluginForm.cors.allow_origins.tooltip':
     'Originler CORSları aktif ettiğinde örn : ：scheme://host:port, örn https://somehost.com:8081.Kullanılacak birden çok kaynak allow_credential false olduğunda, herhangi bir kaynağa izin verildiğini belirtmek için * işaretini kullanabilirsiniz. Ayrıca, ** kullanarak tüm kökenlere izin verebilirsiniz, allow_credentialı etkinleştirirseniz bazı güvenlik riskleri getirecektir.',
@@ -91,7 +90,7 @@ export default {
   'component.pluginForm.limit-conn.key_type.tooltip':
     'Anahtar tipinin destekledikleri; "var" (single var) ve "var_combination" (combine var)',
   'component.pluginForm.limit-conn.key.tooltip':
-  'eşzamanlılık seviyesini sınırlamak için. Örneğin, ana bilgisayar adı başına eşzamanlılığı sınırlamamız için ana bilgisayar adı (veya sunucu bölgesi) anahtar olarak kullanılabilir. Aksi takdirde, tek bir istemcinin hizmetimizi çok fazla paralel bağlantı veya istekle doldurmasını önlemek için istemci adresini anahtar olarak da kullanabiliriz.',
+    'Eşzamanlılık seviyesini sınırlamak için kullanılır. Örneğin ana bilgisayar adı başına eşzamanlılığı sınırlamamız için ana bilgisayar adı (veya sunucu bölgesi) anahtar olarak kullanılabilir Aksi takdirde tek bir istemcinin hizmetimizi çok fazla bağlantı veya istekle doldurmasını önlemek için istemci adresini anahtar olarak da kullanabiliriz.',
   'component.pluginForm.limit-conn.rejected_code.tooltip':
   'istek (conn + burst) aştığında döndürülen reddedilecektir.',
   'component.pluginForm.limit-conn.rejected_msg.tooltip':
