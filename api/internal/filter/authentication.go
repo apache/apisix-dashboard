@@ -31,7 +31,7 @@ import (
 func Authentication() gin.HandlerFunc {
 	skipPath := map[string]struct{}{
 		filepath.Join("/", conf.RoutePrefix, "/apisix/admin/user/login"):   {},
-		filepath.Join("/", conf.RoutePrefix, "/apisix/admin/user/version"): {},
+		filepath.Join("/", conf.RoutePrefix, "/apisix/admin/tool/version"): {},
 	}
 
 	return func(c *gin.Context) {
