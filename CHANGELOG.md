@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.13.0](#2130)
 - [2.11.0](#2110)
 - [2.10.1](#2101)
 - [2.10.0](#2100)
@@ -37,6 +38,42 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+# 2.13.0
+
+This release contains some features and bugfixes, and all the existing functionalities are compatible with Apache APISIX 2.13.x.
+
+Notice: Starting with this release, Apache APISIX Dashboard will use the same version number as the Apache APISIX it supports.
+
+### Core
+
+- feat: add security header [#2341](https://github.com/apache/apisix-dashboard/pull/2341)
+- feat: storage grafana path in to etcd [#2362](https://github.com/apache/apisix-dashboard/pull/2362)
+- feat: Modify plugin preview page [#2359](https://github.com/apache/apisix-dashboard/pull/2359)
+- feat: support Turkish Language [#2452](https://github.com/apache/apisix-dashboard/pull/2452)
+- feat: add page reload judgment [#2370](https://github.com/apache/apisix-dashboard/pull/2370)
+- feat: basic support Apache APISIX 2.13.0 [#2428](https://github.com/apache/apisix-dashboard/pull/2428)
+- chore: use json schema instead hard code [#2399](https://github.com/apache/apisix-dashboard/pull/2399)
+- chore: update README for online demo [#2404](https://github.com/apache/apisix-dashboard/pull/2404)
+- docs: update online playground url [#2416](https://github.com/apache/apisix-dashboard/pull/2416)
+- chore: update the year of copyright and fix typo [#2417](https://github.com/apache/apisix-dashboard/pull/2417)
+
+### Bugfix
+
+- fix: format error in changelog [#2378](https://github.com/apache/apisix-dashboard/pull/2378)
+- fix: caller location error in logs [#2367](https://github.com/apache/apisix-dashboard/pull/2367)
+- fix(import routes): merge route when route have the same name [#2330](https://github.com/apache/apisix-dashboard/pull/2330)
+- fix: consumer without plugins causes page crashes [#2437](https://github.com/apache/apisix-dashboard/pull/2437)
+- fix: correct data type of filed Active.checks.active.https_verify_certificate [#2422](https://github.com/apache/apisix-dashboard/pull/2422)
+- fix: create upstream error when pass host is node and nodes without port [#2421](https://github.com/apache/apisix-dashboard/pull/2421)
+- docs: fix invalid link [#2366](https://github.com/apache/apisix-dashboard/pull/2366)
+- docs: Remove hyperlinks from documents [#2431](https://github.com/apache/apisix-dashboard/pull/2431)
+- docs: Update RPM install package link [#2439](https://github.com/apache/apisix-dashboard/pull/2439)
+
+### Test
+
+- refactor: migrate id compatible tests to e2enew [#2400](https://github.com/apache/apisix-dashboard/pull/2400)
+- refactor: migrate route tests to e2enew [#2411](https://github.com/apache/apisix-dashboard/pull/2411)
 
 # 2.11.0
 
