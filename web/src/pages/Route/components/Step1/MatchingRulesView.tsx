@@ -264,6 +264,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             name={'reverse'}
             valuePropName={'checked'}
             required
+            initialValue={false}
           >
             <Switch />
           </Form.Item>
