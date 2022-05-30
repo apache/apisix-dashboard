@@ -42,8 +42,8 @@ build: web-default api-default
 
 .PHONY: web-default
 web-default:
-ifeq ("$(wildcard $(YARN_EXEC))", "")
-	@echo "ERROR: Need to install yarn first"
+ifeq ("$(wildcard $(PNPM_EXEC))", "")
+	@echo "ERROR: Need to install pnpm first"
 	exit 1
 endif
 
