@@ -42,8 +42,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 14.x
-          cache: 'yarn'
-          cache-dependency-path: web/yarn.lock
+          cache: 'pnpm'
+          cache-dependency-path: web/pnpm-lock.yaml
 
       - name: Setup golang environment
         uses: actions/setup-go@v3
