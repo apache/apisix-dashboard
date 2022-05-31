@@ -62,7 +62,7 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 		// temporarily save the parsed data
 		data = &loader.DataSets{}
 		// global upstream ID
-		globalUpstreamID = o.TaskName + "_global"
+		globalUpstreamID = o.TaskName
 		// global uri prefix
 		globalPath = ""
 	)
@@ -83,7 +83,7 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 
 		// decide whether to merge multi method routes based on configuration
 		if o.MergeMethod {
-			// create a single route for each path
+			// create a single route for each path, merge all methods
 			route := generateBaseRoute(routeID, v.Summary)
 			route.Uris = []string{globalPath + realUri}
 			route.UpstreamID = globalUpstreamID
@@ -107,7 +107,9 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 	return data, nil
 }
 
-// generate upstream from OpenAPI servers field
+// Generate APISIX upstream from OpenAPI servers field
+// return upstream and uri prefix
+// Tips: select only first server in servers field
 func generateUpstreamByServers(servers openapi3.Servers, upstreamID string) (entity.Upstream, string) {
 	upstream := entity.Upstream{
 		BaseInfo: entity.BaseInfo{ID: upstreamID},
@@ -117,34 +119,21 @@ func generateUpstreamByServers(servers openapi3.Servers, upstreamID string) (ent
 		},
 	}
 
-	var (
-		nodes  = make(map[string]float64)
-		scheme string
-		path   string
-	)
-	for _, server := range servers {
-		u, err := url.Parse(server.URL)
-		if err != nil {
-			continue
-		}
-
-		// save the scheme and path of the first valid server
-		// path may be empty
-		if scheme == "" {
-			scheme = u.Scheme
-			path = u.Path
-		}
-
-		nodes[u.Host] = 1
+	u, err := url.Parse(servers[0].URL)
+	if err != nil {
+		// return an empty upstream when parsing url failed
+		return upstream, ""
 	}
 
-	upstream.Scheme = scheme
-	upstream.Nodes = entity.NodesFormat(nodes)
+	upstream.Scheme = u.Scheme
+	upstream.Nodes = map[string]float64{
+		u.Host: 1,
+	}
 
-	return upstream, path
+	return upstream, u.Path
 }
 
-// generate base sample route for customize
+// Generate a base route for customize
 func generateBaseRoute(id string, desc string) entity.Route {
 	return entity.Route{
 		BaseInfo: entity.BaseInfo{ID: id},
