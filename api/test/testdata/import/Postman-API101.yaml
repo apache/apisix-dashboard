@@ -14,14 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# If you want to set the specified configuration value, you can set the new
-# in this file. For example if you want to specify the etcd address:
-#
-
 ###
 # This is the definition file for the Postman API101 sample.
 # It is converted from Postman Collection using postman2openapi.
-
 openapi: 3.0.0
 info:
   title: API 101
@@ -155,4 +150,3 @@ paths:
           description: Successful response
           content:
             application/json: {}
-
