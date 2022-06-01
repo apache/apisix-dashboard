@@ -17,7 +17,6 @@
 package openapi3
 
 import (
-	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -88,8 +87,6 @@ func TestParseAPI101Merge(t *testing.T) {
 	assert.Equal(t, float64(1), data.Upstreams[0].Nodes.(map[string]float64)["api-101.glitch.me"])
 	assert.Equal(t, "test", data.Upstreams[0].Name)
 	assert.Equal(t, "roundrobin", data.Upstreams[0].Type)
-
-	fmt.Println(data.Routes)
 
 	// Route
 	assert.Equal(t, data.Upstreams[0].ID, data.Routes[0].UpstreamID)
