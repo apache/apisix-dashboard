@@ -60,6 +60,7 @@ func TestParseAPI101NoMerge(t *testing.T) {
 			assert.Contains(t, route.Uris, "/customer/*")
 			assert.Contains(t, route.Methods, "PUT")
 			assert.Equal(t, "Update customer", route.Desc)
+			assert.Len(t, route.Plugins, 1)
 			assert.Equal(t, entity.Status(0), route.Status)
 		case "test_customer-customer_id_DELETE":
 			assert.Contains(t, route.Uris, "/customer/*")
@@ -103,6 +104,7 @@ func TestParseAPI101Merge(t *testing.T) {
 		case "test_customer-customer_id":
 			assert.Contains(t, route.Uris, "/customer/*")
 			assert.Contains(t, route.Methods, "PUT", "DELETE")
+			assert.Len(t, route.Plugins, 0)
 			assert.Equal(t, entity.Status(0), route.Status)
 		}
 	}
