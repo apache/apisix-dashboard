@@ -41,7 +41,7 @@ func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 	}
 
 	// no paths in OAS3 document
-	if len(swagger.Paths) < 1 {
+	if len(swagger.Paths) <= 0 {
 		return nil, consts.ErrImportFile
 	}
 
@@ -96,7 +96,7 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 		// generate route name
 		routeID := o.TaskName + "_" + strings.NewReplacer("/", "-", "{", "", "}", "").Replace(strings.TrimPrefix(uri, "/"))
 
-		// decide whether to merge multi method routes based on configuration
+		// decide whether to merge multi-method routes based on configuration
 		if o.MergeMethod {
 			// create a single route for each path, merge all methods
 			route := generateBaseRoute(routeID, v.Summary)
@@ -130,11 +130,12 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 	return data, nil
 }
 
+// Adding authentication plugins to route based on the security scheme
+// Currently supported: apikey
 func attachAuthenticationPlugin(route entity.Route, refs map[string]*openapi3.SecuritySchemeRef, requirements *openapi3.SecurityRequirements) {
 	for _, requirement := range *requirements {
 		for name := range requirement {
-			// Implement authentication method filter
-			// currently supported: apikey
+			// Only add plugins that we can currently handle
 			if _, ok := refs[name]; ok {
 				route.Plugins[authenticationMappings[name]] = map[string]interface{}{}
 			}
