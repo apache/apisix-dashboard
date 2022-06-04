@@ -15,3 +15,8 @@
  * limitations under the License.
  */
 package postman
+
+func (Loader) Export(data loader.DataSets) (interface{}, error) {
+	//TODO implement me
+	panic("implement me")
+}
