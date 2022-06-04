@@ -15,3 +15,10 @@
  * limitations under the License.
  */
 package postman
+
+type Loader struct {
+	// MergeMethod indicates whether to merge routes when multiple HTTP methods are on the same path
+	MergeMethod bool
+	// TaskName indicates the name of current import/export task
+	TaskName string
+}
