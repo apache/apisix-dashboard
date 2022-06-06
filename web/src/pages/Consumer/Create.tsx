@@ -24,13 +24,11 @@ import PluginPage from '@/components/Plugin';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
-import { fetchItem, create, update, fetchPlugList } from './service';
+import { fetchItem, create, update } from './service';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [plugins, setPlugins] = useState<PluginComponent.Data>({});
-  const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
-  const [authPluginList, setAuthPluginList] = useState<string[]>([]);
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
 
@@ -43,15 +41,6 @@ const Page: React.FC = (props) => {
         setPlugins(rest.plugins);
       });
     }
-
-    fetchPlugList().then((data) => {
-      setPluginList(data);
-      const authList = data
-        .filter((item) => item.type === 'auth')
-        .map((item) => item.name)
-        .sort();
-      setAuthPluginList(authList);
-    });
   }, []);
 
   const onSubmit = () => {
@@ -79,21 +68,6 @@ const Page: React.FC = (props) => {
         setStep(nextStep);
       });
     } else if (nextStep === 3) {
-      // TRICK: waiting for https://github.com/apache/apisix-dashboard/issues/532
-      if (
-        !Object.keys(plugins).filter(
-          (name) =>
-            pluginList.find((item) => item.name === name)!.type === 'auth' &&
-            !plugins[name].disable,
-        ).length
-      ) {
-        notification.warning({
-          message: `${formatMessage({
-            id: 'page.consumer.notification.warning.enableAuthenticationPlugin',
-          })} ${authPluginList.join(', ')}`,
-        });
-        return;
-      }
       setStep(3);
     } else if (nextStep === 4) {
       onSubmit();

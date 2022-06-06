@@ -315,9 +315,9 @@ context('Create and Delete Route', () => {
         .within(() => {
           cy.contains('OK').click();
         });
-      cy.get(selector.deleteAlert).within(()=>{
+      cy.get(selector.deleteAlert).within(() => {
         cy.get('.ant-btn-loading-icon').should('be.visible');
-      })
+      });
       cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
       cy.get(selector.notificationCloseIcon).click();
     });
