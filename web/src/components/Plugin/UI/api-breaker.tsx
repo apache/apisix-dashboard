@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Button, Form, Input, InputNumber } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
@@ -93,22 +93,56 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
         <Input />
       </Form.Item>
 
-      <Form.Item
-        label="break_response_headers"
-        name="break_response_headers"
-        rules={[
-          {
-            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} break_response_code`,
-          },
-        ]}
-        tooltip={formatMessage({
-          id: 'component.pluginForm.api-breaker.break_response_headers.tooltip',
-        })}
-        validateTrigger={['onChange', 'onBlur', 'onClick']}
-      >
-        {/* TODO object list */}
-        <Input />
-      </Form.Item>
+      <Form.List name="break_response_headers">
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              <Form.Item label="break_response_headers">
+                {fields.map((field, index) => (
+                  <Row gutter={12} key={index} style={{ marginBottom: 10 }}>
+                    <Col span={10}>
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'key']}
+                        fieldKey={[field.fieldKey, 'key']}
+                        noStyle
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col span={10}>
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'value']}
+                        fieldKey={[field.fieldKey, 'value']}
+                        noStyle
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col>
+                      <MinusCircleOutlined
+                        className="dynamic-delete-button"
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                ))}
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add();
+                  }}
+                >
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
+                </Button>
+              </Form.Item>
+            </div>
+          );
+        }}
+      </Form.List>
 
       <Form.Item
         label="max_breaker_sec"
