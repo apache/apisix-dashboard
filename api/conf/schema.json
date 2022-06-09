@@ -6857,19 +6857,22 @@
 			"priority": 899,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
-				"minProperties": 1,
-				"oneOf": [
-					{
-						"required": [
-							"body"
-						]
-					},
-					{
-						"required": [
-							"filters"
-						]
-					}
-				],
+                "dependencies": {
+                    "filters": {
+                        "not": {
+                            "required": [
+                                "body"
+                            ]
+                        }
+                    },
+                    "body": {
+                        "not": {
+                            "required": [
+                                "filters"
+                            ]
+                        }
+                    }
+                },
 				"properties": {
 					"body": {
 						"description": "new body for response",
