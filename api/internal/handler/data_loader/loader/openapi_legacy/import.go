@@ -33,7 +33,7 @@ import (
 var regPathVar = regexp.MustCompile(`{[\w.]*}`)
 var regPathRepeat = regexp.MustCompile(`-APISIX-REPEAT-URI-[\d]*`)
 
-func (o OpenAPILegacy) Import(input interface{}) (*loader.DataSets, error) {
+func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(input.([]byte))
 	if err != nil {
 		return nil, err

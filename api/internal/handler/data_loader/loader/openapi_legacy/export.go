@@ -38,7 +38,7 @@ var (
 	serviceMap  = map[string]*entity.Service{}
 )
 
-func (o OpenAPILegacy) Export(data loader.DataSets) (interface{}, error) {
+func (o Loader) Export(data loader.DataSets) (interface{}, error) {
 	for _, route := range data.Routes {
 		routeMap[utils.InterfaceToString(route.BaseInfo.ID)] = &route
 	}

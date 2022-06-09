@@ -1,3 +1,3 @@
 package openapi_legacy
 
-type OpenAPILegacy struct{}
+type Loader struct{}
