@@ -6858,6 +6858,18 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"minProperties": 1,
+				"oneOf": [
+					{
+						"required": [
+							"body"
+						]
+					},
+					{
+						"required": [
+							"filters"
+						]
+					}
+				],
 				"properties": {
 					"body": {
 						"description": "new body for response",
@@ -6914,10 +6926,6 @@
 						"minProperties": 1,
 						"type": "object"
 					},
-					"oneOf": [
-						"body",
-						"filters"
-					],
 					"status_code": {
 						"description": "new status code for response",
 						"maximum": 598,
