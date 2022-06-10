@@ -93,13 +93,13 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 	for uri, v := range s.Paths {
 		// replace parameter in uri to wildcard
 		realUri := regURIVar.ReplaceAllString(uri, "*")
-		// generate route name
-		routeID := o.TaskName + "_" + strings.NewReplacer("/", "-", "{", "", "}", "").Replace(strings.TrimPrefix(uri, "/"))
+		// generate route Name
+		routeName := o.TaskName + "_" + strings.TrimPrefix(uri, "/")
 
 		// decide whether to merge multi-method routes based on configuration
 		if o.MergeMethod {
 			// create a single route for each path, merge all methods
-			route := generateBaseRoute(routeID, v.Summary)
+			route := generateBaseRoute(routeName, v.Summary)
 			route.Uris = []string{globalPath + realUri}
 			route.UpstreamID = globalUpstreamID
 			for method := range v.Operations() {
@@ -109,7 +109,7 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 		} else {
 			// create routes for each method of each path
 			for method, operation := range v.Operations() {
-				subRouteID := routeID + "_" + method
+				subRouteID := routeName + "_" + method
 				route := generateBaseRoute(subRouteID, operation.Summary)
 				route.Uris = []string{globalPath + realUri}
 				route.Methods = []string{strings.ToUpper(method)}
@@ -170,11 +170,10 @@ func generateUpstreamByServers(servers openapi3.Servers, upstreamID string) (ent
 }
 
 // Generate a base route for customize
-func generateBaseRoute(id string, desc string) entity.Route {
+func generateBaseRoute(name string, desc string) entity.Route {
 	return entity.Route{
-		BaseInfo: entity.BaseInfo{ID: id},
-		Name:     id,
-		Desc:     desc,
-		Plugins:  make(map[string]interface{}),
+		Name:    name,
+		Desc:    desc,
+		Plugins: make(map[string]interface{}),
 	}
 }
