@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/shiningrush/droplet/data"
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/handler/data_loader/loader"
@@ -33,20 +32,23 @@ var (
 	routeMethods    []string
 	_allHTTPMethods = []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodPatch, http.MethodHead, http.MethodConnect, http.MethodTrace, http.MethodOptions}
 
-	routeMap    = map[string]*entity.Route{}
-	upstreamMap = map[string]*entity.Upstream{}
-	serviceMap  = map[string]*entity.Service{}
+	routes    []*entity.Route
+	upstreams []*entity.Upstream
+	services  []*entity.Service
 )
 
 func (o Loader) Export(data loader.DataSets) (interface{}, error) {
+	routes = make([]*entity.Route, 0)
+	upstreams = make([]*entity.Upstream, 0)
+	services = make([]*entity.Service, 0)
 	for _, route := range data.Routes {
-		routeMap[utils.InterfaceToString(route.BaseInfo.ID)] = &route
+		routes = append(routes, &route)
 	}
 	for _, upstream := range data.Upstreams {
-		upstreamMap[utils.InterfaceToString(upstream.BaseInfo.ID)] = &upstream
+		upstreams = append(upstreams, &upstream)
 	}
 	for _, service := range data.Services {
-		serviceMap[utils.InterfaceToString(service.BaseInfo.ID)] = &service
+		services = append(services, &service)
 	}
 
 	swagger, err := RouteToOpenAPI3()
@@ -66,7 +68,7 @@ func RouteToOpenAPI3() (*openapi3.Swagger, error) {
 	secSchemas := openapi3.SecuritySchemes{}
 	_pathNumber := GetPathNumber()
 
-	for _, route := range routeMap {
+	for _, route := range routes {
 		extensions := make(map[string]interface{})
 		servicePlugins := make(map[string]interface{})
 		plugins := make(map[string]interface{})
@@ -78,15 +80,18 @@ func RouteToOpenAPI3() (*openapi3.Swagger, error) {
 		path.OperationID = route.Name
 
 		if route.ServiceID != nil {
-			service, ok := serviceMap[utils.InterfaceToString(route.ServiceID)]
-			if !ok {
-				if err == data.ErrNotFound {
-					return nil, fmt.Errorf(consts.IDNotFound, "service", route.ServiceID)
+			for _, s := range services {
+				if utils.InterfaceToString(s.BaseInfo.ID) == utils.InterfaceToString(route.ServiceID) {
+					service = s
 				}
-				return nil, err
 			}
-			servicePlugins = service.Plugins
-			serviceLabels = service.Labels
+			if service == nil {
+				return nil, fmt.Errorf(consts.IDNotFound, "service", route.ServiceID)
+			}
+
+			_service := service.(*entity.Service)
+			servicePlugins = _service.Plugins
+			serviceLabels = _service.Labels
 		}
 
 		//Parse upstream
@@ -389,12 +394,14 @@ func ParseRouteUpstream(route *entity.Route) (interface{}, error) {
 	if route.Upstream != nil {
 		return route.Upstream, nil
 	} else if route.UpstreamID != nil && route.Upstream == nil {
-		upstream, ok := upstreamMap[utils.InterfaceToString(route.UpstreamID)]
-		if !ok {
-			if err == data.ErrNotFound {
-				return nil, fmt.Errorf(consts.IDNotFound, "upstream", route.UpstreamID)
+		var upstream *entity.Upstream
+		for _, u := range upstreams {
+			if utils.InterfaceToString(u.BaseInfo.ID) == utils.InterfaceToString(route.UpstreamID) {
+				upstream = u
 			}
-			return nil, err
+		}
+		if upstream == nil {
+			return nil, fmt.Errorf(consts.IDNotFound, "upstream", route.UpstreamID)
 		}
 		return upstream, nil
 	} else if route.UpstreamID == nil && route.Upstream == nil && route.ServiceID != nil {
@@ -402,12 +409,14 @@ func ParseRouteUpstream(route *entity.Route) (interface{}, error) {
 		if _service.Upstream != nil {
 			return _service.Upstream, nil
 		} else if _service.Upstream == nil && _service.UpstreamID != nil {
-			upstream, ok := upstreamMap[utils.InterfaceToString(route.UpstreamID)]
-			if !ok {
-				if err == data.ErrNotFound {
-					return nil, fmt.Errorf(consts.IDNotFound, "upstream", _service.UpstreamID)
+			var upstream *entity.Upstream
+			for _, u := range upstreams {
+				if utils.InterfaceToString(u.BaseInfo.ID) == utils.InterfaceToString(_service.UpstreamID) {
+					upstream = u
 				}
-				return nil, err
+			}
+			if upstream == nil {
+				return nil, fmt.Errorf(consts.IDNotFound, "upstream", route.UpstreamID)
 			}
 			return upstream, nil
 		}
