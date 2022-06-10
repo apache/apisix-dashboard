@@ -30,7 +30,7 @@ const FORM_ITEM_LAYOUT = {
     span: 7,
   },
   wrapperCol: {
-    span: 7,
+    span: 12,
   },
 };
 
@@ -136,7 +136,7 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
                     add();
                   }}
                 >
-                  <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
                 </Button>
               </Form.Item>
             </div>

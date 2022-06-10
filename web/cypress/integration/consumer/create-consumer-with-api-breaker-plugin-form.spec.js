@@ -19,6 +19,9 @@
 context('Create and delete consumer with api-breaker plugin form', () => {
   const selector = {
     break_response_code: '#break_response_code',
+    break_response_body: '#break_response_body',
+    break_response_headers_0_key: '#break_response_headers_0_key',
+    break_response_headers_0_value: '#break_response_headers_0_value',
     empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
@@ -31,6 +34,9 @@ context('Create and delete consumer with api-breaker plugin form', () => {
 
   const data = {
     break_response_code: 200,
+    break_response_body: 'breaker opened',
+    break_response_headers_0_key: 'Content-Type',
+    break_response_headers_0_value: 'application/json',
     consumerName: 'test_consumer',
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
@@ -82,8 +88,13 @@ context('Create and delete consumer with api-breaker plugin form', () => {
       });
     });
     cy.get(selector.notification).should('contain', 'Invalid plugin data');
-
+    cy.contains('.ant-form-item', 'break_response_headers').within(() => {
+      cy.contains('button', 'Create').click();
+    });
     cy.get(selector.break_response_code).type(data.break_response_code);
+    cy.get(selector.break_response_body).type(data.break_response_body);
+    cy.get(selector.break_response_headers_0_key).type(data.break_response_headers_0_key);
+    cy.get(selector.break_response_headers_0_value).type(data.break_response_headers_0_value);
     cy.get(selector.disabledSwitcher).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({

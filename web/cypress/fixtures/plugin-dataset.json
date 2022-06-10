@@ -67,6 +67,11 @@
       "shouldValid": true,
       "data": {
         "break_response_code": 502,
+        "break_response_body": "{\"message\":\"breaker opened.\"}",
+        "break_response_headers": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json+v1" }
+        ],
         "unhealthy": {
           "http_statuses": [500],
           "failures": 1
