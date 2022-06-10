@@ -17,6 +17,7 @@
 package openapi3
 
 import (
+	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -56,13 +57,13 @@ func TestParseAPI101NoMerge(t *testing.T) {
 			assert.Contains(t, route.Methods, "GET")
 			assert.Equal(t, "Get one customer", route.Desc)
 			assert.Equal(t, entity.Status(0), route.Status)
-		case "test_customer-customer_id_PUT":
+		case "test_customer/{customer_id}_PUT":
 			assert.Contains(t, route.Uris, "/customer/*")
 			assert.Contains(t, route.Methods, "PUT")
 			assert.Equal(t, "Update customer", route.Desc)
 			assert.Len(t, route.Plugins, 1)
 			assert.Equal(t, entity.Status(0), route.Status)
-		case "test_customer-customer_id_DELETE":
+		case "test_customer/{customer_id}_DELETE":
 			assert.Contains(t, route.Uris, "/customer/*")
 			assert.Contains(t, route.Methods, "DELETE")
 			assert.Equal(t, "Remove customer", route.Desc)
@@ -92,6 +93,7 @@ func TestParseAPI101Merge(t *testing.T) {
 	// Route
 	assert.Equal(t, data.Upstreams[0].ID, data.Routes[0].UpstreamID)
 	for _, route := range data.Routes {
+		fmt.Println(route.Name)
 		switch route.Name {
 		case "test_customer":
 			assert.Contains(t, route.Uris, "/customer")
@@ -101,7 +103,7 @@ func TestParseAPI101Merge(t *testing.T) {
 			assert.Contains(t, route.Uris, "/customers")
 			assert.Contains(t, route.Methods, "GET")
 			assert.Equal(t, entity.Status(0), route.Status)
-		case "test_customer-customer_id":
+		case "test_customer/{customer_id}":
 			assert.Contains(t, route.Uris, "/customer/*")
 			assert.Contains(t, route.Methods, "PUT", "DELETE")
 			assert.Len(t, route.Plugins, 0)
