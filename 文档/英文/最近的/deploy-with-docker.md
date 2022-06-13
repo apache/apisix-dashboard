@@ -87,3 +87,5 @@ $ docker stop apisix-dashboard
 ```sh
 $ docker build -t apisix-dashboard:$tag . --no-cache=true
 ```
+
+2. It is not recommended to use multiple instances at the same time. When using multiple instances, each instance generates and holds a JWT token, which will lead to verification conflicts.
