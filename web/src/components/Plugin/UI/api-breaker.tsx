@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Button, Form, InputNumber } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
@@ -30,7 +30,7 @@ const FORM_ITEM_LAYOUT = {
     span: 7,
   },
   wrapperCol: {
-    span: 7,
+    span: 12,
   },
 };
 
@@ -41,17 +41,20 @@ const FORM_ITEM_WITHOUT_LABEL = {
 };
 
 const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
-  const { formatMessage } = useIntl()
-  const propertires = schema?.properties
-  const un_http_statuses = propertires.unhealthy.properties.http_statuses
-  const un_http_default = un_http_statuses.default
-  const { http_statuses } = propertires.healthy.properties
-  const http_default = http_statuses.default
+  const { formatMessage } = useIntl();
+  const propertires = schema?.properties;
+  const un_http_statuses = propertires.unhealthy.properties.http_statuses;
+  const un_http_default = un_http_statuses.default;
+  const { http_statuses } = propertires.healthy.properties;
+  const http_default = http_statuses.default;
   return (
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
-      initialValues={{ unhealthy: { http_statuses: un_http_default }, healthy: { http_statuses: http_default } }}
+      initialValues={{
+        unhealthy: { http_statuses: un_http_default },
+        healthy: { http_statuses: http_default },
+      }}
     >
       <Form.Item
         label="break_response_code"
@@ -67,8 +70,79 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
         })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={propertires.break_response_code.minimum} max={propertires.break_response_code.maximum} required />
+        <InputNumber
+          min={propertires.break_response_code.minimum}
+          max={propertires.break_response_code.maximum}
+          required
+        />
       </Form.Item>
+
+      <Form.Item
+        label="break_response_body"
+        name="break_response_body"
+        rules={[
+          {
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} break_response_code`,
+          },
+        ]}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.api-breaker.break_response_body.tooltip',
+        })}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.List name="break_response_headers">
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              <Form.Item label="break_response_headers">
+                {fields.map((field, index) => (
+                  <Row gutter={12} key={index} style={{ marginBottom: 10 }}>
+                    <Col span={10}>
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'key']}
+                        fieldKey={[field.fieldKey, 'key']}
+                        noStyle
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col span={10}>
+                      <Form.Item
+                        {...field}
+                        name={[field.name, 'value']}
+                        fieldKey={[field.fieldKey, 'value']}
+                        noStyle
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col>
+                      <MinusCircleOutlined
+                        className="dynamic-delete-button"
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                ))}
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add();
+                  }}
+                >
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
+                </Button>
+              </Form.Item>
+            </div>
+          );
+        }}
+      </Form.List>
 
       <Form.Item
         label="max_breaker_sec"
@@ -92,12 +166,11 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
                   })}
                   key={field.key}
                 >
-                  <Form.Item
-                    {...field}
-                    validateTrigger={['onChange', 'onBlur']}
-                    noStyle
-                  >
-                    <InputNumber min={un_http_statuses.items.minimum} max={un_http_statuses.items.maximum} />
+                  <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
+                    <InputNumber
+                      min={un_http_statuses.items.minimum}
+                      max={un_http_statuses.items.maximum}
+                    />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
@@ -131,7 +204,9 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
         label="unhealthy.failures"
         name={['unhealthy', 'failures']}
         initialValue={propertires.unhealthy.properties.failures.default}
-        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.unhealthy.failures.tooltip' })}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.api-breaker.unhealthy.failures.tooltip',
+        })}
       >
         <InputNumber min={propertires.unhealthy.properties.failures.minimum} />
       </Form.Item>
@@ -149,12 +224,11 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
                     id: 'component.pluginForm.api-breaker.healthy.http_statuses.tooltip',
                   })}
                 >
-                  <Form.Item
-                    {...field}
-                    validateTrigger={['onChange', 'onBlur']}
-                    noStyle
-                  >
-                    <InputNumber min={http_statuses.items.minimum} max={http_statuses.items.maximum} />
+                  <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
+                    <InputNumber
+                      min={http_statuses.items.minimum}
+                      max={http_statuses.items.maximum}
+                    />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
@@ -188,7 +262,9 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
         label="healthy.successes"
         name={['healthy', 'successes']}
         initialValue={propertires.healthy.properties.successes.default}
-        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.healthy.successes.tooltip' })}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.api-breaker.healthy.successes.tooltip',
+        })}
       >
         <InputNumber min={propertires.healthy.properties.successes.minimum} />
       </Form.Item>

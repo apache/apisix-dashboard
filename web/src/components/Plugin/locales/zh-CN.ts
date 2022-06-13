@@ -62,6 +62,8 @@ export default {
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip': '不健康返回错误码。',
+  'component.pluginForm.api-breaker.break_response_body.tooltip': '不健康返回报文',
+  'component.pluginForm.api-breaker.break_response_headers.tooltip': '不健康返回报文头',
   'component.pluginForm.api-breaker.max_breaker_sec.tooltip': '最大熔断持续时间。',
   'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip': '不健康时候的状态码。',
   'component.pluginForm.api-breaker.unhealthy.failures.tooltip':

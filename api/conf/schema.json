@@ -348,12 +348,12 @@
 					"type": "string"
 				},
 				"host": {
-					"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+					"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 					"type": "string"
 				},
 				"hosts": {
 					"items": {
-						"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+						"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 						"type": "string"
 					},
 					"minItems": 1,
@@ -398,6 +398,7 @@
 							"OPTIONS",
 							"PATCH",
 							"POST",
+							"PURGE",
 							"PUT",
 							"TRACE"
 						],
@@ -631,7 +632,7 @@
 											"type": "object"
 										},
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 											"type": "string"
 										},
 										"http_path": {
@@ -960,7 +961,7 @@
 									"items": {
 										"properties": {
 											"host": {
-												"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+												"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 												"type": "string"
 											},
 											"metadata": {
@@ -1014,12 +1015,13 @@
 						},
 						"scheme": {
 							"default": "http",
-							"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp.",
+							"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp. For specific protocols, it can be kafka.",
 							"enum": [
 								"grpc",
 								"grpcs",
 								"http",
 								"https",
+								"kafka",
 								"tcp",
 								"tls",
 								"udp"
@@ -1079,7 +1081,7 @@
 							"type": "integer"
 						},
 						"upstream_host": {
-							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 							"type": "string"
 						}
 					},
@@ -1134,7 +1136,7 @@
 				},
 				"hosts": {
 					"items": {
-						"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+						"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 						"type": "string"
 					},
 					"minItems": 1,
@@ -1253,7 +1255,7 @@
 											"type": "object"
 										},
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 											"type": "string"
 										},
 										"http_path": {
@@ -1582,7 +1584,7 @@
 									"items": {
 										"properties": {
 											"host": {
-												"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+												"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 												"type": "string"
 											},
 											"metadata": {
@@ -1636,12 +1638,13 @@
 						},
 						"scheme": {
 							"default": "http",
-							"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp.",
+							"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp. For specific protocols, it can be kafka.",
 							"enum": [
 								"grpc",
 								"grpcs",
 								"http",
 								"https",
+								"kafka",
 								"tcp",
 								"tls",
 								"udp"
@@ -1701,7 +1704,7 @@
 							"type": "integer"
 						},
 						"upstream_host": {
-							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 							"type": "string"
 						}
 					},
@@ -1821,12 +1824,12 @@
 					"type": "object"
 				},
 				"sni": {
-					"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+					"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 					"type": "string"
 				},
 				"snis": {
 					"items": {
-						"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+						"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 						"type": "string"
 					},
 					"minItems": 1,
@@ -1877,6 +1880,58 @@
 					]
 				},
 				"plugins": {
+					"type": "object"
+				},
+				"protocol": {
+					"properties": {
+						"conf": {
+							"description": "protocol-specific configuration",
+							"type": "object"
+						},
+						"logger": {
+							"items": {
+								"dependencies": {
+									"name": [
+										"conf"
+									]
+								},
+								"properties": {
+									"conf": {
+										"description": "logger plugin configuration",
+										"type": "object"
+									},
+									"filter": {
+										"description": "logger filter rules",
+										"type": "array"
+									},
+									"name": {
+										"type": "string"
+									}
+								}
+							},
+							"type": "array"
+						},
+						"name": {
+							"type": "string"
+						},
+						"superior_id": {
+							"anyOf": [
+								{
+									"maxLength": 64,
+									"minLength": 1,
+									"pattern": "^[a-zA-Z0-9-_.]+$",
+									"type": "string"
+								},
+								{
+									"minimum": 1,
+									"type": "integer"
+								}
+							]
+						}
+					},
+					"required": [
+						"name"
+					],
 					"type": "object"
 				},
 				"remote_addr": {
@@ -1937,7 +1992,7 @@
 				},
 				"sni": {
 					"description": "server name indication",
-					"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+					"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 					"type": "string"
 				},
 				"update_time": {
@@ -2012,7 +2067,7 @@
 											"type": "object"
 										},
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 											"type": "string"
 										},
 										"http_path": {
@@ -2341,7 +2396,7 @@
 									"items": {
 										"properties": {
 											"host": {
-												"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+												"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 												"type": "string"
 											},
 											"metadata": {
@@ -2395,12 +2450,13 @@
 						},
 						"scheme": {
 							"default": "http",
-							"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp.",
+							"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp. For specific protocols, it can be kafka.",
 							"enum": [
 								"grpc",
 								"grpcs",
 								"http",
 								"https",
+								"kafka",
 								"tcp",
 								"tls",
 								"udp"
@@ -2460,7 +2516,7 @@
 							"type": "integer"
 						},
 						"upstream_host": {
-							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 							"type": "string"
 						}
 					},
@@ -2552,7 +2608,7 @@
 									"type": "object"
 								},
 								"host": {
-									"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+									"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 									"type": "string"
 								},
 								"http_path": {
@@ -2881,7 +2937,7 @@
 							"items": {
 								"properties": {
 									"host": {
-										"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+										"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 										"type": "string"
 									},
 									"metadata": {
@@ -2935,12 +2991,13 @@
 				},
 				"scheme": {
 					"default": "http",
-					"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp.",
+					"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp. For specific protocols, it can be kafka.",
 					"enum": [
 						"grpc",
 						"grpcs",
 						"http",
 						"https",
+						"kafka",
 						"tcp",
 						"tls",
 						"udp"
@@ -3000,7 +3057,7 @@
 					"type": "integer"
 				},
 				"upstream_host": {
-					"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+					"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 					"type": "string"
 				}
 			},
@@ -3021,10 +3078,29 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"break_response_body": {
+						"type": "string"
+					},
 					"break_response_code": {
 						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
+					},
+					"break_response_headers": {
+						"items": {
+							"properties": {
+								"key": {
+									"minLength": 1,
+									"type": "string"
+								},
+								"value": {
+									"minLength": 1,
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
+						"type": "array"
 					},
 					"disable": {
 						"type": "boolean"
@@ -3155,6 +3231,39 @@
 						"type": "string"
 					}
 				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"authz-casdoor": {
+			"priority": 2559,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"callback_url": {
+						"pattern": "^[^%?]+[^/]$",
+						"type": "string"
+					},
+					"client_id": {
+						"type": "string"
+					},
+					"client_secret": {
+						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"endpoint_addr": {
+						"pattern": "^[^%?]+[^/]$",
+						"type": "string"
+					}
+				},
+				"required": [
+					"callback_url",
+					"client_id",
+					"client_secret",
+					"endpoint_addr"
+				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -3302,6 +3411,11 @@
 					"lazy_load_paths": {
 						"default": false,
 						"type": "boolean"
+					},
+					"password_grant_token_generation_incoming_uri": {
+						"maxLength": 4096,
+						"minLength": 1,
+						"type": "string"
 					},
 					"permissions": {
 						"default": {},
@@ -3702,6 +3816,7 @@
 											"OPTIONS",
 											"PATCH",
 											"POST",
+											"PURGE",
 											"PUT",
 											"TRACE"
 										],
@@ -4088,7 +4203,7 @@
 					},
 					"host": {
 						"1": {
-							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 							"type": "string"
 						},
 						"description": "Deprecated, use `tcp.host` instead."
@@ -4157,7 +4272,7 @@
 					"tcp": {
 						"properties": {
 							"host": {
-								"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+								"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 								"type": "string"
 							},
 							"port": {
@@ -4259,6 +4374,44 @@
 		},
 		"ext-plugin-post-req": {
 			"priority": -3000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"allow_degradation": {
+						"default": false,
+						"type": "boolean"
+					},
+					"conf": {
+						"items": {
+							"properties": {
+								"name": {
+									"maxLength": 128,
+									"minLength": 1,
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"name",
+								"value"
+							],
+							"type": "object"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"ext-plugin-post-resp": {
+			"priority": -4000,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
@@ -4468,6 +4621,15 @@
 							"type": "string"
 						},
 						"type": "array"
+					},
+					"request_method": {
+						"default": "GET",
+						"description": "the method for client to request the authorization service",
+						"enum": [
+							"GET",
+							"POST"
+						],
+						"type": "string"
 					},
 					"ssl_verify": {
 						"default": true,
@@ -5327,6 +5489,10 @@
 					"header": {
 						"default": "apikey",
 						"type": "string"
+					},
+					"hide_credentials": {
+						"default": false,
+						"type": "boolean"
 					},
 					"query": {
 						"default": "apikey",
@@ -6458,6 +6624,10 @@
 					"disable": {
 						"type": "boolean"
 					},
+					"recursive": {
+						"default": false,
+						"type": "boolean"
+					},
 					"source": {
 						"minLength": 1,
 						"type": "string"
@@ -6578,7 +6748,7 @@
 				"properties": {
 					"blacklist": {
 						"items": {
-							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 							"type": "string"
 						},
 						"minItems": 1,
@@ -6599,7 +6769,7 @@
 					},
 					"whitelist": {
 						"items": {
-							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 							"type": "string"
 						},
 						"minItems": 1,
@@ -6618,6 +6788,7 @@
 					"algorithm": {
 						"default": "uuid",
 						"enum": [
+							"nanoid",
 							"snowflake",
 							"uuid"
 						],
@@ -6686,7 +6857,22 @@
 			"priority": 899,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
-				"minProperties": 1,
+                "dependencies": {
+                    "filters": {
+                        "not": {
+                            "required": [
+                                "body"
+                            ]
+                        }
+                    },
+                    "body": {
+                        "not": {
+                            "required": [
+                                "filters"
+                            ]
+                        }
+                    }
+                },
 				"properties": {
 					"body": {
 						"description": "new body for response",
@@ -6699,6 +6885,44 @@
 					},
 					"disable": {
 						"type": "boolean"
+					},
+					"filters": {
+						"description": "a group of filters that modify response bodyby replacing one specified string by another",
+						"items": {
+							"description": "filter that modifies response body",
+							"properties": {
+								"options": {
+									"default": "jo",
+									"description": "regex options",
+									"type": "string"
+								},
+								"regex": {
+									"description": "match pattern on response body",
+									"minLength": 1,
+									"type": "string"
+								},
+								"replace": {
+									"description": "regex substitution content",
+									"type": "string"
+								},
+								"scope": {
+									"default": "once",
+									"description": "regex substitution range",
+									"enum": [
+										"global",
+										"once"
+									],
+									"type": "string"
+								}
+							},
+							"required": [
+								"regex",
+								"replace"
+							],
+							"type": "object"
+						},
+						"minItems": 1,
+						"type": "array"
 					},
 					"headers": {
 						"description": "new headers for response",
@@ -7222,7 +7446,7 @@
 						"type": "integer"
 					},
 					"name": {
-						"default": "sys logger",
+						"default": "http sys logger",
 						"type": "string"
 					},
 					"pool_size": {
@@ -7251,7 +7475,7 @@
 						"type": "string"
 					},
 					"timeout": {
-						"default": 3,
+						"default": 3000,
 						"minimum": 1,
 						"type": "integer"
 					},
@@ -7436,7 +7660,7 @@
 																		"type": "object"
 																	},
 																	"host": {
-																		"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+																		"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 																		"type": "string"
 																	},
 																	"http_path": {
@@ -7765,7 +7989,7 @@
 																"items": {
 																	"properties": {
 																		"host": {
-																			"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+																			"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 																			"type": "string"
 																		},
 																		"metadata": {
@@ -7819,12 +8043,13 @@
 													},
 													"scheme": {
 														"default": "http",
-														"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp.",
+														"description": "The scheme of the upstream. For L7 proxy, it can be one of grpc/grpcs/http/https. For L4 proxy, it can be one of tcp/tls/udp. For specific protocols, it can be kafka.",
 														"enum": [
 															"grpc",
 															"grpcs",
 															"http",
 															"https",
+															"kafka",
 															"tcp",
 															"tls",
 															"udp"
@@ -7884,7 +8109,7 @@
 														"type": "integer"
 													},
 													"upstream_host": {
-														"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+														"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
 														"type": "string"
 													}
 												},
@@ -8316,6 +8541,102 @@
 				"required": [
 					"protocol_level",
 					"protocol_name"
+				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"syslog": {
+			"metadata_schema": {
+				"properties": {
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 401,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"drop_limit": {
+						"default": 1048576,
+						"type": "integer"
+					},
+					"flush_limit": {
+						"default": 4096,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"host": {
+						"type": "string"
+					},
+					"inactive_timeout": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "stream sys logger",
+						"type": "string"
+					},
+					"pool_size": {
+						"default": 5,
+						"minimum": 5,
+						"type": "integer"
+					},
+					"port": {
+						"type": "integer"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"sock_type": {
+						"default": "tcp",
+						"enum": [
+							"tcp",
+							"udp"
+						],
+						"type": "string"
+					},
+					"timeout": {
+						"default": 3000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"tls": {
+						"default": false,
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"host",
+					"port"
 				],
 				"type": "object"
 			},
