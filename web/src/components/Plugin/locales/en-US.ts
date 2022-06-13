@@ -65,6 +65,10 @@ export default {
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip':
     'Return error code when unhealthy.',
+  'component.pluginForm.api-breaker.break_response_body.tooltip':
+    'Return body of the response message when upstream is unhealthy.',
+  'component.pluginForm.api-breaker.break_response_headers.tooltip':
+    'Return headers when unhealthy.',
   'component.pluginForm.api-breaker.max_breaker_sec.tooltip': 'Maximum breaker time(seconds).',
   'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip':
     'Status codes when unhealthy.',
