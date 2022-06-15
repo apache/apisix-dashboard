@@ -25,6 +25,7 @@ import (
 
 func TestImport_invalid_loader(t *testing.T) {
 	input := &ImportInput{}
+	input.Type = "test"
 	input.FileName = "file1.yaml"
 	input.FileContent = []byte("hello")
 
@@ -33,7 +34,7 @@ func TestImport_invalid_loader(t *testing.T) {
 	ctx.SetInput(input)
 
 	_, err := h.Import(ctx)
-	assert.EqualError(t, err, "unsupported data loader type")
+	assert.EqualError(t, err, "unsupported data loader type: test")
 }
 
 func TestImport_openapi3_invalid_file_type(t *testing.T) {
