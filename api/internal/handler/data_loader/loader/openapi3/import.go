@@ -65,22 +65,7 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 		globalUpstreamID = o.TaskName
 		// global uri prefix
 		globalPath = ""
-
-		// authentication plugins supported by APISIX
-		interestedAuthentication     = false
-		interestedAuthenticationList = make(map[string]*openapi3.SecuritySchemeRef)
 	)
-
-	// check securitySchemes settings
-	if len(s.Components.SecuritySchemes) > 0 {
-		for name, security := range s.Components.SecuritySchemes {
-			if strings.ToLower(security.Value.Type) == "http" &&
-				strings.ToLower(security.Value.Scheme) == "apikey" {
-				interestedAuthentication = true
-				interestedAuthenticationList[name] = security
-			}
-		}
-	}
 
 	// create upstream when servers field not empty
 	if len(s.Servers) > 0 {
@@ -114,33 +99,11 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 				route.Uris = []string{globalPath + realUri}
 				route.Methods = []string{strings.ToUpper(method)}
 				route.UpstreamID = globalUpstreamID
-
-				// Processing plugins in non-method merge mode
-				// In method merge mode, different methods may have different authentication
-				// methods, so no plugins are attached to them.
-				if interestedAuthentication &&
-					operation.Security != nil &&
-					len(*operation.Security) > 0 {
-					attachAuthenticationPlugin(route, interestedAuthenticationList, operation.Security)
-				}
 				data.Routes = append(data.Routes, route)
 			}
 		}
 	}
 	return data, nil
-}
-
-// Adding authentication plugins to route based on the security scheme
-// Currently supported: apikey
-func attachAuthenticationPlugin(route entity.Route, refs map[string]*openapi3.SecuritySchemeRef, requirements *openapi3.SecurityRequirements) {
-	for _, requirement := range *requirements {
-		for name := range requirement {
-			// Only add plugins that we can currently handle
-			if _, ok := refs[name]; ok {
-				route.Plugins[authenticationMappings[name]] = map[string]interface{}{}
-			}
-		}
-	}
 }
 
 // Generate APISIX upstream from OpenAPI servers field

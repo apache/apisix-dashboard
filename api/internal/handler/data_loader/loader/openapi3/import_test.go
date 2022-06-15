@@ -17,7 +17,6 @@
 package openapi3
 
 import (
-	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -93,7 +92,6 @@ func TestParseAPI101Merge(t *testing.T) {
 	// Route
 	assert.Equal(t, data.Upstreams[0].ID, data.Routes[0].UpstreamID)
 	for _, route := range data.Routes {
-		fmt.Println(route.Name)
 		switch route.Name {
 		case "test_customer":
 			assert.Contains(t, route.Uris, "/customer")
