@@ -26,7 +26,7 @@ import (
 
 	"github.com/onsi/ginkgo/extensions/table"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 var _ = ginkgo.Describe("create service without plugin", func() {

@@ -28,7 +28,7 @@ import (
 	"github.com/onsi/gomega"
 	"github.com/tidwall/gjson"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 var upstream map[string]interface{} = map[string]interface{}{

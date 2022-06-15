@@ -24,7 +24,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 func TestMigrate(t *testing.T) {

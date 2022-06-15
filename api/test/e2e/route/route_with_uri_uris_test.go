@@ -22,7 +22,7 @@ import (
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 var _ = ginkgo.Describe("test route with valid uri uris", func() {

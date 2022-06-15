@@ -24,7 +24,7 @@ import (
 	"github.com/onsi/ginkgo/extensions/table"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 var _ = ginkgo.Describe("Balancer", func() {

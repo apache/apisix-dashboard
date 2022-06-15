@@ -21,7 +21,7 @@ import (
 
 	. "github.com/onsi/ginkgo/extensions/table"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 var _ = DescribeTable("Consumer With key-auth",

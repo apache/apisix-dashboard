@@ -22,7 +22,7 @@ import (
 
 	"github.com/onsi/ginkgo"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 func TestPluginConfig(t *testing.T) {
