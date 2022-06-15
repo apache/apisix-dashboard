@@ -96,7 +96,7 @@ type ImportInput struct {
 	FileName    string `auto_read:"_file"`
 	FileContent []byte `auto_read:"file"`
 
-	MergeMethod bool `auto_read:"merge_method"`
+	MergeMethod string `auto_read:"merge_method"`
 }
 
 func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
@@ -118,7 +118,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	switch LoaderType(input.Type) {
 	case LoaderTypeOpenAPI3:
 		l = &openapi3.Loader{
-			MergeMethod: input.MergeMethod,
+			MergeMethod: input.MergeMethod == "true",
 			TaskName:    input.TaskName,
 		}
 		break
@@ -287,13 +287,51 @@ func (h *ImportHandler) createEntities(ctx context.Context, data *loader.DataSet
 
 // Convert import errors to response result
 func (ImportHandler) convertToImportResult(data *loader.DataSets, errs map[store.HubKey][]string) map[store.HubKey]ImportResult {
-	result := make(map[store.HubKey]ImportResult)
-	for _, s := range storeList {
-		result[s] = ImportResult{
+	return map[store.HubKey]ImportResult{
+		store.HubKeyRoute: {
 			Total:  len(data.Routes),
-			Failed: len(errs[s]),
-			Errors: errs[s],
-		}
+			Failed: len(errs[store.HubKeyRoute]),
+			Errors: errs[store.HubKeyRoute],
+		},
+		store.HubKeyUpstream: {
+			Total:  len(data.Upstreams),
+			Failed: len(errs[store.HubKeyUpstream]),
+			Errors: errs[store.HubKeyUpstream],
+		},
+		store.HubKeyService: {
+			Total:  len(data.Services),
+			Failed: len(errs[store.HubKeyService]),
+			Errors: errs[store.HubKeyService],
+		},
+		store.HubKeyConsumer: {
+			Total:  len(data.Consumers),
+			Failed: len(errs[store.HubKeyConsumer]),
+			Errors: errs[store.HubKeyConsumer],
+		},
+		store.HubKeySsl: {
+			Total:  len(data.SSLs),
+			Failed: len(errs[store.HubKeySsl]),
+			Errors: errs[store.HubKeySsl],
+		},
+		store.HubKeyStreamRoute: {
+			Total:  len(data.StreamRoutes),
+			Failed: len(errs[store.HubKeyStreamRoute]),
+			Errors: errs[store.HubKeyStreamRoute],
+		},
+		store.HubKeyGlobalRule: {
+			Total:  len(data.GlobalPlugins),
+			Failed: len(errs[store.HubKeyGlobalRule]),
+			Errors: errs[store.HubKeyGlobalRule],
+		},
+		store.HubKeyPluginConfig: {
+			Total:  len(data.PluginConfigs),
+			Failed: len(errs[store.HubKeyPluginConfig]),
+			Errors: errs[store.HubKeyPluginConfig],
+		},
+		store.HubKeyProto: {
+			Total:  len(data.Protos),
+			Failed: len(errs[store.HubKeyProto]),
+			Errors: errs[store.HubKeyProto],
+		},
 	}
-	return result
 }

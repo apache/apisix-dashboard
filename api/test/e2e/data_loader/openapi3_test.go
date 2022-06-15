@@ -92,7 +92,7 @@ var _ = Describe("OpenAPI 3", func() {
 			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
 			req.WithMultipart().WithForm(map[string]string{
 				"type":         "openapi3",
-				"task_name":    "test_postman_api101_yaml",
+				"task_name":    "test_postman_api101_yaml_mm",
 				"_file":        "Postman-API101.yaml",
 				"merge_method": "true",
 			})
@@ -123,7 +123,7 @@ var _ = Describe("OpenAPI 3", func() {
 			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
 			req.WithMultipart().WithForm(map[string]string{
 				"type":         "openapi3",
-				"task_name":    "test_postman_api101_yaml",
+				"task_name":    "test_postman_api101_yaml_nmm",
 				"_file":        "Postman-API101.yaml",
 				"merge_method": "false",
 			})
