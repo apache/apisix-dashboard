@@ -12,11 +12,6 @@ import (
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-type response struct {
-	Code    int    `json:"Code"`
-	Message string `json:"Message"`
-}
-
 var _ = Describe("OpenAPI 3", func() {
 	DescribeTable("Import cases",
 		func(f func()) {
@@ -69,36 +64,6 @@ var _ = Describe("OpenAPI 3", func() {
 			r = r.Get("data")
 			for s, result := range r.Map() {
 				if s == "route" || s == "upstream" {
-					Expect(result.Get("total").Uint()).To(Equal(uint64(1)))
-					Expect(result.Get("failed").Uint()).To(Equal(uint64(0)))
-				}
-			}
-		}),
-		Entry("petstore-expanded.yaml", func() {
-			path, err := filepath.Abs("../../testdata/import/petstore-expanded.yaml")
-			Expect(err).To(BeNil())
-
-			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
-			req.WithMultipart().WithForm(map[string]string{
-				"type":      "openapi3",
-				"task_name": "test_petstore_expanded_yaml",
-				"_file":     "petstore-expanded.yaml",
-			})
-			req.WithMultipart().WithFile("file", path)
-			req.WithHeader("Authorization", base.GetToken())
-			resp := req.Expect()
-			resp.Status(http.StatusOK)
-			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
-
-			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
-
-			r = r.Get("data")
-			for s, result := range r.Map() {
-				if s == "route" {
-					Expect(result.Get("total").Uint()).To(Equal(uint64(2)))
-					Expect(result.Get("failed").Uint()).To(Equal(uint64(0)))
-				}
-				if s == "upstream" {
 					Expect(result.Get("total").Uint()).To(Equal(uint64(1)))
 					Expect(result.Get("failed").Uint()).To(Equal(uint64(0)))
 				}
