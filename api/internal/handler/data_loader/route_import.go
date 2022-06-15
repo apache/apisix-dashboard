@@ -95,6 +95,8 @@ type ImportInput struct {
 	TaskName    string `auto_read:"task_name"`
 	FileName    string `auto_read:"_file"`
 	FileContent []byte `auto_read:"file"`
+
+	MergeMethod bool `auto_read:"merge_method"`
 }
 
 func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
@@ -116,7 +118,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	switch LoaderType(input.Type) {
 	case LoaderTypeOpenAPI3:
 		l = &openapi3.Loader{
-			MergeMethod: true,
+			MergeMethod: input.MergeMethod,
 			TaskName:    input.TaskName,
 		}
 		break
