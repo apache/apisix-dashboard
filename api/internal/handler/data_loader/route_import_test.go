@@ -24,17 +24,16 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strings"
 	"testing"
 
-	"github.com/shiningrush/droplet/data"
-
+	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-
-	"github.com/apisix/manager-api/internal/core/store"
 )
 
 type testFile struct {
@@ -181,4 +180,26 @@ func TestImport_with_upstream_id(t *testing.T) {
 	_, err = h.Import(ctx)
 	assert.EqualError(t, err, "upstream id: upstream1 not found")
 
+}
+
+func TestImport_empty_requestbody(t *testing.T) {
+	fileContent := ReadFile(t, "test/testdata/import/empty-request.yaml")
+	input := &ImportInput{}
+	input.FileName = "file1.json"
+	input.FileContent = fileContent
+
+	mStore := &store.MockInterface{}
+	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+	}).Return(nil, errors.New("data not found by key: upstream1"))
+
+	h := ImportHandler{
+		routeStore:    &store.GenericStore{},
+		svcStore:      mStore,
+		upstreamStore: mStore,
+	}
+	ctx := droplet.NewContext()
+	ctx.SetInput(input)
+
+	_, err := h.Import(ctx)
+	assert.Nil(t, err)
 }
