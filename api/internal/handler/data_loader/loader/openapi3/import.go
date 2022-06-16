@@ -18,7 +18,9 @@ package openapi3
 
 import (
 	"errors"
+	"fmt"
 	"net/url"
+	"reflect"
 	"strings"
 	"time"
 
@@ -34,8 +36,13 @@ func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 		return nil, errors.New("input is nil")
 	}
 
+	d, ok := input.([]byte)
+	if !ok {
+		return nil, fmt.Errorf("input format error: expected []byte but it is %s", reflect.TypeOf(input).Kind().String())
+	}
+
 	// load OAS3 document
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(input.([]byte))
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(d)
 	if err != nil {
 		return nil, err
 	}
