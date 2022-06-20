@@ -198,4 +198,8 @@ export default {
   'page.route.fields.vars.invalid': 'Please check the advanced match condition configuration',
   'page.route.fields.vars.in.invalid':
     'When using the IN operator, enter the parameter values in array format.',
+
+  'page.route.data_loader.import': 'Import',
+  'page.route.data_loader.import_panel': 'Import data',
+  'page.route.data_loader.tips.none_option': 'No settings required',
 };
