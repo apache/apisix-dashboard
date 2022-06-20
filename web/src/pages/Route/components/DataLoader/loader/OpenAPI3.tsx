@@ -16,15 +16,18 @@
  */
 import React from 'react';
 import { Col, Form, Row, Switch } from 'antd';
+import { useIntl } from '@@/plugin-locale/localeExports';
 
 const DataLoaderOpenAPI3: React.FC = () => {
+  const { formatMessage } = useIntl();
+
   return (
     <Row gutter={16}>
       <Col span={12}>
         <Form.Item
           name="merge_method"
-          label="Merge HTTP Methods"
-          tooltip="Whether to merge multiple HTTP methods in the OpenAPI path into a single route. When you have multiple HTTP methods in your path with different details configuration (e.g. securitySchema), you can turn off this option to generate them into multiple routes."
+          label={formatMessage({ id: 'page.route.data_loader.labels.openapi3_merge_method' })}
+          tooltip={formatMessage({ id: 'page.route.data_loader.tips.openapi3_merge_method' })}
           initialValue={true}
         >
           <Switch defaultChecked />

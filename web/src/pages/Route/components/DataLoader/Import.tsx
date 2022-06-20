@@ -31,7 +31,7 @@ import {
 import { UploadOutlined } from '@ant-design/icons';
 import { useIntl } from '@@/plugin-locale/localeExports';
 import OpenAPI3 from './loader/OpenAPI3';
-import { RcFile } from 'antd/lib/upload';
+import type { RcFile } from 'antd/lib/upload';
 import { importRoutes } from '@/pages/Route/service';
 
 type Props = {
@@ -88,7 +88,7 @@ const DataLoaderImport: React.FC<Props> = (props) => {
     <>
       <Drawer
         title={formatMessage({ id: 'page.route.data_loader.import_panel' })}
-        width={720}
+        width={480}
         visible={visible}
         onClose={onClose}
         footer={
@@ -112,14 +112,21 @@ const DataLoaderImport: React.FC<Props> = (props) => {
             <Col span={12}>
               <Form.Item
                 name="type"
-                label="Data Loader Type"
-                rules={[{ required: true, message: 'Please select importer type' }]}
+                label={formatMessage({ id: 'page.route.data_loader.labels.loader_type' })}
+                rules={[
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'page.route.data_loader.tips.select_type' }),
+                  },
+                ]}
                 initialValue={importType}
               >
                 <Select onChange={(value: ImportType) => setImportType(value)}>
-                  <Select.Option value="openapi3">OpenAPI 3</Select.Option>
+                  <Select.Option value="openapi3">
+                    {formatMessage({ id: 'page.route.data_loader.types.openapi3' })}
+                  </Select.Option>
                   <Select.Option value="openapi_legacy" disabled>
-                    OpenAPI 3 Legacy
+                    {formatMessage({ id: 'page.route.data_loader.types.openapi_legacy' })}
                   </Select.Option>
                 </Select>
               </Form.Item>
@@ -127,10 +134,17 @@ const DataLoaderImport: React.FC<Props> = (props) => {
             <Col span={12}>
               <Form.Item
                 name="task_name"
-                label="Task name"
-                rules={[{ required: true, message: 'Please input import task name' }]}
+                label={formatMessage({ id: 'page.route.data_loader.labels.task_name' })}
+                rules={[
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'page.route.data_loader.tips.input_task_name' }),
+                  },
+                ]}
               >
-                <Input placeholder="Please input a task name" />
+                <Input
+                  placeholder={formatMessage({ id: 'page.route.data_loader.tips.input_task_name' })}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -138,7 +152,7 @@ const DataLoaderImport: React.FC<Props> = (props) => {
           <Divider />
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item label="Upload">
+              <Form.Item label={formatMessage({ id: 'page.route.data_loader.labels.upload' })}>
                 <Upload
                   fileList={uploadFileList as any}
                   beforeUpload={(file) => {
@@ -149,7 +163,9 @@ const DataLoaderImport: React.FC<Props> = (props) => {
                     setUploadFileList([]);
                   }}
                 >
-                  <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                  <Button icon={<UploadOutlined />}>
+                    {formatMessage({ id: 'page.route.data_loader.tips.click_upload' })}
+                  </Button>
                 </Upload>
               </Form.Item>
             </Col>
