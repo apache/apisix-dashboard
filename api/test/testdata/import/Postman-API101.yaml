@@ -1,0 +1,152 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+###
+# This is the definition file for the Postman API101 sample.
+# It is converted from Postman Collection using postman2openapi.
+openapi: 3.0.0
+info:
+  title: API 101
+  description: >-
+    API 101 template for learning API request basics. Follow along with the
+    webinar / video or just open the first request and hit **Send**!
+  version: 1.0.0
+servers:
+  - url: https://api-101.glitch.me
+  - url: http://{{apiurl}}
+components:
+  securitySchemes:
+    apikeyAuth:
+      type: http
+      scheme: apikey
+paths:
+  /customers:
+    get:
+      tags:
+        - default
+      summary: Get all customers
+      parameters:
+        - name: user-id
+          in: header
+          schema:
+            type: string
+          example: '{{userId}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /customer:
+    get:
+      tags:
+        - default
+      summary: Get one customer
+      parameters:
+        - name: user-id
+          in: header
+          schema:
+            type: string
+          example: '{{userId}}'
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - default
+      summary: Add new customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Dorothy Zborna
+                type: Individual
+      security:
+        - apikeyAuth: []
+      parameters:
+        - name: user-id
+          in: header
+          schema:
+            type: string
+          example: '{{userId}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /customer/{customer_id}:
+    put:
+      tags:
+        - default
+      summary: Update customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Sophia Petrillo
+                type: Individual
+      security:
+        - apikeyAuth: []
+      parameters:
+        - name: user-id
+          in: header
+          schema:
+            type: string
+          example: '{{userId}}'
+        - name: customer_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1311'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - default
+      summary: Remove customer
+      security:
+        - apikeyAuth: []
+      parameters:
+        - name: user-id
+          in: header
+          schema:
+            type: string
+          example: '{{userId}}'
+        - name: customer_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1310'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
