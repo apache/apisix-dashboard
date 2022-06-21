@@ -19,14 +19,13 @@ package data_loader
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
-	"path"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/juliangruber/go-intersect"
+	"github.com/pkg/errors"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
@@ -38,7 +37,6 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	loader "github.com/apisix/manager-api/internal/handler/data_loader/loader"
 	"github.com/apisix/manager-api/internal/handler/data_loader/loader/openapi3"
-	"github.com/apisix/manager-api/internal/log"
 )
 
 type ImportHandler struct {
@@ -102,16 +100,13 @@ type ImportInput struct {
 func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ImportInput)
 
-	// file check
-	suffix := path.Ext(input.FileName)
-	if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
-		return nil, fmt.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
-	}
-
+	// input file content check
 	contentLen := bytes.Count(input.FileContent, nil) - 1
+	if contentLen <= 0 {
+		return nil, errors.New("uploaded file is empty")
+	}
 	if contentLen > conf.ImportSizeLimit {
-		log.Warnf("upload file size exceeds limit: %d", contentLen)
-		return nil, fmt.Errorf("the file size exceeds the limit; limit %d", conf.ImportSizeLimit)
+		return nil, errors.Errorf("uploaded file size exceeds the limit, limit is %d", conf.ImportSizeLimit)
 	}
 
 	var l loader.Loader
