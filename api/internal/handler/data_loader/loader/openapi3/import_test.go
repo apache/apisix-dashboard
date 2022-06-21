@@ -66,6 +66,8 @@ func TestParseAPI101NoMerge(t *testing.T) {
 			assert.Contains(t, route.Methods, "DELETE")
 			assert.Equal(t, "Remove customer", route.Desc)
 			assert.Equal(t, entity.Status(0), route.Status)
+		default:
+			t.Fatal("bad route name exist")
 		}
 	}
 }
@@ -104,6 +106,8 @@ func TestParseAPI101Merge(t *testing.T) {
 			assert.Contains(t, route.Uris, "/customer/*")
 			assert.Contains(t, route.Methods, "PUT", "DELETE")
 			assert.Equal(t, entity.Status(0), route.Status)
+		default:
+			t.Fatal("bad route name exist")
 		}
 	}
 }
