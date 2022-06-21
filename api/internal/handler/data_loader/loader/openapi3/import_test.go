@@ -42,8 +42,6 @@ func TestParseAPI101NoMerge(t *testing.T) {
 	assert.Len(t, data.Upstreams, 1)
 
 	// Upstream
-	assert.Equal(t, "https", data.Upstreams[0].Scheme)
-	assert.Equal(t, float64(1), data.Upstreams[0].Nodes.(map[string]float64)["api-101.glitch.me"])
 	assert.Equal(t, "test", data.Upstreams[0].Name)
 	assert.Equal(t, "roundrobin", data.Upstreams[0].Type)
 
@@ -51,10 +49,20 @@ func TestParseAPI101NoMerge(t *testing.T) {
 	assert.Equal(t, data.Upstreams[0].ID, data.Routes[0].UpstreamID)
 	for _, route := range data.Routes {
 		switch route.Name {
+		case "test_customers_GET":
+			assert.Contains(t, route.Uris, "/customers")
+			assert.Contains(t, route.Methods, "GET")
+			assert.Equal(t, "Get all customers", route.Desc)
+			assert.Equal(t, entity.Status(0), route.Status)
 		case "test_customer_GET":
 			assert.Contains(t, route.Uris, "/customer")
 			assert.Contains(t, route.Methods, "GET")
 			assert.Equal(t, "Get one customer", route.Desc)
+			assert.Equal(t, entity.Status(0), route.Status)
+		case "test_customer_POST":
+			assert.Contains(t, route.Uris, "/customer")
+			assert.Contains(t, route.Methods, "POST")
+			assert.Equal(t, "Add new customer", route.Desc)
 			assert.Equal(t, entity.Status(0), route.Status)
 		case "test_customer/{customer_id}_PUT":
 			assert.Contains(t, route.Uris, "/customer/*")
@@ -66,6 +74,8 @@ func TestParseAPI101NoMerge(t *testing.T) {
 			assert.Contains(t, route.Methods, "DELETE")
 			assert.Equal(t, "Remove customer", route.Desc)
 			assert.Equal(t, entity.Status(0), route.Status)
+		default:
+			t.Fatal("bad route name exist")
 		}
 	}
 }
@@ -83,8 +93,6 @@ func TestParseAPI101Merge(t *testing.T) {
 	assert.Len(t, data.Upstreams, 1)
 
 	// Upstream
-	assert.Equal(t, "https", data.Upstreams[0].Scheme)
-	assert.Equal(t, float64(1), data.Upstreams[0].Nodes.(map[string]float64)["api-101.glitch.me"])
 	assert.Equal(t, "test", data.Upstreams[0].Name)
 	assert.Equal(t, "roundrobin", data.Upstreams[0].Type)
 
@@ -104,6 +112,8 @@ func TestParseAPI101Merge(t *testing.T) {
 			assert.Contains(t, route.Uris, "/customer/*")
 			assert.Contains(t, route.Methods, "PUT", "DELETE")
 			assert.Equal(t, entity.Status(0), route.Status)
+		default:
+			t.Fatal("bad route name exist")
 		}
 	}
 }

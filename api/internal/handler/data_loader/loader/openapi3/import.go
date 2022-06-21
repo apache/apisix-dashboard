@@ -17,12 +17,13 @@
 package openapi3
 
 import (
-	"errors"
-	"net/url"
+	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/pkg/errors"
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/handler/data_loader/loader"
@@ -31,18 +32,23 @@ import (
 
 func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 	if input == nil {
-		return nil, errors.New("input is nil")
+		panic("input is nil")
+	}
+
+	d, ok := input.([]byte)
+	if !ok {
+		panic(fmt.Sprintf("input format error: expected []byte but it is %s", reflect.TypeOf(input).Kind().String()))
 	}
 
 	// load OAS3 document
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(input.([]byte))
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(d)
 	if err != nil {
 		return nil, err
 	}
 
 	// no paths in OAS3 document
 	if len(swagger.Paths) <= 0 {
-		return nil, consts.ErrImportFile
+		return nil, errors.Wrap(errors.New("OpenAPI documentation does not contain any paths"), consts.ErrImportFile.Error())
 	}
 
 	if o.TaskName == "" {
@@ -70,7 +76,13 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 	// create upstream when servers field not empty
 	if len(s.Servers) > 0 {
 		var upstream entity.Upstream
-		upstream, globalPath = generateUpstreamByServers(s.Servers, globalUpstreamID)
+		upstream = entity.Upstream{
+			BaseInfo: entity.BaseInfo{ID: globalUpstreamID},
+			UpstreamDef: entity.UpstreamDef{
+				Name: globalUpstreamID,
+				Type: "roundrobin",
+			},
+		}
 		data.Upstreams = append(data.Upstreams, upstream)
 	}
 
@@ -104,32 +116,6 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 		}
 	}
 	return data, nil
-}
-
-// Generate APISIX upstream from OpenAPI servers field
-// return upstream and uri prefix
-// Tips: It will use only the first server in servers array
-func generateUpstreamByServers(servers openapi3.Servers, upstreamID string) (entity.Upstream, string) {
-	upstream := entity.Upstream{
-		BaseInfo: entity.BaseInfo{ID: upstreamID},
-		UpstreamDef: entity.UpstreamDef{
-			Name: upstreamID,
-			Type: "roundrobin",
-		},
-	}
-
-	u, err := url.Parse(servers[0].URL)
-	if err != nil {
-		// return an empty upstream when parsing url failed
-		return upstream, ""
-	}
-
-	upstream.Scheme = u.Scheme
-	upstream.Nodes = map[string]float64{
-		u.Host: 1,
-	}
-
-	return upstream, u.Path
 }
 
 // Generate a base route for customize
