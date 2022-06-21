@@ -18,7 +18,6 @@ package openapi3
 
 import (
 	"fmt"
-	"net/url"
 	"reflect"
 	"strings"
 	"time"
@@ -77,7 +76,13 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 	// create upstream when servers field not empty
 	if len(s.Servers) > 0 {
 		var upstream entity.Upstream
-		upstream, globalPath = generateUpstreamByServers(s.Servers, globalUpstreamID)
+		upstream = entity.Upstream{
+			BaseInfo: entity.BaseInfo{ID: globalUpstreamID},
+			UpstreamDef: entity.UpstreamDef{
+				Name: globalUpstreamID,
+				Type: "roundrobin",
+			},
+		}
 		data.Upstreams = append(data.Upstreams, upstream)
 	}
 
@@ -111,32 +116,6 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 		}
 	}
 	return data, nil
-}
-
-// Generate APISIX upstream from OpenAPI servers field
-// return upstream and uri prefix
-// Tips: It will use only the first server in servers array
-func generateUpstreamByServers(servers openapi3.Servers, upstreamID string) (entity.Upstream, string) {
-	upstream := entity.Upstream{
-		BaseInfo: entity.BaseInfo{ID: upstreamID},
-		UpstreamDef: entity.UpstreamDef{
-			Name: upstreamID,
-			Type: "roundrobin",
-		},
-	}
-
-	u, err := url.Parse(servers[0].URL)
-	if err != nil {
-		// return an empty upstream when parsing url failed
-		return upstream, ""
-	}
-
-	upstream.Scheme = u.Scheme
-	upstream.Nodes = map[string]float64{
-		u.Host: 1,
-	}
-
-	return upstream, u.Path
 }
 
 // Generate a base route for customize
