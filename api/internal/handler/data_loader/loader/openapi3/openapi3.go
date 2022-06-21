@@ -37,8 +37,5 @@ type PathValue struct {
 }
 
 var (
-	regURIVar              = regexp.MustCompile(`{[\w.]*}`)
-	authenticationMappings = map[string]string{
-		"apikey": "key-auth",
-	}
+	regURIVar = regexp.MustCompile(`{[\w.]*}`)
 )
