@@ -42,8 +42,6 @@ func TestParseAPI101NoMerge(t *testing.T) {
 	assert.Len(t, data.Upstreams, 1)
 
 	// Upstream
-	assert.Equal(t, "https", data.Upstreams[0].Scheme)
-	assert.Equal(t, float64(1), data.Upstreams[0].Nodes.(map[string]float64)["api-101.glitch.me"])
 	assert.Equal(t, "test", data.Upstreams[0].Name)
 	assert.Equal(t, "roundrobin", data.Upstreams[0].Type)
 
@@ -95,8 +93,6 @@ func TestParseAPI101Merge(t *testing.T) {
 	assert.Len(t, data.Upstreams, 1)
 
 	// Upstream
-	assert.Equal(t, "https", data.Upstreams[0].Scheme)
-	assert.Equal(t, float64(1), data.Upstreams[0].Nodes.(map[string]float64)["api-101.glitch.me"])
 	assert.Equal(t, "test", data.Upstreams[0].Name)
 	assert.Equal(t, "roundrobin", data.Upstreams[0].Type)
 
