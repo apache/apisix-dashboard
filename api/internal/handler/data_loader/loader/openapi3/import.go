@@ -17,6 +17,7 @@
 package openapi3
 
 import (
+	"fmt"
 	"net/url"
 	"reflect"
 	"strings"
@@ -32,12 +33,12 @@ import (
 
 func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 	if input == nil {
-		return nil, errors.New("input is nil")
+		panic("input is nil")
 	}
 
 	d, ok := input.([]byte)
 	if !ok {
-		return nil, errors.Errorf("input format error: expected []byte but it is %s", reflect.TypeOf(input).Kind().String())
+		panic(fmt.Sprintf("input format error: expected []byte but it is %s", reflect.TypeOf(input).Kind().String()))
 	}
 
 	// load OAS3 document
