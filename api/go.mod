@@ -22,6 +22,7 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
+	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.8.0 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiningrush/droplet v0.2.6-0.20210127040147-53817015cd1b

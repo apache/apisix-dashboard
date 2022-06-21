@@ -17,14 +17,13 @@
 package openapi3
 
 import (
-	"errors"
-	"fmt"
 	"net/url"
 	"reflect"
 	"strings"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/pkg/errors"
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/handler/data_loader/loader"
@@ -38,7 +37,7 @@ func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 
 	d, ok := input.([]byte)
 	if !ok {
-		return nil, fmt.Errorf("input format error: expected []byte but it is %s", reflect.TypeOf(input).Kind().String())
+		return nil, errors.Errorf("input format error: expected []byte but it is %s", reflect.TypeOf(input).Kind().String())
 	}
 
 	// load OAS3 document
@@ -49,7 +48,7 @@ func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 
 	// no paths in OAS3 document
 	if len(swagger.Paths) <= 0 {
-		return nil, consts.ErrImportFile
+		return nil, errors.Wrap(errors.New("OpenAPI documentation does not contain any paths"), consts.ErrImportFile.Error())
 	}
 
 	if o.TaskName == "" {
