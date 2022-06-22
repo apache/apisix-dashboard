@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"net/http"
 	"path"
 	"reflect"
 
@@ -28,7 +27,6 @@ import (
 	"github.com/juliangruber/go-intersect"
 	"github.com/pkg/errors"
 	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -79,16 +77,6 @@ type ImportResult struct {
 
 type LoaderType string
 
-const (
-	LoaderTypeOpenAPI3 LoaderType = "openapi3"
-)
-
-var (
-	storeList = []store.HubKey{store.HubKeyRoute, store.HubKeyUpstream, store.HubKeyService,
-		store.HubKeyConsumer, store.HubKeySsl, store.HubKeyStreamRoute, store.HubKeyGlobalRule,
-		store.HubKeyPluginConfig, store.HubKeyProto}
-)
-
 type ImportInput struct {
 	Type        string `auto_read:"type"`
 	TaskName    string `auto_read:"task_name"`
@@ -97,6 +85,10 @@ type ImportInput struct {
 
 	MergeMethod string `auto_read:"merge_method"`
 }
+
+const (
+	LoaderTypeOpenAPI3 LoaderType = "openapi3"
+)
 
 func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ImportInput)
@@ -133,12 +125,8 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 
 	// Pre-checking for route duplication
 	preCheckErrs := h.preCheck(c.Context(), dataSets)
-	if len(preCheckErrs) > 0 {
-		var errStr string
-		for _, err := range preCheckErrs {
-			errStr += err.Error() + "\n"
-		}
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New(errStr)
+	if _, ok := preCheckErrs[store.HubKeyRoute]; ok && len(preCheckErrs[store.HubKeyRoute]) > 0 {
+		return h.convertToImportResult(dataSets, preCheckErrs), nil
 	}
 
 	// Create APISIX resources
@@ -150,9 +138,10 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 // The main problem facing duplication is routing, so here
 // we mainly check the duplication of routes, based on
 // domain name and uri.
-func (h *ImportHandler) preCheck(ctx context.Context, data *loader.DataSets) []error {
-	var errs = make([]error, 0)
+func (h *ImportHandler) preCheck(ctx context.Context, data *loader.DataSets) map[store.HubKey][]string {
+	errs := make(map[store.HubKey][]string)
 	for _, route := range data.Routes {
+		errs[store.HubKeyRoute] = make([]string, 0)
 		o, err := h.routeStore.List(ctx, store.ListInput{
 			// The check logic here is that if when a duplicate HOST or URI
 			// has been found, the HTTP method is checked for overlap, and
@@ -160,17 +149,13 @@ func (h *ImportHandler) preCheck(ctx context.Context, data *loader.DataSets) []e
 			// and the import is rejected.
 			Predicate: func(obj interface{}) bool {
 				r := obj.(*entity.Route)
-				methodCheck := func() bool {
-					return len(intersect.Hash(r.Methods, route.Methods)) > 0
-				}
 
-				// Check URI duplication
-				if r.URI == route.URI || len(intersect.Hash(r.Uris, route.Uris)) > 0 {
-					return methodCheck()
-				}
-				// Check host duplication
-				if r.Host == route.Host || len(intersect.Hash(r.Hosts, route.Hosts)) > 0 {
-					return methodCheck()
+				// Check URI and host duplication
+				// When the URI, host, and methods all overlap, the route is considered duplicated
+				if (r.URI == route.URI || len(intersect.Hash(r.Uris, route.Uris)) > 0) &&
+					(r.Host == route.Host || len(intersect.Hash(r.Hosts, route.Hosts)) > 0) &&
+					len(intersect.Hash(r.Methods, route.Methods)) > 0 {
+					return true
 				}
 				return false
 			},
@@ -179,7 +164,9 @@ func (h *ImportHandler) preCheck(ctx context.Context, data *loader.DataSets) []e
 		})
 		if err != nil {
 			// When a special storage layer error occurs, return directly.
-			return []error{err}
+			return map[store.HubKey][]string{
+				store.HubKeyRoute: {err.Error()},
+			}
 		}
 
 		// Duplicate routes found
@@ -187,13 +174,17 @@ func (h *ImportHandler) preCheck(ctx context.Context, data *loader.DataSets) []e
 			for _, row := range o.Rows {
 				route, ok := row.(*entity.Route)
 				if ok {
-					errs = append(errs, fmt.Errorf("%s uri is duplicated with route %s", route.Uris[0], route.Name))
+					errs[store.HubKeyRoute] = append(errs[store.HubKeyRoute],
+						errors.Errorf("%s uri is duplicated with route %s",
+							route.Uris[0],
+							route.Name).
+							Error())
 				}
 			}
 		}
 	}
 
-	return []error{}
+	return errs
 }
 
 // Create parsed resources
