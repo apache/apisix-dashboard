@@ -201,81 +201,54 @@ func (h *ImportHandler) createEntities(ctx context.Context, data *loader.DataSet
 	for _, route := range data.Routes {
 		_, err := h.routeStore.Create(ctx, &route)
 		if err != nil {
-			if errs[store.HubKeyRoute] == nil {
-				errs[store.HubKeyRoute] = []string{}
-			}
 			errs[store.HubKeyRoute] = append(errs[store.HubKeyRoute], err.Error())
 		}
 	}
 	for _, upstream := range data.Upstreams {
 		_, err := h.upstreamStore.Create(ctx, &upstream)
 		if err != nil {
-			if errs[store.HubKeyUpstream] == nil {
-				errs[store.HubKeyUpstream] = []string{}
-			}
 			errs[store.HubKeyUpstream] = append(errs[store.HubKeyUpstream], err.Error())
 		}
 	}
 	for _, service := range data.Services {
 		_, err := h.serviceStore.Create(ctx, &service)
 		if err != nil {
-			if errs[store.HubKeyService] == nil {
-				errs[store.HubKeyService] = []string{}
-			}
 			errs[store.HubKeyService] = append(errs[store.HubKeyService], err.Error())
 		}
 	}
 	for _, consumer := range data.Consumers {
 		_, err := h.consumerStore.Create(ctx, &consumer)
 		if err != nil {
-			if errs[store.HubKeyConsumer] == nil {
-				errs[store.HubKeyConsumer] = []string{}
-			}
 			errs[store.HubKeyConsumer] = append(errs[store.HubKeyConsumer], err.Error())
 		}
 	}
 	for _, ssl := range data.SSLs {
 		_, err := h.sslStore.Create(ctx, &ssl)
 		if err != nil {
-			if errs[store.HubKeySsl] == nil {
-				errs[store.HubKeySsl] = []string{}
-			}
 			errs[store.HubKeySsl] = append(errs[store.HubKeySsl], err.Error())
 		}
 	}
 	for _, route := range data.StreamRoutes {
 		_, err := h.streamRouteStore.Create(ctx, &route)
 		if err != nil {
-			if errs[store.HubKeyStreamRoute] == nil {
-				errs[store.HubKeyStreamRoute] = []string{}
-			}
 			errs[store.HubKeyStreamRoute] = append(errs[store.HubKeyStreamRoute], err.Error())
 		}
 	}
 	for _, plugin := range data.GlobalPlugins {
 		_, err := h.globalPluginStore.Create(ctx, &plugin)
 		if err != nil {
-			if errs[store.HubKeyGlobalRule] == nil {
-				errs[store.HubKeyGlobalRule] = []string{}
-			}
 			errs[store.HubKeyGlobalRule] = append(errs[store.HubKeyGlobalRule], err.Error())
 		}
 	}
 	for _, config := range data.PluginConfigs {
 		_, err := h.pluginConfigStore.Create(ctx, &config)
 		if err != nil {
-			if errs[store.HubKeyPluginConfig] == nil {
-				errs[store.HubKeyPluginConfig] = []string{}
-			}
 			errs[store.HubKeyPluginConfig] = append(errs[store.HubKeyPluginConfig], err.Error())
 		}
 	}
 	for _, proto := range data.Protos {
 		_, err := h.protoStore.Create(ctx, &proto)
 		if err != nil {
-			if errs[store.HubKeyProto] == nil {
-				errs[store.HubKeyProto] = []string{}
-			}
 			errs[store.HubKeyProto] = append(errs[store.HubKeyProto], err.Error())
 		}
 	}
