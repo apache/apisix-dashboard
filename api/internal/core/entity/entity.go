@@ -162,7 +162,7 @@ type UpstreamKeepalivePool struct {
 }
 
 type UpstreamDef struct {
-	Nodes         interface{}            `json:"nodes,omitempty"`
+	Nodes         interface{}            `json:"nodes"`
 	Retries       *int                   `json:"retries,omitempty"`
 	Timeout       *Timeout               `json:"timeout,omitempty"`
 	Type          string                 `json:"type,omitempty"`

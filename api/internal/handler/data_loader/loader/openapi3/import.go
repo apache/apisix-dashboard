@@ -79,8 +79,9 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 		upstream = entity.Upstream{
 			BaseInfo: entity.BaseInfo{ID: globalUpstreamID},
 			UpstreamDef: entity.UpstreamDef{
-				Name: globalUpstreamID,
-				Type: "roundrobin",
+				Name:  globalUpstreamID,
+				Type:  "roundrobin",
+				Nodes: map[string]float64{},
 			},
 		}
 		data.Upstreams = append(data.Upstreams, upstream)
