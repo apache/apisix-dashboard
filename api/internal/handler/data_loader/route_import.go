@@ -149,13 +149,20 @@ func (h *ImportHandler) preCheck(ctx context.Context, data *loader.DataSets) map
 			// and the import is rejected.
 			Predicate: func(obj interface{}) bool {
 				r := obj.(*entity.Route)
+				isMethodDuplicated := len(intersect.Hash(r.Methods, route.Methods)) > 0
 
 				// Check URI and host duplication
-				// When the URI, host, and methods all overlap, the route is considered duplicated
-				if (r.URI == route.URI || len(intersect.Hash(r.Uris, route.Uris)) > 0) &&
-					(r.Host == route.Host || len(intersect.Hash(r.Hosts, route.Hosts)) > 0) &&
-					len(intersect.Hash(r.Methods, route.Methods)) > 0 {
-					return true
+				// First check for duplicate URIs
+				if (r.URI != "" && route.URI != "" && r.URI == route.URI) || len(intersect.Hash(r.Uris, route.Uris)) > 0 {
+					// Then check if the host field exists, and if it does, check for duplicates
+					if r.Host != "" && route.Host != "" {
+						return r.Host == route.Host && isMethodDuplicated
+					} else if len(r.Hosts) > 0 && len(route.Hosts) > 0 {
+						return len(intersect.Hash(r.Hosts, route.Hosts)) > 0 && isMethodDuplicated
+					}
+					// If the host field does not exist, only the presence or absence
+					// of HTTP method duplication is returned by default.
+					return isMethodDuplicated
 				}
 				return false
 			},
@@ -172,12 +179,12 @@ func (h *ImportHandler) preCheck(ctx context.Context, data *loader.DataSets) map
 		// Duplicate routes found
 		if o.TotalSize > 0 {
 			for _, row := range o.Rows {
-				route, ok := row.(*entity.Route)
+				r, ok := row.(*entity.Route)
 				if ok {
 					errs[store.HubKeyRoute] = append(errs[store.HubKeyRoute],
-						errors.Errorf("%s uri is duplicated with route %s",
+						errors.Errorf("%s is duplicated with route %s",
 							route.Uris[0],
-							route.Name).
+							r.Name).
 							Error())
 				}
 			}
