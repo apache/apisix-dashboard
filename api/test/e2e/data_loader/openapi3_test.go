@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"path/filepath"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -212,6 +213,9 @@ var _ = Describe("OpenAPI 3", func() {
 			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
 			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
 
+			// wait for etcd data sync
+			time.Sleep(2 * time.Second)
+
 			// second import
 			req = base.ManagerApiExpect().POST("/apisix/admin/import/routes")
 			req.WithMultipart().WithForm(map[string]string{
@@ -228,7 +232,7 @@ var _ = Describe("OpenAPI 3", func() {
 			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
 			Expect(r.Get("data").Map()["route"].Get("failed").Uint()).To(Equal(uint64(1)))
 			Expect(r.Get("data").Map()["route"].Get("errors").Array()[0].String()).
-				To(Equal("/customers is duplicated with route test_postman_api101_yaml_mm_customers"))
+				To(ContainSubstring("is duplicated with route test_postman_api101_yaml_mm_customers"))
 		}),
 		Entry("Clean resources", func() {
 			base.CleanResource("routes")
