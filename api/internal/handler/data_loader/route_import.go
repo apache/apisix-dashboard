@@ -390,6 +390,10 @@ func parseRequestBody(requestBody *openapi3.RequestBodyRef, swagger *openapi3.Sw
 		requestValidation = rv.(map[string]interface{})
 	}
 	for _, v := range schema {
+		if v.Schema == nil {
+			plugins["request-validation"] = requestValidation
+			continue
+		}
 		if v.Schema.Ref != "" {
 			s := getParameters(v.Schema.Ref, &swagger.Components).Value
 			requestValidation["body_schema"] = &entity.RequestValidation{

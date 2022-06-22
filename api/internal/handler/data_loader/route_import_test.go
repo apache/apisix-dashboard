@@ -28,13 +28,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/shiningrush/droplet/data"
-
+	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-
-	"github.com/apisix/manager-api/internal/core/store"
 )
 
 type testFile struct {
@@ -181,4 +180,14 @@ func TestImport_with_upstream_id(t *testing.T) {
 	_, err = h.Import(ctx)
 	assert.EqualError(t, err, "upstream id: upstream1 not found")
 
+}
+
+func TestImport_empty_requestbody(t *testing.T) {
+	fc := ReadFile(t, "test/testdata/import/empty-request.yaml")
+
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(fc)
+	assert.NoError(t, err)
+
+	_, err = OpenAPI3ToRoute(swagger)
+	assert.NoError(t, err)
 }
