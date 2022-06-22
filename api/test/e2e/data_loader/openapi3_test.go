@@ -23,6 +23,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
+	"github.com/savsgio/gotils/bytes"
 	"github.com/tidwall/gjson"
 
 	"github.com/apisix/manager-api/test/e2e/base"
@@ -117,6 +118,8 @@ var _ = Describe("OpenAPI 3", func() {
 			}
 		}),
 		Entry("Postman-API101.yaml non-merge method", func() {
+			// clean routes
+			base.CleanResource("routes")
 			path, err := filepath.Abs("../../testdata/import/Postman-API101.yaml")
 			Expect(err).To(BeNil())
 
@@ -146,6 +149,85 @@ var _ = Describe("OpenAPI 3", func() {
 					Expect(result.Get("failed").Uint()).To(Equal(uint64(0)))
 				}
 			}
+		}),
+		Entry("Clean resources", func() {
+			base.CleanResource("routes")
+			base.CleanResource("upstreams")
+			base.CleanResource("services")
+		}),
+	)
+	DescribeTable("Exception cases",
+		func(f func()) {
+			f()
+		},
+		Entry("empty upload file", func() {
+			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
+			req.WithMultipart().WithForm(map[string]string{
+				"type":      "openapi3",
+				"task_name": "empty_upload",
+				"_file":     "default.yaml",
+			})
+			req.WithHeader("Authorization", base.GetToken())
+			resp := req.Expect()
+			resp.Status(http.StatusOK)
+			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
+
+			Expect(r.Get("code").Uint()).To(Equal(uint64(10000)))
+			Expect(r.Get("message").String()).To(Equal("uploaded file is empty"))
+		}),
+		Entry("exceed limit upload file", func() {
+			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
+			req.WithMultipart().WithForm(map[string]string{
+				"type":      "openapi3",
+				"task_name": "exceed_limit_upload",
+				"_file":     "default.yaml",
+			})
+
+			req.WithMultipart().WithFileBytes("file", "default.yaml", bytes.Rand(make([]byte, 10*1024*1024+1)))
+			req.WithHeader("Authorization", base.GetToken())
+			resp := req.Expect()
+			resp.Status(http.StatusOK)
+			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
+
+			Expect(r.Get("code").Uint()).To(Equal(uint64(10000)))
+			Expect(r.Get("message").String()).To(Equal("uploaded file size exceeds the limit, limit is 10485760"))
+		}),
+		Entry("routes duplicate", func() {
+			path, err := filepath.Abs("../../testdata/import/Postman-API101.yaml")
+			Expect(err).To(BeNil())
+
+			// first import
+			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
+			req.WithMultipart().WithForm(map[string]string{
+				"type":         "openapi3",
+				"task_name":    "test_postman_api101_yaml_mm",
+				"_file":        "Postman-API101.yaml",
+				"merge_method": "true",
+			})
+			req.WithMultipart().WithFile("file", path)
+			req.WithHeader("Authorization", base.GetToken())
+			resp := req.Expect()
+			resp.Status(http.StatusOK)
+			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
+			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
+
+			// second import
+			req = base.ManagerApiExpect().POST("/apisix/admin/import/routes")
+			req.WithMultipart().WithForm(map[string]string{
+				"type":         "openapi3",
+				"task_name":    "test_postman_api101_yaml_mm",
+				"_file":        "Postman-API101.yaml",
+				"merge_method": "true",
+			})
+			req.WithMultipart().WithFile("file", path)
+			req.WithHeader("Authorization", base.GetToken())
+			resp = req.Expect()
+			resp.Status(http.StatusOK)
+			r = gjson.ParseBytes([]byte(resp.Body().Raw()))
+			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
+			Expect(r.Get("data").Map()["route"].Get("failed").Uint()).To(Equal(uint64(1)))
+			Expect(r.Get("data").Map()["route"].Get("errors").Array()[0].String()).
+				To(Equal("/customers is duplicated with route test_postman_api101_yaml_mm_customers"))
 		}),
 	)
 })
