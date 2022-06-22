@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: httpbin
+  version: 1.0.0
+servers:
+  - url: https://httpbin.org
+paths:
+  /get:
+    get:
+      tags:
+        - default
+      summary: GET request
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

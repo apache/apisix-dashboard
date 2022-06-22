@@ -17,6 +17,7 @@
 package data_loader_test
 
 import (
+	"encoding/json"
 	"net/http"
 	"path/filepath"
 
@@ -160,7 +161,7 @@ var _ = Describe("OpenAPI 3", func() {
 		func(f func()) {
 			f()
 		},
-		Entry("empty upload file", func() {
+		Entry("Empty upload file", func() {
 			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
 			req.WithMultipart().WithForm(map[string]string{
 				"type":      "openapi3",
@@ -175,7 +176,7 @@ var _ = Describe("OpenAPI 3", func() {
 			Expect(r.Get("code").Uint()).To(Equal(uint64(10000)))
 			Expect(r.Get("message").String()).To(Equal("uploaded file is empty"))
 		}),
-		Entry("exceed limit upload file", func() {
+		Entry("Exceed limit upload file", func() {
 			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
 			req.WithMultipart().WithForm(map[string]string{
 				"type":      "openapi3",
@@ -192,7 +193,7 @@ var _ = Describe("OpenAPI 3", func() {
 			Expect(r.Get("code").Uint()).To(Equal(uint64(10000)))
 			Expect(r.Get("message").String()).To(Equal("uploaded file size exceeds the limit, limit is 10485760"))
 		}),
-		Entry("routes duplicate", func() {
+		Entry("Routes duplicate", func() {
 			path, err := filepath.Abs("../../testdata/import/Postman-API101.yaml")
 			Expect(err).To(BeNil())
 
@@ -228,6 +229,93 @@ var _ = Describe("OpenAPI 3", func() {
 			Expect(r.Get("data").Map()["route"].Get("failed").Uint()).To(Equal(uint64(1)))
 			Expect(r.Get("data").Map()["route"].Get("errors").Array()[0].String()).
 				To(Equal("/customers is duplicated with route test_postman_api101_yaml_mm_customers"))
+		}),
+		Entry("Clean resources", func() {
+			base.CleanResource("routes")
+			base.CleanResource("upstreams")
+			base.CleanResource("services")
+		}),
+	)
+	DescribeTable("Real API cases",
+		func(f func()) {
+			f()
+		},
+		Entry("Import httpbin.org YAML", func() {
+			path, err := filepath.Abs("../../testdata/import/httpbin.yaml")
+			Expect(err).To(BeNil())
+
+			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
+			req.WithMultipart().WithForm(map[string]string{
+				"type":      "openapi3",
+				"task_name": "httpbin",
+				"_file":     "httpbin.yaml",
+			})
+			req.WithMultipart().WithFile("file", path)
+			req.WithHeader("Authorization", base.GetToken())
+			resp := req.Expect()
+			resp.Status(http.StatusOK)
+			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
+
+			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
+
+			r = r.Get("data")
+			for s, result := range r.Map() {
+				if s == "route" {
+					Expect(result.Get("total").Uint()).To(Equal(uint64(1)))
+					Expect(result.Get("failed").Uint()).To(Equal(uint64(0)))
+				}
+			}
+		}),
+		Entry("Modify upstream", func() {
+			body := make(map[string]interface{})
+			body["nodes"] = []map[string]interface{}{
+				{
+					"host":   "httpbin.org",
+					"port":   80,
+					"weight": 1,
+				},
+			}
+			body["type"] = "roundrobin"
+			_body, err := json.Marshal(body)
+			Expect(err).To(BeNil())
+			base.RunTestCase(base.HttpTestCase{
+				Object:       base.ManagerApiExpect(),
+				Method:       http.MethodPatch,
+				Path:         "/apisix/admin/upstreams/httpbin",
+				Body:         string(_body),
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+			})
+		}),
+		Entry("Enable route", func() {
+			// get route id
+			req := base.ManagerApiExpect().GET("/apisix/admin/routes")
+			req.WithHeader("Authorization", base.GetToken())
+			resp := req.Expect()
+			resp.Status(http.StatusOK)
+			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
+			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
+			id := r.Get("data").Get("rows").Array()[0].Get("id").String()
+
+			body := make(map[string]interface{})
+			body["status"] = 1
+			_body, err := json.Marshal(body)
+			Expect(err).To(BeNil())
+			base.RunTestCase(base.HttpTestCase{
+				Object:       base.ManagerApiExpect(),
+				Method:       http.MethodPatch,
+				Path:         "/apisix/admin/routes/" + id,
+				Body:         string(_body),
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+			})
+		}),
+		Entry("Request API", func() {
+			req := base.APISIXExpect().GET("/get")
+			resp := req.Expect()
+			resp.Status(http.StatusOK)
+			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
+			Expect(r.Get("headers").Get("User-Agent").String()).To(Equal("Go-http-client/1.1"))
 		}),
 	)
 })
