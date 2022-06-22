@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"path"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
@@ -101,6 +102,10 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ImportInput)
 
 	// input file content check
+	suffix := path.Ext(input.FileName)
+	if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
+		return nil, errors.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
+	}
 	contentLen := bytes.Count(input.FileContent, nil) - 1
 	if contentLen <= 0 {
 		return nil, errors.New("uploaded file is empty")
