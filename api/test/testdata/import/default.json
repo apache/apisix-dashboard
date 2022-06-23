@@ -11,7 +11,7 @@
   },
   "paths": {
     "/hello": {
-      "get": {
+      "post": {
         "x-api-limit": 20,
         "description": "hello world.",
         "operationId": "hello",

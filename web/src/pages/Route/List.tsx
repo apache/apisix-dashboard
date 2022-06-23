@@ -163,6 +163,7 @@ const Page: React.FC = () => {
       return;
     }
     formData.append('file', uploadFileList[0]);
+    formData.append('type', 'openapi3');
 
     importRoutes(formData).then(() => {
       handleTableActionSuccessResponse(

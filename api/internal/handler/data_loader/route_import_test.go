@@ -17,55 +17,27 @@
 package data_loader
 
 import (
-	"bytes"
-	"errors"
-	"io/ioutil"
-	"mime/multipart"
-	"net/http"
-	"os"
-	"path/filepath"
-	"runtime"
-	"strings"
 	"testing"
-
-	"github.com/shiningrush/droplet/data"
 
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
-
-	"github.com/apisix/manager-api/internal/core/store"
 )
 
-type testFile struct {
-	FieldName string
-	FileName  string
-	Content   []byte
+func TestImport_invalid_loader(t *testing.T) {
+	input := &ImportInput{}
+	input.Type = "test"
+	input.FileName = "file1.yaml"
+	input.FileContent = []byte("hello")
+
+	h := ImportHandler{}
+	ctx := droplet.NewContext()
+	ctx.SetInput(input)
+
+	_, err := h.Import(ctx)
+	assert.EqualError(t, err, "unsupported data loader type: test")
 }
 
-func createRequestMultipartFiles(t *testing.T, files ...testFile) *http.Request {
-	var body bytes.Buffer
-
-	mw := multipart.NewWriter(&body)
-	for _, file := range files {
-		fw, err := mw.CreateFormFile(file.FieldName, file.FileName)
-		assert.NoError(t, err)
-
-		n, err := fw.Write(file.Content)
-		assert.NoError(t, err)
-		assert.Equal(t, len(file.Content), n)
-	}
-	err := mw.Close()
-	assert.NoError(t, err)
-
-	req, err := http.NewRequest("POST", "/", &body)
-	assert.NoError(t, err)
-
-	req.Header.Set("Content-Type", "multipart/form-data; boundary="+mw.Boundary())
-	return req
-}
-
-func TestImport_invalid_file_type(t *testing.T) {
+func TestImport_openapi3_invalid_file_type(t *testing.T) {
 	input := &ImportInput{}
 	input.FileName = "file1.txt"
 	input.FileContent = []byte("hello")
@@ -78,8 +50,9 @@ func TestImport_invalid_file_type(t *testing.T) {
 	assert.EqualError(t, err, "required file type is .yaml, .yml or .json but got: .txt")
 }
 
-func TestImport_invalid_content(t *testing.T) {
+func TestImport_openapi3_invalid_content(t *testing.T) {
 	input := &ImportInput{}
+	input.Type = "openapi3"
 	input.FileName = "file1.json"
 	input.FileContent = []byte(`{"test": "a"}`)
 
@@ -88,97 +61,5 @@ func TestImport_invalid_content(t *testing.T) {
 	ctx.SetInput(input)
 
 	_, err := h.Import(ctx)
-	assert.EqualError(t, err, "empty or invalid imported file")
-}
-
-func ReadFile(t *testing.T, filePath string) []byte {
-	pwd, err := os.Getwd()
-	assert.Nil(t, err)
-
-	bound := "/api/"
-	if runtime.GOOS == "windows" {
-		bound = `\api\`
-	}
-	apiDir := filepath.Join(strings.Split(pwd, bound)[0], bound)
-	fileContent, err := ioutil.ReadFile(filepath.Join(apiDir, filePath))
-	assert.Nil(t, err)
-
-	return fileContent
-}
-
-func TestImport_with_service_id(t *testing.T) {
-	fileContent := ReadFile(t, "test/testdata/import/with-service-id.yaml")
-	input := &ImportInput{}
-	input.FileName = "file1.json"
-	input.FileContent = fileContent
-
-	mStore := &store.MockInterface{}
-	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
-	}).Return(nil, errors.New("data not found by key: service1"))
-
-	h := ImportHandler{
-		routeStore:    &store.GenericStore{},
-		svcStore:      mStore,
-		upstreamStore: mStore,
-	}
-	ctx := droplet.NewContext()
-	ctx.SetInput(input)
-
-	_, err := h.Import(ctx)
-	assert.EqualError(t, err, "data not found by key: service1")
-
-	//
-	mStore = &store.MockInterface{}
-	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
-	}).Return(nil, data.ErrNotFound)
-
-	h = ImportHandler{
-		routeStore:    &store.GenericStore{},
-		svcStore:      mStore,
-		upstreamStore: mStore,
-	}
-	ctx = droplet.NewContext()
-	ctx.SetInput(input)
-
-	_, err = h.Import(ctx)
-	assert.EqualError(t, err, "service id: service1 not found")
-}
-
-func TestImport_with_upstream_id(t *testing.T) {
-	fileContent := ReadFile(t, "test/testdata/import/with-upstream-id.yaml")
-	input := &ImportInput{}
-	input.FileName = "file1.json"
-	input.FileContent = fileContent
-
-	mStore := &store.MockInterface{}
-	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
-	}).Return(nil, errors.New("data not found by key: upstream1"))
-
-	h := ImportHandler{
-		routeStore:    &store.GenericStore{},
-		svcStore:      mStore,
-		upstreamStore: mStore,
-	}
-	ctx := droplet.NewContext()
-	ctx.SetInput(input)
-
-	_, err := h.Import(ctx)
-	assert.EqualError(t, err, "data not found by key: upstream1")
-
-	//
-	mStore = &store.MockInterface{}
-	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
-	}).Return(nil, data.ErrNotFound)
-
-	h = ImportHandler{
-		routeStore:    &store.GenericStore{},
-		svcStore:      mStore,
-		upstreamStore: mStore,
-	}
-	ctx = droplet.NewContext()
-	ctx.SetInput(input)
-
-	_, err = h.Import(ctx)
-	assert.EqualError(t, err, "upstream id: upstream1 not found")
-
+	assert.EqualError(t, err, "empty or invalid imported file: OpenAPI documentation does not contain any paths")
 }
