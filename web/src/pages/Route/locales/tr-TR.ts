@@ -76,12 +76,10 @@ export default {
   'page.route.form.itemLabel.token': 'Token(Jeton)',
   'page.route.form.itemLabel.apikey': 'Api Anahtarı',
 
-  'page.route.form.itemExtraMessage.domain':
-    'Domain adınızı girin. Örn: www.example.com',
+  'page.route.form.itemExtraMessage.domain': 'Domain adınızı girin. Örn: www.example.com',
   'page.route.form.itemRulesPatternMessage.domain':
     'Domain adı gerekli ve geçerli bir değer içermelidir.',
-  'page.route.form.itemExtraMessage1.path':
-    'Yönlendirme yolunu girin. Örn: /foo/index.html',
+  'page.route.form.itemExtraMessage1.path': 'Yönlendirme yolunu girin. Örn: /foo/index.html',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
     'Geçerli bir IP adresi girin. örn: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
   'page.route.form.itemExtraMessage1.remoteAddrs':
@@ -118,7 +116,8 @@ export default {
   'page.route.steps.stepTitle.defineApiRequest': 'API Request tanımla',
   'page.route.steps.stepTitle.defineApiBackendServe': 'API Backend Server tanımla',
 
-  'page.route.popconfirm.title.offline': 'Bu yönlendirmeyi çevrimdışı yapmak istediğinize emin misiniz?',
+  'page.route.popconfirm.title.offline':
+    'Bu yönlendirmeyi çevrimdışı yapmak istediğinize emin misiniz?',
   'page.route.radio.static': 'Statik',
   'page.route.radio.regex': 'Regex',
   'page.route.form.itemLabel.from': 'Kimden',
@@ -145,7 +144,8 @@ export default {
   'page.route.list': 'Rotalar',
   'page.route.panelSection.title.requestOverride': 'Yönlendirme İsteği',
   'page.route.form.itemLabel.headerRewrite': 'Header Yönlendirme',
-  'page.route.tooltip.pluginOrchOnlySupportChrome': 'Eklenti düzenlemesi yalnızca Chromeu destekler.',
+  'page.route.tooltip.pluginOrchOnlySupportChrome':
+    'Eklenti düzenlemesi yalnızca Chromeu destekler.',
   'page.route.tooltip.pluginOrchWithoutProxyRewrite':
     'Adım 1de istek geçersiz kılma yapılandırıldığında eklenti düzenleme modu kullanılamaz.',
   'page.route.tooltip.pluginOrchWithoutRedirect':
@@ -155,14 +155,15 @@ export default {
   'page.route.tabs.orchestration': 'Orkestrasyon',
 
   'page.route.list.description':
-  'Rota, bir istemci isteği ile bir hizmet arasındaki eşleştirme kurallarını tanımlayan bir isteğin giriş noktasıdır. Bir yol bir hizmetle (Hizmet), bir yukarı akışla (Upstream) ilişkilendirilebilir, bir hizmet bir dizi rotaya karşılık gelebilir ve bir rota bir yukarı akış nesnesine (bir dizi arka uç hizmet düğümü) karşılık gelebilir, böylece her istek eşleşir. bir rotaya, ağ geçidi tarafından rotaya bağlı yukarı akış hizmetine vekalet edilecektir.',
+    'Rota, bir istemci isteği ile bir hizmet arasındaki eşleştirme kurallarını tanımlayan bir isteğin giriş noktasıdır. Bir yol bir hizmetle (Hizmet), bir yukarı akışla (Upstream) ilişkilendirilebilir, bir hizmet bir dizi rotaya karşılık gelebilir ve bir rota bir yukarı akış nesnesine (bir dizi arka uç hizmet düğümü) karşılık gelebilir, böylece her istek eşleşir. bir rotaya, ağ geçidi tarafından rotaya bağlı yukarı akış hizmetine vekalet edilecektir.',
   'page.route.configuration.name.rules.required.description': 'Rota adı zorunlu bir alandır.',
   'page.route.configuration.name.placeholder': 'Rota adı girin',
   'page.route.configuration.desc.tooltip': 'Rota açıklaması girin',
   'page.route.configuration.publish.tooltip':
     'Bir rotanın oluşturulduktan hemen sonra ağ geçidine yayınlanıp yayınlanmayacağını kontrol etmek için kullanılır',
   'page.route.configuration.version.placeholder': 'Rota sürümü girin',
-  'page.route.configuration.version.tooltip': 'Rota sürümü şu şekilde olabilir: 1.0.0, 1.0.1, 1.0.2',
+  'page.route.configuration.version.tooltip':
+    'Rota sürümü şu şekilde olabilir: 1.0.0, 1.0.1, 1.0.2',
   'page.route.configuration.normal-labels.tooltip':
     'Rota gruplaması için kullanılabilecek rotalara özel etiketler ekleyin.',
 
@@ -183,18 +184,34 @@ export default {
   'page.route.fields.service_id.without-upstream':
     'Hizmeti bağlamazsanız, Yukarı Akışı ayarlamanız gerekir (Adım 2)',
   'page.route.advanced-match.tooltip':
-  'İstek üstbilgileri, istek parametreleri ve tanımlama bilgileri aracılığıyla rota eşleştirmeyi destekler ve gri tonlamalı yayınlama ve mavi-yeşil test gibi senaryolara uygulanabilir.',
+    'İstek üstbilgileri, istek parametreleri ve tanımlama bilgileri aracılığıyla rota eşleştirmeyi destekler ve gri tonlamalı yayınlama ve mavi-yeşil test gibi senaryolara uygulanabilir.',
   'page.route.advanced-match.message': 'İpuçları',
-  'page.route.advanced-match.tips.requestParameter': 'İstek Parametresi：İstek URLsinin sorgulanması',
+  'page.route.advanced-match.tips.requestParameter':
+    'İstek Parametresi：İstek URLsinin sorgulanması',
   'page.route.advanced-match.tips.postRequestParameter':
-  'POST İstek Parametresi：Yalnızca x-www-form-urlencoding formunu destekler',
+    'POST İstek Parametresi：Yalnızca x-www-form-urlencoding formunu destekler',
   'page.route.advanced-match.tips.builtinParameter':
     'Yerleşik Parametre: Nginx dahili parametreleri destekler',
 
   'page.route.fields.custom.redirectOption.tooltip': 'Bu yönlendirme eklentisi ile ilgilidir',
-  'page.route.fields.service_id.tooltip': 'Yapılandırmalarını yeniden kullanmak için Hizmet nesnesini bağlayın.',
+  'page.route.fields.service_id.tooltip':
+    'Yapılandırmalarını yeniden kullanmak için Hizmet nesnesini bağlayın.',
 
   'page.route.fields.vars.invalid': 'Lütfen gelişmiş eşleşme koşulu yapılandırmasını kontrol edin',
   'page.route.fields.vars.in.invalid':
     'IN operatörünü kullanırken parametre değerlerini dizi formatında girin.',
+
+  'page.route.data_loader.import': 'Import',
+  'page.route.data_loader.import_panel': 'Import data',
+  'page.route.data_loader.types.openapi3': 'OpenAPI 3',
+  'page.route.data_loader.types.openapi_legacy': 'OpenAPI 3 Legacy',
+  'page.route.data_loader.labels.loader_type': 'Data Loader Type',
+  'page.route.data_loader.labels.task_name': 'Task Name',
+  'page.route.data_loader.labels.upload': 'Upload',
+  'page.route.data_loader.labels.openapi3_merge_method': 'Merge HTTP Methods',
+  'page.route.data_loader.tips.select_type': 'Please select data loader',
+  'page.route.data_loader.tips.input_task_name': 'Please input import task name',
+  'page.route.data_loader.tips.click_upload': 'Click to Upload',
+  'page.route.data_loader.tips.openapi3_merge_method':
+    'Whether to merge multiple HTTP methods in the OpenAPI path into a single route. When you have multiple HTTP methods in your path with different details configuration (e.g. securitySchema), you can turn off this option to generate them into multiple routes.',
 };

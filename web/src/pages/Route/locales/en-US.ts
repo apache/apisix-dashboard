@@ -207,7 +207,7 @@ export default {
   'page.route.data_loader.labels.task_name': 'Task Name',
   'page.route.data_loader.labels.upload': 'Upload',
   'page.route.data_loader.labels.openapi3_merge_method': 'Merge HTTP Methods',
-  'page.route.data_loader.tips.select_type': 'Please select data loader type',
+  'page.route.data_loader.tips.select_type': 'Please select data loader',
   'page.route.data_loader.tips.input_task_name': 'Please input import task name',
   'page.route.data_loader.tips.click_upload': 'Click to Upload',
   'page.route.data_loader.tips.openapi3_merge_method':
