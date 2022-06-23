@@ -214,7 +214,7 @@ var _ = Describe("OpenAPI 3", func() {
 			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
 
 			// wait for etcd data sync
-			time.Sleep(2 * time.Second)
+			time.Sleep(5 * time.Second)
 
 			// second import
 			req = base.ManagerApiExpect().POST("/apisix/admin/import/routes")
