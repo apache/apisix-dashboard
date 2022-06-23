@@ -152,12 +152,12 @@ func (h *ImportHandler) preCheck(ctx context.Context, data *loader.DataSets) map
 
 				// Check URI and host duplication
 				isURIDuplicated := r.URI != "" && route.URI != "" && r.URI == route.URI
-				isURIsDuplicated := len(r.Hosts) > 0 && len(route.Hosts) > 0 &&
+				isURIsDuplicated := len(r.Uris) > 0 && len(route.Uris) > 0 &&
 					len(intersect.Hash(r.Uris, route.Uris)) > 0
 				isMethodDuplicated := len(intersect.Hash(r.Methods, route.Methods)) > 0
 
 				// First check for duplicate URIs
-				if isURIDuplicated && isURIsDuplicated {
+				if isURIDuplicated || isURIsDuplicated {
 					// Then check if the host field exists, and if it does, check for duplicates
 					if r.Host != "" && route.Host != "" {
 						return r.Host == route.Host && isMethodDuplicated
