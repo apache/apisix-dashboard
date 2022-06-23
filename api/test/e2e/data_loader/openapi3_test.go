@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"path/filepath"
-	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -194,15 +193,13 @@ var _ = Describe("OpenAPI 3", func() {
 			Expect(r.Get("code").Uint()).To(Equal(uint64(10000)))
 			Expect(r.Get("message").String()).To(Equal("uploaded file size exceeds the limit, limit is 10485760"))
 		}),
-		Entry("Routes duplicate", func() {
+		Entry("Routes duplicate #1", func() {
 			path, err := filepath.Abs("../../testdata/import/Postman-API101.yaml")
 			Expect(err).To(BeNil())
-
-			// first import
 			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
 			req.WithMultipart().WithForm(map[string]string{
 				"type":         "openapi3",
-				"task_name":    "test_postman_api101_yaml_mm",
+				"task_name":    "duplicate",
 				"_file":        "Postman-API101.yaml",
 				"merge_method": "true",
 			})
@@ -212,27 +209,27 @@ var _ = Describe("OpenAPI 3", func() {
 			resp.Status(http.StatusOK)
 			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
 			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
-
-			// wait for etcd data sync
-			time.Sleep(5 * time.Second)
-
-			// second import
-			req = base.ManagerApiExpect().POST("/apisix/admin/import/routes")
+		}),
+		Entry("Route duplicate #2", func() {
+			path, err := filepath.Abs("../../testdata/import/Postman-API101.yaml")
+			Expect(err).To(BeNil())
+			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
 			req.WithMultipart().WithForm(map[string]string{
 				"type":         "openapi3",
-				"task_name":    "test_postman_api101_yaml_mm",
+				"task_name":    "duplicate",
 				"_file":        "Postman-API101.yaml",
 				"merge_method": "true",
 			})
 			req.WithMultipart().WithFile("file", path)
 			req.WithHeader("Authorization", base.GetToken())
-			resp = req.Expect()
+			resp := req.Expect()
 			resp.Status(http.StatusOK)
-			r = gjson.ParseBytes([]byte(resp.Body().Raw()))
+			r := gjson.ParseBytes([]byte(resp.Body().Raw()))
 			Expect(r.Get("code").Uint()).To(Equal(uint64(0)))
 			Expect(r.Get("data").Map()["route"].Get("failed").Uint()).To(Equal(uint64(1)))
 			Expect(r.Get("data").Map()["route"].Get("errors").Array()[0].String()).
-				To(ContainSubstring("is duplicated with route test_postman_api101_yaml_mm_customers"))
+				To(ContainSubstring("is duplicated with route duplicate_"))
+
 		}),
 		Entry("Clean resources", func() {
 			base.CleanResource("routes")
