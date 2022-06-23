@@ -587,14 +587,15 @@ const Page: React.FC = () => {
           );
         }}
       />
-      <DataLoaderImport
-        visible={showImportDrawer}
-        onClose={() => setShowImportDrawer(false)}
-        onFinish={() => {
-          checkPageList(ref);
-          setShowImportDrawer(false);
-        }}
-      />
+      {showImportDrawer && (
+        <DataLoaderImport
+          onClose={() => setShowImportDrawer(false)}
+          onFinish={() => {
+            checkPageList(ref);
+            setShowImportDrawer(false);
+          }}
+        />
+      )}
     </PageHeaderWrapper>
   );
 };

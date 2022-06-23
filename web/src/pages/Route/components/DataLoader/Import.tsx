@@ -18,11 +18,13 @@ import React, { useState } from 'react';
 import {
   Button,
   Col,
+  Collapse,
   Divider,
   Drawer,
   Form,
   Input,
   notification,
+  Result,
   Row,
   Select,
   Space,
@@ -35,12 +37,35 @@ import type { RcFile } from 'antd/lib/upload';
 import { importRoutes } from '@/pages/Route/service';
 
 type Props = {
-  visible: boolean;
   onClose?: () => void;
   onFinish?: () => void;
 };
 
 type ImportType = 'openapi3' | 'openapi_legacy';
+type ImportState = 'import' | 'result';
+type ImportResult = {
+  success: boolean;
+  data: Record<
+    string,
+    {
+      total: number;
+      failed: number;
+      errors: string[];
+    }
+  >;
+};
+
+const entityNames = [
+  'route',
+  'upstream',
+  'service',
+  'consumer',
+  'ssl',
+  'stream_route',
+  'global_rule',
+  'plugin_config',
+  'proto',
+];
 
 const Option: React.FC<{
   type: ImportType;
@@ -57,9 +82,14 @@ const Option: React.FC<{
 const DataLoaderImport: React.FC<Props> = (props) => {
   const [form] = Form.useForm();
   const { formatMessage } = useIntl();
-  const { visible, onClose } = props;
+  const { onClose } = props;
   const [importType, setImportType] = useState<ImportType>('openapi3');
   const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
+  const [state, setState] = useState<ImportState>('import');
+  const [importResult, setImportResult] = useState<ImportResult>({
+    success: true,
+    data: {},
+  });
 
   const onFinish = (values: Record<string, string>) => {
     const formData = new FormData();
@@ -74,13 +104,17 @@ const DataLoaderImport: React.FC<Props> = (props) => {
     });
     formData.append('file', uploadFileList[0]);
 
-    importRoutes(formData).then(() => {
-      notification.success({
-        message: `${formatMessage({ id: 'page.route.data_loader.import' })} ${formatMessage({
-          id: 'component.status.success',
-        })}`,
+    importRoutes(formData).then((r) => {
+      let errorNumber = 0;
+      entityNames.forEach((v) => {
+        errorNumber += r.data[v].failed;
       });
-      if (props.onFinish) props.onFinish();
+
+      setImportResult({
+        success: errorNumber <= 0,
+        data: r.data,
+      });
+      setState('result');
     });
   };
 
@@ -89,10 +123,15 @@ const DataLoaderImport: React.FC<Props> = (props) => {
       <Drawer
         title={formatMessage({ id: 'page.route.data_loader.import_panel' })}
         width={480}
-        visible={visible}
+        visible={true}
         onClose={onClose}
         footer={
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div
+            style={{
+              display: state === 'result' ? 'none' : 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
             <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>
             <Space>
               <Button
@@ -107,70 +146,114 @@ const DataLoaderImport: React.FC<Props> = (props) => {
           </div>
         }
       >
-        <Form layout="vertical" form={form} onFinish={onFinish} hideRequiredMark>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="type"
-                label={formatMessage({ id: 'page.route.data_loader.labels.loader_type' })}
-                rules={[
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'page.route.data_loader.tips.select_type' }),
-                  },
-                ]}
-                initialValue={importType}
-              >
-                <Select onChange={(value: ImportType) => setImportType(value)}>
-                  <Select.Option value="openapi3">
-                    {formatMessage({ id: 'page.route.data_loader.types.openapi3' })}
-                  </Select.Option>
-                  <Select.Option value="openapi_legacy" disabled>
-                    {formatMessage({ id: 'page.route.data_loader.types.openapi_legacy' })}
-                  </Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="task_name"
-                label={formatMessage({ id: 'page.route.data_loader.labels.task_name' })}
-                rules={[
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'page.route.data_loader.tips.input_task_name' }),
-                  },
-                ]}
-              >
-                <Input
-                  placeholder={formatMessage({ id: 'page.route.data_loader.tips.input_task_name' })}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Option type={importType}></Option>
-          <Divider />
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item label={formatMessage({ id: 'page.route.data_loader.labels.upload' })}>
-                <Upload
-                  fileList={uploadFileList as any}
-                  beforeUpload={(file) => {
-                    setUploadFileList([file]);
-                    return false;
-                  }}
-                  onRemove={() => {
-                    setUploadFileList([]);
-                  }}
+        {state === 'import' && (
+          <Form layout="vertical" form={form} onFinish={onFinish} hideRequiredMark>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="type"
+                  label={formatMessage({ id: 'page.route.data_loader.labels.loader_type' })}
+                  rules={[
+                    {
+                      required: true,
+                      message: formatMessage({ id: 'page.route.data_loader.tips.select_type' }),
+                    },
+                  ]}
+                  initialValue={importType}
                 >
-                  <Button icon={<UploadOutlined />}>
-                    {formatMessage({ id: 'page.route.data_loader.tips.click_upload' })}
-                  </Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
+                  <Select onChange={(value: ImportType) => setImportType(value)}>
+                    <Select.Option value="openapi3">
+                      {formatMessage({ id: 'page.route.data_loader.types.openapi3' })}
+                    </Select.Option>
+                    <Select.Option value="openapi_legacy" disabled>
+                      {formatMessage({ id: 'page.route.data_loader.types.openapi_legacy' })}
+                    </Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="task_name"
+                  label={formatMessage({ id: 'page.route.data_loader.labels.task_name' })}
+                  rules={[
+                    {
+                      required: true,
+                      message: formatMessage({ id: 'page.route.data_loader.tips.input_task_name' }),
+                    },
+                  ]}
+                >
+                  <Input
+                    placeholder={formatMessage({
+                      id: 'page.route.data_loader.tips.input_task_name',
+                    })}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Option type={importType}></Option>
+            <Divider />
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label={formatMessage({ id: 'page.route.data_loader.labels.upload' })}>
+                  <Upload
+                    fileList={uploadFileList as any}
+                    beforeUpload={(file) => {
+                      setUploadFileList([file]);
+                      return false;
+                    }}
+                    onRemove={() => {
+                      setUploadFileList([]);
+                    }}
+                  >
+                    <Button icon={<UploadOutlined />}>
+                      {formatMessage({ id: 'page.route.data_loader.tips.click_upload' })}
+                    </Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        )}
+        {state === 'result' && (
+          <Result
+            status={importResult.success ? 'success' : 'error'}
+            title={`${formatMessage({ id: 'page.route.data_loader.import' })} ${
+              importResult.success
+                ? formatMessage({ id: 'component.status.success' })
+                : formatMessage({ id: 'component.status.fail' })
+            }`}
+            extra={[
+              <Button
+                type="primary"
+                onClick={() => {
+                  setState('import');
+                  onClose?.();
+                  if (props.onFinish) props.onFinish();
+                }}
+              >
+                {formatMessage({ id: 'menu.close' })}
+              </Button>,
+            ]}
+          >
+            <Collapse>
+              {entityNames.map((v) => {
+                if (importResult.data[v] && importResult.data[v].total > 0) {
+                  return (
+                    <Collapse.Panel
+                      collapsible={importResult.data[v].failed > 0 ? 'header' : 'disabled'}
+                      header={`Total ${importResult.data[v].total} ${v} imported, ${importResult.data[v].failed} failed`}
+                      key={v}
+                    >
+                      {importResult.data[v].errors &&
+                        importResult.data[v].errors.map((err) => <p>{err}</p>)}
+                    </Collapse.Panel>
+                  );
+                }
+                return null;
+              })}
+            </Collapse>
+          </Result>
+        )}
       </Drawer>
     </>
   );
