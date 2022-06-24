@@ -30,21 +30,6 @@ context('Data Loader import', () => {
     merge_method: '#merge_method',
   };
   const data = {
-    route_name_0: 'route_name_0',
-    route_name_1: 'route_name_1',
-    upstream_node0_host_0: '1.1.1.1',
-    upstream_node0_host_1: '2.2.2.2',
-    importErrorMsg: 'required file type is .yaml, .yml or .json but got: .txt',
-    uploadRouteFiles: [
-      '../../../api/test/testdata/import/default.json',
-      '../../../api/test/testdata/import/default.yaml',
-      'import-error.txt',
-    ],
-    // Note: export file's name will be end of a timestamp
-    jsonMask: 'cypress/downloads/*.json',
-    yamlMask: 'cypress/downloads/*.yaml',
-    port: '80',
-    weight: 1,
     importRouteSuccess: 'Import Successfully',
     deleteRouteSuccess: 'Delete Route Successfully',
     deleteUpstreamSuccess: 'Delete Upstream Successfully',
@@ -145,9 +130,6 @@ context('Data Loader import', () => {
 
     // check result
     cy.get(selector.listTbody).get(selector.listRow).should('have.length', 5);
-
-    // remove route
-    /**/
   });
 
   it('should import API101 with duplicate route', () => {
