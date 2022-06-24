@@ -75,4 +75,5 @@ export default {
   'menu.serverinfo': 'Sistem Bilgisi',
   'menu.advanced-feature': 'Gelişmiş Özellikler',
   'menu.more': 'Daha Fazla',
+  'menu.close': 'Kapat',
 };

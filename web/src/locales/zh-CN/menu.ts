@@ -72,4 +72,5 @@ export default {
   'menu.serverinfo': '系统信息',
   'menu.advanced-feature': '高级特性',
   'menu.more': '更多',
+  'menu.close': '关闭',
 };

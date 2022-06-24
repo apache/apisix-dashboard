@@ -28,9 +28,7 @@ import {
   Select,
   Radio,
   Form,
-  Upload,
   Modal,
-  Divider,
   Menu,
   Dropdown,
   Tooltip,
@@ -46,7 +44,6 @@ import { omit } from 'lodash';
 
 import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
-import type { RcFile } from 'antd/lib/upload';
 
 import {
   update,
@@ -56,11 +53,11 @@ import {
   fetchLabelList,
   updateRouteStatus,
   exportRoutes,
-  importRoutes,
 } from './service';
 import { DebugDrawView } from './components/DebugViews';
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
+import DataLoaderImport from '@/pages/Route/components/DataLoader/Import';
 
 const { OptGroup, Option } = Select;
 
@@ -81,8 +78,7 @@ const Page: React.FC = () => {
 
   const [labelList, setLabelList] = useState<LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
-  const [showImportModal, setShowImportModal] = useState(false);
+  const [showImportDrawer, setShowImportDrawer] = useState(false);
   const [visible, setVisible] = useState(false);
   const [rawData, setRawData] = useState<Record<string, any>>({});
   const [id, setId] = useState('');
@@ -154,27 +150,6 @@ const Page: React.FC = () => {
     });
   };
 
-  const handleImport = () => {
-    const formData = new FormData();
-    if (!uploadFileList[0]) {
-      notification.warn({
-        message: formatMessage({ id: 'page.route.button.selectFile' }),
-      });
-      return;
-    }
-    formData.append('file', uploadFileList[0]);
-    formData.append('type', 'openapi3');
-
-    importRoutes(formData).then(() => {
-      handleTableActionSuccessResponse(
-        `${formatMessage({ id: 'page.route.button.importOpenApi' })} ${formatMessage({
-          id: 'component.status.success',
-        })}`,
-      );
-      setShowImportModal(false);
-    });
-  };
-
   const ListToolbar = () => {
     const tools = [
       {
@@ -194,11 +169,10 @@ const Page: React.FC = () => {
         },
       },
       {
-        name: formatMessage({ id: 'page.route.button.importOpenApi' }),
+        name: formatMessage({ id: 'page.route.data_loader.import' }),
         icon: <ImportOutlined />,
         onClick: () => {
-          setUploadFileList([]);
-          setShowImportModal(true);
+          setShowImportDrawer(true);
         },
       },
     ];
@@ -613,45 +587,14 @@ const Page: React.FC = () => {
           );
         }}
       />
-      <Modal
-        title={formatMessage({ id: 'page.route.button.importOpenApi' })}
-        visible={showImportModal}
-        okText={formatMessage({ id: 'component.global.confirm' })}
-        onOk={handleImport}
-        onCancel={() => {
-          setShowImportModal(false);
-        }}
-      >
-        <Upload
-          fileList={uploadFileList as any}
-          beforeUpload={(file) => {
-            setUploadFileList([file]);
-            return false;
+      {showImportDrawer && (
+        <DataLoaderImport
+          onClose={(finish) => {
+            if (finish) checkPageList(ref);
+            setShowImportDrawer(false);
           }}
-          onRemove={() => {
-            setUploadFileList([]);
-          }}
-        >
-          <Button type="primary" icon={<ImportOutlined />}>
-            {formatMessage({ id: 'page.route.button.selectFile' })}
-          </Button>
-        </Upload>
-        <Divider />
-        <div>
-          <p>{formatMessage({ id: 'page.route.instructions' })}:</p>
-          <p>
-            <a
-              href="https://apisix.apache.org/docs/dashboard/IMPORT_OPENAPI_USER_GUIDE"
-              target="_blank"
-            >
-              1.{' '}
-              {`${formatMessage({ id: 'page.route.import' })} ${formatMessage({
-                id: 'page.route.instructions',
-              })}`}
-            </a>
-          </p>
-        </div>
-      </Modal>
+        />
+      )}
     </PageHeaderWrapper>
   );
 };

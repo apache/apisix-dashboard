@@ -192,4 +192,18 @@ export default {
 
   'page.route.fields.vars.invalid': '请检查高级匹配条件配置',
   'page.route.fields.vars.in.invalid': '使用 IN 操作符时，请输入数组格式的参数值。',
+
+  'page.route.data_loader.import': '导入',
+  'page.route.data_loader.import_panel': '导入路由',
+  'page.route.data_loader.types.openapi3': 'OpenAPI 3',
+  'page.route.data_loader.types.openapi_legacy': 'OpenAPI 3 旧版',
+  'page.route.data_loader.labels.loader_type': '数据加载器类型',
+  'page.route.data_loader.labels.task_name': '导入任务名称',
+  'page.route.data_loader.labels.upload': '上传',
+  'page.route.data_loader.labels.openapi3_merge_method': '合并 HTTP 方法',
+  'page.route.data_loader.tips.select_type': '请选择数据加载器',
+  'page.route.data_loader.tips.input_task_name': '请输入导入任务名称',
+  'page.route.data_loader.tips.click_upload': '点击上传',
+  'page.route.data_loader.tips.openapi3_merge_method':
+    '是否将 OpenAPI 路径中的多个 HTTP 方法合并为单一路由。当你的路径中多个 HTTP 方法有不同的细节配置（如 securitySchema），你可以关闭这个选项，将为不同的 HTTP 方法生成单独的路由。',
 };
