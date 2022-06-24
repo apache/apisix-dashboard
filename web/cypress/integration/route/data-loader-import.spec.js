@@ -63,6 +63,7 @@ context('Data Loader import', () => {
     cy.get(selector.drawer).contains('Import Successfully').should('be.visible');
     cy.get(selector.drawer).contains('Total 3 route imported, 0 failed').click();
     cy.get(selector.drawer).contains('Close').click();
+    cy.get(selector.drawer).should('not.exist');
 
     // check result
     cy.get(selector.listTbody).get(selector.listRow).should('have.length', 3);
@@ -98,6 +99,7 @@ context('Data Loader import', () => {
     cy.get(selector.drawer).contains('Total 1 upstream imported, 1 failed').click();
     cy.get(selector.drawer).contains('key: api101_mm is conflicted').should('be.visible');
     cy.get(selector.drawer).contains('Close').click();
+    cy.get(selector.drawer).should('not.exist');
 
     // remove route
     for (let i = 0; i < 3; i += 1) {
@@ -127,6 +129,7 @@ context('Data Loader import', () => {
     cy.get(selector.drawer).contains('Import Successfully').should('be.visible');
     cy.get(selector.drawer).contains('Total 5 route imported, 0 failed').click();
     cy.get(selector.drawer).contains('Close').click();
+    cy.get(selector.drawer).should('not.exist');
 
     // check result
     cy.get(selector.listTbody).get(selector.listRow).should('have.length', 5);
@@ -151,6 +154,7 @@ context('Data Loader import', () => {
     cy.get(selector.drawer).contains('Total 5 route imported, 1 failed').click();
     cy.get(selector.drawer).contains('is duplicated with route api101_nmm_').should('be.visible');
     cy.get(selector.drawer).contains('Close').click();
+    cy.get(selector.drawer).should('not.exist');
   });
 
   it('should remove all routes and upstreams', function () {
