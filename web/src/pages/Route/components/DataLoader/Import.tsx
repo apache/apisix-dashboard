@@ -116,7 +116,7 @@ const DataLoaderImport: React.FC<Props> = (props) => {
         });
         setState('result');
       })
-      .catch(console.error);
+      .catch(() => {});
   };
 
   return (
@@ -149,7 +149,7 @@ const DataLoaderImport: React.FC<Props> = (props) => {
       }
     >
       {state === 'import' && (
-        <Form layout="vertical" form={form} onFinish={onFinish} hideRequiredMark>
+        <Form layout="vertical" form={form} onFinish={onFinish} requiredMark={false}>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
