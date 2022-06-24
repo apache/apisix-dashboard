@@ -103,18 +103,20 @@ const DataLoaderImport: React.FC<Props> = (props) => {
     });
     formData.append('file', uploadFileList[0]);
 
-    importRoutes(formData).then((r) => {
-      let errorNumber = 0;
-      entityNames.forEach((v) => {
-        errorNumber += r.data[v].failed;
-      });
+    importRoutes(formData)
+      .then((r) => {
+        let errorNumber = 0;
+        entityNames.forEach((v) => {
+          errorNumber += r.data[v].failed;
+        });
 
-      setImportResult({
-        success: errorNumber <= 0,
-        data: r.data,
-      });
-      setState('result');
-    });
+        setImportResult({
+          success: errorNumber <= 0,
+          data: r.data,
+        });
+        setState('result');
+      })
+      .catch(console.error);
   };
 
   return (
