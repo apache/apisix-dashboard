@@ -37,8 +37,7 @@ import type { RcFile } from 'antd/lib/upload';
 import { importRoutes } from '@/pages/Route/service';
 
 type Props = {
-  onClose?: () => void;
-  onFinish?: () => void;
+  onClose: (finish: boolean) => void;
 };
 
 type ImportType = 'openapi3' | 'openapi_legacy';
@@ -123,7 +122,7 @@ const DataLoaderImport: React.FC<Props> = (props) => {
       title={formatMessage({ id: 'page.route.data_loader.import_panel' })}
       width={480}
       visible={true}
-      onClose={onClose}
+      onClose={() => onClose(false)}
       footer={
         <div
           style={{
@@ -131,7 +130,9 @@ const DataLoaderImport: React.FC<Props> = (props) => {
             justifyContent: 'space-between',
           }}
         >
-          <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>
+          <Button onClick={() => onClose(false)}>
+            {formatMessage({ id: 'component.global.cancel' })}
+          </Button>
           <Space>
             <Button
               type="primary"
@@ -226,8 +227,7 @@ const DataLoaderImport: React.FC<Props> = (props) => {
               type="primary"
               onClick={() => {
                 setState('import');
-                onClose?.();
-                if (props.onFinish) props.onFinish();
+                onClose(true);
               }}
             >
               {formatMessage({ id: 'menu.close' })}

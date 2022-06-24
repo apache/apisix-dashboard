@@ -589,9 +589,8 @@ const Page: React.FC = () => {
       />
       {showImportDrawer && (
         <DataLoaderImport
-          onClose={() => setShowImportDrawer(false)}
-          onFinish={() => {
-            checkPageList(ref);
+          onClose={(finish) => {
+            if (finish) checkPageList(ref);
             setShowImportDrawer(false);
           }}
         />
