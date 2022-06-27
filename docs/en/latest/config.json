@@ -4,7 +4,7 @@
     {
       "type": "category",
       "label": "Getting Started",
-      "items": ["USER_GUIDE", "IMPORT_OPENAPI_USER_GUIDE", "api/api"]
+      "items": ["USER_GUIDE", "api/api"]
     },
     {
       "type": "category",
@@ -19,6 +19,20 @@
     {
       "type": "doc",
       "id": "FAQ"
+    },
+    {
+      "type": "category",
+      "label": "Others",
+      "items": [
+        {
+          "type": "category",
+          "label": "Import / Export",
+          "items": [
+            "modules/data_loader",
+            "modules/data_loader/openapi3"
+          ]
+        }
+      ]
     },
     {
       "type": "link",
