@@ -201,17 +201,17 @@ export default {
   'page.route.fields.vars.in.invalid':
     'IN operatörünü kullanırken parametre değerlerini dizi formatında girin.',
 
-  'page.route.data_loader.import': 'Import',
-  'page.route.data_loader.import_panel': 'Import data',
+  'page.route.data_loader.import': 'İçeri Aktar',
+  'page.route.data_loader.import_panel': 'Veriyi içe Aktar',
   'page.route.data_loader.types.openapi3': 'OpenAPI 3',
-  'page.route.data_loader.types.openapi_legacy': 'OpenAPI 3 Legacy',
-  'page.route.data_loader.labels.loader_type': 'Data Loader Type',
-  'page.route.data_loader.labels.task_name': 'Task Name',
-  'page.route.data_loader.labels.upload': 'Upload',
-  'page.route.data_loader.labels.openapi3_merge_method': 'Merge HTTP Methods',
-  'page.route.data_loader.tips.select_type': 'Please select data loader',
-  'page.route.data_loader.tips.input_task_name': 'Please input import task name',
-  'page.route.data_loader.tips.click_upload': 'Click to Upload',
+  'page.route.data_loader.types.openapi_legacy': 'OpenAPI 3 Eski Sürüm',
+  'page.route.data_loader.labels.loader_type': 'Veri Yükleyici Tipi',
+  'page.route.data_loader.labels.task_name': 'İş Adı',
+  'page.route.data_loader.labels.upload': 'Yükle',
+  'page.route.data_loader.labels.openapi3_merge_method': 'HTTP Methodlarını birleştir',
+  'page.route.data_loader.tips.select_type': 'Lütfen veri yükleyicisini seçin',
+  'page.route.data_loader.tips.input_task_name': 'Lütfen içeri aktarılan iş adını belirtin',
+  'page.route.data_loader.tips.click_upload': 'Yüklemek için tıkla',
   'page.route.data_loader.tips.openapi3_merge_method':
-    'Whether to merge multiple HTTP methods in the OpenAPI path into a single route. When you have multiple HTTP methods in your path with different details configuration (e.g. securitySchema), you can turn off this option to generate them into multiple routes.',
+    'OpenAPI routelarda birden çok HTTP yöntemi tek bir rotada birleştirilir. Routelarda farklı yapılandırmalara sahip birden fazla HTTP yöntemi olduğunda (ör. securitySchema) ve bunları birden çok rotada oluşturmak için bu seçeneği kapatabilirsiniz. ',
 };
