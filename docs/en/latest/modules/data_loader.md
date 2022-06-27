@@ -51,7 +51,7 @@ Developers can look at the code in [api/internal/handler/data_loader/loader/load
 
 ## Supported data loader
 
-- [OpenAPI 3](modules/data_loader/openapi3.md): Currently only data import is supported
+- [OpenAPI 3](data_loader/openapi3.md): Currently only data import is supported
 
 ## How to support other data loader
 
