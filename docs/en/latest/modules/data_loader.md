@@ -68,8 +68,8 @@ Adds a new item to the data loader list of the import and export handler.
 
 ### Add front UI support for new data loader (front-end)
 
-Adds the previously created data loader to the frontend selector. [web/src/pages/Route/components/DataLoader/Import.tsx](https://github.com/apache/apisix-dashboard/blob/master/web/src/pages/Route/components/DataLoader/Import.tsx#L167-L172)
+Adds the previously created data loader to the frontend selector. Refer to [this](https://github.com/apache/apisix-dashboard/blob/master/web/src/pages/Route/components/DataLoader/Import.tsx#L167-L172) for more details.
 
 :::note
-When you implement a data loader that requires partial input of custom parameters, you can create a form for it to enter data. [web/src/pages/Route/components/DataLoader/loader/OpenAPI3.tsx](https://github.com/apache/apisix-dashboard/blob/master/web/src/pages/Route/components/DataLoader/loader/OpenAPI3.tsx)
+When you implement a data loader that requires partial input of custom parameters, you can create a form for it to enter data. Refer to [this](https://github.com/apache/apisix-dashboard/blob/master/web/src/pages/Route/components/DataLoader/loader/OpenAPI3.tsx) for more details.
 :::

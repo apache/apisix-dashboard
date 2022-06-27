@@ -29,7 +29,7 @@ description: This document contains information about the OpenAPI 3 data loader.
 
 ## Overview
 
-OpenAPI 3 data loader，It currently supports importing standard OpenAPI 3 documentation to generate individual paths as routes and upstreams in Apache APISIX.
+OpenAPI 3 data loader currently supports importing standard OpenAPI 3 documentation to generate individual paths as routes and upstreams in Apache APISIX.
 
 ## Configuration
 
