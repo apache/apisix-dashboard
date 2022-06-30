@@ -24,6 +24,7 @@ header:
   paths-ignore:
     # Frontend files
     - 'web/yarn.lock'
+
     # Frontend copied files
     - 'web/src/components/HeaderDropdown/index.less'
     - 'web/src/components/HeaderDropdown/index.tsx'
