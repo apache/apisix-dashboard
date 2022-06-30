@@ -24,9 +24,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/apisix/manager-api/internal/conf"
-	"github.com/apisix/manager-api/internal/core/server"
-	"github.com/apisix/manager-api/internal/log"
+	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/core/server"
+	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
 var rootCmd = &cobra.Command{

@@ -17,7 +17,7 @@
 package main
 
 import (
-	"github.com/apisix/manager-api/cmd"
+	"github.com/apache/apisix-dashboard/api/cmd"
 )
 
 func main() {
