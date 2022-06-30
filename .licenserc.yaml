@@ -44,5 +44,8 @@ header:
     - '**/*.pb.go'
     - '.github/'
     - '.yamllint'
+    - '.gitignore'
+    - '.gitmodule'
+    - '.dockerignore'
 
   comment: on-failure
