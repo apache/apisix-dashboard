@@ -1,4 +1,4 @@
-module github.com/apisix/manager-api
+module github.com/apache/apisix-dashboard/api
 
 go 1.15
 
