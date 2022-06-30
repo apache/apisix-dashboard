@@ -24,6 +24,21 @@ header:
   paths-ignore:
     # Frontend files
     - 'web/yarn.lock'
+    # Frontend copied files
+    - 'web/src/components/HeaderDropdown/index.less'
+    - 'web/src/components/HeaderDropdown/index.tsx'
+    - 'web/src/components/NoticeIcon/NoticeList.less'
+    - 'web/src/components/NoticeIcon/NoticeList.tsx'
+    - 'web/src/components/NoticeIcon/index.less'
+    - 'web/src/components/NoticeIcon/index.tsx'
+    - 'web/src/components/PageLoading/index.tsx'
+    - 'web/src/components/PluginFlow/components/Toolbar/index.tsx'
+    - 'web/src/components/RightContent/AvatarDropdown.tsx'
+    - 'web/src/components/RightContent/index.less'
+    - 'web/src/components/RightContent/index.tsx'
+    - 'web/src/libs/iconfont.js'
+    - 'web/src/pages/404.tsx'
+    - 'web/src/pages/document.ejs'
 
     # Backend files
     - 'api/logs/.gitkeep'
