@@ -45,7 +45,7 @@ header:
     - '.github/'
     - '.yamllint'
     - '.gitignore'
-    - '.gitmodule'
+    - '.gitmodules'
     - '.dockerignore'
 
   comment: on-failure
