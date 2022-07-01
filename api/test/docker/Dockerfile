@@ -17,7 +17,7 @@
 
 FROM golang:1.15 AS build-env
 
-WORKDIR /go/src/github.com/apache/apisix-dashboard/api
+WORKDIR /go/src/github.com/apache/apisix-dashboard
 
 COPY ./ ./
 
