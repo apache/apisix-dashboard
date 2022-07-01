@@ -20,7 +20,7 @@ set -e
 VERSION=$(cat ./api/VERSION)
 GITHASH=$(cat ./.githash 2> /dev/null || HASH="ref: HEAD"; while [[ $HASH == ref\:* ]]; do HASH="$(cat ".git/$(echo $HASH | cut -d \  -f 2)")"; done; echo ${HASH:0:7})
 
-GOLDFLAGS="-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X github.com/apisix/manager-api/internal/utils.gitHash=${GITHASH}"
+GOLDFLAGS="-X github.com/apache/apisix-dashboard/api/internal/utils.version=${VERSION} -X github.com/apache/apisix-dashboard/api/internal/utils.gitHash=${GITHASH}"
 
 # Enter dry-run mode
 if [ "$1" == "--dry-run" ]; then
