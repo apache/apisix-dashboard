@@ -29,11 +29,11 @@ import (
 
 	"github.com/shiningrush/droplet/data"
 
-	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/storage"
-	"github.com/apisix/manager-api/internal/log"
-	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/internal/utils/runtime"
+	"github.com/apache/apisix-dashboard/api/internal/core/entity"
+	"github.com/apache/apisix-dashboard/api/internal/core/storage"
+	"github.com/apache/apisix-dashboard/api/internal/log"
+	"github.com/apache/apisix-dashboard/api/internal/utils"
+	"github.com/apache/apisix-dashboard/api/internal/utils/runtime"
 )
 
 type Pagination struct {

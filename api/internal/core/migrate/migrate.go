@@ -22,8 +22,8 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/apisix/manager-api/internal/core/store"
-	"github.com/apisix/manager-api/internal/log"
+	"github.com/apache/apisix-dashboard/api/internal/core/store"
+	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
 var (

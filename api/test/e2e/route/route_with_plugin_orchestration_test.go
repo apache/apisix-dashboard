@@ -25,7 +25,7 @@ import (
 	"github.com/onsi/gomega"
 	"github.com/tidwall/gjson"
 
-	"github.com/apisix/manager-api/test/e2e/base"
+	"github.com/apache/apisix-dashboard/api/test/e2e/base"
 )
 
 var _ = ginkgo.Describe("route with plugin orchestration", func() {
