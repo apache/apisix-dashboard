@@ -43,6 +43,7 @@ const (
 
 var (
 	ENV              string
+	RoutePrefix      string
 	Schema           gjson.Result
 	WorkDir          = "."
 	ConfigFile       = ""
@@ -106,13 +107,14 @@ type Log struct {
 }
 
 type Conf struct {
-	Etcd      Etcd
-	Listen    Listen
-	SSL       SSL
-	Log       Log
-	AllowList []string `mapstructure:"allow_list"`
-	MaxCpu    int      `mapstructure:"max_cpu"`
-	Security  Security
+	Etcd       Etcd
+	Listen     Listen
+	SSL        SSL
+	Log        Log
+	AllowList  []string `mapstructure:"allow_list"`
+	MaxCpu     int      `mapstructure:"max_cpu"`
+	Security   Security
+	RutePrefix string `mapstructure:"route_prefix"`
 }
 
 type User struct {
@@ -185,6 +187,8 @@ func setupConfig() {
 	if err != nil {
 		panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
 	}
+
+	RoutePrefix = config.Conf.RutePrefix
 
 	// listen
 	if config.Conf.Listen.Port != 0 {

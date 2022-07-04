@@ -17,6 +17,7 @@
 
 # yamllint disable rule:comments-indentation
 conf:
+  route_prefix: /         # route prefix is the prefix for all routes of `Manager API`, / by default
   listen:
     # host: 127.0.0.1     # the address on which the `Manager API` should listen.
                           # The default value is 0.0.0.0, if want to specify, please enable it.

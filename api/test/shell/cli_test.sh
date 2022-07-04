@@ -483,6 +483,39 @@ stop_dashboard() {
   stop_dashboard 6
 }
 
+#16
+@test "Check route prefix" {
+  recover_conf
+
+  # modify route prefix config to /test
+  if [[ $KERNEL = "Darwin" ]]; then
+      sed -i "" 's/route_prefix: \//route_prefix: \/test/g' ${CONF_FILE}
+    else
+      sed -i 's/route_prefix: \//route_prefix: \/test/g' ${CONF_FILE}
+  fi
+
+  mkdir -p /usr/local/apisix-dashboard/html
+  echo "hi~" > /usr/local/apisix-dashboard/html/index.html
+
+  start_dashboard 3
+
+  # check api
+  run curl http://127.0.0.1:9000/test/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
+  respCode=$(echo "$output" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
+  echo $respCode
+  [ "$respCode" = "0" ]
+
+  # 404
+  result=$(curl "http://127.0.0.1:9000/apisix/admin/user/login")
+  [ "$result" = "hi~" ]
+
+  # check static file server
+  result=$(curl "http://127.0.0.1:9000/test")
+  [ "$result" = "hi~" ]
+
+  stop_dashboard 6
+}
+
 #post
 @test "Clean test environment" {
   # kill etcd

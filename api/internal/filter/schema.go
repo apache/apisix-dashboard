@@ -26,10 +26,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/log"
@@ -177,7 +179,7 @@ func handleDefaultValue(resource string, reqBody []byte) ([]byte, error) {
 
 func SchemaCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		pathPrefix := "/apisix/admin/"
+		pathPrefix := filepath.Join("/", conf.RoutePrefix, "/apisix/admin") + "/"
 		resource := strings.TrimPrefix(c.Request.URL.Path, pathPrefix)
 		idx := strings.LastIndex(resource, "/")
 		if idx > 1 {
