@@ -30,8 +30,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "manager-api",
-	Short: "Apache APISIX Manager API",
+	Use:   "dashboard",
+	Short: "Apache APISIX Dashboard",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		err := manageAPI()
 		return err
@@ -39,9 +39,6 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&conf.ConfigFile, "config", "c", "", "config file")
-	rootCmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
-
 	rootCmd.AddCommand(
 		newVersionCommand(),
 	)
