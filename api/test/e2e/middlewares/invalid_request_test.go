@@ -32,5 +32,11 @@ var _ = Describe("Invalid Request", func() {
 			Path:         "/../../../../etc/hosts",
 			ExpectStatus: http.StatusForbidden,
 		})
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/.%2e/%2e%2e/../etc/hosts",
+			ExpectStatus: http.StatusForbidden,
+		})
 	})
 })
