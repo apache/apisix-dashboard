@@ -14,24 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gzip
+package middlewares_test
 
 import (
 	"net/http"
 
-	"github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("Gzip enable", func() {
-	ginkgo.It("get index.html", func() {
+var _ = Describe("Invalid Request", func() {
+	It("double dot in URL path (arbitrary file index)", func() {
 		base.RunTestCase(base.HttpTestCase{
-			Object:        base.ManagerApiExpect(),
-			Method:        http.MethodGet,
-			Path:          "/",
-			Headers:       map[string]string{"Accept-Encoding": "gzip, deflate, br"},
-			ExpectHeaders: map[string]string{"Content-Encoding": "gzip"},
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/../../../../etc/hosts",
+			ExpectStatus: http.StatusForbidden,
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/.%2e/%2e%2e/../etc/hosts",
+			ExpectStatus: http.StatusForbidden,
 		})
 	})
 })
