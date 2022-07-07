@@ -235,7 +235,7 @@ const Page: React.FC<Props> = (props) => {
         advancedMatchingRules,
       } as RouteModule.RequestData;
 
-      const path = props.route.path
+      const { path } = props.route
 
       if (path.indexOf('edit') !== -1) {
         update((props as any).match.params.rid, routeData).then(() => {
