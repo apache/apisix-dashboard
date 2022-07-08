@@ -31,6 +31,7 @@ import {
   Modal,
   Menu,
   Dropdown,
+  Table,
   Tooltip,
 } from 'antd';
 import { history, useIntl } from 'umi';
@@ -542,6 +543,34 @@ const Page: React.FC = () => {
         actionRef={ref}
         rowKey="id"
         columns={columns}
+                rowSelection={{
+          selections: [Table.SELECTION_ALL, Table.ResponseBody.SELECTION_INVERT],
+          defaultSelectedRowKeys: [1],
+        }}
+        tableAlertRender={({ selectedRowKeys }) => (
+          <Space size={24}>
+            <span>
+              chosen {selectedRowKeys.length} items
+              <a style={{ marginLeft: 8 }} onClick={() => {selectedRowKeys([])}}>
+                {formatMessage({ id: 'page.route.unSelect' })}
+              </a>
+            </span>
+          </Space>
+        )}
+        tableAlertOptionRender={() => {
+          return (
+            <Space size={16}>
+               <Button
+                onClick={async () => {
+                await remove(selectedRowKeys);
+                selectedRowKeys([]);
+                actionRef.current?.reloadAndRest?.();
+              }}>
+              {formatMessage({ id: 'page.route.batchDeletion' })}
+               </Button>    
+            </Space>
+          );
+        }}
         request={fetchList}
         pagination={{
           onChange: (page, pageSize?) => savePageList(page, pageSize),
