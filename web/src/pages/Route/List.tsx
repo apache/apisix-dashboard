@@ -543,9 +543,9 @@ const Page: React.FC = () => {
         actionRef={ref}
         rowKey="id"
         columns={columns}
-                rowSelection={{
-          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-          defaultSelectedRowKeys: [1],
+        rowSelection={{
+        selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+        defaultSelectedRowKeys: [1],
         }}
         tableAlertRender={({ selectedRowKeys }) => (
           <Space size={24}>
