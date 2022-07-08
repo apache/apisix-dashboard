@@ -29,8 +29,6 @@ import (
 )
 
 func NewRootCommand() *cobra.Command {
-	var configFile string
-
 	cmd := &cobra.Command{
 		Use:   "apisix-dashboard",
 		Short: "Apache APISIX Dashboard",
@@ -64,7 +62,7 @@ func NewRootCommand() *cobra.Command {
 		},
 	}
 
-	cmd.PersistentFlags().StringVarP(&configFile, "config", "c", "", "config file")
+	cmd.PersistentFlags().StringVarP(&conf.ConfigFile, "config", "c", "", "config file")
 	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
 
 	cmd.AddCommand(
