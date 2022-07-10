@@ -30,6 +30,7 @@ context('Delete Plugin List with the Drawer', () => {
     checkedSwitcher: '.ant-switch-checked',
     refresh: '.anticon-reload',
     empty: '.ant-empty-normal',
+    authPluginType: '#plugin-category-authentication > div:nth-child(2)',
   };
 
   const data = {
@@ -40,7 +41,7 @@ context('Delete Plugin List with the Drawer', () => {
     cy.login();
   });
 
-  it('should visit plugin market and enable plugin', function () {
+  it('should visit plugin market and enable plugin then show plugin in order by state)', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
     cy.contains('Enable').click();
@@ -71,6 +72,13 @@ context('Delete Plugin List with the Drawer', () => {
       });
 
     cy.contains('button', 'Submit').click();
+
+    cy.get(selector.authPluginType, {
+      timeout,
+    }).should(($p) => {
+      expect($p.first()).to.contain(data.basicAuthPlugin);
+    });
+
     cy.get(selector.drawer, {
       timeout,
     }).should('not.exist');
