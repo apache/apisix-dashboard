@@ -32,12 +32,12 @@ import (
 
 func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 	if input == nil {
-		panic("input is nil")
+		panic("loader/openapi3: input is nil")
 	}
 
 	d, ok := input.([]byte)
 	if !ok {
-		panic(fmt.Sprintf("input format error: expected []byte but it is %s", reflect.TypeOf(input).Kind().String()))
+		panic(fmt.Sprintf("loader/openapi3: input format error, expected []byte but it is %s", reflect.TypeOf(input).Kind().String()))
 	}
 
 	// load OAS3 document
@@ -48,7 +48,7 @@ func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 
 	// no paths in OAS3 document
 	if len(swagger.Paths) <= 0 {
-		return nil, errors.Wrap(errors.New("OpenAPI documentation does not contain any paths"), consts.ErrImportFile.Error())
+		return nil, errors.Wrap(errors.New("loader/openapi3: OpenAPI documentation does not contain any paths"), consts.ErrImportFile.Error())
 	}
 
 	if o.TaskName == "" {
