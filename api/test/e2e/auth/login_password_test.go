@@ -24,36 +24,36 @@ import (
 	"github.com/apache/apisix-dashboard/api/test/e2e/base"
 )
 
-var _ = Describe("Authentication", func() {
-	It("Access with valid authentication token", func() {
+var _ = Describe("Login (Password)", func() {
+	It("Login with valid password", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/routes",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/user/login",
+			Body:         `{"username": "admin","password": "admin"}`,
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
 		})
 	})
 
-	It("Access with malformed authentication token", func() {
+	It("Login with invalid username", func() {
 		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/routes",
-			Headers:      map[string]string{"Authorization": "An-Invalid-Token"},
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `"message":"request unauthorized"`,
+			Object:     base.ManagerApiExpect(),
+			Method:     http.MethodPost,
+			Path:       "/apisix/admin/user/login",
+			Body:       `{"username": "abcd","password": "admin"}`,
+			ExpectBody: `"message":"username or password error"`,
 		})
 	})
 
-	It("Access without authentication token", func() {
+	It("Login with invalid password", func() {
 		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/routes",
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `"message":"request unauthorized"`,
+			Object:     base.ManagerApiExpect(),
+			Method:     http.MethodPost,
+			Path:       "/apisix/admin/user/login",
+			Body:       `{"username": "admin","password": "password"}`,
+			ExpectBody: `"message":"username or password error"`,
 		})
 	})
+
 })
