@@ -164,6 +164,12 @@ func setupConfig() {
 		viper.SetConfigName(ConfigFile)
 		viper.SetConfigType("yaml")
 		viper.AddConfigPath("./conf")
+
+		if ENV == EnvTEST {
+			// Add a profile lookup compatibility for GitHub Action CI test
+			viper.AddConfigPath("/home/runner/work/apisix-dashboard/apisix-dashboard/api/conf")
+		}
+
 	} else {
 		viper.SetConfigFile(ConfigFile)
 	}
