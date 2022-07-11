@@ -149,8 +149,8 @@ func init() {
 }
 
 func InitConf() {
-	setupConfig()
 	setupEnv()
+	setupConfig()
 	initSchema()
 }
 
@@ -169,7 +169,6 @@ func setupConfig() {
 			// Add a profile lookup compatibility for GitHub Action CI test
 			viper.AddConfigPath("/home/runner/work/apisix-dashboard/apisix-dashboard/api/conf")
 		}
-
 	} else {
 		viper.SetConfigFile(ConfigFile)
 	}
