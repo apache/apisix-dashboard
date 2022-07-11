@@ -26,7 +26,7 @@ import (
 )
 
 var _ = Describe("Global Rule", func() {
-	DescribeTable("test global rule curd",
+	DescribeTable("Test global rule CURD",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -154,7 +154,7 @@ var _ = Describe("Global Rule", func() {
 		}),
 	)
 
-	DescribeTable("test global rule integration",
+	DescribeTable("Test global rule Integration",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
