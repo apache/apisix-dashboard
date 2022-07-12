@@ -101,7 +101,7 @@ var _ = Describe("Consumer", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"username":"consumer_2"`,
 		}),
-		Entry("List consumer (2 item)", base.HttpTestCase{
+		Entry("List consumer (2 items)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers",
@@ -148,11 +148,11 @@ var _ = Describe("Consumer", func() {
 		}),
 	)
 
-	DescribeTable("test consumer curd exception",
+	DescribeTable("Test consumer CURD Exception",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		Entry("create consumer by POST method", base.HttpTestCase{
+		Entry("Create consumer (POST method)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/consumers",
@@ -173,7 +173,7 @@ var _ = Describe("Consumer", func() {
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "404 page not found",
 		}),
-		Entry("create consumer with not exist plugin", base.HttpTestCase{
+		Entry("Create consumer (Not Exist Plugin)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/consumers",
@@ -190,7 +190,7 @@ var _ = Describe("Consumer", func() {
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "schema validate failed: schema not found, path: plugins.key-authnotexist",
 		}),
-		Entry("delete consumer (as delete not exist consumer)", base.HttpTestCase{
+		Entry("Delete consumer (as delete not exist consumer)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/test",
