@@ -138,10 +138,10 @@ var _ = Describe("Consumer", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{`"code":0`, `"username":"consumer_1"`, `"rejected_code":504`},
 		}),
-		Entry("Delete consumer", base.HttpTestCase{
+		Entry("Batch Delete consumer", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/consumers/consumer_1",
+			Path:         "/apisix/admin/consumers/consumer_1,consumer_2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
