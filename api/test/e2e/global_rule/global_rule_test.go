@@ -37,7 +37,7 @@ var _ = Describe("Global Rule", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
 		}),
-		Entry("Get global rule list (Empty)", base.HttpTestCase{
+		Entry("List global rule (Empty)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/global_rules",
