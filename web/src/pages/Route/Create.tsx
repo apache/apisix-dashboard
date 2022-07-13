@@ -234,11 +234,17 @@ const Page: React.FC<Props> = (props) => {
         step3Data,
         advancedMatchingRules,
       } as RouteModule.RequestData;
-      if (props.route.path.indexOf('edit') !== -1) {
+
+      const { path } = props.route
+
+      if (path.indexOf('edit') !== -1) {
         update((props as any).match.params.rid, routeData).then(() => {
           setStep(5);
         });
       } else {
+        if (path.indexOf('duplicate') !== -1) {
+          delete routeData.form1Data.id
+        }
         create(routeData).then(() => {
           setStep(5);
         });
