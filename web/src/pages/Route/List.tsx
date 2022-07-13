@@ -560,17 +560,16 @@ const Page: React.FC = () => {
         tableAlertOptionRender={() => {
           return (
             <Space size={16}>
-               <Button
+              <Button
                 onClick={async () => {
                 await remove(selectedRowKeys);
                 selectedRowKeys([]);
                 actionRef.current?.reloadAndRest?.();
               }}>
               {formatMessage({ id: 'page.route.batchDeletion' })}
-               </Button>    
+              </Button>
             </Space>
-          );
-        }}
+          );}}
         request={fetchList}
         pagination={{
           onChange: (page, pageSize?) => savePageList(page, pageSize),
