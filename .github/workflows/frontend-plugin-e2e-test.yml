@@ -50,15 +50,10 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: '1.15'
-
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          cache: true
+          cache-dependency-path: |
+            api/go.sum
+            api/test/e2e/go.sum
 
       - name: Download dag-to-lua
         working-directory: ./
