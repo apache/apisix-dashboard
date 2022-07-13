@@ -115,6 +115,7 @@ declare namespace RouteModule {
   };
 
   type Form1Data = {
+    id?: string;
     name: string;
     desc: string;
     custom_version_label: string;

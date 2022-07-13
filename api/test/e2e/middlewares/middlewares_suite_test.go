@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gzip_test
+package middlewares_test
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestGzip(t *testing.T) {
+func TestMiddlewares(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "gzip suite")
+	RunSpecs(t, "Middlewares Suite")
 }
