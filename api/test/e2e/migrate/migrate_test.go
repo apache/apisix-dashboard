@@ -272,6 +272,9 @@ var _ = Describe("Migrate", func() {
 		err := json.Unmarshal([]byte(resp.Body().Raw()), rsp)
 		Expect(err).Should(BeNil())
 		Expect(rsp.Code).Should(Equal(0))
+	})
+
+	It("Wait for APISIX re-sync", func() {
 		time.Sleep(5 * time.Second)
 	})
 
