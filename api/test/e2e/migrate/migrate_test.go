@@ -272,6 +272,7 @@ var _ = Describe("Migrate", func() {
 		err := json.Unmarshal([]byte(resp.Body().Raw()), rsp)
 		Expect(err).Should(BeNil())
 		Expect(rsp.Code).Should(Equal(0))
+		time.Sleep(5 * time.Second)
 	})
 
 	It("request hit route r1", func() {
