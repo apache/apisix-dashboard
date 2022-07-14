@@ -540,7 +540,7 @@ const Page: React.FC = () => {
       content={formatMessage({ id: 'page.route.list.description' })}
     >
       <ProTable<RouteModule.ResponseBody>
-        actionRef={ref}
+        ref={ref}
         rowKey="id"
         columns={columns}
         rowSelection={{
