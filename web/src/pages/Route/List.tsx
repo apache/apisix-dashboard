@@ -588,6 +588,7 @@ const Page: React.FC = () => {
           <ListToolbar />,
         ]}
         footer={() => <ListFooter />}
+        tableAlertRender={false}
         scroll={{ x: 1300 }}
       />
       <DebugDrawView
