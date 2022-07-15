@@ -61,6 +61,13 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
 
 export const remove = (rid: string) => request(`/routes/${rid}`, { method: 'DELETE' });
 
+export async function removeRoute(options) {
+  return request('/api/rule', {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}
+
 export const checkUniqueName = (name = '', exclude = '') =>
   request('/notexist/routes', {
     params: pickBy(
