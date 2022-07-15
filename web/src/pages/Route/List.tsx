@@ -543,10 +543,6 @@ const Page: React.FC = () => {
         ref={ref}
         rowKey="id"
         columns={columns}
-        rowSelection={{
-        selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-        defaultSelectedRowKeys: [1],
-        }}
         tableAlertRender={({ selectedRowKeys }) => (
           <Space size={24}>
             <span>
@@ -587,6 +583,7 @@ const Page: React.FC = () => {
           </Button>,
           <ListToolbar />,
         ]}
+        rowSelection={rowSelection}
         footer={() => <ListFooter />}
         scroll={{ x: 1300 }}
       />
