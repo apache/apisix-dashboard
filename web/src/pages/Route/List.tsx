@@ -16,7 +16,7 @@
  */
 import type { ReactNode } from 'react';
 import React, { useRef, useEffect, useState } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { PageHeaderWrapper, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import {
@@ -33,7 +33,7 @@ import {
   Dropdown,
   Tooltip,
 } from 'antd';
-import { history, useIntl } from 'umi';
+import { history, useIntl, FormattedMessage } from 'umi';
 import usePagination from '@/hooks/usePagination';
 import { PlusOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
@@ -78,6 +78,7 @@ const Page: React.FC = () => {
 
   const [labelList, setLabelList] = useState<LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [selectedRowsState, setSelectedRows] = useState([]);
   const [showImportDrawer, setShowImportDrawer] = useState(false);
   const [visible, setVisible] = useState(false);
   const [rawData, setRawData] = useState<Record<string, any>>({});
@@ -542,29 +543,33 @@ const Page: React.FC = () => {
         ref={ref}
         rowKey="id"
         columns={columns}
-        tableAlertRender={({ selectedRowKeys }) => (
-          <Space size={24}>
-            <span>
-              chosen {selectedRowKeys.length} items
-              <a style={{ marginLeft: 8 }} onClick={() => {selectedRowKeys([])}}>
-                {formatMessage({ id: 'page.route.unSelect' })}
-              </a>
-            </span>
-          </Space>
-        )}
-        tableAlertOptionRender={() => {
-          return (
-            <Space size={16}>
-              <Button
-                onClick={async () => {
-                await remove(selectedRowKeys);
-                selectedRowKeys([]);
-                actionRef.current?.reloadAndRest?.();
+        rowSelection={rowSelection}   
+        {selectedRowsState?.length > 0 && (
+          <FooterToolbar
+            extra={
+              <div>
+                <FormattedMessage id="pages.searchTable.chosen" defaultMessage="Chosen" />{' '}
+                <a
+                  style={{
+                    fontWeight: 600,
+                  }}
+                >
+                  {selectedRowsState.length}
+                </a>{' '}
+                <FormattedMessage id="pages.searchTable.item" defaultMessage="items" />
+                &nbsp;&nbsp;
+              </div>
+            }>
+            <Button
+              onClick={async () => {
+                await remove(record.id!);
+                setSelectedRows([]);
+                ref.current?.reloadAndRest?.();
               }}>
               {formatMessage({ id: 'page.route.batchDeletion' })}
-              </Button>
-            </Space>
-          );}}
+            </Button>
+          </FooterToolbar>
+        )}
         request={fetchList}
         pagination={{
           onChange: (page, pageSize?) => savePageList(page, pageSize),
@@ -582,7 +587,6 @@ const Page: React.FC = () => {
           </Button>,
           <ListToolbar />,
         ]}
-        rowSelection={rowSelection}
         footer={() => <ListFooter />}
         scroll={{ x: 1300 }}
       />
