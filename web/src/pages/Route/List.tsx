@@ -31,7 +31,6 @@ import {
   Modal,
   Menu,
   Dropdown,
-  Table,
   Tooltip,
 } from 'antd';
 import { history, useIntl } from 'umi';
