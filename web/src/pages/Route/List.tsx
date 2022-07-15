@@ -77,7 +77,7 @@ const Page: React.FC = () => {
   }
 
   const [labelList, setLabelList] = useState<LabelList>({});
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [selectedRowKeys] = useState<string[]>([]);
   const [selectedRowsState, setSelectedRows] = useState([]);
   const [showImportDrawer, setShowImportDrawer] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -90,14 +90,6 @@ const Page: React.FC = () => {
   useEffect(() => {
     fetchLabelList().then(setLabelList);
   }, []);
-
-  const rowSelection: any = {
-    selectedRowKeys,
-    onChange: (currentSelectKeys: string[]) => {
-      setSelectedRowKeys(currentSelectKeys);
-    },
-    preserveSelectedRowKeys: true,
-  };
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
     notification.success({
@@ -119,6 +111,25 @@ const Page: React.FC = () => {
       );
     });
   };
+  
+  const handleRemove = async (selectedRows) => {
+    const hide = message.loading('正在删除');
+    if (!selectedRows) return true;
+  
+    try {
+      await removeRoute({
+        key: selectedRows.map((row) => row.key),
+      });
+      hide();
+      message.success('Deleted successfully and will refresh soon');
+      return true;
+    } catch (error) {
+      hide();
+      message.error('Delete failed, please try again');
+      return false;
+    }
+  };
+
 
   const handleExport = (exportFileType: ExportFileType) => {
     exportRoutes(selectedRowKeys.join(',')).then((resp) => {
@@ -543,33 +554,11 @@ const Page: React.FC = () => {
         ref={ref}
         rowKey="id"
         columns={columns}
-        rowSelection={rowSelection}   
-        {selectedRowsState?.length > 0 && (
-          <FooterToolbar
-            extra={
-              <div>
-                <FormattedMessage id="page.route.chosen" defaultMessage="Chosen" />{' '}
-                <a
-                  style={{
-                    fontWeight: 600,
-                  }}
-                >
-                  {selectedRowsState.length}
-                </a>{' '}
-                <FormattedMessage id="page.route.item" defaultMessage="items" />
-                &nbsp;&nbsp;
-              </div>
-            }>
-            <Button
-              onClick={async () => {
-                await remove(record.id);
-                setSelectedRows([]);
-                ref.current?.reloadAndRest?.();
-              }}>
-              {formatMessage({ id: 'page.route.batchDeletion' })}
-            </Button>
-          </FooterToolbar>
-        )}
+        rowSelection={{
+          onChange: (_, selectedRows) => {
+            setSelectedRows(selectedRows);
+          },
+        }}
         request={fetchList}
         pagination={{
           onChange: (page, pageSize?) => savePageList(page, pageSize),
@@ -591,6 +580,34 @@ const Page: React.FC = () => {
         tableAlertRender={false}
         scroll={{ x: 1300 }}
       />
+      {selectedRowsState?.length > 0 && (
+        <FooterToolbar
+          extra={
+            <div>
+              <FormattedMessage id="page.route.chosen" defaultMessage="Chosen" />{' '}
+              <a
+                style={{
+                  fontWeight: 600,
+                }}
+              >
+                {selectedRowsState.length}
+              </a>{' '}
+              <FormattedMessage id="page.route.item" defaultMessage="items" />
+              &nbsp;&nbsp;
+            </div>
+          }
+        >
+          <Button
+            onClick={async () => {
+              await handleRemove(selectedRowsState);
+              setSelectedRows([]);
+              ref.current?.reloadAndRest?.();
+            }}
+          >
+            {formatMessage({ id: 'page.route.batchDeletion' })}
+          </Button>
+        </FooterToolbar>
+      )}
       <DebugDrawView
         visible={debugDrawVisible}
         onClose={() => {
