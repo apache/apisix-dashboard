@@ -548,7 +548,7 @@ const Page: React.FC = () => {
           <FooterToolbar
             extra={
               <div>
-                <FormattedMessage id="pages.searchTable.chosen" defaultMessage="Chosen" />{' '}
+                <FormattedMessage id="page.route.chosen" defaultMessage="Chosen" />{' '}
                 <a
                   style={{
                     fontWeight: 600,
@@ -556,7 +556,7 @@ const Page: React.FC = () => {
                 >
                   {selectedRowsState.length}
                 </a>{' '}
-                <FormattedMessage id="pages.searchTable.item" defaultMessage="items" />
+                <FormattedMessage id="page.route.item" defaultMessage="items" />
                 &nbsp;&nbsp;
               </div>
             }>
