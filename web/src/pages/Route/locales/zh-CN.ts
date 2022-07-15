@@ -53,6 +53,7 @@ export default {
   'page.route.editRoute': '编辑路由',
   'page.route.batchDeletion': '批量删除路由',
   'page.route.unSelect': '取消选择',
+  'page.route.item': '项',
 
   // button
   'page.route.button.returnList': '返回路由列表',
