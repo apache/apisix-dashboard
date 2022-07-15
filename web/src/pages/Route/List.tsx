@@ -562,7 +562,7 @@ const Page: React.FC = () => {
             }>
             <Button
               onClick={async () => {
-                await remove(record.id!);
+                await remove(record.id);
                 setSelectedRows([]);
                 ref.current?.reloadAndRest?.();
               }}>
