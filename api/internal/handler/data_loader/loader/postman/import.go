@@ -16,9 +16,14 @@
  */
 package postman
 
-func (o Loader) Import (input interface{}) (*loader.Datasets, error)
-{
+import (
+	"github.com/apisix/manager-api/internal/handler/data_loader/loader"
+)
+
+func (o Loader) Import (input interface{}) (*loader.DataSets, error){
 	if input == nil {
 		panic("input is nil")
 	}
+
+	return nil, nil
 }

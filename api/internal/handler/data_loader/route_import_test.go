@@ -61,5 +61,5 @@ func TestImport_openapi3_invalid_content(t *testing.T) {
 	ctx.SetInput(input)
 
 	_, err := h.Import(ctx)
-	assert.EqualError(t, err, "empty or invalid imported file: OpenAPI documentation does not contain any paths")
+	assert.EqualError(t, err, "empty or invalid imported file: loader/openapi3: OpenAPI documentation does not contain any paths")
 }
