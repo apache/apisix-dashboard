@@ -5,6 +5,7 @@ keywords:
 - APISIX Dashboard
 - Data Loader
 - OpenAPI
+- OAS
 description: This document contains information about the Apache APISIX Dashboard data loader framework.
 ---
 
@@ -33,6 +34,8 @@ The data loader is an abstraction of the data import and export functionality un
 
 Based on it, developers can easily implement the ability to export APISIX data entities to generate different data files, and parse the data files and convert them into APISIX data entities for import into APISIX.
 
+It also serves as a data connector between user defined data and APISIX data entities. Where users can import data into APISIX.
+
 ## Definition
 
 ```go
@@ -45,13 +48,14 @@ type Loader interface {
 }
 ```
 
-Implement the above functions to complete the data conversion between Raw data format and DataSets data set, APISIX Dashboard will use DataSets data format as the intermediate format for importing and exporting according to it.
+Implement the above functions to complete the data conversion between Raw data format and `DataSets` data set, APISIX Dashboard will use `DataSets` data format as the intermediate format for importing and exporting according to it.
 
-Developers can look at the code in [api/internal/handler/data_loader/loader/loader.go](https://github.com/apache/apisix-dashboard/blob/master/api/internal/handler/data_loader/loader/loader.go) for the definition of the DataSets structure and the Data Loader interface.
+Developers can look at the code in [api/internal/handler/data_loader/loader/loader.go](https://github.com/apache/apisix-dashboard/blob/master/api/internal/handler/data_loader/loader/loader.go) for the definition of the `DataSets` structure and the Data Loader interface.
 
 ## Supported data loader
 
 - [OpenAPI 3](data_loader/openapi3.md): Currently only data import is supported
+- [Postman Collection v2.1](data_loader/postman_collection_v2.1.md): Currently only data import is supported
 
 ## How to support other data loader
 
@@ -61,7 +65,7 @@ Extending the data loader is simple and requires some development in the backend
 
 Create a structure that implements the above interface, which contains two parts.
 
-- Import function: complete the parsing and conversion from raw format `[]byte` uploaded by the user to DataSets structure [api/internal/handler/data_loader/loader/openapi3/import.go](https://github.com/apache/apisix-dashboard/blob/master/api/internal/handler/data_loader/loader/openapi3/import.go)
+- Import function: complete the parsing and conversion from raw format `[]byte` uploaded by the user to DataSets structure, e.g. [api/internal/handler/data_loader/loader/openapi3/import.go](https://github.com/apache/apisix-dashboard/blob/master/api/internal/handler/data_loader/loader/openapi3/import.go)
 - Export function: complete the generation of raw format for DataSets structure data inputted from APISIX Dashboard
 
 Adds a new item to the data loader list of the import and export handler.
@@ -71,5 +75,5 @@ Adds a new item to the data loader list of the import and export handler.
 Adds the previously created data loader to the frontend selector. Refer to [this](https://github.com/apache/apisix-dashboard/blob/master/web/src/pages/Route/components/DataLoader/Import.tsx#L167-L172) for more details.
 
 :::note
-When you implement a data loader that requires partial input of custom parameters, you can create a form for it to enter data. Refer to [this](https://github.com/apache/apisix-dashboard/blob/master/web/src/pages/Route/components/DataLoader/loader/OpenAPI3.tsx) for more details.
+When you implement a data loader that requires partial input of custom parameters (e.g. Merge HTTP Methods), you can create a form for it to enter data. Refer to [this](https://github.com/apache/apisix-dashboard/blob/master/web/src/pages/Route/components/DataLoader/loader/OpenAPI3.tsx) for more details.
 :::
