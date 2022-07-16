@@ -163,6 +163,11 @@ const DataLoaderImport: React.FC<Props> = (props) => {
                 ]}
                 initialValue={importType}
               >
+	        <Select onChange={(value: ImportType) => setImportType(value)}>
+		<Select.Option value="postman">
+                    {formatMessage({ id: 'page.route.data_loader.types.postman' })}
+                </Select.Option>
+		</Select>
                 <Select onChange={(value: ImportType) => setImportType(value)}>
                   <Select.Option value="openapi3">
                     {formatMessage({ id: 'page.route.data_loader.types.openapi3' })}

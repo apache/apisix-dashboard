@@ -212,4 +212,5 @@ export default {
   'page.route.data_loader.tips.click_upload': 'Click to Upload',
   'page.route.data_loader.tips.openapi3_merge_method':
     'Whether to merge multiple HTTP methods in the OpenAPI path into a single route. When you have multiple HTTP methods in your path with different details configuration (e.g. securitySchema), you can turn off this option to generate them into multiple routes.',
+  'page.route.data_loader.types.postman': 'Postman Collection v2.1',
 };
