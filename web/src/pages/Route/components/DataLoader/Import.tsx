@@ -73,8 +73,9 @@ const Option: React.FC<{
     case 'openapi_legacy':
       return <></>;
     case 'openapi3':
-    default:
       return <OpenAPI3 />;
+    default:
+      return <></>;
   }
 };
 
