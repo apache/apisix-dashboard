@@ -111,7 +111,6 @@ const Page: React.FC = () => {
       );
     });
   };
-  
   const handleRemove = async (selectedRows) => {
     const hide = message.loading('正在删除');
     if (!selectedRows) return true;
