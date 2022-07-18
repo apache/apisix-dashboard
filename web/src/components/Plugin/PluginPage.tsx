@@ -212,6 +212,7 @@ const PluginPage: React.FC<Props> = ({
                     <Button
                       type={item.state ? 'primary' : 'default'}
                       danger={item.state === PluginState.enable}
+                      data-cy-plugin-state={item.state}
                       onClick={() => {
                         setName(item.name);
                       }}

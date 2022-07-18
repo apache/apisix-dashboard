@@ -19,7 +19,7 @@ declare namespace PluginComponent {
 
   type Schema = '' | 'route' | 'consumer';
 
-  interface Meta {
+  type Meta = {
     name: string;
     priority: number;
     schema: Record<string, any>;
@@ -28,7 +28,7 @@ declare namespace PluginComponent {
     version: number;
     consumer_schema?: Record<string, any>;
     hidden?: boolean;
-  }
+  };
 
   type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
 
