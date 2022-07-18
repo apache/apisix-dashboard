@@ -212,11 +212,12 @@ const PluginPage: React.FC<Props> = ({
                     <Button
                       type={item.state ? 'primary' : 'default'}
                       danger={item.state === PluginState.enable}
+                      data-cy-plugin-state={item.state}
                       onClick={() => {
                         setName(item.name);
                       }}
                     >
-                      {item.state === PluginState.disable
+                      {item.state === PluginState.enable
                         ? formatMessage({ id: 'component.plugin.disable' })
                         : formatMessage({ id: 'component.plugin.enable' })}
                     </Button>,
