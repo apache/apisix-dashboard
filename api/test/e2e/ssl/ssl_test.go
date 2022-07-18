@@ -19,7 +19,6 @@ package ssl_test
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -192,7 +191,7 @@ var _ = Describe("SSL", func() {
 			}
 
 			_, err := http.Get("https://www.test2.com:9443")
-			Expect(fmt.Sprintf("%s", err)).Should(Equal(`Get "https://www.test2.com:9443": remote error: tls: internal error`))
+			Expect(err.Error()).Should(Equal(`Get "https://www.test2.com:9443": remote error: tls: internal error`))
 			return nil
 		}),
 		Entry("Create SSL", func() *base.HttpTestCase {
