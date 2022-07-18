@@ -24,6 +24,7 @@ import (
 	"net"
 	"net/http"
 	"strings"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -172,6 +173,7 @@ var _ = Describe("SSL", func() {
 			Path:         "/apisix/admin/ssl/1,2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        time.Second,
 		}),
 	)
 
