@@ -26,7 +26,7 @@ const cached: {
   list: [],
 };
 
-export const fetchList = async ({ enablePluginList = {} }) => {
+export const fetchList = async ({ enablePluginList = {} } = {}) => {
   let res: PluginItem[];
   if (cached.list.length) {
     res = cached.list;

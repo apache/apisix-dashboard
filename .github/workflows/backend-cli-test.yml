@@ -34,7 +34,7 @@ jobs:
 
       - name: cache etcd
         id: cache-etcd
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ${{ github.workspace }}/api/etcd-v${{ matrix.etcd }}-linux-amd64

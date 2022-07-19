@@ -74,11 +74,14 @@ context('Delete Plugin List with the Drawer', () => {
 
     cy.contains('button', 'Submit').click();
 
-    cy.log('**sort by state**').wait(timeout);
+    cy.log('**sort by state**').wait(1000);
     cy.get(selector.authPluginCategory).within(() => {
-      cy.get(pluginStateSelector).then((button$) => {
+      cy.get(selector.pluginStateSelector).then((button$) => {
         const justState = [...button$].map(
-          (item) => item.attributes[pluginStateSelector.slice(1, str.length - 1)].value,
+          (item) =>
+            item.attributes[
+              selector.pluginStateSelector.slice(1, selector.pluginStateSelector.length - 1)
+            ].value,
         );
         const sortedState = [...justState].sort((a, b) => b - a);
         cy.log(justState);
@@ -87,7 +90,9 @@ context('Delete Plugin List with the Drawer', () => {
       });
     });
 
-    cy.get(selector.drawer).should('not.exist');
+    cy.get(selector.drawer, {
+      timeout,
+    }).should('not.exist');
   });
 
   it('should verify openid-connect and authz-keycloak plugin need to configure', function () {
