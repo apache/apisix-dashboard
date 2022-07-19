@@ -204,12 +204,7 @@ var _ = Describe("SSL", func() {
 				return dialer.DialContext(ctx, network, addr)
 			}
 
-			resp, err := http.Get("https://www.test2.com:9443")
-			if resp != nil {
-				d, _ := ioutil.ReadAll(resp.Body)
-				fmt.Println(string(d))
-			}
-			fmt.Println(err)
+			_, err := http.Get("https://www.test2.com:9443")
 			Expect(fmt.Sprintf("%v", err)).Should(Equal(`Get "https://www.test2.com:9443": remote error: tls: internal error`))
 			return nil
 		}),
