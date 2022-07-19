@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ssl
+package ssl_test
 
 import (
 	"testing"
@@ -33,5 +33,6 @@ func TestSSL(t *testing.T) {
 
 var _ = ginkgo.AfterSuite(func() {
 	base.CleanResource("ssl")
+	base.CleanResource("routes")
 	time.Sleep(base.SleepTime)
 })
