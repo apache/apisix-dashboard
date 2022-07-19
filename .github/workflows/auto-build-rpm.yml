@@ -12,7 +12,7 @@ on:
 
 jobs:
   auto_build_rpm:
-    name: auto build rpm package
+    name: Auto Build RPM package
     runs-on: ubuntu-latest
 
     services:
@@ -29,9 +29,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - uses: docker/setup-buildx-action@v1
+      - uses: docker/setup-buildx-action@v2
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-apisixdashboard-${{ github.sha }}
