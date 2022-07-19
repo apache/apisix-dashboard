@@ -139,10 +139,10 @@ var _ = Describe("Stream Route", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"server_port":10091`,
 		}),
-		Entry("Update SSL (Partial)", base.HttpTestCase{
+		Entry("Update stream route (Partial)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPatch,
-			Path:   "/apisix/admin/ssl/2/upstream",
+			Path:   "/apisix/admin/stream_routes/2/upstream",
 			Body: `{
 				"nodes": {
 					"` + base.UpstreamIp + `:1981": 1
@@ -179,4 +179,9 @@ var _ = Describe("Stream Route", func() {
 			ExpectStatus: http.StatusBadRequest,
 		}),
 	)
+
+	It("Clean all resources", func() {
+		base.CleanResource("stream_routes")
+		base.CleanResource("ssl")
+	})
 })
