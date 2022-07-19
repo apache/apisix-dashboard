@@ -47,7 +47,7 @@ var _ = Describe("Stream Route", func() {
 		}),
 		Entry("Create stream route #1", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
-			Method: http.MethodPost,
+			Method: http.MethodPut,
 			Path:   "/apisix/admin/stream_routes/1",
 			Body: `{
 				"remote_addr": "127.0.0.1",
@@ -138,20 +138,6 @@ var _ = Describe("Stream Route", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"server_port":10091`,
-		}),
-		Entry("Update stream route (Partial)", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPatch,
-			Path:   "/apisix/admin/stream_routes/2/upstream",
-			Body: `{
-				"nodes": {
-					"` + base.UpstreamIp + `:1981": 1
-				},
-				"type": "roundrobin"
-			}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   `:1981":1`,
 		}),
 		Entry("Batch Delete stream route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),

@@ -28,7 +28,7 @@ import (
 
 func TestStreamRoute(t *testing.T) {
 	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "stream route suite")
+	ginkgo.RunSpecs(t, "Stream Route Suite")
 }
 
 var _ = ginkgo.AfterSuite(func() {
