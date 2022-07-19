@@ -167,13 +167,12 @@ var _ = Describe("SSL", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"version":"v1"`,
 		}),
-		Entry("Delete SSL", base.HttpTestCase{
+		Entry("Batch Delete SSL", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/ssl/1,2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        time.Second,
 		}),
 	)
 
@@ -183,6 +182,18 @@ var _ = Describe("SSL", func() {
 				base.RunTestCase(*c)
 			}
 		},
+		Entry("Ensure SSL cleaned", func() *base.HttpTestCase {
+			base.CleanResource("ssl")
+			time.Sleep(time.Second)
+			return &base.HttpTestCase{
+				Object:       base.ManagerApiExpect(),
+				Method:       http.MethodGet,
+				Path:         "/apisix/admin/ssl",
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+				ExpectBody:   `"total_size":0`,
+			}
+		}),
 		Entry("Request HTTPS (without certificate)", func() *base.HttpTestCase {
 			http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 			http.DefaultTransport.(*http.Transport).DialContext = func(ctx context.Context, network, addr string) (net.Conn, error) {
@@ -193,7 +204,12 @@ var _ = Describe("SSL", func() {
 				return dialer.DialContext(ctx, network, addr)
 			}
 
-			_, err := http.Get("https://www.test2.com:9443")
+			resp, err := http.Get("https://www.test2.com:9443")
+			if resp != nil {
+				d, _ := ioutil.ReadAll(resp.Body)
+				fmt.Println(string(d))
+			}
+			fmt.Println(err)
 			Expect(fmt.Sprintf("%v", err)).Should(Equal(`Get "https://www.test2.com:9443": remote error: tls: internal error`))
 			return nil
 		}),
@@ -203,9 +219,9 @@ var _ = Describe("SSL", func() {
 				Method: http.MethodPut,
 				Path:   "/apisix/admin/ssl/1",
 				Body: `{
-				"cert": "` + testCert + `",
-				"key": "` + testKey + `"
-			}`,
+					"cert": "` + testCert + `",
+					"key": "` + testKey + `"
+				}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
 				ExpectBody:   `"cert":"-----BEGIN CERTIFICATE-----`,
@@ -217,16 +233,16 @@ var _ = Describe("SSL", func() {
 				Method: http.MethodPut,
 				Path:   "/apisix/admin/routes/r1",
 				Body: `{
-				"name": "route1",
-				"uri": "/hello_",
-				"hosts": ["test2.com", "*.test2.com"],
-				"upstream": {
-					"nodes": {
-						"` + base.UpstreamIp + `:1980": 1
-					},
-					"type": "roundrobin"
-				}
-			}`,
+					"name": "route1",
+					"uri": "/hello_",
+					"hosts": ["test2.com", "*.test2.com"],
+					"upstream": {
+						"nodes": {
+							"` + base.UpstreamIp + `:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
 				ExpectBody:   []string{`"id":"r1"`, `"name":"route1"`, `"uri":"/hello_"`},
