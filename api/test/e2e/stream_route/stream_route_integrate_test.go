@@ -14,7 +14,7 @@ import (
 	"github.com/apache/apisix-dashboard/api/test/e2e/base"
 )
 
-var _ = Describe("StreamRouteIntegrate", func() {
+var _ = Describe("Stream Route", func() {
 	DescribeTable("Test stream route Integrate (HTTP upstream)",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
