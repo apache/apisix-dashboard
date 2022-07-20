@@ -174,10 +174,12 @@ stop_dashboard() {
   recover_conf
 
   if [[ $KERNEL = "Darwin" ]]; then
-    sed -i "" 's/127.0.0.1:2379/100.0.0.1:2379/' ${CONF_FILE}
+    sed -i "" 's/127.0.0.1:2379/0.0.0.0:2379/' ${CONF_FILE}
   else
-    sed -i 's/127.0.0.1:2379/100.0.0.1:2379/' ${CONF_FILE}
+    sed -i 's/127.0.0.1:2379/0.0.0.0:2379/' ${CONF_FILE}
   fi
+
+  cat ${CONF_FILE}
 
   start_dashboard 6
 
