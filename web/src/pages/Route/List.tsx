@@ -16,7 +16,7 @@
  */
 import type { ReactNode } from 'react';
 import React, { useRef, useEffect, useState } from 'react';
-import { PageHeaderWrapper, FooterToolbar } from '@ant-design/pro-layout';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import {
@@ -31,9 +31,10 @@ import {
   Modal,
   Menu,
   Dropdown,
+  Table,
   Tooltip,
 } from 'antd';
-import { history, useIntl, FormattedMessage } from 'umi';
+import { history, useIntl } from 'umi';
 import usePagination from '@/hooks/usePagination';
 import { PlusOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
@@ -77,7 +78,7 @@ const Page: React.FC = () => {
   }
 
   const [labelList, setLabelList] = useState<LabelList>({});
-  const [selectedRowKeys] = useState<string[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [selectedRowsState, setSelectedRows] = useState([]);
   const [showImportDrawer, setShowImportDrawer] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -90,6 +91,16 @@ const Page: React.FC = () => {
   useEffect(() => {
     fetchLabelList().then(setLabelList);
   }, []);
+
+  const rowSelection: any = {
+    selectedRowKeys,
+    onChange: (currentSelectKeys: string[]) => {
+      setSelectedRowKeys(currentSelectKeys);
+    },
+    preserveSelectedRowKeys: true,
+    selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+    defaultSelectedRowKeys: [1],
+  };
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
     notification.success({
@@ -111,23 +122,6 @@ const Page: React.FC = () => {
       );
     });
   };
-  const handleRemove = async (selectedRows) => {
-    const hide = message.loading('正在删除');
-    if (!selectedRows) return true;
-    try {
-      await removeRoute({
-        key: selectedRows.map((row) => row.key),
-      });
-      hide();
-      message.success('Deleted successfully and will refresh soon');
-      return true;
-    } catch (error) {
-      hide();
-      message.error('Delete failed, please try again');
-      return false;
-    }
-  };
-
 
   const handleExport = (exportFileType: ExportFileType) => {
     exportRoutes(selectedRowKeys.join(',')).then((resp) => {
@@ -344,7 +338,7 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'page.route.path' }),
       dataIndex: 'uri',
       width: 224,
-      render: (_, record) => {
+      render: (_: any, record: { uris: any; uri: any; }) => {
         const list = record.uris || (record.uri && [record.uri]) || [];
 
         return list.map((item) => (
@@ -375,7 +369,7 @@ const Page: React.FC = () => {
             </Tag>
           ));
       },
-      renderFormItem: (_, { type }) => {
+      renderFormItem: (_: any, { type }: any) => {
         if (type === 'form') {
           return null;
         }
@@ -552,10 +546,30 @@ const Page: React.FC = () => {
         ref={ref}
         rowKey="id"
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
+        rowSelection={rowSelection}
+        tableAlertRender={({ selectedRowKeys, onCleanSelected  }) => (
+          <Space size={24}>
+            <span>
+              chosen {selectedRowKeys.length} items
+              <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
+                {formatMessage({ id: 'page.route.unSelect' })}
+              </a>
+            </span>
+          </Space>
+        )}
+        tableAlertOptionRender={() => {
+          return (
+            <Space size={16}>
+               <Button
+                onClick={async () => {
+                await remove(selectedRowKeys);
+                setSelectedRows([]);
+                ref.current?.reloadAndRest?.();
+              }}>
+              {formatMessage({ id: 'page.route.batchDeletion' })}
+               </Button>
+            </Space>
+          );
         }}
         request={fetchList}
         pagination={{
@@ -575,37 +589,8 @@ const Page: React.FC = () => {
           <ListToolbar />,
         ]}
         footer={() => <ListFooter />}
-        tableAlertRender={false}
         scroll={{ x: 1300 }}
       />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              <FormattedMessage id="page.route.chosen" defaultMessage="Chosen" />{' '}
-              <a
-                style={{
-                  fontWeight: 600,
-                }}
-              >
-                {selectedRowsState.length}
-              </a>{' '}
-              <FormattedMessage id="page.route.item" defaultMessage="items" />
-              &nbsp;&nbsp;
-            </div>
-          }
-        >
-          <Button
-            onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              ref.current?.reloadAndRest?.();
-            }}
-          >
-            {formatMessage({ id: 'page.route.batchDeletion' })}
-          </Button>
-        </FooterToolbar>
-      )}
       <DebugDrawView
         visible={debugDrawVisible}
         onClose={() => {
