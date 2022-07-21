@@ -551,23 +551,20 @@ const Page: React.FC = () => {
           <Space size={24}>
             <span>
               chosen {selectedRowKeys.length} items
-              <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
-                {formatMessage({ id: 'page.route.unSelect' })}
-              </a>
             </span>
           </Space>
         )}
         tableAlertOptionRender={() => {
           return (
             <Space size={16}>
-               <Button
-                onClick={async () => {
-                await remove(selectedRowKeys);
-                setSelectedRows([]);
-                ref.current?.reloadAndRest?.();
-              }}>
-              {formatMessage({ id: 'page.route.batchDeletion' })}
-               </Button>
+              <Button
+               onClick={async () => {
+               await remove(selectedRowKeys);
+               setSelectedRows([]);
+               ref.current?.reloadAndRest?.();
+             }}>
+             {formatMessage({ id: 'page.route.batchDeletion' })}
+             </Button>
             </Space>
           );
         }}
