@@ -34,7 +34,6 @@ import (
 	"github.com/apache/apisix-dashboard/api/internal/handler/global_rule"
 	"github.com/apache/apisix-dashboard/api/internal/handler/healthz"
 	"github.com/apache/apisix-dashboard/api/internal/handler/label"
-	"github.com/apache/apisix-dashboard/api/internal/handler/migrate"
 	"github.com/apache/apisix-dashboard/api/internal/handler/plugin_config"
 	"github.com/apache/apisix-dashboard/api/internal/handler/proto"
 	"github.com/apache/apisix-dashboard/api/internal/handler/route"
@@ -84,7 +83,6 @@ func SetUpRouter() *gin.Engine {
 		data_loader.NewImportHandler,
 		tool.NewHandler,
 		plugin_config.NewHandler,
-		migrate.NewHandler,
 		proto.NewHandler,
 		stream_route.NewHandler,
 		system_config.NewHandler,
