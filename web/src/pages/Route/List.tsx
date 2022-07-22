@@ -79,7 +79,6 @@ const Page: React.FC = () => {
 
   const [labelList, setLabelList] = useState<LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [setSelectedRows] = useState([]);
   const [showImportDrawer, setShowImportDrawer] = useState(false);
   const [visible, setVisible] = useState(false);
   const [rawData, setRawData] = useState<Record<string, any>>({});
@@ -560,7 +559,6 @@ const Page: React.FC = () => {
               <Button
                onClick={async () => {
                await remove(selectedRowKeys);
-               setSelectedRows([]);
                ref.current?.reloadAndRest?.();
              }}>
              {formatMessage({ id: 'page.route.batchDeletion' })}
