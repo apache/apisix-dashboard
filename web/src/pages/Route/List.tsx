@@ -547,7 +547,7 @@ const Page: React.FC = () => {
         columns={columns}
         rowSelection={rowSelection}
         selectedRowKeys={selectedRowKeys}
-        tableAlertRender={({ selectedRowKeys }) => (
+        tableAlertRender={() => (
           <Space size={24}>
             <span>
             {formatMessage({ id: 'page.route.chosen' })} {selectedRowKeys.length} {formatMessage({ id: 'page.route.item' })}
