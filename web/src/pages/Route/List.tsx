@@ -553,7 +553,7 @@ const Page: React.FC = () => {
             </span>
           </Space>
         )}
-        tableAlertOptionRender={() => {
+        tableAlertOptionRender={({ selectedRowKeys }) => {
           return (
             <Space size={16}>
               <Button
