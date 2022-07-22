@@ -338,7 +338,7 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'page.route.path' }),
       dataIndex: 'uri',
       width: 224,
-      render: (_: any, record: { uris: any; uri: any; }) => {
+      render: (_, record) => {
         const list = record.uris || (record.uri && [record.uri]) || [];
 
         return list.map((item) => (
