@@ -546,6 +546,7 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         rowSelection={rowSelection}
+        selectedRowKeys={selectedRowKeys}
         tableAlertRender={({ selectedRowKeys }) => (
           <Space size={24}>
             <span>
