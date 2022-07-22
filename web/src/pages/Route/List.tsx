@@ -79,7 +79,7 @@ const Page: React.FC = () => {
 
   const [labelList, setLabelList] = useState<LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [selectedRowsState, setSelectedRows] = useState([]);
+  const [setSelectedRows] = useState([]);
   const [showImportDrawer, setShowImportDrawer] = useState(false);
   const [visible, setVisible] = useState(false);
   const [rawData, setRawData] = useState<Record<string, any>>({});
@@ -547,7 +547,7 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         rowSelection={rowSelection}
-        tableAlertRender={({ selectedRowKeys, onCleanSelected  }) => (
+        tableAlertRender={({ selectedRowKeys }) => (
           <Space size={24}>
             <span>
               chosen {selectedRowKeys.length} items
