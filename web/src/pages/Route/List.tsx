@@ -97,7 +97,7 @@ const Page: React.FC = () => {
       setSelectedRowKeys(currentSelectKeys);
     },
     preserveSelectedRowKeys: true,
-    selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+    selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT, Table.SELECTION_NONE],
     defaultSelectedRowKeys: [1],
   };
 
