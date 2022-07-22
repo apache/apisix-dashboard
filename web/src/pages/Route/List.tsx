@@ -542,11 +542,10 @@ const Page: React.FC = () => {
       content={formatMessage({ id: 'page.route.list.description' })}
     >
       <ProTable<RouteModule.ResponseBody>
-        ref={ref}
+        actionRef={ref}
         rowKey="id"
         columns={columns}
         rowSelection={rowSelection}
-        selectedRowKeys={selectedRowKeys}
         tableAlertRender={() => (
           <Space size={24}>
             <span>
