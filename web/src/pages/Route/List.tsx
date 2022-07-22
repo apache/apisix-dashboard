@@ -369,7 +369,7 @@ const Page: React.FC = () => {
             </Tag>
           ));
       },
-      renderFormItem: (_: any, { type }: any) => {
+      renderFormItem: (_, { type }) => {
         if (type === 'form') {
           return null;
         }
