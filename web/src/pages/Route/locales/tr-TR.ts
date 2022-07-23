@@ -214,4 +214,5 @@ export default {
   'page.route.data_loader.tips.click_upload': 'Yüklemek için tıkla',
   'page.route.data_loader.tips.openapi3_merge_method':
     'OpenAPI routelarda birden çok HTTP yöntemi tek bir rotada birleştirilir. Routelarda farklı yapılandırmalara sahip birden fazla HTTP yöntemi olduğunda (ör. securitySchema) ve bunları birden çok rotada oluşturmak için bu seçeneği kapatabilirsiniz. ',
+   'page.route.data_loader.types.postman': 'Postman Collection v2.1',
 };

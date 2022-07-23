@@ -206,4 +206,5 @@ export default {
   'page.route.data_loader.tips.click_upload': '点击上传',
   'page.route.data_loader.tips.openapi3_merge_method':
     '是否将 OpenAPI 路径中的多个 HTTP 方法合并为单一路由。当你的路径中多个 HTTP 方法有不同的细节配置（如 securitySchema），你可以关闭这个选项，将为不同的 HTTP 方法生成单独的路由。',
+  'page.route.data_loader.types.postman': 'Postman Collection v2.1',
 };

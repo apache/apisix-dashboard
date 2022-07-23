@@ -203,6 +203,7 @@ export default {
   'page.route.data_loader.import_panel': 'Import data',
   'page.route.data_loader.types.openapi3': 'OpenAPI 3',
   'page.route.data_loader.types.openapi_legacy': 'OpenAPI 3 Legacy',
+  'page.route.data_loader.types.postman': 'Postman Collection v2.1',
   'page.route.data_loader.labels.loader_type': 'Data Loader Type',
   'page.route.data_loader.labels.task_name': 'Task Name',
   'page.route.data_loader.labels.upload': 'Upload',
