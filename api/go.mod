@@ -44,4 +44,5 @@ require (
 	golang.org/x/sys v0.0.0-20210514084401-e8d321eab015 // indirect
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
 	sigs.k8s.io/yaml v1.2.0 // indirect
+        github.com/rbretecher/go-postman-collection v0.8.0
 )
