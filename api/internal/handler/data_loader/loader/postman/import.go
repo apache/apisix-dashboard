@@ -96,6 +96,11 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 		data.Upstreams = append(data.Upstreams, upstream)
 	}
 
+	for i, v := range s.Items {
+		fmt.Printf("%v\n", i)
+		fmt.Printf("%v", v)
+	}
+
 
 	return data, nil
 }
