@@ -81,7 +81,6 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 
 	// Create upstream when servers field not empty
 	if len(s.Items) > 0 {
-		fmt.Println("Items greater than 0")
 		var upstream entity.Upstream
 		upstream = entity.Upstream{
 			BaseInfo: entity.BaseInfo{ID: globalUpstreamID},
@@ -97,8 +96,11 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 	}
 
 	for i, v := range s.Items {
-		fmt.Printf("%v\n", i)
-		fmt.Printf("%v", v)
+		//fmt.Printf("%#v\n", i)
+		_ = i
+		fmt.Printf("%#v", v)
+		// replace parameter in uri to wildcard
+		// realUri := regURIVar.ReplaceAllString(i)
 	}
 
 
