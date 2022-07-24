@@ -36,6 +36,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	loader "github.com/apisix/manager-api/internal/handler/data_loader/loader"
 	"github.com/apisix/manager-api/internal/handler/data_loader/loader/openapi3"
+	"github.com/apisix/manager-api/internal/handler/data_loader/loader/postman"
 )
 
 type ImportHandler struct {
@@ -88,6 +89,7 @@ type ImportInput struct {
 
 const (
 	LoaderTypeOpenAPI3 LoaderType = "openapi3"
+	LoaderTypePostman LoaderType="postman"
 )
 
 func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
@@ -108,6 +110,11 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 
 	var l loader.Loader
 	switch LoaderType(input.Type) {
+	case LoaderTypePostman:
+		l = &postman.Loader{
+			TaskName: input.TaskName,
+		}
+		break
 	case LoaderTypeOpenAPI3:
 		l = &openapi3.Loader{
 			MergeMethod: input.MergeMethod == "true",
