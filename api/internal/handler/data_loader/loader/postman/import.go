@@ -95,15 +95,18 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 		data.Upstreams = append(data.Upstreams, upstream)
 	}
 
-	for i, v := range s.Items {
-		//fmt.Printf("%#v\n", i)
-		_ = i
-		fmt.Printf("%#v", v)
-		// replace parameter in uri to wildcard
-		// realUri := regURIVar.ReplaceAllString(i)
+	// Get all route items
+	routes := []*postman.Item
+	
+	item := *postman.Item
+	for getItems(s) != nil {
+		getItems(s)
 	}
-
-
+	
 	return data, nil
+}
+
+func getItems(i postman.Items) (i postman.Items) {
+	return i.Items
 }
 
