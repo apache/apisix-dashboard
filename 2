@@ -17,7 +17,6 @@
 package postman
 
 import (
-	"github.com/apisix/manager-api/internal/core/entity"
 	"fmt"
 	"bytes"
 	"reflect"
@@ -75,25 +74,12 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 
 		// global uri prefix
 		globalPath = ""
-		_ = globalPath
 
 	)
 
 	// Create upstream when servers field not empty
 	if len(s.Items) > 0 {
 		fmt.Println("Items greater than 0")
-		var upstream entity.Upstream
-		upstream = entity.Upstream{
-			BaseInfo: entity.BaseInfo{ID: globalUpstreamID},
-			UpstreamDef: entity.UpstreamDef{
-				Name: globalUpstreamID,
-				Type: "roundrobin",
-				Nodes: map[string]float64{
-					"0.0.0.0": 1,
-				},
-			},
-		}
-		data.Upstreams = append(data.Upstreams, upstream)
 	}
 
 
