@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"bytes"
 	"reflect"
+	"time"
 	"github.com/apisix/manager-api/internal/handler/data_loader/loader"
 
 	postman "github.com/rbretecher/go-postman-collection"
@@ -50,11 +51,27 @@ func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
                 return nil, err
         }
 
-	fmt.Println("%v+n", postman)
+	if o.TaskName == "" {
+		o.TaskName = "postman_" + time.Now().Format("20060102150405")
+	}
 
-	data := &loader.DataSets{}
+	data, err := o.convertToEntities(postman)
+	if err != nil {
+		return nil, err
+	}
+
+
 	return data, nil
 }
 
+func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, error) {
+	var (
+		// temporarily save the parsed data
+		data = &loader.DataSets{}
+	)
 
+	fmt.Printf("%#v\n", s)
+
+	return data, nil
+}
 

@@ -96,10 +96,6 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ImportInput)
 
 	// input file content check
-	suffix := path.Ext(input.FileName)
-	if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
-		return nil, errors.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
-	}
 	contentLen := bytes.Count(input.FileContent, nil) - 1
 	if contentLen <= 0 {
 		return nil, errors.New("uploaded file is empty")
@@ -111,11 +107,19 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	var l loader.Loader
 	switch LoaderType(input.Type) {
 	case LoaderTypePostman:
+		suffix := path.Ext(input.FileName)
+		if suffix != ".postman_collection" {
+			return nil, errors.Errorf("required file type is .postman_collection: %s", suffix)
+		}
 		l = &postman.Loader{
 			TaskName: input.TaskName,
 		}
 		break
 	case LoaderTypeOpenAPI3:
+		suffix := path.Ext(input.FileName)
+		if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
+			return nil, errors.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
+		}
 		l = &openapi3.Loader{
 			MergeMethod: input.MergeMethod == "true",
 			TaskName:    input.TaskName,
