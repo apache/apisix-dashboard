@@ -141,20 +141,7 @@ type Security struct {
 	ContentSecurityPolicy string `mapstructure:"content_security_policy"`
 }
 
-// TODO: we should no longer use init() function after remove all handler's integration tests
-// ENV=test is for integration tests only, other ENV should call "InitConf" explicitly
-func init() {
-	if env := os.Getenv("ENV"); env == EnvTEST {
-		InitConf()
-	}
-}
-
 func InitConf() {
-	//go test
-	if workDir := os.Getenv("APISIX_API_WORKDIR"); workDir != "" {
-		WorkDir = workDir
-	}
-
 	setupConfig()
 	setupEnv()
 	initSchema()
