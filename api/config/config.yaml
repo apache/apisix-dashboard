@@ -23,16 +23,13 @@ server:
   #   cert_file: "/tmp/cert/example.crt"  # The path of your TLS certificate.
   #   key_file: "/tmp/cert/example.key"   # The path of your TLS key.
 
-etcd:
-  endpoints:              # supports defining multiple etcd host addresses for an etcd cluster
-    - 127.0.0.1:2379
-  # username: "root"      # ignore etcd username if not enable etcd auth
-  # password: "123456"    # ignore etcd password if not enable etcd auth
-  # prefix: /apisix       # apisix config's prefix in etcd, /apisix by default
-  mtls:
-    key_file: ""          # Path of your self-signed client side key
-    cert_file: ""         # Path of your self-signed client side cert
-    ca_file: ""           # Path of your self-signed ca cert, the CA is used to sign callers' certificates
+data_source:                                      # The data source type of APISIX Dashboard.
+                                                 # It is an array that allows to contain multiple data sources, but currently only the first one is used.
+- name: default                                  # The name of data source.
+  type: apisix                                   # The type of data source, it now only supports "apisix".
+  apisix:                                        # When the data source type is "apisix", configure the following parameters.
+    address: http://127.0.0.1:9080/apisix/admin  # The endpoint of APISIX Admin API.
+    key: edd1c9f034335f136f87ad84b625c8f1        # The admin key of Admin API, It needs to have the "admin" role to support data writes.
 
 security:
   allow_list:             # If we don't set any IP list, then localhost IP access is allowed by default.
@@ -67,50 +64,3 @@ authentication:
       password: admin
     - username: user
       password: user
-
-plugins:                          # plugin list (sorted in alphabetical order)
-  - api-breaker
-  - authz-keycloak
-  - basic-auth
-  - batch-requests
-  - consumer-restriction
-  - cors
-  # - dubbo-proxy
-  - echo
-  # - error-log-logger
-  # - example-plugin
-  - fault-injection
-  - grpc-transcode
-  - hmac-auth
-  - http-logger
-  - ip-restriction
-  - jwt-auth
-  - kafka-logger
-  - key-auth
-  - limit-conn
-  - limit-count
-  - limit-req
-  # - log-rotate
-  # - node-status
-  - openid-connect
-  - prometheus
-  - proxy-cache
-  - proxy-mirror
-  - proxy-rewrite
-  - redirect
-  - referer-restriction
-  - request-id
-  - request-validation
-  - response-rewrite
-  - serverless-post-function
-  - serverless-pre-function
-  # - skywalking
-  - sls-logger
-  - syslog
-  - tcp-logger
-  - udp-logger
-  - uri-blocker
-  - wolf-rbac
-  - zipkin
-  - server-info
-  - traffic-split
