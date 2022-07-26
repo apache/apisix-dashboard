@@ -97,17 +97,20 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 
 	// Get all route items
 	var result []*postman.Items
-	getItems(s.Items, result)
+	getItems(s.Items, &result)
+
+	fmt.Printf("%#v", result[0])
 
 	return data, nil
 }
 
-func getItems(i []*postman.Items, result []*postman.Items) {
+func getItems(i []*postman.Items, result *[]*postman.Items) {
 	for _,v := range i {
 		if v.Items != nil {
 			getItems(v.Items, result)
 		} else {
-			result = append(result, v)
+			*result = append(*result, v)
+
 		}
 	}
 }
