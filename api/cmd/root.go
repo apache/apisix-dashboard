@@ -21,11 +21,17 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
 	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/core/server"
 	"github.com/apache/apisix-dashboard/api/internal/log"
+)
+
+var (
+	configFile = "config/config.yaml"
 )
 
 func NewRootCommand() *cobra.Command {
@@ -33,7 +39,11 @@ func NewRootCommand() *cobra.Command {
 		Use:   "apisix-dashboard",
 		Short: "Apache APISIX Dashboard",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			conf.InitConf()
+			cfg := config.NewDefaultConfig()
+			if err := config.SetupConfig(cfg, configFile); err != nil {
+				return errors.Errorf("failed to setup config: %v", err)
+			}
+
 			log.InitLogger()
 
 			s, err := server.NewServer(&server.Options{})
@@ -62,7 +72,7 @@ func NewRootCommand() *cobra.Command {
 		},
 	}
 
-	cmd.PersistentFlags().StringVarP(&conf.ConfigFile, "config", "c", "", "config file")
+	cmd.PersistentFlags().StringVarP(&configFile, "config", "c", "config/config.yaml", "config file")
 	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
 
 	cmd.AddCommand(
