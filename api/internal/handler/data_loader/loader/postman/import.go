@@ -96,17 +96,21 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 	}
 
 	// Get all route items
-	routes := []*postman.Item
-	
-	item := *postman.Item
-	for getItems(s) != nil {
-		getItems(s)
-	}
-	
+	var routes []*postman.Item
+	routes = getItems(s.Items)
+
 	return data, nil
 }
 
-func getItems(i postman.Items) (i postman.Items) {
+func getItems(i *postman.Items) (i *postman.Items) {
+	var item *postman.Item
+	_ = item
+	for _,v := range s.Items {
+
+		for getItems(v) != nil {
+			getItems(v)
+		}
+	}
 	return i.Items
 }
 
