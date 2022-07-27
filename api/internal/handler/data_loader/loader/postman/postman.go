@@ -34,5 +34,6 @@ type PathValue struct {
 }
 
 var (
-	regURIVar = regexp.MustCompile(`{.*?}`)
+	regURIVar = regexp.MustCompile(`:.*?`)
+	regBaseURI = regexp.MustCompile(`{{.*?}}`)
 )

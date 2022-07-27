@@ -99,7 +99,7 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 	var result []*postman.Items
 	getItems(s.Items, &result)
 
-	fmt.Printf("%#v", result[0])
+	fmt.Printf("%#v", result[0].Request.URL)
 
 	return data, nil
 }
