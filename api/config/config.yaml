@@ -23,19 +23,18 @@ server:
   #   cert_file: "/tmp/cert/example.crt"  # The path of your TLS certificate.
   #   key_file: "/tmp/cert/example.key"   # The path of your TLS key.
 
-data_source:                                      # The data source type of APISIX Dashboard.
-                                                 # It is an array that allows to contain multiple data sources, but currently only the first one is used.
-- name: default                                  # The name of data source.
-  type: apisix                                   # The type of data source, it now only supports "apisix".
-  apisix:                                        # When the data source type is "apisix", configure the following parameters.
-    address: http://127.0.0.1:9080/apisix/admin  # The endpoint of APISIX Admin API.
-    key: edd1c9f034335f136f87ad84b625c8f1        # The admin key of Admin API, It needs to have the "admin" role to support data writes.
+data_source:                                       # The data source type of APISIX Dashboard, it's an array that allows to contain multiple data sources, but currently only the first one is used.
+  - name: default                                  # The name of data source.
+    type: apisix                                   # The type of data source, it now only supports "apisix".
+    apisix:                                        # When the data source type is "apisix", configure the following parameters.
+      address: http://127.0.0.1:9080/apisix/admin  # The endpoint of APISIX Admin API.
+      key: edd1c9f034335f136f87ad84b625c8f1        # The admin key of Admin API, It needs to have the "admin" role to support data writes.
 
 security:
   allow_list:             # If we don't set any IP list, then localhost IP access is allowed by default.
     - 127.0.0.1           # The rules are checked in sequence until the first match is found.
     - ::1                 # In this example, access is allowed only for IPv4 network 127.0.0.1, and for IPv6 network ::1.
-    # It also supports CIDR like 192.168.1.0/24 and 2001:0db8::/32
+                          # It also supports CIDR like 192.168.1.0/24 and 2001:0db8::/32
   cors:
   #   access_control_allow_origin: "http://dashboard.apisix.local"
   #   access_control_allow_credentials: true
@@ -53,11 +52,11 @@ log:
   access_log: logs/access.log   # supports relative path, absolute path, standard output
                                 # such as: logs/access.log, /tmp/logs/access.log, /dev/stdout, /dev/stderr
                                 # such as absolute path on Windows: winfile:///C:\access.log
-       # log example: 2020-12-09T16:38:09.039+0800	INFO	filter/logging.go:46	/apisix/admin/routes/r1	{"status": 401, "host": "127.0.0.1:9000", "query": "asdfsafd=adf&a=a", "requestId": "3d50ecb8-758c-46d1-af5b-cd9d1c820156", "latency": 0, "remoteIP": "127.0.0.1", "method": "PUT", "errs": []}
+                                # log example: 2020-12-09T16:38:09.039+0800	INFO	filter/logging.go:46	/apisix/admin/routes/r1	{"status": 401, "host": "127.0.0.1:9000", "query": "asdfsafd=adf&a=a", "requestId": "3d50ecb8-758c-46d1-af5b-cd9d1c820156", "latency": 0, "remoteIP": "127.0.0.1", "method": "PUT", "errs": []}
 
 authentication:
   # secret: secret      # The secret for jwt token generator. If not set, random values are generated at startup
-  # NOTE: Highly recommended to modify this value to protect APISIX Dashboard
+                        # NOTE: Highly recommended to modify this value to protect APISIX Dashboard
   # expire_time: 3600   # The jwt token expire time, in second, default is 3600 second / 1 hour
   users:
     - username: admin   # The username and password for login APISIX Dashboard
