@@ -22,6 +22,7 @@ import (
 	"bytes"
 	"reflect"
 	"time"
+	"strings"
 	"github.com/apisix/manager-api/internal/handler/data_loader/loader"
 
 	postman "github.com/rbretecher/go-postman-collection"
@@ -47,7 +48,6 @@ func (o Loader) Import(input interface{}) (*loader.DataSets, error) {
 	// Load postman document
 	r := bytes.NewReader(d)
 	postman, err := postman.ParseCollection(r)
-	_ = postman
 	if err != nil {
                 return nil, err
         }
@@ -99,7 +99,40 @@ func (o Loader) convertToEntities(s *postman.Collection) (*loader.DataSets, erro
 	var result []*postman.Items
 	getItems(s.Items, &result)
 
-	fmt.Printf("%#v", result[0].Request.URL)
+	for _,v := range result {
+		// global uri prefix
+                globalPath = ""
+
+		path := "/"
+		name := ""
+		if len(v.Request.URL.Path) > 0 {
+			for i,_ := range v.Request.URL.Path {
+				if strings.HasPrefix(v.Request.URL.Path[i], ":") {
+					name = name + "/{" + v.Request.URL.Path[i][1:] + "}"
+					//fmt.Print(v.Request.URL.Path[i])
+					v.Request.URL.Path[i] = "*"
+				} else {
+					name = name + v.Request.URL.Path[i]
+				}
+			}
+			path = "/"+strings.Join(v.Request.URL.Path, "/")
+		}
+
+		// generate route Name
+                routeName := o.TaskName + "_" + strings.TrimPrefix(name, "/")
+		// equivalent to description in openapi3
+		description := v.Name
+		//_ = routeName
+		//_ = name
+		// fmt.Printf("%#v", string(v.Request.Method))
+		method := string(v.Request.Method)
+		subRouteID := routeName + "_" + method
+		route := generateBaseRoute(subRouteID, description)
+		route.Uris =  []string{globalPath + path}
+		route.Methods = []string{strings.ToUpper(method)}
+		route.UpstreamID = globalUpstreamID
+		data.Routes = append(data.Routes, route)
+	}
 
 	return data, nil
 }
@@ -113,5 +146,14 @@ func getItems(i []*postman.Items, result *[]*postman.Items) {
 
 		}
 	}
+}
+
+// Generate a base route for customize
+func generateBaseRoute(name string, desc string) entity.Route {
+        return entity.Route{
+                Name:    name,
+                Desc:    desc,
+                Plugins: make(map[string]interface{}),
+        }
 }
 
