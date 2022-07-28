@@ -27,15 +27,15 @@ import (
 )
 
 var _ = Describe("Postman Collection v2.1", func() {
-	It("Ensure all resources had cleaned", func() {
-		base.CleanResource("routes")
-		base.CleanResource("upstreams")
-	})
+	//It("Ensure all resources had cleaned", func() {
+	//})
 	DescribeTable("Import cases",
 		func(f func()) {
 			f()
 		},
 		Entry("API_101.postman_collection", func() {
+			base.CleanResource("routes")
+			base.CleanResource("upstreams")
 			path, err := filepath.Abs("../../testdata/import/API_101.postman_collection")
 			Expect(err).To(BeNil())
 			req := base.ManagerApiExpect().POST("/apisix/admin/import/routes")
