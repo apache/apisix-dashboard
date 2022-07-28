@@ -126,6 +126,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	default:
 		if input.Type != "" {
 			return nil, errors.Errorf("unsupported data loader type: %s", input.Type)
+		}
 		if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
 			return nil, errors.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
 		}
