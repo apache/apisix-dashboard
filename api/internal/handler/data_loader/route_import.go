@@ -126,7 +126,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 		}
 		break
 	default:
-		return nil, fmt.Errorf("unsupported data loader type: %s", input.Type)
+		return nil, fmt.Errorf("unsupported data loader type: %s", suffix)
 	}
 
 	dataSets, err := l.Import(input.FileContent)
