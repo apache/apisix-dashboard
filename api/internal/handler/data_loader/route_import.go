@@ -125,7 +125,13 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 		}
 		break
 	default:
-		return nil, fmt.Errorf("unsupported data loader type: %s", suffix)
+		if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
+			return nil, errors.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
+		}
+		l = &openapi3.Loader{
+			MergeMethod: input.MergeMethod == "true",
+			TaskName:    input.TaskName,
+		}
 	}
 
 	dataSets, err := l.Import(input.FileContent)
