@@ -47,7 +47,7 @@ func TestImport_openapi3_invalid_file_type(t *testing.T) {
 	ctx.SetInput(input)
 
 	_, err := h.Import(ctx)
-	assert.EqualError(t, err, "unsupported data loader type: .txt")
+	assert.EqualError(t, err, "required file type is .yaml, .yml or .json but got: .txt")
 }
 
 func TestImport_openapi3_invalid_content(t *testing.T) {
