@@ -109,7 +109,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	switch LoaderType(input.Type) {
 	case LoaderTypePostman:
 		if suffix != ".postman_collection" {
-			return nil, errors.Errorf("required file type is .postman_collection: %s", suffix)
+			return nil, errors.Errorf("required file type is .postman_collection: %s", input.Type)
 		}
 		l = &postman.Loader{
 			TaskName: input.TaskName,
