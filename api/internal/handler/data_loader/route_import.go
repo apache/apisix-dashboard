@@ -19,7 +19,6 @@ package data_loader
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"path"
 	"reflect"
 
