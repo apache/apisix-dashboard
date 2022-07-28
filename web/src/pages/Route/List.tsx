@@ -309,7 +309,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
-      fixed: '50',
+      width: 150,
     },
     {
       title: formatMessage({ id: 'component.global.id' }),
