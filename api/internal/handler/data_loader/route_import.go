@@ -19,7 +19,6 @@ package data_loader
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"path"
 	"reflect"
 
@@ -105,18 +104,17 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	}
 
 	var l loader.Loader
+	suffix := path.Ext(input.FileName)
 	switch LoaderType(input.Type) {
 	case LoaderTypePostman:
-		suffix := path.Ext(input.FileName)
 		if suffix != ".postman_collection" {
-			return nil, errors.Errorf("required file type is .postman_collection: %s", suffix)
+			return nil, errors.Errorf("required file type is .postman_collection: %s", input.Type)
 		}
 		l = &postman.Loader{
 			TaskName: input.TaskName,
 		}
 		break
 	case LoaderTypeOpenAPI3:
-		suffix := path.Ext(input.FileName)
 		if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
 			return nil, errors.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
 		}
@@ -126,7 +124,16 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 		}
 		break
 	default:
-		return nil, fmt.Errorf("unsupported data loader type: %s", input.Type)
+		if input.Type != "" {
+			return nil, errors.Errorf("unsupported data loader type: %s", input.Type)
+		}
+		if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
+			return nil, errors.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
+		}
+		l = &openapi3.Loader{
+			MergeMethod: input.MergeMethod == "true",
+			TaskName:    input.TaskName,
+		}
 	}
 
 	dataSets, err := l.Import(input.FileContent)
