@@ -19,7 +19,11 @@
  * Schema: https://github.com/apache/apisix/blob/master/apisix/schema_def.lua#L335
  */
 declare namespace UpstreamComponent {
-  type ActiveCheck = {};
+  type ActiveCheck = {
+    url?: string;
+    host?: string;
+    http_path?: string;
+  };
 
   type PassiveCheck = {};
 

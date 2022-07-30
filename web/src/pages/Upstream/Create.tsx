@@ -20,9 +20,9 @@ import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
-
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
+import { omit } from 'lodash';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -44,6 +44,15 @@ const Page: React.FC = (props) => {
           }
         }
 
+        if (newData?.checks?.active) {
+          const host = newData?.checks?.active.host;
+          const http_path = newData?.checks?.active.http_path;
+          const url = `${host}${http_path}`;
+          const { active: activeData } = newData.checks;
+          activeData.url = url;
+          newData.checks.active = omit(newData.checks.active, 'host');
+          newData.checks.active = omit(newData.checks.active, 'http_path');
+        }
         form1.setFieldsValue(newData);
       });
     }
@@ -57,6 +66,15 @@ const Page: React.FC = (props) => {
           message: formatMessage({ id: 'page.upstream.other.configuration.invalid' }),
         });
         return;
+      }
+      if (data?.checks?.active) {
+        const urlData = data.checks.active.url;
+        const hostData = urlData.split('/')[0];
+        const pathData = urlData.slice(hostData.length);
+        const newData = data;
+        newData.checks.active.host = hostData;
+        newData.checks.active.http_path = pathData;
+        newData.checks.active = omit(newData.checks.active, 'url');
       }
 
       const { id } = (props as any).match.params;

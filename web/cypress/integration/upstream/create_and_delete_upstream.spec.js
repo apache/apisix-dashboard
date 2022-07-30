@@ -55,6 +55,7 @@ context('Create and Delete Upstream', () => {
     weight0: '2',
     port1: '7001',
     weight1: '2',
+    url_input: '11.11.11.11/test/asd',
   };
 
   beforeEach(() => {
@@ -192,7 +193,7 @@ context('Create and Delete Upstream', () => {
     cy.get(selector.discovery_type_namespace_id).should('not.exist');
 
     cy.get('#custom_checks_active').click();
-    cy.get('#checks_active_port').clear();
+    cy.get('#checks_active_url').type(data.url_input);
     cy.contains('Next').click();
     cy.get(selector.input).should('be.disabled');
     cy.contains('Submit').click();
