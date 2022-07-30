@@ -88,14 +88,13 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
   });
-
   it('should delete the pluginTemplate failure', function () {
     cy.visit('plugin-template/list');
     cy.get(selector.refresh).click();
 
     cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
     cy.contains('button', 'Search').click();
-    cy.contains(data.pluginTemplateName).siblings().contains('Delete').click();
+    cy.contains(data.pluginTemplateName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.pluginTemplateErrorAlert);
     cy.get(selector.notificationClose).should('be.visible').click();
@@ -122,14 +121,13 @@ context('Create PluginTemplate Binding To Route', () => {
 
   it('should delete the pluginTemplate successfully', function () {
     cy.visit('plugin-template/list');
-
     cy.get(selector.refresh).click();
+
     cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
     cy.contains('button', 'Search').click();
     cy.contains(data.pluginTemplateName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deletePluginTemplateSuccess);
-
     cy.visit('/routes/list');
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();

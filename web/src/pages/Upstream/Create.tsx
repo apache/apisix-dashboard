@@ -18,6 +18,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
+import { omit } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 
@@ -58,7 +59,11 @@ const Page: React.FC = (props) => {
         });
         return;
       }
-
+      if (data.checks) {
+        if (data.checks.active.req_headers?.length === 0) {
+          data.checks.active = omit(data.checks.active, 'req_headers');
+        }
+      }
       const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
         notification.success({
