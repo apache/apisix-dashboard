@@ -29,15 +29,18 @@ context('Create Configure and Delete PluginTemplate', () => {
     notification: '.ant-notification-notice-message',
     refresh: '.anticon-reload',
     descriptionSelector: '[title=Description]',
+    monacoScroll: '.monaco-scrollable-element',
     pluginTitle: '.ant-divider-inner-text',
     pluginBtn: '.ant-btn-primary',
   };
+
   const data = {
     pluginTemplateName: 'test_plugin_template1',
     pluginTemplateName2: 'test_plugin_template2',
     createPluginTemplateSuccess: 'Create Plugin Template Successfully',
     editPluginTemplateSuccess: 'Configure Plugin Template Successfully',
     deletePluginTemplateSuccess: 'Delete Plugin Template Successfully',
+    submitPluginTemplateSuccess: 'Submit Successfully',
   };
 
   beforeEach(() => {
@@ -85,6 +88,32 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.contains(selector.pluginBtn, 'Enable').should('not.exist');
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createPluginTemplateSuccess);
+  });
+  it('should view the plugin-template', function () {
+    cy.visit('plugin-template/list');
+    cy.get(selector.refresh).click();
+    cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
+    cy.contains('button', 'Search').click();
+    cy.contains(data.pluginTemplateName).siblings().contains('View').click();
+    cy.get(selector.drawer).should('be.visible');
+
+    cy.get(selector.monacoScroll).within(() => {
+      cy.contains('plugins').should('exist');
+    });
+    cy.window().then((window) => {
+      window.monacoEditor.setValue(
+        JSON.stringify({
+          plugins: {
+            'jwt-auth': {
+              disable: false,
+            },
+          },
+        }),
+      );
+    });
+    cy.contains('button', 'Submit').click();
+
+    cy.get(selector.notification).should('contain', data.submitPluginTemplateSuccess);
   });
 
   it('should edit the pluginTemplate', function () {

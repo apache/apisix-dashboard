@@ -62,6 +62,7 @@ export default {
   'component.global.pleaseEnter': 'Please Enter',
   'component.global.pleaseChoose': 'Please Choose',
   'component.global.pleaseCheck': 'Please Check',
+  'component.global.submit.success': 'Submit Successfully',
 
   'component.global.input.ruleMessage.name':
     'Only letters, numbers, - and _ are supported, and can only begin with letters',

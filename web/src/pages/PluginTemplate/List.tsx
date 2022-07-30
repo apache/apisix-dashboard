@@ -22,13 +22,20 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, notification, Popconfirm, Select, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import usePagination from '@/hooks/usePagination';
-import { fetchList, remove, fetchLabelList } from './service';
+import { omit } from 'lodash';
+
+import { fetchList, remove, fetchLabelList, update } from './service';
+import { RawDataEditor } from '@/components/RawDataEditor';
+import { DELETE_FIELDS } from '@/constants';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const [labelList, setLabelList] = useState<LabelList>({});
   const { formatMessage } = useIntl();
-
+  const [visible, setVisible] = useState(false);
+  const [rawData, setRawData] = useState<Record<string, any>>({});
+  const [id, setId] = useState('');
+  const [, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList } = usePagination();
 
   useEffect(() => {
@@ -115,6 +122,18 @@ const Page: React.FC = () => {
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
 
+            <Button
+              type="primary"
+              onClick={() => {
+                setId(record.id);
+                setRawData(omit(record, DELETE_FIELDS));
+                setVisible(true);
+                setEditorMode('update');
+              }}
+            >
+              {formatMessage({ id: 'component.global.view' })}
+            </Button>
+
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
@@ -140,7 +159,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.list' })}>
+    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.template' })}>
       <ProTable<PluginTemplateModule.ResEntity>
         actionRef={ref}
         rowKey="id"
@@ -161,6 +180,24 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
+      />
+      <RawDataEditor
+        visible={visible}
+        type="PluginTemplate"
+        readonly={false}
+        data={rawData}
+        onClose={() => {
+          setVisible(false);
+        }}
+        onSubmit={(data: any) => {
+          update(id, data).then(() => {
+            setVisible(false);
+            handleTableActionSuccessResponse(
+              formatMessage({ id: 'component.global.submit.success' }),
+            );
+            ref.current?.reload();
+          });
+        }}
       />
     </PageHeaderWrapper>
   );

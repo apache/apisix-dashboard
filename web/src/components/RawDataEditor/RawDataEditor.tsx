@@ -29,7 +29,7 @@ import { json2yaml, yaml2json } from '../../helpers';
 type Props = {
   visible: boolean;
   readonly: boolean;
-  type: 'route' | 'service' | 'consumer' | 'upstream';
+  type: 'route' | 'service' | 'consumer' | 'upstream' | 'PluginTemplate';
   data: Record<string, any>;
   onClose?: () => void;
   onSubmit?: (data: Record<string, any>) => void;
