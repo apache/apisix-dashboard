@@ -25,6 +25,9 @@ defaults:
 jobs:
   web-e2e:
     name: Frontend e2e test
+    strategy:
+      matrix:
+        folderPrefix: ['consumer', 'route', 'plugin']
     runs-on: ubuntu-latest
     services:
       etcd:
@@ -82,8 +85,7 @@ jobs:
 
       - name: Start frontend then test
         run: |
-          rm -rf cypress/integration/plugin
-          yarn test:e2e
+          yarn "start-server-and-test 'cross-env SERVE_ENV=test yarn start' http-get://localhost:8000 cypress:run-ci --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js""
 
       - name: Report e2e coverage
         run: npx nyc report --reporter=text-summary
