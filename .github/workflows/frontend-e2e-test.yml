@@ -26,6 +26,7 @@ jobs:
   web-e2e:
     name: Frontend e2e test
     strategy:
+      fail-fast: false
       matrix:
         folderPrefix: ['consumer', 'route', 'plugin']
     runs-on: ubuntu-latest
