@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        folderPrefix: ['consumer', 'route', 'plugin']
+        folderPrefix: ['consumer', 'route', 'plugin', 'rest']
     runs-on: ubuntu-latest
     services:
       etcd:
