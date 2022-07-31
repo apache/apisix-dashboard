@@ -71,3 +71,4 @@ web/public/monaco-editor/
 
 # Editors
 .vscode/
+.idea/
