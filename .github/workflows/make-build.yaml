@@ -39,7 +39,7 @@ jobs:
           submodules: recursive
 
       - name: Setup Pnpm environment
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v2.2.2
         with:
           version: 7
 
@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: pnpm
+          cache: 'pnpm'
           cache-dependency-path: web/pnpm-lock.yaml
 
       - name: Install dependencies
