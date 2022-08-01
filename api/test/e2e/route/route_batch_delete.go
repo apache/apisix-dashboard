@@ -52,7 +52,7 @@ var _ = ginkgo.Describe("Route Batch Delete", func() {
 			Path:   "/apisix/admin/routes/r2",
 			Body: `{
 				"name": "route2",
-				"uri": "/hello_",
+				"uri": "/hello",
 				"upstream": {
 					"nodes": {
 						"` + base.UpstreamIp + `:1980": 1
@@ -64,14 +64,27 @@ var _ = ginkgo.Describe("Route Batch Delete", func() {
 			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("delete all success", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodDelete,
-			Path:   "/apisix/admin/routes",
-			Body: `{
-`,
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1,r2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "?",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("hit route1 that just deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("hit route2 that just deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}",
 			Sleep:        base.SleepTime,
 		}))
 })
