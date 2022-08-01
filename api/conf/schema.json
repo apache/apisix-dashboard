@@ -574,7 +574,7 @@
 						{
 							"required": [
 								"discovery_type",
-								"service_name",
+								"service_name_type",
 								"type"
 							]
 						}
@@ -1027,6 +1027,15 @@
 								"udp"
 							]
 						},
+                                                "service_name_type": {
+                                                        "default": "pass",
+                                                        "description": "mod of service name passing",
+                                                        "enum": [
+                                                                "pass",
+                                                                "rewrite"
+                                                        ],
+                                                        "type": "string"
+                                                },
 						"service_name": {
 							"maxLength": 256,
 							"minLength": 1,
@@ -1197,7 +1206,7 @@
 						{
 							"required": [
 								"discovery_type",
-								"service_name",
+								"service_name_type",
 								"type"
 							]
 						}
@@ -2009,7 +2018,7 @@
 						{
 							"required": [
 								"discovery_type",
-								"service_name",
+								"service_name_type",
 								"type"
 							]
 						}
@@ -2550,7 +2559,7 @@
 				{
 					"required": [
 						"discovery_type",
-						"service_name",
+						"service_name_type",
 						"type"
 					]
 				}
@@ -7602,7 +7611,7 @@
 													{
 														"required": [
 															"discovery_type",
-															"service_name",
+															"service_name_type",
 															"type"
 														]
 													}

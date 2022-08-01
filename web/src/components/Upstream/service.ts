@@ -67,7 +67,7 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
     }));
   }
 
-  if (data.discovery_type && data.service_name) {
+  if (data.discovery_type && data.service_name_type) {
     data.upstream_type = 'service_discovery';
   }
 
@@ -91,6 +91,7 @@ export const convertToRequestData = (
     submitNodes,
     discovery_type,
     discovery_args,
+    service_name_type,
     service_name,
     pass_host,
     upstream_host,
@@ -112,6 +113,10 @@ export const convertToRequestData = (
     if (hash_on !== 'consumer' && !key) {
       return undefined;
     }
+  }
+
+  if (service_name_type === 'rewrite' && !service_name) {
+    return undefined;
   }
 
   if (pass_host === 'rewrite' && !upstream_host) {
@@ -143,7 +148,7 @@ export const convertToRequestData = (
     return omit(data, ['upstream_type', 'submitNodes']);
   }
 
-  if (upstream_type === 'service_discovery' && discovery_type && service_name) {
+  if (upstream_type === 'service_discovery' && discovery_type && service_name_type) {
     if (!discovery_args) data.discovery_args = {};
     return omit(data, 'upstream_type');
   }

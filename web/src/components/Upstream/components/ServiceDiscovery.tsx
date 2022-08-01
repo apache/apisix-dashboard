@@ -19,6 +19,7 @@ import type { FormInstance } from 'antd';
 import { Form, Input, Select } from 'antd';
 import { useIntl } from 'umi';
 import ServiceDiscoveryArgs from '@/components/Upstream/components/ServiceDiscoveryArgs';
+import ServerName from '@/components/Upstream/components/ServerName';
 
 type Props = {
   form: FormInstance;
@@ -61,17 +62,7 @@ const ServiceDiscovery: React.FC<Props> = ({ readonly, form }) => {
           })}
         </Select>
       </Form.Item>
-      <Form.Item
-        name="service_name"
-        label={formatMessage({ id: 'component.upstream.fields.service_name' })}
-        tooltip={formatMessage({ id: 'component.upstream.fields.service_name.tooltip' })}
-        rules={[{ required: true }, { min: 1 }, { max: 256 }]}
-      >
-        <Input
-          disabled={readonly}
-          placeholder={formatMessage({ id: 'component.upstream.fields.service_name.placeholder' })}
-        />
-      </Form.Item>
+      <ServerName form={form} readonly={readonly} />
       <Form.Item shouldUpdate noStyle>
         {() => {
           if (!form.getFieldValue('discovery_type')) return null;
