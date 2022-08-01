@@ -52,7 +52,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - run: pnpm test
 
       - name: Setup golang environment
         uses: actions/setup-go@v3
