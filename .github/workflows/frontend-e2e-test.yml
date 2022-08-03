@@ -67,6 +67,7 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Start manager-api
+        working-directory: ./
         run: |
           make dag-lib
           cd api
