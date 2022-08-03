@@ -25,6 +25,10 @@ defaults:
 jobs:
   web-e2e:
     name: Frontend e2e test
+    strategy:
+      fail-fast: false
+      matrix:
+        folderPrefix: ['consumer', 'route', 'plugin', 'rest']
     runs-on: ubuntu-latest
     services:
       etcd:
@@ -63,8 +67,10 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Start manager-api
-        working-directory: ./api
+        working-directory: ./
         run: |
+          make dag-lib
+          cd api
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
           nohup go run ./main.go &
 
@@ -82,8 +88,7 @@ jobs:
 
       - name: Start frontend then test
         run: |
-          rm -rf cypress/integration/plugin
-          yarn test:e2e
+          yarn start-server-and-test 'cross-env SERVE_ENV=test yarn start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test yarn cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
 
       - name: Report e2e coverage
         run: npx nyc report --reporter=text-summary
@@ -96,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: cypress-report
+          name: cypress-report-${{matrix.folderPrefix}}
           path: |
             web/cypress/videos
             web/cypress/screenshots

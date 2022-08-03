@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
-import defaultSettings from '../../../config/defaultSettings';
+import defaultSettings from '../../../../../config/defaultSettings';
 
 context('Save Paginator Status', () => {
   const timeout = 300;

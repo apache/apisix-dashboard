@@ -53,6 +53,10 @@ Username: admin
 Password: admin
 ```
 
+## Works with APISIX Ingress Controller
+
+Currently, APISIX Ingress Controller automatically manipulates some APISIX resources, which is not very compatible with APISIX Dashboard. In addition, users should not modify resources labeled `managed-by: apisix-ingress-controllers` via APISIX Dashboard.
+
 ## Project structure
 
 ```text
