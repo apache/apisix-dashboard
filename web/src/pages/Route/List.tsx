@@ -557,12 +557,18 @@ const Page: React.FC = () => {
           return (
             <Space size={16}>
               <Button
-                onClick={async () => {
-                await remove(selectedRowKeys);
-                ref.current?.reloadAndRest?.();
-              }}>
-              {formatMessage({ id: 'page.route.batchDeletion' })}
-              </Button>
+               onClick={async () => {
+               await remove(selectedRowKeys).then(() => {
+                handleTableActionSuccessResponse(
+                  `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                    id: 'menu.routes',
+                  })} ${formatMessage({ id: 'component.status.success' })}`,
+                );
+               });
+               ref.current?.reloadAndRest?.();
+             }}>
+             {formatMessage({ id: 'page.route.batchDeletion' })}
+             </Button>
             </Space>
           );
         }}
