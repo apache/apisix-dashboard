@@ -67,8 +67,9 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Start manager-api
-        working-directory: ./api
         run: |
+          make dag-lib
+          cd api
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
           nohup go run ./main.go &
 
