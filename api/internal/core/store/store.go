@@ -21,15 +21,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/apache/apisix-dashboard/api/internal/core/storage"
 	"os"
 	"reflect"
 	"sort"
 	"sync"
 	"time"
 
-	"github.com/apache/apisix-dashboard/api/pkg/storage"
+	"github.com/apache/apisix-dashboard/api/internal/core/storage"
+
 	"github.com/shiningrush/droplet/data"
+
+	"github.com/apache/apisix-dashboard/api/pkg/storage"
 
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/log"
@@ -90,8 +92,10 @@ func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
 		log.Error("obj type is invalid")
 		return nil, fmt.Errorf("obj type is invalid")
 	}
-	s := &GenericStore{}
-	s.Stg = storage.GenEtcdStorage()
+	s := &GenericStore{
+		opt: opt,
+		Stg: storage.GenEtcdStorage(),
+	}
 
 	return s, nil
 }
