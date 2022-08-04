@@ -36,7 +36,7 @@ rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
 
 # get dag-to-lua lib
 if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
-    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp
+    curl -Lso /tmp/v1.1.tar.gz https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
     tar -zxvf /tmp/v1.1.tar.gz -C /tmp
     cp -r /tmp/dag-to-lua-1.1/lib/* ./output/dag-to-lua
 fi
