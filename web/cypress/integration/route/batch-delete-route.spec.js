@@ -113,7 +113,8 @@ context('Create and Batch Deletion Routes', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.get('[type="checkbox"]').first().check();
+    cy.get('ant-checkbox').contains(data.test0).check();
+    cy.get('ant-checkbox').contains(data.test2).check();
     cy.contains('BatchDeletion Routes').should('be.visible').click({ timeout });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
     cy.get(selector.notificationClose).should('be.visible').click({
