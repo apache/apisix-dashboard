@@ -3,13 +3,13 @@ on:
   push:
     branches:
       - master
-#      - next
+      - next
     paths-ignore:
       - 'docs/**'
   pull_request:
     branches:
       - master
-#      - next
+      - next
     paths-ignore:
       - 'docs/**'
 
