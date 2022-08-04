@@ -29,17 +29,9 @@ context('Create and Batch Deletion Routes', () => {
     nodes_0_host: '#submitNodes_0_host',
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
-    nameSearchInput: '#name',
-    pathSearchInput: '#uri',
-    labelSelect_0: '.ant-select-selection-overflow',
-    dropdown: '.rc-virtual-list',
-    disabledSwitcher: '#disable',
-    checkedSwitcher: '.ant-switch-checked',
-    deleteAlert: '.ant-modal-body',
     drawerBody: '.ant-drawer-wrapper-body',
     notification: '.ant-notification-notice-message',
     notificationClose: '.anticon-close',
-    expandSearch: '.ant-pro-form-collapse-button',
   };
 
   const data = {
@@ -59,9 +51,6 @@ context('Create and Batch Deletion Routes', () => {
     test1: 'test1',
     test2: 'test2',
     testx: 'testx',
-    desc0: 'desc0',
-    desc1: 'desc1',
-    desc2: 'desc2',
     value0: 'value0',
     label0_value0: 'label0:value0',
   };
