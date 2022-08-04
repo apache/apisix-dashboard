@@ -77,7 +77,6 @@ func Authentication() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
 			return
 		}
-
 		c.Next()
 	}
 }
