@@ -14,6 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export enum CUSTOM_REDIRECT_TYPE {
+  STATIC = 0,
+  REGEXP,
+}
+
 export const HTTP_METHOD_OPTION_LIST: HttpMethod[] = [
   'GET',
   'POST',
@@ -65,7 +70,9 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   uris: ['/*'],
   remote_addrs: [''],
   redirectOption: 'disabled',
+  customRedirectType: CUSTOM_REDIRECT_TYPE.STATIC,
   redirectURI: '',
+  regex_uri: ['', ''],
   ret_code: 302,
   methods: HTTP_METHOD_OPTION_LIST,
   service_id: '',

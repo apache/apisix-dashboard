@@ -17,7 +17,12 @@
 import { omit, pick, cloneDeep, isEmpty, unset } from 'lodash';
 
 import { transformLableValueToKeyValue } from '@/helpers';
-import { SCHEME_REWRITE, URI_REWRITE_TYPE, HOST_REWRITE_TYPE } from '@/pages/Route/constants';
+import {
+  CUSTOM_REDIRECT_TYPE,
+  SCHEME_REWRITE,
+  URI_REWRITE_TYPE,
+  HOST_REWRITE_TYPE,
+} from '@/pages/Route/constants';
 import { convertToFormData } from '@/components/Upstream/service';
 
 export const transformProxyRewrite2Plugin = (
@@ -133,10 +138,15 @@ export const transformStepData = ({
     step3DataCloned.plugins = omit(step3Data.plugins, ['redirect']);
   } else if (form1Data.redirectOption === 'forceHttps') {
     redirect = { http_to_https: true };
-  } else if (form1Data.redirectURI !== '') {
+  } else if (form1Data.customRedirectType === CUSTOM_REDIRECT_TYPE.STATIC) {
     redirect = {
       ret_code: form1Data.ret_code,
       uri: form1Data.redirectURI,
+    };
+  } else if (form1Data.customRedirectType === CUSTOM_REDIRECT_TYPE.REGEXP) {
+    redirect = {
+      ret_code: form1Data.ret_code,
+      regex_uri: form1Data.regex_uri,
     };
   }
 
@@ -364,6 +374,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
     form1Data.redirectOption = 'customRedirect';
     form1Data.ret_code = redirect?.ret_code;
     form1Data.redirectURI = redirect?.uri;
+  } else if (redirect?.regex_uri) {
+    form1Data.redirectOption = 'customRedirect';
+    form1Data.ret_code = redirect?.ret_code;
+    form1Data.regex_uri = redirect?.regex_uri;
   } else {
     form1Data.redirectOption = 'disabled';
   }
