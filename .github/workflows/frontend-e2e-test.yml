@@ -41,6 +41,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup Pnpm environment
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+          
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
