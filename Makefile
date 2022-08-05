@@ -50,8 +50,8 @@ endif
 
 .PHONY: api-default
 api-default:
-ifeq ("$(wildcard $(PNPM_EXEC))", "")
-	@echo "ERROR: Need to install pnpm first"
+ifeq ("$(wildcard $(GO_EXEC))", "")
+	@echo "ERROR: Need to install golang 1.15+ first"
 	exit 1
 endif
 
@@ -122,13 +122,7 @@ release-src:
 	--exclude release \
 	--exclude api/internal/core/store/validate_mock.go \
 	--exclude api/internal/core/storage/storage_mock.go \
-	./api \
-        ./licenses \
-        ./web \
-        LICENSE \
-        Makefile \
-        NOTICE \
-        *.md
+	.
 
 	shasum -a 512 $(RELEASE_SRC).tgz > $(RELEASE_SRC).tgz.sha512
 
