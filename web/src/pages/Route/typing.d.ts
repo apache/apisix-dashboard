@@ -62,6 +62,7 @@ declare namespace RouteModule {
   type Redirect = {
     ret_code?: number;
     uri?: string;
+    regex_uri?: string[];
     http_to_https?: boolean;
   };
 
@@ -127,7 +128,9 @@ declare namespace RouteModule {
     remote_addrs: string[];
     methods: HttpMethod[];
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
+    customRedirectType: number;
     redirectURI?: string;
+    regex_uri?: string[];
     ret_code?: number;
     status: number;
     enable_websocket?: boolean;
