@@ -51,6 +51,9 @@ context('Create and Batch Deletion Routes', () => {
     test1: 'test1',
     test2: 'test2',
     testx: 'testx',
+    desc0: 'desc0',
+    desc1: 'desc1',
+    desc2: 'desc2',
     value0: 'value0',
     label0_value0: 'label0:value0',
   };
@@ -59,7 +62,7 @@ context('Create and Batch Deletion Routes', () => {
     cy.login();
   });
 
-  it('should successfully create 3 corresponding routes', function () {
+  it('should create route test0, test1, test2', function () {
     cy.visit('/');
     cy.contains('Route').click();
     for (let i = 0; i < 3; i += 1) {
@@ -110,5 +113,51 @@ context('Create and Batch Deletion Routes', () => {
       force: true,
       multiple: true,
     });
+  });
+
+  it('should batch delete the name of the route', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    // full match
+    cy.get(selector.nameSearchInput).type(data.test1);
+    cy.contains('Search').click();
+    cy.contains(data.test1).siblings().should('contain', data.desc1);
+    cy.contains(data.test0).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
+    // partial match
+    cy.get(selector.nameSearchInput).clear().type(data.test0);
+    cy.contains('Search').click();
+    cy.contains(data.test0).should('not.exist');
+    cy.contains(data.test1).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
+    // no match
+    cy.get(selector.nameSearchInput).clear().type(data.testx);
+    cy.contains('Search').click();
+    cy.contains(data.test0).should('not.exist');
+    cy.contains(data.test1).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
+  });
+
+  it('should batch delete the path of the route', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    // full match
+    cy.get(selector.pathSearchInput).type(data.uris1);
+    cy.contains('Search').click();
+    cy.contains(data.uris1).should('contain', data.uris1);
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
+    // partial match
+    cy.get(selector.pathSearchInput).clear().type(data.uris0);
+    cy.contains('Search').click();
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris1).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
+    // no match
+    cy.get(selector.pathSearchInput).clear().type(data.urisx);
+    cy.contains('Search').click();
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris1).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
   });
 });
