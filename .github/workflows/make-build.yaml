@@ -38,13 +38,20 @@ jobs:
         with:
           submodules: recursive
 
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+          
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
           cache: 'pnpm'
           cache-dependency-path: web/pnpm-lock.yaml
-
+     
+      - name: Install dependencies
+        run: pnpm install
+      
       - name: Setup golang environment
         uses: actions/setup-go@v3
         with:
