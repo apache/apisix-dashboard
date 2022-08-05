@@ -91,7 +91,7 @@ jobs:
           pnpm start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test pnpm cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
 
       - name: Report e2e coverage
-        run: npx nyc report --reporter=text-summary
+        run: pnpx nyc report --reporter=text-summary
 
       - name: Upload coverage to Codecov
         run: |
