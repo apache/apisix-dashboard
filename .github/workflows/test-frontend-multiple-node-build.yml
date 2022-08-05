@@ -34,16 +34,14 @@ jobs:
         with:
           submodules: recursive
       
-      - uses: pnpm/action-setup@v2.2.2
-        with:
-          version: 7
-      
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
           cache-dependency-path: web/pnpm-lock.yaml
+          
+      - name: Install PNPM
+        run: npm i -g pnpm
 
       # Install dependencies
       - name: Install dependencies
