@@ -25,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [12x, 14.x, 16.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -38,7 +38,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache-dependency-path: web/pnpm-lock.yaml
+          cache: 'yarn'
+          cache-dependency-path: web/yarn.lock
           
       - name: Install PNPM
         run: npm i -g pnpm
@@ -50,8 +51,8 @@ jobs:
 
       - name: Lint
         working-directory: web
-        run: pnpm run lint:js && pnpm run lint:style
+        run: yarn run lint:js && yarn run lint:style
 
       - name: Build the Dashboard
         working-directory: web
-        run: pnpm build
+        run: yarn build
