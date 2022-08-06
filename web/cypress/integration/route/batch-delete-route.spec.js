@@ -30,6 +30,7 @@ context('Create and Batch Deletion Routes', () => {
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     nameSearchInput: '#name',
+    pathSearchInput: '#uri',
     drawerBody: '.ant-drawer-wrapper-body',
     notification: '.ant-notification-notice-message',
     notificationClose: '.anticon-close',
@@ -117,7 +118,8 @@ context('Create and Batch Deletion Routes', () => {
   });
 
   it('should batch delete the name of the route', function () {
-    cy.visit('/routes/list');
+    cy.visit('/');
+    cy.contains('Route').click();
     // full match
     cy.get(selector.nameSearchInput).type(data.test1);
     cy.contains('Search').click();
@@ -139,7 +141,8 @@ context('Create and Batch Deletion Routes', () => {
   });
 
   it('should batch delete the path of the route', function () {
-    cy.visit('/routes/list');
+    cy.visit('/');
+    cy.contains('Route').click();
     // full match
     cy.get(selector.pathSearchInput).type(data.uris1);
     cy.contains('Search').click();
