@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
-import { omit, orderBy } from 'lodash';
+import { orderBy } from 'lodash';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
@@ -277,12 +277,12 @@ const PluginPage: React.FC<Props> = ({
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
       onChange={({ monacoData, formData, shouldDelete }) => {
-        let newPlugins = {
+        const newPlugins = {
           ...initialData,
           [name]: { ...monacoData, disable: !formData.disable },
         };
         if (shouldDelete === true) {
-          newPlugins = omit(newPlugins, name);
+          newPlugins[name] = null;
         }
         onChange(newPlugins, form.getFieldValue('plugin_config_id'));
         setPlugins(newPlugins);
