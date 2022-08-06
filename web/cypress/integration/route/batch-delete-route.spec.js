@@ -29,6 +29,8 @@ context('Create and Batch Deletion Routes', () => {
     nodes_0_host: '#submitNodes_0_host',
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
+    nameSearchInput: '#name',
+    pathSearchInput: '#uri',
     drawerBody: '.ant-drawer-wrapper-body',
     notification: '.ant-notification-notice-message',
     notificationClose: '.anticon-close',
@@ -51,6 +53,9 @@ context('Create and Batch Deletion Routes', () => {
     test1: 'test1',
     test2: 'test2',
     testx: 'testx',
+    desc0: 'desc0',
+    desc1: 'desc1',
+    desc2: 'desc2',
     value0: 'value0',
     label0_value0: 'label0:value0',
   };
@@ -59,7 +64,7 @@ context('Create and Batch Deletion Routes', () => {
     cy.login();
   });
 
-  it('should successfully create 3 corresponding routes', function () {
+  it('should create route test0, test1, test2', function () {
     cy.visit('/');
     cy.contains('Route').click();
     for (let i = 0; i < 3; i += 1) {
@@ -110,5 +115,51 @@ context('Create and Batch Deletion Routes', () => {
       force: true,
       multiple: true,
     });
+  });
+
+  it('should batch delete the name of the route', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    // full match
+    cy.get(selector.nameSearchInput).type(data.test0);
+    cy.contains('Search').click();
+    cy.contains(data.test1).should('not.exist');
+    cy.contains(data.test0).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
+    // partial match
+    cy.get(selector.nameSearchInput).clear().type(data.test2);
+    cy.contains('Search').click();
+    cy.contains(data.test0).should('not.exist');
+    cy.contains(data.test1).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
+    // no match
+    cy.get(selector.nameSearchInput).clear().type(data.testx);
+    cy.contains('Search').click();
+    cy.contains(data.test0).should('not.exist');
+    cy.contains(data.test1).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
+  });
+
+  it('should batch delete the path of the route', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    // full match
+    cy.get(selector.pathSearchInput).type(data.uris0);
+    cy.contains('Search').click();
+    cy.contains(data.uris1).should('not.exist');
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
+    // partial match
+    cy.get(selector.pathSearchInput).clear().type(data.uris2);
+    cy.contains('Search').click();
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris1).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
+    // no match
+    cy.get(selector.pathSearchInput).clear().type(data.urisx);
+    cy.contains('Search').click();
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris1).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
   });
 });
