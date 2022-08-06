@@ -44,7 +44,7 @@ jobs:
           node-version: 16.x
           cache: 'yarn'
           cache-dependency-path: web/yarn.lock
-      
+
       - name: Setup golang environment
         uses: actions/setup-go@v3
         with:
