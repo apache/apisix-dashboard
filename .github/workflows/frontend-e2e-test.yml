@@ -49,10 +49,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache-dependency-path: web/pnpm-lock.yaml
-          
-      - name: Install PNPM
-        run: npm i -g pnpm
+          cache: 'yarn'
+          cache-dependency-path: web/yarn.lock
 
       - name: Setup golang environment
         uses: actions/setup-go@v3
@@ -86,14 +84,14 @@ jobs:
             cypress-${{ runner.os }}-cypress-cache0
 
       - name: Install dependencies
-        run: pnpm install
+        run: yarn install
 
       - name: Start frontend then test
         run: |
           pnpm start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test pnpm cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
 
       - name: Report e2e coverage
-        run: pnpx nyc report --reporter=text-summary
+        run: npx nyc report --reporter=text-summary
 
       - name: Upload coverage to Codecov
         run: |
