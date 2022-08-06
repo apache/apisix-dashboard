@@ -123,7 +123,7 @@ context('Create and Batch Deletion Routes', () => {
     // full match
     cy.get(selector.nameSearchInput).type(data.test1);
     cy.contains('Search').click();
-    cy.contains(data.test1).siblings().should('contain', data.desc1);
+    cy.contains(data.test1).should('exist');
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test2).should('not.exist');
     // partial match
@@ -146,7 +146,7 @@ context('Create and Batch Deletion Routes', () => {
     // full match
     cy.get(selector.pathSearchInput).type(data.uris1);
     cy.contains('Search').click();
-    cy.contains(data.uris1).should('contain', data.uris1);
+    cy.contains(data.uris1).should('exist');
     cy.contains(data.uris0).should('not.exist');
     cy.contains(data.uris2).should('not.exist');
     // partial match
