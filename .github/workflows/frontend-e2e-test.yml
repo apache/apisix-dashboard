@@ -84,11 +84,11 @@ jobs:
             cypress-${{ runner.os }}-cypress-cache0
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn
 
       - name: Start frontend then test
         run: |
-          pnpm start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test pnpm cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
+          yarn start-server-and-test 'cross-env SERVE_ENV=test yarn start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test yarn cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
 
       - name: Report e2e coverage
         run: npx nyc report --reporter=text-summary
