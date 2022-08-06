@@ -88,6 +88,26 @@ For `web`:
 1. [Node.js](https://nodejs.org/en/download/) current LTS (14.x+)
 2. [Yarn](https://yarnpkg.com/getting-started/install)
 
+```shell
+cd apisix-dashboard/web
+yarn install
+yarn start
+```
+
+3. [Pnpm（Optional）](https://pnpm.io/installation))
+
+```shell
+# You can also use pnpm as a tool to download dependent packages.
+pnpm install
+pnpm start
+
+# If some dependent packages are not installed, use the following command.
+npm config set strict-peer-dependencies=false
+npm config set auto-install-peers=true
+```
+
+Note: When you have used pnpm before or have local dependency packages, it will show faster download speed.
+
 ### Download {#source-download}
 
 ```shell
