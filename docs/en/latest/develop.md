@@ -98,8 +98,11 @@ $ pnpm start
 # In In the .npmrc configuration file, add strict peer dependencies = false, which means that the strict peer dependency mode will be turned off.
 $ npm config set strict-peer-dependencies=false
 
-# Change it to true if you want to automatically install peer dependencies
+# Change it to true if you want to automatically install peer dependencies.
 $ npm config set auto-install-peers=true
+
+# The RE2 package is missing for this project
+$ npm install re2
 ```
 
 > When you have used pnpm before or have local dependency packages, it will show faster download speed. If necessary, you can use 'pnpm import' to convert yarn.lock to pnpm-lock.yaml (even for APISIX developers, this thing does not need to be submitted to the warehouse, and our dependent package anchor is still package.json)
