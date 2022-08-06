@@ -106,7 +106,7 @@ npm config set strict-peer-dependencies=false
 npm config set auto-install-peers=true
 ```
 
-Note: When you have used pnpm before or have local dependency packages, it will show faster download speed.
+Note: When you have used pnpm before or have local dependency packages, it will show faster download speed. If necessary, you can use 'pnpm import' to convert yarn to yarn.lock (even for APISIX developers, this thing does not need to be submitted to the warehouse, and our dependent package anchor is still package.json)
 
 ### Download {#source-download}
 
