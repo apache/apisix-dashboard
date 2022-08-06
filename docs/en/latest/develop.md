@@ -102,6 +102,6 @@ $ npm config set strict-peer-dependencies=false
 $ npm config set auto-install-peers=true
 ```
 
-> When you have used pnpm before or have local dependency packages, it will show faster download speed. If necessary, you can use 'pnpm import' to convert yarn to yarn.lock (even for APISIX developers, this thing does not need to be submitted to the warehouse, and our dependent package anchor is still package.json)
+> When you have used pnpm before or have local dependency packages, it will show faster download speed. If necessary, you can use 'pnpm import' to convert yarn.lock to pnpm-lock.yaml (even for APISIX developers, this thing does not need to be submitted to the warehouse, and our dependent package anchor is still package.json)
 
 5. If writing an front end E2E test, please refer to the [Front End E2E Writing Guide](./front-end-e2e.md)
