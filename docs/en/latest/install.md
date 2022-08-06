@@ -94,7 +94,7 @@ yarn install
 yarn start
 ```
 
-3. [Pnpm（Optional）](https://pnpm.io/installation))
+3. [Pnpm(Optional)](https://pnpm.io/installation)
 
 ```shell
 # You can also use pnpm as a tool to download dependent packages.
