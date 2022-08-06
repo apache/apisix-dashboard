@@ -121,13 +121,13 @@ context('Create and Batch Deletion Routes', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
-    cy.get(selector.nameSearchInput).type(data.test1);
+    cy.get(selector.nameSearchInput).type(data.test0);
     cy.contains('Search').click();
-    cy.contains(data.test1).should('exist');
+    cy.contains(data.test1).should('not.exist');
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test2).should('not.exist');
     // partial match
-    cy.get(selector.nameSearchInput).clear().type(data.test0);
+    cy.get(selector.nameSearchInput).clear().type(data.test2);
     cy.contains('Search').click();
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test1).should('not.exist');
@@ -144,13 +144,13 @@ context('Create and Batch Deletion Routes', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
-    cy.get(selector.pathSearchInput).type(data.uris1);
+    cy.get(selector.pathSearchInput).type(data.uris0);
     cy.contains('Search').click();
-    cy.contains(data.uris1).should('exist');
+    cy.contains(data.uris1).should('not.exist');
     cy.contains(data.uris0).should('not.exist');
     cy.contains(data.uris2).should('not.exist');
     // partial match
-    cy.get(selector.pathSearchInput).clear().type(data.uris0);
+    cy.get(selector.pathSearchInput).clear().type(data.uris2);
     cy.contains('Search').click();
     cy.contains(data.uris0).should('not.exist');
     cy.contains(data.uris1).should('not.exist');
@@ -163,4 +163,3 @@ context('Create and Batch Deletion Routes', () => {
     cy.contains(data.uris2).should('not.exist');
   });
 });
-
