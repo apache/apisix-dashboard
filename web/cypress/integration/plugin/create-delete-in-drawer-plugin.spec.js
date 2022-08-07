@@ -109,4 +109,42 @@ context('Delete Plugin List with the Drawer', () => {
     });
     cy.get(selector.empty).should('be.visible');
   });
+
+  it('should delete the plugin with the drawer in the list of plugins', function () {
+    cy.visit('/plugin/list');
+    cy.get(selector.refresh).click();
+    cy.contains('Enable').click();
+
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
+      });
+    cy.get(selector.drawer)
+      .should('be.visible')
+      .within(() => {
+        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.checkedSwitcher).should('exist');
+      });
+    cy.contains('button', 'Submit').click();
+
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
+      });
+
+    cy.contains('button', 'Delete').click({
+      force: true,
+    });
+    cy.contains('button', 'Confirm').click({
+      force: true,
+    });
+    cy.visit('/plugin/list');
+    cy.get(selector.empty).should('be.visible');
+  });
 });
