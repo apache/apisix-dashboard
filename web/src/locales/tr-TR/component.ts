@@ -53,6 +53,7 @@ export default {
   'component.global.notification.success.message.deleteSuccess': 'Başarıyla silindi',
   'component.global.create.consumer.success': 'Başarıyla oluşturuldu',
   'component.global.delete.consumer.success': 'Başarıyla silindi',
+  'component.global.delete.routes.success':'Sil Yöneltmeler Başarılı',
   'component.global.edit.consumer.success': 'Başarıyla güncellendi',
 
   'component.global.steps.stepTitle.basicInformation': 'Temel Bilgiler',
