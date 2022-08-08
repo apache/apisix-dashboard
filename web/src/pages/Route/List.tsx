@@ -560,9 +560,7 @@ const Page: React.FC = () => {
                onClick={async () => {
                await remove(selectedRowKeys).then(() => {
                 handleTableActionSuccessResponse(
-                  `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                    id: 'menu.routes',
-                  })} ${formatMessage({ id: 'component.status.success' })}`,
+                  `${formatMessage({ id: 'component.global.delete.routes.success' })}`,
                 );
                });
                ref.current?.reloadAndRest?.();
