@@ -64,7 +64,7 @@ context('Create and Batch Deletion Routes', () => {
     cy.login();
   });
 
-  it('should create route test0, test1, test2', function () {
+  it('should successfully create 3 routes', function () {
     cy.visit('/');
     cy.contains('Route').click();
     for (let i = 0; i < 3; i += 1) {
