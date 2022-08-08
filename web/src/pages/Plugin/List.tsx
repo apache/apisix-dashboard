@@ -131,6 +131,13 @@ const Page: React.FC = () => {
           setVisible(false);
           setName('');
           ref.current?.reload();
+          notification.success({
+            message: `${formatMessage({
+              id: `component.global.${shouldDelete ? 'delete' : 'edit'}`,
+            })} ${formatMessage({
+              id: 'menu.plugin',
+            })} ${formatMessage({ id: 'component.status.success' })}`,
+          });
         });
       }}
     />

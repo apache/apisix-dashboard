@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Card } from 'antd';
+import { Card, notification } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import PluginPage from '@/components/Plugin';
@@ -48,7 +48,7 @@ const PluginMarket: React.FC = () => {
           initialData={initialData}
           type="global"
           schemaType="route"
-          onChange={(pluginsData) => {
+          onChange={(pluginsData, handleType) => {
             createOrUpdate({
               plugins: {
                 ...initialData,
@@ -56,6 +56,13 @@ const PluginMarket: React.FC = () => {
               },
             }).then(() => {
               initPageData();
+              notification.success({
+                message: `${formatMessage({
+                  id: `component.global.${handleType}`,
+                })} ${formatMessage({
+                  id: 'menu.plugin',
+                })} ${formatMessage({ id: 'component.status.success' })}`,
+              });
             });
           }}
         />

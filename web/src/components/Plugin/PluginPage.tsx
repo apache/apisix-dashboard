@@ -33,7 +33,11 @@ type Props = {
   schemaType?: PluginComponent.Schema;
   referPage?: PluginComponent.ReferPage;
   showSelector?: boolean;
-  onChange?: (plugins: PluginComponent.Data, plugin_config_id?: string) => void;
+  onChange?: (
+    plugins: PluginComponent.Data,
+    handleType: 'edit' | 'delete',
+    plugin_config_id?: string,
+  ) => void;
 };
 
 const PanelSectionStyle = {
@@ -280,11 +284,10 @@ const PluginPage: React.FC<Props> = ({
         const newPlugins = {
           ...initialData,
           [name]: { ...monacoData, disable: !formData.disable },
+          ...(shouldDelete ? { [name]: null } : {}),
         };
-        if (shouldDelete === true) {
-          newPlugins[name] = null;
-        }
-        onChange(newPlugins, form.getFieldValue('plugin_config_id'));
+        const handleType = shouldDelete ? 'delete' : 'edit';
+        onChange(newPlugins, handleType, form.getFieldValue('plugin_config_id'));
         setPlugins(newPlugins);
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}

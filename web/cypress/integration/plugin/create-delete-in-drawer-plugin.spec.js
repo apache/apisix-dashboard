@@ -30,6 +30,8 @@ context('Delete Plugin List with the Drawer', () => {
     checkedSwitcher: '.ant-switch-checked',
     refresh: '.anticon-reload',
     empty: '.ant-empty-normal',
+    notification: '.ant-notification-notice',
+    notificationCloseIcon: '.ant-notification-notice-close',
   };
 
   const data = {
@@ -107,6 +109,8 @@ context('Delete Plugin List with the Drawer', () => {
     cy.contains('button', 'Confirm').click({
       force: true,
     });
+    cy.get(selector.notification).should('contain', 'Delete Plugin Successfully');
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
     cy.get(selector.empty).should('be.visible');
   });
 
@@ -144,6 +148,8 @@ context('Delete Plugin List with the Drawer', () => {
     cy.contains('button', 'Confirm').click({
       force: true,
     });
+    cy.get(selector.notification).should('contain', 'Delete Plugin Successfully');
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
     cy.visit('/plugin/list');
     cy.get(selector.empty).should('be.visible');
   });
