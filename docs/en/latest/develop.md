@@ -102,7 +102,7 @@ $ npm config set strict-peer-dependencies=false
 $ npm config set auto-install-peers=true
 
 # The RE2 package is missing for this project
-$ npm install re2
+$ npm/yarn install re2
 ```
 
 > When you have used pnpm before or have local dependency packages, it will show faster download speed. If necessary, you can use 'pnpm import' to convert yarn.lock to pnpm-lock.yaml (even for APISIX developers, this thing does not need to be submitted to the warehouse, and our dependent package anchor is still package.json)
