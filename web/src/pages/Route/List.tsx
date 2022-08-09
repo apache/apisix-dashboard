@@ -31,7 +31,6 @@ import {
   Modal,
   Menu,
   Dropdown,
-  Table,
   Tooltip,
 } from 'antd';
 import { history, useIntl } from 'umi';
@@ -97,8 +96,6 @@ const Page: React.FC = () => {
       setSelectedRowKeys(currentSelectKeys);
     },
     preserveSelectedRowKeys: true,
-    selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT, Table.SELECTION_NONE],
-    defaultSelectedRowKeys: [1],
   };
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
@@ -309,7 +306,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
-      width: 150,
+      fixed:'left',
     },
     {
       title: formatMessage({ id: 'component.global.id' }),
