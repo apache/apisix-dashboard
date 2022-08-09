@@ -31,6 +31,7 @@ import {
   Modal,
   Menu,
   Dropdown,
+  Table,
   Tooltip,
 } from 'antd';
 import { history, useIntl } from 'umi';
@@ -96,6 +97,8 @@ const Page: React.FC = () => {
       setSelectedRowKeys(currentSelectKeys);
     },
     preserveSelectedRowKeys: true,
+    selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT, Table.SELECTION_NONE],
+    defaultSelectedRowKeys: [1],
   };
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
@@ -306,7 +309,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
-      fixed: 'left',
+      width: 150,
     },
     {
       title: formatMessage({ id: 'component.global.id' }),
@@ -542,6 +545,31 @@ const Page: React.FC = () => {
         actionRef={ref}
         rowKey="id"
         columns={columns}
+        rowSelection={rowSelection}
+        tableAlertRender={() => (
+          <Space size={24}>
+            <span>
+            {formatMessage({ id: 'page.route.chosen' })} {selectedRowKeys.length} {formatMessage({ id: 'page.route.item' })}
+            </span>
+          </Space>
+        )}
+        tableAlertOptionRender={() => {
+          return (
+            <Space size={16}>
+              <Button
+               onClick={async () => {
+               await remove(selectedRowKeys).then(() => {
+                handleTableActionSuccessResponse(
+                  `${formatMessage({ id: 'component.global.delete.routes.success' })}`,
+                );
+               });
+               ref.current?.reloadAndRest?.();
+             }}>
+             {formatMessage({ id: 'page.route.batchDeletion' })}
+             </Button>
+            </Space>
+          );
+        }}
         request={fetchList}
         pagination={{
           onChange: (page, pageSize?) => savePageList(page, pageSize),
@@ -559,9 +587,7 @@ const Page: React.FC = () => {
           </Button>,
           <ListToolbar />,
         ]}
-        rowSelection={rowSelection}
         footer={() => <ListFooter />}
-        tableAlertRender={false}
         scroll={{ x: 1300 }}
       />
       <DebugDrawView
