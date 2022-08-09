@@ -306,7 +306,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
-      fixed:'left',
+      fixed: 'left',
     },
     {
       title: formatMessage({ id: 'component.global.id' }),
@@ -542,33 +542,6 @@ const Page: React.FC = () => {
         actionRef={ref}
         rowKey="id"
         columns={columns}
-        rowSelection={rowSelection}
-        tableAlertRender={() => (
-          <Space size={24}>
-            <span>
-            {formatMessage({ id: 'page.route.chosen' })} {selectedRowKeys.length} {formatMessage({ id: 'page.route.item' })}
-            </span>
-          </Space>
-        )}
-        tableAlertOptionRender={() => {
-          return (
-            <Space size={16}>
-              <Button
-               onClick={async () => {
-               await remove(selectedRowKeys).then(() => {
-                handleTableActionSuccessResponse(
-                  `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                    id: 'menu.routes',
-                  })} ${formatMessage({ id: 'component.status.success' })}`,
-                );
-               });
-               ref.current?.reloadAndRest?.();
-             }}>
-             {formatMessage({ id: 'page.route.batchDeletion' })}
-             </Button>
-            </Space>
-          );
-        }}
         request={fetchList}
         pagination={{
           onChange: (page, pageSize?) => savePageList(page, pageSize),
@@ -586,7 +559,9 @@ const Page: React.FC = () => {
           </Button>,
           <ListToolbar />,
         ]}
+        rowSelection={rowSelection}
         footer={() => <ListFooter />}
+        tableAlertRender={false}
         scroll={{ x: 1300 }}
       />
       <DebugDrawView
