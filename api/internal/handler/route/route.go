@@ -385,9 +385,6 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		return ret, err
 	}
 
-	// enable route by default
-	input.Status = 1
-
 	// create
 	res, err := h.routeStore.Create(c.Context(), input)
 	if err != nil {
@@ -504,9 +501,6 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	if err != nil {
 		return ret, err
 	}
-
-	// enable route by default
-	input.Status = 1
 
 	// create
 	res, err := h.routeStore.Update(c.Context(), &input.Route, true)
