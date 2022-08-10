@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package server
 
 import (
@@ -25,19 +26,22 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 	"github.com/apache/apisix-dashboard/api/internal/utils"
 )
 
-// server is the manager of Manager API, which is responsible for managing the life cycle of Manager API, including initialization, start, stop and so on
+// server is the manager of Manager API, which is responsible for managing the life cycle of Manager API,
+// including initialization, start, stop and so on
 type server struct {
 	server    *http.Server
 	serverSSL *http.Server
 	options   *Options
 }
 
-type Options struct{}
+type Options struct {
+	Config *config.Config
+}
 
 // NewServer Create a server manager
 func NewServer(options *Options) (*server, error) {
@@ -66,9 +70,10 @@ func (s *server) Start(errSig chan error) {
 	}()
 
 	// start HTTPs server
-	if conf.SSLCert != "" && conf.SSLKey != "" {
+	if s.IsEnableTLS() {
+		tlsConfig := s.options.Config.Server.TLS
 		go func() {
-			err := s.serverSSL.ListenAndServeTLS(conf.SSLCert, conf.SSLKey)
+			err := s.serverSSL.ListenAndServeTLS(tlsConfig.CertFile, tlsConfig.KeyFile)
 			if err != nil && err != http.ErrServerClosed {
 				log.Errorf("listen and serve for HTTPS failed: %s", err)
 				errSig <- err
@@ -109,14 +114,21 @@ func (s *server) shutdownServer(server *http.Server) {
 }
 
 func (s *server) printInfo() {
+	cfg := s.options.Config
+
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
 	utils.PrintVersion()
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Config File", viper.ConfigFileUsed())
-	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
-	if conf.SSLCert != "" && conf.SSLKey != "" {
-		fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "HTTPS Listen", conf.SSLHost, conf.SSLPort)
+	fmt.Fprintf(os.Stdout, "Config File: %s\n", viper.ConfigFileUsed())
+	fmt.Fprintf(os.Stdout, "Listen: %s\n", cfg.Server.HTTPListen)
+	if s.IsEnableTLS() {
+		fmt.Fprintf(os.Stdout, "HTTPS Listen: %s\n", cfg.Server.HTTPSListen)
 	}
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "ErrorLogFile", conf.ErrorLogPath)
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "AccessLogFile", conf.AccessLogPath)
+	fmt.Fprintf(os.Stdout, "Error Log Level: %s\n", cfg.Log.ErrorLog.Level)
+	fmt.Fprintf(os.Stdout, "Error Log File: %s\n", cfg.Log.ErrorLog.FilePath)
+	fmt.Fprintf(os.Stdout, "Access Log File: %s\n\n", cfg.Log.AccessLog)
+}
+
+func (s *server) IsEnableTLS() bool {
+	tlsConfig := s.options.Config.Server.TLS
+	return tlsConfig.CertFile != "" && tlsConfig.KeyFile != ""
 }

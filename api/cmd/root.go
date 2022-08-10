@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package cmd
 
 import (
@@ -24,7 +25,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/core/server"
 	"github.com/apache/apisix-dashboard/api/internal/log"
@@ -46,7 +46,7 @@ func NewRootCommand() *cobra.Command {
 
 			log.InitLogger()
 
-			s, err := server.NewServer(&server.Options{})
+			s, err := server.NewServer(&server.Options{Config: cfg})
 			if err != nil {
 				return err
 			}
@@ -73,7 +73,6 @@ func NewRootCommand() *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&configFile, "config", "c", "config/config.yaml", "config file")
-	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
 
 	cmd.AddCommand(
 		newVersionCommand(),
