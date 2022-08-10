@@ -24,6 +24,18 @@ server:
   #   key_file: "/tmp/cert/example.key"   # The path of your TLS key.
 
 data_source:                                       # The data source type of APISIX Dashboard, it's an array that allows to contain multiple data sources, but currently only the first one is used.
+  - name: default
+    type: etcd
+    etcd:
+      endpoints:                                   # Multiple addresses are supported when using etcd clusters
+        - 127.0.0.1:2379
+      # username: "root"                           # ignore etcd username if not enable etcd auth
+      # password: "123456"                         # ignore etcd password if not enable etcd auth
+      # mtls:
+      #   key_file: ""                             # Path of your self-signed client side key
+      #   cert_file: ""                            # Path of your self-signed client side cert
+      #   ca_file: ""                              # Path of your self-signed ca cert, the CA is used to sign callers' certificates
+      # prefix: /apisix                            # apisix config's prefix in etcd, /apisix by default
   - name: default                                  # The name of data source.
     type: apisix                                   # The type of data source, it now only supports "apisix".
     apisix:                                        # When the data source type is "apisix", configure the following parameters.
