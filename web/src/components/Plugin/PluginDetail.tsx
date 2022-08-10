@@ -441,7 +441,7 @@ const PluginDetail: React.FC<Props> = ({
 1       "plugins": {
 2           "jwt-auth": {
 3               "key": "user-key",
-4               "secret": "my-secret-key"      
+4               "secret": "my-secret-key"
 5           }
 6       }
               `}
