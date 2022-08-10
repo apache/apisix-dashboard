@@ -59,7 +59,7 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
   });
 };
 
-export const remove = (rid: string) => request(`/routes/${rid}`, { method: 'DELETE' });
+export const remove = (rid: string[]) => request(`/routes/${rid}`, { method: 'DELETE' });
 
 export const checkUniqueName = (name = '', exclude = '') =>
   request('/notexist/routes', {
