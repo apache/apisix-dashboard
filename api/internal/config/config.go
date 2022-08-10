@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package config
 
 import (
@@ -32,12 +33,23 @@ func NewDefaultConfig() *Config {
 		DataSource: []DataSource{
 			{
 				Name: "default",
+				Type: DataSourceTypeETCD,
+				ETCD: DataSourceETCD{
+					Endpoints: []string{"127.0.0.1:2379"},
+					Username:  "",
+					Password:  "",
+					MTLS:      DataSourceETCDMTLS{},
+					Prefix:    "/apisix",
+				},
+			},
+			/*{
+				Name: "default",
 				Type: DataSourceTypeAPISIX,
 				APISIX: DataSourceAPISIX{
 					Address: "http://127.0.0.1:9080",
-					Key:     "edd1c9f034335f136f87ad84b625c8f1",
+					KeyFile:     "edd1c9f034335f136f87ad84b625c8f1",
 				},
-			},
+			},*/
 		},
 		Security: Security{
 			AllowList: []string{"127.0.0.1", "::1"},
