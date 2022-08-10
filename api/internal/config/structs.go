@@ -18,6 +18,7 @@ package config
 
 const (
 	DataSourceTypeAPISIX DataSourceType = "apisix"
+	DataSourceTypeETCD   DataSourceType = "etcd"
 )
 
 type Config struct {
@@ -44,6 +45,7 @@ type DataSource struct {
 	Name   string           `mapstructure:"name"`
 	Type   DataSourceType   `mapstructure:"type"`
 	APISIX DataSourceAPISIX `mapstructure:"apisix"`
+	ETCD   DataSourceETCD   `mapstructure:"etcd"`
 }
 
 type DataSourceType string
@@ -51,6 +53,20 @@ type DataSourceType string
 type DataSourceAPISIX struct {
 	Address string `mapstructure:"address"`
 	Key     string `mapstructure:"key"`
+}
+
+type DataSourceETCD struct {
+	Endpoints []string           `mapstructure:"endpoints"`
+	Username  string             `mapstructure:"username"`
+	Password  string             `mapstructure:"password"`
+	MTLS      DataSourceETCDMTLS `mapstructure:"mtls"`
+	Prefix    string             `mapstructure:"prefix"`
+}
+
+type DataSourceETCDMTLS struct {
+	KeyFile  string `mapstructure:"key_file"`
+	CertFile string `mapstructure:"cert_file"`
+	CAFile   string `mapstructure:"ca_file"`
 }
 
 type Security struct {
