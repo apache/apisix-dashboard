@@ -51,6 +51,10 @@ export default {
   'page.route.import': '导入',
   'page.route.createRoute': '创建路由',
   'page.route.editRoute': '编辑路由',
+  'page.route.batchDeletion': '批量删除路由',
+  'page.route.unSelect': '取消选择',
+  'page.route.item': '项',
+  'page.route.chosen':'已选择',
 
   // button
   'page.route.button.returnList': '返回路由列表',

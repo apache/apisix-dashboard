@@ -66,8 +66,7 @@ conf:
   #   access_control_allow_headers: "Authorization"
   #   access_control-allow_methods: "*"
   #   x_frame_options: "deny"
-  #   content_security_policy: ""default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'""
-
+  #   content_security_policy: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; frame-src xx.xx.xx.xx:3000"  # You can set frame-src to provide content for your grafana panel.
 
 authentication:
   secret:

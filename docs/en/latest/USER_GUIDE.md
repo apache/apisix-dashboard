@@ -27,6 +27,8 @@ The following are parts of the modules' snapshot.
 
 We support the monitor page by referencing it in [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe). Before accessing [Grafana](https://grafana.com/), please Enable [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding), which defaults to `false`. This causes the browser to fail to render Grafana pages properly due to security policies.
 
+Solving this problem requires you to configure some csp rules. Please check the default configuration options for details. You can refer to this [link](https://github.com/apache/apisix-dashboard/blob/master/api/conf/conf.yaml) for the recommand rule.
+
 ![Dashboard-en](https://user-images.githubusercontent.com/40708551/112922395-0eed0380-912a-11eb-8c92-4c67d2bae4a8.png)
 
 ## Route
