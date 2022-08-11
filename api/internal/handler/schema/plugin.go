@@ -24,7 +24,6 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 )
@@ -52,8 +51,8 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	if input.All {
 		var res []map[string]interface{}
 		list := plugins.Value().(map[string]interface{})
-		for name, conf := range list {
-			plugin := conf.(map[string]interface{})
+		for name, p := range list {
+			plugin := p.(map[string]interface{})
 			plugin["name"] = name
 			if _, ok := plugin["type"]; !ok {
 				plugin["type"] = "other"
@@ -66,10 +65,6 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	var ret []string
 	list := plugins.Map()
 	for pluginName := range list {
-		if res, ok := conf.Plugins[pluginName]; !ok || !res {
-			continue
-		}
-
 		ret = append(ret, pluginName)
 	}
 
