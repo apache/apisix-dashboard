@@ -18,6 +18,7 @@ concurrency:
 
 env:
   CYPRESS_CACHE_FOLDER: cypress/cache
+  SERVER_URL_TEST: 'http://localhost:9000'
 defaults:
   run:
     working-directory: web
