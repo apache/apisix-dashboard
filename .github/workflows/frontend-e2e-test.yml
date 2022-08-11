@@ -51,6 +51,9 @@ jobs:
           node-version: 16.x
           cache: 'pnpm'
           cache-dependency-path: web/pnpm-lock.yaml
+        
+      - name: Install PNPM
+        run: npm i -g pnpm
 
       - name: Setup golang environment
         uses: actions/setup-go@v3
