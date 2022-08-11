@@ -38,6 +38,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Change the NPM Settings for PNPM
+        run: npm config set strict-peer-dependencies=false
+      - run: npm config set auto-install-peers=true
+
       - name: Install PNPM
         run: npm i -g pnpm@6.32.11
 
