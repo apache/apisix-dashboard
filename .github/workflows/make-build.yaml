@@ -44,7 +44,7 @@ jobs:
           node-version: 16.x
       
       - name: Install PNPM
-        run: npm i -g pnpm
+        run: npm i -g pnpm@6.32.11
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
