@@ -32,8 +32,8 @@ export default {
   pwa: false,
   iconfontUrl: '',
   serveUrlMap: {
-    dev: 'http://139.217.190.60',
-    test: 'http://localhost:9000',
+    dev: process.env.SERVER_URL_DEV || 'http://139.217.190.60',
+    test: process.env.SERVER_URL_TEST || 'http://localhost:9000',
   },
 } as LayoutSettings & {
   pwa: boolean;
