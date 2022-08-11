@@ -16,7 +16,8 @@
  */
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-export default {
+const { SERVER_URL_DEV, SERVER_URL_TEST, REACT_APP_ENV } = process.env;
+const defaultSettings = {
   navTheme: 'dark',
   primaryColor: '#1890ff',
   layout: 'mix',
@@ -32,8 +33,8 @@ export default {
   pwa: false,
   iconfontUrl: '',
   serveUrlMap: {
-    dev: process.env.SERVER_URL_DEV || 'http://139.217.190.60',
-    test: process.env.SERVER_URL_TEST || 'http://localhost:9000',
+    dev: SERVER_URL_DEV,
+    test: SERVER_URL_TEST,
   },
 } as LayoutSettings & {
   pwa: boolean;
@@ -42,3 +43,20 @@ export default {
     test: string;
   };
 };
+
+const { dev, test } = defaultSettings.serveUrlMap;
+const throwPromptError = (message: TemplateStringsArray) => {
+  throw new Error(
+    `Please set '${message[0]}' in 'web/.env' file. Guide: https://apisix.apache.org/docs/dashboard/develop/#web`,
+  );
+};
+
+if (REACT_APP_ENV === 'test' && !test) {
+  throwPromptError`SERVER_URL_TEST`;
+}
+
+if (REACT_APP_ENV === 'dev' && !dev) {
+  throwPromptError`SERVER_URL_DEV`;
+}
+
+export default defaultSettings;
