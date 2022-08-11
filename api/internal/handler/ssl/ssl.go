@@ -32,7 +32,6 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/core/store"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -220,7 +219,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	ssl.ID = input.ID
 	ssl.Labels = input.Labels
 	//set default value for SSL status, if not set, it will be 0 which means disable.
-	ssl.Status = conf.SSLDefaultStatus
+	ssl.Status = 1
 	ret, err := h.sslStore.Create(c.Context(), ssl)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
@@ -260,7 +259,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	//set default value for SSL status, if not set, it will be 0 which means disable.
-	ssl.Status = conf.SSLDefaultStatus
+	ssl.Status = 1
 	ret, err := h.sslStore.Update(c.Context(), ssl, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err

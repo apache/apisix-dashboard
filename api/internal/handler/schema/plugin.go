@@ -25,6 +25,7 @@ import (
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 )
 
@@ -47,7 +48,7 @@ type ListInput struct {
 func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	plugins := conf.Schema.Get("plugins")
+	plugins := config.GetSchema().Get("plugins")
 	if input.All {
 		var res []map[string]interface{}
 		list := plugins.Value().(map[string]interface{})

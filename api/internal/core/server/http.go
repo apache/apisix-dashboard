@@ -40,7 +40,7 @@ func (s *server) setupAPI() {
 	}
 
 	// routes
-	r := internal.SetUpRouter()
+	r := internal.SetUpRouter(s.options.Config)
 
 	// HTTP
 	addr := s.options.Config.Server.HTTPListen

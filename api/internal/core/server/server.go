@@ -40,7 +40,7 @@ type server struct {
 }
 
 type Options struct {
-	Config *config.Config
+	Config config.Config
 }
 
 // NewServer Create a server manager

@@ -30,7 +30,6 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/core/store"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -102,8 +101,10 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	if contentLen <= 0 {
 		return nil, errors.New("uploaded file is empty")
 	}
-	if contentLen > conf.ImportSizeLimit {
-		return nil, errors.Errorf("uploaded file size exceeds the limit, limit is %d", conf.ImportSizeLimit)
+
+	importSizeLimit := 10 * 1024 * 1024
+	if contentLen > importSizeLimit {
+		return nil, errors.Errorf("uploaded file size exceeds the limit, limit is %d", importSizeLimit)
 	}
 
 	var l loader.Loader

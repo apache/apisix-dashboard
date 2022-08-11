@@ -33,7 +33,6 @@ import (
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 	lua "github.com/yuin/gopher-lua"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/core/store"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -273,7 +272,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	workDir, err := filepath.Abs(conf.WorkDir)
+	workDir, err := filepath.Abs(".")
 	if err != nil {
 		return "", err
 	}

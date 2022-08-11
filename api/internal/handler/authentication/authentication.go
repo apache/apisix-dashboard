@@ -26,7 +26,8 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 	"github.com/apache/apisix-dashboard/api/internal/utils/consts"
 )
@@ -87,7 +88,18 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	username := input.Username
 	password := input.Password
 
-	user := conf.UserList[username]
+	authnConfig := internal.Config.Authentication
+	var user *config.AuthenticationUser
+	for i := range authnConfig.Users {
+		if authnConfig.Users[i].Username == username {
+			user = &authnConfig.Users[i]
+			break
+		}
+	}
+	if user == nil {
+		return nil, consts.ErrUsernamePassword
+	}
+
 	if username != user.Username || password != user.Password {
 		return nil, consts.ErrUsernamePassword
 	}
@@ -96,10 +108,10 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	claims := jwt.StandardClaims{
 		Subject:   username,
 		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthConf.ExpireTime)).Unix(),
+		ExpiresAt: time.Now().Add(time.Second * time.Duration(authnConfig.ExpireTime)).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, _ := token.SignedString([]byte(conf.AuthConf.Secret))
+	signedToken, _ := token.SignedString([]byte(authnConfig.Secret))
 
 	// output token
 	return &UserSession{

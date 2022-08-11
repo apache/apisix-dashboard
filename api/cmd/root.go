@@ -40,11 +40,11 @@ func NewRootCommand() *cobra.Command {
 		Short: "Apache APISIX Dashboard",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg := config.NewDefaultConfig()
-			if err := config.SetupConfig(cfg, configFile); err != nil {
+			if err := config.SetupConfig(&cfg, configFile); err != nil {
 				return errors.Errorf("failed to setup config: %v", err)
 			}
 
-			log.InitLogger()
+			log.InitLogger(cfg)
 
 			s, err := server.NewServer(&server.Options{Config: cfg})
 			if err != nil {

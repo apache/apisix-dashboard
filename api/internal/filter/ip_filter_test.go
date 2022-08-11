@@ -23,14 +23,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 )
 
 func TestIPFilter_Handle(t *testing.T) {
+	secConfig := config.NewDefaultConfig().Security
+
 	// empty allowed ip list --> should normal
-	conf.AllowList = []string{}
+	secConfig.AllowList = []string{}
 	r := gin.New()
-	r.Use(IPFilter())
+	r.Use(IPFilter(secConfig))
 
 	r.GET("/", func(c *gin.Context) {
 	})
@@ -39,9 +41,9 @@ func TestIPFilter_Handle(t *testing.T) {
 	assert.Equal(t, 200, w.Code)
 
 	// should forbidden
-	conf.AllowList = []string{"10.0.0.0/8", "10.0.0.1"}
+	secConfig.AllowList = []string{"10.0.0.0/8", "10.0.0.1"}
 	r = gin.New()
-	r.Use(IPFilter())
+	r.Use(IPFilter(secConfig))
 	r.GET("/fbd", func(c *gin.Context) {
 	})
 
@@ -49,18 +51,18 @@ func TestIPFilter_Handle(t *testing.T) {
 	assert.Equal(t, 403, w.Code)
 
 	// should allowed
-	conf.AllowList = []string{"10.0.0.0/8", "0.0.0.0/0"}
+	secConfig.AllowList = []string{"10.0.0.0/8", "0.0.0.0/0"}
 	r = gin.New()
-	r.Use(IPFilter())
+	r.Use(IPFilter(secConfig))
 	r.GET("/test", func(c *gin.Context) {
 	})
 	w = performRequest(r, "GET", "/test", nil)
 	assert.Equal(t, 200, w.Code)
 
 	// should forbidden
-	conf.AllowList = []string{"127.0.0.1"}
+	secConfig.AllowList = []string{"127.0.0.1"}
 	r = gin.New()
-	r.Use(IPFilter())
+	r.Use(IPFilter(secConfig))
 	r.GET("/test", func(c *gin.Context) {})
 
 	req := httptest.NewRequest("GET", "/test", nil)

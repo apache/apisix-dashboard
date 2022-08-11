@@ -23,30 +23,43 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 )
 
-var logger *zap.SugaredLogger
+var accessLogger *zap.SugaredLogger
+var errLogger *zap.SugaredLogger
 
 // TODO: we should no longer use init() function after remove all handler's integration tests
 // ENV=test is for integration tests only, other ENV should call "InitLogger" explicitly
 func init() {
-	if env := os.Getenv("ENV"); env == conf.EnvTEST {
-		InitLogger()
+	if env := os.Getenv("ENV"); env == "test" {
+		InitLogger(config.NewDefaultConfig())
 	}
 }
 
-func InitLogger() {
-	logger = GetLogger(ErrorLog)
+func InitLogger(cfg config.Config) {
+	accessLogger = genLogger(cfg, AccessLog)
+	errLogger = genLogger(cfg, ErrorLog)
 }
 
 func GetLogger(logType Type) *zap.SugaredLogger {
+	switch logType {
+	case AccessLog:
+		return accessLogger
+	case ErrorLog:
+		fallthrough
+	default:
+		return errLogger
+	}
+}
+
+func genLogger(cfg config.Config, logType Type) *zap.SugaredLogger {
 	_ = zap.RegisterSink("winfile", newWinFileSink)
 
 	skip := 2
-	writeSyncer := fileWriter(logType)
+	writeSyncer := fileWriter(cfg, logType)
 	encoder := getEncoder(logType)
-	logLevel := getLogLevel()
+	logLevel := getLogLevel(cfg)
 	if logType == AccessLog {
 		logLevel = zapcore.InfoLevel
 		skip = 0
@@ -59,9 +72,9 @@ func GetLogger(logType Type) *zap.SugaredLogger {
 	return zapLogger.Sugar()
 }
 
-func getLogLevel() zapcore.LevelEnabler {
+func getLogLevel(cfg config.Config) zapcore.LevelEnabler {
 	level := zapcore.WarnLevel
-	switch conf.ErrorLogLevel {
+	switch cfg.Log.ErrorLog.Level {
 	case "debug":
 		level = zapcore.DebugLevel
 	case "info":
@@ -90,10 +103,10 @@ func getEncoder(logType Type) zapcore.Encoder {
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
-func fileWriter(logType Type) zapcore.WriteSyncer {
-	logPath := conf.ErrorLogPath
+func fileWriter(cfg config.Config, logType Type) zapcore.WriteSyncer {
+	logPath := cfg.Log.ErrorLog.FilePath
 	if logType == AccessLog {
-		logPath = conf.AccessLogPath
+		logPath = cfg.Log.AccessLog
 	}
 	//standard output
 	if logPath == "/dev/stdout" {

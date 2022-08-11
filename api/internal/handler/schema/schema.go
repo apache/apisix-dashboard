@@ -27,7 +27,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 )
 
@@ -53,7 +53,7 @@ type SchemaInput struct {
 func (h *SchemaHandler) Schema(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*SchemaInput)
 
-	ret := conf.Schema.Get("main." + input.Resource).Value()
+	ret := config.GetSchema().Get("main." + input.Resource).Value()
 
 	if ret == nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
@@ -73,11 +73,11 @@ func (h *SchemaHandler) PluginSchema(c droplet.Context) (interface{}, error) {
 
 	var ret interface{}
 	if input.SchemaType == "consumer" {
-		ret = conf.Schema.Get("plugins." + input.Name + ".consumer_schema").Value()
+		ret = config.GetSchema().Get("plugins." + input.Name + ".consumer_schema").Value()
 	}
 
 	if ret == nil {
-		ret = conf.Schema.Get("plugins." + input.Name + ".schema").Value()
+		ret = config.GetSchema().Get("plugins." + input.Name + ".schema").Value()
 	}
 
 	if ret == nil {
