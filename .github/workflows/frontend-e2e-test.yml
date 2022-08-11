@@ -18,7 +18,6 @@ concurrency:
 
 env:
   CYPRESS_CACHE_FOLDER: cypress/cache
-  SERVER_URL_TEST: 'http://localhost:9000'
 defaults:
   run:
     working-directory: web
@@ -90,6 +89,8 @@ jobs:
       - name: Start frontend then test
         run: |
           yarn start-server-and-test 'cross-env SERVE_ENV=test yarn start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test yarn cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
+        env:
+          SERVER_URL_TEST: http://localhost:9000
 
       - name: Report e2e coverage
         run: npx nyc report --reporter=text-summary
