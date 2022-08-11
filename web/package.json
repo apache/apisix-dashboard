@@ -59,6 +59,7 @@
     "@rjsf/antd": "2.2.0",
     "@rjsf/core": "2.2.0",
     "@types/js-yaml": "^4.0.0",
+    "@umijs/route-utils": "^2.2.0",
     "ajv": "^7.0.3",
     "ajv-formats": "^1.5.1",
     "antd": "^4.4.0",
