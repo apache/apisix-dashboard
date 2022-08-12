@@ -122,7 +122,13 @@ release-src:
 	--exclude release \
 	--exclude api/internal/core/store/validate_mock.go \
 	--exclude api/internal/core/storage/storage_mock.go \
-        .
+         ./api \
+         ./licenses \
+	 ./web \
+	 LICENSE \
+	 Makefile \
+	 NOTICE \
+	 *.md
 
 	shasum -a 512 $(RELEASE_SRC).tgz > $(RELEASE_SRC).tgz.sha512
 
