@@ -32,8 +32,8 @@ data_source:                                       # The data source type of API
       # username: "root"                           # ignore etcd username if not enable etcd auth
       # password: "123456"                         # ignore etcd password if not enable etcd auth
       # mtls:
-      #   key_file: ""                             # Path of your self-signed client side key
       #   cert_file: ""                            # Path of your self-signed client side cert
+      #   key_file: ""                             # Path of your self-signed client side key
       #   ca_file: ""                              # Path of your self-signed ca cert, the CA is used to sign callers' certificates
       # prefix: /apisix                            # apisix config's prefix in etcd, /apisix by default
   - name: default                                  # The name of data source.
