@@ -19,6 +19,7 @@ package log
 import (
 	"net/url"
 	"os"
+	"path/filepath"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -114,6 +115,15 @@ func fileWriter(cfg config.Config, logType Type) zapcore.WriteSyncer {
 	}
 	if logPath == "/dev/stderr" {
 		return zapcore.Lock(os.Stderr)
+	}
+
+	logDir := filepath.Dir(logPath)
+	_, err := os.Stat(logDir)
+	if os.IsNotExist(err) {
+		err = os.Mkdir(logDir, 0777)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	writer, _, err := zap.Open(logPath)
