@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -121,6 +122,11 @@ func GetSchema() gjson.Result {
 		customizeSchemaContent []byte
 		err                    error
 	)
+
+	if os.Getenv("ENV") == "test" {
+		apisixSchemaPath = os.Getenv("GITHUB_WORKSPACE") + "/api/conf/schema.json"
+		customizeSchemaPath = os.Getenv("GITHUB_WORKSPACE") + "/api/conf/customize_schema.json"
+	}
 
 	if apisixSchemaContent, err = ioutil.ReadFile(apisixSchemaPath); err != nil {
 		panic(fmt.Errorf("fail to read configuration: %s, error: %s", apisixSchemaPath, err.Error()))
