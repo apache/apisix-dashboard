@@ -30,8 +30,8 @@
 
 VERSION=$(cat ./VERSION)
 KERNEL=$(uname -s)
-CONF_FILE="/usr/local/apisix-dashboard/conf/conf.yaml"
-APISIX_PROFILE_CONF_FILE="/usr/local/apisix-dashboard/conf/conf-test.yaml"
+CONF_FILE="/usr/local/apisix-dashboard/config/config.yaml"
+APISIX_PROFILE_CONF_FILE="/usr/local/apisix-dashboard/config/config-test.yaml"
 LOG_FILE="/usr/local/apisix-dashboard/logs/error.log"
 ACCESS_LOG_FILE="/usr/local/apisix-dashboard/logs/access.log"
 SERVICE_NAME="apisix-dashboard"
@@ -47,8 +47,8 @@ else
 fi
 
 recover_conf() {
-  run cp -rf ./conf/conf.yaml ${CONF_FILE}
-  run cp -rf ./conf/conf.yaml ${APISIX_PROFILE_CONF_FILE}
+  run cp -rf ./config/config.yaml ${CONF_FILE}
+  run cp -rf ./config/config.yaml ${APISIX_PROFILE_CONF_FILE}
   [ "$status" -eq 0 ]
 }
 check_logfile() {
@@ -83,8 +83,8 @@ stop_dashboard() {
   [ "$status" -eq 0 ]
 
   # prepare service files
-  mkdir -p /usr/local/apisix-dashboard/conf /usr/local/apisix-dashboard/logs
-  cp ./conf/* /usr/local/apisix-dashboard/conf
+  mkdir -p /usr/local/apisix-dashboard/config /usr/local/apisix-dashboard/logs
+  cp ./config/* /usr/local/apisix-dashboard/config
   cp ./manager-api /usr/local/apisix-dashboard
 
   # create systemd service
@@ -443,7 +443,7 @@ stop_dashboard() {
 
   stop_dashboard 3
 
-  sed -i 's#-c /usr/local/apisix-dashboard/conf/conf.yaml##g' /usr/lib/systemd/system/${SERVICE_NAME}.service
+  sed -i 's#-c /usr/local/apisix-dashboard/config/config.yaml##g' /usr/lib/systemd/system/${SERVICE_NAME}.service
   sed -i '$a\Environment=APISIX_PROFILE=test' /usr/lib/systemd/system/${SERVICE_NAME}.service
   run systemctl daemon-reload
 
