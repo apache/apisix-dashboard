@@ -50,9 +50,7 @@ const PluginMarket: React.FC = () => {
           schemaType="route"
           onChange={(pluginsData, pluginId, handleType) => {
             createOrUpdate({
-              plugins: {
-                ...pluginsData,
-              },
+              plugins: pluginsData,
             }).then(() => {
               initPageData();
               notification.success({

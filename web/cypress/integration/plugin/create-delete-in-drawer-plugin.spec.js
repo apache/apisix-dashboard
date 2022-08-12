@@ -150,6 +150,15 @@ context('Delete Plugin List with the Drawer', () => {
     });
     cy.get(selector.notification).should('contain', 'Delete Plugin Successfully');
     cy.get(selector.notificationCloseIcon).click({ multiple: true });
+
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').then(($el) => {
+          const text = $el.text();
+          expect(text).to.eq('Enable');
+        });
+      });
     cy.visit('/plugin/list');
     cy.get(selector.empty).should('be.visible');
   });
