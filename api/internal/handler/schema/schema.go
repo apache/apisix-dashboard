@@ -38,7 +38,7 @@ func NewSchemaHandler() (handler.RouteRegister, error) {
 	return &SchemaHandler{}, nil
 }
 
-func (h *SchemaHandler) ApplyRoute(r *gin.Engine) {
+func (h *SchemaHandler) ApplyRoute(r *gin.Engine, _ config.Config) {
 	r.GET("/apisix/admin/schema/plugins/:name", wgin.Wraps(h.PluginSchema,
 		wrapper.InputType(reflect.TypeOf(PluginSchemaInput{}))))
 

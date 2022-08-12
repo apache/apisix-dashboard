@@ -35,7 +35,7 @@ func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{}, nil
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
+func (h *Handler) ApplyRoute(r *gin.Engine, _ config.Config) {
 	r.GET("/apisix/admin/plugins", wgin.Wraps(h.Plugins,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 }

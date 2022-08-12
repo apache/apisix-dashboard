@@ -21,6 +21,7 @@ import (
 	"github.com/shiningrush/droplet"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 	"github.com/apache/apisix-dashboard/api/internal/utils"
 )
@@ -37,7 +38,7 @@ func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{}, nil
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
+func (h *Handler) ApplyRoute(r *gin.Engine, _ config.Config) {
 	r.GET("/apisix/admin/tool/version", wgin.Wraps(h.Version))
 }
 

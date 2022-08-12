@@ -26,6 +26,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/core/store"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -41,7 +42,7 @@ func NewHandler() (handler.RouteRegister, error) {
 	}, nil
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
+func (h *Handler) ApplyRoute(r *gin.Engine, _ config.Config) {
 	r.GET("/apisix/admin/consumers/:username", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
 	r.GET("/apisix/admin/consumers", wgin.Wraps(h.List,

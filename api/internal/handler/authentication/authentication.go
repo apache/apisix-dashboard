@@ -26,20 +26,21 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal"
 	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 	"github.com/apache/apisix-dashboard/api/internal/utils/consts"
 )
 
 type Handler struct {
+	config config.Config
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{}, nil
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
+func (h *Handler) ApplyRoute(r *gin.Engine, cfg config.Config) {
+	h.config = cfg
 	r.POST("/apisix/admin/user/login", wgin.Wraps(h.userLogin,
 		wrapper.InputType(reflect.TypeOf(LoginInput{}))))
 }
@@ -88,7 +89,7 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	username := input.Username
 	password := input.Password
 
-	authnConfig := internal.Config.Authentication
+	authnConfig := h.config.Authentication
 	var user *config.AuthenticationUser
 	for i := range authnConfig.Users {
 		if authnConfig.Users[i].Username == username {

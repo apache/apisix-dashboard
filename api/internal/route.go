@@ -47,14 +47,7 @@ import (
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
-var (
-	// Config will be temporarily cached here, and it will be removed after the next PR architecture adjustment
-	Config config.Config
-)
-
 func SetUpRouter(cfg config.Config) *gin.Engine {
-	Config = cfg
-
 	if os.Getenv("ENV") == "local" || os.Getenv("ENV") == "dev" {
 		gin.SetMode(gin.DebugMode)
 	} else {
@@ -100,7 +93,7 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 		if err != nil {
 			panic(err)
 		}
-		h.ApplyRoute(r)
+		h.ApplyRoute(r, cfg)
 	}
 
 	// pprof.Register(r)
