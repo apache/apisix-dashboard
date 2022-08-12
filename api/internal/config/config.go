@@ -116,16 +116,16 @@ func SetupConfig(c *Config, file string) error {
 // GetSchema was added to ensure that the PR passes the CI check and it will be removed in the future
 func GetSchema() gjson.Result {
 	var (
-		apisixSchemaPath       = "./conf/schema.json"
-		customizeSchemaPath    = "./conf/customize_schema.json"
+		apisixSchemaPath       = "./config/schema.json"
+		customizeSchemaPath    = "./config/customize_schema.json"
 		apisixSchemaContent    []byte
 		customizeSchemaContent []byte
 		err                    error
 	)
 
 	if os.Getenv("ENV") == "test" {
-		apisixSchemaPath = os.Getenv("GITHUB_WORKSPACE") + "/api/conf/schema.json"
-		customizeSchemaPath = os.Getenv("GITHUB_WORKSPACE") + "/api/conf/customize_schema.json"
+		apisixSchemaPath = os.Getenv("GITHUB_WORKSPACE") + "/api/config/schema.json"
+		customizeSchemaPath = os.Getenv("GITHUB_WORKSPACE") + "/api/config/customize_schema.json"
 	}
 
 	if apisixSchemaContent, err = ioutil.ReadFile(apisixSchemaPath); err != nil {
