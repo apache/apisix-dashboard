@@ -37,7 +37,7 @@ jobs:
       - name: Change the NPM Settings for PNPM
         run: npm config set strict-peer-dependencies=false
       - run: npm config set auto-install-peers=true
-      
+
       - uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
