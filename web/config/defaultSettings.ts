@@ -16,7 +16,8 @@
  */
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-const { SERVER_URL_DEV, SERVER_URL_TEST, REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, SERVE_ENV, SERVE_URL_DEV, SERVE_URL_TEST, CYPRESS_SERVE_ENV } = process.env;
+
 const defaultSettings = {
   navTheme: 'dark',
   primaryColor: '#1890ff',
@@ -33,8 +34,16 @@ const defaultSettings = {
   pwa: false,
   iconfontUrl: '',
   serveUrlMap: {
-    dev: SERVER_URL_DEV,
-    test: SERVER_URL_TEST,
+    dev: SERVE_URL_DEV,
+    test: SERVE_URL_TEST,
+  },
+  overwrite(env: Record<string, string>) {
+    const { SERVE_URL_DEV, SERVE_URL_TEST } = env;
+    defaultSettings.serveUrlMap = {
+      dev: SERVE_URL_DEV,
+      test: SERVE_URL_TEST,
+    };
+    return defaultSettings;
   },
 } as LayoutSettings & {
   pwa: boolean;
@@ -51,12 +60,15 @@ const throwPromptError = (message: TemplateStringsArray) => {
   );
 };
 
-if (REACT_APP_ENV === 'test' && !test) {
-  throwPromptError`SERVER_URL_TEST`;
+console.log(defaultSettings.serveUrlMap);
+const envs = [REACT_APP_ENV, SERVE_ENV, CYPRESS_SERVE_ENV];
+
+if (envs.some((v) => v === 'test') && !test) {
+  throwPromptError`SERVE_URL_TEST`;
 }
 
-if (REACT_APP_ENV === 'dev' && !dev) {
-  throwPromptError`SERVER_URL_DEV`;
+if (envs.some((v) => v === 'dev') && !dev) {
+  throwPromptError`SERVE_URL_DEV`;
 }
 
 export default defaultSettings;

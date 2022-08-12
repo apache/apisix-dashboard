@@ -19,10 +19,14 @@ import defaultSettings from '../../config/defaultSettings';
 import 'cypress-file-upload';
 import '@4tw/cypress-drag-drop';
 
+defaultSettings.overwrite(Cypress.env());
+
 Cypress.Commands.add('login', () => {
   const { SERVE_ENV = 'dev' } = Cypress.env();
+  const serveUrl = defaultSettings.serveUrlMap[SERVE_ENV];
+  cy.log(serveUrl, defaultSettings.serveUrlMap, SERVE_ENV);
 
-  cy.request('POST', `${defaultSettings.serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
+  cy.request('POST', `${serveUrl}/apisix/admin/user/login`, {
     username: 'user',
     password: 'user',
   }).then((res) => {

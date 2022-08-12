@@ -72,13 +72,13 @@ $ cd ./web
 > All commands here are for Linux environment, other systems please use the corresponding commands for your platform. You are also welcome to contribute your own methods.
 
 ```bash
-echo "SERVER_URL_DEV=http://localhost:9000" > web/.env
+echo "SERVE_URL_DEV=http://localhost:9000" > web/.env
 ```
 
 If you don't want to create the file, you can also export the variable.
 
 ```bash
-export SERVER_URL_DEV=http://localhost:9000
+export SERVE_URL_DEV=http://localhost:9000
 ```
 
 3. Launch development mode
