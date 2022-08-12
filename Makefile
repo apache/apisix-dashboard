@@ -122,12 +122,10 @@ release-src:
 	--exclude release \
 	--exclude api/internal/core/store/validate_mock.go \
 	--exclude api/internal/core/storage/storage_mock.go \
-	.
+        .
 
-	gpg --batch --yes --armor --detach-sig $(RELEASE_SRC).tgz
 	shasum -a 512 $(RELEASE_SRC).tgz > $(RELEASE_SRC).tgz.sha512
 
 	mkdir -p release
 	mv $(RELEASE_SRC).tgz release/$(RELEASE_SRC).tgz
-        mv $(RELEASE_SRC).tgz.asc release/$(RELEASE_SRC).tgz.asc
 	mv $(RELEASE_SRC).tgz.sha512 release/$(RELEASE_SRC).tgz.sha512
