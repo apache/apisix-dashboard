@@ -27,10 +27,10 @@ export default defineConfig({
     runMode: 3,
     openMode: 0,
   },
+  env: process.env,
   e2e: {
     baseUrl: 'http://localhost:8000',
   },
-  env: process.env,
   setupNodeEvents(on, config) {
     // `on` is used to hook into various events Cypress emits
     // `config` is the resolved Cypress config
