@@ -108,11 +108,8 @@ stop_dashboard() {
 
 #2
 @test "Check info log level and signal" {
-  if [[ $KERNEL = "Darwin" ]]; then
-    sed -i "" 's/level: warn/level: info/' ${CONF_FILE}
-  else
-    sed -i 's/level: warn/level: info/' ${CONF_FILE}
-  fi
+  # Update log level
+  yq -y '.log.error_log.level="info"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
 
   start_dashboard 3
 
@@ -127,9 +124,8 @@ stop_dashboard() {
 
 #3
 @test "Check start info" {
-  LOGLEVEL=$(cat "$CONF_FILE" | awk '$1=="level:"{print $2}')
-  HOST=$(cat "$CONF_FILE" | awk '$1=="host:"{print $2}')
-  PORT=$(cat "$CONF_FILE" | awk '$1=="port:"{print $2}')
+  LOGLEVEL=$(yq -r '.log.error_log.level' config/config.yaml)
+  HTTP_LISTEN=$(yq -r '.server.http_listen' config/config.yaml)
   start_dashboard 3
 
   run systemctl status ${SERVICE_NAME}
@@ -138,7 +134,7 @@ stop_dashboard() {
   [ $(echo "$output" | grep -c -w "${VERSION}") -eq '1' ]
   [ $(echo "$output" | grep -c "${GITHASH}") -eq '1' ]
   [ $(echo "$output" | grep -c "${LOGLEVEL}") -eq '1' ]
-  [ $(echo "$output" | grep -c "${HOST}:${PORT}") -eq '1' ]
+  [ $(echo "$output" | grep -c "${HTTP_LISTEN}") -eq '1' ]
 
   stop_dashboard 6
 }
@@ -173,11 +169,8 @@ stop_dashboard() {
 @test "Check invalid etcd endpoint" {
   recover_conf
 
-  if [[ $KERNEL = "Darwin" ]]; then
-    sed -i "" 's/127.0.0.1:2379/0.0.0.0:0/' ${CONF_FILE}
-  else
-    sed -i 's/127.0.0.1:2379/0.0.0.0:0/' ${CONF_FILE}
-  fi
+  # Update to invalid etcd endpoint
+  yq -y '.data_source[0].etcd.endpoints[0]="0.0.0.0:0"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
 
   start_dashboard 6
 
@@ -209,11 +202,8 @@ stop_dashboard() {
 @test "Check ip allow list" {
   recover_conf
 
-  if [[ $KERNEL = "Darwin" ]]; then
-    sed -i "" 's@- 127.0.0.1 @- 10.0.0.1 @' ${CONF_FILE}
-  else
-    sed -i 's@- 127.0.0.1 @- 10.0.0.1 @' ${CONF_FILE}
-  fi
+  # Update ip allow list
+  yq -y '.security.allow_list[0]="10.0.0.1"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
 
   start_dashboard 3
 
@@ -227,17 +217,9 @@ stop_dashboard() {
 @test "Check HTTPS server" {
   recover_conf
 
-  if [[ $KERNEL = "Darwin" ]]; then
-    sed -i "" 's@# ssl:@ssl:@' ${CONF_FILE}
-    sed -i "" 's@#   port: 9001@  port: 9001@' ${CONF_FILE}
-    sed -i "" "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$(pwd)/test/certs/test2.crt\"@" ${CONF_FILE}
-    sed -i "" "s@#   key:  \"/tmp/cert/example.key\"@  cert: \"$(pwd)/test/certs/test2.key\"@" ${CONF_FILE}
-  else
-    sed -i 's@# ssl:@ssl:@' ${CONF_FILE}
-    sed -i 's@#   port: 9001@  port: 9001@' ${CONF_FILE}
-    sed -i "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$(pwd)/test/certs/test2.crt\"@" ${CONF_FILE}
-    sed -i "s@#   key:  \"/tmp/cert/example.key\"@  key: \"$(pwd)/test/certs/test2.key\"@" ${CONF_FILE}
-  fi
+  # Update TLS configuration
+  yq -y ".server.tls.cert_file=\"$(pwd)/test/certs/test2.crt\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y ".server.tls.key_file=\"$(pwd)/test/certs/test2.key\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
 
   start_dashboard 3
 
@@ -252,7 +234,7 @@ stop_dashboard() {
   recover_conf
 
   # add root user
-  curl -L http://localhost:2379/v3/auth/user/add -X POST -d '{"name": "root", "password": "root"}'
+  curl -L http://localhost:2379/v3/auth/user/add -X POST -d '{"name": "root", "password": "123456"}'
 
   # add root role
   curl -L http://localhost:2379/v3/auth/role/add -d '{"name": "root"}'
@@ -269,14 +251,9 @@ stop_dashboard() {
 
   stop_dashboard 6
 
-  # modify etcd auth config
-  if [[ $KERNEL = "Darwin" ]]; then
-    sed -i "" '1,$s/# username: "root"    # ignore etcd username if not enable etcd auth/username: "root"/g' ${CONF_FILE}
-    sed -i "" '1,$s/# password: "123456"  # ignore etcd password if not enable etcd auth/password: "root"/g' ${CONF_FILE}
-  else
-    sed -i '1,$s/# username: "root"    # ignore etcd username if not enable etcd auth/username: "root"/g' ${CONF_FILE}
-    sed -i '1,$s/# password: "123456"  # ignore etcd password if not enable etcd auth/password: "root"/g' ${CONF_FILE}
-  fi
+  # Update ETCD auth
+  yq -y '.data_source[0].etcd.username="root"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y '.data_source[0].etcd.password="123456"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
 
   start_dashboard 3
 
@@ -304,7 +281,7 @@ stop_dashboard() {
   stop_dashboard 6
 
   # disable etcd basic auth
-  run curl -L http://localhost:2379/v3/auth/authenticate -X POST -d '{"name": "root", "password": "root"}'
+  run curl -L http://localhost:2379/v3/auth/authenticate -X POST -d '{"name": "root", "password": "123456"}'
   etcd_token=$(echo "$output" |grep -oE "token\".*\"(.*)\""|awk -F[:\"] '{print $4}')
   [ -n "${etcd_token}" ]
 
@@ -341,12 +318,8 @@ stop_dashboard() {
 
   recover_conf
 
-  # modify etcd prefix config to /apisix-test
-  if [[ $KERNEL = "Darwin" ]]; then
-    sed -i "" '1,$s/# prefix: \/apisix.*/prefix: \/apisix-test/g' ${CONF_FILE}
-  else
-    sed -i '1,$s/# prefix: \/apisix.*/prefix: \/apisix-test/g' ${CONF_FILE}
-  fi
+  # Update ETCD prefix to /apisix-test
+  yq -y '.data_source[0].etcd.prefix="apisix-test"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
 
   start_dashboard 3
 
@@ -380,17 +353,11 @@ stop_dashboard() {
         --client-cert-auth --trusted-ca-file=$(pwd)/test/certs/mtls_ca.pem --cert-file=$(pwd)/test/certs/mtls_server.pem --key-file=$(pwd)/test/certs/mtls_server-key.pem \
         --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://127.0.0.1:3380 &
 
-  if [[ $KERNEL = "Darwin" ]]; then
-    sed -i "" "s@key_file: \"\"@key_file: \"$(pwd)/test/certs/mtls_client-key.pem\"@g" ${CONF_FILE}
-    sed -i "" "s@cert_file: \"\"@cert_file: \"$(pwd)/test/certs/mtls_client.pem\"@g" ${CONF_FILE}
-    sed -i "" "s@ca_file: \"\"@ca_file: \"$(pwd)/test/certs/mtls_ca.pem\"@g" ${CONF_FILE}
-    sed -i "" 's/127.0.0.1:2379/127.0.0.1:3379/' ${CONF_FILE}
-  else
-    sed -i "s@key_file: \"\"@key_file: \"$(pwd)/test/certs/mtls_client-key.pem\"@g" ${CONF_FILE}
-    sed -i "s@cert_file: \"\"@cert_file: \"$(pwd)/test/certs/mtls_client.pem\"@g" ${CONF_FILE}
-    sed -i "s@ca_file: \"\"@ca_file: \"$(pwd)/test/certs/mtls_ca.pem\"@g" ${CONF_FILE}
-    sed -i 's/127.0.0.1:2379/127.0.0.1:3379/' ${CONF_FILE}
-  fi
+  # Update ETCD mtls
+  yq -y '.data_source[0].etcd.endpoints[0]="127.0.0.1:3379"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y ".data_source[0].etcd.mtls.cert_file=\"$(pwd)/test/certs/mtls_client.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y ".data_source[0].etcd.mtls.key_file=\"$(pwd)/test/certs/mtls_client-key.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y ".data_source[0].etcd.mtls.ca_file=\"$(pwd)/test/certs/mtls_ca.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
 
   start_dashboard 3
 
@@ -431,33 +398,7 @@ stop_dashboard() {
   stop_dashboard 6
 }
 
-
 #14
-@test "Check APISIX_PROFILE" {
-  recover_conf
-
-  start_dashboard 3
-
-  run journalctl -u ${SERVICE_NAME}.service -n 30
-  [ $(echo "$output" | grep -c "conf.yaml") -eq '1' ]
-
-  stop_dashboard 3
-
-  sed -i 's#-c /usr/local/apisix-dashboard/config/config.yaml##g' /usr/lib/systemd/system/${SERVICE_NAME}.service
-  sed -i '$a\Environment=APISIX_PROFILE=test' /usr/lib/systemd/system/${SERVICE_NAME}.service
-  run systemctl daemon-reload
-
-  start_dashboard 3
-
-  run journalctl -u ${SERVICE_NAME}.service -n 30
-  [ $(echo "$output" | grep -c "conf-test.yaml") -eq '1' ]
-
-  stop_dashboard 3
-
-  recover_service_file
-}
-
-#15
 @test "Check Security configuration" {
   recover_conf
 
@@ -470,8 +411,8 @@ stop_dashboard() {
 
   stop_dashboard 6
 
-  sed -i 's@# security:@security:@' ${CONF_FILE}
-  sed -i 's@#   x_frame_options: "deny"@  x_frame_options: "test"@' ${CONF_FILE}
+  # Update x_frame_options
+  yq -y '.security.x_frame_options="test"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
 
   start_dashboard 3
 

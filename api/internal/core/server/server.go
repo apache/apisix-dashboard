@@ -123,8 +123,8 @@ func (s *server) printInfo() {
 	if s.IsEnableTLS() {
 		fmt.Fprintf(os.Stdout, "HTTPS Listen: %s\n", cfg.Server.HTTPSListen)
 	}
-	fmt.Fprintf(os.Stdout, "Error Log Level: %s\n", cfg.Log.ErrorLog.Level)
-	fmt.Fprintf(os.Stdout, "Error Log File: %s\n", cfg.Log.ErrorLog.FilePath)
+	fmt.Fprintf(os.Stdout, "Log Level: %s\n", cfg.Log.ErrorLog.Level)
+	fmt.Fprintf(os.Stdout, "Log File: %s\n", cfg.Log.ErrorLog.FilePath)
 	fmt.Fprintf(os.Stdout, "Access Log File: %s\n\n", cfg.Log.AccessLog)
 }
 
