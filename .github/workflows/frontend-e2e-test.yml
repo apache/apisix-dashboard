@@ -73,7 +73,6 @@ jobs:
         run: |
           make dag-lib
           cd api
-          sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
           nohup go run ./main.go &
 
       - name: Cache Cypress binary

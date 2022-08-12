@@ -56,9 +56,7 @@ jobs:
 
       - name: run test
         working-directory: ./api
-        run: |
-          sudo pip3 install yq
-          chmod +x ./test/shell/cli_test.sh && sudo ./test/shell/cli_test.sh
+        run: chmod +x ./test/shell/cli_test.sh && sudo ./test/shell/cli_test.sh
 
       - name: tmate debugger
         if: ${{ failure() }}

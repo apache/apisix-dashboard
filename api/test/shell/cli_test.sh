@@ -79,6 +79,9 @@ stop_dashboard() {
 ### Test Case
 #pre
 @test "Build and Deploy APISIX Dashboard Manager API" {
+  # Install yq for update YAML in command line
+  sudo pip3 install yq
+
   run go build -o ./manager-api -ldflags "-X github.com/apache/apisix-dashboard/api/internal/utils.version=${VERSION} -X github.com/apache/apisix-dashboard/api/internal/utils.gitHash=${GITHASH}" ./main.go
   [ "$status" -eq 0 ]
 
