@@ -35,6 +35,9 @@ jobs:
             ${{ runner.os }}-buildx-apisixdashboard-
             ${{ runner.os }}-buildx-
 
+      - name: Install PNPM
+        run: npm i -g pnpm@6.32.11
+
       - name: Build Docker Image
         uses: docker/build-push-action@v2
         with:
