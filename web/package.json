@@ -92,6 +92,7 @@
     "redux": "4.x",
     "start-server-and-test": "^1.11.5",
     "styled-components": "^5.2.1",
+    "typescript": ">= 2.7",
     "umi": "^3.1.2",
     "umi-request": "^1.0.8",
     "url-regex-safe": "^1.0.2",
