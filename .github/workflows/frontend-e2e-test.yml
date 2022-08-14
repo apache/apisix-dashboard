@@ -94,7 +94,7 @@ jobs:
         run: pnpx cypress install
 
       - run: pnpx browserslist@latest --update-db
-      - run: Y
+      - run: y
 
       - name: Start frontend then test
         run: |
