@@ -53,6 +53,9 @@ jobs:
       - name: Install PNPM
         run: npm i -g pnpm@6.32.11
 
+      - name: Install cypress
+        run: cypress install
+
       - run: pnpx browserslist@latest --update-db
 
       - name: Setup golang environment
