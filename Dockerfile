@@ -20,7 +20,7 @@ ARG APISIX_DASHBOARD_VERSION=master
 
 RUN set -x \
     && apk add --no-cache --virtual .builddeps git \
-    && git clone https://github.com/apache/apisix-dashboard.git -b ${APISIX_DASHBOARD_VERSION} /usr/local/apisix-dashboard \
+    && git clone https://github.com/FangSen9000/apisix-dashboard.git -b chore-move-yarn-to-pnpm(try1.5) /usr/local/apisix-dashboard \
     && cd /usr/local/apisix-dashboard && git clean -Xdf \
     && rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 
