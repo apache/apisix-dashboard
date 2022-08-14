@@ -69,7 +69,7 @@ jobs:
           if [ "$VERSION" != "merge" && "$VERSION" != "master" ];then
             export checkout=release/${VERSION}
           fi
-          yum install -y pnpm;
+          npm install -g pnpm;
           make package type=rpm app=dashboard version=${VERSION} checkout=${checkout} image_base=centos image_tag=7 local_code_path=./apisix-dashboard buildx=True
 
       - name: Run centos7 docker and mapping apisix into container
