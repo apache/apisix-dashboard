@@ -49,6 +49,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          cache: 'pnpm'
+          cache-dependency-path: web/pnpm-lock.yaml
 
       - name: Install PNPM
         run: npm i -g pnpm@6.32.11
@@ -94,7 +96,6 @@ jobs:
         run: pnpx cypress install
 
       - run: pnpx browserslist@latest --update-db
-      - run: y
 
       - name: Start frontend then test
         run: |
