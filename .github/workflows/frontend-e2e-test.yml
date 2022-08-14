@@ -85,7 +85,7 @@ jobs:
           key: cypress-${{ runner.os }}-cypress-cache0-${{ hashFiles('**/package.json') }}
           restore-keys: |
             cypress-${{ runner.os }}-cypress-cache0
-
+      - run: npx cypress install
       - name: Install dependencies
         run: pnpm install
 
