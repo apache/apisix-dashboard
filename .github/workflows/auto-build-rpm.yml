@@ -61,8 +61,8 @@ jobs:
           # move codes under build tool
           mkdir ./apisix-build-tools/apisix-dashboard
           for dir in `ls|grep -v "^apisix-build-tools$"`;
-          do yum install -y pnpm;
           do cp -r $dir ./apisix-build-tools/apisix-dashboard/;
+          yum install -y pnpm;
           done
 
           cd apisix-build-tools
