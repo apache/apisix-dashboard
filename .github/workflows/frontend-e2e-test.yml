@@ -91,6 +91,8 @@ jobs:
         
       - name: Install Cypress binary
         run: pnpx cypress install
+      - run: pnpx cypress cache path
+      - run: pnpx cypress cache list
 
       - name: Start frontend then test
         run: |
