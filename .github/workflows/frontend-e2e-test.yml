@@ -53,8 +53,6 @@ jobs:
       - name: Install PNPM
         run: npm i -g pnpm@6.32.11
 
-      - run: pnpx browserslist@latest --update-db
-
       - name: Setup golang environment
         uses: actions/setup-go@v3
         with:
@@ -94,6 +92,8 @@ jobs:
 
       - name: Install Cypress binary
         run: pnpx cypress install
+
+      - run: pnpx browserslist@latest --update-db
 
       - name: Start frontend then test
         run: |
