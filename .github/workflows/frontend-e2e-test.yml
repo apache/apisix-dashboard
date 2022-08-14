@@ -49,8 +49,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: 'pnpm'
-          cache-dependency-path: web/pnpm-lock.yaml
 
       - name: Install PNPM
         run: npm i -g pnpm@6.32.11
@@ -79,15 +77,6 @@ jobs:
 
       - name: Clear Cypress Cache
         run: pnpx cypress cache clear
-
-      - name: Cache Cypress binary
-        uses: actions/cache@v3
-        id: cypress-binary-cache
-        with:
-          path: '*/cypress/cache'
-          key: cypress-${{ runner.os }}-cypress-cache0-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            cypress-${{ runner.os }}-cypress-cache0
 
       - name: Install dependencies
         run: pnpm install
