@@ -7,6 +7,7 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 replace github.com/coreos/bbolt => go.etcd.io/bbolt v1.3.5
 
 require (
+	github.com/casbin/casbin/v2 v2.1.2
 	github.com/coreos/bbolt v1.3.2 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect

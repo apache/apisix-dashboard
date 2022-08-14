@@ -63,6 +63,7 @@ var (
 	AllowList        []string
 	Plugins          = map[string]bool{}
 	SecurityConf     Security
+	config           Config
 )
 
 type MTLS struct {
@@ -139,6 +140,7 @@ type Security struct {
 	AllowHeaders          string `mapstructure:"access_control_allow_headers"`
 	XFrameOptions         string `mapstructure:"x_frame_options"`
 	ContentSecurityPolicy string `mapstructure:"content_security_policy"`
+	IdentityUrl           bool   `mapstructure:"identify_url"`
 }
 
 // TODO: we should no longer use init() function after remove all handler's integration tests
@@ -180,7 +182,7 @@ func setupConfig() {
 	}
 
 	// unmarshal config
-	config := Config{}
+	config = Config{}
 	err := viper.Unmarshal(&config)
 	if err != nil {
 		panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
@@ -393,4 +395,8 @@ func initSecurity(conf Security) {
 		XFrameOptions:         "deny",
 		ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'",
 	}
+}
+
+func GetConfig() Config {
+	return config
 }

@@ -18,13 +18,14 @@ package internal
 
 import (
 	"fmt"
+	"github.com/apache/apisix-dashboard/api/pkg/identity"
 	"path/filepath"
-
+	
 	// "github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-
+	
 	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/filter"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -48,7 +49,7 @@ import (
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
-func SetUpRouter() *gin.Engine {
+func SetUpRouter(cfg conf.Config) *gin.Engine {
 	if conf.ENV == conf.EnvLOCAL || conf.ENV == conf.EnvDEV {
 		gin.SetMode(gin.DebugMode)
 	} else {
@@ -58,14 +59,16 @@ func SetUpRouter() *gin.Engine {
 	logger := log.GetLogger(log.AccessLog)
 	// security
 	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(), filter.InvalidRequest(), filter.Authentication())
-
+	if cfg.Conf.Security.IdentityUrl == true {
+		r.Use(identity.CheckForPower(identity.DefaultIdentifier{}))
+	}
 	// misc
 	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(), filter.RequestId(), filter.SchemaCheck(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
 	})
-
+	
 	factories := []handler.RegisterFactory{
 		route.NewHandler,
 		ssl.NewHandler,
@@ -87,7 +90,7 @@ func SetUpRouter() *gin.Engine {
 		stream_route.NewHandler,
 		system_config.NewHandler,
 	}
-
+	
 	for i := range factories {
 		h, err := factories[i]()
 		if err != nil {
@@ -95,8 +98,8 @@ func SetUpRouter() *gin.Engine {
 		}
 		h.ApplyRoute(r)
 	}
-
+	
 	// pprof.Register(r)
-
+	
 	return r
 }

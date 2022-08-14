@@ -42,7 +42,7 @@ func (s *server) setupAPI() {
 	}
 	
 	// routes
-	r := internal.SetUpRouter(conf.I)
+	r := internal.SetUpRouter(conf.GetConfig())
 	
 	// HTTP
 	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
