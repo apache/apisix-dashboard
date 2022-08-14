@@ -77,6 +77,9 @@ jobs:
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
           nohup go run ./main.go &
 
+      - name: Clear Cypress Cache
+        run: pnpx cypress cache clear
+
       - name: Cache Cypress binary
         uses: actions/cache@v3
         id: cypress-binary-cache
@@ -88,11 +91,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        
+
       - name: Install Cypress binary
         run: pnpx cypress install
-      - run: pnpx cypress cache path
-      - run: pnpx cypress cache list
 
       - name: Start frontend then test
         run: |
