@@ -58,9 +58,6 @@ jobs:
           sudo gem install --no-document fpm
           git clone https://github.com/api7/apisix-build-tools.git
 
-          # Install the PNPM package management tool
-          npm install -g pnpm
-
           # move codes under build tool
           mkdir ./apisix-build-tools/apisix-dashboard
           for dir in `ls|grep -v "^apisix-build-tools$"`;
