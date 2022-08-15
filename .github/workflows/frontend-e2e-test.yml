@@ -95,6 +95,7 @@ jobs:
 
       - run: pnpx browserslist@latest --update-db
 
+      - run: ls
       - run: cd node_modules
       - run: ls
       - run: cd monaco-editor
