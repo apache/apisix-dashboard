@@ -53,7 +53,7 @@ func (s *server) setupAPI() {
 
 	// HTTPS
 	if s.IsEnableTLS() {
-		addrSSL := s.options.Config.Server.HTTPListen
+		addrSSL := s.options.Config.Server.HTTPSListen
 		s.serverSSL = &http.Server{
 			Addr:         addrSSL,
 			Handler:      r,
