@@ -112,7 +112,7 @@ stop_dashboard() {
 #2
 @test "Check info log level and signal" {
   # Update log level
-  yq -y '.log.error_log.level="info"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y '.log.error_log.level="info"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
@@ -127,8 +127,8 @@ stop_dashboard() {
 
 #3
 @test "Check start info" {
-  LOGLEVEL=$(yq -r '.log.error_log.level' config/config.yaml)
-  HTTP_LISTEN=$(yq -r '.server.http_listen' config/config.yaml)
+  LOGLEVEL=$(yq -r '.log.error_log.level' ${CONF_FILE})
+  HTTP_LISTEN=$(yq -r '.server.http_listen' ${CONF_FILE})
   start_dashboard 3
 
   run systemctl status ${SERVICE_NAME}
@@ -173,7 +173,7 @@ stop_dashboard() {
   recover_conf
 
   # Update to invalid etcd endpoint
-  yq -y '.data_source[0].etcd.endpoints[0]="0.0.0.0:0"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y '.data_source[0].etcd.endpoints[0]="0.0.0.0:0"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 6
 
@@ -206,7 +206,7 @@ stop_dashboard() {
   recover_conf
 
   # Update ip allow list
-  yq -y '.security.allow_list[0]="10.0.0.1"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y '.security.allow_list[0]="10.0.0.1"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
@@ -221,8 +221,8 @@ stop_dashboard() {
   recover_conf
 
   # Update TLS configuration
-  yq -y ".server.tls.cert_file=\"$(pwd)/test/certs/test2.crt\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
-  yq -y ".server.tls.key_file=\"$(pwd)/test/certs/test2.key\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y ".server.tls.cert_file=\"$(pwd)/test/certs/test2.crt\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
+  yq -y ".server.tls.key_file=\"$(pwd)/test/certs/test2.key\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
@@ -255,8 +255,8 @@ stop_dashboard() {
   stop_dashboard 6
 
   # Update ETCD auth
-  yq -y '.data_source[0].etcd.username="root"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
-  yq -y '.data_source[0].etcd.password="123456"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y '.data_source[0].etcd.username="root"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
+  yq -y '.data_source[0].etcd.password="123456"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
@@ -322,7 +322,7 @@ stop_dashboard() {
   recover_conf
 
   # Update ETCD prefix to /apisix-test
-  yq -y '.data_source[0].etcd.prefix="apisix-test"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y '.data_source[0].etcd.prefix="apisix-test"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
@@ -357,10 +357,10 @@ stop_dashboard() {
         --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://127.0.0.1:3380 &
 
   # Update ETCD mtls
-  yq -y '.data_source[0].etcd.endpoints[0]="127.0.0.1:3379"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
-  yq -y ".data_source[0].etcd.mtls.cert_file=\"$(pwd)/test/certs/mtls_client.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
-  yq -y ".data_source[0].etcd.mtls.key_file=\"$(pwd)/test/certs/mtls_client-key.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
-  yq -y ".data_source[0].etcd.mtls.ca_file=\"$(pwd)/test/certs/mtls_ca.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y '.data_source[0].etcd.endpoints[0]="127.0.0.1:3379"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
+  yq -y ".data_source[0].etcd.mtls.cert_file=\"$(pwd)/test/certs/mtls_client.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
+  yq -y ".data_source[0].etcd.mtls.key_file=\"$(pwd)/test/certs/mtls_client-key.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
+  yq -y ".data_source[0].etcd.mtls.ca_file=\"$(pwd)/test/certs/mtls_ca.pem\"" config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
@@ -415,7 +415,7 @@ stop_dashboard() {
   stop_dashboard 6
 
   # Update x_frame_options
-  yq -y '.security.x_frame_options="test"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp config/config.yaml
+  yq -y '.security.x_frame_options="test"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
