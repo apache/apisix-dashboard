@@ -75,6 +75,15 @@ jobs:
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
           nohup go run ./main.go &
 
+      - name: Cache Cypress binary
+        uses: actions/cache@v3
+        id: cypress-binary-cache
+        with:
+          path: '*/cypress/cache'
+          key: cypress-${{ runner.os }}-cypress-cache0-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            cypress-${{ runner.os }}-cypress-cache0
+
       - name: Clear Cypress Cache
         run: pnpx cypress cache clear
 
