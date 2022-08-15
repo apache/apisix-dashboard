@@ -91,8 +91,6 @@ jobs:
             cypress-${{ runner.os }}-cypress-cache0
 
       - run: pnpx browserslist@latest --update-db
-      
-      - run: cp -dr /home/runner/work/apisix-dashboard/apisix-dashboard/web/node_modules/.pnpm/monaco-editor@0.32.1/node_modules/monaco-editor ./node_modules
 
       - name: Start frontend then test
         run: |
