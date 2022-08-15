@@ -86,6 +86,13 @@ jobs:
 
       - run: pnpx browserslist@latest --update-db
 
+      - run: cd node_modules
+      - run: ls
+      - run: cd monaco-editor
+      - run: ls
+      - run: cd ..
+      - run: cd ..
+
       - name: Start frontend then test
         run: |
           pnpm start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test pnpm cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
