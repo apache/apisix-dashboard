@@ -19119,7 +19119,7 @@ packages:
   /url-regex-safe/1.1.0:
     resolution: {integrity: sha512-v/QjeNYDCZsaqaQeudXtb+Nd2882XXwPahCTAWjYiSHo720JSplIsareaiuAduXZw6uG0ToXDXaItdog+hwbxg==}
     engines: {node: '>= 10.12.0'}
-    deprecated: Please upgrade to url-regex-safe@v3.0.0+ AND install re2 as an additional dependency in your project via `npm install re2` or `yarn add re2`, suggested that NPM.
+    deprecated: Please upgrade to url-regex-safe@v3.0.0+ AND install re2 as an additional dependency in your project via `npm install re2` or `yarn add re2`, suggested that PNPM.
     dependencies:
       ip-regex: 4.3.0
       re2: 1.15.4
