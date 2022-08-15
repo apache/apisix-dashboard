@@ -65,6 +65,10 @@ recover_service_file() {
 }
 
 start_dashboard() {
+  # clean log files
+  rm -f ${LOG_FILE} ${ACCESS_LOG_FILE}
+
+  # start APISIX Dashboard
   run systemctl start ${SERVICE_NAME}
   [ "$status" -eq 0 ]
   sleep $1
