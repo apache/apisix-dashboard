@@ -81,9 +81,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Cypress binary
-        run: pnpx cypress install
-
       - run: pnpx browserslist@latest --update-db
 
       - name: Start frontend then test
