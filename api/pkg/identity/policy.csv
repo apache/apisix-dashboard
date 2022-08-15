@@ -50,3 +50,4 @@ p,role_admin,/apisix/admin/upstreams/:id,PATCH
 p,role_admin,/apisix/admin/upstreams/:id/*path,PATCH
 p,role_admin,/apisix/admin/global_rules/:id,PATCH
 p,role_admin,/apisix/admin/global_rules/:id/*path,PATCH
+g,user_admin,role_admin

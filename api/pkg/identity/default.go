@@ -3,6 +3,8 @@ package identity
 import (
 	"encoding/csv"
 	"errors"
+	"fmt"
+	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -15,15 +17,16 @@ import (
 type DefaultIdentifier struct{}
 
 func (DefaultIdentifier) Check(userId, resource, action string) error {
-	enforce, err := casbin.NewEnforcer("./model.conf", "./policy.csv")
-	enforce.AddFunction("identify", keyMatchFunc)
+	enforce, err := casbin.NewEnforcer(conf.ModelPath, conf.PolicyPath)
 	if err != nil {
 		return err
 	}
-	userId = "user_" + userId
-	normal, _ := enforce.HasRoleForUser(userId, "role_admin")
-	ok, _ := enforce.Enforce(userId, resource, action)
-	if !normal || !ok {
+	enforce.AddFunction("identify", KeyMatchFunc)
+	normal, err := enforce.HasRoleForUser("user_"+userId, "role_admin")
+	if err != nil {
+		fmt.Println(err)
+	}
+	if !normal {
 		return errors.New("without permission")
 	}
 	return nil
@@ -32,7 +35,7 @@ func (DefaultIdentifier) Check(userId, resource, action string) error {
 func CheckForPower(i Identifier) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// judge whether the route is under the control of admin
-		f, err := os.Open("./policy.csv")
+		f, err := os.Open(conf.PolicyPath)
 		if err != nil {
 			log.Warn("fail to read route")
 			return
@@ -44,19 +47,17 @@ func CheckForPower(i Identifier) gin.HandlerFunc {
 				c.Next()
 				return
 			}
-			if keyMatch(row[2], c.Request.URL.Path) {
+			if KeyMatch(c.Request.URL.Path, row[2]) && row[3] == c.Request.Method {
 				break
 			}
 		}
-
+		
 		// get the identity of user
 		username := c.MustGet("Username").(string)
-
+		
 		if err := i.Check(username, c.Request.URL.Path, c.Request.Method); err != nil {
-			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-				"code":    010013,
-				"message": "not enough power to this route",
-			})
+			c.AbortWithStatus(http.StatusForbidden)
+			c.Next()
 			return
 		}
 		c.Next()
@@ -64,46 +65,37 @@ func CheckForPower(i Identifier) gin.HandlerFunc {
 }
 
 // KeyMatchFunc wrap KeyMatch to meet with casbin's need of custom functions
-func keyMatchFunc(args ...interface{}) (interface{}, error) {
+func KeyMatchFunc(args ...interface{}) (interface{}, error) {
 	key1, key2 := args[0].(string), args[1].(string)
-	return (bool)(keyMatch(key1, key2)), nil
+	return (bool)(KeyMatch(key1, key2)), nil
 }
 
 // KeyMatch can match three patterns of route /* && /:id && /:id/*
-func keyMatch(key1 string, key2 string) bool {
-	var k int
-	var p int
-	i := strings.Index(key2, "*")
-	j := strings.Index(key2, ":")
-	if j != -1 {
-		p = strings.Index(key1[j:], "/")
-		k = strings.Index(key2[j:], "/")
+func KeyMatch(key1 string, key2 string) bool {
+	i, j := strings.Index(key2, ":"), strings.Index(key2, "*")
+	if len(key1) < i+1 {
+		return false
 	}
-
-	if i == -1 && j == -1 {
-		return key1 == key2
-	}
-
-	if i == -1 && j != -1 {
-		if p == -1 && k == -1 && len(key1) >= len(key2) {
-			return key1[:j] == key2[:j]
-		} else if p == -1 && k != -1 || p != -1 && k == -1 {
-			return false
+	if i != -1 {
+		ok := key1[:i-1] == key2[:i-1]
+		if j != -1 && ok {
+			k, p := strings.Index(key2[i:], "/"), strings.Index(key1[i:], "/")
+			if key2[i+k+1] == '*' {
+				return true
+			}
+			return key2[i+k:j] == key1[i+p:i+p+k+1]
 		}
-		return key1[:j] == key2[:j] && key1[j+p:] == key2[j+k:]
-	}
-
-	if i < j {
-		return key1[:i] == key2[:i]
-	}
-
-	if i > j {
-		if p == -1 && k == -1 && len(key1) >= len(key2) {
-			return key1[:j] == key2[:j]
-		} else if p == -1 && k != -1 || p != -1 && k == -1 {
-			return false
+		return ok
+	} else if j != -1 {
+		ok := key1[:j-1] == key2[:j-1]
+		if i != -1 && ok {
+			k, p := strings.Index(key2[i:], "/"), strings.Index(key1[i:], "/")
+			if key2[i+k+1] == '*' {
+				return true
+			}
+			return key2[i+k:j] == key1[i+p:i+p+k+1]
 		}
-		return key1[:j] == key2[:j] && key1[j+p:i+p-k] == key2[j+k:i]
+		return ok
 	}
-	return false
+	return key1 == key2
 }

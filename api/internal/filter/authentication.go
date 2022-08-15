@@ -72,12 +72,13 @@ func Authentication() gin.HandlerFunc {
 			return
 		}
 
-		if _, ok := conf.UserList[claims.Subject]; !ok {
+		user, ok := conf.UserList[claims.Subject]
+		if !ok {
 			log.Warnf("user not exists by token claims subject %s", claims.Subject)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
 			return
 		}
-
+		c.Set("Username", user.Username)
 		c.Next()
 	}
 }

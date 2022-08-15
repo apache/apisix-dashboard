@@ -59,7 +59,8 @@ func SetUpRouter(cfg conf.Config) *gin.Engine {
 	logger := log.GetLogger(log.AccessLog)
 	// security
 	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(), filter.InvalidRequest(), filter.Authentication())
-	if cfg.Conf.Security.IdentityUrl == true {
+	if cfg.Conf.Security.IdentityUrl {
+		fmt.Println("ok")
 		r.Use(identity.CheckForPower(identity.DefaultIdentifier{}))
 	}
 	// misc

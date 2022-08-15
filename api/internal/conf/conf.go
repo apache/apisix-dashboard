@@ -55,6 +55,8 @@ var (
 	ETCDConfig       *Etcd
 	ErrorLogLevel    = "warn"
 	ErrorLogPath     = "logs/error.log"
+	PolicyPath       = "pkg/identity/policy.csv"
+	ModelPath        = "pkg/identity/model.conf"
 	AccessLogPath    = "logs/access.log"
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication

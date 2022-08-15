@@ -22,9 +22,9 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	
+
 	"github.com/shiningrush/droplet"
-	
+
 	"github.com/apache/apisix-dashboard/api/internal"
 	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -40,10 +40,10 @@ func (s *server) setupAPI() {
 		newMws = append(newMws, mws[1:]...)
 		return newMws
 	}
-	
+
 	// routes
 	r := internal.SetUpRouter(conf.GetConfig())
-	
+
 	// HTTP
 	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
 	s.server = &http.Server{
@@ -52,7 +52,7 @@ func (s *server) setupAPI() {
 		ReadTimeout:  time.Duration(1000) * time.Millisecond,
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
-	
+
 	// HTTPS
 	if conf.SSLCert != "" && conf.SSLKey != "" {
 		addrSSL := net.JoinHostPort(conf.SSLHost, strconv.Itoa(conf.SSLPort))
