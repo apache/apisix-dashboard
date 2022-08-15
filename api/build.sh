@@ -32,7 +32,7 @@ set -x
 export ENV=local
 pwd=$(pwd)
 
-rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
+rm -rf output && mkdir -p output/config && mkdir -p output/dag-to-lua
 
 # get dag-to-lua lib
 if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
