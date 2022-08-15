@@ -21,10 +21,10 @@ WORKDIR /workspace
 
 COPY ./ ./
 
-RUN mkdir -p /go/manager-api/conf \
+RUN mkdir -p /go/manager-api/config \
     && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./api \
     && mv /workspace/api/entry.sh /go/manager-api/ \
-    && mv /workspace/api/config/conf.yaml /go/manager-api/config/conf.yaml \
+    && mv /workspace/api/config/config.yaml /go/manager-api/config/config.yaml \
     && mv /workspace/api/config/schema.json /go/manager-api/config/schema.json \
     && mv /workspace/api/config/customize_schema.json /go/manager-api/config/customize_schema.json \
     && rm -rf /workspace \
