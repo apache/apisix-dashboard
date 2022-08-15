@@ -326,7 +326,7 @@ stop_dashboard() {
   recover_conf
 
   # Update ETCD prefix to /apisix-test
-  yq -y '.data_source[0].etcd.prefix="apisix-test"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
+  yq -y '.data_source[0].etcd.prefix="/apisix-test"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
