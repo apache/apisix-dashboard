@@ -21,6 +21,7 @@
     "prettier": "prettier -c --write \"**/*\"",
     "site": "pnpm run fetch:blocks && pnpm run build",
     "start": "cp -dr ./node_modules/monaco-editor ./public/ && umi dev",
+    "start:umi-dev": "umi dev",
     "start:e2e": "cross-env SERVE_ENV=test pnpm run start",
     "test:e2e": "start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 cypress:run-ci",
     "test-plugin:e2e": "start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 cypress:run-plugin-ci",
