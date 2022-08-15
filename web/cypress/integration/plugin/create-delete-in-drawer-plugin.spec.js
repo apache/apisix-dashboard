@@ -30,6 +30,8 @@ context('Delete Plugin List with the Drawer', () => {
     checkedSwitcher: '.ant-switch-checked',
     refresh: '.anticon-reload',
     empty: '.ant-empty-normal',
+    notification: '.ant-notification-notice',
+    notificationCloseIcon: '.ant-notification-notice-close',
   };
 
   const data = {
@@ -107,6 +109,57 @@ context('Delete Plugin List with the Drawer', () => {
     cy.contains('button', 'Confirm').click({
       force: true,
     });
+    cy.get(selector.notification).should('contain', 'Delete Plugin Successfully');
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
+    cy.get(selector.empty).should('be.visible');
+  });
+
+  it('should delete the plugin with the drawer in the list of plugins', function () {
+    cy.visit('/plugin/list');
+    cy.get(selector.refresh).click();
+    cy.contains('Enable').click();
+
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
+      });
+    cy.get(selector.drawer)
+      .should('be.visible')
+      .within(() => {
+        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.checkedSwitcher).should('exist');
+      });
+    cy.contains('button', 'Submit').click();
+
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
+      });
+
+    cy.contains('button', 'Delete').click({
+      force: true,
+    });
+    cy.contains('button', 'Confirm').click({
+      force: true,
+    });
+    cy.get(selector.notification).should('contain', 'Delete Plugin Successfully');
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
+
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').then(($el) => {
+          const text = $el.text();
+          expect(text).to.eq('Enable');
+        });
+      });
+    cy.visit('/plugin/list');
     cy.get(selector.empty).should('be.visible');
   });
 });

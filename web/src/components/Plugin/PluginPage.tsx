@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
-import { omit, orderBy } from 'lodash';
+import { orderBy, omit } from 'lodash';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
@@ -33,7 +33,11 @@ type Props = {
   schemaType?: PluginComponent.Schema;
   referPage?: PluginComponent.ReferPage;
   showSelector?: boolean;
-  onChange?: (plugins: PluginComponent.Data, plugin_config_id?: string) => void;
+  onChange?: (
+    plugins: PluginComponent.Data,
+    plugin_config_id?: string,
+    handleType?: 'edit' | 'delete',
+  ) => void;
 };
 
 const PanelSectionStyle = {
@@ -281,10 +285,12 @@ const PluginPage: React.FC<Props> = ({
           ...initialData,
           [name]: { ...monacoData, disable: !formData.disable },
         };
+        let handleType = 'edit';
         if (shouldDelete === true) {
-          newPlugins = omit(newPlugins, name);
+          newPlugins = omit(plugins, name);
+          handleType = 'delete';
         }
-        onChange(newPlugins, form.getFieldValue('plugin_config_id'));
+        onChange(newPlugins, form.getFieldValue('plugin_config_id'), handleType);
         setPlugins(newPlugins);
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}

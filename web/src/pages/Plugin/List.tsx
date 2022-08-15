@@ -81,9 +81,7 @@ const Page: React.FC = () => {
                 const plugins = omit(initialData, [`${record.name}`]);
                 createOrUpdate({ plugins }).then(() => {
                   notification.success({
-                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.plugin',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                    message: formatMessage({ id: 'page.plugin.delete' }),
                   });
                   checkPageList(ref);
                   setInitialData(plugins);
@@ -131,6 +129,11 @@ const Page: React.FC = () => {
           setVisible(false);
           setName('');
           ref.current?.reload();
+          notification.success({
+            message: formatMessage({
+              id: `page.plugin.${shouldDelete ? 'delete' : 'edit'}`,
+            }),
+          });
         });
       }}
     />
