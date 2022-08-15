@@ -97,6 +97,8 @@ jobs:
 
       - run: cd ..
       - run: ls
+      - run: cd node_modules
+      - run: ls
 
       - name: Start frontend then test
         run: |
