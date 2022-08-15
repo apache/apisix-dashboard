@@ -42,10 +42,11 @@ jobs:
 
       - name: Modify conf.yaml Configure for use by the manage-api cluster
         run: |
-          sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' ./api/conf/conf.yaml
-          sed -i 's@127.0.0.1@0.0.0.0/0@' ./api/conf/conf.yaml
-          sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' ./api/conf/conf.yaml
-          sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' ./api/conf/conf.yaml
+          sudo pip3 install yq
+          yq -y '.data_source[0].etcd.endpoints[0]="172.16.238.10:2379"' api/config/config.yaml | \
+          yq -y '.data_source[0].etcd.endpoints[1]="172.16.238.11:2379"' | \
+          yq -y '.data_source[0].etcd.endpoints[2]="172.16.238.12:2379"' | \
+          yq -y '.security.allow_list[0]="127.0.0.1"' > api/config/config.yaml.tmp && mv api/config/config.yaml.tmp api/config/config.yaml
 
       - name: download file Dockerfile-apisix
         working-directory: ./api/test/docker
