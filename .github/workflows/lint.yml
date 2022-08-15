@@ -45,7 +45,7 @@ jobs:
       - name: 🧹 YAML Lint
         run: |
           # return non-zero exit code on warnings
-          yamllint -f github --no-warnings --strict .
+          yamllint -f github --strict .
   trailing-whitespace:
     name: Trailing whitespace
     runs-on: ubuntu-latest

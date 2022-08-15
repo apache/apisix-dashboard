@@ -6,3 +6,4 @@ rules:
   document-start: false
   line-length: false
   truthy: false
+  comments-indentation: false
