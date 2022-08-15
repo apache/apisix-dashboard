@@ -94,6 +94,8 @@ jobs:
         run: pnpm install
 
       - run: pnpx browserslist@latest --update-db
+      
+      - run: find / -name monaco-editor
 
       - name: Start frontend then test
         run: |
