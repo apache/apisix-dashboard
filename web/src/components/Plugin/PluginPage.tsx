@@ -233,7 +233,10 @@ const PluginPage: React.FC<Props> = ({
                     ? (item) => item.type === typeItem && !item.hidden && initialData[item.name]
                     : (item) =>
                         showEnablePlugin
-                          ? item.type === typeItem && !item.hidden && !initialData[item.name]
+                          ? item.type === typeItem &&
+                            !item.hidden &&
+                            (!initialData[item.name] ||
+                              (initialData[item.name] && initialData[item.name].disable))
                           : item.type === typeItem &&
                             !item.hidden &&
                             initialData[item.name] &&
