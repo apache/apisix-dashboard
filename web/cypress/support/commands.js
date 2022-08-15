@@ -33,12 +33,13 @@ Cypress.Commands.add('login', () => {
     localStorage.setItem('token', res.body.data.token);
     // set default language
     localStorage.setItem('umi_locale', 'en-US');
+    cy.log(res.body.data.token);
   });
 });
 
-const timeout = 300;
+const timeout = 1000;
 const domSelector = {
-  name: (name) => `[data-cy-plugin-name="${name}"]`,
+  nameGen: (name) => `[data-cy-plugin-name="${name}"]`,
   parents: '.ant-card-bordered',
   drawer_wrap: '.ant-drawer-content-wrapper',
   drawer: '.ant-drawer-content',
@@ -52,50 +53,38 @@ const domSelector = {
 };
 
 Cypress.Commands.add('configurePlugin', ({ name, cases }) => {
-  const shouldValid = cases.shouldValid;
-  const data = cases.data;
-  const type = cases.type;
+  const { shouldValid, data, type } = cases;
 
-  if (type === 'consumer') {
-    cy.log('consumer schema case, skipping');
-    return;
-  }
-
-  cy.get('main.ant-layout-content')
-    .find(domSelector.name(name), { timeout })
-    .then(function (cards) {
-      if (cards.every((i) => name !== i.innerText)) {
-        cy.log('non global plugin, skipping');
+  cy.get('main.ant-layout-content', { timeout })
+    .get(domSelector.nameGen(name), { timeout })
+    .then(function (card) {
+      if (name !== card.innerText) {
         return;
       }
 
-      cy.contains(name)
-        .parents(domSelector.parents)
-        .within(() => {
-          cy.find('button').click({
-            force: true,
-          });
+      card.parents(domSelector.parents).within(() => {
+        cy.find('button').click({
+          force: true,
         });
+      });
 
       // NOTE: wait for the Drawer to appear on the DOM
       cy.focused(domSelector.drawer).should('exist');
 
       cy.get(domSelector.monacoMode)
+        .as('monacoMode')
         .invoke('text')
         .then((text) => {
           if (text === 'Form') {
             cy.wait(1000);
-            cy.find(domSelector.monacoMode).should('be.visible');
-            cy.find(domSelector.monacoMode).click();
+            cy.get(domSelector.monacoMode).should('be.visible').click();
             cy.find(domSelector.selectDropdown).should('be.visible');
             cy.find(domSelector.selectJSON).click();
           }
         });
 
-      cy.get(domSelector.drawer, { timeout }).within(() => {
-        cy.get(domSelector.switch).click({
-          force: true,
-        });
+      cy.get(domSelector.switch, { timeout, withinSubject: domSelector.drawer }).click({
+        force: true,
       });
 
       cy.get(domSelector.monacoMode)
@@ -104,8 +93,7 @@ Cypress.Commands.add('configurePlugin', ({ name, cases }) => {
           if (text === 'Form') {
             // FIXME: https://github.com/cypress-io/cypress/issues/7306
             cy.wait(1000);
-            cy.find(domSelector.monacoMode).should('be.visible');
-            cy.find(domSelector.monacoMode).click();
+            cy.find(domSelector.monacoMode).should('be.visible').click();
             cy.find(domSelector.selectDropdown).should('be.visible');
             cy.find(domSelector.selectJSON).click();
           }

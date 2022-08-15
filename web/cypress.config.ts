@@ -30,27 +30,28 @@ export default defineConfig({
   env: process.env,
   e2e: {
     baseUrl: 'http://localhost:8000',
-  },
-  setupNodeEvents(on, config) {
-    // `on` is used to hook into various events Cypress emits
-    // `config` is the resolved Cypress config
-    on('task', {
-      findFile(mask: any) {
-        if (!mask) {
-          throw new Error('Missing a file mask to search');
-        }
-
-        return globby(mask).then((list) => {
-          if (!list.length) {
-            throw new Error(`Could not find files matching mask "${mask}"`);
+    setupNodeEvents(on, config) {
+      // `on` is used to hook into various events Cypress emits
+      // `config` is the resolved Cypress config
+      on('task', {
+        findFile(mask: any) {
+          if (!mask) {
+            throw new Error('Missing a file mask to search');
           }
 
-          return list[0];
-        });
-      },
-    });
+          return globby(mask).then((list) => {
+            if (!list.length) {
+              throw new Error(`Could not find files matching mask "${mask}"`);
+            }
 
-    require('@cypress/code-coverage/task')(on, config);
-    return config;
+            return list[0];
+          });
+        },
+      });
+
+      require('@cypress/code-coverage/task')(on, config);
+      require('cypress-localstorage-commands/plugin')(on, config);
+      return config;
+    },
   },
 });
