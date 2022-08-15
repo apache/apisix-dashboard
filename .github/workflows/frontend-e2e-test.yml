@@ -75,6 +75,12 @@ jobs:
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
           nohup go run ./main.go &
 
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Cypress binary
+        run: pnpx cypress install
+
       - name: Cache Cypress binary
         uses: actions/cache@v3
         id: cypress-binary-cache
@@ -84,29 +90,11 @@ jobs:
           restore-keys: |
             cypress-${{ runner.os }}-cypress-cache0
 
-      - name: Clear Cypress Cache
-        run: pnpx cypress cache clear
-
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Cypress binary
-        run: pnpx cypress install
-
       - run: pnpx browserslist@latest --update-db
 
-      - run: ls
-      - run: cd node_modules
-      - run: ls
-      - run: cd node_modules
-      - run: ls
-      - run: cd node_modules
-      - run: ls
-      - run: cd node_modules
-      - run: ls
-      - run: cd node_modules
-      - run: ls
-      
       - name: Start frontend then test
         run: |
           pnpm start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test pnpm cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
