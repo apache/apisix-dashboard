@@ -95,9 +95,12 @@ jobs:
 
       - run: pnpx browserslist@latest --update-db
 
-      - run: cd ..
       - run: ls
       - run: cd node_modules
+      - run: ls
+      - run: cd node_modules
+      - run: ls
+      - run: cd monaco-editor
       - run: ls
 
       - name: Start frontend then test
