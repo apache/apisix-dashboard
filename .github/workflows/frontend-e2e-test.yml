@@ -87,16 +87,14 @@ jobs:
       - name: Clear Cypress Cache
         run: pnpx cypress cache clear
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Install Cypress binary
         run: pnpx cypress install
 
       - run: pnpx browserslist@latest --update-db
 
-      - run: cd ..
-      - run: ls
-      - run: cd ..
-      - run: ls
-      - run: cd ..
       - run: ls
       - run: cd node_modules
       - run: ls
