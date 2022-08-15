@@ -41,7 +41,7 @@ describe('Plugin Schema Test', () => {
     cy.contains('Enable').click();
   });
 
-  pluginList.forEach((plugin, pluginIndex) => {
+  pluginList.slice(0, 4).forEach((plugin, pluginIndex) => {
     const cases = casesList[pluginIndex];
 
     if (cases.length <= 0) {
@@ -49,7 +49,7 @@ describe('Plugin Schema Test', () => {
       return;
     }
 
-    cases.forEach((c, caseIndex) => {
+    cases.slice(0, 4).forEach((c, caseIndex) => {
       it(`${plugin} plugin #${caseIndex + 1} case`, function () {
         cy.configurePlugin({ name: plugin, cases: c });
       });

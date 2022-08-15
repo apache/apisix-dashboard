@@ -90,9 +90,6 @@ jobs:
         run: |
           yarn start-server-and-test 'cross-env SERVE_ENV=test SERVE_URL_TEST=http://localhost:9000 yarn start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test SERVE_URL_TEST=http://localhost:9000 yarn cypress run --spec "**/e2e/${{matrix.folderPrefix}}/**.cy.js"'
 
-      - name: Report e2e coverage
-        run: npx nyc report --reporter=text-summary
-
       - name: Upload coverage to Codecov
         run: |
           bash <(curl -s https://codecov.io/bash) -f ./coverage/coverage-final.json -F frontend-e2e-test
