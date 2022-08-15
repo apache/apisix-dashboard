@@ -39,6 +39,8 @@ context('Create and Delete Service ', () => {
     drawerFooter: '.ant-drawer-footer',
     notification: '.ant-notification-notice-message',
     nameSelector: '[title=Name]',
+    tab: '.ant-tabs-tab',
+    tabBtn: '.ant-tabs-tab-btn',
   };
 
   const data = {
@@ -102,6 +104,11 @@ context('Create and Delete Service ', () => {
     cy.contains('button', 'Submit').click();
     cy.get(selector.drawer, { timeout }).should('not.exist');
 
+    cy.get(selector.tab).within(() => {
+      cy.contains(selector.tabBtn, 'Edit').click({
+        force: true,
+      });
+    });
     cy.contains(data.basicAuthPlugin)
       .parents(selector.pluginCardBordered)
       .within(() => {
@@ -110,6 +117,12 @@ context('Create and Delete Service ', () => {
 
     cy.get(selector.drawerFooter).contains('button', 'Delete').click({ force: true });
     cy.contains('button', 'Confirm').click({ force: true });
+
+    cy.get(selector.tab).within(() => {
+      cy.contains(selector.tabBtn, 'Enable').click({
+        force: true,
+      });
+    });
 
     cy.contains(data.basicAuthPlugin)
       .parents(selector.pluginCardBordered)
