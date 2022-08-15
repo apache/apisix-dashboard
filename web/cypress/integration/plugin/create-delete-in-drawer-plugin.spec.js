@@ -30,6 +30,8 @@ context('Delete Plugin List with the Drawer', () => {
     checkedSwitcher: '.ant-switch-checked',
     refresh: '.anticon-reload',
     empty: '.ant-empty-normal',
+    tab: '.ant-tabs-tab',
+    tabBtn: '.ant-tabs-tab-btn',
     notification: '.ant-notification-notice',
     notificationCloseIcon: '.ant-notification-notice-close',
   };
@@ -159,6 +161,58 @@ context('Delete Plugin List with the Drawer', () => {
           expect(text).to.eq('Enable');
         });
       });
+    cy.visit('/plugin/list');
+    cy.get(selector.empty).should('be.visible');
+  });
+
+  it('should switch tabs to distinguish with enable or not enbale', function () {
+    cy.visit('/plugin/list');
+    cy.get(selector.refresh).click();
+    cy.contains('button', 'Enable').click();
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
+      });
+    cy.get(selector.drawer)
+      .should('be.visible')
+      .within(() => {
+        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.checkedSwitcher).should('exist');
+      });
+    cy.contains('button', 'Submit').click();
+    cy.contains(data.basicAuthPlugin).should('not.exist');
+
+    cy.get(selector.tab).within(() => {
+      cy.contains(selector.tabBtn, 'Edit').click({
+        force: true,
+      });
+    });
+
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
+      });
+
+    cy.contains('button', 'Delete').click({
+      force: true,
+    });
+    cy.contains('button', 'Confirm').click({
+      force: true,
+    });
+
+    cy.contains(data.basicAuthPlugin).should('not.exist');
+    cy.get(selector.tab).within(() => {
+      cy.contains(selector.tabBtn, 'Enable').click({
+        force: true,
+      });
+    });
+    cy.contains(data.basicAuthPlugin).should('exist');
     cy.visit('/plugin/list');
     cy.get(selector.empty).should('be.visible');
   });

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
+import { Anchor, Layout, Card, Button, Form, Select, Alert, Tabs } from 'antd';
 import { orderBy, omit } from 'lodash';
 import { useIntl } from 'umi';
 
@@ -103,6 +103,35 @@ const PluginPage: React.FC<Props> = ({
   const newOpenPluginType = openPluginType.filter((elem, index, self) => {
     return index === self.indexOf(elem);
   });
+
+  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(true);
+  const tabsList = [
+    {
+      title: formatMessage({ id: 'component.plugin.enable' }),
+      key: 'enablePlugins',
+    },
+    {
+      title: formatMessage({ id: 'component.plugin.disable' }),
+      key: 'allPlugins',
+    },
+  ];
+
+  const SwitchTab = () => (
+    <Tabs
+      defaultActiveKey={showEnablePlugin ? 'enablePlugins' : 'allPlugins'}
+      onChange={(val: string) => {
+        if (val === 'enablePlugins') {
+          setShowEnablePlugin(true);
+        } else {
+          setShowEnablePlugin(false);
+        }
+      }}
+    >
+      {tabsList.map((tab) => (
+        <Tabs.TabPane tab={tab.title} key={tab.key} />
+      ))}
+    </Tabs>
+  );
 
   const PluginList = () => (
     <>
@@ -202,7 +231,13 @@ const PluginPage: React.FC<Props> = ({
                 pluginList.filter(
                   readonly
                     ? (item) => item.type === typeItem && !item.hidden && initialData[item.name]
-                    : (item) => item.type === typeItem && !item.hidden,
+                    : (item) =>
+                        showEnablePlugin
+                          ? item.type === typeItem && !item.hidden && !initialData[item.name]
+                          : item.type === typeItem &&
+                            !item.hidden &&
+                            initialData[item.name] &&
+                            !initialData[item.name].disable,
                 ),
                 'name',
                 'asc',
@@ -303,6 +338,7 @@ const PluginPage: React.FC<Props> = ({
           background-color: transparent;
         }
       `}</style>
+      {!readonly && <SwitchTab />}
       <Layout>
         <PluginList />
         <Plugin />
