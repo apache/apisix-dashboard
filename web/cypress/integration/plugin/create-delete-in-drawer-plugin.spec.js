@@ -183,7 +183,6 @@ context('Delete Plugin List with the Drawer', () => {
         cy.get(selector.checkedSwitcher).should('exist');
       });
     cy.contains('button', 'Submit').click();
-    cy.contains(data.basicAuthPlugin).should('not.exist');
 
     cy.get(selector.tab).within(() => {
       cy.contains(selector.tabBtn, 'Enable').click({
@@ -206,7 +205,6 @@ context('Delete Plugin List with the Drawer', () => {
       force: true,
     });
 
-    cy.contains(data.basicAuthPlugin).should('not.exist');
     cy.get(selector.tab).within(() => {
       cy.contains(selector.tabBtn, 'All').click({
         force: true,
