@@ -94,7 +94,7 @@ jobs:
 
       - name: Start frontend then test
         run: |
-          pnpm start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test pnpm cypress run --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
+          pnpm start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test pnpm cypress run --browser chrome --spec "**/integration/${{matrix.folderPrefix}}/**.spec.js"'
 
       - name: Report e2e coverage
         run: pnpx nyc report --reporter=text-summary
