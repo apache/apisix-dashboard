@@ -25,7 +25,7 @@ context('Create and delete route with plugin orchestration', () => {
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     groupButton: '.ant-radio-group',
-    canvas: '.x6-graph-scroller',
+    canvas: 'x6-widget-stencil-title',
     startNode:
       '#stencil > div > div.x6-widget-stencil-content > div:nth-child(1) > div > div > svg > g > g.x6-graph-svg-stage > g:nth-child(1) > g > circle',
     notification: '.ant-notification-notice-message',
