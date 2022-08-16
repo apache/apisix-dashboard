@@ -27,7 +27,7 @@ type Config struct {
 	Security       Security       `mapstructure:"security"`
 	Log            Log            `mapstructure:"log"`
 	Authentication Authentication `mapstructure:"authentication"`
-	Plugins        []string       `mapstructure:"plugins"`
+	FeatureGate    FeatureGate    `mapstructure:"feature_gate"`
 }
 
 type Server struct {
@@ -102,4 +102,7 @@ type Authentication struct {
 type AuthenticationUser struct {
 	Username string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
+}
+
+type FeatureGate struct {
 }

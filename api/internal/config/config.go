@@ -87,6 +87,7 @@ func NewDefaultConfig() Config {
 				},
 			},
 		},
+		FeatureGate: FeatureGate{},
 	}
 }
 
