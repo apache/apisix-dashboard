@@ -6,7 +6,7 @@
   "scripts": {
     "prepare": "cd .. && husky install web/.husky",
     "analyze": "cross-env ANALYZE=1 pnpm run build",
-    "build": "cp -dr ./node_modules/monaco-editor ./public/ && umi build",
+    "build": "cp -R ./node_modules/.pnpm/monaco-editor@0.32.1/node_modules/monaco-editor ./public/ && umi build",
     "dev": "pnpm run start:dev",
     "fetch:blocks": "pro fetch-blocks --branch antd@4 && pnpm run prettier",
     "i18n-remove": "pro i18n-remove --locale=zh-CN --write",
@@ -20,7 +20,7 @@
     "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
     "prettier": "prettier -c --write \"**/*\"",
     "site": "pnpm run fetch:blocks && pnpm run build",
-    "start": "cp -dr ./node_modules/monaco-editor ./public/ && umi dev",
+    "start": "cp -R ./node_modules/.pnpm/monaco-editor@0.32.1/node_modules/monaco-editor ./public/ && umi dev",
     "start:umi-dev": "umi dev",
     "start:e2e": "cross-env SERVE_ENV=test pnpm run start",
     "test:e2e": "start-server-and-test 'cross-env SERVE_ENV=test pnpm start' http-get://localhost:8000 cypress:run-ci",
