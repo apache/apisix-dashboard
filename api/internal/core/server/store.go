@@ -14,23 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package server
 
 import (
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/pkg/errors"
+
 	"github.com/apache/apisix-dashboard/api/internal/core/storage"
 	"github.com/apache/apisix-dashboard/api/internal/core/store"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
 func (s *server) setupStore() error {
-	if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
+	dataSourceConfig := s.options.Config.DataSource
+
+	if len(dataSourceConfig) <= 0 {
+		return errors.New("no data source is configured")
+	}
+
+	etcdConfig := dataSourceConfig[0].ETCD
+	if err := storage.InitETCDClient(etcdConfig); err != nil {
 		log.Errorf("init etcd client fail: %w", err)
 		return err
 	}
-	if err := store.InitStores(); err != nil {
+
+	if err := store.InitStores(etcdConfig.Prefix); err != nil {
 		log.Errorf("init stores fail: %w", err)
 		return err
 	}
+
 	return nil
 }

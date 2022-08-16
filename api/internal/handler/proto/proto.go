@@ -31,6 +31,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/core/store"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -57,7 +58,7 @@ func NewHandler() (handler.RouteRegister, error) {
 	}, nil
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
+func (h *Handler) ApplyRoute(r *gin.Engine, _ config.Config) {
 	r.GET("/apisix/admin/proto/:id", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
 	r.GET("/apisix/admin/proto", wgin.Wraps(h.List,
@@ -214,8 +215,8 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	checklist := []store.Interface{h.routeStore, h.consumerStore, h.serviceStore, h.pluginConfigStore, h.globalRuleStore}
 
 	for _, id := range ids {
-		for _, store := range checklist {
-			if err := h.checkProtoUsed(c.Context(), store, id); err != nil {
+		for _, s := range checklist {
+			if err := h.checkProtoUsed(c.Context(), s, id); err != nil {
 				return handler.SpecCodeResponse(err), err
 			}
 		}

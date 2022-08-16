@@ -33,7 +33,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v3
         with:
-          go-version: "1.18"
+          go-version: "1.19"
 
       - uses: actions/cache@v3
         with:
@@ -57,13 +57,12 @@ jobs:
         working-directory: ./api
         run: |
           export GO111MOUDULE=on
-          export APISIX_CONF_PATH=$PWD/conf
-          sed -i 's/9000/8088/' conf/conf.yaml
+          sed -i 's/9000/8088/' config/config.yaml
           go build -o ./manager-api ./main.go
           ./manager-api > ./api.log 2>&1 &
           sleep 2
           cat ./api.log
-          cat conf/conf.yaml
+          cat config/config.yaml
 
       - name: run with custom port
         working-directory: ./api

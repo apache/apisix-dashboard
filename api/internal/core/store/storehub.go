@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package store
 
 import (
 	"fmt"
 	"reflect"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 	"github.com/apache/apisix-dashboard/api/internal/utils"
@@ -99,9 +99,9 @@ func RangeStore(f func(key HubKey, store *GenericStore) bool) {
 	}
 }
 
-func InitStores() error {
+func InitStores(prefix string) error {
 	err := InitStore(HubKeyConsumer, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/consumers",
+		BasePath: prefix + "/consumers",
 		ObjType:  reflect.TypeOf(entity.Consumer{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Consumer)
@@ -113,7 +113,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyRoute, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/routes",
+		BasePath: prefix + "/routes",
 		ObjType:  reflect.TypeOf(entity.Route{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Route)
@@ -125,7 +125,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyService, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/services",
+		BasePath: prefix + "/services",
 		ObjType:  reflect.TypeOf(entity.Service{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Service)
@@ -137,7 +137,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeySsl, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/ssl",
+		BasePath: prefix + "/ssl",
 		ObjType:  reflect.TypeOf(entity.SSL{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.SSL)
@@ -149,7 +149,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyUpstream, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/upstreams",
+		BasePath: prefix + "/upstreams",
 		ObjType:  reflect.TypeOf(entity.Upstream{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Upstream)
@@ -161,7 +161,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyScript, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/scripts",
+		BasePath: prefix + "/scripts",
 		ObjType:  reflect.TypeOf(entity.Script{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Script)
@@ -173,7 +173,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyGlobalRule, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/global_rules",
+		BasePath: prefix + "/global_rules",
 		ObjType:  reflect.TypeOf(entity.GlobalPlugins{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.GlobalPlugins)
@@ -185,7 +185,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyServerInfo, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/data_plane/server_info",
+		BasePath: prefix + "/data_plane/server_info",
 		ObjType:  reflect.TypeOf(entity.ServerInfo{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.ServerInfo)
@@ -197,7 +197,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyPluginConfig, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/plugin_configs",
+		BasePath: prefix + "/plugin_configs",
 		ObjType:  reflect.TypeOf(entity.PluginConfig{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.PluginConfig)
@@ -209,7 +209,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyProto, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/proto",
+		BasePath: prefix + "/proto",
 		ObjType:  reflect.TypeOf(entity.Proto{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Proto)
@@ -221,7 +221,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyStreamRoute, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/stream_routes",
+		BasePath: prefix + "/stream_routes",
 		ObjType:  reflect.TypeOf(entity.StreamRoute{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.StreamRoute)
@@ -233,7 +233,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeySystemConfig, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/system_config",
+		BasePath: prefix + "/system_config",
 		ObjType:  reflect.TypeOf(entity.SystemConfig{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.SystemConfig)

@@ -34,6 +34,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 )
 
@@ -48,7 +49,7 @@ type ProtocolSupport interface {
 	RequestForwarding(c droplet.Context) (interface{}, error)
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
+func (h *Handler) ApplyRoute(r *gin.Engine, _ config.Config) {
 	r.POST("/apisix/admin/debug-request-forwarding", wgin.Wraps(h.DebugRequestForwarding,
 		wrapper.InputType(reflect.TypeOf(DebugOnlineInput{}))))
 }

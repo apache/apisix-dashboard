@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package storage
 
 import (
 	"context"
 	"fmt"
-	"github.com/apache/apisix-dashboard/api/pkg/storage"
 	"time"
+
+	"github.com/apache/apisix-dashboard/api/internal/config"
+	"github.com/apache/apisix-dashboard/api/pkg/storage"
 
 	"go.etcd.io/etcd/clientv3"
 	"go.etcd.io/etcd/pkg/transport"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 	"github.com/apache/apisix-dashboard/api/internal/utils"
 	"github.com/apache/apisix-dashboard/api/internal/utils/runtime"
@@ -53,29 +55,29 @@ type EtcdV3Storage struct {
 	client *clientv3.Client
 }
 
-func InitETCDClient(etcdConf *conf.Etcd) error {
-	config := clientv3.Config{
-		Endpoints:   etcdConf.Endpoints,
+func InitETCDClient(cfg config.DataSourceETCD) error {
+	etcdConfig := clientv3.Config{
+		Endpoints:   cfg.Endpoints,
 		DialTimeout: 5 * time.Second,
-		Username:    etcdConf.Username,
-		Password:    etcdConf.Password,
+		Username:    cfg.Username,
+		Password:    cfg.Password,
 	}
 	// mTLS
-	if etcdConf.MTLS != nil && etcdConf.MTLS.CaFile != "" &&
-		etcdConf.MTLS.CertFile != "" && etcdConf.MTLS.KeyFile != "" {
+	if &cfg.MTLS != nil && cfg.MTLS.CAFile != "" &&
+		cfg.MTLS.CertFile != "" && cfg.MTLS.KeyFile != "" {
 		tlsInfo := transport.TLSInfo{
-			CertFile:      etcdConf.MTLS.CertFile,
-			KeyFile:       etcdConf.MTLS.KeyFile,
-			TrustedCAFile: etcdConf.MTLS.CaFile,
+			CertFile:      cfg.MTLS.CertFile,
+			KeyFile:       cfg.MTLS.KeyFile,
+			TrustedCAFile: cfg.MTLS.CAFile,
 		}
 		tlsConfig, err := tlsInfo.ClientConfig()
 		if err != nil {
 			return err
 		}
-		config.TLS = tlsConfig
+		etcdConfig.TLS = tlsConfig
 	}
 
-	cli, err := clientv3.New(config)
+	cli, err := clientv3.New(etcdConfig)
 	if err != nil {
 		log.Errorf("init etcd failed: %s", err)
 		return fmt.Errorf("init etcd failed: %s", err)
@@ -90,26 +92,6 @@ func GenEtcdStorage() *EtcdV3Storage {
 	return &EtcdV3Storage{
 		client: Client,
 	}
-}
-
-func NewETCDStorage(etcdConf *conf.Etcd) (*EtcdV3Storage, error) {
-	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   etcdConf.Endpoints,
-		DialTimeout: 5 * time.Second,
-		Username:    etcdConf.Username,
-		Password:    etcdConf.Password,
-	})
-	if err != nil {
-		log.Errorf("init etcd failed: %s", err)
-		return nil, fmt.Errorf("init etcd failed: %s", err)
-	}
-
-	s := &EtcdV3Storage{
-		client: cli,
-	}
-
-	utils.AppendToClosers(s.Close)
-	return s, nil
 }
 
 func Close() error {

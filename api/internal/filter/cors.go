@@ -17,36 +17,39 @@
 package filter
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 )
 
-func CORS() gin.HandlerFunc {
+func CORS(cfg config.Security) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if conf.SecurityConf.AllowOrigin != "" {
-			c.Writer.Header().Set("Access-Control-Allow-Origin", conf.SecurityConf.AllowOrigin)
+		if cfg.CORS.AllowOrigin != "" {
+			c.Writer.Header().Set("Access-Control-Allow-Origin", cfg.CORS.AllowOrigin)
 		}
 
-		if conf.SecurityConf.AllowHeaders != "" {
-			c.Writer.Header().Set("Access-Control-Allow-Headers", conf.SecurityConf.AllowHeaders)
+		if cfg.CORS.AllowHeaders != "" {
+			c.Writer.Header().Set("Access-Control-Allow-Headers", cfg.CORS.AllowHeaders)
 		}
 
-		if conf.SecurityConf.AllowMethods != "" {
-			c.Writer.Header().Set("Access-Control-Allow-Methods", conf.SecurityConf.AllowMethods)
+		if cfg.CORS.AllowMethods != "" {
+			c.Writer.Header().Set("Access-Control-Allow-Methods", cfg.CORS.AllowMethods)
 		}
 
-		if conf.SecurityConf.AllowCredentials != "" {
-			c.Writer.Header().Set("Access-Control-Allow-Credentials", conf.SecurityConf.AllowCredentials)
+		if cfg.CORS.AllowCredentials {
+			c.Writer.Header().Set("Access-Control-Allow-Credentials", strconv.FormatBool(cfg.CORS.AllowCredentials))
 		}
 
-		if conf.SecurityConf.XFrameOptions != "" {
-			c.Writer.Header().Set("X-Frame-Options", conf.SecurityConf.XFrameOptions)
+		if cfg.XFrameOptions != "" {
+			c.Writer.Header().Set("X-Frame-Options", cfg.XFrameOptions)
 		}
 
-		if conf.SecurityConf.ContentSecurityPolicy != "" {
-			c.Writer.Header().Set("Content-Security-Policy", conf.SecurityConf.ContentSecurityPolicy)
+		if cfg.ContentSecurityPolicy != "" {
+			c.Writer.Header().Set("Content-Security-Policy", cfg.ContentSecurityPolicy)
 		}
+
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return

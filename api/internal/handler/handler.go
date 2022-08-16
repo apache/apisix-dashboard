@@ -45,6 +45,7 @@ import (
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/middleware"
 
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/core/store"
 	"github.com/apache/apisix-dashboard/api/internal/utils"
@@ -53,7 +54,7 @@ import (
 type RegisterFactory func() (RouteRegister, error)
 
 type RouteRegister interface {
-	ApplyRoute(r *gin.Engine)
+	ApplyRoute(r *gin.Engine, cfg config.Config)
 }
 
 func SpecCodeResponse(err error) *data.SpecCodeResponse {

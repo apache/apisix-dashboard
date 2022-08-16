@@ -158,7 +158,7 @@ services:
       dockerfile: api/test/docker/Dockerfile
     restart: always
     volumes:
-      - ../../conf/conf.yaml:/go/manager-api/conf/conf.yaml:ro
+      - ../../config/config.yaml:/go/manager-api/config/config.yaml:ro
       - ../testdata:/go/manager-api/testdata
     depends_on:
       - etcd1

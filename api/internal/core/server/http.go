@@ -14,19 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package server
 
 import (
 	"crypto/tls"
-	"net"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/shiningrush/droplet"
 
 	"github.com/apache/apisix-dashboard/api/internal"
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 )
 
@@ -42,10 +40,10 @@ func (s *server) setupAPI() {
 	}
 
 	// routes
-	r := internal.SetUpRouter()
+	r := internal.SetUpRouter(s.options.Config)
 
 	// HTTP
-	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
+	addr := s.options.Config.Server.HTTPListen
 	s.server = &http.Server{
 		Addr:         addr,
 		Handler:      r,
@@ -54,8 +52,8 @@ func (s *server) setupAPI() {
 	}
 
 	// HTTPS
-	if conf.SSLCert != "" && conf.SSLKey != "" {
-		addrSSL := net.JoinHostPort(conf.SSLHost, strconv.Itoa(conf.SSLPort))
+	if s.IsEnableTLS() {
+		addrSSL := s.options.Config.Server.HTTPSListen
 		s.serverSSL = &http.Server{
 			Addr:         addrSSL,
 			Handler:      r,

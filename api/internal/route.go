@@ -18,14 +18,13 @@ package internal
 
 import (
 	"fmt"
-	"path/filepath"
-
+	"os"
 	// "github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/filter"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 	"github.com/apache/apisix-dashboard/api/internal/handler/authentication"
@@ -48,8 +47,8 @@ import (
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
-func SetUpRouter() *gin.Engine {
-	if conf.ENV == conf.EnvLOCAL || conf.ENV == conf.EnvDEV {
+func SetUpRouter(cfg config.Config) *gin.Engine {
+	if os.Getenv("ENV") == "local" || os.Getenv("ENV") == "dev" {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)
@@ -57,13 +56,14 @@ func SetUpRouter() *gin.Engine {
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
 	// security
-	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(), filter.InvalidRequest(), filter.Authentication())
+	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(cfg.Security), filter.InvalidRequest(), filter.Authentication(cfg.Authentication))
 
 	// misc
-	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(), filter.RequestId(), filter.SchemaCheck(), filter.RecoverHandler())
-	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
+	staticPath := "./html/"
+	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(cfg.Security), filter.RequestId(), filter.SchemaCheck(), filter.RecoverHandler())
+	r.Use(static.Serve("/", static.LocalFile(staticPath, false)))
 	r.NoRoute(func(c *gin.Context) {
-		c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
+		c.File(fmt.Sprintf("%s/index.html", staticPath))
 	})
 
 	factories := []handler.RegisterFactory{
@@ -93,7 +93,7 @@ func SetUpRouter() *gin.Engine {
 		if err != nil {
 			panic(err)
 		}
-		h.ApplyRoute(r)
+		h.ApplyRoute(r, cfg)
 	}
 
 	// pprof.Register(r)

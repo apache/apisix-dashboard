@@ -5,4 +5,4 @@ After=network-online.target
 
 [Service]
 WorkingDirectory=/usr/local/apisix-dashboard
-ExecStart=/usr/local/apisix-dashboard/manager-api -c /usr/local/apisix-dashboard/conf/conf.yaml
+ExecStart=/usr/local/apisix-dashboard/manager-api -c /usr/local/apisix-dashboard/config/config.yaml

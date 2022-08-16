@@ -32,7 +32,7 @@ set -x
 export ENV=local
 pwd=$(pwd)
 
-rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
+rm -rf output && mkdir -p output/config && mkdir -p output/dag-to-lua
 
 # get dag-to-lua lib
 if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
@@ -44,8 +44,8 @@ fi
 # build
 cd ./api && go build -o ../output/manager-api -ldflags "${GOLDFLAGS}" ./main.go && cd ..
 
-cp ./api/conf/schema.json ./output/conf/schema.json
-cp ./api/conf/customize_schema.json ./output/conf/customize_schema.json
-cp ./api/conf/conf*.yaml ./output/conf/
+cp ./api/config/schema.json ./output/config/schema.json
+cp ./api/config/customize_schema.json ./output/config/customize_schema.json
+cp ./api/config/conf*.yaml ./output/config/
 
 echo "Build the Manager API successfully"
