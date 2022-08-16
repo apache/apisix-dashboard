@@ -12,7 +12,7 @@ var (
 	access iamDef.Access
 )
 
-func IAM() gin.HandlerFunc {
+func Filter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if access != nil {
 			identity := c.MustGet("identity").(string)
