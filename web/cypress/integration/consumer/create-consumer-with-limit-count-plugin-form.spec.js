@@ -39,8 +39,6 @@ context('Create and delete consumer with limit-count plugin form', () => {
     redis_cluster_nodes_0: '#redis_cluster_nodes_0',
     redis_cluster_nodes_1: '#redis_cluster_nodes_1',
     monacoViewZones: '.view-zones',
-    tab: '.ant-tabs-tab',
-    tabBtn: '.ant-tabs-tab-btn',
   };
 
   const data = {
@@ -123,12 +121,6 @@ context('Create and delete consumer with limit-count plugin form', () => {
     });
     cy.get(selector.drawer).should('not.exist');
 
-    cy.get(selector.tab).within(() => {
-      cy.contains(selector.tabBtn, 'Edit').click({
-        force: true,
-      });
-    });
-
     // config limit-count form with redis-cluster policy
     cy.contains(selector.pluginCard, 'limit-count').within(() => {
       cy.contains('Enable').click({
@@ -156,12 +148,6 @@ context('Create and delete consumer with limit-count plugin form', () => {
       });
     });
     cy.get(selector.drawer).should('not.exist');
-
-    cy.get(selector.tab).within(() => {
-      cy.contains(selector.tabBtn, 'Enable').click({
-        force: true,
-      });
-    });
 
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
