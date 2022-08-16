@@ -96,6 +96,11 @@ const PluginPage: React.FC<Props> = ({
       form.setFieldsValue({ plugin_config_id });
     });
   }, []);
+
+  useEffect(() => {
+    setPlugins(initialData);
+  }, [initialData]);
+
   const openPluginList = pluginList.filter(
     (item) => initialData[item.name] && !initialData[item.name].disable,
   );
