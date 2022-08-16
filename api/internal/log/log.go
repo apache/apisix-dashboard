@@ -44,43 +44,43 @@ type Interface interface {
 }
 
 func (e emptyLog) Debug(msg string, fields ...interface{}) {
-	getZapFields(logger, fields).Debug(msg)
+	getZapFields(errLogger, fields).Debug(msg)
 }
 
 func (e emptyLog) Debugf(msg string, args ...interface{}) {
-	logger.Debugf(msg, args...)
+	errLogger.Debugf(msg, args...)
 }
 
 func (e emptyLog) Info(msg string, fields ...interface{}) {
-	getZapFields(logger, fields).Info(msg)
+	getZapFields(errLogger, fields).Info(msg)
 }
 
 func (e emptyLog) Infof(msg string, args ...interface{}) {
-	logger.Infof(msg, args...)
+	errLogger.Infof(msg, args...)
 }
 
 func (e emptyLog) Warn(msg string, fields ...interface{}) {
-	getZapFields(logger, fields).Warn(msg)
+	getZapFields(errLogger, fields).Warn(msg)
 }
 
 func (e emptyLog) Warnf(msg string, args ...interface{}) {
-	logger.Warnf(msg, args...)
+	errLogger.Warnf(msg, args...)
 }
 
 func (e emptyLog) Error(msg string, fields ...interface{}) {
-	getZapFields(logger, fields).Error(msg)
+	getZapFields(errLogger, fields).Error(msg)
 }
 
 func (e emptyLog) Errorf(msg string, args ...interface{}) {
-	logger.Errorf(msg, args...)
+	errLogger.Errorf(msg, args...)
 }
 
 func (e emptyLog) Fatal(msg string, fields ...interface{}) {
-	getZapFields(logger, fields).Fatal(msg)
+	getZapFields(errLogger, fields).Fatal(msg)
 }
 
 func (e emptyLog) Fatalf(msg string, args ...interface{}) {
-	logger.Fatalf(msg, args...)
+	errLogger.Fatalf(msg, args...)
 }
 
 func Debug(msg string, fields ...interface{}) {

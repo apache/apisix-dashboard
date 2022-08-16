@@ -21,12 +21,12 @@ WORKDIR /workspace
 
 COPY ./ ./
 
-RUN mkdir -p /go/manager-api/conf \
+RUN mkdir -p /go/manager-api/config \
     && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./api \
     && mv /workspace/api/entry.sh /go/manager-api/ \
-    && mv /workspace/api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
-    && mv /workspace/api/conf/schema.json /go/manager-api/conf/schema.json \
-    && mv /workspace/api/conf/customize_schema.json /go/manager-api/conf/customize_schema.json \
+    && mv /workspace/api/config/config.yaml /go/manager-api/config/config.yaml \
+    && mv /workspace/api/config/schema.json /go/manager-api/config/schema.json \
+    && mv /workspace/api/config/customize_schema.json /go/manager-api/config/customize_schema.json \
     && rm -rf /workspace \
     && rm -rf /etc/localtime \
     && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \

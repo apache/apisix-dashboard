@@ -4,14 +4,12 @@ on:
   push:
     branches:
       - master
-      - next
       - 'release/**'
     paths-ignore:
       - 'docs/**'
   pull_request:
     branches:
       - master
-      - next
     paths-ignore:
       - 'docs/**'
 

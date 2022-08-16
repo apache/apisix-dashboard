@@ -23,7 +23,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 	"github.com/apache/apisix-dashboard/api/internal/utils/consts"
 )
@@ -79,15 +79,15 @@ func checkIP(ipStr string, ips map[string]bool, subnets []*subnet) bool {
 	return false
 }
 
-func IPFilter() gin.HandlerFunc {
-	ips, subnets := generateIPSet(conf.AllowList)
+func IPFilter(cfg config.Security) gin.HandlerFunc {
+	ips, subnets := generateIPSet(cfg.AllowList)
 	return func(c *gin.Context) {
 		var ipStr string
 		if ip, _, err := net.SplitHostPort(strings.TrimSpace(c.Request.RemoteAddr)); err == nil {
 			ipStr = ip
 		}
 
-		if len(conf.AllowList) < 1 {
+		if len(cfg.AllowList) < 1 {
 			c.Next()
 			return
 		}
@@ -100,7 +100,7 @@ func IPFilter() gin.HandlerFunc {
 
 		res := checkIP(ipStr, ips, subnets)
 		if !res {
-			log.Warnf("forbidden by IP: %s, allowed list: %v", ipStr, conf.AllowList)
+			log.Warnf("forbidden by IP: %s, allowed list: %v", ipStr, cfg.AllowList)
 			c.AbortWithStatusJSON(http.StatusForbidden, consts.ErrIPNotAllow)
 		}
 

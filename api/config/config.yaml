@@ -1,0 +1,77 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+server:
+  http_listen: ":9000"    # The HTTP  Server listen address, default is ":9000"
+  # This value accepts only port ":9000" or ipv4/6 with port "127.0.0.1:9000"
+  https_listen: ":9001"   # The HTTPS Server listen address, default is ":9001"
+  # tls:
+  #   cert_file: "/tmp/cert/example.crt"  # The path of your TLS certificate.
+  #   key_file: "/tmp/cert/example.key"   # The path of your TLS key.
+
+data_source:                                       # The data source type of APISIX Dashboard, it's an array that allows to contain multiple data sources, but currently only the first one is used.
+  - name: default
+    type: etcd
+    etcd:
+      endpoints:                                   # Multiple addresses are supported when using etcd clusters
+        - 127.0.0.1:2379
+      # username: "root"                           # ignore etcd username if not enable etcd auth
+      # password: "123456"                         # ignore etcd password if not enable etcd auth
+      # mtls:
+      #   cert_file: ""                            # Path of your self-signed client side cert
+      #   key_file: ""                             # Path of your self-signed client side key
+      #   ca_file: ""                              # Path of your self-signed ca cert, the CA is used to sign callers' certificates
+      # prefix: /apisix                            # apisix config's prefix in etcd, /apisix by default
+  - name: default                                  # The name of data source.
+    type: apisix                                   # The type of data source, it now only supports "apisix".
+    apisix:                                        # When the data source type is "apisix", configure the following parameters.
+      address: http://127.0.0.1:9080/apisix/admin  # The endpoint of APISIX Admin API.
+      key: edd1c9f034335f136f87ad84b625c8f1        # The admin key of Admin API, It needs to have the "admin" role to support data writes.
+
+security:
+  allow_list:             # If we don't set any IP list, then localhost IP access is allowed by default.
+    - 127.0.0.1           # The rules are checked in sequence until the first match is found.
+    - ::1                 # In this example, access is allowed only for IPv4 network 127.0.0.1, and for IPv6 network ::1.
+                          # It also supports CIDR like 192.168.1.0/24 and 2001:0db8::/32
+  cors:
+  #   access_control_allow_origin: "http://dashboard.apisix.local"
+  #   access_control_allow_credentials: true
+  #   access_control_allow_headers: "Authorization"
+  #   access_control-allow_methods: "*"
+  # x_frame_options: "deny"
+  # content_security_policy: ""default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'""
+
+log:
+  error_log:
+    level: warn                 # supports levels, lower to higher: debug, info, warn, error, panic, fatal, default is "warn"
+    file_path: logs/error.log   # supports relative path, absolute path, standard output
+                                # such as: logs/error.log, /tmp/logs/error.log, /dev/stdout, /dev/stderr
+                                # such as absolute path on Windows: winfile:///C:\error.log
+  access_log: logs/access.log   # supports relative path, absolute path, standard output
+                                # such as: logs/access.log, /tmp/logs/access.log, /dev/stdout, /dev/stderr
+                                # such as absolute path on Windows: winfile:///C:\access.log
+                                # log example: 2020-12-09T16:38:09.039+0800	INFO	filter/logging.go:46	/apisix/admin/routes/r1	{"status": 401, "host": "127.0.0.1:9000", "query": "asdfsafd=adf&a=a", "requestId": "3d50ecb8-758c-46d1-af5b-cd9d1c820156", "latency": 0, "remoteIP": "127.0.0.1", "method": "PUT", "errs": []}
+
+authentication:
+  # secret: secret      # The secret for jwt token generator. If not set, random values are generated at startup
+                        # NOTE: Highly recommended to modify this value to protect APISIX Dashboard
+  # expire_time: 3600   # The jwt token expire time, in second, default is 3600 second / 1 hour
+  users:
+    - username: admin   # The username and password for login APISIX Dashboard
+      password: admin
+    - username: user
+      password: user

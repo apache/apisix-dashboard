@@ -25,7 +25,11 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
+)
+
+var (
+	cfg = config.NewDefaultConfig()
 )
 
 func genToken(username string, issueAt, expireAt int64) string {
@@ -35,14 +39,15 @@ func genToken(username string, issueAt, expireAt int64) string {
 		ExpiresAt: expireAt,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, _ := token.SignedString([]byte(conf.AuthConf.Secret))
+
+	signedToken, _ := token.SignedString([]byte(cfg.Authentication.Secret))
 
 	return signedToken
 }
 
 func TestAuthenticationMiddleware_Handle(t *testing.T) {
 	r := gin.New()
-	r.Use(Authentication())
+	r.Use(Authentication(cfg.Authentication))
 	r.GET("/*path", func(c *gin.Context) {
 	})
 

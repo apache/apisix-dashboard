@@ -24,7 +24,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 )
 
@@ -35,7 +35,7 @@ func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{}, nil
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
+func (h *Handler) ApplyRoute(r *gin.Engine, _ config.Config) {
 	r.GET("/apisix/admin/plugins", wgin.Wraps(h.Plugins,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 }
@@ -47,12 +47,12 @@ type ListInput struct {
 func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	plugins := conf.Schema.Get("plugins")
+	plugins := config.GetSchema().Get("plugins")
 	if input.All {
 		var res []map[string]interface{}
 		list := plugins.Value().(map[string]interface{})
-		for name, conf := range list {
-			plugin := conf.(map[string]interface{})
+		for name, p := range list {
+			plugin := p.(map[string]interface{})
 			plugin["name"] = name
 			if _, ok := plugin["type"]; !ok {
 				plugin["type"] = "other"
@@ -65,10 +65,6 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	var ret []string
 	list := plugins.Map()
 	for pluginName := range list {
-		if res, ok := conf.Plugins[pluginName]; !ok || !res {
-			continue
-		}
-
 		ret = append(ret, pluginName)
 	}
 

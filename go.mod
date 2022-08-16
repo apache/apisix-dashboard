@@ -18,6 +18,8 @@ require (
 	github.com/gin-contrib/gzip v0.0.3
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
 	github.com/gin-gonic/gin v1.6.3
+	github.com/go-logr/logr v1.2.3
+	github.com/go-logr/zapr v1.2.3
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.2.0 // indirect
@@ -40,7 +42,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0
 	github.com/yuin/gopher-lua v0.0.0-20200816102855-ee81675732da
 	go.etcd.io/etcd v3.3.25+incompatible
-	go.uber.org/zap v1.17.0
+	go.uber.org/zap v1.22.0
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
 	golang.org/x/sys v0.0.0-20210514084401-e8d321eab015 // indirect
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect

@@ -23,11 +23,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
-func Authentication() gin.HandlerFunc {
+func Authentication(authn config.Authentication) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.URL.Path == "/apisix/admin/user/login" ||
 			c.Request.URL.Path == "/apisix/admin/tool/version" ||
@@ -39,7 +39,7 @@ func Authentication() gin.HandlerFunc {
 		tokenStr := c.GetHeader("Authorization")
 		// verify token
 		token, err := jwt.ParseWithClaims(tokenStr, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-			return []byte(conf.AuthConf.Secret), nil
+			return []byte(authn.Secret), nil
 		})
 
 		errResp := gin.H{
@@ -72,13 +72,18 @@ func Authentication() gin.HandlerFunc {
 			return
 		}
 
-		user, ok := conf.UserList[claims.Subject]
-		if !ok {
+		userExist := false
+		for _, user := range authn.Users {
+			if user.Username == claims.Subject {
+				userExist = true
+			}
+		}
+		if !userExist {
 			log.Warnf("user not exists by token claims subject %s", claims.Subject)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
 			return
 		}
-		c.Set("Username", user.Username)
+
 		c.Next()
 	}
 }

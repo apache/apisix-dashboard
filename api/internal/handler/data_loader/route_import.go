@@ -30,7 +30,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/core/store"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -64,7 +64,7 @@ func NewImportHandler() (handler.RouteRegister, error) {
 	}, nil
 }
 
-func (h *ImportHandler) ApplyRoute(r *gin.Engine) {
+func (h *ImportHandler) ApplyRoute(r *gin.Engine, _ config.Config) {
 	r.POST("/apisix/admin/import/routes", wgin.Wraps(h.Import,
 		wrapper.InputType(reflect.TypeOf(ImportInput{}))))
 }
@@ -102,8 +102,10 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	if contentLen <= 0 {
 		return nil, errors.New("uploaded file is empty")
 	}
-	if contentLen > conf.ImportSizeLimit {
-		return nil, errors.Errorf("uploaded file size exceeds the limit, limit is %d", conf.ImportSizeLimit)
+
+	importSizeLimit := 10 * 1024 * 1024
+	if contentLen > importSizeLimit {
+		return nil, errors.Errorf("uploaded file size exceeds the limit, limit is %d", importSizeLimit)
 	}
 
 	var l loader.Loader
@@ -244,8 +246,8 @@ func (h *ImportHandler) createEntities(ctx context.Context, data *loader.DataSet
 			errs[store.HubKeyGlobalRule] = append(errs[store.HubKeyGlobalRule], err.Error())
 		}
 	}
-	for _, config := range data.PluginConfigs {
-		_, err := h.pluginConfigStore.Create(ctx, &config)
+	for _, pluginConfig := range data.PluginConfigs {
+		_, err := h.pluginConfigStore.Create(ctx, &pluginConfig)
 		if err != nil {
 			errs[store.HubKeyPluginConfig] = append(errs[store.HubKeyPluginConfig], err.Error())
 		}

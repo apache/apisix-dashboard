@@ -23,7 +23,7 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/core/entity"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
@@ -38,7 +38,7 @@ type APISIXJsonSchemaValidator struct {
 }
 
 func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
-	schemaDef := conf.Schema.Get(jsonPath).String()
+	schemaDef := config.GetSchema().Get(jsonPath).String()
 	if schemaDef == "" {
 		log.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
 		return nil, fmt.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
@@ -85,14 +85,14 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 
 	var schemaDef string
 	if upstream.HashOn == "vars" {
-		schemaDef = conf.Schema.Get("main.upstream_hash_vars_schema").String()
+		schemaDef = config.GetSchema().Get("main.upstream_hash_vars_schema").String()
 		if schemaDef == "" {
 			return fmt.Errorf("schema validate failed: schema not found, path: main.upstream_hash_vars_schema")
 		}
 	}
 
 	if upstream.HashOn == "header" || upstream.HashOn == "cookie" {
-		schemaDef = conf.Schema.Get("main.upstream_hash_header_schema").String()
+		schemaDef = config.GetSchema().Get("main.upstream_hash_header_schema").String()
 		if schemaDef == "" {
 			return fmt.Errorf("schema validate failed: schema not found, path: main.upstream_hash_header_schema")
 		}
@@ -221,9 +221,9 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 
 	plugins, schemaType := getPlugins(obj)
 	for pluginName, pluginConf := range plugins {
-		schemaValue := conf.Schema.Get("plugins." + pluginName + "." + schemaType).Value()
+		schemaValue := config.GetSchema().Get("plugins." + pluginName + "." + schemaType).Value()
 		if schemaValue == nil && schemaType == "consumer_schema" {
-			schemaValue = conf.Schema.Get("plugins." + pluginName + ".schema").Value()
+			schemaValue = config.GetSchema().Get("plugins." + pluginName + ".schema").Value()
 		}
 
 		if schemaValue == nil {
@@ -286,7 +286,7 @@ type APISIXSchemaValidator struct {
 }
 
 func NewAPISIXSchemaValidator(jsonPath string) (Validator, error) {
-	schemaDef := conf.Schema.Get(jsonPath).String()
+	schemaDef := config.GetSchema().Get(jsonPath).String()
 	if schemaDef == "" {
 		log.Warnf("schema validate failed: schema not found, path: %s", jsonPath)
 		return nil, fmt.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
