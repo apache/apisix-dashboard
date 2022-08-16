@@ -34,8 +34,8 @@
     "tsc": "tsc",
     "cypress:open": "cross-env CYPRESS_SERVE_ENV=test cypress open",
     "cypress:open-dev": "cross-env CYPRESS_SERVE_ENV=dev cypress open",
-    "cypress:run-ci": "cross-env CYPRESS_SERVE_ENV=test cypress run",
-    "cypress:run-plugin-ci": "cross-env CYPRESS_SERVE_ENV=test cypress run --spec 'cypress/integration/plugin/*.spec.js'"
+    "cypress:run-ci": "cross-env CYPRESS_SERVE_ENV=test cypress run --browser chrome",
+    "cypress:run-plugin-ci": "cross-env CYPRESS_SERVE_ENV=test cypress run --browser chrome --spec 'cypress/integration/plugin/*.spec.js'"
   },
   "license": "Apache-2.0",
   "lint-staged": {
