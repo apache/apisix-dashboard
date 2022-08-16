@@ -25,7 +25,7 @@ context('Create and delete route with plugin orchestration', () => {
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     groupButton: '.ant-radio-group',
-    canvas: 'General',
+    canvas: '.x6-graph-svg',
     startNode:
       '#stencil > div > div.x6-widget-stencil-content > div:nth-child(1) > div > div > svg > g > g.x6-graph-svg-stage > g:nth-child(1) > g > circle',
     notification: '.ant-notification-notice-message',
@@ -59,7 +59,7 @@ context('Create and delete route with plugin orchestration', () => {
     cy.contains('Next').click();
 
     cy.get(selector.groupButton).contains('Orchestration').click();
-    cy.contains(selector.canvas).should('exist');
+    cy.get(selector.canvas).should('be.visible');
 
     // Plugin Orchestration
     cy.get(selector.startNode).move({ x: 400, y: 0, force: true, position: 'center' });
