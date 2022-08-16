@@ -108,7 +108,6 @@ const PluginPage: React.FC<Props> = ({
   const openPluginList = pluginList.filter(
     (item) => initialData[item.name] && !initialData[item.name].disable,
   );
-
   const openPluginType = openPluginList.map((item) => item.type);
   const newOpenPluginType = openPluginType.filter((elem, index, self) => {
     return index === self.indexOf(elem);

@@ -62,6 +62,7 @@ context('Create and delete route with cors form', () => {
     cy.get(selector.nodes_0_port).clear().type(data.port);
     cy.get(selector.nodes_0_weight).clear().type(data.weight);
     cy.contains('Next').click();
+
     // config cors plugin
     cy.contains('cors')
       .parents(selector.pluginCardBordered)
