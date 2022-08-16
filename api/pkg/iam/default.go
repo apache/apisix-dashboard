@@ -3,7 +3,13 @@ package iam
 import (
 	"encoding/csv"
 	"errors"
+<<<<<<< HEAD:api/pkg/iam/default.go
 	"fmt"
+=======
+	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/casbin/casbin/v2"
+	"github.com/gin-gonic/gin"
+>>>>>>> e80fcffa (chore:optimize the default strategy):api/pkg/identity/default.go
 	"io"
 	"net/http"
 	"os"
@@ -16,9 +22,25 @@ import (
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
-type DefaultIdentifier struct{}
+type defaultIdentifier struct{}
 
-func (DefaultIdentifier) Check(userId, resource, action string) error {
+func (defaultIdentifier) Check(userId, method, path string) error {
+	// judge whether the route is under the control of admin
+	f, err := os.Open(conf.PolicyPath)
+	if err != nil {
+		return err
+	}
+	reader := csv.NewReader(f)
+	for {
+		row, err := reader.Read()
+		if err == io.EOF {
+			return err
+		}
+		if KeyMatch(path, row[2]) && row[3] == method {
+			break
+		}
+	}
+	
 	enforce, err := casbin.NewEnforcer(conf.ModelPath, conf.PolicyPath)
 	if err != nil {
 		return err
@@ -26,7 +48,7 @@ func (DefaultIdentifier) Check(userId, resource, action string) error {
 	enforce.AddFunction("identify", KeyMatchFunc)
 	normal, err := enforce.HasRoleForUser("user_"+userId, "role_admin")
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 	if !normal {
 		return errors.New("without permission")
@@ -36,6 +58,7 @@ func (DefaultIdentifier) Check(userId, resource, action string) error {
 
 func CheckForPower(i Identifier) gin.HandlerFunc {
 	return func(c *gin.Context) {
+<<<<<<< HEAD:api/pkg/iam/default.go
 		// judge whether the route is under the control of admin
 		f, err := os.Open(conf.PolicyPath)
 		if err != nil {
@@ -58,8 +81,13 @@ func CheckForPower(i Identifier) gin.HandlerFunc {
 		username := c.MustGet("Username").(string)
 
 		if err := i.Check(username, c.Request.URL.Path, c.Request.Method); err != nil {
+=======
+		// get the identity of user
+		username := c.MustGet("Username").(string)
+		err := i.Check(username, c.Request.Method, c.Request.URL.Path)
+		if err != nil && err != io.EOF {
+>>>>>>> e80fcffa (chore:optimize the default strategy):api/pkg/identity/default.go
 			c.AbortWithStatus(http.StatusForbidden)
-			c.Next()
 			return
 		}
 		c.Next()

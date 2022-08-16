@@ -46,6 +46,7 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 	logger := log.GetLogger(log.AccessLog)
 
 	// security
+<<<<<<< HEAD
 	r.Use(
 		filter.RequestLogHandler(logger),
 		filter.IPFilter(cfg.Security),
@@ -54,6 +55,12 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 		iam.Filter(cfg),
 	)
 
+=======
+	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(), filter.InvalidRequest(), filter.Authentication())
+	if cfg.Conf.Security.IdentityUrl {
+		r.Use(identity.CheckForPower(identity.DashBoardIdentifier.GetIdentifier()))
+	}
+>>>>>>> e80fcffa (chore:optimize the default strategy)
 	// misc
 	staticPath := "./html/"
 	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(cfg.Security), filter.RequestId(), filter.RecoverHandler())
