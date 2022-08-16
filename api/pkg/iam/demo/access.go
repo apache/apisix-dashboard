@@ -1,30 +1,39 @@
-package iam
+package demo
 
 import (
-	"encoding/csv"
+	"embed"
 	"errors"
 	"fmt"
-	"io"
-	"net/http"
-	"os"
 	"strings"
 
-	"github.com/apache/apisix-dashboard/api/internal/conf"
 	"github.com/casbin/casbin/v2"
-	"github.com/gin-gonic/gin"
+	casbinFSAdapter "github.com/naucon/casbin-fs-adapter"
 
-	"github.com/apache/apisix-dashboard/api/internal/log"
+	"github.com/apache/apisix-dashboard/api/pkg/iam"
 )
 
-type DefaultIdentifier struct{}
+var (
+	//go:embed model.conf policy.csv
+	fs embed.FS
 
-func (DefaultIdentifier) Check(userId, resource, action string) error {
-	enforce, err := casbin.NewEnforcer(conf.ModelPath, conf.PolicyPath)
+	// Ensure that demo Access conforms to the iam.Access interface definition
+	_ iam.Access = Access{}
+)
+
+type Access struct{}
+
+func (Access) Check(identity, resource, action string) error {
+	// Load casbin model and adapter from Go embed FS
+	model, _ := casbinFSAdapter.NewModel(fs, "model.conf")
+	policies := casbinFSAdapter.NewAdapter(fs, "policy.csv")
+
+	// Create enforcer
+	enforce, err := casbin.NewEnforcer(model, policies)
 	if err != nil {
 		return err
 	}
 	enforce.AddFunction("identify", KeyMatchFunc)
-	normal, err := enforce.HasRoleForUser("user_"+userId, "role_admin")
+	normal, err := enforce.HasRoleForUser("user_"+identity, "role_admin")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -32,38 +41,6 @@ func (DefaultIdentifier) Check(userId, resource, action string) error {
 		return errors.New("without permission")
 	}
 	return nil
-}
-
-func CheckForPower(i Identifier) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// judge whether the route is under the control of admin
-		f, err := os.Open(conf.PolicyPath)
-		if err != nil {
-			log.Warn("fail to read route")
-			return
-		}
-		reader := csv.NewReader(f)
-		for {
-			row, err := reader.Read()
-			if err == io.EOF {
-				c.Next()
-				return
-			}
-			if KeyMatch(c.Request.URL.Path, row[2]) && row[3] == c.Request.Method {
-				break
-			}
-		}
-
-		// get the identity of user
-		username := c.MustGet("Username").(string)
-
-		if err := i.Check(username, c.Request.URL.Path, c.Request.Method); err != nil {
-			c.AbortWithStatus(http.StatusForbidden)
-			c.Next()
-			return
-		}
-		c.Next()
-	}
 }
 
 // KeyMatchFunc wrap KeyMatch to meet with casbin's need of custom functions
