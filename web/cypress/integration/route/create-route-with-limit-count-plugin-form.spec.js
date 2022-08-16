@@ -46,8 +46,6 @@ context('Create and delete route with limit-count form', () => {
     redis_cluster_nodes_0: '#redis_cluster_nodes_0',
     redis_cluster_nodes_1: '#redis_cluster_nodes_1',
     dropdown: '.rc-virtual-list',
-    tab: '.ant-tabs-tab',
-    tabBtn: '.ant-tabs-tab-btn',
   };
 
   const data = {
@@ -99,11 +97,6 @@ context('Create and delete route with limit-count form', () => {
     });
     cy.get(selector.drawer).should('not.exist');
 
-    cy.get(selector.tab).within(() => {
-      cy.contains(selector.tabBtn, 'Edit').click({
-        force: true,
-      });
-    });
     // config limit-count form with redis policy
     cy.contains(selector.pluginCard, 'limit-count').within(() => {
       cy.get('button').click({

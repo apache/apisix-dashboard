@@ -66,6 +66,7 @@ const PluginPage: React.FC<Props> = ({
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
+  const [enablePluginsList, setEnablePluginsList] = useState<PluginComponent.Meta[]>([]);
   const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>(
     [],
   );
@@ -96,23 +97,32 @@ const PluginPage: React.FC<Props> = ({
       form.setFieldsValue({ plugin_config_id });
     });
   }, []);
+
+  useEffect(() => {
+    const openList = pluginList.filter(
+      (item) => initialData[item.name] && !initialData[item.name].disable,
+    );
+    setEnablePluginsList(openList);
+  }, [initialData]);
+
   const openPluginList = pluginList.filter(
     (item) => initialData[item.name] && !initialData[item.name].disable,
   );
+
   const openPluginType = openPluginList.map((item) => item.type);
   const newOpenPluginType = openPluginType.filter((elem, index, self) => {
     return index === self.indexOf(elem);
   });
 
-  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(true);
+  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(false);
   const tabsList = [
+    {
+      title: formatMessage({ id: 'component.plugin.all' }),
+      key: 'allPlugins',
+    },
     {
       title: formatMessage({ id: 'component.plugin.enable' }),
       key: 'enablePlugins',
-    },
-    {
-      title: formatMessage({ id: 'component.plugin.disable' }),
-      key: 'allPlugins',
     },
   ];
 
@@ -228,19 +238,10 @@ const PluginPage: React.FC<Props> = ({
               id={`plugin-category-${typeItem}`}
             >
               {orderBy(
-                pluginList.filter(
+                (showEnablePlugin ? enablePluginsList : pluginList).filter(
                   readonly
                     ? (item) => item.type === typeItem && !item.hidden && initialData[item.name]
-                    : (item) =>
-                        showEnablePlugin
-                          ? item.type === typeItem &&
-                            !item.hidden &&
-                            (!initialData[item.name] ||
-                              (initialData[item.name] && initialData[item.name].disable))
-                          : item.type === typeItem &&
-                            !item.hidden &&
-                            initialData[item.name] &&
-                            !initialData[item.name].disable,
+                    : (item) => item.type === typeItem && !item.hidden,
                 ),
                 'name',
                 'asc',
