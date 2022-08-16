@@ -19,13 +19,13 @@
 describe('Plugin Schema Test', () => {
   const timeout = 5000;
   const cases = require('../../fixtures/plugin-dataset.json');
+  const domSelector = require('../../fixtures/selector.json');
+  const data = require('../../fixtures/data.json');
   const pluginList = Object.keys(cases);
   const casesList = Object.values(cases);
 
   before(() => {
     cy.clearLocalStorageSnapshot();
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
     cy.login();
     cy.saveLocalStorage();
   });
@@ -34,27 +34,21 @@ describe('Plugin Schema Test', () => {
     cy.restoreLocalStorage();
   });
 
-  afterEach(() => {
-    cy.saveLocalStorage();
-  });
-
-  it('should visit plugin market', function () {
+  it('can visit plugin market', () => {
     cy.visit('/');
-    cy.get('#root > div > section > aside > div > div:nth-child(1) > ul')
+    cy.get('#root > div > section > aside > div > div:nth-child(1) > ul', { timeout })
       .contains('Plugin')
       .click();
-    cy.get('#ant-design-pro-table > div > div > div.ant-pro-table-list-toolbar')
+    cy.get('#ant-design-pro-table > div > div > div.ant-pro-table-list-toolbar', { timeout })
       .contains('Enable')
       .click();
     cy.url().should('include', '/plugin/market');
   });
 
-  describe('Test plugin cases', () => {
+  describe('test plugin cases', () => {
     let globalPluginNames;
-    before(function () {
-      cy.fixture('selector.json').as('domSelector');
-      cy.fixture('data.json').as('data');
 
+    before(function () {
       cy.login();
       cy.visit('/plugin/market');
       cy.saveLocalStorage();
@@ -72,48 +66,50 @@ describe('Plugin Schema Test', () => {
     });
 
     pluginList
-      .slice(0, 4)
       .map((name, i) => ({ name, cases: casesList[i].filter((v) => v.type !== 'consumer') }))
-      .filter(({ cases }) => cases !== undefined || cases.length <= 0)
-      .forEach(({ name, cases }, i) => {
-        it(`${name} plugin #${i + 1} case`, function () {
-          if (globalPluginNames.includes(name)) {
-            cy.configurePlugin({ name, cases });
-          } else {
-            cy.log('non global plugin, skipping');
-          }
+      .filter(({ cases }) => cases !== undefined && cases.length > 0)
+      .forEach(({ name, cases }) => {
+        cases.forEach((c, i) => {
+          it(`${name} plugin #${i + 1} case`, () => {
+            if (globalPluginNames.includes(name)) {
+              console.log(name, c);
+              cy.configurePlugin({ name, content: c });
+            } else {
+              cy.log(`${name} not a global plugin, skipping`);
+            }
+          });
         });
       });
 
     it('should edit the plugin', function () {
       cy.visit('/plugin/list');
 
-      cy.get(this.domSelector.refresh).click();
+      cy.get(domSelector.refresh).click();
       cy.contains('Configure').click();
-      cy.get(this.domSelector.monacoScroll).should('exist');
-      cy.get(this.domSelector.disabledSwitcher).click();
+      cy.get(domSelector.monacoScroll).should('exist');
+      cy.get(domSelector.disabledSwitcher).click();
       cy.contains('button', 'Submit').click();
     });
 
     it('should delete plugin list', function () {
       cy.visit('/plugin/list');
-      cy.get(this.domSelector.refresh).click();
-      cy.get(this.domSelector.paginationOptions).click();
+      cy.get(domSelector.refresh).click();
+      cy.get(domSelector.paginationOptions).click();
       cy.contains('50 / page').should('be.visible').click();
-      cy.get(this.domSelector.fiftyPerPage).should('exist');
+      cy.get(domSelector.fiftyPerPage).should('exist');
       cy.location('href').should('include', 'pageSize=50');
 
-      cy.get(this.domSelector.deleteButton, { timeout })
+      cy.get(domSelector.deleteButton, { timeout })
         .should('exist')
-        .each(function ($el) {
+        .each(($el) => {
           cy.wrap($el).click().click({ timeout });
           cy.contains('button', 'Confirm').click({ force: true });
-          cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
-          cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+          cy.get(domSelector.notification).should('contain', data.deletePluginSuccess);
+          cy.get(domSelector.notificationCloseIcon).click().should('not.exist');
         });
 
       // check if plugin list is empty
-      cy.get(this.domSelector.empty).should('be.visible');
+      cy.get(domSelector.empty).should('be.visible');
     });
   });
 });
