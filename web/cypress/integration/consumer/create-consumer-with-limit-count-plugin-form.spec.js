@@ -157,6 +157,12 @@ context('Create and delete consumer with limit-count plugin form', () => {
     });
     cy.get(selector.drawer).should('not.exist');
 
+    cy.get(selector.tab).within(() => {
+      cy.contains(selector.tabBtn, 'Enable').click({
+        force: true,
+      });
+    });
+
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
     cy.get(selector.notification).should('contain', data.createConsumerSuccess);
