@@ -1,17 +1,19 @@
-package identity
+package iam
 
 import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"github.com/apache/apisix-dashboard/api/internal/conf"
-	"github.com/apache/apisix-dashboard/api/internal/log"
-	"github.com/casbin/casbin/v2"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/apache/apisix-dashboard/api/internal/conf"
+	"github.com/casbin/casbin/v2"
+	"github.com/gin-gonic/gin"
+
+	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
 type DefaultIdentifier struct{}
@@ -51,10 +53,10 @@ func CheckForPower(i Identifier) gin.HandlerFunc {
 				break
 			}
 		}
-		
+
 		// get the identity of user
 		username := c.MustGet("Username").(string)
-		
+
 		if err := i.Check(username, c.Request.URL.Path, c.Request.Method); err != nil {
 			c.AbortWithStatus(http.StatusForbidden)
 			c.Next()

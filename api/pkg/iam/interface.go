@@ -1,4 +1,4 @@
-package identity
+package iam
 
 type Identifier interface {
 	Check(userId, resource, action string) error
