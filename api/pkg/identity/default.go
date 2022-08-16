@@ -3,9 +3,7 @@ package identity
 import (
 	"encoding/csv"
 	"errors"
-	"fmt"
 	"github.com/apache/apisix-dashboard/api/internal/conf"
-	"github.com/apache/apisix-dashboard/api/internal/log"
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -14,9 +12,25 @@ import (
 	"strings"
 )
 
-type DefaultIdentifier struct{}
+type defaultIdentifier struct{}
 
-func (DefaultIdentifier) Check(userId, resource, action string) error {
+func (defaultIdentifier) Check(userId, method, path string) error {
+	// judge whether the route is under the control of admin
+	f, err := os.Open(conf.PolicyPath)
+	if err != nil {
+		return err
+	}
+	reader := csv.NewReader(f)
+	for {
+		row, err := reader.Read()
+		if err == io.EOF {
+			return err
+		}
+		if KeyMatch(path, row[2]) && row[3] == method {
+			break
+		}
+	}
+	
 	enforce, err := casbin.NewEnforcer(conf.ModelPath, conf.PolicyPath)
 	if err != nil {
 		return err
@@ -24,7 +38,7 @@ func (DefaultIdentifier) Check(userId, resource, action string) error {
 	enforce.AddFunction("identify", KeyMatchFunc)
 	normal, err := enforce.HasRoleForUser("user_"+userId, "role_admin")
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 	if !normal {
 		return errors.New("without permission")
@@ -34,30 +48,11 @@ func (DefaultIdentifier) Check(userId, resource, action string) error {
 
 func CheckForPower(i Identifier) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// judge whether the route is under the control of admin
-		f, err := os.Open(conf.PolicyPath)
-		if err != nil {
-			log.Warn("fail to read route")
-			return
-		}
-		reader := csv.NewReader(f)
-		for {
-			row, err := reader.Read()
-			if err == io.EOF {
-				c.Next()
-				return
-			}
-			if KeyMatch(c.Request.URL.Path, row[2]) && row[3] == c.Request.Method {
-				break
-			}
-		}
-		
 		// get the identity of user
 		username := c.MustGet("Username").(string)
-		
-		if err := i.Check(username, c.Request.URL.Path, c.Request.Method); err != nil {
+		err := i.Check(username, c.Request.Method, c.Request.URL.Path)
+		if err != nil && err != io.EOF {
 			c.AbortWithStatus(http.StatusForbidden)
-			c.Next()
 			return
 		}
 		c.Next()

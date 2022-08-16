@@ -1,17 +1,25 @@
 package identity
 
 type Identifier interface {
-	Check(userId, resource, action string) error
+	Check(userId, method, path string) error
 }
 
 type ReplaceIdentifier struct {
 	self *Identifier
 }
 
-func (dr *ReplaceIdentifier) ReplaceIdentifier(i Identifier) {
-	dr.self = &i
+var DashBoardIdentifier = initIdentifier()
+
+func initIdentifier() *ReplaceIdentifier {
+	var dr = &ReplaceIdentifier{}
+	dr.ReplaceIdentifier(defaultIdentifier{})
+	return dr
 }
 
-func (dr ReplaceIdentifier) GetIdentifier() Identifier {
-	return *dr.self
+func (r *ReplaceIdentifier) ReplaceIdentifier(i Identifier) {
+	r.self = &i
+}
+
+func (r ReplaceIdentifier) GetIdentifier() Identifier {
+	return *r.self
 }
