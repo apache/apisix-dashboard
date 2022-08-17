@@ -50,6 +50,7 @@ context('Create and Delete Consumer', () => {
 
   it('creates consumer without plugins', function () {
     cy.visit('/consumer/list');
+    cy.wait(3000);
     cy.contains('Create').click();
     // basic information
     cy.get(selector.username).type(data.noPluginsConsumerName);
@@ -72,6 +73,7 @@ context('Create and Delete Consumer', () => {
   it('creates consumer with key-auth', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
+    cy.wait(3000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     // basic information
@@ -107,7 +109,7 @@ context('Create and Delete Consumer', () => {
 
   it('should view the consumer', function () {
     cy.visit('/consumer/list');
-
+    cy.wait(3000);
     cy.get(selector.nameSelector).type(data.consumerName);
     cy.contains('Search').click();
     cy.contains('key-auth').should('be.visible');
@@ -122,6 +124,7 @@ context('Create and Delete Consumer', () => {
 
   it('delete the consumer', function () {
     cy.visit('/consumer/list');
+    cy.wait(3000);
     cy.contains(data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
@@ -129,6 +132,7 @@ context('Create and Delete Consumer', () => {
 
   it('creates consumer with wrong json', function () {
     cy.visit('/consumer/list');
+    cy.wait(3000);
     cy.contains('Create').click();
     // basic information
     cy.get(selector.username).type(data.consumerName);
