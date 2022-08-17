@@ -52,11 +52,13 @@ context('Create and delete route with plugin orchestration', () => {
     cy.get(selector.name).type('routeName');
     cy.get(selector.description).type('desc');
     cy.contains('Next').click();
+    cy.wait(1000);
 
     cy.get(selector.nodes_0_host).type('127.0.0.1');
     cy.get(selector.nodes_0_port).clear().type('80');
     cy.get(selector.nodes_0_weight).clear().type('1');
     cy.contains('Next').click();
+    cy.wait(1000);
 
     cy.get(selector.groupButton).contains('Orchestration').click();
     cy.contains(selector.canvas).should('exist');
@@ -90,6 +92,7 @@ context('Create and delete route with plugin orchestration', () => {
     cy.contains('Next').click();
     cy.get(selector.notification).should('contain', 'Found node without configuration');
     cy.get(selector.notificationClose).click().should('not.be.visible');
+    cy.wait(1000);
 
     // Configuration plugins and submit
     cy.get(selector.canvasContainer)
