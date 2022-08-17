@@ -64,6 +64,7 @@ context('Create Route Both use uri and uris', () => {
   it('should create route with uri/host/remote_addr', () => {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
@@ -92,6 +93,7 @@ context('Create Route Both use uri and uris', () => {
   it('Raw Data should have uri/host/remote_addr', () => {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
 
     cy.get(selector.nameSelector).type(data.name);
     cy.contains('Search').click();
@@ -109,6 +111,7 @@ context('Create Route Both use uri and uris', () => {
   it('should create route with uris/hosts/remote_addrs', () => {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
 
     cy.get(selector.nameSelector).type(data.name);
     cy.contains('Search').click();
@@ -145,6 +148,7 @@ context('Create Route Both use uri and uris', () => {
   it('Raw Data should have uris/hosts/remote_addrs', () => {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
 
     cy.get(selector.nameSelector).type(data.name);
     cy.contains('Search').click();
@@ -162,6 +166,7 @@ context('Create Route Both use uri and uris', () => {
   it('confirm the configure view render normally', () => {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
 
     cy.get(selector.nameSelector).type(data.name);
     cy.contains('Search').click();
@@ -178,6 +183,7 @@ context('Create Route Both use uri and uris', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
+    cy.wait(2000);
     cy.get(selector.name).clear().type(data.name);
     cy.contains('Search').click();
     cy.contains(data.name).siblings().contains('More').click();
