@@ -52,6 +52,7 @@ context('Create Route with Upstream', () => {
   it('should create an upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
+    cy.wait(2000);
     cy.contains('Create').click();
 
     cy.get(selector.name).type(data.upstreamName);
@@ -103,6 +104,7 @@ context('Create Route with Upstream', () => {
   it('should edit this route with upstream', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.nameSelector).type(data.routeName);
 
     cy.contains('Search').click();
@@ -149,8 +151,10 @@ context('Create Route with Upstream', () => {
 
   it('should delete this test route and upstream', function () {
     cy.visit('/routes/list');
+    cy.wait(2000);
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
+    cy.wait(1000);
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
@@ -162,6 +166,7 @@ context('Create Route with Upstream', () => {
 
     cy.visit('/');
     cy.contains('Upstream').click();
+    cy.wait(2000);
     cy.contains(data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
