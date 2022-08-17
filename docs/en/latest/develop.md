@@ -93,6 +93,6 @@ $ npm config set auto-install-peers=true
 
 ```
 
-> If there is an error about gyp during pnpm install, please ignore it and go ahead!
+> If there is an error about gyp during pnpm install, please ignore it and go ahead! If monaco-editor cannot be found during startup, please go to the original address of the file and copy it .public, you can use the command 'find -name monaco-editor'
 
 4. If writing an front end E2E test, please refer to the [Front End E2E Writing Guide](./front-end-e2e.md)
