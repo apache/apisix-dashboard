@@ -61,6 +61,7 @@ context('Create Route with search service name', () => {
   it('should create two services', function () {
     cy.visit('/');
     cy.contains('Service').click();
+    cy.wait(2000);
     cy.contains('Create').click();
 
     cy.get(selector.name).type(data.serviceName);
@@ -69,6 +70,7 @@ context('Create Route with search service name', () => {
     cy.get(selector.nodes_0_host).type(data.ip);
     cy.get(selector.nodes_0_port).clear().type(data.port);
     cy.get(selector.nodes_0_weight).clear().type(data.weight);
+    cy.wait(1000);
 
     cy.contains('Next').click();
     cy.contains('Next').click();
@@ -85,6 +87,7 @@ context('Create Route with search service name', () => {
     cy.get(selector.nodes_0_host).type(data.ip2);
     cy.get(selector.nodes_0_port).clear().type(data.port2);
     cy.get(selector.nodes_0_weight).clear().type(data.weight2);
+    cy.wait(1000);
 
     cy.contains('Next').click();
     cy.contains('Next').click();
@@ -141,6 +144,7 @@ context('Create Route with search service name', () => {
   it('should delete the route and services', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.name).type(`${data.routeName}\n`);
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
