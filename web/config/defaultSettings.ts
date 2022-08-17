@@ -39,11 +39,11 @@ const defaultSettings = {
   },
   overwrite(env: Record<string, string>) {
     const { SERVE_URL_DEV, SERVE_URL_TEST } = env;
-    defaultSettings.serveUrlMap = {
+    this.serveUrlMap = {
       dev: SERVE_URL_DEV,
       test: SERVE_URL_TEST,
     };
-    return defaultSettings;
+    return this;
   },
 } as LayoutSettings & {
   pwa: boolean;
@@ -51,6 +51,7 @@ const defaultSettings = {
     dev: string;
     test: string;
   };
+  overwrite: Function;
 };
 
 const { dev, test } = defaultSettings.serveUrlMap;

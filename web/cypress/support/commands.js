@@ -14,18 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable */
-import defaultSettings from '../../config/defaultSettings';
 import 'cypress-file-upload';
 import '@4tw/cypress-drag-drop';
 
-defaultSettings.overwrite(Cypress.env());
-
 Cypress.Commands.add('login', () => {
-  const { SERVE_ENV = 'dev' } = Cypress.env();
-  const serveUrl = defaultSettings.serveUrlMap[SERVE_ENV];
+  const { SERVE_URL } = Cypress.env();
 
-  cy.request('POST', `${serveUrl}/apisix/admin/user/login`, {
+  cy.request('POST', `${SERVE_URL}/apisix/admin/user/login`, {
     username: 'user',
     password: 'user',
   }).then((res) => {
@@ -128,11 +123,11 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
 });
 
 Cypress.Commands.add('requestWithToken', ({ method, url, payload }) => {
-  const { SERVE_ENV = 'dev' } = Cypress.env();
+  const { SERVE_URL } = Cypress.env();
   // Make sure the request is synchronous
   cy.request({
     method,
-    url: defaultSettings.serveUrlMap[SERVE_ENV] + url,
+    url: SERVE_URL + url,
     body: payload,
     headers: { Authorization: localStorage.getItem('token') },
   }).then((res) => {

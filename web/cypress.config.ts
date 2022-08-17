@@ -17,6 +17,9 @@
 import { defineConfig } from 'cypress';
 import * as globby from 'globby';
 import 'dotenv/config';
+import defaultSettings from './config/defaultSettings';
+
+const DEFAULT_SETTINGS = defaultSettings.overwrite(process.env)
 
 export default defineConfig({
   viewportWidth: 1920,
@@ -27,7 +30,11 @@ export default defineConfig({
     runMode: 3,
     openMode: 0,
   },
-  env: process.env,
+  env: {
+    ...process.env,
+    DEFAULT_SETTINGS,
+    SERVE_URL: DEFAULT_SETTINGS.serveUrlMap[process.env.CYPRESS_SERVE_ENV || 'dev']
+  },
   e2e: {
     baseUrl: 'http://localhost:8000',
     setupNodeEvents(on, config) {
