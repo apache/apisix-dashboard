@@ -91,6 +91,7 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
   it('should edit this route ', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.nameSelector).type(data.routeName);
 
     cy.contains('Search').click();
@@ -109,6 +110,7 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
+    cy.wait(2000);
     cy.get(selector.name).clear().type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('More').click();
