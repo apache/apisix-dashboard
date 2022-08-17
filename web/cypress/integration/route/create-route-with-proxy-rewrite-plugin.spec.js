@@ -65,6 +65,7 @@ context('create route with proxy-rewrite plugin', () => {
   it('should create route with proxy-rewrite plugin', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
+    cy.wait(2000);
 
     // show create page
     cy.contains(componentLocaleUS['component.global.create']).click();
@@ -122,6 +123,7 @@ context('create route with proxy-rewrite plugin', () => {
   it('should keep the same proxy-rewrite data in edit route page with the create data', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
+    cy.wait(2000);
 
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
@@ -156,6 +158,7 @@ context('create route with proxy-rewrite plugin', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
+    cy.wait(2000);
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('More').click();
