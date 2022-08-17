@@ -51,6 +51,7 @@ context('Create and Delete Consumer', () => {
   it('creates consumer with cors form', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
+    cy.wait(3000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     // basic information
