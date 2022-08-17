@@ -20,6 +20,7 @@ func Filter(cfg config.Config) gin.HandlerFunc {
 	// set the access implementation to Demo
 	if cfg.FeatureGate.DemoIAMAccess {
 		access = demo.Access{}
+		accessLock = true
 	}
 
 	return func(c *gin.Context) {
