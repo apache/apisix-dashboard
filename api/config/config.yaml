@@ -77,3 +77,4 @@ authentication:
       password: user
 
 feature_gate:
+  demoIAMAccess: false

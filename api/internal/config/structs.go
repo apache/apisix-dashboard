@@ -105,4 +105,5 @@ type AuthenticationUser struct {
 }
 
 type FeatureGate struct {
+	DemoIAMAccess bool `mapstructure:"demoIAMAccess"`
 }
