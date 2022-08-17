@@ -63,7 +63,7 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 		filter.IPFilter(cfg.Security),
 		filter.InvalidRequest(),
 		filter.Authentication(cfg.Authentication),
-		iam.Filter(),
+		iam.Filter(cfg),
 	)
 
 	// misc
