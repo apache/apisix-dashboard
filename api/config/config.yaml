@@ -75,3 +75,5 @@ authentication:
       password: admin
     - username: user
       password: user
+
+feature_gate:
