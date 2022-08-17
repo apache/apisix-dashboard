@@ -74,6 +74,10 @@ const PluginPage: React.FC<Props> = ({
   const [plugins, setPlugins] = useState({});
 
   useEffect(() => {
+    setPlugins(initialData);
+  }, [initialData]);
+
+  useEffect(() => {
     fetchList().then((data) => {
       const filteredData = data.filter(
         (item) =>
@@ -95,10 +99,6 @@ const PluginPage: React.FC<Props> = ({
       form.setFieldsValue({ plugin_config_id });
     });
   }, []);
-
-  useEffect(() => {
-    setPlugins(initialData);
-  }, [initialData]);
 
   const openPluginList = pluginList.filter(
     (item) => initialData[item.name] && !initialData[item.name].disable,
