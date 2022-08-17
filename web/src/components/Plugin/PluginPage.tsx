@@ -67,10 +67,10 @@ const PluginPage: React.FC<Props> = ({
   const [form] = Form.useForm();
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [enablePluginsList, setEnablePluginsList] = useState<PluginComponent.Meta[]>([]);
+  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(false);
   const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>(
     [],
   );
-  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(false);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
   const [plugins, setPlugins] = useState({});
@@ -100,16 +100,13 @@ const PluginPage: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    const openList = pluginList.filter(
+    const openPluginList = pluginList.filter(
       (item) => initialData[item.name] && !initialData[item.name].disable,
     );
-    setEnablePluginsList(openList);
+    setEnablePluginsList(openPluginList);
   }, [initialData]);
 
-  const openPluginList = pluginList.filter(
-    (item) => initialData[item.name] && !initialData[item.name].disable,
-  );
-  const openPluginType = openPluginList.map((item) => item.type);
+  const openPluginType = enablePluginsList.map((item) => item.type);
   const newOpenPluginType = openPluginType.filter((elem, index, self) => {
     return index === self.indexOf(elem);
   });
@@ -129,11 +126,7 @@ const PluginPage: React.FC<Props> = ({
     <Tabs
       defaultActiveKey={showEnablePlugin ? 'enablePlugins' : 'allPlugins'}
       onChange={(val: string) => {
-        if (val === 'enablePlugins') {
-          setShowEnablePlugin(true);
-        } else {
-          setShowEnablePlugin(false);
-        }
+        setShowEnablePlugin(val === 'enablePlugins');
       }}
     >
       {tabsList.map((tab) => (

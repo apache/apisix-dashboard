@@ -165,7 +165,7 @@ context('Delete Plugin List with the Drawer', () => {
     cy.get(selector.empty).should('be.visible');
   });
 
-  it('should switch tabs to distinguish with enable or not enbale', function () {
+  it('should be switched tabs to distinguish enable ', function () {
     cy.visit('/plugin/list');
     cy.get(selector.refresh).click();
     cy.contains('button', 'Enable').click();
