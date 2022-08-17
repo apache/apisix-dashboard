@@ -51,6 +51,7 @@ context('Create and delete route with cors form', () => {
   it('should create route with cors form', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
@@ -111,6 +112,7 @@ context('Create and delete route with cors form', () => {
   it('should edit route with cors form no allow_origins_by_regex configured', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.name).clear().type('routeName');
     cy.contains('Search').click();
     cy.contains('routeName').siblings().contains('Configure').click();
@@ -155,6 +157,7 @@ context('Create and delete route with cors form', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
+    cy.wait(2000);
 
     cy.get(selector.name).clear().type('routeName');
     cy.contains('Search').click();
