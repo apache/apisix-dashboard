@@ -63,6 +63,7 @@ context('Can select service_id skip upstream in route', () => {
   it('should create test upstream and service', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
+    cy.wait(2000);
     cy.contains('Create').click();
 
     cy.get(selector.name).type(data.upstreamName);
@@ -76,6 +77,7 @@ context('Can select service_id skip upstream in route', () => {
 
     cy.visit('/');
     cy.contains('Service').click();
+    cy.wait(2000);
     cy.contains('Create').click();
     cy.get(selector.name).type(data.serviceName);
     cy.get(selector.upstreamSelector).click();
@@ -90,6 +92,7 @@ context('Can select service_id skip upstream in route', () => {
   it('should skip upstream module after service is selected when creating route', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.contains('Create').click();
 
     // The None option doesn't exist when service isn't selected
@@ -120,9 +123,11 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('Submit').click();
     cy.contains('Goto List').click();
   });
+
   it('should Add Advanced Routing Matching Conditions', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
 
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
@@ -156,6 +161,7 @@ context('Can select service_id skip upstream in route', () => {
   it('should skip upstream module after service is selected when editing route', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
 
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
@@ -176,6 +182,7 @@ context('Can select service_id skip upstream in route', () => {
   it('should delete route, service and upstream', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
@@ -187,6 +194,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
     cy.visit('/');
     cy.contains('Service').click();
+    cy.wait(2000);
     cy.contains(data.serviceName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
