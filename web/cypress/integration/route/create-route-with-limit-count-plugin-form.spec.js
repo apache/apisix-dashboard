@@ -65,6 +65,7 @@ context('Create and delete route with limit-count form', () => {
   it('should create route with limit-count form', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
@@ -158,6 +159,7 @@ context('Create and delete route with limit-count form', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
+    cy.wait(2000);
 
     cy.get(selector.name).clear().type('routeName');
     cy.contains('Search').click();
