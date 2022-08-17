@@ -24,7 +24,7 @@ func Filter(cfg config.Config) gin.HandlerFunc {
 	}
 
 	return func(c *gin.Context) {
-		if access != nil {
+		if access != nil && c.Request.URL.Path != "/apisix/admin/user/login" {
 			identity := c.MustGet("identity").(string)
 			err := access.Check(identity, c.Request.URL.Path, c.Request.Method)
 			if err != nil {

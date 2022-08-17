@@ -84,6 +84,7 @@ func Authentication(authn config.Authentication) gin.HandlerFunc {
 			return
 		}
 
+		c.Set("identity", claims.Subject)
 		c.Next()
 	}
 }

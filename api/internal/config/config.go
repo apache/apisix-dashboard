@@ -88,7 +88,7 @@ func NewDefaultConfig() Config {
 			},
 		},
 		FeatureGate: FeatureGate{
-			DemoIAMAccess: false,
+			DemoIAMAccess: true,
 		},
 	}
 }

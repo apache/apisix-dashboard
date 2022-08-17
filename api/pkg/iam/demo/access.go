@@ -3,7 +3,6 @@ package demo
 import (
 	"embed"
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/casbin/casbin/v2"
@@ -26,20 +25,25 @@ func (Access) Check(identity, resource, action string) error {
 	// Load casbin model and adapter from Go embed FS
 	model, _ := casbinFSAdapter.NewModel(fs, "model.conf")
 	policies := casbinFSAdapter.NewAdapter(fs, "policy.csv")
-
+	policies.LoadPolicy(model)
 	// Create enforcer
 	enforce, err := casbin.NewEnforcer(model, policies)
 	if err != nil {
 		return err
 	}
 	enforce.AddFunction("identify", KeyMatchFunc)
-	normal, err := enforce.HasRoleForUser("user_"+identity, "role_admin")
-	if err != nil {
-		fmt.Println(err)
+	// get all the permission the user has
+	pers, _ := enforce.GetImplicitPermissionsForUser("role_admin")
+	admin, _ := enforce.HasRoleForUser(identity, "role_admin")
+	if !admin {
+		for _, v := range pers {
+			if KeyMatch(resource, v[1]) && action == v[2] {
+				return errors.New("no permission")
+			}
+		}
 	}
-	if !normal {
-		return errors.New("without permission")
-	}
+
+	// the normal url can be requested
 	return nil
 }
 
