@@ -59,6 +59,7 @@ context('Create and delete route with referer-restriction form', () => {
   it('should create route with referer-restriction form', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
@@ -166,6 +167,7 @@ context('Create and delete route with referer-restriction form', () => {
   it('should delete the route', function () {
     cy.get(selector.name).clear().type('routeName');
     cy.contains('Search').click();
+    cy.wait(2000);
     cy.contains('routeName').siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
