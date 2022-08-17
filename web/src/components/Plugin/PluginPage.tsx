@@ -70,6 +70,7 @@ const PluginPage: React.FC<Props> = ({
   const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>(
     [],
   );
+  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(false);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
   const [plugins, setPlugins] = useState({});
@@ -113,7 +114,6 @@ const PluginPage: React.FC<Props> = ({
     return index === self.indexOf(elem);
   });
 
-  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(false);
   const tabsList = [
     {
       title: formatMessage({ id: 'component.plugin.all' }),
