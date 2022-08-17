@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable */
 
 context('Create and Batch Deletion Routes', () => {
   const timeout = 5000;
@@ -41,35 +40,32 @@ context('Create and Batch Deletion Routes', () => {
     host2: '12.12.12.12',
     port: '80',
     weight: 1,
-    uris: '/get',
-    uris0: '/get0',
-    uris1: '/get1',
-    uris2: '/get2',
-    urisx: '/getx',
     submitSuccess: 'Submit Successfully',
     deleteRouteSuccess: 'Delete Route Successfully',
-    test: 'test',
-    test0: 'test0',
-    test1: 'test1',
-    test2: 'test2',
-    testx: 'testx',
-    desc0: 'desc0',
-    desc1: 'desc1',
-    desc2: 'desc2',
     value0: 'value0',
     label0_value0: 'label0:value0',
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+    cy.visit('/');
   });
 
   it('should successfully create 3 routes', function () {
-    cy.visit('/');
-    cy.contains('Route').click();
+    cy.get('#root > div > section > aside > div > div:nth-child(1) > ul', { timeout })
+      .contains('Route')
+      .click();
+
     for (let i = 0; i < 3; i += 1) {
-      cy.contains('Create').click();
-      cy.contains('Next').click().click();
+      cy.wait(timeout);
+      cy.get('.ant-pro-table-list-toolbar-right').contains('Create').click();
+      cy.get('.ant-row').contains('Next').click().click();
       cy.get(selector.name).type(`test${i}`);
       cy.get(selector.description).type(`desc${i}`);
       cy.get(selector.hosts_0).type(data.host1);
@@ -78,13 +74,14 @@ context('Create and Batch Deletion Routes', () => {
       // config label
       cy.contains('Manage').click();
 
-      // eslint-disable-next-line no-loop-func
-      cy.get(selector.drawerBody).within(() => {
-        cy.contains('button', 'Add')
+      cy.get(selector.drawerBody).within(($drawer) => {
+        cy.wrap($drawer)
+          .contains('button', 'Add')
           .should('not.be.disabled')
           .click()
           .then(() => {
             cy.get(selector.labels_0_labelKey).type(`label${i}`);
+            cy.wait(timeout);
             cy.get(selector.labels_0_labelValue).type(`value${i}`);
             cy.contains('Confirm').click();
           });
@@ -96,9 +93,9 @@ context('Create and Batch Deletion Routes', () => {
       });
       cy.get(selector.nodes_0_port).type(data.port);
       cy.get(selector.nodes_0_weight).type(data.weight);
-      cy.contains('Next').click();
-      cy.contains('Next').click();
-      cy.contains('Submit').click();
+      cy.get('.ant-row').contains('Next').click();
+      cy.get('.ant-row').contains('Next').click();
+      cy.get('.ant-row').contains('Submit').click();
       cy.contains(data.submitSuccess);
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
@@ -107,8 +104,9 @@ context('Create and Batch Deletion Routes', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.contains(data.test0).get('[type="checkbox"]').check();
-    cy.contains(data.test2).get('[type="checkbox"]').check();
+    cy.wrap([0, 2]).each(($n) => {
+      cy.contains(`test${$n}`).get('[type="checkbox"]').check();
+    });
     cy.contains('BatchDeletion Routes').should('be.visible').click({ timeout });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
     cy.get(selector.notificationClose).should('be.visible').click({
@@ -118,48 +116,36 @@ context('Create and Batch Deletion Routes', () => {
   });
 
   it('should batch delete the name of the route', function () {
-    cy.visit('/');
     cy.contains('Route').click();
-    // full match
-    cy.get(selector.nameSearchInput).type(data.test0);
-    cy.contains('Search').click();
-    cy.contains(data.test1).should('not.exist');
-    cy.contains(data.test0).should('not.exist');
-    cy.contains(data.test2).should('not.exist');
-    // partial match
-    cy.get(selector.nameSearchInput).clear().type(data.test2);
-    cy.contains('Search').click();
-    cy.contains(data.test0).should('not.exist');
-    cy.contains(data.test1).should('not.exist');
-    cy.contains(data.test2).should('not.exist');
-    // no match
-    cy.get(selector.nameSearchInput).clear().type(data.testx);
-    cy.contains('Search').click();
-    cy.contains(data.test0).should('not.exist');
-    cy.contains(data.test1).should('not.exist');
-    cy.contains(data.test2).should('not.exist');
+    const cases = [
+      [1, 0, 2], //full match
+      [0, 1, 2], // partial match
+      [0, 1, 2], //none match
+    ];
+    const prefix = 'test';
+    cy.wrap([0, 2, 'x']).each(($n, i) => {
+      cy.get(selector.nameSearchInput).clear().type(`${prefix}${$n}`);
+      cy.contains('Search').click();
+      cy.wrap(cases[i]).each(($n) => {
+        cy.contains(`${prefix}${$n}`).should('not.exist');
+      });
+    });
   });
 
   it('should batch delete the path of the route', function () {
-    cy.visit('/');
     cy.contains('Route').click();
-    // full match
-    cy.get(selector.pathSearchInput).type(data.uris0);
-    cy.contains('Search').click();
-    cy.contains(data.uris1).should('not.exist');
-    cy.contains(data.uris0).should('not.exist');
-    cy.contains(data.uris2).should('not.exist');
-    // partial match
-    cy.get(selector.pathSearchInput).clear().type(data.uris2);
-    cy.contains('Search').click();
-    cy.contains(data.uris0).should('not.exist');
-    cy.contains(data.uris1).should('not.exist');
-    cy.contains(data.uris2).should('not.exist');
-    // no match
-    cy.get(selector.pathSearchInput).clear().type(data.urisx);
-    cy.contains('Search').click();
-    cy.contains(data.uris0).should('not.exist');
-    cy.contains(data.uris1).should('not.exist');
-    cy.contains(data.uris2).should('not.exist');
+    const cases = [
+      [1, 0, 2], //full match
+      [0, 1, 2], // partial match
+      [0, 1, 2], //none match
+    ];
+    const prefix = '/get';
+    cy.wrap([0, 2, 'x']).each(($n, i) => {
+      cy.get(selector.nameSearchInput).clear().type(`${prefix}${$n}`);
+      cy.contains('Search').click();
+      cy.wrap(cases[i]).each(($n) => {
+        cy.contains(`${prefix}${$n}`).should('not.exist');
+      });
+    });
   });
 });

@@ -40,20 +40,24 @@ context('Data Loader import', () => {
 
   beforeEach(() => {
     cy.login();
+  });
 
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
-    cy.fixture('export-route-dataset.json').as('exportFile');
+  before(() => {
+    cy.clearLocalStorageSnapshot();
+    cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(selector.refresh).click();
   });
 
   it('should import API101 with merge mode', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
-    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains('Import').should('be.visible').click();
-
     // select Data Loader type
     cy.contains('OpenAPI 3').should('be.visible').click();
     cy.get(selector.selectDropdown).contains('OpenAPI 3').should('be.visible').click();
@@ -82,13 +86,8 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with duplicate upstream', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
-    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains('Import').should('be.visible').click();
-
     // select Data Loader type
     cy.contains('OpenAPI 3').should('be.visible').click();
     cy.get(selector.selectDropdown).contains('OpenAPI 3').should('be.visible').click();
@@ -112,10 +111,6 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with non-merge mode', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
-    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains('Import').should('be.visible').click();
 
@@ -136,10 +131,6 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with duplicate route', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
-    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains('Import').should('be.visible').click();
 
@@ -158,9 +149,6 @@ context('Data Loader import', () => {
   });
 
   it('should remove all routes and upstreams', function () {
-    cy.visit('/');
-    cy.contains('Route').click();
-    cy.get(selector.refresh).click();
     // remove route
     for (let i = 0; i < 5; i += 1) {
       cy.get(selector.listTbody).get(selector.listRow).contains('More').click();
