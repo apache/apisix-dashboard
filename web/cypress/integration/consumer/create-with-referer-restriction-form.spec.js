@@ -46,6 +46,7 @@ context('Create and delete Consumer with referer-restriction form ', () => {
   it('creates consumer with referer-restriction form', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
+    cy.wait(3000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     // basic information
@@ -95,6 +96,7 @@ context('Create and delete Consumer with referer-restriction form ', () => {
 
   it('delete the consumer', function () {
     cy.visit('/consumer/list');
+    cy.wait(3000);
     cy.contains(data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
