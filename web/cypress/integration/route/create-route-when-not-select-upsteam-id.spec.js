@@ -70,6 +70,7 @@ context('Create Route without Upstream', () => {
   it('should edit this route ', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.nameSelector).type(data.routeName);
 
     cy.contains('Search').click();
@@ -108,6 +109,7 @@ context('Create Route without Upstream', () => {
 
   it('should delete this test route', function () {
     cy.visit('/routes/list');
+    cy.wait(2000);
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('More').click();
