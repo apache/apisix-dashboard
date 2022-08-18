@@ -107,6 +107,7 @@ context('Create and Delete Consumer', () => {
 
   it('should view the consumer', function () {
     cy.visit('/consumer/list');
+
     cy.get(selector.nameSelector).type(data.consumerName);
     cy.contains('Search').click();
     cy.contains('key-auth').should('be.visible');
