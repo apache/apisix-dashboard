@@ -73,7 +73,6 @@ context('Create and Search Route', () => {
   it('should create route test0, test1, test2', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     for (let i = 0; i < 3; i += 1) {
       cy.contains('Create').click();
       cy.contains('Next').click().click();
@@ -115,7 +114,6 @@ context('Create and Search Route', () => {
   it('should search the route with name', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     // full match
     cy.get(selector.nameSearchInput).type(data.test1);
     cy.contains('Search').click();
@@ -139,7 +137,6 @@ context('Create and Search Route', () => {
   it('should search the route with path', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     // full match
     cy.get(selector.pathSearchInput).type(data.uris1);
     cy.contains('Search').click();
@@ -163,7 +160,6 @@ context('Create and Search Route', () => {
   it('should search the route with labels', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     // search one label
     cy.get(selector.expandSearch).click();
     cy.get(selector.labelSelect_0).click({ timeout });
@@ -176,7 +172,6 @@ context('Create and Search Route', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.wait(2000);
     for (let i = 0; i < 3; i += 1) {
       cy.contains(`test${i}`).siblings().contains('More').click({ timeout });
       cy.contains('Delete').should('be.visible').click({ timeout });
