@@ -69,7 +69,6 @@ context('Table Auto Jump When No Data', () => {
   it('should delete last data and jump to first page', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     cy.get(selector.page_item).click();
     cy.wait(1000);
     cy.contains('routeName').siblings().contains('More').click();
