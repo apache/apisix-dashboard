@@ -88,7 +88,6 @@ context('Create and Delete Route', () => {
   it.only('should not create route with name above 100 characters', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click();
@@ -103,7 +102,6 @@ context('Create and Delete Route', () => {
   it('should create route', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
@@ -306,7 +304,6 @@ context('Create and Delete Route', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.wait(2000);
     const routeNames = [newName, duplicateNewName];
     routeNames.forEach(function (routeName) {
       cy.get(selector.name).clear().type(routeName);
