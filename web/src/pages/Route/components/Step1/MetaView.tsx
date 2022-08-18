@@ -83,7 +83,16 @@ const NormalLabelComponent: FC<
 const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
   const { formatMessage } = useIntl();
   const { disabled } = props;
-  const { data, error } = useSWR('', () => fetchLabelList());
+  const { data, error } = useSWR('', fetchLabelList);
+  
+  if (error) {
+    return <div>error</div>
+  }
+
+  if (!data) {
+    return <div>Loading...</div>
+  }
+
   return (
     <Form.Item
       label={formatMessage({ id: 'component.global.version' })}
@@ -92,15 +101,11 @@ const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = 
       <Row>
         <Col span={10}>
           <Form.Item noStyle name="custom_version_label">
-            {!data && !error && <div>Loading...</div>}
-            {error && <div>Error</div>}
-            {data && (
               <AutoComplete
                 options={(data.API_VERSION || []).map((item) => ({ value: item }))}
                 disabled={disabled}
                 placeholder={formatMessage({ id: 'page.route.configuration.version.placeholder' })}
               />
-            )}
           </Form.Item>
         </Col>
       </Row>
@@ -152,7 +157,10 @@ const Name: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
 const Id: FC<Pick<RouteModule.Step1PassProps, 'isEdit'>> = (props) => {
   const { formatMessage } = useIntl();
   const { isEdit } = props;
-  if (!isEdit) return null;
+
+  if (!isEdit) {
+    return null;
+  }
 
   return (
     <Form.Item label={formatMessage({ id: 'component.global.id' })}>
@@ -338,8 +346,16 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
   const { disabled, upstreamForm } = props;
   const { data, error } = useSWR(
     '',
-    () => fetchServiceList() as Promise<{ data: ServiceModule.ResponseBody[] }>,
+    fetchServiceList as () => Promise<{ data: ServiceModule.ResponseBody[] }>,
   );
+
+  if (error) {
+    return <div>error</div>
+  }
+
+  if (!data) {
+    return <div>Loading...</div>
+  }
 
   return (
     <>
@@ -350,9 +366,6 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
         <Row>
           <Col span={5}>
             <Form.Item noStyle name="service_id">
-              {!data && !error && <div>Loading...</div>}
-              {error && <div>Error</div>}
-              {data && (
                 <Select
                   showSearch
                   disabled={disabled}
@@ -373,7 +386,6 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
                     );
                   })}
                 </Select>
-              )}
             </Form.Item>
           </Col>
         </Row>
