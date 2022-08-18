@@ -32,6 +32,7 @@ const NormalLabelComponent: FC<
   const [visible, setVisible] = useState(false);
   const { formatMessage } = useIntl();
   const { disabled, onChange, form } = props;
+  const dataSource = useState(() => form.getFieldValue(field) || [])
   return (
     <React.Fragment>
       <Form.Item
@@ -63,21 +64,16 @@ const NormalLabelComponent: FC<
       </Form.Item>
       {visible && (
         <Form.Item shouldUpdate noStyle>
-          {() => {
-            const labels = form.getFieldValue(field) || [];
-            return (
-              <LabelsDrawer
-                title={formatMessage({ id: 'component.label-manager' })}
-                actionName={field}
-                dataSource={labels}
-                disabled={disabled || false}
-                onChange={onChange}
-                onClose={() => setVisible(false)}
-                filterList={['API_VERSION']}
-                fetchLabelList={fetchLabelList}
-              />
-            );
-          }}
+          <LabelsDrawer
+            title={formatMessage({ id: 'component.label-manager' })}
+            actionName={field}
+            dataSource={dataSource}
+            disabled={disabled || false}
+            onChange={onChange}
+            onClose={() => setVisible(false)}
+            filterList={['API_VERSION']}
+            fetchLabelList={fetchLabelList}
+          />
         </Form.Item>
       )}
     </React.Fragment>

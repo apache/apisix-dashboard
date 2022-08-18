@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
 import { transformLableValueToKeyValue } from '../../helpers';
+import useSWR from 'swr';
 
 type Props = {
   title?: string;
@@ -34,9 +35,13 @@ type Props = {
 const LabelList = (disabled: boolean, labelList: LabelList, filterList: string[] = []) => {
   const { formatMessage } = useIntl();
 
-  const keyOptions = Object.keys(labelList || {})
-    .filter((item) => !filterList.includes(item))
-    .map((item) => ({ value: item }));
+  const keyOptions = useMemo(
+    () =>
+      Object.keys(labelList || {})
+        .filter((item) => !filterList.includes(item))
+        .map((item) => ({ value: item })),
+    [],
+  );
   return (
     <Form.List name="labels">
       {(fields, { add, remove }) => {
@@ -122,16 +127,38 @@ const LabelsDrawer: React.FC<Props> = ({
   onClose,
   onChange = () => {},
 }) => {
-  const transformLabel = transformLableValueToKeyValue(dataSource);
-
+  const { data: labelList } = useSWR('', fetchLabelList);
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
-  const [labelList, setLabelList] = useState<LabelList>({});
-  form.setFieldsValue({ labels: transformLabel });
 
   useEffect(() => {
-    fetchLabelList().then(setLabelList);
-  }, []);
+    const transformLabel = transformLableValueToKeyValue(dataSource);
+    form.setFieldsValue({ labels: transformLabel });
+  }, [form, dataSource]);
+
+  const onClick = useCallback(
+    function onClick(e) {
+      e.persist();
+      form.validateFields().then(({ labels }) => {
+        const data = labels.map((item: any) => `${item.labelKey}:${item.labelValue}`);
+        // check for duplicates
+        if (new Set(data).size !== data.length) {
+          notification.warning({
+            message: `Config Error`,
+            description: 'Please do not enter duplicate labels',
+          });
+          return;
+        }
+
+        onChange({
+          action: actionName,
+          data,
+        });
+        onClose();
+      });
+    },
+    [form, actionName, onChange, onClose],
+  );
 
   return (
     <Drawer
@@ -145,30 +172,7 @@ const LabelsDrawer: React.FC<Props> = ({
       footer={
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>
-          <Button
-            type="primary"
-            style={{ marginRight: 8, marginLeft: 8 }}
-            onClick={(e) => {
-              e.persist();
-              form.validateFields().then(({ labels }) => {
-                const data = labels.map((item: any) => `${item.labelKey}:${item.labelValue}`);
-                // check for duplicates
-                if (new Set(data).size !== data.length) {
-                  notification.warning({
-                    message: `Config Error`,
-                    description: 'Please do not enter duplicate labels',
-                  });
-                  return;
-                }
-
-                onChange({
-                  action: actionName,
-                  data,
-                });
-                onClose();
-              });
-            }}
-          >
+          <Button type="primary" style={{ marginRight: 8, marginLeft: 8 }} onClick={onClick}>
             {formatMessage({ id: 'component.global.confirm' })}
           </Button>
         </div>
