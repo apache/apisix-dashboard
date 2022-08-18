@@ -346,7 +346,7 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
   );
 
   return (
-    <React.Fragment>
+    <>
       <Form.Item
         label={formatMessage({ id: 'page.route.service' })}
         tooltip={formatMessage({ id: 'page.route.fields.service_id.tooltip' })}
@@ -400,8 +400,10 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
           }
           return prev.service_id !== next.service_id;
         }}
-      ></Form.Item>
-    </React.Fragment>
+      >
+        <span/>
+      </Form.Item>
+    </>
   );
 };
 
