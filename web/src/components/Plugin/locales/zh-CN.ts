@@ -30,7 +30,7 @@ export default {
   'component.plugin.serverless': '无服务器架构',
   'component.plugin.observability': '可观测性',
   'component.plugin.other': '其它',
-
+  'component.plugin.all': '所有',
   // cors
   'component.pluginForm.cors.allow_origins.tooltip':
     '允许跨域访问的 Origin，格式如：scheme://host:port，比如: https://somehost.com:8081 。多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所有 Origin 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Origin 都通过，但请注意这样存在安全隐患。',
