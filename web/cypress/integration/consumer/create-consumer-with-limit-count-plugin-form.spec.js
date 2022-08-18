@@ -57,7 +57,6 @@ context('Create and delete consumer with limit-count plugin form', () => {
   it('should create consumer with limit-count form', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(3000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     // basic information
@@ -157,7 +156,6 @@ context('Create and delete consumer with limit-count plugin form', () => {
 
   it('should delete the consumer', function () {
     cy.visit('/consumer/list');
-    cy.wait(3000);
     cy.contains(data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
