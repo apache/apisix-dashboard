@@ -76,7 +76,6 @@ const PluginPage: React.FC<Props> = ({
   const [plugins, setPlugins] = useState({});
 
   useEffect(() => {
-    setPlugins(initialData);
     fetchList().then((data) => {
       const filteredData = data.filter(
         (item) =>
@@ -103,6 +102,7 @@ const PluginPage: React.FC<Props> = ({
     const openPluginList = pluginList.filter(
       (item) => initialData[item.name] && !initialData[item.name].disable,
     );
+    setPlugins(initialData);
     setEnablePluginsList(openPluginList);
   }, [initialData, pluginList]);
 
