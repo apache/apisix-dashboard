@@ -63,7 +63,6 @@ context('Create Route with advanced matching conditions', () => {
 
   it('should create route with advanced matching conditions', function () {
     cy.visit('/routes/list');
-    cy.wait(2000);
     cy.contains('Create').click();
     cy.contains('Next').click().click();
     cy.get(selector.name).type(data.routeName);
@@ -123,7 +122,6 @@ context('Create Route with advanced matching conditions', () => {
 
   it('should edit this route matching conditions', function () {
     cy.visit('/routes/list');
-    cy.wait(2000);
     cy.get(selector.name).clear().type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();
@@ -165,7 +163,6 @@ context('Create Route with advanced matching conditions', () => {
 
   it('should delete route matching conditions', function () {
     cy.visit('/routes/list');
-    cy.wait(2000);
     cy.get(selector.name).clear().type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();
