@@ -99,7 +99,6 @@ context('Create Route with Service Discovery Upstream', () => {
   it('should edit this route with Nacos Service Discovery upstream', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     cy.get(selector.nameSelector).type(data.routeName);
 
     cy.contains('Search').click();
@@ -142,7 +141,6 @@ context('Create Route with Service Discovery Upstream', () => {
   it('should view the test route', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
 
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
@@ -158,7 +156,6 @@ context('Create Route with Service Discovery Upstream', () => {
 
   it('should delete this test route and upstream', function () {
     cy.visit('/routes/list');
-    cy.wait(2000);
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('More').click();
