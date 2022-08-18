@@ -274,9 +274,9 @@ const Redirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange'>> = 
   );
 };
 
-const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange'>> = (props) => {
+const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange' | 'form'>> = (props) => {
   const { formatMessage } = useIntl();
-  const { disabled, onChange = () => {} } = props;
+  const { disabled, onChange = () => {}, form } = props;
   return (
     <Form.Item
       noStyle
@@ -287,50 +287,50 @@ const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange
         return prev.redirectOption !== next.redirectOption;
       }}
     >
-      (form.getFieldValue('redirectOption') === 'customRedirect' &&
-      <Form.Item
-        label={formatMessage({ id: 'page.route.form.itemLabel.redirectCustom' })}
-        required
-        style={{ marginBottom: 0 }}
-      >
-        <Row gutter={10}>
-          <Col span={5}>
-            <Form.Item
-              name="redirectURI"
-              rules={[
-                {
-                  required: true,
-                  message: `${formatMessage({
-                    id: 'component.global.pleaseEnter',
-                  })}${formatMessage({
-                    id: 'page.route.form.itemLabel.redirectURI',
-                  })}`,
-                },
-              ]}
-            >
-              <Input
-                placeholder={formatMessage({
-                  id: 'page.route.input.placeholder.redirectCustom',
-                })}
-                disabled={disabled}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={5}>
-            <Form.Item name="ret_code" rules={[{ required: true }]}>
-              <Select disabled={disabled} data-cy="redirect_code">
-                <Select.Option value={301}>
-                  {formatMessage({ id: 'page.route.select.option.redirect301' })}
-                </Select.Option>
-                <Select.Option value={302}>
-                  {formatMessage({ id: 'page.route.select.option.redirect302' })}
-                </Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form.Item>
-      )
+      {form?.getFieldValue('redirectOption') === 'customRedirect' &&
+        <Form.Item
+          label={formatMessage({ id: 'page.route.form.itemLabel.redirectCustom' })}
+          required
+          style={{ marginBottom: 0 }}
+        >
+          <Row gutter={10}>
+            <Col span={5}>
+              <Form.Item
+                name="redirectURI"
+                rules={[
+                  {
+                    required: true,
+                    message: `${formatMessage({
+                      id: 'component.global.pleaseEnter',
+                    })}${formatMessage({
+                      id: 'page.route.form.itemLabel.redirectURI',
+                    })}`,
+                  },
+                ]}
+              >
+                <Input
+                  placeholder={formatMessage({
+                    id: 'page.route.input.placeholder.redirectCustom',
+                  })}
+                  disabled={disabled}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={5}>
+              <Form.Item name="ret_code" rules={[{ required: true }]}>
+                <Select disabled={disabled} data-cy="redirect_code">
+                  <Select.Option value={301}>
+                    {formatMessage({ id: 'page.route.select.option.redirect301' })}
+                  </Select.Option>
+                  <Select.Option value={302}>
+                    {formatMessage({ id: 'page.route.select.option.redirect302' })}
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form.Item>
+      }
     </Form.Item>
   );
 };
@@ -421,7 +421,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = (props) => {
       <Description disabled={disabled} />
 
       <Redirect disabled={disabled} onChange={onChange} />
-      <CustomRedirect disabled={disabled} onChange={onChange} />
+      <CustomRedirect disabled={disabled} onChange={onChange} form={form} />
 
       <ServiceSelector disabled={disabled} upstreamForm={upstreamForm} />
 
