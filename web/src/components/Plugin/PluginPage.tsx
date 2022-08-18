@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
+import { Anchor, Layout, Card, Button, Form, Select, Alert, Tabs } from 'antd';
 import { orderBy, omit } from 'lodash';
 import { useIntl } from 'umi';
 
@@ -66,16 +66,14 @@ const PluginPage: React.FC<Props> = ({
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
+  const [enablePluginsList, setEnablePluginsList] = useState<PluginComponent.Meta[]>([]);
+  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(false);
   const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>(
     [],
   );
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
   const [plugins, setPlugins] = useState({});
-
-  useEffect(() => {
-    setPlugins(initialData);
-  }, [initialData]);
 
   useEffect(() => {
     fetchList().then((data) => {
@@ -100,13 +98,42 @@ const PluginPage: React.FC<Props> = ({
     });
   }, []);
 
-  const openPluginList = pluginList.filter(
-    (item) => initialData[item.name] && !initialData[item.name].disable,
-  );
-  const openPluginType = openPluginList.map((item) => item.type);
+  useEffect(() => {
+    const openPluginList = pluginList.filter(
+      (item) => initialData[item.name] && !initialData[item.name].disable,
+    );
+    setPlugins(initialData);
+    setEnablePluginsList(openPluginList);
+  }, [initialData, pluginList]);
+
+  const openPluginType = enablePluginsList.map((item) => item.type);
   const newOpenPluginType = openPluginType.filter((elem, index, self) => {
     return index === self.indexOf(elem);
   });
+
+  const tabsList = [
+    {
+      title: formatMessage({ id: 'component.plugin.all' }),
+      key: 'allPlugins',
+    },
+    {
+      title: formatMessage({ id: 'component.plugin.enable' }),
+      key: 'enablePlugins',
+    },
+  ];
+
+  const SwitchTab = () => (
+    <Tabs
+      defaultActiveKey={showEnablePlugin ? 'enablePlugins' : 'allPlugins'}
+      onChange={(val: string) => {
+        setShowEnablePlugin(val === 'enablePlugins');
+      }}
+    >
+      {tabsList.map((tab) => (
+        <Tabs.TabPane tab={tab.title} key={tab.key} />
+      ))}
+    </Tabs>
+  );
 
   const PluginList = () => (
     <>
@@ -203,7 +230,7 @@ const PluginPage: React.FC<Props> = ({
               id={`plugin-category-${typeItem}`}
             >
               {orderBy(
-                pluginList.filter(
+                (showEnablePlugin ? enablePluginsList : pluginList).filter(
                   readonly
                     ? (item) => item.type === typeItem && !item.hidden && initialData[item.name]
                     : (item) => item.type === typeItem && !item.hidden,
@@ -307,6 +334,7 @@ const PluginPage: React.FC<Props> = ({
           background-color: transparent;
         }
       `}</style>
+      {!readonly && <SwitchTab />}
       <Layout>
         <PluginList />
         <Plugin />

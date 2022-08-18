@@ -32,6 +32,7 @@ export default {
   'component.plugin.serverless': 'Sunucusuz Mimari',
   'component.plugin.observability': 'Gözlemlenebilirlik',
   'component.plugin.other': 'Diğer',
+  'component.plugin.all': 'Tümü',
   // cors
   'component.pluginForm.cors.allow_origins.tooltip':
     'Originler CORSları aktif ettiğinde örn : ：scheme://host:port, örn https://somehost.com:8081.Kullanılacak birden çok kaynak allow_credential false olduğunda, herhangi bir kaynağa izin verildiğini belirtmek için * işaretini kullanabilirsiniz. Ayrıca, ** kullanarak tüm kökenlere izin verebilirsiniz, allow_credentialı etkinleştirirseniz bazı güvenlik riskleri getirecektir.',
