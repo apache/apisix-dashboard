@@ -65,7 +65,6 @@ const { OptGroup, Option } = Select;
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
-  const [exportFileTypeForm] = Form.useForm();
 
   enum RouteStatus {
     Offline = 0,
@@ -270,6 +269,7 @@ const Page: React.FC = () => {
   };
 
   const ListFooter: React.FC = () => {
+    const [exportFileTypeForm] = Form.useForm();
     return (
       <Popconfirm
         title={
