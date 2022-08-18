@@ -24,7 +24,6 @@ context('Check Route Required Field Flag', () => {
   it('should exist required flag for Route name', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     cy.contains('Create').click();
     cy.get('label[title="Name"]').then(($els) => {
       // get Window reference from element
@@ -41,7 +40,6 @@ context('Check Route Required Field Flag', () => {
   it('should exist required flag for Route path', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     cy.contains('Create').click();
     cy.get('label[title="Path"]').then(($els) => {
       const win = $els[0].ownerDocument.defaultView;
