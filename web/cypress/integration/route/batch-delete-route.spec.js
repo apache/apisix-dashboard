@@ -67,7 +67,6 @@ context('Create and Batch Deletion Routes', () => {
   it('should successfully create 3 routes', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     for (let i = 0; i < 3; i += 1) {
       cy.contains('Create').click();
       cy.contains('Next').click().click();
@@ -108,7 +107,6 @@ context('Create and Batch Deletion Routes', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.wait(2000);
     cy.contains(data.test0).get('[type="checkbox"]').check();
     cy.contains(data.test2).get('[type="checkbox"]').check();
     cy.contains('BatchDeletion Routes').should('be.visible').click({ timeout });
@@ -122,7 +120,6 @@ context('Create and Batch Deletion Routes', () => {
   it('should batch delete the name of the route', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     // full match
     cy.get(selector.nameSearchInput).type(data.test0);
     cy.contains('Search').click();
@@ -145,7 +142,6 @@ context('Create and Batch Deletion Routes', () => {
 
   it('should batch delete the path of the route', function () {
     cy.visit('/');
-    cy.wait(2000);
     cy.contains('Route').click();
     // full match
     cy.get(selector.pathSearchInput).type(data.uris0);
