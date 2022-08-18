@@ -58,9 +58,7 @@ context('Create and Batch Deletion Routes', () => {
   });
 
   it('should successfully create 3 routes', function () {
-    cy.get('#root > div > section > aside > div > div:nth-child(1) > ul', { timeout })
-      .contains('Route')
-      .click();
+    cy.get('#root > div > section > aside > div ul', { timeout }).contains('Route').click();
 
     for (let i = 0; i < 3; i += 1) {
       cy.wait(timeout);
@@ -81,7 +79,6 @@ context('Create and Batch Deletion Routes', () => {
           .click()
           .then(() => {
             cy.get(selector.labels_0_labelKey).type(`label${i}`);
-            cy.wait(timeout);
             cy.get(selector.labels_0_labelValue).type(`value${i}`);
             cy.contains('Confirm').click();
           });
