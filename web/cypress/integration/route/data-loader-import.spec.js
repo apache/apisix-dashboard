@@ -49,7 +49,6 @@ context('Data Loader import', () => {
   it('should import API101 with merge mode', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
 
     cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
@@ -85,7 +84,6 @@ context('Data Loader import', () => {
   it('should import API101 with duplicate upstream', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
 
     cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
@@ -116,7 +114,6 @@ context('Data Loader import', () => {
   it('should import API101 with non-merge mode', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
 
     cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
@@ -141,7 +138,6 @@ context('Data Loader import', () => {
   it('should import API101 with duplicate route', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
 
     cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
@@ -164,7 +160,6 @@ context('Data Loader import', () => {
   it('should remove all routes and upstreams', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(2000);
     cy.get(selector.refresh).click();
     // remove route
     for (let i = 0; i < 5; i += 1) {
