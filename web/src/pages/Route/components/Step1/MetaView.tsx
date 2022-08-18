@@ -32,7 +32,8 @@ const NormalLabelComponent: FC<
   const [visible, setVisible] = useState(false);
   const { formatMessage } = useIntl();
   const { disabled, onChange, form } = props;
-  const dataSource = useState(() => form.getFieldValue(field) || []);
+  const dataSource = form.getFieldValue(field) || [];
+
   return (
     <React.Fragment>
       <Form.Item
@@ -85,8 +86,6 @@ const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = 
   const { disabled } = props;
   const { data, error } = useSWR('get', fetchLabelList);
 
-  console.log({ data, error, l: 'log' });
-
   return (
     <Form.Item
       label={formatMessage({ id: 'component.global.version' })}
@@ -103,7 +102,7 @@ const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = 
               if (!data) {
                 return <div>Loading...</div>;
               }
-              
+
               return (<AutoComplete
                 options={(data.API_VERSION || []).map((item) => ({ value: item }))}
                 disabled={disabled}
