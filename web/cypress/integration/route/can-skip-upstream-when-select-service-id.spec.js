@@ -76,7 +76,7 @@ context('Can select service_id skip upstream in route', () => {
 
     cy.visit('/');
     cy.contains('Service').click();
-    cy.wait(2000);
+    cy.wait(500);
     cy.contains('Create').click();
     cy.get(selector.name).type(data.serviceName);
     cy.get(selector.upstreamSelector).click();
@@ -189,7 +189,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
     cy.visit('/');
     cy.contains('Service').click();
-    cy.wait(2000);
+    cy.wait(500);
     cy.contains(data.serviceName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
