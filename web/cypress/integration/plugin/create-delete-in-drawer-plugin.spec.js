@@ -126,10 +126,11 @@ context('Delete Plugin List with the Drawer', () => {
           force: true,
         });
       });
+    cy.wait(500);
     cy.get(selector.drawer)
       .should('be.visible')
       .within(() => {
-        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.disabledSwitcher).click({force:true});
         cy.get(selector.checkedSwitcher).should('exist');
       });
     cy.contains('button', 'Submit').click();
