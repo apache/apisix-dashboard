@@ -167,7 +167,7 @@ context('Delete Plugin List with the Drawer', () => {
     cy.get(selector.empty).should('be.visible');
   });
 
-   it('should be switched tabs to distinguish enable ', function () {
+  it('should be switched tabs to distinguish enable ', function () {
     cy.visit('/plugin/list');
     cy.get(selector.refresh).click();
     cy.contains('button', 'Enable').click();
@@ -191,26 +191,14 @@ context('Delete Plugin List with the Drawer', () => {
         force: true,
       });
     });
-  cy.contains(data.basicAuthPlugin)
+
+    cy.contains(data.basicAuthPlugin)
       .parents(selector.pluginCardBordered)
       .within(() => {
         cy.get('button').click({
           force: true,
         });
       });
-  cy.contains('button', 'Delete').click({
-      force: true,
-    });
-    cy.contains('button', 'Confirm').click({
-      force: true,
-    });
-
-    cy.get(selector.tab).within(() => {
-      cy.contains(selector.tabBtn, 'All').click({
-        force: true,
-      });
-    });
-    cy.contains(data.basicAuthPlugin).should('exist');
 
     cy.contains('button', 'Delete').click({
       force: true,
@@ -225,7 +213,6 @@ context('Delete Plugin List with the Drawer', () => {
       });
     });
     cy.contains(data.basicAuthPlugin).should('exist');
-
     cy.visit('/plugin/list');
     cy.get(selector.empty).should('be.visible');
   });
