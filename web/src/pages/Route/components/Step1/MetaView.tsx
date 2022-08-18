@@ -83,7 +83,10 @@ const NormalLabelComponent: FC<
 const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
   const { formatMessage } = useIntl();
   const { disabled } = props;
-  const { data, error } = useSWR('', fetchLabelList);
+  const { data, error } = useSWR(null, fetchLabelList);
+
+  console.log({data, error, l: 'log'});
+  
   
   if (error) {
     return <div>error</div>
@@ -348,6 +351,7 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
     '',
     fetchServiceList as () => Promise<{ data: ServiceModule.ResponseBody[] }>,
   );
+  console.log({data, error, l: 'lo2'});
 
   if (error) {
     return <div>error</div>
