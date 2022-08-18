@@ -32,7 +32,7 @@ const NormalLabelComponent: FC<
   const [visible, setVisible] = useState(false);
   const { formatMessage } = useIntl();
   const { disabled, onChange, form } = props;
-  const dataSource = useState(() => form.getFieldValue(field) || [])
+  const dataSource = useState(() => form.getFieldValue(field) || []);
   return (
     <React.Fragment>
       <Form.Item
@@ -83,18 +83,9 @@ const NormalLabelComponent: FC<
 const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
   const { formatMessage } = useIntl();
   const { disabled } = props;
-  const { data, error } = useSWR(null, fetchLabelList);
+  const { data, error } = useSWR('get', fetchLabelList);
 
-  console.log({data, error, l: 'log'});
-  
-  
-  if (error) {
-    return <div>error</div>
-  }
-
-  if (!data) {
-    return <div>Loading...</div>
-  }
+  console.log({ data, error, l: 'log' });
 
   return (
     <Form.Item
@@ -104,11 +95,21 @@ const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = 
       <Row>
         <Col span={10}>
           <Form.Item noStyle name="custom_version_label">
-              <AutoComplete
+            {(() => {
+              if (error) {
+                return <div>error</div>;
+              }
+
+              if (!data) {
+                return <div>Loading...</div>;
+              }
+              
+              return (<AutoComplete
                 options={(data.API_VERSION || []).map((item) => ({ value: item }))}
                 disabled={disabled}
                 placeholder={formatMessage({ id: 'page.route.configuration.version.placeholder' })}
-              />
+              />)
+            })()}
           </Form.Item>
         </Col>
       </Row>
@@ -281,7 +282,9 @@ const Redirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange'>> = 
   );
 };
 
-const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange' | 'form'>> = (props) => {
+const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange' | 'form'>> = (
+  props,
+) => {
   const { formatMessage } = useIntl();
   const { disabled, onChange = () => {}, form } = props;
   return (
@@ -294,7 +297,7 @@ const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange
         return prev.redirectOption !== next.redirectOption;
       }}
     >
-      {form?.getFieldValue('redirectOption') === 'customRedirect' &&
+      {form?.getFieldValue('redirectOption') === 'customRedirect' && (
         <Form.Item
           label={formatMessage({ id: 'page.route.form.itemLabel.redirectCustom' })}
           required
@@ -337,7 +340,7 @@ const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange
             </Col>
           </Row>
         </Form.Item>
-      }
+      )}
     </Form.Item>
   );
 };
@@ -348,18 +351,10 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
   const { formatMessage } = useIntl();
   const { disabled, upstreamForm } = props;
   const { data, error } = useSWR(
-    '',
+    'get',
     fetchServiceList as () => Promise<{ data: ServiceModule.ResponseBody[] }>,
   );
-  console.log({data, error, l: 'lo2'});
-
-  if (error) {
-    return <div>error</div>
-  }
-
-  if (!data) {
-    return <div>Loading...</div>
-  }
+  console.log({ data, error, l: 'lo2' });
 
   return (
     <>
@@ -370,26 +365,38 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
         <Row>
           <Col span={5}>
             <Form.Item noStyle name="service_id">
-                <Select
-                  showSearch
-                  disabled={disabled}
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {/* TODO: value === '' means  no service_id select, need to find a better way */}
-                  <Select.Option value="" key={Math.random().toString(36).substring(7)}>
-                    {formatMessage({ id: 'page.route.service.none' })}
-                  </Select.Option>
-                  {data?.data?.map((item) => {
-                    return (
-                      <Select.Option value={item.id} key={item.id}>
-                        {item.name}
-                      </Select.Option>
-                    );
-                  })}
-                </Select>
+              {(() => {
+                if (error) {
+                  return <div>error</div>;
+                }
+
+                if (!data) {
+                  return <div>Loading...</div>;
+                }
+
+                return (
+                  <Select
+                    showSearch
+                    disabled={disabled}
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {/* TODO: value === '' means  no service_id select, need to find a better way */}
+                    <Select.Option value="" key={Math.random().toString(36).substring(7)}>
+                      {formatMessage({ id: 'page.route.service.none' })}
+                    </Select.Option>
+                    {data?.data?.map((item) => {
+                      return (
+                        <Select.Option value={item.id} key={item.id}>
+                          {item.name}
+                        </Select.Option>
+                      );
+                    })}
+                  </Select>
+                );
+              })()}
             </Form.Item>
           </Col>
         </Row>
@@ -413,7 +420,7 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
           return prev.service_id !== next.service_id;
         }}
       >
-        <span/>
+        <span />
       </Form.Item>
     </>
   );
