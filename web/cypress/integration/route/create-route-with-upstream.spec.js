@@ -151,7 +151,7 @@ context('Create Route with Upstream', () => {
     cy.visit('/routes/list');
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
-    cy.wait(1000);
+    cy.wait(500);
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
