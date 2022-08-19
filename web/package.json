@@ -17,7 +17,7 @@
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && yarn run lint:style",
     "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
     "lint:prettier": "prettier --check \"**/*\" --end-of-line auto",
-    "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
+    "lint:style": "stylelint --fix \"src/**/*.less\"",
     "prettier": "prettier -c --write \"**/*\"",
     "site": "yarn run fetch:blocks && yarn run build",
     "start": "cp -R ./node_modules/monaco-editor ./public/ && umi dev",
@@ -38,7 +38,7 @@
   },
   "license": "Apache-2.0",
   "lint-staged": {
-    "**/*.less": "stylelint --syntax less",
+    "**/*.less": "stylelint",
     "**/*.{js,jsx,ts,tsx}": "yarn run lint-staged:js",
     "**/*.{js,jsx,tsx,ts,less,md,json}": [
       "prettier --write"
@@ -136,10 +136,17 @@
     "mockjs": "^1.0.1-beta3",
     "monaco-editor": "^0.32.1",
     "pinst": "^2.1.1",
+    "postcss": "^8.4.16",
+    "postcss-less": "^6.0.0",
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
     "puppeteer-core": "^4.0.1",
-    "stylelint": "^14.10.0"
+    "stylelint": "^14.10.0",
+    "stylelint-config-css-modules": "^4.1.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-standard-scss": "^5.0.0",
+    "stylelint-declaration-block-no-ignored-properties": "^2.5.0",
+    "stylelint-order": "^5.0.0"
   },
   "engines": {
     "node": ">=10.0.0"
