@@ -139,7 +139,7 @@
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
     "puppeteer-core": "^4.0.1",
-    "stylelint": "^13.0.0"
+    "stylelint": "^14.10.0"
   },
   "engines": {
     "node": ">=10.0.0"
