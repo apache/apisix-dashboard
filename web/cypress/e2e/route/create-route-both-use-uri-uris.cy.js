@@ -57,8 +57,14 @@ context('Create Route Both use uri and uris', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should create route with uri/host/remote_addr', () => {

@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { FC, useState } from 'react';
+import type { FC } from 'react';
+import React, { useState } from 'react';
 import Form from 'antd/es/form';
 import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col, notification } from 'antd';
 import { useIntl } from 'umi';
@@ -48,8 +49,8 @@ const NormalLabelComponent: FC<
           disabled={disabled}
           open={false}
           bordered={false}
-          tagRender={(props) => {
-            const { value, closable, onClose } = props;
+          tagRender={(tagsRenderProps) => {
+            const { value, closable, onClose } = tagsRenderProps;
             return (
               <Tag closable={closable && !disabled} onClose={onClose} style={{ marginRight: 3 }}>
                 {value}
@@ -103,11 +104,15 @@ const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = 
                 return <div>Loading...</div>;
               }
 
-              return (<AutoComplete
-                options={(data.API_VERSION || []).map((item) => ({ value: item }))}
-                disabled={disabled}
-                placeholder={formatMessage({ id: 'page.route.configuration.version.placeholder' })}
-              />)
+              return (
+                <AutoComplete
+                  options={(data.API_VERSION || []).map((item) => ({ value: item }))}
+                  disabled={disabled}
+                  placeholder={formatMessage({
+                    id: 'page.route.configuration.version.placeholder',
+                  })}
+                />
+              );
             })()}
           </Form.Item>
         </Col>

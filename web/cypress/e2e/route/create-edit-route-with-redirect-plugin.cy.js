@@ -44,8 +44,14 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     setUpstreamNotice: 'If you do not bind the service, you must set the Upstream (Step 2)',
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should create route with custom redirect plugin', function () {
