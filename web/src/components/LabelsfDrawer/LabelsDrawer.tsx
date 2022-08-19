@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
 import { transformLableValueToKeyValue } from '../../helpers';
-import useSWR from 'swr';
 
 type Props = {
   title?: string;
@@ -127,9 +126,13 @@ const LabelsDrawer: React.FC<Props> = ({
   onClose,
   onChange = () => {},
 }) => {
-  const { data: labelList } = useSWR('', fetchLabelList);
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
+  const [labelList, setLabelList] = useState<LabelList>();
+
+  useEffect(() => {
+    fetchLabelList().then(setLabelList);
+  }, []);
 
   useEffect(() => {
     const transformLabel = transformLableValueToKeyValue(dataSource);
