@@ -48,7 +48,7 @@ const domSelector = {
 };
 
 Cypress.Commands.add('configurePlugin', ({ name, content }) => {
-  const { shouldValid, data, type } = content;
+  const { shouldValid, data } = content;
 
   cy.get('main.ant-layout-content')
     .find(domSelector.nameGen(name), 3)
@@ -62,7 +62,7 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
         .should('exist')
         .within(() => {
           cy.wait(timeout * 2);
-          cy.get(domSelector.switch).click({
+          cy.get(domSelector.switch).should('exist').click({
             force: true,
           });
 
@@ -71,6 +71,7 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
             .then(($btn) => {
               if ($btn.text() === 'Form') {
                 cy.get(domSelector.monacoMode)
+                  .should('exist')
                   .click({ force: true })
                   .then(() => {
                     cy.root()
@@ -89,7 +90,6 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
 
           cy.window()
             .then((win) => {
-              console.log(data);
               if (data) win.monacoEditor.setValue(JSON.stringify(data));
             })
             .then(() => {

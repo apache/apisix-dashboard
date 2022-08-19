@@ -38,10 +38,6 @@ context('Data Loader import', () => {
     API101: '../../../api/test/testdata/import/Postman-API101.yaml',
   };
 
-  beforeEach(() => {
-    cy.login();
-  });
-
   before(() => {
     cy.clearLocalStorageSnapshot();
     cy.login();
@@ -56,7 +52,10 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with merge mode', () => {
-    cy.contains('Advanced').click();
+    cy.get('.ant-pro-page-container').within(() => {
+      cy.wait(1000);
+      cy.contains('Advanced').click();
+    });
     cy.contains('Import').should('be.visible').click();
     // select Data Loader type
     cy.contains('OpenAPI 3').should('be.visible').click();
@@ -86,7 +85,10 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with duplicate upstream', () => {
-    cy.contains('Advanced').click();
+    cy.get('.ant-pro-page-container').within(() => {
+      cy.wait(1000);
+      cy.contains('Advanced').click();
+    });
     cy.contains('Import').should('be.visible').click();
     // select Data Loader type
     cy.contains('OpenAPI 3').should('be.visible').click();
@@ -111,7 +113,10 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with non-merge mode', () => {
-    cy.contains('Advanced').click();
+    cy.get('.ant-pro-page-container').within(() => {
+      cy.wait(1000);
+      cy.contains('Advanced').click();
+    });
     cy.contains('Import').should('be.visible').click();
 
     // select Data Loader type
@@ -131,7 +136,10 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with duplicate route', () => {
-    cy.contains('Advanced').click();
+    cy.get('.ant-pro-page-container').within(() => {
+      cy.wait(1000);
+      cy.contains('Advanced').click();
+    });
     cy.contains('Import').should('be.visible').click();
 
     // select Data Loader type

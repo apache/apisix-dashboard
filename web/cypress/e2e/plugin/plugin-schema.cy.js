@@ -72,7 +72,6 @@ describe('Plugin Schema Test', () => {
         cases.forEach((c, i) => {
           it(`${name} plugin #${i + 1} case`, () => {
             if (globalPluginNames.includes(name)) {
-              console.log(name, c);
               cy.configurePlugin({ name, content: c });
             } else {
               cy.log(`${name} not a global plugin, skipping`);
