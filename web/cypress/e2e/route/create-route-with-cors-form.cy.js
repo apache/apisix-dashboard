@@ -44,8 +44,14 @@ context('Create and delete route with cors form', () => {
     weight: 1,
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should create route with cors form', function () {
@@ -116,7 +122,9 @@ context('Create and delete route with cors form', () => {
     cy.contains('routeName').siblings().contains('Configure').click();
     cy.get(selector.name).should('have.value', 'routeName');
     cy.contains('Next').click();
+    cy.wait(2000);
     cy.contains('Next').click();
+    cy.wait(2000);
 
     // config cors plugin
     cy.contains('cors')

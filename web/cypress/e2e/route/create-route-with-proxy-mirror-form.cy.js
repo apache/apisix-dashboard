@@ -42,13 +42,20 @@ context('Create and delete route with proxy-mirror form', () => {
     weight: 1,
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should create route with proxy-mirror form', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(2000);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
@@ -70,10 +77,11 @@ context('Create and delete route with proxy-mirror form', () => {
         });
       });
 
+    cy.wait(2000);
     cy.get(selector.drawer)
       .should('be.visible')
       .within(() => {
-        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.disabledSwitcher).focus().click();
         cy.get(selector.checkedSwitcher).should('exist');
       });
 
