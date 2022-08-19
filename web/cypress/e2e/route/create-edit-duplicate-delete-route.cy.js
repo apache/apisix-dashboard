@@ -60,7 +60,7 @@ context('Create and Delete Route', () => {
 
   const data = {
     description: 'desc_by_autotest',
-    invalidName: new Array(101).fill('a').join(''),
+    invalidName: 'a'.repeat(101),
     host1: '11.11.11.11',
     host2: '12.12.12.12',
     host3: '10.10.10.10',

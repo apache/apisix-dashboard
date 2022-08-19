@@ -71,6 +71,7 @@ context('Can select service_id skip upstream in route', () => {
 
   it('should create test upstream and service', function () {
     cy.contains('Upstream').click();
+    cy.wait(timeout);
     cy.contains('Create').click();
 
     cy.get(selector.name).type(data.upstreamName);
