@@ -58,6 +58,8 @@ var (
 	AccessLogPath    = "logs/access.log"
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
+	AppList          = make(map[string]App, 1)
+	OidcConf         OidcApp
 	SSLDefaultStatus = 1 //enable ssl by default
 	ImportSizeLimit  = 10 * 1024 * 1024
 	AllowList        []string
@@ -126,10 +128,26 @@ type Authentication struct {
 	Users      []User
 }
 
+type App struct {
+	AppName      string
+	ClientId     string
+	ClientSecret string
+	scope        string
+	state        string
+	RedirectUri  string
+}
+
+type OidcApp struct {
+	Secret     string
+	ExpireTime int `mapstructure:"expire_time"`
+	Apps       []App
+}
+
 type Config struct {
 	Conf           Conf
 	Authentication Authentication
 	Plugins        []string
+	OidcApp        OidcApp
 }
 
 type Security struct {
@@ -256,6 +274,9 @@ func setupConfig() {
 	// set authentication
 	initAuthentication(config.Authentication)
 
+	//set opidApp
+	initOidcApp(config.OidcApp)
+
 	// set plugin
 	initPlugins(config.Plugins)
 
@@ -280,6 +301,19 @@ func initAuthentication(conf Authentication) {
 	// create user list
 	for _, item := range userList {
 		UserList[item.Username] = item
+	}
+}
+
+func initOidcApp(conf OidcApp) {
+	OidcConf = conf
+
+	if OidcConf.Secret == "secret" {
+		OidcConf.Secret = utils.GetFlakeUidStr()
+	}
+	appList := OidcConf.Apps
+
+	for _, item := range appList {
+		AppList[item.AppName] = item
 	}
 }
 
