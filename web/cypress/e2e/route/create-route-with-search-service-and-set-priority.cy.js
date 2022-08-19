@@ -54,13 +54,22 @@ context('Create Route with search service name', () => {
     upstreamName: 'None (Only available when binding the service)',
   };
 
-  beforeEach(() => {
+  const timeout = 2000;
+
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should create two services', function () {
     cy.visit('/');
     cy.contains('Service').click();
+    cy.wait(timeout);
     cy.contains('Create').click();
 
     cy.get(selector.name).type(data.serviceName);
@@ -75,7 +84,7 @@ context('Create Route with search service name', () => {
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.wait(2000);
+    cy.wait(timeout);
     cy.get(selector.notification).should('contain', data.createServiceSuccess);
 
     cy.visit('/');
@@ -89,7 +98,7 @@ context('Create Route with search service name', () => {
     cy.get(selector.nodes_0_port).clear().type(data.port2);
     cy.get(selector.nodes_0_weight).clear().type(data.weight2);
 
-    cy.wait(1000);
+    cy.wait(timeout);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -108,13 +117,13 @@ context('Create Route with search service name', () => {
     // set priority
     cy.get(selector.priority).type(data.priority);
     cy.contains('Next').click();
-    cy.wait(2000);
+    cy.wait(timeout);
     // select upstream with None
     cy.get('.ant-select-selector')
       .find(selector.upstreamSelector)
       .focus()
       .type(`${data.upstreamName}\n`, { force: true });
-    cy.wait(2000);
+    cy.wait(timeout);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
