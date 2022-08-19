@@ -25,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [14.x, 16.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -44,8 +44,6 @@ jobs:
       - name: Install dependencies
         working-directory: web
         run: CYPRESS_INSTALL_BINARY=0 yarn
-        env:
-          NODE_OPTIONS: --openssl-legacy-provider
 
       - name: Lint
         working-directory: web
