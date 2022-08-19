@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { FC } from 'react';
+import { FC, useEffect } from 'react';
 import React, { useState } from 'react';
 import Form from 'antd/es/form';
 import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col, notification } from 'antd';
@@ -24,7 +24,6 @@ import PanelSection from '@/components/PanelSection';
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from '@/components/LabelsfDrawer';
 import { fetchLabelList, fetchServiceList } from '../../service';
-import useSWR from 'swr';
 
 const field = 'custom_normal_labels';
 const NormalLabelComponent: FC<
@@ -85,7 +84,11 @@ const NormalLabelComponent: FC<
 const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
   const { formatMessage } = useIntl();
   const { disabled } = props;
-  const { data, error } = useSWR('/', () => fetchLabelList());
+  const [labelList, setLabelList] = useState<LabelList>();
+
+  useEffect(() => {
+    fetchServiceList().then(setLabelList);
+  }, []);
 
   return (
     <Form.Item
@@ -95,25 +98,13 @@ const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = 
       <Row>
         <Col span={10}>
           <Form.Item noStyle name="custom_version_label">
-            {(() => {
-              if (error) {
-                return <div>error</div>;
-              }
-
-              if (!data) {
-                return <div>Loading...</div>;
-              }
-
-              return (
-                <AutoComplete
-                  options={(data.API_VERSION || []).map((item) => ({ value: item }))}
-                  disabled={disabled}
-                  placeholder={formatMessage({
-                    id: 'page.route.configuration.version.placeholder',
-                  })}
-                />
-              );
-            })()}
+            <AutoComplete
+              options={(labelList?.API_VERSION || []).map((item) => ({ value: item }))}
+              disabled={disabled}
+              placeholder={formatMessage({
+                id: 'page.route.configuration.version.placeholder',
+              })}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -354,10 +345,11 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
 ) => {
   const { formatMessage } = useIntl();
   const { disabled, upstreamForm } = props;
-  const { data, error } = useSWR(
-    '/',
-    () => fetchServiceList() as Promise<{ data: ServiceModule.ResponseBody[] }>,
-  );
+  const [serviceList, setServiceList] = useState<{ data: ServiceModule.ResponseBody[] }>();
+
+  useEffect(() => {
+    fetchServiceList().then(setServiceList);
+  }, []);
 
   return (
     <>
@@ -368,38 +360,26 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
         <Row>
           <Col span={5}>
             <Form.Item noStyle name="service_id">
-              {(() => {
-                if (error) {
-                  return <div>error</div>;
+              <Select
+                showSearch
+                disabled={disabled}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
-
-                if (!data) {
-                  return <div>Loading...</div>;
-                }
-
-                return (
-                  <Select
-                    showSearch
-                    disabled={disabled}
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {/* TODO: value === '' means  no service_id select, need to find a better way */}
-                    <Select.Option value="" key={Math.random().toString(36).substring(7)}>
-                      {formatMessage({ id: 'page.route.service.none' })}
+              >
+                {/* TODO: value === '' means  no service_id select, need to find a better way */}
+                <Select.Option value="" key={Math.random().toString(36).substring(7)}>
+                  {formatMessage({ id: 'page.route.service.none' })}
+                </Select.Option>
+                {serviceList?.data?.map((item) => {
+                  return (
+                    <Select.Option value={item.id} key={item.id}>
+                      {item.name}
                     </Select.Option>
-                    {data?.data?.map((item) => {
-                      return (
-                        <Select.Option value={item.id} key={item.id}>
-                          {item.name}
-                        </Select.Option>
-                      );
-                    })}
-                  </Select>
-                );
-              })()}
+                  );
+                })}
+              </Select>
             </Form.Item>
           </Col>
         </Row>
