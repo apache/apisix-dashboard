@@ -30,19 +30,19 @@ func TestFilter(t *testing.T) {
 	r.DELETE("/apisix/admin/stream_routes/:ids", func(ctx *gin.Context) {})
 	r.GET("/*path", func(ctx *gin.Context) {})
 	r.POST("/success", func(ctx *gin.Context) {})
-	
+
 	w := performRequest(r, "POST", "/apisix/admin/user/login")
 	assert.Equal(t, http.StatusOK, w.Code)
-	
+
 	w = performRequest(r, "PUT", "/apisix/admin/global_rules/12")
 	assert.Equal(t, http.StatusForbidden, w.Code)
-	
+
 	w = performRequest(r, "DELETE", "/apisix/admin/stream_routes/67")
 	assert.Equal(t, http.StatusForbidden, w.Code)
-	
+
 	w = performRequest(r, "GET", "/apisix/admin/ssl/98")
 	assert.Equal(t, http.StatusOK, w.Code)
-	
+
 	w = performRequest(r, "POST", "/success")
 	assert.Equal(t, http.StatusOK, w.Code)
 }
@@ -67,13 +67,13 @@ func TestSetAccessImplementation(t *testing.T) {
 	r.POST("/apisix/admin/user/login", func(ctx *gin.Context) {})
 	r.PUT("/apisix/admin/route/:id", func(ctx *gin.Context) {})
 	r.DELETE("/apisix/admin/upstream", func(ctx *gin.Context) {})
-	
+
 	w := performRequest(r, "POST", "/apisix/admin/user/login")
 	assert.Equal(t, http.StatusOK, w.Code)
-	
+
 	w = performRequest(r, "PUT", "/apisix/admin/route/2")
 	assert.Equal(t, http.StatusForbidden, w.Code)
-	
+
 	w = performRequest(r, "DELETE", "/apisix/admin/upstream")
 	assert.Equal(t, http.StatusForbidden, w.Code)
 }
