@@ -132,8 +132,8 @@ type App struct {
 	AppName      string
 	ClientId     string
 	ClientSecret string
-	scope        string
-	state        string
+	Scope        string
+	State        string
 	RedirectUri  string
 }
 

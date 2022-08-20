@@ -75,8 +75,7 @@ func (o Loader) convertToEntities(s *openapi3.Swagger) (*loader.DataSets, error)
 
 	// create upstream when servers field not empty
 	if len(s.Servers) > 0 {
-		var upstream entity.Upstream
-		upstream = entity.Upstream{
+		upstream := entity.Upstream{
 			BaseInfo: entity.BaseInfo{ID: globalUpstreamID},
 			UpstreamDef: entity.UpstreamDef{
 				Name: globalUpstreamID,

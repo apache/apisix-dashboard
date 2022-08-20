@@ -88,7 +88,7 @@ oidcApp:
     - appName: authing
       clientId: 62f3bafc15fe957a20a2ab1a
       clientSecret: 35e4d9c9a21d2176922a4b0395ec1373
-      scope: opid
+      scope: oidc
       state: 123456
       redirectUri: /authing/callback
 
