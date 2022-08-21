@@ -76,6 +76,7 @@ export default {
   'page.route.form.itemLabel.priority': '优先级',
   'page.route.form.itemLabel.redirect': '重定向',
   'page.route.form.itemLabel.redirectCustom': '自定义重定向',
+  'page.route.form.itemLabel.redirectCode': '状态码',
   'page.route.form.itemLabel.URIRewriteType': '路径改写',
   'page.route.form.itemLabel.hostRewriteType': '域名改写',
   'page.route.form.itemLabel.methodRewrite': 'HTTP 方法改写',

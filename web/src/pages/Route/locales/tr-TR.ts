@@ -73,6 +73,7 @@ export default {
   'page.route.select.option.forbidden': 'Yasaklılar',
   'page.route.form.itemLabel.redirectCustom': 'Özel yönlendirme',
   'page.route.input.placeholder.redirectCustom': 'Örn: /foo/index.html',
+  'page.route.form.itemLabel.redirectCode': 'Code',
   'page.route.select.option.redirect301': '301(Kalıcı Yönlendirme)',
   'page.route.select.option.redirect302': '302(Geçici Yönlendirme)',
   'page.route.form.itemLabel.username': 'Kullanıcı Adı',
