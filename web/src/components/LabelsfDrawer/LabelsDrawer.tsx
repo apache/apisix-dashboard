@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
@@ -140,26 +140,29 @@ const LabelsDrawer: React.FC<Props> = ({
     form.setFieldsValue({ labels: transformLabel });
   }, [form, dataSource]);
 
-  const onClick: React.MouseEventHandler<HTMLElement> = (e) => {
-    e.persist();
-    form.validateFields().then(({ labels }) => {
-      const data = labels.map((item: any) => `${item.labelKey}:${item.labelValue}`);
-      // check for duplicates
-      if (new Set(data).size !== data.length) {
-        notification.warning({
-          message: `Config Error`,
-          description: 'Please do not enter duplicate labels',
-        });
-        return;
-      }
+  const onClick: React.MouseEventHandler<HTMLElement> = useCallback(
+    function onClick(e) {
+      e.persist();
+      form.validateFields().then(({ labels }) => {
+        const data = labels.map((item: any) => `${item.labelKey}:${item.labelValue}`);
+        // check for duplicates
+        if (new Set(data).size !== data.length) {
+          notification.warning({
+            message: `Config Error`,
+            description: 'Please do not enter duplicate labels',
+          });
+          return;
+        }
 
-      onChange({
-        action: actionName,
-        data,
+        onChange({
+          action: actionName,
+          data,
+        });
+        onClose();
       });
-      onClose();
-    });
-  };
+    },
+    [form, actionName, onChange, onClose],
+  );
 
   return (
     <Drawer
