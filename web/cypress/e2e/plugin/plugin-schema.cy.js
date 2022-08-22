@@ -22,7 +22,6 @@ describe('Plugin Schema Test', () => {
   const domSelector = require('../../fixtures/selector.json');
   const data = require('../../fixtures/data.json');
   const pluginList = Object.keys(cases);
-  const casesList = Object.values(cases);
 
   before(() => {
     cy.clearLocalStorageSnapshot();
@@ -63,11 +62,12 @@ describe('Plugin Schema Test', () => {
 
     beforeEach(() => {
       cy.restoreLocalStorage();
+      cy.reload();
     });
 
     pluginList
-      .map((name, i) => ({ name, cases: casesList[i].filter((v) => v.type !== 'consumer') }))
-      .filter(({ cases }) => cases !== undefined && cases.length > 0)
+      .map((name) => ({ name, cases: cases[name].filter((v) => v.type !== 'consumer') }))
+      .filter(({ cases }) => cases.length > 0)
       .forEach(({ name, cases }) => {
         cases.forEach((c, i) => {
           it(`${name} plugin #${i + 1} case`, () => {
