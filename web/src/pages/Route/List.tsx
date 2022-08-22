@@ -341,8 +341,8 @@ const Page: React.FC = () => {
         const list = record.uris || (record.uri && [record.uri]) || [];
 
         return list.map((item) => (
-          <Tooltip placement="topLeft" title={item}>
-            <Tag key={item} color="geekblue" style={tagStyle}>
+          <Tooltip key={item} placement="topLeft" title={item}>
+            <Tag color="geekblue" style={tagStyle}>
               {item}
             </Tag>
           </Tooltip>
