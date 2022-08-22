@@ -23,9 +23,9 @@ conf:
     # This value accepts IPv4, IPv6, and hostname.
     port: 9000            # The port on which the `Manager API` should listen.
 
-      # ssl:
-      #   host: 127.0.0.1     # the address on which the `Manager API` should listen for HTTPS.
-    # The default value is 0.0.0.0, if want to specify, please enable it.
+  # ssl:
+  #   host: 127.0.0.1     # the address on which the `Manager API` should listen for HTTPS.
+  # The default value is 0.0.0.0, if want to specify, please enable it.
   #   port: 9001            # The port on which the `Manager API` should listen for HTTPS.
   #   cert: "/tmp/cert/example.crt" # Path of your SSL cert.
   #   key:  "/tmp/cert/example.key"  # Path of your SSL key.
@@ -80,17 +80,17 @@ authentication:
     - username: user
       password: user
 
-oidcApp:
+oidc:
   secret:
     secret
   expire_time: 3600
   apps:
-    - appName: authing
-      clientId: 62f3bafc15fe957a20a2ab1a
-      clientSecret: 35e4d9c9a21d2176922a4b0395ec1373
+    - app_name: authing
+      client_id:
+      client_secret:
       scope: oidc
       state: 123456
-      redirectUri: /authing/callback
+      redirect_uri: /authing/callback
 
 plugins:                          # plugin list (sorted in alphabetical order)
   - api-breaker

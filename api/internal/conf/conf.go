@@ -129,25 +129,25 @@ type Authentication struct {
 }
 
 type App struct {
-	AppName      string
-	ClientId     string
-	ClientSecret string
-	Scope        string
-	State        string
-	RedirectUri  string
+	AppName      string `yaml:"app_name"`
+	ClientId     string `yaml:"client_id"`
+	ClientSecret string `yaml:"client_secret"`
+	Scope        string `yaml:"scope"`
+	State        string `yaml:"state"`
+	RedirectUri  string `yaml:"redirect_uri"`
 }
 
-type OidcApp struct {
-	Secret     string
-	ExpireTime int `mapstructure:"expire_time"`
-	Apps       []App
+type Oidc struct {
+	Secret     string `yaml:"secret"`
+	ExpireTime int    `mapstructure:"expire_time" yaml:"expire_time"`
+	Apps       []App  `yaml:"apps"`
 }
 
 type Config struct {
 	Conf           Conf
 	Authentication Authentication
 	Plugins        []string
-	OidcApp        OidcApp
+	Oidc           Oidc
 }
 
 type Security struct {
