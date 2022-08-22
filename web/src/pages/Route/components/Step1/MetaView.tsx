@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { FC, useEffect } from 'react';
+import { createContext, FC, useContext, useEffect, useMemo } from 'react';
 import React, { useState } from 'react';
 import Form from 'antd/es/form';
 import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col, notification } from 'antd';
@@ -26,13 +26,16 @@ import LabelsDrawer from '@/components/LabelsfDrawer';
 import { fetchLabelList, fetchServiceList } from '../../service';
 
 const field = 'custom_normal_labels';
-const NormalLabelComponent: FC<
-  Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange' | 'form'>
-> = (props) => {
+const MetaViewContext = createContext<RouteModule.Step1PassProps>({
+  form: null,
+  advancedMatchingRules: [],
+});
+
+const NormalLabelComponent: FC = () => {
   const [visible, setVisible] = useState(false);
   const { formatMessage } = useIntl();
-  const { disabled, onChange, form } = props;
-  const dataSource = form.getFieldValue(field) || [];
+  const { disabled, onChange, form } = useContext(MetaViewContext);
+  const dataSource = useMemo(() => form.getFieldValue(field) || [], [form.getFieldValue]);
 
   return (
     <React.Fragment>
@@ -81,9 +84,9 @@ const NormalLabelComponent: FC<
   );
 };
 
-const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
+const VersionLabelComponent: FC = () => {
   const { formatMessage } = useIntl();
-  const { disabled } = props;
+  const { disabled } = useContext(MetaViewContext);
   const [labelList, setLabelList] = useState<LabelList>();
 
   useEffect(() => {
@@ -112,9 +115,9 @@ const VersionLabelComponent: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = 
   );
 };
 
-const Name: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
+const Name: FC = () => {
   const { formatMessage } = useIntl();
-  const { disabled } = props;
+  const { disabled } = useContext(MetaViewContext);
 
   return (
     <Form.Item
@@ -153,9 +156,9 @@ const Name: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
   );
 };
 
-const Id: FC<Pick<RouteModule.Step1PassProps, 'isEdit'>> = (props) => {
+const Id: FC = () => {
   const { formatMessage } = useIntl();
-  const { isEdit } = props;
+  const { isEdit } = useContext(MetaViewContext);
 
   if (!isEdit) {
     return null;
@@ -174,9 +177,9 @@ const Id: FC<Pick<RouteModule.Step1PassProps, 'isEdit'>> = (props) => {
   );
 };
 
-const Description: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
+const Description: FC = () => {
   const { formatMessage } = useIntl();
-  const { disabled } = props;
+  const { disabled } = useContext(MetaViewContext);
 
   return (
     <Form.Item label={formatMessage({ id: 'component.global.description' })}>
@@ -196,9 +199,9 @@ const Description: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) =>
   );
 };
 
-const Publish: FC<Pick<RouteModule.Step1PassProps, 'isEdit'>> = (props) => {
+const Publish: FC = () => {
   const { formatMessage } = useIntl();
-  const { isEdit } = props;
+  const { isEdit } = useContext(MetaViewContext);
 
   return (
     <Form.Item
@@ -216,8 +219,8 @@ const Publish: FC<Pick<RouteModule.Step1PassProps, 'isEdit'>> = (props) => {
   );
 };
 
-const WebSocket: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
-  const { disabled } = props;
+const WebSocket: FC = () => {
+  const { disabled } = useContext(MetaViewContext);
   return (
     <Form.Item label="WebSocket">
       <Row>
@@ -231,9 +234,9 @@ const WebSocket: FC<Pick<RouteModule.Step1PassProps, 'disabled'>> = (props) => {
   );
 };
 
-const Redirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange'>> = (props) => {
+const Redirect: FC = () => {
   const { formatMessage } = useIntl();
-  const { disabled, onChange = () => {} } = props;
+  const { disabled, onChange = () => {} } = useContext(MetaViewContext);
   const [list] = useState([
     {
       value: 'forceHttps',
@@ -277,11 +280,9 @@ const Redirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange'>> = 
   );
 };
 
-const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange' | 'form'>> = (
-  props,
-) => {
+const CustomRedirect: FC = () => {
   const { formatMessage } = useIntl();
-  const { disabled, onChange = () => {}, form } = props;
+  const { disabled, onChange = () => {}, form } = useContext(MetaViewContext);
   return (
     <Form.Item
       noStyle
@@ -340,11 +341,9 @@ const CustomRedirect: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'onChange
   );
 };
 
-const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstreamForm'>> = (
-  props,
-) => {
+const ServiceSelector: FC = () => {
   const { formatMessage } = useIntl();
-  const { disabled, upstreamForm } = props;
+  const { disabled, upstreamForm } = useContext(MetaViewContext);
   const [serviceList, setServiceList] = useState<{ data: ServiceModule.ResponseBody[] }>();
 
   useEffect(() => {
@@ -410,25 +409,26 @@ const ServiceSelector: FC<Pick<RouteModule.Step1PassProps, 'disabled' | 'upstrea
 };
 
 const MetaView: React.FC<RouteModule.Step1PassProps> = (props) => {
-  const { disabled, form, isEdit, upstreamForm, onChange = () => {} } = props;
   const { formatMessage } = useIntl();
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
-      <Name disabled={disabled} />
-      <Id isEdit={isEdit} />
-      <NormalLabelComponent form={form} />
-      <VersionLabelComponent />
+      <MetaViewContext.Provider value={props}>
+        <Name />
+        <Id />
+        <NormalLabelComponent />
+        <VersionLabelComponent />
 
-      <Description disabled={disabled} />
+        <Description />
 
-      <Redirect disabled={disabled} onChange={onChange} />
-      <CustomRedirect disabled={disabled} onChange={onChange} form={form} />
+        <Redirect />
+        <CustomRedirect />
 
-      <ServiceSelector disabled={disabled} upstreamForm={upstreamForm} />
+        <ServiceSelector />
 
-      <WebSocket disabled={disabled} />
-      <Publish isEdit={isEdit} />
+        <WebSocket />
+        <Publish />
+      </MetaViewContext.Provider>
     </PanelSection>
   );
 };
