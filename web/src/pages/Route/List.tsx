@@ -325,8 +325,8 @@ const Page: React.FC = () => {
         const list = record.hosts || (record.host && [record.host]) || [];
 
         return list.map((item) => (
-          <Tooltip placement="topLeft" title={item}>
-            <Tag key={item} color="geekblue" style={tagStyle}>
+          <Tooltip key={item} placement="topLeft" title={item}>
+            <Tag color="geekblue" style={tagStyle}>
               {item}
             </Tag>
           </Tooltip>
@@ -369,6 +369,8 @@ const Page: React.FC = () => {
           ));
       },
       renderFormItem: (_, { type }) => {
+        console.log(labelList);
+
         if (type === 'form') {
           return null;
         }
@@ -549,7 +551,8 @@ const Page: React.FC = () => {
         tableAlertRender={() => (
           <Space size={24}>
             <span>
-            {formatMessage({ id: 'page.route.chosen' })} {selectedRowKeys.length} {formatMessage({ id: 'page.route.item' })}
+              {formatMessage({ id: 'page.route.chosen' })} {selectedRowKeys.length}{' '}
+              {formatMessage({ id: 'page.route.item' })}
             </span>
           </Space>
         )}
@@ -557,16 +560,17 @@ const Page: React.FC = () => {
           return (
             <Space size={16}>
               <Button
-               onClick={async () => {
-               await remove(selectedRowKeys).then(() => {
-                handleTableActionSuccessResponse(
-                  `${formatMessage({ id: 'component.global.delete.routes.success' })}`,
-                );
-               });
-               ref.current?.reloadAndRest?.();
-             }}>
-             {formatMessage({ id: 'page.route.batchDeletion' })}
-             </Button>
+                onClick={async () => {
+                  await remove(selectedRowKeys).then(() => {
+                    handleTableActionSuccessResponse(
+                      `${formatMessage({ id: 'component.global.delete.routes.success' })}`,
+                    );
+                  });
+                  ref.current?.reloadAndRest?.();
+                }}
+              >
+                {formatMessage({ id: 'page.route.batchDeletion' })}
+              </Button>
             </Space>
           );
         }}
