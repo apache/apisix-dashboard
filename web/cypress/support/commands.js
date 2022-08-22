@@ -28,7 +28,6 @@ Cypress.Commands.add('login', () => {
     localStorage.setItem('token', res.body.data.token);
     // set default language
     localStorage.setItem('umi_locale', 'en-US');
-    cy.log(res.body.data.token);
   });
 });
 
@@ -61,8 +60,8 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
       cy.focused(domSelector.drawer)
         .should('exist')
         .within(() => {
-          cy.wait(timeout * 2);
-          cy.get(domSelector.switch).should('exist').click({
+          cy.wait(timeout);
+          cy.get(domSelector.switch).should('be.visible').click({
             force: true,
           });
 
@@ -99,7 +98,6 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
             });
         });
 
-      console.log(`shouldValid ${shouldValid}`);
       cy.wait(timeout);
       if (shouldValid) {
         cy.get(domSelector.drawer, { timeout }).should('not.exist');
