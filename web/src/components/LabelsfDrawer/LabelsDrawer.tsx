@@ -39,8 +39,9 @@ const LabelList = (disabled: boolean, labelList: LabelList, filterList: string[]
       Object.keys(labelList || {})
         .filter((item) => !filterList.includes(item))
         .map((item) => ({ value: item })),
-    [],
+    [labelList, filterList],
   );
+
   return (
     <Form.List name="labels">
       {(fields, { add, remove }) => {
