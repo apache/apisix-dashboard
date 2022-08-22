@@ -129,18 +129,18 @@ type Authentication struct {
 }
 
 type App struct {
-	AppName      string `yaml:"app_name"`
-	ClientId     string `yaml:"client_id"`
-	ClientSecret string `yaml:"client_secret"`
-	Scope        string `yaml:"scope"`
-	State        string `yaml:"state"`
-	RedirectUri  string `yaml:"redirect_uri"`
+	AppName      string `mapstructure:"app_name"`
+	ClientId     string `mapstructure:"client_id"`
+	ClientSecret string `mapstructure:"client_secret"`
+	Scope        string
+	State        string
+	RedirectUri  string `mapstructure:"redirect_uri"`
 }
 
 type Oidc struct {
-	Secret     string `yaml:"secret"`
-	ExpireTime int    `mapstructure:"expire_time" yaml:"expire_time"`
-	Apps       []App  `yaml:"apps"`
+	Secret     string
+	ExpireTime int `mapstructure:"expire_time" yaml:"expire_time"`
+	Apps       []App
 }
 
 type Config struct {

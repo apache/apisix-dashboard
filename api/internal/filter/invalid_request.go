@@ -34,5 +34,5 @@ func InvalidRequest() gin.HandlerFunc {
 }
 
 func checkURL(url *url.URL) bool {
-	return strings.Contains(url.Path, "..")
+	return !strings.Contains(url.Path, "..")
 }
