@@ -59,7 +59,7 @@ var (
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
 	AppList          = make(map[string]App, 1)
-	OidcConf         OidcApp
+	OidcConf         Oidc
 	SSLDefaultStatus = 1 //enable ssl by default
 	ImportSizeLimit  = 10 * 1024 * 1024
 	AllowList        []string
@@ -274,8 +274,8 @@ func setupConfig() {
 	// set authentication
 	initAuthentication(config.Authentication)
 
-	//set opidApp
-	initOidcApp(config.OidcApp)
+	//set Oidc
+	initOidc(config.Oidc)
 
 	// set plugin
 	initPlugins(config.Plugins)
@@ -304,7 +304,7 @@ func initAuthentication(conf Authentication) {
 	}
 }
 
-func initOidcApp(conf OidcApp) {
+func initOidc(conf Oidc) {
 	OidcConf = conf
 
 	if OidcConf.Secret == "secret" {
