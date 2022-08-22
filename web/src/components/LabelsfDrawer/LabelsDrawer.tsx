@@ -138,7 +138,7 @@ const LabelsDrawer: React.FC<Props> = ({
   useEffect(() => {
     const transformLabel = transformLableValueToKeyValue(dataSource);
     form.setFieldsValue({ labels: transformLabel });
-  }, [form, dataSource]);
+  }, [form.setFieldsValue, dataSource]);
 
   const onClick: React.MouseEventHandler<HTMLElement> = useCallback(
     function onClick(e) {
