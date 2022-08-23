@@ -39,6 +39,8 @@ const (
 	EnvTEST  = "test"
 
 	WebDir = "html/"
+
+	DefaultCSP = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
 )
 
 var (
@@ -381,7 +383,7 @@ func initSecurity(conf Security) {
 	if conf != se {
 		SecurityConf = conf
 		if conf.ContentSecurityPolicy == "" {
-			SecurityConf.ContentSecurityPolicy = "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
+			SecurityConf.ContentSecurityPolicy = DefaultCSP
 		}
 		if conf.XFrameOptions == "" {
 			SecurityConf.XFrameOptions = "deny"
@@ -391,6 +393,6 @@ func initSecurity(conf Security) {
 
 	SecurityConf = Security{
 		XFrameOptions:         "deny",
-		ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'",
+		ContentSecurityPolicy: DefaultCSP,
 	}
 }
