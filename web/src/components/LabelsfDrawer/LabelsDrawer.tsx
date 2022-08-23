@@ -19,7 +19,7 @@ import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
-import { transformLableValueToKeyValue } from '../../helpers';
+import { transformLabelValueToKeyValue } from '../../helpers';
 
 type Props = {
   title?: string;
@@ -136,7 +136,7 @@ const LabelsDrawer: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    const transformLabel = transformLableValueToKeyValue(dataSource);
+    const transformLabel = transformLabelValueToKeyValue(dataSource);
     form.setFieldsValue({ labels: transformLabel });
   }, [form.setFieldsValue, dataSource]);
 
