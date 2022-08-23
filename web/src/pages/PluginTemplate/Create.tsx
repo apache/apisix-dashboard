@@ -21,7 +21,7 @@ import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
-import { transformLableValueToKeyValue } from '@/helpers';
+import { transformLabelValueToKeyValue } from '@/helpers';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
@@ -51,7 +51,7 @@ const Page: React.FC = (props) => {
   const onSubmit = () => {
     const { desc, custom_normal_labels } = form1.getFieldsValue();
     const labels: Record<string, string> = {};
-    transformLableValueToKeyValue(custom_normal_labels || []).forEach(
+    transformLabelValueToKeyValue(custom_normal_labels || []).forEach(
       ({ labelKey, labelValue }) => {
         labels[labelKey] = labelValue;
       },
