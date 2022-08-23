@@ -60,7 +60,7 @@ context('Create and Delete Route', () => {
 
   const data = {
     description: 'desc_by_autotest',
-    invalidName: new Array(101).fill('a').join(''),
+    invalidName: 'a'.repeat(101),
     host1: '11.11.11.11',
     host2: '12.12.12.12',
     host3: '10.10.10.10',
@@ -81,8 +81,15 @@ context('Create and Delete Route', () => {
     'Reverse the result(!)',
   ];
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+    cy.visit('/');
   });
 
   it.only('should not create route with name above 100 characters', function () {
@@ -100,7 +107,6 @@ context('Create and Delete Route', () => {
   });
 
   it('should create route', function () {
-    cy.visit('/');
     cy.contains('Route').click();
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
@@ -208,7 +214,6 @@ context('Create and Delete Route', () => {
   });
 
   it('should view the route', function () {
-    cy.visit('/');
     cy.contains('Route').click();
 
     cy.get(selector.nameSelector).type(name);
@@ -228,7 +233,6 @@ context('Create and Delete Route', () => {
   });
 
   it('should edit the route', function () {
-    cy.visit('/');
     cy.contains('Route').click();
 
     cy.get(selector.nameSelector).type(name);
@@ -269,7 +273,6 @@ context('Create and Delete Route', () => {
   });
 
   it('should duplicate the route', function () {
-    cy.visit('/');
     cy.contains('Route').click();
     cy.reload();
 

@@ -67,12 +67,18 @@ $ make api-stop
 $ cd ./web
 ```
 
-2. Please change the `manager-api` address in the `config/defaultSettings.ts` file. If you follow this guidelines, the address may need to be set as below.
+2. Please change the `manager-api` address in the `web/.env` file. If you follow this guidelines, the address may need to be set as below.
 
+> All commands here are for Linux environment, other systems please use the corresponding commands for your platform. You are also welcome to contribute your own methods.
+
+```bash
+echo "SERVE_URL_DEV=http://localhost:9000" > web/.env
 ```
-serveUrlMap:{
-    dev: 'http://localhost:9000'
-}
+
+If you don't want to create the file, you can also export the variable.
+
+```bash
+export SERVE_URL_DEV=http://localhost:9000
 ```
 
 3. Launch development mode

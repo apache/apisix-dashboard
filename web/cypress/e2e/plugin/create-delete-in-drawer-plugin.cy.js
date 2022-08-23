@@ -17,7 +17,7 @@
 /* eslint-disable no-undef */
 
 context('Delete Plugin List with the Drawer', () => {
-  const timeout = 5000;
+  const timeout = 4000;
 
   const selector = {
     pluginCardBordered: '.ant-card-bordered',
@@ -42,8 +42,14 @@ context('Delete Plugin List with the Drawer', () => {
     jwtAuthPlugin: 'jwt-auth',
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should visit plugin market and enable plugin', function () {
@@ -115,6 +121,7 @@ context('Delete Plugin List with the Drawer', () => {
     });
     cy.get(selector.notification).should('contain', 'Delete Plugin Successfully');
     cy.get(selector.notificationCloseIcon).click({ multiple: true });
+    cy.wait(timeout);
     cy.get(selector.empty).should('be.visible');
   });
 
@@ -134,6 +141,7 @@ context('Delete Plugin List with the Drawer', () => {
       .should('be.visible')
       .within(() => {
         cy.get(selector.disabledSwitcher).click();
+        cy.wait(timeout);
         cy.get(selector.checkedSwitcher).should('exist');
       });
     cy.contains('button', 'Submit').click();
@@ -184,8 +192,8 @@ context('Delete Plugin List with the Drawer', () => {
         cy.get(selector.disabledSwitcher).click();
         cy.get(selector.checkedSwitcher).should('exist');
       });
-    cy.contains('button', 'Submit').click();
-
+    cy.contains('button', 'Submit').click({ force: true });
+    cy.wait(timeout);
     cy.get(selector.tab).within(() => {
       cy.contains(selector.tabBtn, 'Enable').click({
         force: true,
@@ -231,10 +239,12 @@ context('Delete Plugin List with the Drawer', () => {
             force: true,
           });
         });
+
+      cy.wait(timeout);
       cy.get(selector.drawer)
         .should('be.visible')
         .within(() => {
-          cy.get(selector.disabledSwitcher).click();
+          cy.get(selector.disabledSwitcher).focus().click();
           cy.get(selector.checkedSwitcher).should('exist');
         });
       cy.contains('button', 'Submit').click();
@@ -289,10 +299,9 @@ context('Delete Plugin List with the Drawer', () => {
         .within(() => {
           cy.get(selector.checkedSwitcher).should('exist');
         });
-      cy.contains('button', 'Delete').click();
-      cy.contains('button', 'Confirm').click({
-        force: true,
-      });
+      cy.wait(timeout);
+      cy.contains('button', 'Delete').click({ force: true });
+      cy.contains('button', 'Confirm').click({ force: true });
       cy.get(selector.drawer, {
         timeout,
       }).should('not.exist');

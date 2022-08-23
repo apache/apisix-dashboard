@@ -14,15 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable */
-import defaultSettings from '../../config/defaultSettings';
 import 'cypress-file-upload';
 import '@4tw/cypress-drag-drop';
 
 Cypress.Commands.add('login', () => {
-  const { SERVE_ENV = 'dev' } = Cypress.env();
+  const { SERVE_URL } = Cypress.env();
 
-  cy.request('POST', `${defaultSettings.serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
+  cy.request('POST', `${SERVE_URL}/apisix/admin/user/login`, {
     username: 'user',
     password: 'user',
   }).then((res) => {
@@ -33,123 +31,105 @@ Cypress.Commands.add('login', () => {
   });
 });
 
-Cypress.Commands.add('configurePlugin', ({ name, cases }) => {
-  const timeout = 300;
-  const domSelector = {
-    name: '[data-cy-plugin-name]',
-    parents: '.ant-card-bordered',
-    drawer_wrap: '.ant-drawer-content-wrapper',
-    drawer: '.ant-drawer-content',
-    switch: '#disable',
-    close: '.anticon-close',
-    selectDropdown: '.ant-select-dropdown',
-    monacoMode: '[data-cy="monaco-mode"]',
-    selectJSON: '.ant-select-dropdown [label=JSON]',
-    monacoViewZones: '.view-zones',
-    notification: '.ant-notification-notice-message',
-  };
+const timeout = 1000;
+const domSelector = {
+  nameGen: (name) => `[data-cy-plugin-name="${name}"]`,
+  parents: '.ant-card-bordered',
+  drawer_wrap: '.ant-drawer-content-wrapper',
+  drawer: '.ant-drawer-content',
+  switch: 'button.ant-switch#disable',
+  close: '.anticon-close',
+  selectDropdown: '.ant-select-dropdown',
+  monacoMode: '[data-cy="monaco-mode"] > .ant-select-selector',
+  selectJSON: '[label=JSON]',
+  monacoViewZones: 'div.view-zones',
+  notification: '.ant-notification-notice-message',
+};
 
-  const shouldValid = cases.shouldValid;
-  const data = cases.data;
-  const type = cases.type;
+Cypress.Commands.add('configurePlugin', ({ name, content }) => {
+  const { shouldValid, data } = content;
 
-  if (type === 'consumer') {
-    cy.log('consumer schema case, skipping');
-    return;
-  }
-
-  cy.get(domSelector.name, { timeout }).then(function (cards) {
-    let needCheck = false;
-    [...cards].forEach((item) => {
-      if (name === item.innerText) needCheck = true;
-    });
-
-    if (!needCheck) {
-      cy.log('non global plugin, skipping');
-      return;
-    }
-
-    cy.contains(name)
-      .parents(domSelector.parents)
-      .within(() => {
-        cy.get('button').click({
-          force: true,
-        });
-      });
-
-    // NOTE: wait for the Drawer to appear on the DOM
-    cy.focused(domSelector.drawer).should('exist');
-
-    cy.get(domSelector.monacoMode)
-      .invoke('text')
-      .then((text) => {
-        if (text === 'Form') {
-          cy.wait(1000);
-          cy.get(domSelector.monacoMode).should('be.visible');
-          cy.get(domSelector.monacoMode).click();
-          cy.get(domSelector.selectDropdown).should('be.visible');
-          cy.get(domSelector.selectJSON).click();
-        }
-      });
-
-    cy.get(domSelector.drawer, { timeout }).within(() => {
-      cy.get(domSelector.switch).click({
+  cy.get('main.ant-layout-content')
+    .should('exist')
+    .find(domSelector.nameGen(name))
+    .then(function (card) {
+      card.parents(domSelector.parents).find('button').trigger('click', {
         force: true,
       });
-    });
 
-    cy.get(domSelector.monacoMode)
-      .invoke('text')
-      .then((text) => {
-        if (text === 'Form') {
-          // FIXME: https://github.com/cypress-io/cypress/issues/7306
-          cy.wait(1000);
-          cy.get(domSelector.monacoMode).should('be.visible');
-          cy.get(domSelector.monacoMode).click();
-          cy.get(domSelector.selectDropdown).should('be.visible');
-          cy.get(domSelector.selectJSON).click();
-        }
-      });
-    // edit monaco
-    cy.get(domSelector.monacoViewZones).should('exist').click({ force: true });
-    cy.window().then((window) => {
-      window.monacoEditor.setValue(JSON.stringify(data));
-
-      cy.get(domSelector.drawer, { timeout }).within(() => {
-        cy.contains('Submit').click({
-          force: true,
-        });
-        cy.get(domSelector.drawer).should('not.exist');
-      });
-    });
-
-    if (shouldValid === true) {
-      cy.get(domSelector.drawer).should('not.exist');
-    } else if (shouldValid === false) {
-      cy.get(domSelector.notification).should('contain', 'Invalid plugin data');
-
-      cy.get(domSelector.close).should('be.visible').click({
-        force: true,
-        multiple: true,
-      });
-
-      cy.get(domSelector.drawer, { timeout })
-        .invoke('show')
+      // NOTE: wait for the Drawer to appear on the DOM
+      cy.get(domSelector.drawer)
+        .should('exist')
         .within(() => {
-          cy.contains('Cancel').click({
+          cy.wait(timeout);
+          // trick for stable
+          cy.contains('Enable').should('exist');
+          cy.get(domSelector.switch, { timeout }).should('exist').click({
             force: true,
           });
+
+          cy.get(domSelector.monacoMode)
+            .should('be.visible')
+            .then(($btn) => {
+              if ($btn.text() === 'Form') {
+                cy.get(domSelector.monacoMode)
+                  .should('exist')
+                  .click({ force: true })
+                  .then(() => {
+                    cy.root()
+                      .closest('body')
+                      .find(domSelector.selectDropdown)
+                      .should('be.visible')
+                      .find(domSelector.selectJSON)
+                      .click();
+                  });
+              }
+            });
+
+          // edit monaco
+          cy.wait(timeout * 2);
+          cy.get(domSelector.monacoViewZones).should('exist').click({ force: true });
+
+          cy.window()
+            .then((win) => {
+              if (data) win.monacoEditor.setValue(JSON.stringify(data));
+            })
+            .then(() => {
+              cy.contains('Submit').click({
+                force: true,
+              });
+            });
         });
-    }
-  });
+
+      if (shouldValid) {
+        cy.wait(timeout);
+        cy.get(domSelector.drawer, { timeout }).should('not.exist');
+      } else {
+        cy.get(domSelector.notification).should('contain', 'Invalid plugin data');
+
+        cy.get(domSelector.close).should('be.visible').click({
+          force: true,
+          multiple: true,
+        });
+
+        cy.wait(timeout);
+        cy.get(domSelector.drawer)
+          .invoke('show')
+          .within(() => {
+            cy.contains('Cancel').click({
+              force: true,
+            });
+          });
+      }
+    });
 });
 
 Cypress.Commands.add('requestWithToken', ({ method, url, payload }) => {
-  const { SERVE_ENV = 'dev' } = Cypress.env();
+  const { SERVE_URL } = Cypress.env();
   // Make sure the request is synchronous
   cy.request({
     method,
-    url: defaultSettings.serveUrlMap[SERVE_ENV] + url,
+    url: SERVE_URL + url,
     body: payload,
     headers: { Authorization: localStorage.getItem('token') },
   }).then((res) => {

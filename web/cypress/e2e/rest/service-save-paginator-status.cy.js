@@ -14,13 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
-import defaultSettings from '../../../../../config/defaultSettings';
 
 context('Save Paginator Status', () => {
-  const timeout = 300;
+  const timeout = 2000;
   const token = localStorage.getItem('token');
-  const { SERVE_ENV = 'dev' } = Cypress.env();
+  const { SERVE_URL } = Cypress.env();
 
   const selector = {
     twentyPerPage: '[title="20 / page"]',
@@ -38,32 +36,43 @@ context('Save Paginator Status', () => {
     deleteServiceSuccess: 'Delete Service Successfully',
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should create 11 test services', function () {
     cy.visit('/');
     cy.contains('Service').click();
 
-    for (let i = 0; i <= 10; i++) {
-      cy.request({
-        method: 'POST',
-        url: `${defaultSettings.serveUrlMap[SERVE_ENV]}/apisix/admin/services`,
-        headers: {
-          Authorization: token,
-        },
-        body: {
-          upstream: {
-            nodes: { '39.97.63.215:80': 1 },
-            timeout: { connect: 6, read: 6, send: 6 },
-            type: 'roundrobin',
-            pass_host: 'pass',
+    for (let i = 0; i <= 10; i+=1) {
+      cy.request(
+        {
+          method: 'POST',
+          url: `${SERVE_URL}/apisix/admin/services`,
+          headers: {
+            Authorization: token,
           },
-          enable_websocket: true,
-          name: `${data.serviceName}${i}`,
+          body: {
+            upstream: {
+              nodes: { '39.97.63.215:80': 1 },
+              timeout: { connect: 6, read: 6, send: 6 },
+              type: 'roundrobin',
+              pass_host: 'pass',
+            },
+            enable_websocket: true,
+            name: `${data.serviceName}${i}`,
+          },
         },
-      }).then((res) => {
+        {
+          retryOnStatusCodeFailure: true,
+        },
+      ).then((res) => {
         expect(res.body.code).to.equal(0);
       });
     }
@@ -99,7 +108,7 @@ context('Save Paginator Status', () => {
     cy.visit('/service/list?page=1&pageSize=20');
     cy.reload();
     cy.contains('Service List').should('be.visible');
-    cy.get(selector.deleteButton, { timeout: 300 })
+    cy.get(selector.deleteButton, { timeout })
       .should('exist')
       .each(function ($el) {
         cy.wrap($el).click().click({ timeout });
