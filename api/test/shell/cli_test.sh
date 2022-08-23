@@ -432,45 +432,43 @@ stop_dashboard() {
 }
 
 #15
-@test "Check featureGate effected" {
+@test "Check FeatureGate effected" {
   recover_conf
   start_dashboard 3
 
   # validate process is right by requesting login api
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"user", "password": "user"}'
-  token=$(echo "$output" | jq .code -r)
+  token=$(echo "$output" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
 
   [ -n "${token}" ]
 
   # more validation to make sure it's ok to access etcd
   run curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Content-Type: application/json" -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}'
-  respCode=$(echo "$output" | jq .code -r)
+  respCode=$(echo "$output" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
 
-  [ "$respCode" == "0" ]
+  [ "$respCode" = "0" ]
 
   stop_dashboard 6
 
   recover_conf
-  yq -y '.featureGate.DemoIAMAccess="true"' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
+  yq -y '.featureGate.DemoIAMAccess=true' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 
   # validate process is right by requesting login api
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"user", "password": "user"}'
-  token=$(echo "$output" | jq .code -r)
+  token=$(echo "$output" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
 
   [ -n "${token}" ]
 
   # more validation to make sure it's ok to access etcd
   run curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Content-Type: application/json" -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}'
-  respCode=$(echo "$output" | jq .code -r)
+  respCode=$(echo "$output" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
 
   [ "$respCode" != "0" ]
 
   stop_dashboard 6
 }
-
-
 
 #post
 @test "Clean test environment" {
