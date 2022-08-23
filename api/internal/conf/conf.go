@@ -133,7 +133,6 @@ type App struct {
 	ClientId     string `mapstructure:"client_id"`
 	ClientSecret string `mapstructure:"client_secret"`
 	Scope        string
-	State        string
 	RedirectUri  string `mapstructure:"redirect_uri"`
 }
 
