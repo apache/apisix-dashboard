@@ -58,10 +58,12 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
       });
 
       // NOTE: wait for the Drawer to appear on the DOM
-      cy.focused(domSelector.drawer)
+      cy.get(domSelector.drawer)
         .should('exist')
         .within(() => {
           cy.wait(timeout);
+          // trick for stable
+          cy.contains('Enable').should('exist');
           cy.get(domSelector.switch, { timeout }).should('exist').click({
             force: true,
           });
@@ -99,8 +101,8 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
             });
         });
 
-      cy.wait(timeout);
       if (shouldValid) {
+        cy.wait(timeout);
         cy.get(domSelector.drawer, { timeout }).should('not.exist');
       } else {
         cy.get(domSelector.notification).should('contain', 'Invalid plugin data');
@@ -110,6 +112,7 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
           multiple: true,
         });
 
+        cy.wait(timeout);
         cy.get(domSelector.drawer)
           .invoke('show')
           .within(() => {
