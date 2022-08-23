@@ -159,6 +159,7 @@ context('Data Loader import', () => {
   it('should remove all routes and upstreams', function () {
     // remove route
     for (let i = 0; i < 5; i += 1) {
+      cy.wait(1000);
       cy.get(selector.listTbody).get(selector.listRow).contains('More').click();
       cy.contains('Delete').should('be.visible').click();
       cy.contains('OK').should('be.visible').click();
@@ -171,6 +172,7 @@ context('Data Loader import', () => {
     cy.get(selector.refresh).click();
     // remove route
     for (let i = 0; i < 2; i += 1) {
+      cy.wait(1000);
       cy.get(selector.listTbody).get(selector.listRow).contains('Delete').click();
       cy.contains('Confirm').should('be.visible').click();
       cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
