@@ -1840,7 +1840,7 @@
   ],
   "opentelemetry": [
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {}
     },
     {
@@ -1849,25 +1849,6 @@
         "sampler": {
           "name": "always_on"
         }
-      }
-    }
-  ],
-  "openwhisk": [
-    {
-      "shouldValid": false,
-      "data": {
-        "service_token": "${service_token}",
-        "namespace": "guest",
-        "action": "test"
-      }
-    },
-    {
-      "shouldValid": true,
-      "data": {
-        "api_host": "http://localhost:3233",
-        "service_token": "${service_token}",
-        "namespace": "guest",
-        "action": "test"
       }
     }
   ],
