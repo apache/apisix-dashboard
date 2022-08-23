@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createContext, FC, useContext, useEffect, useMemo } from 'react';
+import { createContext, FC, useContext, useEffect } from 'react';
 import React, { useState } from 'react';
 import Form from 'antd/es/form';
 import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col, notification } from 'antd';
@@ -35,7 +35,7 @@ const NormalLabelComponent: FC = () => {
   const [visible, setVisible] = useState(false);
   const { formatMessage } = useIntl();
   const { disabled, onChange, form } = useContext(MetaViewContext);
-  const dataSource = useMemo(() => form.getFieldValue(field) || [], [form.getFieldValue]);
+  const dataSource = form.getFieldValue(field) || [];
 
   return (
     <React.Fragment>
