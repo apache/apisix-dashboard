@@ -31,7 +31,7 @@ Cypress.Commands.add('login', () => {
   });
 });
 
-const timeout = 2000;
+const timeout = 1000;
 const domSelector = {
   nameGen: (name) => `[data-cy-plugin-name="${name}"]`,
   parents: '.ant-card-bordered',
@@ -50,7 +50,8 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
   const { shouldValid, data } = content;
 
   cy.get('main.ant-layout-content')
-    .find(domSelector.nameGen(name), 3)
+    .should('exist')
+    .find(domSelector.nameGen(name))
     .then(function (card) {
       card.parents(domSelector.parents).find('button').trigger('click', {
         force: true,
@@ -61,7 +62,7 @@ Cypress.Commands.add('configurePlugin', ({ name, content }) => {
         .should('exist')
         .within(() => {
           cy.wait(timeout);
-          cy.get(domSelector.switch).should('be.visible').click({
+          cy.get(domSelector.switch, { timeout }).should('exist').click({
             force: true,
           });
 
