@@ -136,7 +136,7 @@ const LabelsDrawer: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    const transformLabel = transformLableValueToKeyValue(dataSource);
+    const transformLabel = transformLabelValueToKeyValue(dataSource);
     form.setFieldsValue({ labels: transformLabel });
   }, [form.setFieldsValue, dataSource]);
 
