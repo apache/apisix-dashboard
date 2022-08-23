@@ -37,7 +37,7 @@ const domSelector = {
   parents: '.ant-card-bordered',
   drawer_wrap: '.ant-drawer-content-wrapper',
   drawer: '.ant-drawer-content',
-  switch: 'button#disable',
+  switch: 'button.ant-switch#disable',
   close: '.anticon-close',
   selectDropdown: '.ant-select-dropdown',
   monacoMode: '[data-cy="monaco-mode"] > .ant-select-selector',

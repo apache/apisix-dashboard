@@ -62,7 +62,6 @@ describe('Plugin Schema Test', () => {
 
     beforeEach(() => {
       cy.restoreLocalStorage();
-      cy.reload();
     });
 
     pluginList
@@ -75,6 +74,10 @@ describe('Plugin Schema Test', () => {
               cy.configurePlugin({ name, content: c });
             } else {
               cy.log(`${name} not a global plugin, skipping`);
+            }
+
+            if (cases.length === i + 1) {
+              cy.reload(true);
             }
           });
         });
