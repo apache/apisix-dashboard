@@ -451,7 +451,7 @@ stop_dashboard() {
   stop_dashboard 6
 
   recover_conf
-  yq -y '.featureGate.DemoIAMAccess=true' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
+  yq -y '.feature_gate.DemoIAMAccess=true' config/config.yaml > config/config.yaml.tmp && mv config/config.yaml.tmp ${CONF_FILE}
 
   start_dashboard 3
 

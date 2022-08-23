@@ -44,7 +44,7 @@ RUN mkdir -p /go/manager-api \
    && apk add ca-certificates \
    && update-ca-certificates \
    && apk add --no-cache libc6-compat \
-   && echo "hosts: srcFiles dns" > /etc/nsswitch.conf \
+   && echo "hosts: files dns" > /etc/nsswitch.conf \
    && rm -rf /var/cache/apk/*
 
 
