@@ -85,7 +85,7 @@ export SERVE_URL_DEV=http://localhost:9000
 
 ```shell
 # You can also use pnpm as a tool to download dependent packages.
-$ pnpm install
+$ pnpm install --unsafe-perm
 
 $ pnpm start
 
