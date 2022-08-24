@@ -53,7 +53,7 @@ RUN npm config set strict-peer-dependencies=false
 RUN npm config set auto-install-peers=true
 
 RUN if [ "$ENABLE_PROXY" = "true" ] ; then pnpm config set registry https://registry.npmmirror.com/ ; fi \
-    && pnpm install \
+    && pnpm install --unsafe-perm \
     && pnpm build
 
 FROM alpine:latest as prod
