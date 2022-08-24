@@ -51,7 +51,7 @@ jobs:
       - run: npm config set auto-install-peers=true
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --unsafe-perm
 
       - name: Setup golang environment
         uses: actions/setup-go@v3
