@@ -138,7 +138,7 @@
     "carlo": "^0.9.46",
     "cross-env": "^7.0.0",
     "cross-port-killer": "^1.1.1",
-    "cypress": "^6.0.0",
+    "cypress": "^10.4.0",
     "cypress-file-upload": "^5.0.2",
     "cypress-localstorage-commands": "^2.2.0",
     "detect-installer": "^1.0.1",
@@ -174,3 +174,4 @@
     "scripts/**/*.js"
   ]
 }
+
