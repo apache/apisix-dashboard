@@ -84,12 +84,11 @@ oidc:
   secret:
     secret
   expire_time: 3600
-  apps:
-    - app_name: authing
-      client_id:
-      client_secret:
-      scope: oidc
-      redirect_uri: /authing/callback
+  app_name: authing
+  client_id:
+  client_secret:
+  scope: oidc
+  redirect_uri: oidc/callback
 
 plugins:                          # plugin list (sorted in alphabetical order)
   - api-breaker
