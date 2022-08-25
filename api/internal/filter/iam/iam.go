@@ -19,9 +19,9 @@ package iam
 
 import (
 	"net/http"
-	
+
 	"github.com/gin-gonic/gin"
-	
+
 	"github.com/apache/apisix-dashboard/api/internal/config"
 	iamDef "github.com/apache/apisix-dashboard/api/pkg/iam"
 	"github.com/apache/apisix-dashboard/api/pkg/iam/demo"
@@ -39,7 +39,7 @@ func Filter(cfg config.Config) gin.HandlerFunc {
 		access = demo.Access{}
 		accessLock = true
 	}
-	
+
 	return func(c *gin.Context) {
 		if access != nil && c.Request.URL.Path != "/apisix/admin/user/login" {
 			identity := c.MustGet("identity").(string)
@@ -49,7 +49,7 @@ func Filter(cfg config.Config) gin.HandlerFunc {
 				return
 			}
 		}
-		
+
 		c.Next()
 	}
 }
