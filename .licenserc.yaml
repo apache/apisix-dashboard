@@ -45,6 +45,7 @@ header:
     - 'api/logs/.gitkeep'
     - 'api/service/apisix-dashboard.service'
     - 'api/VERSION'
+    - 'api/pkg/iam/demo/policy.csv'
 
     # Other files
     - 'go.mod'
