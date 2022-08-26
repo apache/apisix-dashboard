@@ -113,6 +113,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 			MergeMethod: input.MergeMethod == "true",
 			TaskName:    input.TaskName,
 		}
+		break
 	default:
 		return nil, fmt.Errorf("unsupported data loader type: %s", input.Type)
 	}

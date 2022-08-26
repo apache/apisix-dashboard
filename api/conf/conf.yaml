@@ -81,8 +81,6 @@ authentication:
       password: user
 
 oidc:
-  secret:
-    secret
   expire_time: 3600
   app_name: authing
   client_id:

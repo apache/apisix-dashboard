@@ -128,7 +128,6 @@ type Authentication struct {
 }
 
 type Oidc struct {
-	Secret       string
 	ExpireTime   int    `mapstructure:"expire_time" yaml:"expire_time"`
 	AppName      string `mapstructure:"app_name"`
 	ClientId     string `mapstructure:"client_id"`
@@ -300,10 +299,6 @@ func initAuthentication(conf Authentication) {
 
 func initOidc(conf Oidc) {
 	OidcConf = conf
-
-	if OidcConf.Secret == "secret" {
-		OidcConf.Secret = utils.GetFlakeUidStr()
-	}
 }
 
 func initPlugins(plugins []string) {
