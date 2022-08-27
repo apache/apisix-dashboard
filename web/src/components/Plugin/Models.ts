@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 import { Uri, editor } from "monaco-editor";
-//import*as modelCode from './modelCode/index'
 
 export const authzcasbinModel = editor.createModel(
     modelCode.authzcasbin,
