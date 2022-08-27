@@ -1,5 +1,5 @@
 {
-  "model_path": "/path/to/model.conf",
-  "policy_path": "/path/to/policy.csv",
-  "username": "user"
+  "model_path":
+  "policy_path":
+  "username":
 }
