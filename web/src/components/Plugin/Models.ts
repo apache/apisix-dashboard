@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { Uri, editor } from "monaco-editor";
+import*as modelCode from './modelCode/index';
 
 export const authzcasbinModel = editor.createModel(
     modelCode.authzcasbin,
@@ -25,5 +26,5 @@ export const authzcasbinModel = editor.createModel(
 export const opaModel = editor.createModel(
   modelCode.opa,
   "json",
-  Uri.parse("file:tsconfig.json")
+  Uri.parse("file:opa")
 );
