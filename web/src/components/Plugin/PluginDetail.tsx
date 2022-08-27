@@ -48,6 +48,7 @@ import type { languages } from 'monaco-editor';
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
+import*as allModels from './Models';
 
 type Props = {
   name: string;
@@ -123,6 +124,8 @@ const PluginDetail: React.FC<Props> = ({
   const targetPluginName = pluginList.find((item) => item.name === name)?.name;
   const [state] = useState<ProFieldFCMode>('read');
   const [plain] = useState<boolean>(false);
+  let filteredName = name.replace("-","");
+  let targetModel = allModels.[`${filteredName}Model`];
 
   if (PLUGIN_UI_LIST.includes(name)) {
     modeOptions.push({
@@ -340,7 +343,9 @@ const PluginDetail: React.FC<Props> = ({
       footer={
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           {' '}
-          <Button onClick={onClose} key={1}>
+          <Button onClick={() =>{
+            window.location.reload();
+          }} key={1}>
             {formatMessage({ id: 'component.global.cancel' })}
           </Button>
           <Space>
@@ -437,13 +442,14 @@ const PluginDetail: React.FC<Props> = ({
           <Descriptions.Item label={formatMessage({ id: 'component.global.example' })}>
             <Field
               text={`
-//Just fill in 2-5 lines in the editor below
-1       "plugins": {
-2           "jwt-auth": {
-3               "key": "user-key",
-4               "secret": "my-secret-key"
-5           }
-6       }
+//Just fill in 3-5 lines in the editor below
+1     "plugins": {
+2         "xx-xxx": {
+3             "key": "user-key",
+4             "secret": {},
+5             "algorithm": "RS256",
+6        }
+7     }
               `}
               valueType="jsonCode"
               mode={state}
@@ -508,12 +514,12 @@ const PluginDetail: React.FC<Props> = ({
             }
           }}
           language={monacoMode.toLocaleLowerCase()}
+          beforeMount={editorWillMount}
           onMount={(editor) => {
             // NOTE: for debug & test
             // @ts-ignore
-            window.monacoEditor = editor;
+            window.monacoEditor = editor.setModel(targetModel);
           }}
-          beforeMount={editorWillMount}
           options={{
             scrollbar: {
               vertical: 'hidden',
