@@ -1,26 +1,26 @@
 {
-  "type": "http",
+  "type":
   "request": {
-      "scheme": "http",
-      "path": "\/get",
+      "scheme":
+      "path":
       "headers": {
-          "user-agent": "curl\/7.68.0",
-          "accept": "*\/*",
-          "host": "127.0.0.1:9080"
+          "user-agent":
+          "accept":
+          "host":
       },
-      "query": {},
-      "port": 9080,
-      "method": "GET",
-      "host": "127.0.0.1"
+      "query":
+      "port":
+      "method":
+      "host":
   },
   "var": {
-      "timestamp": 1701234567,
-      "server_addr": "127.0.0.1",
-      "server_port": "9080",
-      "remote_port": "port",
-      "remote_addr": "ip address"
+      "timestamp":
+      "server_addr":
+      "server_port":
+      "remote_port":
+      "remote_addr":
   },
-  "route": {},
-  "service": {},
-  "consumer": {}
+  "route":
+  "service":
+  "consumer":
 }
