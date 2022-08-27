@@ -17,8 +17,9 @@
 /* eslint-disable no-undef */
 
 context('Create Edit and Delete Route with redirect plugin', () => {
-  const name = `routeName${new Date().valueOf()}`;
-  const newName = `newName${new Date().valueOf()}`;
+  const name = `routeName${Date.now()}`;
+  const newName = `newName${Date.now()}`;
+  const timeout = 2000;
 
   const selector = {
     empty: '.ant-empty-normal',
@@ -44,16 +45,25 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     setUpstreamNotice: 'If you do not bind the service, you must set the Upstream (Step 2)',
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should create route with custom redirect plugin', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(timeout * 2);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
-    cy.contains('Next').click().click();
+    cy.wait(timeout * 2);
+    cy.contains('Next').click();
+    cy.contains('Next').click();
     cy.get(selector.name).type(name);
     cy.get(selector.redirect).click();
     cy.contains('Custom').click({ force: true });
@@ -87,14 +97,18 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains(name).siblings().contains('Configure').click();
 
     // NOTE: make sure all components rerender done
+    cy.wait(timeout);
     cy.get('#status').should('have.class', 'ant-switch-checked');
     // should not shown set upstream notice
     cy.contains(data.setUpstreamNotice).should('not.exist');
-    cy.get(selector.name).clear().type(newName);
+    cy.get(selector.name).focus().clear().type(newName).blur();
     cy.get(selector.webSocketSelector).should('exist');
     cy.get(selector.enable_websocket_button).should('exist');
 
-    cy.contains('Next').click();
+    for (let i = 0; i < 3; i += 1) {
+      cy.contains('Next').focus().click({ force: true });
+      cy.wait(timeout);
+    }
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess);
     cy.contains('Goto List').click();
@@ -104,7 +118,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.get(selector.name).clear().type(newName);
+    cy.get(selector.name).focus().clear().type(newName);
     cy.contains('Search').click();
     cy.contains(newName).siblings().contains('More').click();
     cy.contains('Delete').click();

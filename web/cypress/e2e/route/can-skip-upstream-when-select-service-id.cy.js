@@ -17,6 +17,7 @@
 /* eslint-disable no-undef */
 
 context('Can select service_id skip upstream in route', () => {
+  const timeout = 2000;
   const selector = {
     name: '#name',
     nodes_0_host: '#submitNodes_0_host',
@@ -56,20 +57,30 @@ context('Can select service_id skip upstream in route', () => {
     value: '["1", "2"]',
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+    cy.visit('/');
+    cy.contains('Route').click();
   });
 
   it('should create test upstream and service', function () {
-    cy.visit('/');
     cy.contains('Upstream').click();
+    cy.wait(timeout);
     cy.contains('Create').click();
 
     cy.get(selector.name).type(data.upstreamName);
+    cy.contains('Next').click();
     cy.get(selector.nodes_0_host).type(data.ip1);
     cy.get(selector.nodes_0_port).clear().type(data.port0);
     cy.get(selector.nodes_0_weight).clear().type(data.weight0);
     cy.contains('Next').click();
+    cy.wait(timeout);
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
     cy.contains(data.createUpstreamSuccess);
@@ -83,19 +94,19 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
+    cy.wait(timeout * 2);
     cy.get(selector.notification).should('contain', data.createServiceSuccess);
     cy.contains(data.createServiceSuccess);
   });
 
   it('should skip upstream module after service is selected when creating route', function () {
-    cy.visit('/');
-    cy.contains('Route').click();
     cy.contains('Create').click();
 
     // The None option doesn't exist when service isn't selected
     cy.contains('Next').click().click();
     cy.get(selector.name).type(data.routeName);
     cy.contains('Next').click();
+    cy.wait(timeout * 2);
     cy.get(selector.upstreamSelector).click();
     cy.get('.ant-select-item-option-disabled > .ant-select-item-option-content').contains('None');
 
@@ -120,10 +131,8 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('Submit').click();
     cy.contains('Goto List').click();
   });
-  it('should Add Advanced Routing Matching Conditions', function () {
-    cy.visit('/');
-    cy.contains('Route').click();
 
+  it('should Add Advanced Routing Matching Conditions', function () {
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();
@@ -132,6 +141,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(selector.selectItem).within(() => {
       cy.contains('HTTP Request Header').click();
     });
+    cy.wait(timeout);
     cy.get('.ant-form-item-control-input-content > #name').type(data.parameterName);
     cy.get(selector.reverse).click();
     cy.get(selector.operator).click();
@@ -147,16 +157,16 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('Confirm').click();
     cy.get(selector.rowcard).get('tr>td').eq(2).contains('false').should('be.visible');
     cy.contains('Next').click();
+    cy.wait(timeout);
     cy.contains('Next').click();
+    cy.wait(timeout);
     cy.contains('Next').click();
+    cy.wait(timeout);
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess);
   });
 
   it('should skip upstream module after service is selected when editing route', function () {
-    cy.visit('/');
-    cy.contains('Route').click();
-
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();
@@ -164,8 +174,9 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(selector.enable_websocket).should('have.class', 'ant-switch-checked');
     cy.contains('None').click();
     cy.contains('Next').click();
-    cy.wait(500);
-    cy.get('[data-cy=upstream_selector]').click();
+    cy.wait(timeout);
+    cy.get('.ant-select-selector').click({ force: true });
+    cy.wait(timeout);
     cy.contains(data.upstreamName).click();
     cy.contains('Next').click();
     cy.contains('Next').click();
@@ -174,8 +185,6 @@ context('Can select service_id skip upstream in route', () => {
   });
 
   it('should delete route, service and upstream', function () {
-    cy.visit('/');
-    cy.contains('Route').click();
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)

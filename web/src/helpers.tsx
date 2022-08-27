@@ -176,7 +176,7 @@ export const yaml2json = (
   }
 };
 
-export const transformLableValueToKeyValue = (data: string[]) => {
+export const transformLabelValueToKeyValue = (data: string[]) => {
   return (data || []).map((item) => {
     const index = item.indexOf(':');
     const labelKey = item.substring(0, index);

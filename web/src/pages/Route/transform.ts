@@ -16,7 +16,7 @@
  */
 import { omit, pick, cloneDeep, isEmpty, unset } from 'lodash';
 
-import { transformLableValueToKeyValue } from '@/helpers';
+import { transformLabelValueToKeyValue } from '@/helpers';
 import { SCHEME_REWRITE, URI_REWRITE_TYPE, HOST_REWRITE_TYPE } from '@/pages/Route/constants';
 import { convertToFormData } from '@/components/Upstream/service';
 
@@ -141,7 +141,7 @@ export const transformStepData = ({
   }
 
   const labels: Record<string, string> = {};
-  transformLableValueToKeyValue(custom_normal_labels).forEach(({ labelKey, labelValue }) => {
+  transformLabelValueToKeyValue(custom_normal_labels).forEach(({ labelKey, labelValue }) => {
     labels[labelKey] = labelValue;
   });
 

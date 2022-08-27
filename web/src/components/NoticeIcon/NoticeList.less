@@ -26,9 +26,11 @@
 .list {
   max-height: 400px;
   overflow: auto;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
   .item {
     padding-right: 24px;
     padding-left: 24px;
@@ -44,6 +46,7 @@
       margin-top: 4px;
       background: #fff;
     }
+
     .iconElement {
       font-size: 32px;
     }
@@ -51,25 +54,31 @@
     &.read {
       opacity: 0.4;
     }
+
     &:last-child {
       border-bottom: 0;
     }
+
     &:hover {
       background: @primary-1;
     }
+
     .title {
       margin-bottom: 8px;
       font-weight: normal;
     }
+
     .description {
       font-size: 12px;
       line-height: @line-height-base;
     }
+
     .datetime {
       margin-top: 4px;
       font-size: 12px;
       line-height: @line-height-base;
     }
+
     .extra {
       float: right;
       margin-top: -1.5px;
@@ -78,13 +87,15 @@
       font-weight: normal;
     }
   }
+
   .loadMore {
     padding: 8px 0;
     color: @primary-6;
     text-align: center;
     cursor: pointer;
+
     &.loadedAll {
-      color: rgba(0, 0, 0, 0.25);
+      color: rgb(0 0 0 / 25%);
       cursor: unset;
     }
   }
@@ -94,6 +105,7 @@
   padding: 73px 0 88px;
   color: @text-color-secondary;
   text-align: center;
+
   img {
     display: inline-block;
     height: 76px;
@@ -109,6 +121,7 @@
   border-top: 1px solid @border-color-split;
   border-radius: 0 0 @border-radius-base @border-radius-base;
   transition: all 0.3s;
+
   div {
     display: inline-block;
     width: 50%;
@@ -119,6 +132,7 @@
     &:only-child {
       width: 100%;
     }
+
     &:not(:only-child):last-child {
       border-left: 1px solid @border-color-split;
     }

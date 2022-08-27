@@ -38,22 +38,25 @@ context('Data Loader import', () => {
     API101: '../../../api/test/testdata/import/Postman-API101.yaml',
   };
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
 
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
-    cy.fixture('export-route-dataset.json').as('exportFile');
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(selector.refresh).click();
   });
 
   it('should import API101 with merge mode', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
-    cy.get(selector.refresh).click();
-    cy.contains('Advanced').click();
+    cy.get('.ant-pro-page-container').within(() => {
+      cy.wait(1000);
+      cy.contains('Advanced').click();
+    });
     cy.contains('Import').should('be.visible').click();
-
     // select Data Loader type
     cy.contains('OpenAPI 3').should('be.visible').click();
     cy.get(selector.selectDropdown).contains('OpenAPI 3').should('be.visible').click();
@@ -82,13 +85,11 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with duplicate upstream', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
-    cy.get(selector.refresh).click();
-    cy.contains('Advanced').click();
+    cy.get('.ant-pro-page-container').within(() => {
+      cy.wait(1000);
+      cy.contains('Advanced').click();
+    });
     cy.contains('Import').should('be.visible').click();
-
     // select Data Loader type
     cy.contains('OpenAPI 3').should('be.visible').click();
     cy.get(selector.selectDropdown).contains('OpenAPI 3').should('be.visible').click();
@@ -112,11 +113,10 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with non-merge mode', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
-    cy.get(selector.refresh).click();
-    cy.contains('Advanced').click();
+    cy.get('.ant-pro-page-container').within(() => {
+      cy.wait(1000);
+      cy.contains('Advanced').click();
+    });
     cy.contains('Import').should('be.visible').click();
 
     // select Data Loader type
@@ -136,11 +136,10 @@ context('Data Loader import', () => {
   });
 
   it('should import API101 with duplicate route', () => {
-    cy.visit('/');
-    cy.contains('Route').click();
-
-    cy.get(selector.refresh).click();
-    cy.contains('Advanced').click();
+    cy.get('.ant-pro-page-container').within(() => {
+      cy.wait(1000);
+      cy.contains('Advanced').click();
+    });
     cy.contains('Import').should('be.visible').click();
 
     // select Data Loader type
@@ -158,11 +157,9 @@ context('Data Loader import', () => {
   });
 
   it('should remove all routes and upstreams', function () {
-    cy.visit('/');
-    cy.contains('Route').click();
-    cy.get(selector.refresh).click();
     // remove route
     for (let i = 0; i < 5; i += 1) {
+      cy.wait(1000);
       cy.get(selector.listTbody).get(selector.listRow).contains('More').click();
       cy.contains('Delete').should('be.visible').click();
       cy.contains('OK').should('be.visible').click();
@@ -175,6 +172,7 @@ context('Data Loader import', () => {
     cy.get(selector.refresh).click();
     // remove route
     for (let i = 0; i < 2; i += 1) {
+      cy.wait(1000);
       cy.get(selector.listTbody).get(selector.listRow).contains('Delete').click();
       cy.contains('Confirm').should('be.visible').click();
       cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
