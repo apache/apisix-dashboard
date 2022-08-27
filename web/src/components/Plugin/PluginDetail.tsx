@@ -124,8 +124,8 @@ const PluginDetail: React.FC<Props> = ({
   const targetPluginName = pluginList.find((item) => item.name === name)?.name;
   const [state] = useState<ProFieldFCMode>('read');
   const [plain] = useState<boolean>(false);
-  let filteredName = name.replace("-","");
-  let targetModel = allModels[`.${filteredName}Model`];
+  const filteredName = name.replace("-","");
+  const targetModel = allModels[`.${filteredName}Model`];
 
   if (PLUGIN_UI_LIST.includes(name)) {
     modeOptions.push({
