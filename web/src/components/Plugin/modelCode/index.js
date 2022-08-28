@@ -14,10 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import opa from './opa.txt';
-import authzcasbin from './authzcasbin.txt';
+export const opa = `
+{
+    "type":
+    "request": {
+        "scheme":
+        "path":
+        "headers": {
+            "user-agent":
+            "accept":
+            "host":
+        },
+        "query":
+        "port":
+        "method":
+        "host":
+    },
+    "var": {
+        "timestamp":
+        "server_addr":
+        "server_port":
+        "remote_port":
+        "remote_addr":
+    },
+    "route":
+    "service":
+    "consumer":
+}
+`;
 
-export {
-  opa,
-  authzcasbin
-};
+export const authzcasbin = `
+{
+  "model_path":
+  "policy_path":
+  "username":
+}
+`;
