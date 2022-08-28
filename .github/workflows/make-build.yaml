@@ -44,6 +44,7 @@ jobs:
           node-version: 16.x
           cache: 'yarn'
           cache-dependency-path: web/yarn.lock
+          run: export NODE_OPTIONS="--max-old-space-size=8192"
 
       - name: Setup golang environment
         uses: actions/setup-go@v3
