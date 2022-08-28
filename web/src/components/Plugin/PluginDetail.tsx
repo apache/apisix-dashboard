@@ -344,7 +344,7 @@ const PluginDetail: React.FC<Props> = ({
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           {' '}
           <Button onClick={() =>{
-            window.location.reload();
+            window.history.go(0);
           }} key={1}>
             {formatMessage({ id: 'component.global.cancel' })}
           </Button>
