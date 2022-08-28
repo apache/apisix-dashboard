@@ -1,5 +1,0 @@
-{
-  "model_path":
-  "policy_path":
-  "username":
-}
