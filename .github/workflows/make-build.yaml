@@ -48,7 +48,7 @@ jobs:
       # Dynamically increasing working memory
       - name: Adjust Node.js environment
         working-directory: web
-        run: npm install -g increase-memory-limit && increase-memory-limit
+        run: npm install -g increase-memory-limit && increase-memory-limit && export NODE_OPTIONS="--max-old-space-size=4096"
 
       - name: Setup golang environment
         uses: actions/setup-go@v3
