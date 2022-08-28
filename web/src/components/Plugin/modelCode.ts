@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const opa = `
+export var opa = `
 {
     "type":
     "request": {
@@ -43,7 +43,7 @@ export const opa = `
 }
 `;
 
-export const authzcasbin = `
+export var authzcasbin = `
 {
   "model_path":
   "policy_path":
@@ -51,7 +51,7 @@ export const authzcasbin = `
 }
 `;
 
-export const authzkeycloak =`
+export var authzkeycloak =`
 {
   "token_endpoint":
   "permissions":
