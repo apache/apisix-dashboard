@@ -518,7 +518,8 @@ const PluginDetail: React.FC<Props> = ({
           onMount={(editor) => {
             // NOTE: for debug & test
             // @ts-ignore
-            window.monacoEditor = editor.setModel(targetModel);
+            window.monacoEditor = editor;
+            if(targetModel)editor.setModel(targetModel);
           }}
           options={{
             scrollbar: {
