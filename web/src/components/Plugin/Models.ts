@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { Uri, editor } from "monaco-editor";
-import*as modelCode from './modelCode/index';
+import*as modelCode from './modelCode';
 
 export const authzcasbinModel = editor.createModel(
     modelCode.authzcasbin,
@@ -27,4 +27,10 @@ export const opaModel = editor.createModel(
   modelCode.opa,
   "json",
   Uri.parse("file:opa")
+);
+
+export const authzkeycloakModel = editor.createModel(
+  modelCode.authzkeycloak,
+  "json",
+  Uri.parse("file:authz-keycloak")
 );
