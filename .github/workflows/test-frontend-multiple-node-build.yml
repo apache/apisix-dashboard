@@ -43,7 +43,7 @@ jobs:
       # Dynamically increasing working memory
       - name: Adjust Node.js environment
         working-directory: web
-        run: npx browserslist@latest --update-db && npm install -g increase-memory-limit && increase-memory-limit && export NODE_OPTIONS="--max-old-space-size=8192"
+        run: export NODE_OPTIONS="--max-old-space-size=4096 && npm install -g increase-memory-limit && increase-memory-limit"
 
       # Install dependencies
       - name: Install dependencies
