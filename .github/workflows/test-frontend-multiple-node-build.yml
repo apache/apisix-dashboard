@@ -40,8 +40,10 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: web/yarn.lock
 
+      # Dynamically increasing working memory
       - name: Adjust Node.js environment
-        run: export NODE_OPTIONS="--max-old-space-size=8192"
+        working-directory: web
+        run: npm install -g increase-memory-limit && increase-memory-limit
 
       # Install dependencies
       - name: Install dependencies
