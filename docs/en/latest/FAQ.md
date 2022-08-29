@@ -79,8 +79,8 @@ By default, the IPv4 range of `127.0.0.0/24` is allowed to access `APISIX Dashbo
 
 ```yaml
 conf:
-  allow_list:
-    - 0.0.0.0/0
+   allow_list:
+      - 0.0.0.0/0
 ```
 
 2. Allow all IPv6 access
@@ -99,7 +99,7 @@ If you want to allow all IPs to access `APISIX Dashboard`, you only need to do t
 
 ```yaml
 conf:
-  allow_list:
+   allow_list:
 ```
 
 Restart `manager-api`, all IPs can access `APISIX Dashboard`.
