@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 /**
  * Model List of PluginType of Monaco editor
  */
- 
+
 import { Uri, editor } from "monaco-editor";
 import*as modelCode from './modelCode'
 
