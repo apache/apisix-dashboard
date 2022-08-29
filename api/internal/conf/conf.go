@@ -19,6 +19,7 @@ package conf
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/sessions"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -64,6 +65,9 @@ var (
 	AllowList        []string
 	Plugins          = map[string]bool{}
 	SecurityConf     Security
+	CookieStore      = sessions.NewCookieStore([]byte("oidc"))
+	OidcLogin        bool
+	OidcId           string
 )
 
 type MTLS struct {
