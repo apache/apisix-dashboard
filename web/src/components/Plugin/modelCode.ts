@@ -166,11 +166,11 @@ export const trafficsplit =`
     ]
 }
 `;
- 
+
 /**
 * Model code of serverless type as fllows:
 */
- 
+
 export const awslambda =`
 {
   "token_endpoint":
@@ -202,7 +202,7 @@ export const openwhisk =`
 /**
 * Model code of observability type as fllows:
 */
- 
+
 export const clickhouselogger =`
 {
     "user":
