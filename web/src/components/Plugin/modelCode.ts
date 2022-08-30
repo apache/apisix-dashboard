@@ -153,11 +153,11 @@ export const trafficsplit =`{
     ]
 }
 `;
- 
+
 /**
 * Model code of serverless type as fllows:
 */
- 
+
 export const awslambda =`{
   "token_endpoint":
   "permissions":
