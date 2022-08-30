@@ -23,24 +23,20 @@
 * Model code of authentication type as fllows:
 */
 
-export const authzcasbin = `
-{
+export const authzcasbin = `{
     "model_path":
     "policy_path":
     "username":
-}
-`;
+}`;
 
-export const authzkeycloak =`
-{
+export const authzkeycloak =`{
     "token_endpoint":
     "permissions":
     "audience":
 }
 `;
 
-export const forwardauth =`
-{
+export const forwardauth =`{
     "uri":
     "request_headers":
     "upstream_headers":
@@ -48,8 +44,7 @@ export const forwardauth =`
 }
 `;
 
-export const hmacauth =`
-{
+export const hmacauth =`{
     "access_key":
     "secret_key":
     "clock_skew":
@@ -57,8 +52,7 @@ export const hmacauth =`
 }
 `;
 
-export const opa = `
-{
+export const opa = `{
     "type":
     "request": {
         "scheme":
@@ -86,8 +80,7 @@ export const opa = `
 }
 `;
 
-export const openidconnect =`
-{
+export const openidconnect =`{
     "client_id":
     "client_secret":
     "discovery":
@@ -102,28 +95,24 @@ export const openidconnect =`
 * Model code of security type as fllows:
 */
 
-export const csrf =`
-{
+export const csrf =`{
     "key":
 }
 `;
 
-export const iprestriction =`
-{
+export const iprestriction =`{
     "whitelist":
 }
 `;
 
-export const uarestriction =`
-{
+export const uarestriction =`{
     "bypass_missing":
     "allowlist":
     "denylist":
 }
 `;
 
-export const uriblocker =`
-{
+export const uriblocker =`{
     "block_rules":
 }
 `;
@@ -132,14 +121,12 @@ export const uriblocker =`
 * Model code of traffic type as fllows:
 */
 
-export const clientcontrol =`
-{
+export const clientcontrol =`{
     "max_body_size":
 }
 `;
 
-export const trafficsplit =`
-{
+export const trafficsplit =`{
     "rules": [
         {
             "weighted_upstreams": [
@@ -166,21 +153,19 @@ export const trafficsplit =`
     ]
 }
 `;
-
+ 
 /**
 * Model code of serverless type as fllows:
 */
-
-export const awslambda =`
-{
+ 
+export const awslambda =`{
   "token_endpoint":
   "permissions":
   "audience":
 }
 `;
 
-export const azurefunctions =`
-{
+export const azurefunctions =`{
     "azure-functions": {
         "function_uri":
         "authorization": {
@@ -190,8 +175,7 @@ export const azurefunctions =`
 }
 `;
 
-export const openwhisk =`
-{
+export const openwhisk =`{
     "api_host":
     "service_token":
     "namespace":
@@ -203,8 +187,7 @@ export const openwhisk =`
 * Model code of observability type as fllows:
 */
 
-export const clickhouselogger =`
-{
+export const clickhouselogger =`{
     "user":
     "password":
     "database":
@@ -213,14 +196,12 @@ export const clickhouselogger =`
 }
 `;
 
-export const filelogger =`
-{
+export const filelogger =`{
     "path":
 }
 `;
 
-export const googlecloudlogging =`
-{
+export const googlecloudlogging =`{
     "auth_config":{
         "project_id":
         "private_key":
@@ -240,14 +221,12 @@ export const googlecloudlogging =`
 }
 `;
 
-export const httplogger =`
-{
+export const httplogger =`{
     "uri":
 }
 `;
 
-export const kafkalogger =`
-{
+export const kafkalogger =`{
     "broker_list" :
     "kafka_topic" :
     "key" :
@@ -256,8 +235,7 @@ export const kafkalogger =`
 }
 `;
 
-export const loggly =`
-{
+export const loggly =`{
     "nameserver_list":
     "topic":
     "batch_max_size":
@@ -265,28 +243,24 @@ export const loggly =`
 }
 `;
 
-export const rocketmqlogger =`
-{
+export const rocketmqlogger =`{
   "token_endpoint":
   "permissions":
   "audience":
 }
 `;
 
-export const skywalking =`
-{
+export const skywalking =`{
     "sample_ratio":
 }
 `;
 
-export const skywalkinglogger =`
-{
+export const skywalkinglogger =`{
     "endpoint_addr":
 }
 `;
 
-export const slslogger =`
-{
+export const slslogger =`{
     "host":
     "port":
     "project":
@@ -297,8 +271,7 @@ export const slslogger =`
 }
 `;
 
-export const splunkheclogging =`
-{
+export const splunkheclogging =`{
     "endpoint":{
         "uri":
         "token":
@@ -313,16 +286,14 @@ export const splunkheclogging =`
 }
 `;
 
-export const syslog =`
-{
+export const syslog =`{
     "host":
     "port":
     "flush_limit":
 }
 `;
 
-export const tcplogger =`
-{
+export const tcplogger =`{
     "host":
     "port":
     "tls":
@@ -331,8 +302,7 @@ export const tcplogger =`
 }
 `;
 
-export const zipkin =`
-{
+export const zipkin =`{
     "endpoint":
     "sample_ratio":
     "service_name":
@@ -344,14 +314,12 @@ export const zipkin =`
 * Model code of other type as fllows:
 */
 
-export const extpluginprereq =`
-{
+export const extpluginprereq =`{
     "conf":
 }
 `;
 
-export const realip =`
-{
+export const realip =`{
     "source":
     "trusted_addresses":
 }
