@@ -17,8 +17,6 @@ require (
 	github.com/gin-contrib/gzip v0.0.3
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-logr/logr v1.2.3
-	github.com/go-logr/zapr v1.2.3
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.2.0 // indirect
