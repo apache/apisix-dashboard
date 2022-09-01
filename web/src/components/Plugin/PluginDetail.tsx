@@ -49,6 +49,7 @@ import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
 import*as allModels from './Models';
+import*as modelCode from './modelCode';
 
 type Props = {
   name: string;
@@ -126,6 +127,7 @@ const PluginDetail: React.FC<Props> = ({
   const [plain] = useState<boolean>(false);
   const filteredName = name.replace("-","");
   const targetModel = allModels[`${filteredName}Model`];
+  const targetModelCode = modelCode?.[`${filteredName}`];
 
   if (PLUGIN_UI_LIST.includes(name)) {
     modeOptions.push({
@@ -343,9 +345,7 @@ const PluginDetail: React.FC<Props> = ({
       footer={
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           {' '}
-          <Button onClick={() =>{
-            window.history.go(0);
-          }} key={1}>
+          <Button onClick={onClose} key={1}>
             {formatMessage({ id: 'component.global.cancel' })}
           </Button>
           <Space>
@@ -519,7 +519,7 @@ const PluginDetail: React.FC<Props> = ({
             // NOTE: for debug & test
             // @ts-ignore
             window.monacoEditor = editor;
-            if(targetModel)editor.setModel(targetModel);
+            if(targetModel)editor.setValue(targetModelCode);
           }}
           options={{
             scrollbar: {
