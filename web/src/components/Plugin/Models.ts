@@ -43,12 +43,6 @@ export const forwardauthModel = editor.createModel(
   Uri.parse("file:forward-auth")
 );
 
-export const hmacauthModel = editor.createModel(
-  modelCode.hmacauth,
-  "json",
-  Uri.parse("file:hmac-auth")
-);
-
 export const opaModel = editor.createModel(
   modelCode.opa,
   "json",
