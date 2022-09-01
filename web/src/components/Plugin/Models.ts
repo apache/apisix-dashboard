@@ -218,4 +218,3 @@ export const realipModel = editor.createModel(
   "json",
   Uri.parse("file:real-ip")
 );
-
