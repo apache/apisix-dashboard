@@ -44,14 +44,6 @@ export const forwardauth =`{
 }
 `;
 
-export const hmacauth =`{
-    "access_key":
-    "secret_key":
-    "clock_skew":
-    "signed_headers":
-}
-`;
-
 export const opa = `{
     "type":
     "request": {
