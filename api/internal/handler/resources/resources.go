@@ -19,13 +19,15 @@ package resources
 
 import (
 	"fmt"
-	"github.com/apache/apisix-dashboard/api/internal/config"
-	"github.com/apache/apisix-dashboard/api/internal/handler"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
-	"net/http"
+
+	"github.com/apache/apisix-dashboard/api/internal/config"
+	"github.com/apache/apisix-dashboard/api/internal/handler"
 )
 
 type AdminAPIVersion = int
@@ -73,18 +75,10 @@ func (h *Handler) Proxy(c *gin.Context) {
 
 	// process Admin API errors
 	if data.Get("error_msg").Exists() {
-		c.AbortWithStatusJSON(400, gin.H{
-			"success": false,
-			"message": data.Get("error_msg").String(),
-			"data":    gin.H{},
-		})
+		c.AbortWithStatusJSON(400, h.buildResponse(false, data.Get("error_msg").String(), nil))
 	}
 	if data.Get("message").Exists() {
-		c.AbortWithStatusJSON(400, gin.H{
-			"success": false,
-			"message": data.Get("message").String(),
-			"data":    gin.H{},
-		})
+		c.AbortWithStatusJSON(400, h.buildResponse(false, data.Get("message").String(), nil))
 	}
 
 	// process response data
@@ -96,25 +90,35 @@ func (h *Handler) Proxy(c *gin.Context) {
 	c.JSON(200, h.processResponse(version, data))
 }
 
+// buildResponse builds the response body for the Dashboard Resource API output.
+func (h *Handler) buildResponse(success bool, message string, data map[string]interface{}) gin.H {
+	resp := gin.H{
+		"success": success,
+		"message": message,
+	}
+
+	if data != nil {
+		resp["data"] = data
+	}
+
+	return resp
+}
+
 // processResponse processes the response body of the Admin API, converting it to a format that meets the needs of Dashboard
 func (h *Handler) processResponse(ver AdminAPIVersion, data gjson.Result) gin.H {
-	var dataField gin.H
+	var respData gin.H
 	if ver == AdminAPIVersion3 {
-		dataField = h.processResponseV3(data)
+		respData = h.processResponseV3(data)
 	} else {
-
+		respData = h.processResponseV2(data)
 	}
-	return gin.H{
-		"success": true,
-		"message": "",
-		"data":    dataField,
-	}
+	return h.buildResponse(true, "", respData)
 }
 
 // processResponseV3 handle the response body style of Admin API v3, converting it to a format that meets the needs of Dashboard
 func (h *Handler) processResponseV3(data gjson.Result) gin.H {
 	if deleted := data.Get("deleted"); deleted.Exists() && deleted.Int() == 1 {
-		return gin.H{}
+		return nil
 	}
 
 	if list := data.Get("list"); list.Exists() {
@@ -126,18 +130,60 @@ func (h *Handler) processResponseV3(data gjson.Result) gin.H {
 			}
 		}
 
-		var processList []interface{}
+		var processedList []interface{}
 		list.ForEach(func(_, value gjson.Result) bool {
-			processList = append(processList, h.processResourceData(value))
+			processedList = append(processedList, h.processResourceData(value))
 			return true
 		})
 		return gin.H{
-			"list":  processList,
+			"list":  processedList,
 			"total": total,
 		}
 	}
 
 	return h.processResourceData(data)
+}
+
+func (h *Handler) processResponseV2(data gjson.Result) gin.H {
+	action := data.Get("action").String()
+	switch action {
+	case "delete":
+		if deleted := data.Get("deleted"); deleted.Exists() && deleted.Int() == 1 {
+			return nil
+		}
+	case "set":
+		fallthrough
+	case "get":
+		fallthrough
+	default:
+		// single query / create / update
+		if data.Get("node.value").Exists() {
+			return h.processResourceData(data.Get("node"))
+		}
+
+		// list query
+		if list := data.Get("node.nodes"); list.Exists() {
+			total := len(list.Array())
+
+			if total <= 0 {
+				return gin.H{
+					"list":  []interface{}{},
+					"total": 0,
+				}
+			}
+
+			var processedList []interface{}
+			list.ForEach(func(_, value gjson.Result) bool {
+				processedList = append(processedList, h.processResourceData(value))
+				return true
+			})
+			return gin.H{
+				"list":  processedList,
+				"total": total,
+			}
+		}
+	}
+	return gin.H{}
 }
 
 // processResourceData processes a single data unit, which is used to process a single query, create,
