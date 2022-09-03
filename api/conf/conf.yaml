@@ -82,11 +82,13 @@ authentication:
 
 oidc:
   expire_time: 3600
-  app_name: authing
   client_id:
   client_secret:
-  scope: oidc
-  redirect_uri: oidc/callback
+  auth_url:
+  token_url:
+  user_info_url:
+  redirect_uri:
+  scope: openid
 
 plugins:                          # plugin list (sorted in alphabetical order)
   - api-breaker

@@ -29,7 +29,13 @@ import (
 
 func Authentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if !conf.OidcLogin {
+		cookie, _ := conf.CookieStore.Get(c.Request, "oidc")
+		errResp := gin.H{
+			"code":    010013,
+			"message": "request unauthorized",
+		}
+
+		if cookie.IsNew {
 			if c.Request.URL.Path == "/apisix/admin/user/login" ||
 				c.Request.URL.Path == "/apisix/admin/tool/version" ||
 				!strings.HasPrefix(c.Request.URL.Path, "/apisix") {
@@ -42,11 +48,6 @@ func Authentication() gin.HandlerFunc {
 			token, err := jwt.ParseWithClaims(tokenStr, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 				return []byte(conf.AuthConf.Secret), nil
 			})
-
-			errResp := gin.H{
-				"code":    010013,
-				"message": "request unauthorized",
-			}
 
 			if err != nil || token == nil || !token.Valid {
 				log.Warnf("token validate failed: %s", err)
@@ -79,19 +80,7 @@ func Authentication() gin.HandlerFunc {
 				return
 			}
 		} else {
-			errResp := gin.H{
-				"code":    010013,
-				"message": "request unauthorized",
-			}
-			cookie, _ := conf.CookieStore.Get(c.Request, "oidc")
-			if cookie.IsNew {
-				// 如果cookie过期
-				conf.OidcLogin = false
-				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
-				return
-			} else if cookie.Values["oidc_id"] != conf.OidcId {
-				// 如果虽然有cookie，但是cookie无效
-				conf.OidcLogin = false
+			if cookie.Values["oidc_id"] != conf.OidcId {
 				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
 				return
 			}
