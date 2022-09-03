@@ -19,7 +19,6 @@ package conf
 import (
 	"encoding/json"
 	"fmt"
-	"golang.org/x/oauth2"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -29,6 +28,7 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
+	"golang.org/x/oauth2"
 
 	"github.com/apisix/manager-api/internal/utils"
 )
