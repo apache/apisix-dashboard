@@ -43,8 +43,8 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Install PNPM
-        run: npm i -g pnpm@6.32.11
+      - name: Setup PNPM environment
+        run: npm i -g pnpm
 
       - name: Change the NPM Settings for PNPM
         run: npm config set strict-peer-dependencies=false
