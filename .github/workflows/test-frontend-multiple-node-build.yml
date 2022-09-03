@@ -39,7 +39,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Setup PNPM environment
-        run: npm i -g pnpm
+        run: npm i -g pnpm@6.32.11
 
       - name: Change the NPM Settings for PNPM
         run: npm config set strict-peer-dependencies=false
