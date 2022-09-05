@@ -90,12 +90,6 @@ func (s *server) Stop() {
 }
 
 func (s *server) init() error {
-	//log.Info("Initialize Manager API store")
-	/*err := s.setupStore()
-	if err != nil {
-		return err
-	}*/
-
 	log.Info("Initialize Manager API server")
 	s.setupAPI()
 
