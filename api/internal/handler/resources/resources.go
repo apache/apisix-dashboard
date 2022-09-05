@@ -23,7 +23,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
-	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 
 	"github.com/apache/apisix-dashboard/api/internal/config"
@@ -66,19 +65,20 @@ func (h *Handler) Proxy(c *gin.Context) {
 
 	resp, err := req.Execute(c.Request.Method, c.Param("resource"))
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, errors.New("Admin API request failed"))
+		c.AbortWithStatusJSON(http.StatusInternalServerError, h.buildResponse(false, "Admin API request failed", nil))
+		return
 	}
-
-	fmt.Println(req.URL, resp.String())
 
 	data := gjson.ParseBytes(resp.Body())
 
 	// process Admin API errors
 	if data.Get("error_msg").Exists() {
 		c.AbortWithStatusJSON(400, h.buildResponse(false, data.Get("error_msg").String(), nil))
+		return
 	}
 	if data.Get("message").Exists() {
 		c.AbortWithStatusJSON(400, h.buildResponse(false, data.Get("message").String(), nil))
+		return
 	}
 
 	// process response data
