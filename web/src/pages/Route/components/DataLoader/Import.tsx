@@ -71,11 +71,11 @@ const Option: React.FC<{
 }> = ({ type }) => {
   switch (type) {
     case 'openapi_legacy':
-      return <></>;
+      return null;
     case 'openapi3':
       return <OpenAPI3 />;
     default:
-      return <></>;
+      return null;
   }
 };
 
