@@ -88,7 +88,7 @@ type ImportInput struct {
 
 const (
 	LoaderTypeOpenAPI3 LoaderType = "openapi3"
-	LoaderTypePostman LoaderType="postman"
+	LoaderTypePostman  LoaderType = "postman"
 )
 
 func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
