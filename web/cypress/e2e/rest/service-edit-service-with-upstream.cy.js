@@ -94,15 +94,14 @@ context('Edit Service with Upstream', () => {
       })
       .should('value', data.ip1);
 
-    cy.wait(500);
     cy.get(selector.upstreamSelector).click();
-    cy.contains('.ant-select-item-option-content', 'Custom')
-      .click({
-        force: true,
-      })
+    cy.contains('.ant-select-item-option-content', 'Custom').click();
     cy.get(selector.nodes_0_host).should('not.be.disabled').clear().type(data.ip2);
+    cy.wait(100);
     cy.get(selector.nodes_0_port).type(data.port);
+    cy.wait(100);
     cy.get(selector.nodes_0_weight).type(data.weight);
+    cy.wait(500);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
