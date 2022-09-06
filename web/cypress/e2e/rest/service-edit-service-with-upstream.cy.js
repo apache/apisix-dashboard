@@ -73,7 +73,6 @@ context('Edit Service with Upstream', () => {
     cy.get(selector.description).type(data.description);
     cy.get(selector.upstreamSelector).click();
     cy.contains(data.upstreamName).click();
-    cy.get(selector.input).should('not.be.disabled');
 
     cy.contains('Next').click();
     cy.contains('Next').click();
