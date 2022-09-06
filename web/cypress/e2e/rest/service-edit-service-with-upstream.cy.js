@@ -94,6 +94,7 @@ context('Edit Service with Upstream', () => {
       })
       .should('value', data.ip1);
 
+    cy.wait(500);
     cy.get(selector.upstreamSelector).click();
     cy.contains('.ant-select-item-option-content', 'Custom').click();
     cy.get(selector.nodes_0_host).should('not.be.disabled').clear().type(data.ip2);
