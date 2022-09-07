@@ -18,6 +18,7 @@ package filter
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -38,6 +39,16 @@ func genToken(username string, issueAt, expireAt int64) string {
 	signedToken, _ := token.SignedString([]byte(conf.AuthConf.Secret))
 
 	return signedToken
+}
+
+func performOidcRequest(r http.Handler, method, path string, value interface{}) *httptest.ResponseRecorder {
+	req := httptest.NewRequest(method, path, nil)
+	w := httptest.NewRecorder()
+	cookie, _ := conf.CookieStore.Get(req, "oidc")
+	cookie.IsNew = false
+	cookie.Values["oidc_id"] = value
+	r.ServeHTTP(w, req)
+	return w
 }
 
 func TestAuthenticationMiddleware_Handle(t *testing.T) {
@@ -71,4 +82,12 @@ func TestAuthenticationMiddleware_Handle(t *testing.T) {
 	validToken := genToken("admin", time.Now().Unix(), time.Now().Unix()+60*3600)
 	w = performRequest(r, "GET", "/apisix/admin/routes", map[string]string{"Authorization": validToken})
 	assert.Equal(t, http.StatusOK, w.Code)
+
+	// test oidc auth with wrong cookie
+	w = performOidcRequest(r, "GET", "/apisix/admin/routes", "xxx")
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
+
+	// test oidc auth success
+	w = performOidcRequest(r, "GET", "/apisix/admin/routes", conf.OidcId)
+	assert.Equal(t, http.StatusUnauthorized, w.Code)
 }

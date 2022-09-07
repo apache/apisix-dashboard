@@ -89,7 +89,7 @@ func Oidc() gin.HandlerFunc {
 
 			cookie.Options.MaxAge = -1
 			cookie.Save(c.Request, c.Writer)
-			c.Abort()
+			c.AbortWithStatus(200)
 			return
 		}
 
