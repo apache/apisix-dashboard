@@ -25,7 +25,7 @@ context('Edit Service with Upstream', () => {
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     notification: '.ant-notification-notice-message',
-    upstreamSelector: '[data-cy=upstream_selector]',
+    upstreamSelector: 'ant-select-selector',
     input: ':input',
     nameSearch: '[title=Name]',
   };
@@ -89,7 +89,7 @@ context('Edit Service with Upstream', () => {
 
     cy.get(selector.upstreamSelector).click();
     cy.wait(500);
-    cy.contains('.ant-select-item-option-content', 'Custom').click();
+    cy.contains('.ant-select-item-option-content', 'Custom').click({force: true});
     cy.wait(300);
     cy.get$(selector.nodes_0_host).should('not.be.disabled').clear().type(data.ip2);
     cy.wait(300);
