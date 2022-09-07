@@ -89,4 +89,4 @@ $ yarn install
 $ yarn start
 ```
 
-> If there is an error about gyp during yarn install, please ignore it and go ahead!
+> If there is an error about gyp during yarn install, please ignore it and go ahead
