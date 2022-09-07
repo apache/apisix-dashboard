@@ -519,6 +519,7 @@ const Page: React.FC = () => {
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
               >
+                
                 <Button type="primary" danger disabled={Boolean(!record.status)}>
                   {formatMessage({ id: 'page.route.offline' })}
                 </Button>
