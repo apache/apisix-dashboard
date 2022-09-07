@@ -87,7 +87,7 @@ context('Edit Service with Upstream', () => {
     cy.contains('Search').click();
     cy.contains(data.serviceName).siblings().contains('Configure').click();
     cy.wait(300);
-    cy.contains('127.0.0.1').should('exist');
+    cy.contains('127.0.0.1').should('be.visible');
 
     cy.get(selector.upstreamSelector).click();
     cy.wait(500);
