@@ -25,7 +25,7 @@ context('Edit Service with Upstream', () => {
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     notification: '.ant-notification-notice-message',
-    upstreamSelector: 'ant-select-selector',
+    upstreamSelector: '[data-cy=upstream_selector]',
     input: ':input',
     nameSearch: '[title=Name]',
   };
