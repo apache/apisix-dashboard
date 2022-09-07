@@ -91,4 +91,3 @@ $ yarn start
 
 > If there is an error about gyp during yarn install, please ignore it and go ahead!
 
-4. If writing an front end E2E test, please refer to the [Front End E2E Writing Guide](./front-end-e2e.md)
