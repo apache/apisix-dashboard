@@ -87,13 +87,6 @@ context('Edit Service with Upstream', () => {
     cy.contains('Search').click();
     cy.contains(data.serviceName).siblings().contains('Configure').click();
 
-    cy.wait(500);
-    cy.get(selector.nodes_0_host)
-      .click({
-        force: true,
-      })
-      .should('value', data.ip1);
-
     cy.get(selector.upstreamSelector).click();
     cy.wait(500);
     cy.contains('.ant-select-item-option-content', 'Custom').should('be.visible').click();
