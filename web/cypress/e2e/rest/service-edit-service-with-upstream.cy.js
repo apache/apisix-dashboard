@@ -88,10 +88,13 @@ context('Edit Service with Upstream', () => {
     cy.contains(data.serviceName).siblings().contains('Configure').click();
 
     cy.get(selector.upstreamSelector).click();
-    cy.contains('.ant-select-item-option-content', 'Custom').click();
+    cy.wait(300);
+    cy.contains('.ant-select-item-option-content', 'Custom').click({force: true});
+    cy.wait(300);
     cy.get(selector.nodes_0_host).should('not.be.disabled').clear().type(data.ip2);
     cy.get(selector.nodes_0_port).type(data.port);
     cy.get(selector.nodes_0_weight).type(data.weight);
+    cy.wait(500);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
