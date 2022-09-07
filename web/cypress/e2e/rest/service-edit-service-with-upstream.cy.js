@@ -86,23 +86,18 @@ context('Edit Service with Upstream', () => {
     cy.get(selector.nameSearch).type(data.serviceName);
     cy.contains('Search').click();
     cy.contains(data.serviceName).siblings().contains('Configure').click();
-
-    cy.wait(500);
-    cy.get(selector.nodes_0_host)
-      .click({
-        force: true,
-      })
-      .should('value', data.ip1);
+    cy.wait(300);
+    cy.contains('127.0.0.1').should('exist');
 
     cy.get(selector.upstreamSelector).click();
-    cy.wait(100);
-    cy.contains('.ant-select-item-option-content', 'Custom').click();
-    cy.wait(100);
+    cy.wait(500);
+    cy.contains('.ant-select-item-option-content', 'Custom').should('be.visible').click();
+    cy.wait(300);
     cy.get(selector.nodes_0_host).should('not.be.disabled').clear().type(data.ip2);
-    cy.wait(100);
-    cy.get(selector.nodes_0_port).type(data.port);
-    cy.wait(100);
-    cy.get(selector.nodes_0_weight).type(data.weight);
+    cy.wait(300);
+    cy.get$(selector.nodes_0_port).clear().type(data.port);
+    cy.wait(300);
+    cy.get$(selector.nodes_0_weight).clear().type(data.weight);
     cy.wait(500);
     cy.contains('Next').click();
     cy.contains('Next').click();
