@@ -58,6 +58,7 @@ var (
 	AccessLogPath    = "logs/access.log"
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
+	OidcConf         Oidc
 	SSLDefaultStatus = 1 //enable ssl by default
 	ImportSizeLimit  = 10 * 1024 * 1024
 	AllowList        []string
@@ -126,10 +127,20 @@ type Authentication struct {
 	Users      []User
 }
 
+type Oidc struct {
+	ExpireTime   int    `mapstructure:"expire_time" yaml:"expire_time"`
+	AppName      string `mapstructure:"app_name"`
+	ClientId     string `mapstructure:"client_id"`
+	ClientSecret string `mapstructure:"client_secret"`
+	Scope        string
+	RedirectUri  string `mapstructure:"redirect_uri"`
+}
+
 type Config struct {
 	Conf           Conf
 	Authentication Authentication
 	Plugins        []string
+	Oidc           Oidc
 }
 
 type Security struct {
@@ -256,6 +267,9 @@ func setupConfig() {
 	// set authentication
 	initAuthentication(config.Authentication)
 
+	//set Oidc
+	initOidc(config.Oidc)
+
 	// set plugin
 	initPlugins(config.Plugins)
 
@@ -281,6 +295,10 @@ func initAuthentication(conf Authentication) {
 	for _, item := range userList {
 		UserList[item.Username] = item
 	}
+}
+
+func initOidc(conf Oidc) {
+	OidcConf = conf
 }
 
 func initPlugins(plugins []string) {
