@@ -18,8 +18,13 @@ package internal
 
 import (
 	"fmt"
-	"github.com/apache/apisix-dashboard/api/internal/handler/resources"
 	"os"
+
+	"github.com/apache/apisix-dashboard/api/internal/handler/authentication"
+	"github.com/apache/apisix-dashboard/api/internal/handler/healthz"
+	"github.com/apache/apisix-dashboard/api/internal/handler/resources"
+	"github.com/apache/apisix-dashboard/api/internal/handler/tool"
+
 	// "github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
@@ -40,36 +45,27 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
 	// security
-	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(cfg.Security), filter.InvalidRequest())
+	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(cfg.Security), filter.InvalidRequest(), filter.Authentication(cfg.Authentication))
 
 	// misc
 	staticPath := "./html/"
-	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(cfg.Security), filter.RequestId(), filter.SchemaCheck(), filter.RecoverHandler())
+	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(cfg.Security), filter.RequestId(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(staticPath, false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", staticPath))
 	})
 
 	factories := []handler.RegisterFactory{
-		//route.NewHandler,
-		//ssl.NewHandler,
-		//consumer.NewHandler,
-		//upstream.NewHandler,
-		//service.NewHandler,
-		//schema.NewHandler,
-		//schema.NewSchemaHandler,
-		//healthz.NewHandler,
-		//authentication.NewHandler,
-		//global_rule.NewHandler,
-		//server_info.NewHandler,
-		//label.NewHandler,
+		authentication.NewHandler,
 		//data_loader.NewHandler,
 		//data_loader.NewImportHandler,
-		//.NewHandler,
-		//plugin_config.NewHandler,
-		//proto.NewHandler,
-		//stream_route.NewHandler,
+		healthz.NewHandler,
+		//label.NewHandler,
+		//schema.NewHandler,
+		//schema.NewSchemaHandler,
+		//server_info.NewHandler,
 		//system_config.NewHandler,
+		tool.NewHandler,
 		resources.NewHandler,
 	}
 
