@@ -20,6 +20,7 @@ package resources
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
@@ -36,6 +37,22 @@ const (
 	AdminAPIVersion3 = 3
 )
 
+var (
+	resources = []string{
+		"routes",
+		"upstreams",
+		"services",
+		"consumers",
+		"global_rules",
+		"plugin_configs",
+		"plugin_metadata",
+		"plugins",
+		"protos",
+		"ssls",
+		"stream_routes",
+	}
+)
+
 type Handler struct {
 	client *resty.Client
 }
@@ -48,7 +65,16 @@ func NewHandler() (handler.RouteRegister, error) {
 
 func (h *Handler) ApplyRoute(r *gin.Engine, cfg config.Config) {
 	h.setupClient(cfg)
-	r.Any("/apisix/admin/*resource", h.Proxy)
+	//r.Any("/apisix/admin/*resource", handler.Warp(h.Proxy))
+	for _, resource := range resources {
+		r.GET("/apisix/admin/"+resource, handler.Warp(h.Proxy))
+		r.GET("/apisix/admin/"+resource+"/*param", handler.Warp(h.Proxy))
+		r.POST("/apisix/admin/"+resource, handler.Warp(h.Proxy))
+		r.PUT("/apisix/admin/"+resource, handler.Warp(h.Proxy))
+		r.PUT("/apisix/admin/"+resource+"/*param", handler.Warp(h.Proxy))
+		r.PATCH("/apisix/admin/"+resource+"/*param", handler.Warp(h.Proxy))
+		r.DELETE("/apisix/admin/"+resource+"/*param", handler.Warp(h.Proxy))
+	}
 }
 
 func (h *Handler) setupClient(cfg config.Config) {
@@ -57,28 +83,35 @@ func (h *Handler) setupClient(cfg config.Config) {
 		SetHeader("X-API-KEY", cfg.DataSource[0].APISIX.Key)
 }
 
-func (h *Handler) Proxy(c *gin.Context) {
+func (h *Handler) Proxy(c *gin.Context) handler.Response {
 	req := h.client.NewRequest()
 	req.SetHeaderMultiValues(c.Request.Header)
 	req.SetQueryParamsFromValues(c.Request.URL.Query())
 	req.SetBody(c.Request.Body)
 
-	resp, err := req.Execute(c.Request.Method, c.Param("resource"))
+	resourceURI := strings.Replace(c.Request.URL.Path, "/apisix/admin", "", 1)
+	resp, err := req.Execute(c.Request.Method, resourceURI)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, h.buildResponse(false, "Admin API request failed", nil))
-		return
+		return handler.Response{
+			Status:  http.StatusInternalServerError,
+			Message: "Admin API request failed",
+		}
 	}
 
 	data := gjson.ParseBytes(resp.Body())
 
 	// process Admin API errors
 	if data.Get("error_msg").Exists() {
-		c.AbortWithStatusJSON(400, h.buildResponse(false, data.Get("error_msg").String(), nil))
-		return
+		return handler.Response{
+			Status:  http.StatusBadRequest,
+			Message: data.Get("error_msg").String(),
+		}
 	}
 	if data.Get("message").Exists() {
-		c.AbortWithStatusJSON(400, h.buildResponse(false, data.Get("message").String(), nil))
-		return
+		return handler.Response{
+			Status:  http.StatusBadRequest,
+			Message: data.Get("message").String(),
+		}
 	}
 
 	// process response data
@@ -87,12 +120,15 @@ func (h *Handler) Proxy(c *gin.Context) {
 		version = AdminAPIVersion3
 	}
 
-	c.JSON(200, h.processResponse(version, data))
+	return handler.Response{
+		Success: true,
+		Data:    h.processResponse(version, data),
+	}
 }
 
 // buildResponse builds the response body for the Dashboard Resource API output.
-func (h *Handler) buildResponse(success bool, message string, data map[string]interface{}) gin.H {
-	resp := gin.H{
+func (h *Handler) buildResponse(success bool, message string, data map[string]interface{}) map[string]interface{} {
+	resp := map[string]interface{}{
 		"success": success,
 		"message": message,
 	}
@@ -105,26 +141,25 @@ func (h *Handler) buildResponse(success bool, message string, data map[string]in
 }
 
 // processResponse processes the response body of the Admin API, converting it to a format that meets the needs of Dashboard
-func (h *Handler) processResponse(ver AdminAPIVersion, data gjson.Result) gin.H {
-	var respData gin.H
+func (h *Handler) processResponse(ver AdminAPIVersion, data gjson.Result) map[string]interface{} {
+	var respData map[string]interface{}
 	if ver == AdminAPIVersion3 {
 		respData = h.processResponseV3(data)
 	} else {
 		respData = h.processResponseV2(data)
 	}
-	return h.buildResponse(true, "", respData)
+	return respData
 }
 
 // processResponseV3 handle the response body style of Admin API v3, converting it to a format that meets the needs of Dashboard
-func (h *Handler) processResponseV3(data gjson.Result) gin.H {
+func (h *Handler) processResponseV3(data gjson.Result) map[string]interface{} {
 	if deleted := data.Get("deleted"); deleted.Exists() && deleted.Int() == 1 {
 		return nil
 	}
 
 	if list := data.Get("list"); list.Exists() {
-		total := data.Get("total").Uint()
-		if total == 0 {
-			return gin.H{
+		if len(data.Get("list").Array()) == 0 {
+			return map[string]interface{}{
 				"list":  []interface{}{},
 				"total": 0,
 			}
@@ -135,16 +170,16 @@ func (h *Handler) processResponseV3(data gjson.Result) gin.H {
 			processedList = append(processedList, h.processResourceData(value))
 			return true
 		})
-		return gin.H{
+		return map[string]interface{}{
 			"list":  processedList,
-			"total": total,
+			"total": data.Get("total").Uint(),
 		}
 	}
 
 	return h.processResourceData(data)
 }
 
-func (h *Handler) processResponseV2(data gjson.Result) gin.H {
+func (h *Handler) processResponseV2(data gjson.Result) map[string]interface{} {
 	action := data.Get("action").String()
 	switch action {
 	case "delete":
@@ -166,7 +201,7 @@ func (h *Handler) processResponseV2(data gjson.Result) gin.H {
 			total := len(list.Array())
 
 			if total <= 0 {
-				return gin.H{
+				return map[string]interface{}{
 					"list":  []interface{}{},
 					"total": 0,
 				}
@@ -177,13 +212,13 @@ func (h *Handler) processResponseV2(data gjson.Result) gin.H {
 				processedList = append(processedList, h.processResourceData(value))
 				return true
 			})
-			return gin.H{
+			return map[string]interface{}{
 				"list":  processedList,
 				"total": total,
 			}
 		}
 	}
-	return gin.H{}
+	return map[string]interface{}{}
 }
 
 // processResourceData processes a single data unit, which is used to process a single query, create,
