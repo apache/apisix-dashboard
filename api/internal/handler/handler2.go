@@ -1,22 +1,37 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+	"reflect"
 
-type Func = func(c *gin.Context) Response
+	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
+)
+
+type Func = func(c *gin.Context, input interface{}) Response
 type Response struct {
-	Status  int
-	Success bool
-	Message string
-	Data    map[string]interface{}
+	StatusCode int
+	Success    bool
+	Message    string
+	Data       map[string]interface{}
 }
 
-func Warp(f Func) gin.HandlerFunc {
+func Wrap(f Func, inputType reflect.Type) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		resp := f(c)
-		if resp.Status == 0 {
-			resp.Status = 200
+		var input interface{}
+		if inputType != nil {
+			input = reflect.New(inputType).Interface()
+			if err := c.ShouldBind(&input); err != nil {
+				c.AbortWithStatusJSON(http.StatusBadRequest, buildResponse(false, errors.Wrap(err, "input parse error").Error(), nil))
+				return
+			}
 		}
-		c.JSON(resp.Status, buildResponse(resp.Success, resp.Message, resp.Data))
+
+		resp := f(c, input)
+		if resp.StatusCode == 0 {
+			resp.StatusCode = 200
+		}
+		c.JSON(resp.StatusCode, buildResponse(resp.Success, resp.Message, resp.Data))
 	}
 }
 
