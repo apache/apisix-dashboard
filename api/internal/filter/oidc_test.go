@@ -18,11 +18,13 @@ package filter
 
 import (
 	"fmt"
-	"github.com/apisix/manager-api/internal/conf"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/apisix/manager-api/internal/conf"
 )
 
 func TestOidc(t *testing.T) {
