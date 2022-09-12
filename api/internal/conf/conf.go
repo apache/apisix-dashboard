@@ -141,7 +141,7 @@ type Oidc struct {
 	AuthURL      string `mapstructure:"auth_url"`
 	TokenURL     string `mapstructure:"token_url"`
 	UserInfoURL  string `mapstructure:"user_info_url"`
-	RedirectURI  string `mapstructure:"redirect_uri"`
+	RedirectURL  string `mapstructure:"redirect_url"`
 	Scope        string
 }
 
@@ -312,7 +312,7 @@ func initOidc(conf Oidc) {
 	OidcConfig.ClientSecret = conf.ClientSecret
 	OidcConfig.Endpoint = oauth2.Endpoint{AuthURL: conf.AuthURL, TokenURL: conf.TokenURL, AuthStyle: 1}
 	OidcConfig.Scopes = append(OidcConfig.Scopes, conf.Scope)
-	OidcConfig.RedirectURL = fmt.Sprintf("http://%s:%d/%s", ServerHost, ServerPort, conf.RedirectURI)
+	OidcConfig.RedirectURL = conf.RedirectURL
 	OidcUserInfoURL = conf.UserInfoURL
 }
 

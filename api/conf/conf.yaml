@@ -87,7 +87,7 @@ oidc:
   auth_url:
   token_url:
   user_info_url:
-  redirect_uri:
+  redirect_url:
   scope: openid
 
 plugins:                          # plugin list (sorted in alphabetical order)
