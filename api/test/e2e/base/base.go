@@ -37,13 +37,15 @@ import (
 var (
 	token string
 
-	UpstreamIp             = "172.16.238.20"
-	UpstreamGrpcIp         = "172.16.238.21"
-	APISIXHost             = "http://127.0.0.1:9080"
-	APISIXInternalUrl      = "http://172.16.238.30:9080"
-	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
-	ManagerAPIHost         = "http://127.0.0.1:9000"
-	PrometheusExporter     = "http://127.0.0.1:9091"
+	UpstreamIp                    = "172.16.238.20"
+	UpstreamGrpcIp                = "172.16.238.21"
+	APISIXHost                    = "http://127.0.0.1:9080"
+	APISIXInternalUrl             = "http://172.16.238.30:9080"
+	APISIXSingleWorkerHost        = "http://127.0.0.1:9081"
+	ManagerAPIHost                = "http://127.0.0.1:9000"
+	PrometheusExporter            = "http://127.0.0.1:9091"
+	OidcCode               string = ""
+	OidcState              string = "123456"
 )
 
 func GetToken() string {
