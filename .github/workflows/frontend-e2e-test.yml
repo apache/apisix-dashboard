@@ -90,6 +90,15 @@ jobs:
         run: |
           yarn start-server-and-test 'cross-env SERVE_ENV=test UMI_UI=none MOCK=none SERVE_URL_TEST=http://localhost:9000 yarn start' http-get://localhost:8000 'cross-env CYPRESS_SERVE_ENV=test SERVE_URL_TEST=http://localhost:9000 yarn cypress run --spec "**/e2e/${{matrix.folderPrefix}}/**.cy.js"'
 
+      - name: 'Upload screenshots and videos to Slack'
+        uses: trymbill/cypress-slack-video-upload-action@v1.3.0
+        if: failure()
+        with:
+          token: ${{ secrets.SLACK_TOKEN }}
+          channels: 'apisix-cypress'
+          workdir: /home/runner/work/apisix-dashboard/apisix-dashboard/web/cypress
+          message-text: 'Cypress tests failed! They have been placed in this thread, good luck.'
+
       - name: Report e2e coverage
         run: npx nyc report --reporter=text-summary
 
