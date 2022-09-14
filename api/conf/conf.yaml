@@ -80,6 +80,14 @@ authentication:
     - username: user
       password: user
 
+oidc:
+  expire_time: 3600
+  app_name: authing
+  client_id:
+  client_secret:
+  scope: oidc
+  redirect_uri: oidc/callback
+
 plugins:                          # plugin list (sorted in alphabetical order)
   - api-breaker
   - authz-keycloak

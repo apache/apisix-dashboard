@@ -19,7 +19,6 @@ import { Button, Card, Drawer, Form, Input, notification, Radio, Select, Spin, T
 import { useIntl } from 'umi';
 import queryString from 'query-string';
 import Base64 from 'base-64';
-import urlRegexSafe from 'url-regex-safe';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { CopyOutlined } from '@ant-design/icons';
 import type * as monacoEditor from 'monaco-editor';
@@ -215,13 +214,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   };
 
   const handleDebug = (url: string) => {
-    /* eslint-disable no-useless-escape */
-    if (!urlRegexSafe({ exact: true, strict: false }).test(url)) {
-      notification.warning({
-        message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
-      });
-      return;
-    }
     const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
     const bodyFormRelateData = transformBodyParamsFormData();
     const { bodyFormData, header: bodyFormHeader } = bodyFormRelateData;

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
-import { omit, orderBy } from 'lodash';
+import { Anchor, Layout, Card, Button, Form, Select, Alert, Tabs } from 'antd';
+import { orderBy, omit } from 'lodash';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
@@ -33,7 +33,11 @@ type Props = {
   schemaType?: PluginComponent.Schema;
   referPage?: PluginComponent.ReferPage;
   showSelector?: boolean;
-  onChange?: (plugins: PluginComponent.Data, plugin_config_id?: string) => void;
+  onChange?: (
+    plugins: PluginComponent.Data,
+    plugin_config_id?: string,
+    handleType?: 'edit' | 'delete',
+  ) => void;
 };
 
 const PanelSectionStyle = {
@@ -62,6 +66,8 @@ const PluginPage: React.FC<Props> = ({
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
+  const [enablePluginsList, setEnablePluginsList] = useState<PluginComponent.Meta[]>([]);
+  const [showEnablePlugin, setShowEnablePlugin] = useState<boolean>(false);
   const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>(
     [],
   );
@@ -70,7 +76,6 @@ const PluginPage: React.FC<Props> = ({
   const [plugins, setPlugins] = useState({});
 
   useEffect(() => {
-    setPlugins(initialData);
     fetchList().then((data) => {
       const filteredData = data.filter(
         (item) =>
@@ -92,13 +97,43 @@ const PluginPage: React.FC<Props> = ({
       form.setFieldsValue({ plugin_config_id });
     });
   }, []);
-  const openPluginList = pluginList.filter(
-    (item) => initialData[item.name] && !initialData[item.name].disable,
-  );
-  const openPluginType = openPluginList.map((item) => item.type);
+
+  useEffect(() => {
+    const openPluginList = pluginList.filter(
+      (item) => initialData[item.name] && !initialData[item.name].disable,
+    );
+    setPlugins(initialData);
+    setEnablePluginsList(openPluginList);
+  }, [initialData, pluginList]);
+
+  const openPluginType = enablePluginsList.map((item) => item.type);
   const newOpenPluginType = openPluginType.filter((elem, index, self) => {
     return index === self.indexOf(elem);
   });
+
+  const tabsList = [
+    {
+      title: formatMessage({ id: 'component.plugin.all' }),
+      key: 'allPlugins',
+    },
+    {
+      title: formatMessage({ id: 'component.plugin.enable' }),
+      key: 'enablePlugins',
+    },
+  ];
+
+  const SwitchTab = () => (
+    <Tabs
+      defaultActiveKey={showEnablePlugin ? 'enablePlugins' : 'allPlugins'}
+      onChange={(val: string) => {
+        setShowEnablePlugin(val === 'enablePlugins');
+      }}
+    >
+      {tabsList.map((tab) => (
+        <Tabs.TabPane tab={tab.title} key={tab.key} />
+      ))}
+    </Tabs>
+  );
 
   const PluginList = () => (
     <>
@@ -195,7 +230,7 @@ const PluginPage: React.FC<Props> = ({
               id={`plugin-category-${typeItem}`}
             >
               {orderBy(
-                pluginList.filter(
+                (showEnablePlugin ? enablePluginsList : pluginList).filter(
                   readonly
                     ? (item) => item.type === typeItem && !item.hidden && initialData[item.name]
                     : (item) => item.type === typeItem && !item.hidden,
@@ -281,10 +316,12 @@ const PluginPage: React.FC<Props> = ({
           ...initialData,
           [name]: { ...monacoData, disable: !formData.disable },
         };
+        let handleType = 'edit';
         if (shouldDelete === true) {
-          newPlugins = omit(newPlugins, name);
+          newPlugins = omit(plugins, name);
+          handleType = 'delete';
         }
-        onChange(newPlugins, form.getFieldValue('plugin_config_id'));
+        onChange(newPlugins, form.getFieldValue('plugin_config_id'), handleType);
         setPlugins(newPlugins);
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
@@ -297,6 +334,7 @@ const PluginPage: React.FC<Props> = ({
           background-color: transparent;
         }
       `}</style>
+      {!readonly && <SwitchTab />}
       <Layout>
         <PluginList />
         <Plugin />
