@@ -46,7 +46,6 @@ var (
 		"global_rules",
 		"plugin_configs",
 		"plugin_metadata",
-		"plugins",
 		"protos",
 		"ssls",
 		"stream_routes",
@@ -65,16 +64,21 @@ func NewHandler() (handler.RouteRegister, error) {
 
 func (h *Handler) ApplyRoute(r *gin.Engine, cfg config.Config) {
 	h.setupClient(cfg)
-	//r.Any("/apisix/admin/*resource", handler.Warp(h.Proxy))
+
+	// add resource routes
 	for _, resource := range resources {
-		r.GET("/apisix/admin/"+resource, handler.Warp(h.Proxy))
-		r.GET("/apisix/admin/"+resource+"/*param", handler.Warp(h.Proxy))
-		r.POST("/apisix/admin/"+resource, handler.Warp(h.Proxy))
-		r.PUT("/apisix/admin/"+resource, handler.Warp(h.Proxy))
-		r.PUT("/apisix/admin/"+resource+"/*param", handler.Warp(h.Proxy))
-		r.PATCH("/apisix/admin/"+resource+"/*param", handler.Warp(h.Proxy))
-		r.DELETE("/apisix/admin/"+resource+"/*param", handler.Warp(h.Proxy))
+		r.GET("/apisix/admin/"+resource, handler.Wrap(h.ProxyResource, nil))
+		r.GET("/apisix/admin/"+resource+"/*param", handler.Wrap(h.ProxyResource, nil))
+		r.POST("/apisix/admin/"+resource, handler.Wrap(h.ProxyResource, nil))
+		r.PUT("/apisix/admin/"+resource, handler.Wrap(h.ProxyResource, nil))
+		r.PUT("/apisix/admin/"+resource+"/*param", handler.Wrap(h.ProxyResource, nil))
+		r.PATCH("/apisix/admin/"+resource+"/*param", handler.Wrap(h.ProxyResource, nil))
+		r.DELETE("/apisix/admin/"+resource+"/*param", handler.Wrap(h.ProxyResource, nil))
 	}
+
+	// add misc routes
+	r.GET("/apisix/admin/plugins/list", handler.Wrap(h.ProxyMisc, nil))
+	r.GET("/apisix/admin/schema/*param", handler.Wrap(h.ProxyMisc, nil))
 }
 
 func (h *Handler) setupClient(cfg config.Config) {
@@ -83,38 +87,19 @@ func (h *Handler) setupClient(cfg config.Config) {
 		SetHeader("X-API-KEY", cfg.DataSource[0].APISIX.Key)
 }
 
-func (h *Handler) Proxy(c *gin.Context) handler.Response {
-	req := h.client.NewRequest()
-	req.SetHeaderMultiValues(c.Request.Header)
-	req.SetQueryParamsFromValues(c.Request.URL.Query())
-	req.SetBody(c.Request.Body)
-
-	resourceURI := strings.Replace(c.Request.URL.Path, "/apisix/admin", "", 1)
-	resp, err := req.Execute(c.Request.Method, resourceURI)
+// ProxyResource to post-process the response to the Admin API, which is only used for APISIX base resources
+func (h *Handler) ProxyResource(c *gin.Context, _ interface{}) handler.Response {
+	resp, err := h.proxy(c)
 	if err != nil {
-		return handler.Response{
-			Status:  http.StatusInternalServerError,
-			Message: "Admin API request failed",
-		}
+		return *err
 	}
 
 	data := gjson.ParseBytes(resp.Body())
-
-	// process Admin API errors
-	if data.Get("error_msg").Exists() {
-		return handler.Response{
-			Status:  http.StatusBadRequest,
-			Message: data.Get("error_msg").String(),
-		}
-	}
-	if data.Get("message").Exists() {
-		return handler.Response{
-			Status:  http.StatusBadRequest,
-			Message: data.Get("message").String(),
-		}
+	if err := h.extractError(data); err != nil {
+		return *err
 	}
 
-	// process response data
+	// process resource response data
 	version := AdminAPIVersion2
 	if resp.Header().Get("X-API-VERSION") == "v3" {
 		version = AdminAPIVersion3
@@ -126,18 +111,58 @@ func (h *Handler) Proxy(c *gin.Context) handler.Response {
 	}
 }
 
-// buildResponse builds the response body for the Dashboard Resource API output.
-func (h *Handler) buildResponse(success bool, message string, data map[string]interface{}) map[string]interface{} {
-	resp := map[string]interface{}{
-		"success": success,
-		"message": message,
+// ProxyMisc sends the Admin API response as-is, adding only the wrapping required by the Dashboard
+func (h *Handler) ProxyMisc(c *gin.Context, _ interface{}) handler.Response {
+	resp, err := h.proxy(c)
+	if err != nil {
+		return *err
 	}
 
-	if data != nil {
-		resp["data"] = data
+	data := gjson.ParseBytes(resp.Body())
+	if err := h.extractError(data); err != nil {
+		return *err
 	}
 
-	return resp
+	return handler.Response{
+		Success: true,
+		Data:    data.Value(),
+	}
+}
+
+// proxy forwards user requests for these interfaces to the Admin API as-is.
+func (h *Handler) proxy(c *gin.Context) (*resty.Response, *handler.Response) {
+	req := h.client.NewRequest()
+	req.SetHeaderMultiValues(c.Request.Header)
+	req.SetQueryParamsFromValues(c.Request.URL.Query())
+	req.SetBody(c.Request.Body)
+
+	resourceURI := strings.Replace(c.Request.URL.Path, "/apisix/admin", "", 1)
+	resp, err := req.Execute(c.Request.Method, resourceURI)
+	if err != nil {
+		return nil, &handler.Response{
+			StatusCode: http.StatusInternalServerError,
+			Message:    "Admin API request failed",
+		}
+	}
+
+	return resp, nil
+}
+
+func (h *Handler) extractError(data gjson.Result) *handler.Response {
+	if data.Get("error_msg").Exists() {
+		return &handler.Response{
+			StatusCode: http.StatusBadRequest,
+			Message:    data.Get("error_msg").String(),
+		}
+	}
+	if data.Get("message").Exists() {
+		return &handler.Response{
+			StatusCode: http.StatusBadRequest,
+			Message:    data.Get("message").String(),
+		}
+	}
+
+	return nil
 }
 
 // processResponse processes the response body of the Admin API, converting it to a format that meets the needs of Dashboard
@@ -179,6 +204,7 @@ func (h *Handler) processResponseV3(data gjson.Result) map[string]interface{} {
 	return h.processResourceData(data)
 }
 
+// processResponseV2 handle the response body style of Admin API v2, converting it to a format that meets the needs of Dashboard
 func (h *Handler) processResponseV2(data gjson.Result) map[string]interface{} {
 	action := data.Get("action").String()
 	switch action {
