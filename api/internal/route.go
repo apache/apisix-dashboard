@@ -21,9 +21,8 @@ import (
 	"os"
 
 	"github.com/apache/apisix-dashboard/api/internal/handler/authentication"
-	"github.com/apache/apisix-dashboard/api/internal/handler/healthz"
+	"github.com/apache/apisix-dashboard/api/internal/handler/misc"
 	"github.com/apache/apisix-dashboard/api/internal/handler/resources"
-	"github.com/apache/apisix-dashboard/api/internal/handler/tool"
 
 	// "github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/gzip"
@@ -59,13 +58,8 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 		authentication.NewHandler,
 		//data_loader.NewHandler,
 		//data_loader.NewImportHandler,
-		healthz.NewHandler,
-		//label.NewHandler,
-		//schema.NewHandler,
-		//schema.NewSchemaHandler,
 		//server_info.NewHandler,
-		//system_config.NewHandler,
-		tool.NewHandler,
+		misc.NewHandler,
 		resources.NewHandler,
 	}
 
@@ -76,8 +70,6 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 		}
 		h.ApplyRoute(r, cfg)
 	}
-
-	// pprof.Register(r)
 
 	return r
 }

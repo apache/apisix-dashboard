@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package healthz
+
+package misc
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shiningrush/droplet"
-	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
+	"github.com/apache/apisix-dashboard/api/internal/utils"
 )
 
 type Handler struct {
@@ -33,9 +33,21 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine, _ config.Config) {
-	r.GET("/ping", wgin.Wraps(h.healthZHandler))
+	r.GET("/api/version", h.Version)
+	r.GET("/ping", h.Ping)
 }
 
-func (h *Handler) healthZHandler(_ droplet.Context) (interface{}, error) {
-	return "pong", nil
+// Version will return current artifact's version and commit hash
+func (h *Handler) Version(c *gin.Context) {
+	hash, version := utils.GetHashAndVersion()
+
+	c.JSON(200, map[string]interface{}{
+		"commit_hash": hash,
+		"version":     version,
+	})
+}
+
+// Ping will return pong in text
+func (h *Handler) Ping(c *gin.Context) {
+	c.String(200, "pong")
 }

@@ -33,7 +33,7 @@ var _ = ginkgo.Describe("Version", func() {
 		table.Entry("get version", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
-			Path:         "/apisix/admin/tool/version",
+			Path:         "/api/version",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"commit_hash", "\"version\""},
 		}),
