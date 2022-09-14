@@ -185,26 +185,21 @@ func setupConfig() {
 		viper.SetConfigFile(ConfigFile)
 	}
 
-	config := Config{}
-	var err error
-	if exist, _ := utils.PathExist(strings.Join([]string{WorkDir, "conf", ConfigFile}, string(os.PathSeparator))); exist {
-		// load config
-		if err = viper.ReadInConfig(); err != nil {
-			panic(fmt.Sprintf("fail to read configuration, err: %s", err.Error()))
-		}
+	// setup env config search
+	viper.SetEnvPrefix("AD")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.AutomaticEnv()
 
-		// unmarshal config
-		err = viper.Unmarshal(&config)
-		if err != nil {
-			panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
-		}
+	// load config
+	if err := viper.ReadInConfig(); err != nil {
+		panic(fmt.Sprintf("fail to read configuration, err: %s", err.Error()))
 	}
-	// support for env conf in json format, this will override conf.yaml values. see: https://github.com/apache/apisix-dashboard/issues/2514
-	if jsonConfString := os.Getenv("APISIX_CONF_IN_JSON"); jsonConfString != "" {
-		err = json.Unmarshal([]byte(jsonConfString), &config)
-		if err != nil {
-			panic(fmt.Sprintf("fail to unmarshal APISIX_CONF_IN_JSON varible value, err: %s", err.Error()))
-		}
+
+	// unmarshal config
+	config := Config{}
+	err := viper.Unmarshal(&config)
+	if err != nil {
+		panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
 	}
 
 	// listen
