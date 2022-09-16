@@ -48,8 +48,8 @@ import type { languages } from 'monaco-editor';
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
-import*as allModels from './Models';
-import*as modelCode from './modelCode';
+import * as allModels from './Models';
+import * as modelCode from './modelCode';
 
 type Props = {
   name: string;
