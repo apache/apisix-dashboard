@@ -20,7 +20,7 @@
  */
 
 import { Uri, editor } from "monaco-editor";
-import*as modelCode from './modelCode'
+import * as modelCode from './modelCode'
 
 /**
 * Model type is authentication as fllows:
