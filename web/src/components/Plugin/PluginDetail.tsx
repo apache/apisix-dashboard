@@ -442,14 +442,13 @@ const PluginDetail: React.FC<Props> = ({
           <Descriptions.Item label={formatMessage({ id: 'component.global.example' })}>
             <Field
               text={`
-//Just fill in 3-5 lines in the editor below
+//Just fill in 3-4 lines in the editor below
 1     "plugins": {
 2         "xx-xxx": {
-3             "key": "user-key",
-4             "secret": {},
-5             "algorithm": "RS256",
-6        }
-7     }
+3             "key": "value",
+4             "property": {},
+5        }
+6     }
               `}
               valueType="jsonCode"
               mode={state}
