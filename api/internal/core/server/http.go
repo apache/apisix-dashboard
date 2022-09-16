@@ -22,23 +22,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/shiningrush/droplet"
-
 	"github.com/apache/apisix-dashboard/api/internal"
-	"github.com/apache/apisix-dashboard/api/internal/handler"
 )
 
 func (s *server) setupAPI() {
-	// orchestrator
-	droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
-		var newMws []droplet.Middleware
-		// default middleware order: resp_reshape, auto_input, traffic_log
-		// We should put err_transform at second to catch all error
-		newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{})
-		newMws = append(newMws, mws[1:]...)
-		return newMws
-	}
-
 	// routes
 	r := internal.SetUpRouter(s.options.Config)
 
