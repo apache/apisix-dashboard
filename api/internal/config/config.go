@@ -18,15 +18,10 @@
 package config
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"os"
 	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-	"github.com/tidwall/gjson"
 )
 
 func NewDefaultConfig() Config {
@@ -112,62 +107,4 @@ func SetupConfig(c *Config, file string) error {
 	}
 
 	return nil
-}
-
-// GetSchema was added to ensure that the PR passes the CI check and it will be removed in the future
-func GetSchema() gjson.Result {
-	var (
-		apisixSchemaPath       = "./config/schema.json"
-		customizeSchemaPath    = "./config/customize_schema.json"
-		apisixSchemaContent    []byte
-		customizeSchemaContent []byte
-		err                    error
-	)
-
-	if os.Getenv("ENV") == "test" {
-		apisixSchemaPath = os.Getenv("GITHUB_WORKSPACE") + "/api/config/schema.json"
-		customizeSchemaPath = os.Getenv("GITHUB_WORKSPACE") + "/api/config/customize_schema.json"
-	}
-
-	if apisixSchemaContent, err = ioutil.ReadFile(apisixSchemaPath); err != nil {
-		panic(fmt.Errorf("fail to read configuration: %s, error: %s", apisixSchemaPath, err.Error()))
-	}
-
-	if customizeSchemaContent, err = ioutil.ReadFile(customizeSchemaPath); err != nil {
-		panic(fmt.Errorf("fail to read configuration: %s, error: %s", customizeSchemaPath, err.Error()))
-	}
-
-	content, err := mergeSchema(apisixSchemaContent, customizeSchemaContent)
-	if err != nil {
-		panic(err)
-	}
-
-	return gjson.ParseBytes(content)
-}
-
-// mergeSchema was added to ensure that the PR passes the CI check and it will be removed in the future
-func mergeSchema(apisixSchema, customizeSchema []byte) ([]byte, error) {
-	var (
-		apisixSchemaMap    map[string]map[string]interface{}
-		customizeSchemaMap map[string]map[string]interface{}
-	)
-
-	if err := json.Unmarshal(apisixSchema, &apisixSchemaMap); err != nil {
-		return nil, err
-	}
-	if err := json.Unmarshal(customizeSchema, &customizeSchemaMap); err != nil {
-		return nil, err
-	}
-
-	for key := range apisixSchemaMap["main"] {
-		if _, ok := customizeSchemaMap["main"][key]; ok {
-			return nil, fmt.Errorf("duplicates key: main.%s between schema.json and customize_schema.json", key)
-		}
-	}
-
-	for k, v := range customizeSchemaMap["main"] {
-		apisixSchemaMap["main"][k] = v
-	}
-
-	return json.Marshal(apisixSchemaMap)
 }

@@ -32,7 +32,7 @@ export default {
   pwa: false,
   iconfontUrl: '',
   serveUrlMap: {
-    dev: 'http://139.217.190.60',
+    dev: 'http://localhost:9000',
     test: 'http://localhost:9000',
   },
 } as LayoutSettings & {
