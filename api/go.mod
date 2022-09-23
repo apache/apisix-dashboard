@@ -23,7 +23,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0
 	github.com/yuin/gopher-lua v0.0.0-20200816102855-ee81675732da
 	go.etcd.io/etcd/client/pkg/v3 v3.5.5
-	go.etcd.io/etcd/client/v3 v3.5.4
+	go.etcd.io/etcd/client/v3 v3.5.5
 	go.uber.org/zap v1.17.0
 	golang.org/x/net v0.0.0-20220906165146-f3363e06e74c // indirect
 )
