@@ -19,10 +19,10 @@ package storage
 import (
 	"context"
 	"fmt"
+	"go.etcd.io/etcd/client/pkg/v3/transport"
 	"time"
 
-	"go.etcd.io/etcd/clientv3"
-	"go.etcd.io/etcd/pkg/transport"
+	"go.etcd.io/etcd/client/v3"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"

@@ -18,11 +18,13 @@ FROM alpine:latest as pre-build
 
 ARG APISIX_DASHBOARD_VERSION=master
 
-RUN set -x \
-    && apk add --no-cache --virtual .builddeps git \
-    && git clone https://github.com/apache/apisix-dashboard.git -b ${APISIX_DASHBOARD_VERSION} /usr/local/apisix-dashboard \
-    && cd /usr/local/apisix-dashboard && git clean -Xdf \
-    && rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
+#RUN set -x \
+#    && apk add --no-cache --virtual .builddeps git \
+#    && git clone https://github.com/apache/apisix-dashboard.git -b ${APISIX_DASHBOARD_VERSION} /usr/local/apisix-dashboard \
+#    && cd /usr/local/apisix-dashboard && git clean -Xdf \
+#    && rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
+
+COPY . /usr/local/apisix-dashboard
 
 FROM golang:1.15 as api-builder
 
