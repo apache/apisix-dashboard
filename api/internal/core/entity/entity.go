@@ -65,7 +65,7 @@ type Route struct {
 	BaseInfo
 	URI             string                 `json:"uri,omitempty"`
 	Uris            []string               `json:"uris,omitempty"`
-	Name            string                 `json:"name" validate:"max=50"`
+	Name            string                 `json:"name" validate:"max=100"`
 	Desc            string                 `json:"desc,omitempty" validate:"max=256"`
 	Priority        int                    `json:"priority,omitempty"`
 	Methods         []string               `json:"methods,omitempty"`
