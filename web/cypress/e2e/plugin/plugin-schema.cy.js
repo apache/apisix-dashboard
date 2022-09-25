@@ -66,7 +66,7 @@ describe('Plugin Schema Test', () => {
         cy.login();
         cy.visit('/plugin/market');
         cy.saveLocalStorage();
-  
+
         cy.get('main.ant-layout-content', { timeout })
           .find('div.ant-card-head span', { timeout })
           .then((cards) => Array.from(cards).map((card) => card.innerText))
