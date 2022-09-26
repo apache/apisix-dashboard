@@ -62,11 +62,6 @@ describe('Plugin Schema Test', () => {
 
     beforeEach(() => {
       cy.restoreLocalStorage();
-      if (Cypress.$('button', 'Login').length > 0) {
-        cy.login();
-        cy.visit('/plugin/market');
-        cy.saveLocalStorage();
-      }
     });
 
     pluginList
