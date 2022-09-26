@@ -137,7 +137,3 @@ Cypress.Commands.add('requestWithToken', ({ method, url, payload }) => {
     return res;
   });
 });
-
-Cypress.Commands.add("get$", (selector) => {
-  return cy.wrap(Cypress.$(selector)).should("have.length.gte", 1);
-});
