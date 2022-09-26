@@ -44,8 +44,8 @@ fi
 # build
 cd ./api && go build -o ../output/manager-api -ldflags "${GOLDFLAGS}" ./main.go && cd ..
 
-cp ./api/conf/schema.json ./output/conf/schema.json
-cp ./api/conf/customize_schema.json ./output/conf/customize_schema.json
-cp ./api/conf/conf*.yaml ./output/conf/
+cp ./conf/schema.json ../output/conf/schema.json
+cp ./conf/customize_schema.json ../output/conf/customize_schema.json
+cp ./conf/conf*.yaml ../output/conf/
 
 echo "Build the Manager API successfully"
