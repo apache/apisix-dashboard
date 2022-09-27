@@ -126,7 +126,7 @@ export const trafficsplit =`{
                     "upstream": {
                         "name":
                         "type":
-                        "nodes": 
+                        "nodes":
                         "timeout": {
                             "connect":
                             "send":
