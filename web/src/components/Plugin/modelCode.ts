@@ -77,7 +77,7 @@ export const openidconnect =`{
     "client_secret":
     "discovery":
     "introspection_endpoint":
-    "bearer_only": true,
+    "bearer_only":
     "realm":
     "introspection_endpoint_auth_method":
 }
@@ -124,21 +124,19 @@ export const trafficsplit =`{
             "weighted_upstreams": [
                 {
                     "upstream": {
-                        "name": "upstream_A",
-                        "type": "roundrobin",
-                        "nodes": {
-                            "127.0.0.1:1981":10
-                        },
+                        "name":
+                        "type":
+                        "nodes": 
                         "timeout": {
-                            "connect": 15,
-                            "send": 15,
-                            "read": 15
+                            "connect":
+                            "send":
+                            "read":
                         }
                     },
-                    "weight": 1
+                    "weight":
                 },
                 {
-                    "weight": 1
+                    "weight":
                 }
             ]
         }
