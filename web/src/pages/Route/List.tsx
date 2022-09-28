@@ -59,6 +59,7 @@ import { DebugDrawView } from './components/DebugViews';
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
 import DataLoaderImport from '@/pages/Route/components/DataLoader/Import';
+import useThrottle from '@/hooks/useThrottle';
 
 const { OptGroup, Option } = Select;
 
@@ -108,18 +109,28 @@ const Page: React.FC = () => {
     checkPageList(ref);
   };
 
-  const handlePublishOffline = (rid: string, status: RouteModule.RouteStatus) => {
-    updateRouteStatus(rid, status).then(() => {
-      const actionName = status
-        ? formatMessage({ id: 'page.route.publish' })
-        : formatMessage({ id: 'page.route.offline' });
-      handleTableActionSuccessResponse(
-        `${actionName} ${formatMessage({
-          id: 'menu.routes',
-        })} ${formatMessage({ id: 'component.status.success' })}`,
-      );
-    });
-  };
+  const [publishOfflineLoading, setPublishOfflineLoading] = useState<string>('');
+
+  const { fn: handlePublishOffline } = useThrottle(
+    (rid: string, status: RouteModule.RouteStatus) => {
+      setPublishOfflineLoading(rid);
+      updateRouteStatus(rid, status)
+        .then(() => {
+          const actionName = status
+            ? formatMessage({ id: 'page.route.publish' })
+            : formatMessage({ id: 'page.route.offline' });
+          handleTableActionSuccessResponse(
+            `${actionName} ${formatMessage({
+              id: 'menu.routes',
+            })} ${formatMessage({ id: 'component.status.success' })}`,
+          );
+          setPublishOfflineLoading('');
+        })
+        .catch(() => {
+          setPublishOfflineLoading('');
+        });
+    },
+  );
 
   const handleExport = (exportFileType: ExportFileType) => {
     exportRoutes(selectedRowKeys.join(',')).then((resp) => {
@@ -503,6 +514,7 @@ const Page: React.FC = () => {
                 onClick={() => {
                   handlePublishOffline(record.id, RouteStatus.Publish);
                 }}
+                loading={record.id === publishOfflineLoading}
               >
                 {formatMessage({ id: 'page.route.publish' })}
               </Button>
@@ -519,7 +531,12 @@ const Page: React.FC = () => {
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
               >
-                <Button type="primary" danger disabled={Boolean(!record.status)}>
+                <Button
+                  type="primary"
+                  danger
+                  disabled={Boolean(!record.status)}
+                  loading={record.id === publishOfflineLoading}
+                >
                   {formatMessage({ id: 'page.route.offline' })}
                 </Button>
               </Popconfirm>
