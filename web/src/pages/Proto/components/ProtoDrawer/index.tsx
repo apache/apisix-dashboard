@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Drawer, Form, notification, Space } from 'antd';
 import { useIntl } from 'umi';
 import Editor from '@monaco-editor/react';
@@ -22,6 +22,7 @@ import { Input } from 'antd';
 
 import { create, update } from '../../service';
 import styles from './index.less';
+import useThrottle from '@/hooks/useThrottle';
 
 const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
   protoData,
@@ -38,17 +39,25 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
     form.setFieldsValue(protoData);
   }, [visible]);
 
-  const submit = async () => {
+  const [submitLoading, setSubmitLoading] = useState(false);
+
+  const { fn: submit } = useThrottle(async () => {
+    setSubmitLoading(true);
     await form.validateFields();
     const formData: ProtoModule.ProtoData = form.getFieldsValue(true);
     if (editMode === 'create') {
-      create(formData).then(() => {
-        notification.success({
-          message: formatMessage({ id: 'page.proto.drawer.create.successfully' }),
+      create(formData)
+        .then(() => {
+          notification.success({
+            message: formatMessage({ id: 'page.proto.drawer.create.successfully' }),
+          });
+          setVisible(false);
+          refreshTable();
+          setSubmitLoading(false);
+        })
+        .catch(() => {
+          setSubmitLoading(false);
         });
-        setVisible(false);
-        refreshTable();
-      });
     } else {
       update(formData);
       notification.success({
@@ -57,7 +66,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
       setVisible(false);
       refreshTable();
     }
-  };
+  });
 
   return (
     <Drawer
@@ -81,7 +90,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
             {formatMessage({ id: 'component.global.cancel' })}
           </Button>
           <Space>
-            <Button type="primary" onClick={() => submit()}>
+            <Button type="primary" onClick={() => submit()} loading={submitLoading}>
               {formatMessage({ id: 'component.global.submit' })}
             </Button>
           </Space>

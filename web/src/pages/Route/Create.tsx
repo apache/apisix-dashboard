@@ -226,6 +226,8 @@ const Page: React.FC<Props> = (props) => {
     return true;
   };
 
+  const [submitLoading, setSubmitLoading] = useState(false);
+
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
       const routeData = {
@@ -234,8 +236,8 @@ const Page: React.FC<Props> = (props) => {
         step3Data,
         advancedMatchingRules,
       } as RouteModule.RequestData;
-
-      const { path } = props.route
+      setSubmitLoading(true);
+      const { path } = props.route;
 
       if (path.indexOf('edit') !== -1) {
         update((props as any).match.params.rid, routeData).then(() => {
@@ -243,11 +245,16 @@ const Page: React.FC<Props> = (props) => {
         });
       } else {
         if (path.indexOf('duplicate') !== -1) {
-          delete routeData.form1Data.id
+          delete routeData.form1Data.id;
         }
-        create(routeData).then(() => {
-          setStep(5);
-        });
+        create(routeData)
+          .then(() => {
+            setStep(5);
+            setSubmitLoading(false);
+          })
+          .catch(() => {
+            setSubmitLoading(false);
+          });
       }
     };
 
@@ -318,7 +325,13 @@ const Page: React.FC<Props> = (props) => {
           {renderStepList()}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />
+      <ActionBar
+        step={step}
+        loading={submitLoading}
+        lastStep={redirect ? 2 : 4}
+        onChange={onStepChange}
+        withResultView
+      />
     </>
   );
 };

@@ -51,6 +51,8 @@ const Page: React.FC = (props) => {
       });
   };
 
+  const [submitLoading, setSubmitLoading] = useState(false);
+
   const submit = () => {
     const data = form.getFieldsValue();
     const sslData = {
@@ -58,9 +60,14 @@ const Page: React.FC = (props) => {
       cert: data.cert!,
       key: data.key!,
     };
-    (id ? update(id, sslData) : create(sslData)).then(() => {
-      history.replace('/ssl/list');
-    });
+    (id ? update(id, sslData) : create(sslData))
+      .then(() => {
+        history.replace('/ssl/list');
+        setSubmitLoading(false);
+      })
+      .catch(() => {
+        setSubmitLoading(false);
+      });
   };
 
   const handleStepChange = (nextStep: number) => {
@@ -72,6 +79,7 @@ const Page: React.FC = (props) => {
         onValidateForm();
         break;
       case 3:
+        setSubmitLoading(true);
         submit();
         break;
       default:
@@ -101,7 +109,7 @@ const Page: React.FC = (props) => {
           {Boolean(step === 2) && <Step2 form={form} />}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} lastStep={2} onChange={handleStepChange} />
+      <ActionBar loading={submitLoading} step={step} lastStep={2} onChange={handleStepChange} />
     </>
   );
 };

@@ -48,6 +48,7 @@ const Page: React.FC = (props) => {
       });
     }
   }, []);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onSubmit = () => {
     form1.validateFields().then(() => {
@@ -60,16 +61,21 @@ const Page: React.FC = (props) => {
       }
 
       const { id } = (props as any).match.params;
-      (id ? update(id, data) : create(data)).then(() => {
-        notification.success({
-          message: `${
-            id
-              ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
-              : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
-          }`,
+      (id ? update(id, data) : create(data))
+        .then(() => {
+          notification.success({
+            message: `${
+              id
+                ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
+                : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
+            }`,
+          });
+          history.replace('/upstream/list');
+          setSubmitLoading(false);
+        })
+        .catch(() => {
+          setSubmitLoading(false);
         });
-        history.replace('/upstream/list');
-      });
     });
   };
 
@@ -79,6 +85,7 @@ const Page: React.FC = (props) => {
         setStep(nextStep);
       });
     } else if (nextStep === 3) {
+      setSubmitLoading(true);
       onSubmit();
     } else {
       setStep(nextStep);
@@ -104,7 +111,7 @@ const Page: React.FC = (props) => {
           {step === 2 && <Step1 form={form1} upstreamRef={upstreamRef} disabled />}
         </Card>
       </PageContainer>
-      <ActionBar step={step} lastStep={2} onChange={onStepChange} />
+      <ActionBar loading={submitLoading} step={step} lastStep={2} onChange={onStepChange} />
     </>
   );
 };

@@ -62,7 +62,7 @@ const Page: React.FC = (props) => {
       });
     }
   }, []);
-
+  const [submitLoading, setSubmitLoading] = useState(false);
   const onSubmit = () => {
     const data = {
       ...form.getFieldsValue(),
@@ -89,9 +89,11 @@ const Page: React.FC = (props) => {
           })}`,
         });
         history.push('/service/list');
+        setSubmitLoading(false);
       })
       .catch(() => {
         setStep(3);
+        setSubmitLoading(false);
       });
   };
 
@@ -105,6 +107,7 @@ const Page: React.FC = (props) => {
       return;
     }
     if (nextStep === 4) {
+      setSubmitLoading(true);
       onSubmit();
       return;
     }
@@ -142,7 +145,13 @@ const Page: React.FC = (props) => {
           )}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />
+      <ActionBar
+        loading={submitLoading}
+        step={step}
+        lastStep={3}
+        onChange={onStepChange}
+        withResultView
+      />
     </>
   );
 };

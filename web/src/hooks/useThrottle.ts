@@ -27,7 +27,7 @@ interface ThrottleOptions {
   trailing?: boolean;
 }
 
-function useThrottle<T extends useThrottleReturn>(fn: T, options: ThrottleOptions) {
+function useThrottle<T extends useThrottleReturn>(fn: T, options?: ThrottleOptions) {
   const fnRef = useLatest(fn);
 
   const wait = options?.wait ?? 1000;

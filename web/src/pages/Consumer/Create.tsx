@@ -43,6 +43,8 @@ const Page: React.FC = (props) => {
     }
   }, []);
 
+  const [submitLoading, setSubmitLoading] = useState(false);
+
   const onSubmit = () => {
     const data = { ...form1.getFieldsValue(), plugins } as ConsumerModule.Entity;
     const { username } = (props as any).match.params;
@@ -56,9 +58,11 @@ const Page: React.FC = (props) => {
           }`,
         });
         history.push('/consumer/list');
+        setSubmitLoading(false);
       })
       .catch(() => {
         setStep(3);
+        setSubmitLoading(false);
       });
   };
 
@@ -70,6 +74,7 @@ const Page: React.FC = (props) => {
     } else if (nextStep === 3) {
       setStep(3);
     } else if (nextStep === 4) {
+      setSubmitLoading(true);
       onSubmit();
     } else {
       setStep(nextStep);
@@ -103,7 +108,7 @@ const Page: React.FC = (props) => {
           {step === 3 && <Preview form1={form1} plugins={plugins} />}
         </Card>
       </PageContainer>
-      <ActionBar step={step} lastStep={3} onChange={onStepChange} />
+      <ActionBar loading={submitLoading} step={step} lastStep={3} onChange={onStepChange} />
     </>
   );
 };
