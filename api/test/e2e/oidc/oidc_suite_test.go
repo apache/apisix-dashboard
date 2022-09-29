@@ -23,7 +23,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestAuth(t *testing.T) {
+func TestOidc(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Oidc Suite")
 }

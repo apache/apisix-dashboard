@@ -72,8 +72,8 @@ func Oidc() gin.HandlerFunc {
 			}
 
 			// set the cookie
+			conf.CookieStore.MaxAge(conf.OidcExpireTime)
 			cookie, _ := conf.CookieStore.Get(c.Request, "oidc")
-			cookie.Options.MaxAge = conf.OidcExpireTime
 			cookie.Values["oidc_id"] = userInfo.Subject
 			conf.OidcId = userInfo.Subject
 			cookie.Save(c.Request, c.Writer)
@@ -83,6 +83,11 @@ func Oidc() gin.HandlerFunc {
 
 		if c.Request.URL.Path == "/apisix/admin/oidc/logout" {
 			cookie, _ := conf.CookieStore.Get(c.Request, "oidc")
+			if cookie.IsNew {
+				c.AbortWithStatus(http.StatusForbidden)
+				return
+			}
+
 			cookie.Options.MaxAge = -1
 			cookie.Save(c.Request, c.Writer)
 			c.AbortWithStatus(http.StatusOK)
