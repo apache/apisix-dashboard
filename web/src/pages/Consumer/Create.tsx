@@ -25,6 +25,7 @@ import PluginPage from '@/components/Plugin';
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
 import { fetchItem, create, update } from './service';
+import useRequest from '@/hooks/useRequest';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -43,12 +44,12 @@ const Page: React.FC = (props) => {
     }
   }, []);
 
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const { fn: createConsumers, loading: submitLoading } = useRequest(create);
 
   const onSubmit = () => {
     const data = { ...form1.getFieldsValue(), plugins } as ConsumerModule.Entity;
     const { username } = (props as any).match.params;
-    (username ? update(username, data) : create(data))
+    (username ? update(username, data) : createConsumers(data))
       .then(() => {
         notification.success({
           message: `${
@@ -58,11 +59,9 @@ const Page: React.FC = (props) => {
           }`,
         });
         history.push('/consumer/list');
-        setSubmitLoading(false);
       })
       .catch(() => {
         setStep(3);
-        setSubmitLoading(false);
       });
   };
 
@@ -74,7 +73,6 @@ const Page: React.FC = (props) => {
     } else if (nextStep === 3) {
       setStep(3);
     } else if (nextStep === 4) {
-      setSubmitLoading(true);
       onSubmit();
     } else {
       setStep(nextStep);

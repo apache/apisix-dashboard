@@ -64,6 +64,7 @@ const Page: React.FC = (props) => {
   }, []);
   const [submitLoading, setSubmitLoading] = useState(false);
   const onSubmit = () => {
+    setSubmitLoading(true);
     const data = {
       ...form.getFieldsValue(),
       plugins,
@@ -107,7 +108,6 @@ const Page: React.FC = (props) => {
       return;
     }
     if (nextStep === 4) {
-      setSubmitLoading(true);
       onSubmit();
       return;
     }
