@@ -75,10 +75,6 @@ describe('Plugin Schema Test', () => {
             } else {
               cy.log(`${name} not a global plugin, skipping`);
             }
-
-            if (cases.length === i + 1) {
-              cy.reload(true);
-            }
           });
         });
       });
