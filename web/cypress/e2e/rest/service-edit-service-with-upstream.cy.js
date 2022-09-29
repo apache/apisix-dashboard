@@ -76,6 +76,7 @@ context('Edit Service with Upstream', () => {
     cy.get(selector.input).should('be.disabled');
 
     cy.contains('Next').click();
+    cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createServiceSuccess);
   });
