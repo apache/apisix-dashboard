@@ -313,7 +313,7 @@ context('Delete Plugin List with the Drawer', () => {
       cy.contains(item)
         .parents(selector.pluginCardBordered)
         .within(() => {
-          cy.get('button').click();
+          cy.get('button').click({ force: true });
         });
       cy.get(selector.drawer)
         .should('be.visible')
