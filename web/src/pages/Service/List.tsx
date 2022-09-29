@@ -37,6 +37,8 @@ const Page: React.FC = () => {
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
 
+  const [deleteLoading, setDeleteLoading] = useState('');
+
   const columns: ProColumns<ServiceModule.ResponseBody>[] = [
     {
       title: 'ID',
@@ -76,19 +78,26 @@ const Page: React.FC = () => {
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
-                remove(record.id!).then(() => {
-                  notification.success({
-                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.service',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                setDeleteLoading(record.id!);
+                remove(record.id!)
+                  .then(() => {
+                    notification.success({
+                      message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage(
+                        {
+                          id: 'menu.service',
+                        },
+                      )} ${formatMessage({ id: 'component.status.success' })}`,
+                    });
+                    checkPageList(ref);
+                  })
+                  .finally(() => {
+                    setDeleteLoading('');
                   });
-                  checkPageList(ref);
-                });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
-              <Button type="primary" danger>
+              <Button type="primary" danger loading={record.id === deleteLoading}>
                 {formatMessage({ id: 'component.global.delete' })}
               </Button>
             </Popconfirm>

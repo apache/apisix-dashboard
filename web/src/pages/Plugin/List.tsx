@@ -36,6 +36,7 @@ const Page: React.FC = () => {
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState('');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
+  const [deleteLoading, setDeleteLoading] = useState('');
 
   useEffect(() => {
     fetchPluginList().then(setPluginList);
@@ -79,19 +80,24 @@ const Page: React.FC = () => {
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
                 const plugins = omit(initialData, [`${record.name}`]);
-                createOrUpdate({ plugins }).then(() => {
-                  notification.success({
-                    message: formatMessage({ id: 'page.plugin.delete' }),
+                setDeleteLoading(record.id);
+                createOrUpdate({ plugins })
+                  .then(() => {
+                    notification.success({
+                      message: formatMessage({ id: 'page.plugin.delete' }),
+                    });
+                    checkPageList(ref);
+                    setInitialData(plugins);
+                    setName('');
+                  })
+                  .finally(() => {
+                    setDeleteLoading('');
                   });
-                  checkPageList(ref);
-                  setInitialData(plugins);
-                  setName('');
-                });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
-              <Button type="primary" danger>
+              <Button type="primary" danger loading={record.id === deleteLoading}>
                 {formatMessage({ id: 'component.global.delete' })}
               </Button>
             </Popconfirm>
