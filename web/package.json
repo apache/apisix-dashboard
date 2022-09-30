@@ -7,7 +7,7 @@
     "prepare": "cd .. && husky install web/.husky",
     "analyze": "cross-env ANALYZE=1 yarn run build",
     "copy-folder": "node --experimental-modules copy-folder.mjs",
-    "build": "yarn copy-folder monaco-editor ./public/ && umi build",
+    "build": "yarn copy-folder monaco-editor ./public/ && NODE_OPTIONS=--max_old_space_size=4096 umi build",
     "dev": "yarn run start:dev",
     "fetch:blocks": "pro fetch-blocks --branch antd@4 && yarn run prettier",
     "i18n-remove": "pro i18n-remove --locale=zh-CN --write",
