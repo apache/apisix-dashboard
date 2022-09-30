@@ -88,7 +88,9 @@ context('Edit Service with Upstream', () => {
     cy.contains('Search').click();
     cy.contains(data.serviceName).siblings().contains('Configure').click();
 
+    cy.contains(data.upstreamName).click();
     cy.wait(500);
+    cy.contains('.ant-select-item-option-content','Custom').click();
     cy.get(selector.nodes_0_host)
       .click({
         force: true,
@@ -96,8 +98,8 @@ context('Edit Service with Upstream', () => {
       .should('value', data.ip1);
     cy.get(selector.input).should('be.disabled');
 
+    cy.wait(500);
     cy.get(selector.upstreamSelector).click();
-    cy.contains('.ant-select-item-option-content', 'Custom').click();
     cy.get(selector.nodes_0_host).should('not.be.disabled').clear().type(data.ip2);
     cy.get(selector.nodes_0_port).type(data.port);
     cy.get(selector.nodes_0_weight).type(data.weight);
