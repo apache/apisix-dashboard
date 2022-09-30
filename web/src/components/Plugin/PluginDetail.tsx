@@ -15,9 +15,13 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
+import type { ProFieldFCMode } from '@ant-design/pro-components';
+import Field from '@ant-design/pro-field';
 import {
   Alert,
   Button,
+  Col,
+  Descriptions,
   Divider,
   Drawer,
   Form,
@@ -25,6 +29,7 @@ import {
   notification,
   PageHeader,
   Popconfirm,
+  Row,
   Select,
   Space,
   Switch,
@@ -43,6 +48,8 @@ import type { languages } from 'monaco-editor';
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
+import * as allModels from './Models';
+import * as modelCode from './modelCode';
 
 type Props = {
   name: string;
@@ -116,6 +123,11 @@ const PluginDetail: React.FC<Props> = ({
     { label: monacoModeList.YAML, value: monacoModeList.YAML },
   ];
   const targetPluginName = pluginList.find((item) => item.name === name)?.name;
+  const [state] = useState<ProFieldFCMode>('read');
+  const [plain] = useState<boolean>(false);
+  const filteredName = name.replace("-","");
+  const targetModel = allModels[`${filteredName}Model`];
+  const targetModelCode = modelCode?.[`${filteredName}`];
 
   if (PLUGIN_UI_LIST.includes(name)) {
     modeOptions.push({
@@ -400,26 +412,50 @@ const PluginDetail: React.FC<Props> = ({
       </style>
 
       <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-        <Form.Item label={formatMessage({ id: 'component.global.name' })}>
-          <Input value={name} bordered={false} disabled />
-        </Form.Item>
-        <Form.Item
-          label={formatMessage({ id: 'component.global.enable' })}
-          valuePropName="checked"
-          name="disable"
-        >
-          <Switch
-            defaultChecked={isEnabled ? true : initialData[name] && !initialData[name].disable}
-            disabled={readonly || isEnabled}
-          />
-        </Form.Item>
+        <Row gutter={1}>
+          <Col span={12}>
+            <Form.Item label={formatMessage({ id: 'component.global.name' })}>
+              <Input value={name} bordered={false} disabled />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label={formatMessage({ id: 'component.global.enable' })}
+              valuePropName="checked"
+              name="disable"
+            >
+              <Switch
+                defaultChecked={isEnabled ? true : initialData[name] && !initialData[name].disable}
+                disabled={readonly || isEnabled}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
         {type === 'global' && (
-          <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
-            <Select disabled>
-              <Select.Option value="global">{formatMessage({ id: 'other.global' })}</Select.Option>
-            </Select>
-          </Form.Item>
-        )}
+            <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
+              <Select disabled>
+                <Select.Option value="global">{formatMessage({ id: 'other.global' })}</Select.Option>
+              </Select>
+            </Form.Item>
+          )}
+        <Descriptions column={2}>
+          <Descriptions.Item label={formatMessage({ id: 'component.global.example' })}>
+            <Field
+              text={`
+//Just fill in 3-4 lines in the editor below
+1     "plugins": {
+2         "xx-xxx": {
+3             "key": "value",
+4             "property": {},
+5        }
+6     }
+              `}
+              valueType="jsonCode"
+              mode={state}
+              plain={plain}
+            />
+          </Descriptions.Item>
+        </Descriptions>
       </Form>
       <Divider orientation="left">{formatMessage({ id: 'component.global.data.editor' })}</Divider>
       <PageHeader
@@ -477,12 +513,13 @@ const PluginDetail: React.FC<Props> = ({
             }
           }}
           language={monacoMode.toLocaleLowerCase()}
+          beforeMount={editorWillMount}
           onMount={(editor) => {
             // NOTE: for debug & test
             // @ts-ignore
             window.monacoEditor = editor;
+            if(targetModel)editor.setValue(targetModelCode);
           }}
-          beforeMount={editorWillMount}
           options={{
             scrollbar: {
               vertical: 'hidden',
