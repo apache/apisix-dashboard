@@ -26,6 +26,7 @@ export default {
   'component.global.enable': 'Enable',
   'component.global.disable': 'Disable',
   'component.global.scope': 'Scope',
+  'component.global.example': 'Example',
   'component.global.data.editor': 'Raw Data Editor',
   'component.global.delete': 'Delete',
   'component.global.cancel': 'Cancel',
