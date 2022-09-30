@@ -225,27 +225,6 @@ context('Delete Plugin List with the Drawer', () => {
     cy.get(selector.empty).should('be.visible');
   });
 
-  it('should disable plugin', function () {
-    cy.visit('/');
-    cy.contains('Plugin').click();
-    cy.contains('Enable').click();
-
-    cy.contains(data.basicAuthPlugin)
-      .parents(selector.pluginCardBordered)
-      .within(() => {
-        cy.get('button').click({
-          force: true,
-        });
-      });
-
-    cy.get(selector.drawer)
-      .should('be.visible')
-      .within(() => {
-        cy.get(selector.disabledSwitcher).click();
-        cy.get(selector.checkedSwitcher).should('exist');
-      });
-  });
-
   it('should be deleted one of the plugins instead of all', function () {
     cy.visit('/plugin/list');
     cy.get(selector.refresh).click();
