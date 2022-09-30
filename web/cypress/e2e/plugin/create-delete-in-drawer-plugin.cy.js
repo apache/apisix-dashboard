@@ -297,7 +297,7 @@ context('Delete Plugin List with the Drawer', () => {
       cy.get(selector.drawer)
         .should('be.visible')
         .within(() => {
-          cy.get(selector.checkedSwitcher).should('exist');
+          cy.get(selector.disabledSwitcher).should('exist');
         });
       cy.wait(timeout);
       cy.contains('button', 'Delete').click({ force: true });
