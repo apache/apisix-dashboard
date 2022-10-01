@@ -43,6 +43,8 @@ import type { languages } from 'monaco-editor';
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
+import * as allModels from './Models';
+import * as modelCode from './modelCode';
 
 type Props = {
   name: string;
@@ -116,6 +118,9 @@ const PluginDetail: React.FC<Props> = ({
     { label: monacoModeList.YAML, value: monacoModeList.YAML },
   ];
   const targetPluginName = pluginList.find((item) => item.name === name)?.name;
+  const filteredName = name.replace("-","");
+  const targetModel = allModels[`${filteredName}Model`];
+  const targetModelCode = modelCode?.[`${filteredName}`];
 
   if (PLUGIN_UI_LIST.includes(name)) {
     modeOptions.push({
@@ -477,12 +482,13 @@ const PluginDetail: React.FC<Props> = ({
             }
           }}
           language={monacoMode.toLocaleLowerCase()}
+          beforeMount={editorWillMount}
           onMount={(editor) => {
             // NOTE: for debug & test
             // @ts-ignore
             window.monacoEditor = editor;
+            if(targetModel)editor.setValue(targetModelCode);
           }}
-          beforeMount={editorWillMount}
           options={{
             scrollbar: {
               vertical: 'hidden',

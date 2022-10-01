@@ -26,6 +26,7 @@ export default {
   'component.global.enable': 'Aktifleştir',
   'component.global.disable': 'Devre dışı bırak',
   'component.global.scope': 'Kapsam',
+  'component.global.example': 'Örnek',
   'component.global.data.editor': 'Veri Editörü',
   'component.global.delete': 'Sil',
   'component.global.cancel': 'İptal',
