@@ -59,6 +59,7 @@ context('Create and delete route with plugin orchestration', () => {
     cy.contains('Next').click();
 
     cy.get(selector.groupButton).contains('Orchestration').click();
+    cy.wait(1000);
     cy.get(selector.canvas).should('be.visible');
 
     // Plugin Orchestration
