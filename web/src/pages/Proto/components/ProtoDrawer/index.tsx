@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Drawer, Form, notification, Space } from 'antd';
 import { useIntl } from 'umi';
 import Editor from '@monaco-editor/react';
@@ -23,6 +23,7 @@ import { Input } from 'antd';
 import { create, update } from '../../service';
 import styles from './index.less';
 import useThrottle from '@/hooks/useThrottle';
+import useRequest from '@/hooks/useRequest';
 
 const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
   protoData,
@@ -39,25 +40,19 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
     form.setFieldsValue(protoData);
   }, [visible]);
 
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const { fn: createProto, loading: submitLoading } = useRequest(create);
 
   const { fn: submit } = useThrottle(async () => {
-    setSubmitLoading(true);
     await form.validateFields();
     const formData: ProtoModule.ProtoData = form.getFieldsValue(true);
     if (editMode === 'create') {
-      create(formData)
-        .then(() => {
-          notification.success({
-            message: formatMessage({ id: 'page.proto.drawer.create.successfully' }),
-          });
-          setVisible(false);
-          refreshTable();
-          setSubmitLoading(false);
-        })
-        .catch(() => {
-          setSubmitLoading(false);
+      createProto(formData).then(() => {
+        notification.success({
+          message: formatMessage({ id: 'page.proto.drawer.create.successfully' }),
         });
+        setVisible(false);
+        refreshTable();
+      });
     } else {
       update(formData);
       notification.success({

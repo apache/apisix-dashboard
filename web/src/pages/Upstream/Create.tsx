@@ -51,6 +51,7 @@ const Page: React.FC = (props) => {
   const [submitLoading, setSubmitLoading] = useState(false);
 
   const onSubmit = () => {
+    setSubmitLoading(true);
     form1.validateFields().then(() => {
       const data = upstreamRef.current?.getData();
       if (!data) {
@@ -85,7 +86,6 @@ const Page: React.FC = (props) => {
         setStep(nextStep);
       });
     } else if (nextStep === 3) {
-      setSubmitLoading(true);
       onSubmit();
     } else {
       setStep(nextStep);

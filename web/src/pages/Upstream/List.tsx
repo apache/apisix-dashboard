@@ -40,6 +40,8 @@ const Page: React.FC = () => {
   const { paginationConfig, savePageList, checkPageList } = usePagination();
   const { formatMessage } = useIntl();
 
+  const [deleteLoading, setDeleteLoading] = useState('');
+
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
       title: formatMessage({ id: 'page.upstream.list.id' }),
@@ -91,15 +93,20 @@ const Page: React.FC = () => {
             okText={formatMessage({ id: 'page.upstream.list.confirm' })}
             cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
             onConfirm={() => {
-              remove(record.id!).then(() => {
-                notification.success({
-                  message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
+              setDeleteLoading(record.id!);
+              remove(record.id!)
+                .then(() => {
+                  notification.success({
+                    message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
+                  });
+                  checkPageList(ref);
+                })
+                .finally(() => {
+                  setDeleteLoading('');
                 });
-                checkPageList(ref);
-              });
             }}
           >
-            <Button type="primary" danger>
+            <Button type="primary" danger loading={record.id === deleteLoading}>
               {formatMessage({ id: 'page.upstream.list.delete' })}
             </Button>
           </Popconfirm>

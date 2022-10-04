@@ -32,6 +32,7 @@ import CreateStep4 from './components/CreateStep4';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
+import useRequest from '@/hooks/useRequest';
 
 const { Step } = Steps;
 
@@ -226,7 +227,7 @@ const Page: React.FC<Props> = (props) => {
     return true;
   };
 
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const { fn: createRoutes, loading: submitLoading } = useRequest(create);
 
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
@@ -236,7 +237,6 @@ const Page: React.FC<Props> = (props) => {
         step3Data,
         advancedMatchingRules,
       } as RouteModule.RequestData;
-      setSubmitLoading(true);
       const { path } = props.route;
 
       if (path.indexOf('edit') !== -1) {
@@ -247,14 +247,11 @@ const Page: React.FC<Props> = (props) => {
         if (path.indexOf('duplicate') !== -1) {
           delete routeData.form1Data.id;
         }
-        create(routeData)
+        createRoutes(routeData)
           .then(() => {
             setStep(5);
-            setSubmitLoading(false);
           })
-          .catch(() => {
-            setSubmitLoading(false);
-          });
+          .catch(() => {});
       }
     };
 

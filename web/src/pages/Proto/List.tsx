@@ -40,6 +40,7 @@ const Page: React.FC = () => {
   };
   const [protoData, setProtoData] = useState<ProtoModule.ProtoData>(emptyProtoData);
   const [editMode, setEditMode] = useState<ProtoModule.EditMode>('create');
+  const [deleteLoading, setDeleteLoading] = useState('');
 
   const refreshTable = () => {
     ref.current?.reload();
@@ -97,15 +98,20 @@ const Page: React.FC = () => {
             okText={formatMessage({ id: 'page.proto.list.confirm' })}
             cancelText={formatMessage({ id: 'page.proto.list.cancel' })}
             onConfirm={() => {
-              remove(record.id).then(() => {
-                notification.success({
-                  message: formatMessage({ id: 'page.proto.list.delete.successfully' }),
+              setDeleteLoading(record.id);
+              remove(record.id)
+                .then(() => {
+                  notification.success({
+                    message: formatMessage({ id: 'page.proto.list.delete.successfully' }),
+                  });
+                  checkPageList(ref);
+                })
+                .finally(() => {
+                  setDeleteLoading('');
                 });
-                checkPageList(ref);
-              });
             }}
           >
-            <Button type="primary" danger>
+            <Button type="primary" danger loading={record.id === deleteLoading}>
               {formatMessage({ id: 'page.proto.list.delete' })}
             </Button>
           </Popconfirm>

@@ -54,6 +54,7 @@ const Page: React.FC = (props) => {
   const [submitLoading, setSubmitLoading] = useState(false);
 
   const submit = () => {
+    setSubmitLoading(true);
     const data = form.getFieldsValue();
     const sslData = {
       sni: data.snis,
@@ -79,7 +80,6 @@ const Page: React.FC = (props) => {
         onValidateForm();
         break;
       case 3:
-        setSubmitLoading(true);
         submit();
         break;
       default:
