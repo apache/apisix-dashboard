@@ -67,6 +67,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.get(selector.name).type(name);
     cy.get(selector.redirect).click();
     cy.contains('Custom').click({ force: true });
+    cy.wait(timeout);
     // after choose Custom option, Custom Redirect form field should be visible
     cy.get(selector.customRedirectLabel).should('be.visible');
     cy.get(selector.customRedirectUrI).should('be.visible');
@@ -79,6 +80,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains(data.step3Title).should('not.exist');
     // type customRedirectUrI
     cy.get(selector.customRedirectUrI).type(data.customRedirectUrI);
+    cy.get(selector.customRedirectUrI);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess);
