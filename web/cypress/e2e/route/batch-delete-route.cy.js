@@ -74,7 +74,7 @@ context('Create and Batch Deletion Routes', () => {
         cy.wrap($drawer)
           .contains('button', 'Add')
           .should('not.be.disabled')
-          .click({ force: true })
+          .click()
           .then(() => {
             cy.get(selector.labels_0_labelKey).type(`label${i}`);
             cy.get(selector.labels_0_labelValue).type(`value${i}`);
