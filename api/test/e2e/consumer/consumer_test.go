@@ -59,5 +59,13 @@ var _ = Describe("Consumer", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"\"key\":\"/apisix/consumers/jack\"", "\"plugins\":{\"key-auth\"", "\"limit-count\""},
 		}),
+		Entry("get consumer", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"key\":\"/apisix/consumers/jack\"", "\"plugins\":{\"key-auth\"", "\"limit-count\""},
+		}),
 	)
 })
