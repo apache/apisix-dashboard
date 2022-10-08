@@ -48,6 +48,8 @@ context('Create PluginTemplate Binding To Route', () => {
     weight: 1,
   };
 
+  const timeout = 1000;
+
   beforeEach(() => {
     cy.login();
   });
@@ -55,9 +57,11 @@ context('Create PluginTemplate Binding To Route', () => {
   it('should create test pluginTemplate', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(timeout * 2);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Advanced').should('be.visible').click();
     cy.contains('Plugin Template Config').should('be.visible').click();
+    cy.wait(timeout * 2);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.get(selector.description).type(data.pluginTemplateName);
@@ -92,7 +96,7 @@ context('Create PluginTemplate Binding To Route', () => {
   it('should delete the pluginTemplate failure', function () {
     cy.visit('plugin-template/list');
     cy.get(selector.refresh).click();
-
+    cy.wait(timeout * 2);
     cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
     cy.contains('button', 'Search').click();
     cy.contains(data.pluginTemplateName).siblings().contains('Delete').click();
@@ -103,7 +107,7 @@ context('Create PluginTemplate Binding To Route', () => {
 
   it('should edit the route with pluginTemplate', function () {
     cy.visit('routes/list');
-
+    cy.wait(timeout * 2);
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();
@@ -124,8 +128,10 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.visit('plugin-template/list');
 
     cy.get(selector.refresh).click();
+    cy.wait(timeout * 2);
     cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
     cy.contains('button', 'Search').click();
+    cy.wait(timeout * 2);
     cy.contains(data.pluginTemplateName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deletePluginTemplateSuccess);
