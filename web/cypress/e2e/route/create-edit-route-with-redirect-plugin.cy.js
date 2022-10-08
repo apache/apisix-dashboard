@@ -63,6 +63,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains('Create').click();
     cy.wait(timeout * 2);
     cy.contains('Next').click();
+    cy.wait(timeout);
     cy.contains('Next').click();
     cy.get(selector.name).type(name);
     cy.get(selector.redirect).click();
