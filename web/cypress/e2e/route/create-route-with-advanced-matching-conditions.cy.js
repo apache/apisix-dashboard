@@ -44,6 +44,8 @@ context('Create Route with advanced matching conditions', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
   };
 
+  const timeout = 1000;
+
   const operatorList = [
     // 'Equal(==)' : '1234',
     'Unequal(~=)',
@@ -162,9 +164,9 @@ context('Create Route with advanced matching conditions', () => {
     cy.contains('Next').click();
     cy.get(selector.nodes_0_port).focus();
     cy.contains('Next').click();
-    cy.wait(2000);
+    cy.wait(timeout * 2);
     cy.contains('Next').click();
-    cy.wait(2000);
+    cy.wait(timeout * 2);
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess);
     cy.contains('Goto List').click();
@@ -187,9 +189,9 @@ context('Create Route with advanced matching conditions', () => {
     cy.contains('Next').click();
     cy.get(selector.nodes_0_port).focus();
     cy.contains('Next').click();
-    cy.wait(2000);
+    cy.wait(timeout * 2);
     cy.contains('Next').click();
-    cy.wait(2000);
+    cy.wait(timeout * 2);
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess);
     cy.contains('Goto List').click();

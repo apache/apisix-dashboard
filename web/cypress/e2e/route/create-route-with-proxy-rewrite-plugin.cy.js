@@ -58,6 +58,8 @@ context('create route with proxy-rewrite plugin', () => {
     rewriteHeaderValue2: '2',
   };
 
+  const timeout = 1000;
+
   beforeEach(() => {
     cy.login();
   });
@@ -81,7 +83,7 @@ context('create route with proxy-rewrite plugin', () => {
     cy.get(selector.newUri).should('be.visible').type(data.rewriteUri);
     // should show regexp and template after URIRewriteType regexp clicked
     cy.contains(routeLocaleUS['page.route.radio.regex']).click();
-    cy.wait(1000);
+    cy.wait(timeout);
     cy.contains(routeLocaleUS['page.route.form.itemLabel.regex']).should('be.visible');
     cy.get(selector.uriRewriteReg).should('be.visible');
     cy.contains(routeLocaleUS['page.route.form.itemLabel.template']).should('be.visible');
@@ -146,13 +148,13 @@ context('create route with proxy-rewrite plugin', () => {
 
     cy.contains('Next').click();
     cy.get(selector.nodes_0_host).should('have.value', data.host2);
-    cy.wait(1000);
+    cy.wait(timeout);
     cy.contains('Next').click();
 
     // should not see proxy-rewrite plugin in the step3
     cy.contains('proxy-rewrite').should('not.exist');
     cy.contains('Next').click();
-    cy.wait(1000);
+    cy.wait(timeout);
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess).should('be.visible');
   });
