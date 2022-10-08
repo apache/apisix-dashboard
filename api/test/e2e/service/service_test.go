@@ -126,7 +126,7 @@ var _ = Describe("Service", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		Entry("get route1", base.HttpTestCase{
+		Entry("get service1", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/services/1",
