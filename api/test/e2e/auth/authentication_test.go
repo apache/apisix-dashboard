@@ -24,7 +24,7 @@ import (
 	"github.com/apache/apisix-dashboard/api/test/e2e/base"
 )
 
-var _ = Describe("Authentication", func() {
+var _ = FDescribe("Authentication", func() {
 	It("Access with valid authentication token", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -32,7 +32,7 @@ var _ = Describe("Authentication", func() {
 			Path:         "/apisix/admin/routes",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"code":0`,
+			ExpectBody:   "\"success\":true",
 		})
 	})
 
