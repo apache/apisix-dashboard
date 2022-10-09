@@ -77,7 +77,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine, cfg config.Config) {
 	}
 
 	// add misc routes
-	r.GET("/apisix/admin/plugins/list", handler.Wrap(h.ProxyMisc, nil))
+	r.GET("/apisix/admin/plugins/*param", handler.Wrap(h.ProxyMisc, nil))
 	r.GET("/apisix/admin/schema/*param", handler.Wrap(h.ProxyMisc, nil))
 }
 
