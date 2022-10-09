@@ -60,6 +60,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.wait(timeout * 2);
     cy.get(selector.empty).should('be.visible');
     cy.contains('Advanced').should('be.visible').click();
+    cy.wait(timeout);
     cy.contains('Plugin Template Config').should('be.visible').click();
     cy.wait(timeout * 2);
     cy.get(selector.empty).should('be.visible');
@@ -84,6 +85,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.scrollTo(0, 0);
     cy.contains('Custom').should('be.visible');
     cy.get(selector.customSelector).click();
+    cy.wait(timeout);
     cy.contains(data.pluginTemplateName).click();
 
     cy.contains('Next').click();
@@ -110,6 +112,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.wait(timeout * 2);
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
+    cy.wait(timeout);
     cy.contains(data.routeName).siblings().contains('Configure').click();
 
     cy.contains('Forbidden').click();
