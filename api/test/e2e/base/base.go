@@ -35,8 +35,7 @@ import (
 )
 
 var (
-	token string
-
+	token                  string
 	UpstreamIp             = "172.16.238.20"
 	APISIXHost             = "http://127.0.0.1:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
