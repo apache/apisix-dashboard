@@ -28,7 +28,6 @@ import (
 	"strings"
 	"time"
 
-	//"encoding/json"
 	"github.com/gavv/httpexpect/v2"
 	"github.com/onsi/ginkgo"
 	"github.com/stretchr/testify/assert"
@@ -38,10 +37,8 @@ import (
 var (
 	token string
 
-	UpstreamIp             = "127.0.0.1"
-	UpstreamGrpcIp         = "172.16.238.21"
+	UpstreamIp             = "172.16.238.20"
 	APISIXHost             = "http://127.0.0.1:9080"
-	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
 	ManagerAPIHost         = "http://127.0.0.1:9000"
 	PrometheusExporter     = "http://127.0.0.1:9091"
@@ -63,18 +60,8 @@ func GetToken() string {
 		panic(err)
 	}
 
-	//result1, _ := json.Marshal(requestBody)
-	//result := fmt.Sprintf("%s%s", "============ levy test requestBody: ", requestBody)
-	//panic(result)
-
-	//result := fmt.Sprintf("%s%s", "============= levy body: ", body)
-	//panic(result)
-
 	respond := gjson.ParseBytes(body)
 	token = respond.Get("data.token").String()
-
-	//result := fmt.Sprintf("%s%s", "============= levy token: ", token)
-	//panic(result)
 
 	return token
 }
@@ -316,13 +303,11 @@ func GetResourceList(resource string) string {
 func CleanResource(resource string) {
 	resources := GetResourceList(resource)
 	//body, _ := json.Marshal(resources)
-	//res := fmt.Sprintf("%s%s", "============== levy: ", resources)
+	//res := fmt.Sprintf("%s%s", "resources: ", resources)
 	//panic(res)
+
 	list := gjson.Get(resources, "data.list").Value().([]interface{})
 	for _, item := range list {
-		//body, _ := json.Marshal(item)
-		//res := fmt.Sprintf("%s%s", "============== levy: ", body)
-		//panic(res)
 		resourceObj := item.(map[string]interface{})
 		idTag := "id"
 		if resource == "consumers" {
