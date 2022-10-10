@@ -82,9 +82,7 @@ context('Create and Search Route', () => {
     cy.wait(timeout);
     for (let i = 0; i < 3; i += 1) {
       cy.contains('Create').click();
-      cy.contains('Next').click();
-      cy.wait(timeout);
-      cy.contains('Next').click();
+      cy.contains('Next').click().click();
       cy.get(selector.name).type(`test${i}`);
       cy.get(selector.description).type(`desc${i}`);
       cy.get(selector.hosts_0).type(data.host1);

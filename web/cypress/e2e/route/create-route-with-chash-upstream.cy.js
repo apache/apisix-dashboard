@@ -102,7 +102,6 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
     cy.get(selector.chash_key).should('value', data.custom_key);
     cy.get(selector.chash_key).clear().type(data.new_key);
     cy.contains('Next').click();
-    cy.wait(1000);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess).should('be.visible');

@@ -110,9 +110,7 @@ context('Create Route with search service name', () => {
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
-    cy.contains('Next').click();
-    cy.wait(timeout);
-    cy.contains('Next').click();
+    cy.contains('Next').click().click();
 
     // set name
     cy.get(selector.name).type(data.routeName);
