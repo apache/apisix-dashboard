@@ -70,7 +70,7 @@ if [ ! $code -eq 200 ]; then
 fi
 
 # login
-resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -X POST -d '{"username":"admin", "password": "admin"}')
+resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -X POST -H "Content-Type:application/json" -d '{"username":"admin", "password": "admin"}')
 token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
 if [ -z "${token}" ]; then
     echo "login failed"
