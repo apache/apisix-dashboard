@@ -73,6 +73,7 @@ context('Create Route Both use uri and uris', () => {
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
+    cy.wait(2000);
     cy.get(selector.name).type(data.name);
     cy.get(selector.description).type(data.description);
 

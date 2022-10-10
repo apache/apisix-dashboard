@@ -85,7 +85,6 @@ context('Create Route with search service name', () => {
     cy.wait(timeout);
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.wait(timeout);
     cy.get(selector.notification).should('contain', data.createServiceSuccess);
 
     cy.visit('/');
@@ -111,7 +110,7 @@ context('Create Route with search service name', () => {
     cy.contains('Route').click();
     cy.contains('Create').click();
     cy.contains('Next').click().click();
-
+    cy.wait(timeout);
     // set name
     cy.get(selector.name).type(data.routeName);
     cy.get(selector.serviceSelector).type(`${data.serviceName2}\n`);
