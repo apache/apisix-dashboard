@@ -92,8 +92,8 @@ jobs:
 
       - name: run test
         run: |
-          curl http://127.0.0.1:9000/apisix/admin/user/login -X POST -i -d '{"username":"admin", "password": "admin"}'
-          code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000/apisix/admin/user/login -X POST -i -d '{"username":"admin", "password": "admin"}')
+          curl http://127.0.0.1:9000/apisix/admin/user/login -X POST -H "Content-Type:application/json" -i -d '{"username":"admin", "password": "admin"}'
+          code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000/apisix/admin/user/login -X POST -H "Content-Type:application/json" -i -d '{"username":"admin", "password": "admin"}')
           if [ ! $code -eq 200 ]; then
               echo "failed: failed to custom port"
               exit 1
