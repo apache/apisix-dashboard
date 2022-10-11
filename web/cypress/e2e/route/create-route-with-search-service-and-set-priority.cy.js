@@ -156,6 +156,7 @@ context('Create Route with search service name', () => {
   it('should delete the route and services', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(4000);
     cy.get(selector.name).type(`${data.routeName}\n`);
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
