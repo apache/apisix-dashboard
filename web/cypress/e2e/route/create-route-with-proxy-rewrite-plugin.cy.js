@@ -58,8 +58,6 @@ context('create route with proxy-rewrite plugin', () => {
     rewriteHeaderValue2: '2',
   };
 
-  const timeout = 2000;
-
   beforeEach(() => {
     cy.login();
   });
@@ -71,7 +69,6 @@ context('create route with proxy-rewrite plugin', () => {
     // show create page
     cy.contains(componentLocaleUS['component.global.create']).click();
     cy.contains('Next').click().click();
-    cy.wait(timeout);
     cy.get(selector.name).type(data.routeName);
 
     // show requestOverride PanelSection
@@ -152,8 +149,6 @@ context('create route with proxy-rewrite plugin', () => {
 
     // should not see proxy-rewrite plugin in the step3
     cy.contains('proxy-rewrite').should('not.exist');
-    cy.contains('Next').click();
-    cy.wait(timeout);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess).should('be.visible');
