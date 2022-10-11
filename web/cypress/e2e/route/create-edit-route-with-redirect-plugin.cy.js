@@ -63,7 +63,6 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains('Create').click();
     cy.wait(timeout * 2);
     cy.contains('Next').click();
-    cy.wait(timeout);
     cy.contains('Next').click();
     cy.get(selector.name).type(name);
     cy.get(selector.redirect).click();
@@ -80,7 +79,6 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.contains(data.step3Title).should('not.exist');
     // type customRedirectUrI
     cy.get(selector.customRedirectUrI).type(data.customRedirectUrI);
-    cy.get(selector.customRedirectUrI);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess);

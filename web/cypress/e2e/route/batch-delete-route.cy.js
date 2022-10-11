@@ -63,12 +63,15 @@ context('Create and Batch Deletion Routes', () => {
     for (let i = 0; i < 3; i += 1) {
       cy.wait(timeout);
       cy.get('.ant-pro-table-list-toolbar-right').contains('Create').click();
+      cy.get('.ant-row').contains('Next').click().click();
       cy.get(selector.name).type(`test${i}`);
       cy.get(selector.description).type(`desc${i}`);
       cy.get(selector.hosts_0).type(data.host1);
       cy.get(selector.uris_0).clear().type(`/get${i}`);
+
       // config label
       cy.contains('Manage').click();
+
       // eslint-disable-next-line @typescript-eslint/no-loop-func
       cy.get(selector.drawerBody).within(($drawer) => {
         cy.wrap($drawer)
@@ -78,23 +81,19 @@ context('Create and Batch Deletion Routes', () => {
           .then(() => {
             cy.get(selector.labels_0_labelKey).type(`label${i}`);
             cy.get(selector.labels_0_labelValue).type(`value${i}`);
-            cy.contains('Confirm').click({ force: true });
+            cy.contains('Confirm').click();
           });
       });
 
-      cy.get('.ant-row').contains('Next').click({ force: true });
-
+      cy.contains('button', 'Next').should('not.be.disabled').click();
       cy.get(selector.nodes_0_host).type(data.host2, {
         timeout,
       });
       cy.get(selector.nodes_0_port).type(data.port);
       cy.get(selector.nodes_0_weight).type(data.weight);
-
       cy.get('.ant-row').contains('Next').click();
       cy.get('.ant-row').contains('Next').click();
       cy.get('.ant-row').contains('Submit').click();
-      // cy.contains('button', 'Next').should('not.be.disabled').click();
-
       cy.contains(data.submitSuccess);
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
@@ -125,8 +124,9 @@ context('Create and Batch Deletion Routes', () => {
     cy.wrap([0, 2, 'x']).each(($n, i) => {
       cy.get(selector.nameSearchInput).clear().type(`${prefix}${$n}`);
       cy.contains('Search').click();
-      cy.wrap(cases[i]).each(($m) => {
-        cy.contains(`${prefix}${$m}`).should('not.exist');
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      cy.wrap(cases[i]).each(($n) => {
+        cy.contains(`${prefix}${$n}`).should('not.exist');
       });
     });
   });
@@ -142,8 +142,9 @@ context('Create and Batch Deletion Routes', () => {
     cy.wrap([0, 2, 'x']).each(($n, i) => {
       cy.get(selector.nameSearchInput).clear().type(`${prefix}${$n}`);
       cy.contains('Search').click();
-      cy.wrap(cases[i]).each(($m) => {
-        cy.contains(`${prefix}${$m}`).should('not.exist');
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      cy.wrap(cases[i]).each(($n) => {
+        cy.contains(`${prefix}${$n}`).should('not.exist');
       });
     });
   });
