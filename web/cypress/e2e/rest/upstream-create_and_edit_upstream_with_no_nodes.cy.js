@@ -40,7 +40,6 @@ context('Create and Delete Upstream', () => {
   it('should create upstream with no nodes', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(4000);
 
     cy.contains('Create').click();
 
@@ -59,14 +58,13 @@ context('Create and Delete Upstream', () => {
   it('should configure the upstream with no nodes', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(4000);
 
     cy.get(selector.nameSelector).type(data.upstreamName);
     cy.contains('Search').click();
     cy.contains(data.upstreamName).siblings().contains('Configure').click();
 
     cy.get(selector.upstreamNodeMinus0).should('not.exist');
-    cy.contains('button', 'Next').should('not.be.disabled').click({ force: true });
+    cy.contains('button', 'Next').should('not.be.disabled').click();
     cy.contains('Submit').click({
       force: true,
     });
@@ -78,7 +76,6 @@ context('Create and Delete Upstream', () => {
   it('should delete the upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(4000);
     cy.contains(data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
