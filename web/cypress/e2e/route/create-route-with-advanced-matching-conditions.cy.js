@@ -57,8 +57,6 @@ context('Create Route with advanced matching conditions', () => {
 
   const matchingValueList2 = ['2000', '1800', '3000', '["2800","2888"]'];
 
-  const timeout = 2000;
-
   before(() => {
     cy.clearLocalStorageSnapshot();
     cy.login();
@@ -73,7 +71,6 @@ context('Create Route with advanced matching conditions', () => {
     cy.visit('/routes/list');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
-    cy.wait(timeout);
     cy.get(selector.name).type(data.routeName);
 
     // All Of Operational Character Should Exist And Can be Created
@@ -165,7 +162,6 @@ context('Create Route with advanced matching conditions', () => {
     cy.contains('Next').click();
     cy.get(selector.nodes_0_port).focus();
     cy.contains('Next').click();
-    cy.wait(timeout);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess);
@@ -189,7 +185,6 @@ context('Create Route with advanced matching conditions', () => {
     cy.contains('Next').click();
     cy.get(selector.nodes_0_port).focus();
     cy.contains('Next').click();
-    cy.wait(timeout);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess);

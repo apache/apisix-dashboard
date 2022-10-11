@@ -45,8 +45,6 @@ context('Create Route with Upstream', () => {
     FQDN: 'bigserver.mycompany.com',
   };
 
-  const timeout = 1000;
-
   beforeEach(() => {
     cy.login();
   });
@@ -68,7 +66,6 @@ context('Create Route with Upstream', () => {
     cy.get(selector.nodes_0_port).clear();
     cy.get(selector.nodes_0_weight).type(data.weight);
     cy.contains('Next').click();
-    cy.wait(timeout);
     cy.contains('Submit').click();
   });
 

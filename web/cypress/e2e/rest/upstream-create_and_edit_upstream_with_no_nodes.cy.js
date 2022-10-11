@@ -49,7 +49,6 @@ context('Create and Delete Upstream', () => {
     cy.get(selector.upstreamNodeMinus0).click();
 
     cy.contains('Next').click();
-    cy.wait(2000);
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');

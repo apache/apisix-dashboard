@@ -18,7 +18,6 @@ import React from 'react';
 import type { CSSProperties } from 'react';
 import { Row, Col, Button } from 'antd';
 import { useIntl } from 'umi';
-import useThrottle from '@/hooks/useThrottle';
 
 type Props = {
   step: number;
@@ -42,10 +41,6 @@ const style: CSSProperties = {
 const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView, loading }) => {
   const { formatMessage } = useIntl();
 
-  const { fn: onChangeStep } = useThrottle((n: number) => {
-    onChange(step + n);
-  });
-
   if (step > lastStep && !withResultView) {
     onChange(lastStep);
     return null;
@@ -60,12 +55,12 @@ const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView, 
     <div style={style}>
       <Row gutter={10} justify="end">
         <Col>
-          <Button type="primary" onClick={() => onChangeStep(-1)} disabled={step === 1}>
+          <Button type="primary" onClick={() => onChange(step - 1)} disabled={step === 1}>
             {formatMessage({ id: 'component.actionbar.button.preStep' })}
           </Button>
         </Col>
         <Col>
-          <Button type="primary" onClick={() => onChangeStep(1)} loading={loading}>
+          <Button type="primary" onClick={() => onChange(step + 1)} loading={loading}>
             {step < lastStep
               ? formatMessage({ id: 'component.actionbar.button.nextStep' })
               : formatMessage({ id: 'component.global.submit' })}
