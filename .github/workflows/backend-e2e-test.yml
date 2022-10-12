@@ -46,6 +46,7 @@ jobs:
           yq -y '.data_source[0].etcd.endpoints[0]="172.16.238.10:2379"' api/config/config.yaml | \
           yq -y '.data_source[0].etcd.endpoints[1]="172.16.238.11:2379"' | \
           yq -y '.data_source[0].etcd.endpoints[2]="172.16.238.12:2379"' | \
+          yq -y '.data_source[0].apisix.address="http://172.16.238.30:9180/apisix/admin"' | \
           yq -y '.security.allow_list[0]="0.0.0.0/0"' > api/config/config.yaml.tmp && mv api/config/config.yaml.tmp api/config/config.yaml
           cat api/config/config.yaml
 
