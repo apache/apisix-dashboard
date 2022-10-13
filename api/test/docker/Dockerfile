@@ -21,13 +21,14 @@ WORKDIR /workspace
 
 COPY ./ ./
 
-RUN echo "export GOPROXY="https://goproxy.cn"" | tee -a ~/.bashrc \
+RUN mkdir -p /go/manager-api/config \
+    && echo "export GOPROXY="https://goproxy.cn"" | tee -a ~/.bashrc \
     && . ~/.bashrc \
     && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./api \
     && mv /workspace/api/entry.sh /go/manager-api/ \
     && rm -rf /workspace \
     && rm -rf /etc/localtime \
-    && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \
+    && ln -s /usr/share/zoneinfo/Hongkong /etc/localtime \
     && dpkg-reconfigure -f noninteractive tzdata
 
 RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
@@ -55,5 +56,6 @@ RUN mkdir logs
 EXPOSE 9000
 
 RUN chmod +x ./entry.sh
+
 ENTRYPOINT ["/go/manager-api/manager-api"]
 CMD ["-test.coverprofile=./testdata/integrationcover.out"]

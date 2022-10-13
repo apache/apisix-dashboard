@@ -27,7 +27,7 @@ data_source:                                       # The data source type of API
   - name: default                                  # The name of data source.
     type: apisix                                   # The type of data source, it now only supports "apisix".
     apisix:                                        # When the data source type is "apisix", configure the following parameters.
-      address: http://172.16.238.30:9180/apisix/admin  # The endpoint of APISIX Admin API.
+      address: http://127.0.0.1:9180/apisix/admin  # The endpoint of APISIX Admin API.
       key: edd1c9f034335f136f87ad84b625c8f1        # The admin key of Admin API, It needs to have the "admin" role to support data writes.
 
 security:

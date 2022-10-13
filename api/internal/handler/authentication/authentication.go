@@ -123,6 +123,7 @@ func (h *Handler) userLogin(_ *gin.Context, input interface{}) handler.Response 
 
 	// output token
 	return handler.Response{
+		Success: true,
 		Data: UserSession{
 			Token: signedToken,
 		},
