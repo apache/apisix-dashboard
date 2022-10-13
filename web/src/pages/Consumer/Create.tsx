@@ -44,7 +44,9 @@ const Page: React.FC = (props) => {
     }
   }, []);
 
-  const { runAsync: createConsumers, loading: submitLoading } = useRequest(create);
+  const { runAsync: createConsumers, loading: submitLoading } = useRequest(create, {
+    manual: true,
+  });
 
   const onSubmit = () => {
     const data = { ...form1.getFieldsValue(), plugins } as ConsumerModule.Entity;

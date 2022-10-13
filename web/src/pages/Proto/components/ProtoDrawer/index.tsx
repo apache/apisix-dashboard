@@ -39,7 +39,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
     form.setFieldsValue(protoData);
   }, [visible]);
 
-  const { runAsync: createProto, loading: submitLoading } = useRequest(create);
+  const { runAsync: createProto, loading: submitLoading } = useRequest(create, { manual: true });
 
   const { run: submit } = useThrottleFn(async () => {
     await form.validateFields();

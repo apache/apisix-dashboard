@@ -227,7 +227,7 @@ const Page: React.FC<Props> = (props) => {
     return true;
   };
 
-  const { runAsync: createRoutes, loading: submitLoading } = useRequest(create);
+  const { runAsync: createRoutes, loading: submitLoading } = useRequest(create, { manual: true });
 
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
