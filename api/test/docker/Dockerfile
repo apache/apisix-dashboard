@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-FROM golang:1.19 AS build-env
+FROM golang:1.19-alpine AS build-env
 
 WORKDIR /workspace
 
