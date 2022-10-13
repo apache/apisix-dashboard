@@ -50,9 +50,8 @@ jobs:
 
       - name: Build docker images
         working-directory: ./api/test/docker
-        continue-on-error: true
         run: |
-          docker buildx bake -f docker-compose.yaml
+          docker buildx bake --load -f docker-compose.yaml
 
       - name: Build grpc upstream
         working-directory: ./api/test/docker
