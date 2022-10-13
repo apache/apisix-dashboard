@@ -35,7 +35,7 @@ jobs:
       - name: Modify config.yaml Configure for used by the APISIX Dashboard
         run: |
           sudo pip3 install yq
-          yq -y '.data_source[0].apisix.address[0]="172.16.238.20:9180"' api/config/config.yaml | \
+          yq -y '.data_source[0].apisix.address="172.16.238.20:9180"' api/config/config.yaml | \
           yq -y '.security.allow_list[0]="0.0.0.0/0"' > api/config/config.yaml.tmp && mv api/config/config.yaml.tmp api/config/config.yaml
           cat api/config/config.yaml
 
