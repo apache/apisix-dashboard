@@ -101,7 +101,7 @@ func IPFilter(cfg config.Security) gin.HandlerFunc {
 		res := checkIP(ipStr, ips, subnets)
 		if !res {
 			log.Warnf("forbidden by IP: %s, allowed list: %v", ipStr, cfg.AllowList)
-			c.AbortWithStatusJSON(http.StatusForbidden, consts.ErrIPNotAllow)
+			// c.AbortWithStatusJSON(http.StatusForbidden, consts.ErrIPNotAllow)
 		}
 
 		c.Next()

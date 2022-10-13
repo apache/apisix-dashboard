@@ -24,7 +24,7 @@ import (
 	"github.com/apache/apisix-dashboard/api/test/e2e/base"
 )
 
-var _ = FDescribe("Authentication", func() {
+var _ = Describe("Authentication", func() {
 	It("Access with valid authentication token", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),

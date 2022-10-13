@@ -17,29 +17,29 @@
 # If you want to set the specified configuration value, you can set the new
 # in this file. For example if you want to specify the etcd address:
 #
-etcd:
-  host:
-    - "http://172.16.238.10:2379"
-    - "http://172.16.238.11:2379"
-    - "http://172.16.238.12:2379"
-  resync_delay: 0  # sync data from etcd quickly for e2e test
+deployment:
+  etcd:
+    host:
+      - "http://172.16.238.10:2379"
+      - "http://172.16.238.11:2379"
+      - "http://172.16.238.12:2379"
+    resync_delay: 0  # sync data from etcd quickly for e2e test
+
+  admin:
+    admin_key:
+      -
+        name: "admin"                          # yamllint disable rule:comments-indentation
+        key: edd1c9f034335f136f87ad84b625c8f1  # using fixed API token has security risk, please
+                                              # update it when you deploy to production environment
+        role: admin                            # yamllint enable rule:comments-indentation
+
+    allow_admin:               # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
+      - 0.0.0.0/0              # If we don't set any IP list, then any IP access is allowed by default.
 
 apisix:
-  id: "apisix-server1"
-  admin_key:
-    -
-      name: "admin"                          # yamllint disable rule:comments-indentation
-      key: edd1c9f034335f136f87ad84b625c8f1  # using fixed API token has security risk, please
-                                             # update it when you deploy to production environment
-      role: admin                            # yamllint enable rule:comments-indentation
-
-  allow_admin:               # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
-    - 0.0.0.0/0              # If we don't set any IP list, then any IP access is allowed by default.
-
-  ssl:
-    enable: true
-    ssl_cert: "/usr/local/apisix/certs/apisix.crt"
-    ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
+  # ssl:
+    # enable: true
+    # ssl_trusted_certificate: "/usr/local/apisix/certs/apisix.crt"
 
   enable_control: true
   control:
@@ -57,7 +57,7 @@ apisix:
       - 10095
 
 nginx_config:
-  error_log_level: "debug"
+  error_log_level: debug
 
 plugins:                          # plugin list (sorted in alphabetical order)
   - api-breaker
