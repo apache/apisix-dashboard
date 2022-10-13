@@ -19,83 +19,74 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  backend-e2e-test:
+  backend-e2e-test-v3:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
-      - name: setup go
+      - name: Setup golang
         uses: actions/setup-go@v3
         with:
           go-version: "1.19"
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v2
 
-      - uses: docker/setup-buildx-action@v2
-
-      - uses: actions/cache@v3
+  backend-e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup golang
+        uses: actions/setup-go@v3
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-apisixdashboard-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-apisixdashboard-
-            ${{ runner.os }}-buildx-
+          go-version: "1.19"
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Modify conf.yaml Configure for use by the manage-api cluster
+      - name: Modify config.yaml Configure for used by the APISIX Dashboard
         run: |
           sudo pip3 install yq
-          yq -y '.data_source[0].etcd.endpoints[0]="172.16.238.10:2379"' api/config/config.yaml | \
-          yq -y '.data_source[0].etcd.endpoints[1]="172.16.238.11:2379"' | \
-          yq -y '.data_source[0].etcd.endpoints[2]="172.16.238.12:2379"' | \
+          yq -y '.data_source[0].apisix.address[0]="172.16.238.20:9180"' api/config/config.yaml | \
           yq -y '.security.allow_list[0]="0.0.0.0/0"' > api/config/config.yaml.tmp && mv api/config/config.yaml.tmp api/config/config.yaml
           cat api/config/config.yaml
 
-      - name: download file Dockerfile-apisix
-        working-directory: ./api/test/docker
-        run: |
-          curl -o Dockerfile-apisix https://raw.githubusercontent.com/apache/apisix-docker/master/alpine/Dockerfile
-
-      - name: build docker images
+      - name: Build docker images
         working-directory: ./api/test/docker
         continue-on-error: true
         run: |
-          docker buildx bake --load \
-          -f docker-compose.yaml \
-          --set *.cache-from=type=local,src=/tmp/.buildx-cache \
-          --set *.cache-to=type=local,dest=/tmp/.buildx-cache
+          docker buildx bake -f docker-compose.yaml
 
-      - name: build and start grpc_server_example
+      - name: Build grpc upstream
         working-directory: ./api/test/docker
         run: |
           wget https://github.com/api7/grpc_server_example/archive/refs/tags/20210819.tar.gz
           tar -xzvf 20210819.tar.gz && cd grpc_server_example-20210819
           docker build -t grpc_server_example:latest .
 
-      - name: run docker compose
+      - name: Start services
         working-directory: ./api/test/docker
         run: |
-          docker-compose up -d
+          docker-compose up -f docker-compose-v3.yaml -d
           sleep 5
           docker logs docker_managerapi_1
 
-      - name: install ginkgo cli
+      - name: Install ginkgo cli
         run: go install github.com/onsi/ginkgo/ginkgo@v1.16.5
 
-      - name: run test
+      - name: Run test
         working-directory: ./api/test/e2e
         run: ginkgo -r
 
-      - name: stop docker compose
+      - name: Stop docker compose
         working-directory: ./api/test/docker
         run: |
           docker-compose down
           sleep 10
 
-      - name: output test coverage
+      - name: Output test coverage
         working-directory: ./api/test/testdata
         run: |
           go tool cover -func=./integrationcover.out
 
-      - name: upload coverage profile
+      - name: Upload coverage profile
         working-directory: ./api/test/testdata
         run: |
           bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out -F backend-e2e-test-ginkgo
