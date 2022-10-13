@@ -25,7 +25,7 @@ RUN mkdir -p /go/apisix-dashboard/config \
     && go build -o /go/apisix-dashboard/apisix-dashboard ./api \
     && mv ./api/config/* /go/apisix-dashboard/config/ \
     && wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz && tar -zxvf v1.1.tar.gz \
-    && mkdir -p /go/manager-api/dag-to-lua && mv ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/ \
+    && mkdir -p /go/apisix-dashboard/dag-to-lua && mv ./dag-to-lua-1.1/lib/* /go/apisix-dashboard/dag-to-lua/
 
 
 FROM alpine:3.14
