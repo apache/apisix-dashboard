@@ -63,7 +63,7 @@ jobs:
       - name: Start services
         working-directory: ./api/test/docker
         run: |
-          docker-compose up -f docker-compose-v3.yaml -d
+          docker-compose -f docker-compose-v3.yaml up -d
           sleep 5
           docker logs docker_managerapi_1
 
