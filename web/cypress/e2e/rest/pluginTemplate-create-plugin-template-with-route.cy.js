@@ -92,6 +92,7 @@ context('Create PluginTemplate Binding To Route', () => {
   it('should delete the pluginTemplate failure', function () {
     cy.visit('plugin-template/list');
     cy.get(selector.refresh).click();
+
     cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
     cy.contains('button', 'Search').click();
     cy.contains(data.pluginTemplateName).siblings().contains('Delete').click();
@@ -102,6 +103,7 @@ context('Create PluginTemplate Binding To Route', () => {
 
   it('should edit the route with pluginTemplate', function () {
     cy.visit('routes/list');
+
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();

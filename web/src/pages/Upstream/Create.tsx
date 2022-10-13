@@ -72,9 +72,8 @@ const Page: React.FC = (props) => {
             }`,
           });
           history.replace('/upstream/list');
-          setSubmitLoading(false);
         })
-        .catch(() => {
+        .finally(() => {
           setSubmitLoading(false);
         });
     });

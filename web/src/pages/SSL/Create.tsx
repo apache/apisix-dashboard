@@ -64,9 +64,8 @@ const Page: React.FC = (props) => {
     (id ? update(id, sslData) : create(sslData))
       .then(() => {
         history.replace('/ssl/list');
-        setSubmitLoading(false);
       })
-      .catch(() => {
+      .finally(() => {
         setSubmitLoading(false);
       });
   };

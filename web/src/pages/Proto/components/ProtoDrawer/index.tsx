@@ -22,8 +22,7 @@ import { Input } from 'antd';
 
 import { create, update } from '../../service';
 import styles from './index.less';
-import useThrottle from '@/hooks/useThrottle';
-import useRequest from '@/hooks/useRequest';
+import { useRequest, useThrottleFn } from 'ahooks';
 
 const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
   protoData,
@@ -40,9 +39,9 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
     form.setFieldsValue(protoData);
   }, [visible]);
 
-  const { fn: createProto, loading: submitLoading } = useRequest(create);
+  const { runAsync: createProto, loading: submitLoading } = useRequest(create);
 
-  const { fn: submit } = useThrottle(async () => {
+  const { run: submit } = useThrottleFn(async () => {
     await form.validateFields();
     const formData: ProtoModule.ProtoData = form.getFieldsValue(true);
     if (editMode === 'create') {

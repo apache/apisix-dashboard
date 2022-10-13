@@ -25,7 +25,7 @@ import PluginPage from '@/components/Plugin';
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
 import { fetchItem, create, update } from './service';
-import useRequest from '@/hooks/useRequest';
+import { useRequest } from 'ahooks';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -44,7 +44,7 @@ const Page: React.FC = (props) => {
     }
   }, []);
 
-  const { fn: createConsumers, loading: submitLoading } = useRequest(create);
+  const { runAsync: createConsumers, loading: submitLoading } = useRequest(create);
 
   const onSubmit = () => {
     const data = { ...form1.getFieldsValue(), plugins } as ConsumerModule.Entity;

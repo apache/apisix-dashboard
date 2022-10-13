@@ -40,7 +40,6 @@ context('Create and Delete Upstream', () => {
   it('should create upstream with no nodes', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-
     cy.contains('Create').click();
 
     cy.get(selector.name).type(data.upstreamName);

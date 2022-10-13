@@ -59,7 +59,7 @@ import { DebugDrawView } from './components/DebugViews';
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
 import DataLoaderImport from '@/pages/Route/components/DataLoader/Import';
-import useThrottle from '@/hooks/useThrottle';
+import { useThrottleFn } from 'ahooks';
 
 const { OptGroup, Option } = Select;
 
@@ -111,7 +111,7 @@ const Page: React.FC = () => {
 
   const [publishOfflineLoading, setPublishOfflineLoading] = useState<string>('');
 
-  const { fn: handlePublishOffline } = useThrottle(
+  const { run: handlePublishOffline } = useThrottleFn(
     (rid: string, status: RouteModule.RouteStatus) => {
       setPublishOfflineLoading(rid);
       updateRouteStatus(rid, status)

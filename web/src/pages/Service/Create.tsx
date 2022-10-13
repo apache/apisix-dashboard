@@ -90,10 +90,11 @@ const Page: React.FC = (props) => {
           })}`,
         });
         history.push('/service/list');
-        setSubmitLoading(false);
       })
       .catch(() => {
         setStep(3);
+      })
+      .finally(() => {
         setSubmitLoading(false);
       });
   };

@@ -32,7 +32,7 @@ import CreateStep4 from './components/CreateStep4';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
-import useRequest from '@/hooks/useRequest';
+import { useRequest } from 'ahooks';
 
 const { Step } = Steps;
 
@@ -227,7 +227,7 @@ const Page: React.FC<Props> = (props) => {
     return true;
   };
 
-  const { fn: createRoutes, loading: submitLoading } = useRequest(create);
+  const { runAsync: createRoutes, loading: submitLoading } = useRequest(create);
 
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
@@ -247,11 +247,9 @@ const Page: React.FC<Props> = (props) => {
         if (path.indexOf('duplicate') !== -1) {
           delete routeData.form1Data.id;
         }
-        createRoutes(routeData)
-          .then(() => {
-            setStep(5);
-          })
-          .catch(() => {});
+        createRoutes(routeData).then(() => {
+          setStep(5);
+        });
       }
     };
 
