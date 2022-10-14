@@ -15,45 +15,27 @@
 # limitations under the License.
 #
 
-FROM golang:1.18 AS build-env
+FROM golang:1.19-alpine AS build-env
 
 WORKDIR /workspace
 
 COPY ./ ./
 
-RUN mkdir -p /go/manager-api/config \
-    && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./api \
-    && mv /workspace/api/entry.sh /go/manager-api/ \
-    && rm -rf /workspace \
-    && rm -rf /etc/localtime \
-    && ln -s /usr/share/zoneinfo/Hongkong /etc/localtime \
-    && dpkg-reconfigure -f noninteractive tzdata
-
-RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
-    && tar -zxvf v1.1.tar.gz \
-    && mkdir -p /go/manager-api/dag-to-lua \
-    && mv -u ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
+RUN mkdir -p /go/apisix-dashboard/config \
+    && go build -o /go/apisix-dashboard/apisix-dashboard ./api \
+    && mv ./api/config/* /go/apisix-dashboard/config/ \
+    && wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz && tar -zxvf v1.1.tar.gz \
+    && mkdir -p /go/apisix-dashboard/dag-to-lua && mv ./dag-to-lua-1.1/lib/* /go/apisix-dashboard/dag-to-lua/
 
 FROM alpine:3.14
 
-RUN mkdir -p /go/manager-api \
-   && apk update  \
-   && apk add ca-certificates \
-   && update-ca-certificates \
-   && apk add --no-cache libc6-compat \
-   && echo "hosts: files dns" > /etc/nsswitch.conf \
-   && rm -rf /var/cache/apk/*
-
-
-WORKDIR /go/manager-api
-COPY --from=build-env /go/manager-api/ /go/manager-api/
-COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
+WORKDIR /go/apisix-dashboard
 
 RUN mkdir logs
 
 EXPOSE 9000
 
-RUN chmod +x ./entry.sh
-
-ENTRYPOINT ["/go/manager-api/manager-api"]
+ENTRYPOINT ["/go/apisix-dashboard/apisix-dashboard"]
 CMD ["-test.coverprofile=./testdata/integrationcover.out"]
+
+COPY --from=build-env /go/apisix-dashboard/ /go/apisix-dashboard/

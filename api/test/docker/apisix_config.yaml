@@ -21,8 +21,6 @@ deployment:
   etcd:
     host:
       - "http://172.16.238.10:2379"
-      - "http://172.16.238.11:2379"
-      - "http://172.16.238.12:2379"
     resync_delay: 0  # sync data from etcd quickly for e2e test
 
   admin:
@@ -37,9 +35,8 @@ deployment:
       - 0.0.0.0/0              # If we don't set any IP list, then any IP access is allowed by default.
 
 apisix:
-  # ssl:
-    # enable: true
-    # ssl_trusted_certificate: "/usr/local/apisix/certs/apisix.crt"
+  ssl:
+    enable: true
 
   enable_control: true
   control:
@@ -59,59 +56,12 @@ apisix:
 nginx_config:
   error_log_level: debug
 
-plugins:                          # plugin list (sorted in alphabetical order)
-  - api-breaker
-  - authz-keycloak
-  - basic-auth
-  - batch-requests
-  - consumer-restriction
-  - cors
-  - echo
-  - fault-injection
-  - grpc-transcode
-  - hmac-auth
-  - http-logger
-  - ip-restriction
-  - jwt-auth
-  - kafka-logger
-  - key-auth
-  - limit-conn
-  - limit-count
-  - limit-req
-  - node-status
-  - openid-connect
-  - prometheus
-  - proxy-cache
-  - proxy-mirror
-  - proxy-rewrite
-  - redirect
-  - referer-restriction
-  - request-id
-  - request-validation
-  - response-rewrite
-  - serverless-post-function
-  - serverless-pre-function
-  - skywalking
-  - sls-logger
-  - syslog
-  - tcp-logger
-  - udp-logger
-  - uri-blocker
-  - wolf-rbac
-  - zipkin
-  - server-info
-
 plugin_attr:
   skywalking:
-    service_name: APISIX
-    service_instance_name: "APISIX Instance Name"
     endpoint_addr: http://172.16.238.50:12800
   server-info:
-    report_interval: 60
     report_ttl: 3600
   prometheus:
-    export_uri: /apisix/prometheus/metrics
     enable_export_server: true
     export_addr:
-      ip: "0.0.0.0"
-      port: 9091
+      ip: 0.0.0.0
