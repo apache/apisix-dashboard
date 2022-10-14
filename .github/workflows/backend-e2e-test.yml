@@ -65,8 +65,9 @@ jobs:
         working-directory: ./api/test/e2e
         run: ginkgo -r
 
-      - name: tmate debugger
+      - name: Run debugger
         if: ${{ failure() }}
+        timeout-minutes: 15
         uses: ./.github/actions/tmate-action
 
       - name: Stop docker compose
