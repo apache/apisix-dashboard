@@ -1,0 +1,62 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# If you want to set the specified configuration value, you can set the new
+# in this file. For example if you want to specify the etcd address:
+#
+deployment:
+  etcd:
+    host:
+      - "http://172.16.238.10:2379"
+    resync_delay: 0  # sync data from etcd quickly for e2e test
+  admin:
+    admin_key:
+      - name: "admin"
+        key: edd1c9f034335f136f87ad84b625c8f1
+        role: admin
+    allow_admin:
+      - 0.0.0.0/0
+
+apisix:
+  ssl:
+    enable: true
+  enable_control: true
+  control:
+    ip: 0.0.0.0
+    port: 9090
+  stream_proxy:
+    only: false
+    tcp:
+      - addr: 10090
+      - addr: 10091
+      - addr: 10092
+      - addr: 10093
+        tls: true
+    udp:
+      - 10095
+
+nginx_config:
+  error_log_level: "debug"
+
+plugin_attr:
+  skywalking:
+    endpoint_addr: http://172.16.238.50:12800
+  server-info:
+    report_ttl: 3600
+  prometheus:
+    enable_export_server: true
+    export_addr:
+      ip: 0.0.0.0
