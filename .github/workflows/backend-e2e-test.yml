@@ -63,8 +63,7 @@ jobs:
           docker logs docker_managerapi_1
 
       - name: install ginkgo cli
-        run: |
-          export GOPROXY="https://goproxy.cn" && go get github.com/onsi/ginkgo/ginkgo@v1.16.5
+        run: go get github.com/onsi/ginkgo/ginkgo@v1.16.5
 
       - name: run test
         working-directory: ./api/test/e2e

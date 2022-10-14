@@ -22,8 +22,6 @@ WORKDIR /workspace
 COPY ./ ./
 
 RUN mkdir -p /go/manager-api/config \
-    && echo "export GOPROXY="https://goproxy.cn"" | tee -a ~/.bashrc \
-    && . ~/.bashrc \
     && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./api \
     && mv /workspace/api/entry.sh /go/manager-api/ \
     && rm -rf /workspace \
