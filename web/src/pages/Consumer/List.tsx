@@ -38,7 +38,7 @@ const Page: React.FC = () => {
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
-  const [deleteLoading, setDeleteLoading] = useState('');
+  const [consumerId, setConsumerId] = useState<string>('');
   const columns: ProColumns<ConsumerModule.ResEntity>[] = [
     {
       title: formatMessage({ id: 'page.consumer.username' }),
@@ -92,7 +92,7 @@ const Page: React.FC = () => {
             okText={formatMessage({ id: 'component.global.confirm' })}
             cancelText={formatMessage({ id: 'component.global.cancel' })}
             onConfirm={() => {
-              setDeleteLoading(record.id);
+              setConsumerId(record.id);
               remove(record.username)
                 .then(() => {
                   notification.success({
@@ -101,11 +101,11 @@ const Page: React.FC = () => {
                   checkPageList(ref);
                 })
                 .finally(() => {
-                  setDeleteLoading('');
+                  setConsumerId('');
                 });
             }}
           >
-            <Button type="primary" danger loading={record.id === deleteLoading}>
+            <Button type="primary" danger loading={record.id === consumerId}>
               {formatMessage({ id: 'component.global.delete' })}
             </Button>
           </Popconfirm>

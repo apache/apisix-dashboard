@@ -35,6 +35,7 @@ const Page: React.FC = (props) => {
   const [upstreamForm] = Form.useForm();
   const upstreamRef = useRef<any>();
   const [plugins, setPlugins] = useState<PluginComponent.Data>({});
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const STEP_HEADER = [
     formatMessage({ id: 'page.service.steps.stepTitle.basicInformation' }),
@@ -62,7 +63,7 @@ const Page: React.FC = (props) => {
       });
     }
   }, []);
-  const [submitLoading, setSubmitLoading] = useState(false);
+
   const onSubmit = () => {
     setSubmitLoading(true);
     const data = {

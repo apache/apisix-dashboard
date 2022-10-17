@@ -42,7 +42,7 @@ import yaml from 'js-yaml';
 import moment from 'moment';
 import { saveAs } from 'file-saver';
 import { omit } from 'lodash';
-
+import { useThrottleFn } from 'ahooks';
 import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
 
@@ -59,7 +59,6 @@ import { DebugDrawView } from './components/DebugViews';
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
 import DataLoaderImport from '@/pages/Route/components/DataLoader/Import';
-import { useThrottleFn } from 'ahooks';
 
 const { OptGroup, Option } = Select;
 
@@ -86,6 +85,7 @@ const Page: React.FC = () => {
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
   const [debugDrawVisible, setDebugDrawVisible] = useState(false);
+  const [routeId, setRouteId] = useState<string>('');
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
@@ -109,11 +109,9 @@ const Page: React.FC = () => {
     checkPageList(ref);
   };
 
-  const [publishOfflineLoading, setPublishOfflineLoading] = useState<string>('');
-
   const { run: handlePublishOffline } = useThrottleFn(
     (rid: string, status: RouteModule.RouteStatus) => {
-      setPublishOfflineLoading(rid);
+      setRouteId(rid);
       updateRouteStatus(rid, status)
         .then(() => {
           const actionName = status
@@ -124,10 +122,9 @@ const Page: React.FC = () => {
               id: 'menu.routes',
             })} ${formatMessage({ id: 'component.status.success' })}`,
           );
-          setPublishOfflineLoading('');
         })
-        .catch(() => {
-          setPublishOfflineLoading('');
+        .finally(() => {
+          setRouteId('');
         });
     },
   );
@@ -514,7 +511,7 @@ const Page: React.FC = () => {
                 onClick={() => {
                   handlePublishOffline(record.id, RouteStatus.Publish);
                 }}
-                loading={record.id === publishOfflineLoading}
+                loading={record.id === routeId}
               >
                 {formatMessage({ id: 'page.route.publish' })}
               </Button>
@@ -535,7 +532,7 @@ const Page: React.FC = () => {
                   type="primary"
                   danger
                   disabled={Boolean(!record.status)}
-                  loading={record.id === publishOfflineLoading}
+                  loading={record.id === routeId}
                 >
                   {formatMessage({ id: 'page.route.offline' })}
                 </Button>

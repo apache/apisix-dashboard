@@ -29,6 +29,7 @@ const Page: React.FC = (props) => {
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
   const upstreamRef = useRef<any>();
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   useEffect(() => {
     const { id } = (props as any).match.params;
@@ -48,7 +49,6 @@ const Page: React.FC = (props) => {
       });
     }
   }, []);
-  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onSubmit = () => {
     setSubmitLoading(true);

@@ -19,7 +19,7 @@ import { Card, Steps, Form, Modal } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import { isEmpty } from 'lodash';
-
+import { useRequest } from 'ahooks';
 import ActionBar from '@/components/ActionBar';
 import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
@@ -32,7 +32,6 @@ import CreateStep4 from './components/CreateStep4';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
-import { useRequest } from 'ahooks';
 
 const { Step } = Steps;
 
