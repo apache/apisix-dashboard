@@ -18,11 +18,16 @@ package oidc_test
 
 import (
 	"bytes"
+	"context"
+	"errors"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
+	"github.com/Nerzal/gocloak/v11"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
@@ -36,6 +41,13 @@ var _ = ginkgo.Describe("Oidc-Login", func() {
 			gomega.Expect(accessOidcLogin()).To(gomega.Equal(http.StatusFound))
 		})
 	})
+
+	ginkgo.Context("creat a user", func() {
+		ginkgo.It("the error should be 'nil'", func() {
+			gomega.Expect(createUser()).To(gomega.Equal(errors.New("nil")))
+		})
+	})
+
 	ginkgo.Context("test apisix/admin/oidc/callback", func() {
 		ginkgo.It("should return status-code 200", func() {
 			gomega.Expect(accessOidcCallback()).To(gomega.Equal(http.StatusOK))
@@ -186,4 +198,39 @@ func accessOidcLogoutWithCookie(setCookie bool) int {
 
 	// return status-code
 	return resp.StatusCode
+}
+
+func createUser() error {
+	client := gocloak.NewClient("http://127.0.0.1:8080")
+	ctx := context.Background()
+	token, err := client.LoginAdmin(ctx, "admin", "admin", "master")
+	if err != nil {
+		return err
+	}
+
+	user := gocloak.User{
+		FirstName: gocloak.StringP(GetRandomString(3)),
+		LastName:  gocloak.StringP(GetRandomString(3)),
+		Email:     gocloak.StringP(GetRandomString(3)),
+		Enabled:   gocloak.BoolP(true),
+		Username:  gocloak.StringP(GetRandomString(3)),
+	}
+
+	_, err = client.CreateUser(ctx, token.AccessToken, "master", user)
+	if err != nil {
+		return err
+	}
+
+	return errors.New("nil")
+}
+
+func GetRandomString(l int) string {
+	str := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	bytes := []byte(str)
+	var result []byte
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < l; i++ {
+		result = append(result, bytes[r.Intn(len(bytes))])
+	}
+	return string(result)
 }
