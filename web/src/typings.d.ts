@@ -56,7 +56,7 @@ declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 type PageMode = 'CREATE' | 'EDIT' | 'VIEW';
 
 type Res<T> = {
-  success: number;
+  success: boolean;
   message: string;
   request_id: string;
   data: T;
