@@ -19,7 +19,7 @@ import { Card, Steps, Form, Modal } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import { isEmpty } from 'lodash';
-
+import { useRequest } from 'ahooks';
 import ActionBar from '@/components/ActionBar';
 import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
@@ -226,6 +226,8 @@ const Page: React.FC<Props> = (props) => {
     return true;
   };
 
+  const { runAsync: createRoutes, loading: submitLoading } = useRequest(create, { manual: true });
+
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
       const routeData = {
@@ -234,8 +236,7 @@ const Page: React.FC<Props> = (props) => {
         step3Data,
         advancedMatchingRules,
       } as RouteModule.RequestData;
-
-      const { path } = props.route
+      const { path } = props.route;
 
       if (path.indexOf('edit') !== -1) {
         update((props as any).match.params.rid, routeData).then(() => {
@@ -243,9 +244,9 @@ const Page: React.FC<Props> = (props) => {
         });
       } else {
         if (path.indexOf('duplicate') !== -1) {
-          delete routeData.form1Data.id
+          delete routeData.form1Data.id;
         }
-        create(routeData).then(() => {
+        createRoutes(routeData).then(() => {
           setStep(5);
         });
       }
@@ -318,7 +319,13 @@ const Page: React.FC<Props> = (props) => {
           {renderStepList()}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />
+      <ActionBar
+        step={step}
+        loading={submitLoading}
+        lastStep={redirect ? 2 : 4}
+        onChange={onStepChange}
+        withResultView
+      />
     </>
   );
 };

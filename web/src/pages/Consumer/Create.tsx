@@ -25,6 +25,7 @@ import PluginPage from '@/components/Plugin';
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
 import { fetchItem, create, update } from './service';
+import { useRequest } from 'ahooks';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -43,10 +44,14 @@ const Page: React.FC = (props) => {
     }
   }, []);
 
+  const { runAsync: createConsumers, loading: submitLoading } = useRequest(create, {
+    manual: true,
+  });
+
   const onSubmit = () => {
     const data = { ...form1.getFieldsValue(), plugins } as ConsumerModule.Entity;
     const { username } = (props as any).match.params;
-    (username ? update(username, data) : create(data))
+    (username ? update(username, data) : createConsumers(data))
       .then(() => {
         notification.success({
           message: `${
@@ -103,7 +108,7 @@ const Page: React.FC = (props) => {
           {step === 3 && <Preview form1={form1} plugins={plugins} />}
         </Card>
       </PageContainer>
-      <ActionBar step={step} lastStep={3} onChange={onStepChange} />
+      <ActionBar loading={submitLoading} step={step} lastStep={3} onChange={onStepChange} />
     </>
   );
 };

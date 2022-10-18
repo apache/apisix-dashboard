@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -29,6 +29,7 @@ const Page: React.FC = () => {
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
   const { paginationConfig, savePageList, checkPageList } = usePagination();
+  const [deleteLoading, setDeleteLoading] = useState('');
 
   const columns: ProColumns<SSLModule.ResponseBody>[] = [
     {
@@ -70,18 +71,23 @@ const Page: React.FC = () => {
           </Button>
           <Popconfirm
             title={formatMessage({ id: 'component.ssl.removeSSLItemModalContent' })}
-            onConfirm={() =>
-              removeSSL(record.id).then(() => {
-                notification.success({
-                  message: formatMessage({ id: 'component.ssl.removeSSLSuccess' }),
+            onConfirm={() => {
+              setDeleteLoading(record.id);
+              removeSSL(record.id)
+                .then(() => {
+                  notification.success({
+                    message: formatMessage({ id: 'component.ssl.removeSSLSuccess' }),
+                  });
+                  requestAnimationFrame(() => checkPageList(tableRef));
+                })
+                .finally(() => {
+                  setDeleteLoading('');
                 });
-                requestAnimationFrame(() => checkPageList(tableRef));
-              })
-            }
+            }}
             cancelText={formatMessage({ id: 'component.global.cancel' })}
             okText={formatMessage({ id: 'component.global.confirm' })}
           >
-            <Button type="primary" danger>
+            <Button type="primary" danger loading={record.id === deleteLoading}>
               {formatMessage({ id: 'component.global.delete' })}
             </Button>
           </Popconfirm>

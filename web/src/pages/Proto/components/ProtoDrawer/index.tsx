@@ -22,6 +22,7 @@ import { Input } from 'antd';
 
 import { create, update } from '../../service';
 import styles from './index.less';
+import { useRequest, useThrottleFn } from 'ahooks';
 
 const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
   protoData,
@@ -38,11 +39,13 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
     form.setFieldsValue(protoData);
   }, [visible]);
 
-  const submit = async () => {
+  const { runAsync: createProto, loading: submitLoading } = useRequest(create, { manual: true });
+
+  const { run: submit } = useThrottleFn(async () => {
     await form.validateFields();
     const formData: ProtoModule.ProtoData = form.getFieldsValue(true);
     if (editMode === 'create') {
-      create(formData).then(() => {
+      createProto(formData).then(() => {
         notification.success({
           message: formatMessage({ id: 'page.proto.drawer.create.successfully' }),
         });
@@ -57,7 +60,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
       setVisible(false);
       refreshTable();
     }
-  };
+  });
 
   return (
     <Drawer
@@ -81,7 +84,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
             {formatMessage({ id: 'component.global.cancel' })}
           </Button>
           <Space>
-            <Button type="primary" onClick={() => submit()}>
+            <Button type="primary" onClick={() => submit()} loading={submitLoading}>
               {formatMessage({ id: 'component.global.submit' })}
             </Button>
           </Space>

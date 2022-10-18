@@ -29,6 +29,7 @@ const Page: React.FC = (props) => {
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
   const upstreamRef = useRef<any>();
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   useEffect(() => {
     const { id } = (props as any).match.params;
@@ -50,6 +51,7 @@ const Page: React.FC = (props) => {
   }, []);
 
   const onSubmit = () => {
+    setSubmitLoading(true);
     form1.validateFields().then(() => {
       const data = upstreamRef.current?.getData();
       if (!data) {
@@ -60,16 +62,20 @@ const Page: React.FC = (props) => {
       }
 
       const { id } = (props as any).match.params;
-      (id ? update(id, data) : create(data)).then(() => {
-        notification.success({
-          message: `${
-            id
-              ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
-              : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
-          }`,
+      (id ? update(id, data) : create(data))
+        .then(() => {
+          notification.success({
+            message: `${
+              id
+                ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
+                : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
+            }`,
+          });
+          history.replace('/upstream/list');
+        })
+        .finally(() => {
+          setSubmitLoading(false);
         });
-        history.replace('/upstream/list');
-      });
     });
   };
 
@@ -104,7 +110,7 @@ const Page: React.FC = (props) => {
           {step === 2 && <Step1 form={form1} upstreamRef={upstreamRef} disabled />}
         </Card>
       </PageContainer>
-      <ActionBar step={step} lastStep={2} onChange={onStepChange} />
+      <ActionBar loading={submitLoading} step={step} lastStep={2} onChange={onStepChange} />
     </>
   );
 };

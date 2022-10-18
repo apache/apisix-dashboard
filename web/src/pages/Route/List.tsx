@@ -42,7 +42,7 @@ import yaml from 'js-yaml';
 import moment from 'moment';
 import { saveAs } from 'file-saver';
 import { omit } from 'lodash';
-
+import { useThrottleFn } from 'ahooks';
 import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
 
@@ -85,6 +85,7 @@ const Page: React.FC = () => {
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
   const [debugDrawVisible, setDebugDrawVisible] = useState(false);
+  const [routeId, setRouteId] = useState<string>('');
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
@@ -108,18 +109,25 @@ const Page: React.FC = () => {
     checkPageList(ref);
   };
 
-  const handlePublishOffline = (rid: string, status: RouteModule.RouteStatus) => {
-    updateRouteStatus(rid, status).then(() => {
-      const actionName = status
-        ? formatMessage({ id: 'page.route.publish' })
-        : formatMessage({ id: 'page.route.offline' });
-      handleTableActionSuccessResponse(
-        `${actionName} ${formatMessage({
-          id: 'menu.routes',
-        })} ${formatMessage({ id: 'component.status.success' })}`,
-      );
-    });
-  };
+  const { run: handlePublishOffline } = useThrottleFn(
+    (rid: string, status: RouteModule.RouteStatus) => {
+      setRouteId(rid);
+      updateRouteStatus(rid, status)
+        .then(() => {
+          const actionName = status
+            ? formatMessage({ id: 'page.route.publish' })
+            : formatMessage({ id: 'page.route.offline' });
+          handleTableActionSuccessResponse(
+            `${actionName} ${formatMessage({
+              id: 'menu.routes',
+            })} ${formatMessage({ id: 'component.status.success' })}`,
+          );
+        })
+        .finally(() => {
+          setRouteId('');
+        });
+    },
+  );
 
   const handleExport = (exportFileType: ExportFileType) => {
     exportRoutes(selectedRowKeys.join(',')).then((resp) => {
@@ -503,6 +511,7 @@ const Page: React.FC = () => {
                 onClick={() => {
                   handlePublishOffline(record.id, RouteStatus.Publish);
                 }}
+                loading={record.id === routeId}
               >
                 {formatMessage({ id: 'page.route.publish' })}
               </Button>
@@ -519,7 +528,12 @@ const Page: React.FC = () => {
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
               >
-                <Button type="primary" danger disabled={Boolean(!record.status)}>
+                <Button
+                  type="primary"
+                  danger
+                  disabled={Boolean(!record.status)}
+                  loading={record.id === routeId}
+                >
                   {formatMessage({ id: 'page.route.offline' })}
                 </Button>
               </Popconfirm>

@@ -35,6 +35,7 @@ const Page: React.FC = (props) => {
   const [upstreamForm] = Form.useForm();
   const upstreamRef = useRef<any>();
   const [plugins, setPlugins] = useState<PluginComponent.Data>({});
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const STEP_HEADER = [
     formatMessage({ id: 'page.service.steps.stepTitle.basicInformation' }),
@@ -64,6 +65,7 @@ const Page: React.FC = (props) => {
   }, []);
 
   const onSubmit = () => {
+    setSubmitLoading(true);
     const data = {
       ...form.getFieldsValue(),
       plugins,
@@ -92,6 +94,9 @@ const Page: React.FC = (props) => {
       })
       .catch(() => {
         setStep(3);
+      })
+      .finally(() => {
+        setSubmitLoading(false);
       });
   };
 
@@ -142,7 +147,13 @@ const Page: React.FC = (props) => {
           )}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />
+      <ActionBar
+        loading={submitLoading}
+        step={step}
+        lastStep={3}
+        onChange={onStepChange}
+        withResultView
+      />
     </>
   );
 };
