@@ -19,7 +19,6 @@ package oidc_test
 import (
 	"bytes"
 	"context"
-	"errors"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -41,13 +40,6 @@ var _ = ginkgo.Describe("Oidc-Login", func() {
 			gomega.Expect(accessOidcLogin()).To(gomega.Equal(http.StatusFound))
 		})
 	})
-
-	ginkgo.Context("creat a user", func() {
-		ginkgo.It("the error should be 'nil'", func() {
-			gomega.Expect(createUser()).To(gomega.Equal(errors.New("nil")))
-		})
-	})
-
 	ginkgo.Context("test apisix/admin/oidc/callback", func() {
 		ginkgo.It("should return status-code 200", func() {
 			gomega.Expect(accessOidcCallback()).To(gomega.Equal(http.StatusOK))
@@ -96,6 +88,27 @@ func accessOidcLogin() int {
 	return resp.StatusCode
 }
 
+func createUser(authenticationUrl string) string {
+	u, _ := url.Parse(authenticationUrl)
+	client := gocloak.NewClient("http://" + u.Host)
+	ctx := context.Background()
+	token, _ := client.LoginAdmin(ctx, "admin", "admin", "master")
+
+	username := GetRandomString(3)
+	user := gocloak.User{
+		FirstName: gocloak.StringP(GetRandomString(3)),
+		LastName:  gocloak.StringP(GetRandomString(3)),
+		Email:     gocloak.StringP(GetRandomString(3)),
+		Enabled:   gocloak.BoolP(true),
+		Username:  gocloak.StringP(username),
+	}
+
+	id, _ := client.CreateUser(ctx, token.AccessToken, "master", user)
+
+	_ = client.SetPassword(ctx, token.AccessToken, id, "master", "123456", false)
+	return username
+}
+
 func accessOidcCallback() int {
 	var authenticationUrl string
 	var loginUrl string
@@ -112,6 +125,9 @@ func accessOidcCallback() int {
 	resp, _ = Client.Do(req)
 	authenticationUrl = resp.Header.Get("Location")
 
+	// create a user
+	username := createUser(authenticationUrl)
+
 	// access the authentication-url
 	req, _ = http.NewRequest("GET", authenticationUrl, nil)
 	resp, _ = Client.Do(req)
@@ -125,8 +141,8 @@ func accessOidcCallback() int {
 
 	// set username & password
 	formValues := url.Values{}
-	formValues.Set("username", "wang")
-	formValues.Set("password", "20030414")
+	formValues.Set("username", username)
+	formValues.Set("password", "123456")
 	formDataStr := formValues.Encode()
 	formDataBytes := []byte(formDataStr)
 	formBytesReader := bytes.NewReader(formDataBytes)
@@ -141,7 +157,6 @@ func accessOidcCallback() int {
 
 	// access the login-url to login
 	resp, _ = Client.Do(req)
-	body, _ = ioutil.ReadAll(resp.Body)
 
 	// access apisix/admin/oidc/login with code
 	callbackUrl := resp.Header.Get("Location")
@@ -198,30 +213,6 @@ func accessOidcLogoutWithCookie(setCookie bool) int {
 
 	// return status-code
 	return resp.StatusCode
-}
-
-func createUser() error {
-	client := gocloak.NewClient("http://127.0.0.1:8080")
-	ctx := context.Background()
-	token, err := client.LoginAdmin(ctx, "admin", "admin", "master")
-	if err != nil {
-		return err
-	}
-
-	user := gocloak.User{
-		FirstName: gocloak.StringP(GetRandomString(3)),
-		LastName:  gocloak.StringP(GetRandomString(3)),
-		Email:     gocloak.StringP(GetRandomString(3)),
-		Enabled:   gocloak.BoolP(true),
-		Username:  gocloak.StringP(GetRandomString(3)),
-	}
-
-	_, err = client.CreateUser(ctx, token.AccessToken, "master", user)
-	if err != nil {
-		return err
-	}
-
-	return errors.New("nil")
 }
 
 func GetRandomString(l int) string {
