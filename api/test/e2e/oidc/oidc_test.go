@@ -71,7 +71,7 @@ var _ = ginkgo.Describe("Oidc-Login", func() {
 	})
 })
 
-func accessOidcLogin() int {
+func AccessOidcLogin() http.Response {
 	var req *http.Request
 	var resp *http.Response
 	var Client = &http.Client{
@@ -80,11 +80,16 @@ func accessOidcLogin() int {
 		},
 	}
 
-	// access apisix/admin/oidc/login
 	req, _ = http.NewRequest("GET", "http://127.0.0.1:9000/apisix/admin/oidc/login", nil)
 	resp, _ = Client.Do(req)
 
 	// return status-code
+	return *resp
+}
+
+func accessOidcLogin() int {
+	// access apisix/admin/oidc/login
+	resp := AccessOidcLogin()
 	return resp.StatusCode
 }
 
@@ -114,15 +119,10 @@ func accessOidcCallback() int {
 	var loginUrl string
 	var req *http.Request
 	var resp *http.Response
-	var Client = &http.Client{
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			return http.ErrUseLastResponse
-		},
-	}
+	var Client http.Client
 
 	// access apisix/admin/oidc/login to get the authentication-url
-	req, _ = http.NewRequest("GET", "http://127.0.0.1:9000/apisix/admin/oidc/login", nil)
-	resp, _ = Client.Do(req)
+	*resp = AccessOidcLogin()
 	authenticationUrl = resp.Header.Get("Location")
 
 	// create a user
