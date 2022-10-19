@@ -47,7 +47,7 @@ func Wrap(f Func, inputType reflect.Type) gin.HandlerFunc {
 		var input interface{}
 		if inputType != nil {
 			input = reflect.New(inputType).Interface()
-			if err := c.ShouldBind(&input); err != nil {
+			if err := c.ShouldBindJSON(&input); err != nil {
 				if _, ok := err.(validator.ValidationErrors); ok {
 					c.AbortWithStatusJSON(http.StatusBadRequest,
 						buildResponse(false, errors.Wrap(err, "input validate error").Error(), nil))
