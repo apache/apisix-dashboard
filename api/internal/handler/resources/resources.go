@@ -24,6 +24,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
+	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 
 	"github.com/apache/apisix-dashboard/api/internal/config"
@@ -52,6 +53,13 @@ var (
 	}
 )
 
+type proxyType string
+
+var (
+	proxyTypeResource proxyType = "resource"
+	proxyTypeMisc     proxyType = "misc"
+)
+
 type Handler struct {
 	client *resty.Client
 }
@@ -67,18 +75,18 @@ func (h *Handler) ApplyRoute(r *gin.Engine, cfg config.Config) {
 
 	// add resource routes
 	for _, resource := range resources {
-		r.GET("/apisix/admin/"+resource, handler.Wrap(h.ProxyResource, nil))
-		r.GET("/apisix/admin/"+resource+"/*param", handler.Wrap(h.ProxyResource, nil))
-		r.POST("/apisix/admin/"+resource, handler.Wrap(h.ProxyResource, nil))
-		r.PUT("/apisix/admin/"+resource, handler.Wrap(h.ProxyResource, nil))
-		r.PUT("/apisix/admin/"+resource+"/*param", handler.Wrap(h.ProxyResource, nil))
-		r.PATCH("/apisix/admin/"+resource+"/*param", handler.Wrap(h.ProxyResource, nil))
-		r.DELETE("/apisix/admin/"+resource+"/*param", handler.Wrap(h.ProxyResource, nil))
+		r.GET("/apisix/admin/"+resource, handler.Wrap(h.Proxy(proxyTypeResource), nil))
+		r.GET("/apisix/admin/"+resource+"/*param", handler.Wrap(h.Proxy(proxyTypeResource), nil))
+		r.POST("/apisix/admin/"+resource, handler.Wrap(h.Proxy(proxyTypeResource), nil))
+		r.PUT("/apisix/admin/"+resource, handler.Wrap(h.Proxy(proxyTypeResource), nil))
+		r.PUT("/apisix/admin/"+resource+"/*param", handler.Wrap(h.Proxy(proxyTypeResource), nil))
+		r.PATCH("/apisix/admin/"+resource+"/*param", handler.Wrap(h.Proxy(proxyTypeResource), nil))
+		r.DELETE("/apisix/admin/"+resource+"/*param", handler.Wrap(h.Proxy(proxyTypeResource), nil))
 	}
 
 	// add misc routes
-	r.GET("/apisix/admin/plugins/list", handler.Wrap(h.ProxyMisc, nil))
-	r.GET("/apisix/admin/schema/*param", handler.Wrap(h.ProxyMisc, nil))
+	r.GET("/apisix/admin/plugins/list", handler.Wrap(h.Proxy(proxyTypeMisc), nil))
+	r.GET("/apisix/admin/schema/*param", handler.Wrap(h.Proxy(proxyTypeMisc), nil))
 }
 
 func (h *Handler) setupClient(cfg config.Config) {
@@ -87,50 +95,52 @@ func (h *Handler) setupClient(cfg config.Config) {
 		SetHeader("X-API-KEY", cfg.DataSource[0].APISIX.Key)
 }
 
-// ProxyResource to post-process the response to the Admin API, which is only used for APISIX base resources
-func (h *Handler) ProxyResource(c *gin.Context, _ interface{}) handler.Response {
-	resp, err := h.proxy(c)
-	if err != nil {
-		return *err
-	}
+// Proxy forwards requests to Admin API
+// When the proxy type is resource, post-processing is performed on the response data to unify the different response bodies of Admin API v2 and v3 into one format for frontend invocation
+// When the proxy type is misc, the wrapped data is returned as is.
+func (h *Handler) Proxy(pt proxyType) handler.Func {
+	return func(c *gin.Context, _ interface{}) handler.Response {
+		resp, err := h.proxy(c)
+		if err != nil {
+			return handler.Response{
+				StatusCode: http.StatusInternalServerError,
+				Message:    err.Error(),
+			}
+		}
 
-	data := gjson.ParseBytes(resp.Body())
-	if err := h.extractError(data); err != nil {
-		return *err
-	}
+		data := gjson.ParseBytes(resp.Body())
+		if err := h.extractError(data); err != nil {
+			return handler.Response{
+				StatusCode: resp.StatusCode(),
+				Message:    err.Error(),
+			}
+		}
 
-	// process resource response data
-	version := AdminAPIVersion2
-	if resp.Header().Get("X-API-VERSION") == "v3" {
-		version = AdminAPIVersion3
-	}
+		var resultData interface{}
 
-	return handler.Response{
-		Success: true,
-		Data:    h.processResponse(version, data),
-	}
-}
+		switch pt {
+		case proxyTypeResource:
+			version := AdminAPIVersion2
+			if resp.Header().Get("X-API-VERSION") == "v3" {
+				version = AdminAPIVersion3
+			}
 
-// ProxyMisc sends the Admin API response as-is, adding only the wrapping required by the Dashboard
-func (h *Handler) ProxyMisc(c *gin.Context, _ interface{}) handler.Response {
-	resp, err := h.proxy(c)
-	if err != nil {
-		return *err
-	}
+			resultData = h.processResponse(version, data)
+		case proxyTypeMisc:
+			fallthrough
+		default:
+			resultData = data.Value()
+		}
 
-	data := gjson.ParseBytes(resp.Body())
-	if err := h.extractError(data); err != nil {
-		return *err
-	}
-
-	return handler.Response{
-		Success: true,
-		Data:    data.Value(),
+		return handler.Response{
+			Success: true,
+			Data:    resultData,
+		}
 	}
 }
 
 // proxy forwards user requests for these interfaces to the Admin API as-is.
-func (h *Handler) proxy(c *gin.Context) (*resty.Response, *handler.Response) {
+func (h *Handler) proxy(c *gin.Context) (*resty.Response, error) {
 	req := h.client.NewRequest()
 	req.SetHeaderMultiValues(c.Request.Header)
 	req.SetQueryParamsFromValues(c.Request.URL.Query())
@@ -139,29 +149,21 @@ func (h *Handler) proxy(c *gin.Context) (*resty.Response, *handler.Response) {
 	resourceURI := strings.Replace(c.Request.URL.Path, "/apisix/admin", "", 1)
 	resp, err := req.Execute(c.Request.Method, resourceURI)
 	if err != nil {
-		return nil, &handler.Response{
-			StatusCode: http.StatusInternalServerError,
-			Message:    "Admin API request failed",
-		}
+		// TODO record error logs
+		// We need to record logs in conjunction with the request id so that users can check for problems.
+		return nil, errors.New("Admin API request failed")
 	}
 
 	return resp, nil
 }
 
-func (h *Handler) extractError(data gjson.Result) *handler.Response {
+func (h *Handler) extractError(data gjson.Result) error {
 	if data.Get("error_msg").Exists() {
-		return &handler.Response{
-			StatusCode: http.StatusBadRequest,
-			Message:    data.Get("error_msg").String(),
-		}
+		return errors.New(data.Get("error_msg").String())
 	}
 	if data.Get("message").Exists() {
-		return &handler.Response{
-			StatusCode: http.StatusBadRequest,
-			Message:    data.Get("message").String(),
-		}
+		return errors.New(data.Get("message").String())
 	}
-
 	return nil
 }
 
