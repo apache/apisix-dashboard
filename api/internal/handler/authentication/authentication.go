@@ -51,9 +51,9 @@ type UserSession struct {
 // swagger:model LoginInput
 type LoginInput struct {
 	// username
-	Username string `form:"username" binding:"required"`
+	Username string `json:"username" binding:"required"`
 	// password
-	Password string `form:"password" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 // swagger:operation POST /apisix/admin/user/login userLogin
