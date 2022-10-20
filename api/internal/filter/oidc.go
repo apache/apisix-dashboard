@@ -48,6 +48,7 @@ func Oidc() gin.HandlerFunc {
 		if c.Request.URL.Path == "/apisix/admin/oidc/callback" {
 			state := c.Query("state")
 			if state != conf.State {
+				log.Warn("the state does not match")
 				c.AbortWithStatus(http.StatusForbidden)
 				return
 			}

@@ -37,41 +37,55 @@ import (
 var _ = ginkgo.Describe("Oidc-Login", func() {
 	ginkgo.Context("test apisix/admin/oidc/login", func() {
 		ginkgo.It("should return status-code 302", func() {
-			gomega.Expect(accessOidcLogin()).To(gomega.Equal(http.StatusFound))
+			statusCode, err := accessOidcLogin()
+			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
+			gomega.Expect(statusCode).To(gomega.Equal(http.StatusFound))
 		})
 	})
+
 	ginkgo.Context("test apisix/admin/oidc/callback", func() {
 		ginkgo.It("should return status-code 200", func() {
-			gomega.Expect(accessOidcCallback()).To(gomega.Equal(http.StatusOK))
+			statusCode, err := accessOidcCallback()
+			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
+			gomega.Expect(statusCode).To(gomega.Equal(http.StatusOK))
 		})
 	})
 
 	ginkgo.Context("access apisix/admin/routes with cookie", func() {
 		ginkgo.It("should return status-code 200", func() {
-			gomega.Expect(accessRoutesWithCookie(true)).To(gomega.Equal(http.StatusOK))
+			statusCode, err := accessRoutesWithCookie(true)
+			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
+			gomega.Expect(statusCode).To(gomega.Equal(http.StatusOK))
 		})
 	})
 
 	ginkgo.Context("access apisix/admin/oidc/logout with cookie", func() {
 		ginkgo.It("should return status-code 200", func() {
-			gomega.Expect(accessOidcLogoutWithCookie(true)).To(gomega.Equal(http.StatusOK))
+			statusCode, err := accessOidcLogoutWithCookie(true)
+			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
+			gomega.Expect(statusCode).To(gomega.Equal(http.StatusOK))
 		})
 	})
 
 	ginkgo.Context("access apisix/admin/routes with invalid cookie", func() {
 		ginkgo.It("should return status-code 401", func() {
-			gomega.Expect(accessRoutesWithCookie(false)).To(gomega.Equal(http.StatusUnauthorized))
+			statusCode, err := accessRoutesWithCookie(false)
+			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
+			gomega.Expect(statusCode).To(gomega.Equal(http.StatusUnauthorized))
 		})
 	})
 
 	ginkgo.Context("access apisix/admin/oidc/logout with invalid cookie", func() {
 		ginkgo.It("should return status-code 403", func() {
-			gomega.Expect(accessOidcLogoutWithCookie(false)).To(gomega.Equal(http.StatusForbidden))
+			statusCode, err := accessOidcLogoutWithCookie(false)
+			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
+			gomega.Expect(statusCode).To(gomega.Equal(http.StatusForbidden))
 		})
 	})
 })
 
-func AccessOidcLogin() http.Response {
+func accessOidcLogin() (int, error) {
+	var err error
 	var req *http.Request
 	var resp *http.Response
 	var Client = &http.Client{
@@ -81,16 +95,13 @@ func AccessOidcLogin() http.Response {
 	}
 
 	req, _ = http.NewRequest("GET", "http://127.0.0.1:9000/apisix/admin/oidc/login", nil)
-	resp, _ = Client.Do(req)
+	resp, err = Client.Do(req)
+	if err != nil {
+		return resp.StatusCode, err
+	}
 
 	// return status-code
-	return *resp
-}
-
-func accessOidcLogin() int {
-	// access apisix/admin/oidc/login
-	resp := AccessOidcLogin()
-	return resp.StatusCode
+	return resp.StatusCode, err
 }
 
 func createUser(authenticationUrl string) string {
@@ -114,15 +125,24 @@ func createUser(authenticationUrl string) string {
 	return username
 }
 
-func accessOidcCallback() int {
+func accessOidcCallback() (int, error) {
 	var authenticationUrl string
 	var loginUrl string
+	var err error
 	var req *http.Request
 	var resp *http.Response
-	var Client http.Client
+	var client = &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
 
 	// access apisix/admin/oidc/login to get the authentication-url
-	*resp = AccessOidcLogin()
+	req, _ = http.NewRequest("GET", "http://127.0.0.1:9000/apisix/admin/oidc/login", nil)
+	resp, err = client.Do(req)
+	if err != nil {
+		return resp.StatusCode, err
+	}
 	authenticationUrl = resp.Header.Get("Location")
 
 	// create a user
@@ -130,7 +150,10 @@ func accessOidcCallback() int {
 
 	// access the authentication-url
 	req, _ = http.NewRequest("GET", authenticationUrl, nil)
-	resp, _ = Client.Do(req)
+	resp, err = client.Do(req)
+	if err != nil {
+		return resp.StatusCode, err
+	}
 
 	// get the login-url from html
 	body, _ := ioutil.ReadAll(resp.Body)
@@ -156,12 +179,18 @@ func accessOidcCallback() int {
 	}
 
 	// access the login-url to login
-	resp, _ = Client.Do(req)
+	resp, err = client.Do(req)
+	if err != nil {
+		return resp.StatusCode, err
+	}
 
 	// access apisix/admin/oidc/login with code
 	callbackUrl := resp.Header.Get("Location")
 	req, _ = http.NewRequest("GET", callbackUrl, nil)
-	resp, _ = Client.Do(req)
+	resp, err = client.Do(req)
+	if err != nil {
+		return resp.StatusCode, err
+	}
 
 	// save cookie
 	cookies = resp.Cookies()
@@ -170,10 +199,11 @@ func accessOidcCallback() int {
 	}
 
 	// return status-code
-	return resp.StatusCode
+	return resp.StatusCode, err
 }
 
-func accessRoutesWithCookie(setCookie bool) int {
+func accessRoutesWithCookie(setCookie bool) (int, error) {
+	var err error
 	var req *http.Request
 	var resp *http.Response
 	var client http.Client
@@ -188,13 +218,17 @@ func accessRoutesWithCookie(setCookie bool) int {
 	}
 
 	// access apisix/admin/routes
-	resp, _ = client.Do(req)
+	resp, err = client.Do(req)
+	if err != nil {
+		return resp.StatusCode, err
+	}
 
 	// return status-code
-	return resp.StatusCode
+	return resp.StatusCode, err
 }
 
-func accessOidcLogoutWithCookie(setCookie bool) int {
+func accessOidcLogoutWithCookie(setCookie bool) (int, error) {
+	var err error
 	var req *http.Request
 	var resp *http.Response
 	var client http.Client
@@ -209,10 +243,13 @@ func accessOidcLogoutWithCookie(setCookie bool) int {
 	}
 
 	// access apisix/admin/oidc/logout
-	resp, _ = client.Do(req)
+	resp, err = client.Do(req)
+	if err != nil {
+		return resp.StatusCode, err
+	}
 
 	// return status-code
-	return resp.StatusCode
+	return resp.StatusCode, err
 }
 
 func GetRandomString(l int) string {
