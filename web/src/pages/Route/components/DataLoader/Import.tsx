@@ -71,10 +71,11 @@ const Option: React.FC<{
 }> = ({ type }) => {
   switch (type) {
     case 'openapi_legacy':
-      return <></>;
+      return null;
     case 'openapi3':
-    default:
       return <OpenAPI3 />;
+    default:
+      return null;
   }
 };
 
@@ -164,6 +165,9 @@ const DataLoaderImport: React.FC<Props> = (props) => {
                 initialValue={importType}
               >
                 <Select onChange={(value: ImportType) => setImportType(value)}>
+                  <Select.Option value="postman">
+                    {formatMessage({ id: 'page.route.data_loader.types.postman' })}
+                  </Select.Option>
                   <Select.Option value="openapi3">
                     {formatMessage({ id: 'page.route.data_loader.types.openapi3' })}
                   </Select.Option>

@@ -88,6 +88,8 @@ var _ = Describe("OpenAPI 3", func() {
 			}
 		}),
 		Entry("Postman-API101.yaml merge method", func() {
+			base.CleanResource("routes")
+			base.CleanResource("upstreams")
 			path, err := filepath.Abs("../../testdata/import/Postman-API101.yaml")
 			Expect(err).To(BeNil())
 
