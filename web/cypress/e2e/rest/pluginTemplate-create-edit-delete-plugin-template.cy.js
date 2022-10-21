@@ -48,9 +48,12 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(selector.empty).should('be.visible');
-    cy.contains('Advanced').trigger('mouseover');
-    cy.wait(50);
-    cy.contains('Advanced').rightclick();
+    cy.contains('Advanced')
+      .should('be.visible')
+      .click()
+      .then(() => {
+        cy.contains('Advanced').trigger('mouseover');
+      });
     cy.contains('Plugin Template Config').should('be.visible').click();
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
