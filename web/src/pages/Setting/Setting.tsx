@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Form, Input, Row, Col, notification } from 'antd';
+import { Card, Col, Form, Input, notification, Row } from 'antd';
+import React, { useEffect } from 'react';
 import { history, useIntl } from 'umi';
 
-import { getUrlQuery } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
+import { getUrlQuery } from '@/helpers';
 import { getGrafanaURL } from '@/pages/Dashboard/service';
 
 import { updateMonitorURL } from './service';

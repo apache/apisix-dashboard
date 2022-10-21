@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ImportOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Col, Form, Input, Row, Select, Upload } from 'antd';
 import React, { useState } from 'react';
-import { Form, Input, Row, Col, Checkbox, Select, Upload, Button } from 'antd';
 import { useIntl } from 'umi';
-import { MinusCircleOutlined, ImportOutlined } from '@ant-design/icons';
-import { DebugBodyFormDataValueType } from '../../constants';
 
+import { DebugBodyFormDataValueType } from '../../constants';
 import styles from './index.less';
 
 const DebugFormDataView: React.FC<RouteModule.DebugViewProps> = (props) => {

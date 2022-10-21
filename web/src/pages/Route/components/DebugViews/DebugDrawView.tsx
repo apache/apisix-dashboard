@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Drawer, Form, Input, notification, Radio, Select, Spin, Tabs } from 'antd';
-import { useIntl } from 'umi';
-import queryString from 'query-string';
-import Base64 from 'base-64';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { CopyOutlined } from '@ant-design/icons';
-import type * as monacoEditor from 'monaco-editor';
 import type { Monaco } from '@monaco-editor/react';
 import Editor from '@monaco-editor/react';
+import { Button, Card, Drawer, Form, Input, notification, Radio, Select, Spin, Tabs } from 'antd';
+import Base64 from 'base-64';
+import type * as monacoEditor from 'monaco-editor';
+import queryString from 'query-string';
+import React, { useEffect, useState } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
 
@@ -37,8 +37,8 @@ import {
   HTTP_METHOD_OPTION_LIST,
   PROTOCOL_SUPPORTED,
 } from '../../constants';
-import { AuthenticationView, DebugFormDataView, DebugParamsView } from '.';
 import { debugRoute } from '../../service';
+import { AuthenticationView, DebugFormDataView, DebugParamsView } from '.';
 import styles from './index.less';
 
 const { Option } = Select;

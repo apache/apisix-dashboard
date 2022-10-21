@@ -14,22 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Popconfirm, Button, notification, Space } from 'antd';
+import { Button, notification, Popconfirm, Space } from 'antd';
+import { omit } from 'lodash';
+import React, { useRef, useState } from 'react';
 import { history, useIntl } from 'umi';
 
-import { PlusOutlined } from '@ant-design/icons';
-import { omit } from 'lodash';
-import usePagination from '@/hooks/usePagination';
-import { DELETE_FIELDS } from '@/constants';
-
 import { RawDataEditor } from '@/components/RawDataEditor';
+import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
+import usePagination from '@/hooks/usePagination';
 
-import { fetchList, remove, create, update } from './service';
+import { create, fetchList, remove, update } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();

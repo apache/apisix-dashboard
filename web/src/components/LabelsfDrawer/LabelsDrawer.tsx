@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'umi';
 
 import { transformLabelValueToKeyValue } from '../../helpers';

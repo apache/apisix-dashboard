@@ -14,5 +14,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default as UpstreamZhCN } from './locales/zh-CN';
 export { default as UpstreamEnUS } from './locales/en-US';
+export { default as UpstreamZhCN } from './locales/zh-CN';

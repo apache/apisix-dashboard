@@ -25,7 +25,8 @@ export default {
   'component.user.loginMethodPassword.incorrectPassword': 'Kullanıcı adı veya şifre yanlış',
   'component.user.loginMethodPassword.fieldInvalid': 'Lütfen kullanıcı adı ve şifreyi kontrol edin',
   'component.user.loginMethodPassword.success': 'Giriş Başarılı',
-  'component.user.loginMethodPassword.changeDefaultAccount': 'Kullanıcı adı ve şifreyi değiştirmek nasıl yapılır?',
+  'component.user.loginMethodPassword.changeDefaultAccount':
+    'Kullanıcı adı ve şifreyi değiştirmek nasıl yapılır?',
   'component.user.loginMethodPassword.modificationMethod':
     'Lütfen /api/conf/conf.yaml dosyasındaki kullanıcılar alanını değiştirin',
 };

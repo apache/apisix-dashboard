@@ -28,7 +28,7 @@ context('Create and delete consumer with basic-auth plugin form', () => {
     notification: '.ant-notification-notice-message',
     notificationCloseIcon: '.ant-notification-close-icon',
     monacoViewZones: '.view-zones',
-    alert: '.ant-form-item-explain-error [role=alert]'
+    alert: '.ant-form-item-explain-error [role=alert]',
   };
 
   const data = {

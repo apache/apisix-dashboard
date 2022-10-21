@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import { Form, Select } from 'antd';
+import React from 'react';
 import { useIntl, useLocation } from 'umi';
 
 type Upstream = {

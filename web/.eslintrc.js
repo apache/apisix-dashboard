@@ -31,6 +31,8 @@ module.exports = {
     'import/no-unresolved': [2, { ignore: ['^@/', '^umi/', '^@@/'] }],
     'sort-imports': 'off',
     'import/order': 'off',
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
   },
   settings: {
     'import/resolver': {

@@ -14,7 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import { LinkOutlined } from '@ant-design/icons';
+import type { Monaco } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
+import type { DefinedError } from 'ajv';
+import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
 import {
   Alert,
   Button,
@@ -29,23 +34,18 @@ import {
   Space,
   Switch,
 } from 'antd';
-import { useIntl } from 'umi';
 import { js_beautify } from 'js-beautify';
-import { LinkOutlined } from '@ant-design/icons';
-import Ajv from 'ajv';
-import type { DefinedError } from 'ajv';
-import addFormats from 'ajv-formats';
 import { compact, omit } from 'lodash';
-import type { Monaco } from '@monaco-editor/react';
-import Editor from '@monaco-editor/react';
 import type { languages } from 'monaco-editor';
+import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 
-import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
-import { PluginForm, PLUGIN_UI_LIST } from './UI';
+import * as modelCode from './modelCode';
 /* eslint import/namespace: ['error', { allowComputed: true }] */
 import * as allModels from './Models';
-import * as modelCode from './modelCode';
+import { fetchSchema } from './service';
+import { PLUGIN_UI_LIST, PluginForm } from './UI';
 
 type Props = {
   name: string;

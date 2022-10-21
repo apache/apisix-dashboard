@@ -21,12 +21,12 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-import React, { useCallback } from 'react';
-import { SettingOutlined, UserOutlined, SettingFilled, LogoutOutlined } from '@ant-design/icons';
+import { LogoutOutlined, SettingFilled, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
-import { history, useModel, useIntl } from 'umi';
-
 import { stringify } from 'querystring';
+import React, { useCallback } from 'react';
+import { history, useIntl, useModel } from 'umi';
+
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 

@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import { Select, Empty, Form, Card } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useIntl, getIntl } from 'umi';
+import { Card, Empty, Form, Select } from 'antd';
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { getIntl, useIntl } from 'umi';
 
 import { fetchInfoList, fetchVersion } from './service';
 import styles from './style.less';

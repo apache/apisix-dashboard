@@ -14,24 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, Steps, Form, Modal } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { history, useIntl } from 'umi';
-import { isEmpty } from 'lodash';
 import { useRequest } from 'ahooks';
+import { Card, Form, Modal, Steps } from 'antd';
+import { isEmpty } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import { history, useIntl } from 'umi';
+
 import ActionBar from '@/components/ActionBar';
 import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
-import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
-import { transformProxyRewrite2Plugin } from './transform';
+import CreateStep4 from './components/CreateStep4';
+import ResultView from './components/ResultView';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
-import CreateStep4 from './components/CreateStep4';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA } from './constants';
-import ResultView from './components/ResultView';
 import styles from './Create.less';
+import { checkHostWithSSL, checkUniqueName, create, fetchItem, update } from './service';
+import { transformProxyRewrite2Plugin } from './transform';
 
 const { Step } = Steps;
 

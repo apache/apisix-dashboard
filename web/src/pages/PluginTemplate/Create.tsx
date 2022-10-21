@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Steps, notification, Form } from 'antd';
+import { Card, Form, notification, Steps } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
 import { transformLabelValueToKeyValue } from '@/helpers';
 
-import Step1 from './components/Step1';
 import Preview from './components/Preview';
-import { fetchItem, create, update } from './service';
+import Step1 from './components/Step1';
+import { create, fetchItem, update } from './service';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);

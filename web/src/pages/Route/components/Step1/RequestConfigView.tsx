@@ -14,15 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Input, InputNumber, Row, Select } from 'antd';
 import Form from 'antd/es/form';
-import { Button, Input, Select, Row, Col, InputNumber } from 'antd';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import React from 'react';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
-
-import { HTTP_METHOD_OPTION_LIST, FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
+import { FORM_ITEM_WITHOUT_LABEL, HTTP_METHOD_OPTION_LIST } from '@/pages/Route/constants';
 
 const removeBtnStyle = {
   marginLeft: 20,

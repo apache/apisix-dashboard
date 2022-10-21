@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { omit, pick, cloneDeep, isEmpty, unset } from 'lodash';
+import { cloneDeep, isEmpty, omit, pick, unset } from 'lodash';
 
-import { transformLabelValueToKeyValue } from '@/helpers';
-import { SCHEME_REWRITE, URI_REWRITE_TYPE, HOST_REWRITE_TYPE } from '@/pages/Route/constants';
 import { convertToFormData } from '@/components/Upstream/service';
+import { transformLabelValueToKeyValue } from '@/helpers';
+import { HOST_REWRITE_TYPE, SCHEME_REWRITE, URI_REWRITE_TYPE } from '@/pages/Route/constants';
 
 export const transformProxyRewrite2Plugin = (
   data: RouteModule.ProxyRewrite,

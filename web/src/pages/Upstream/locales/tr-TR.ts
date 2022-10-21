@@ -35,7 +35,7 @@ export default {
   'page.upstream.step.name.should.unique': 'Adınız benzersiz olmalıdır',
   'page.upstream.step.input.upstream.name': 'Upstream adı girin',
   'page.upstream.step.description': 'Açıklama',
-  'page.upstream.step.input.description': "Upstream için açıklama girin",
+  'page.upstream.step.input.description': 'Upstream için açıklama girin',
   'page.upstream.step.type': 'Algoritma',
   'page.upstream.step.pass-host': 'Host adı',
   'page.upstream.step.pass-host.pass': 'İstemci isteğinden gelen host adını bırak',
@@ -47,7 +47,8 @@ export default {
     'İstekten yukarı akış sunucusuna bağlantı kurarken zaman aşımına uğradı.',
   'page.upstream.step.input.connect.timeout': 'Bağlantı zaman aşımı girin',
   'page.upstream.step.send.timeout': 'Gönderme zaman aşımı',
-  'page.upstream.step.send.timeout.desc': 'Yukarı akış sunucularına veri göndermek için zaman aşımı',
+  'page.upstream.step.send.timeout.desc':
+    'Yukarı akış sunucularına veri göndermek için zaman aşımı',
   'page.upstream.step.input.send.timeout': 'Zaman aşımı gönnderme girin',
   'page.upstream.step.read.timeout': 'Okuma zaman aşımı',
   'page.upstream.step.read.timeout.desc': 'Upstream sunucularının okuma zaman aşımı',
@@ -68,7 +69,8 @@ export default {
   'page.upstream.step.healthyCheck.passive.tcp_failures': 'TCP hataları',
   'page.upstream.step.input.healthyCheck.passive.tcp_failures': 'TCP hataları girin',
   'page.upstream.step.keepalive_pool': 'Keepalive Pool',
-  'page.upstream.notificationMessage.enableHealthCheckFirst': 'Sağlık kontrolünü etkinleştirmek için önce bir upstream oluşturun',
+  'page.upstream.notificationMessage.enableHealthCheckFirst':
+    'Sağlık kontrolünü etkinleştirmek için önce bir upstream oluşturun',
   'page.upstream.upstream_host.required': 'Upstream host gerekli',
 
   'page.upstream.create': 'Yeni Upstream',

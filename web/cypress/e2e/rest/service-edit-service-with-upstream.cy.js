@@ -90,7 +90,7 @@ context('Edit Service with Upstream', () => {
 
     cy.contains(data.upstreamName).click();
     cy.wait(500);
-    cy.contains('.ant-select-item-option-content','Custom').click();
+    cy.contains('.ant-select-item-option-content', 'Custom').click();
     cy.get(selector.nodes_0_host)
       .click({
         force: true,

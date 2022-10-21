@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { notification } from 'antd';
+import { FileTextOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import type { MenuDataItem } from '@ant-design/pro-layout';
-import { InfoCircleOutlined, FileTextOutlined } from '@ant-design/icons';
-import { history } from 'umi';
-import moment from 'moment';
-import YAML from 'yaml';
+import { notification } from 'antd';
 import yaml from 'js-yaml';
+import moment from 'moment';
+import React from 'react';
+import { history } from 'umi';
+import YAML from 'yaml';
 
-import { codeMessage } from './constants';
 import IconFont from './components/IconFont';
+import { codeMessage } from './constants';
 
 export const getMenuData = (): MenuDataItem[] => {
   return [

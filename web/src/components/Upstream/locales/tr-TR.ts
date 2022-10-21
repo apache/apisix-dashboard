@@ -63,7 +63,8 @@ export default {
     'Yeniden denemelerin sürdürülebileceği saniye miktarını sınırlamak için bir sayı yapılandırın ve önceki istek ve yeniden deneme istekleri çok uzun sürdüyse yeniden denemelere devam etmeyin. 0, yeniden deneme zaman aşımı mekanizmasını devre dışı bırakmak anlamına gelir.',
 
   'component.upstream.fields.keepalive_pool': 'Keepalive Poolu',
-  'component.upstream.fields.keepalive_pool.tooltip': 'Upstream için bağımsız bir keepalive poolu ayarla',
+  'component.upstream.fields.keepalive_pool.tooltip':
+    'Upstream için bağımsız bir keepalive poolu ayarla',
   'component.upstream.fields.keepalive_pool.size': 'Ölçü',
   'component.upstream.fields.keepalive_pool.size.placeholder': 'Ölçüyü giriniz',
   'component.upstream.fields.keepalive_pool.idle_timeout': 'Boşta kalma zaman aşımı',
@@ -90,7 +91,7 @@ export default {
 
   'component.upstream.fields.checks.active.http_path': 'HTTP Yolu',
   'component.upstream.fields.checks.active.http_path.tooltip':
-  'Hedefe HTTP GET isteği düzenlenirken kullanılması gereken yoldur. Öntanımlı değer /.',
+    'Hedefe HTTP GET isteği düzenlenirken kullanılması gereken yoldur. Öntanımlı değer /.',
   'component.upstream.fields.checks.active.http_path.placeholder':
     'Lütfen HTTP istek yolunu giriniz. ',
 
@@ -134,9 +135,8 @@ export default {
 
   'component.upstream.fields.checks.active.unhealthy.interval': 'Aralıklar',
   'component.upstream.fields.checks.active.unhealthy.interval.tooltip':
-  'Sağlıksız hedefler için aktif sağlık kontrolleri arasındaki aralık (saniye cinsinden). Sıfır değeri, sağlıklı hedefler için aktif probların gerçekleştirilmemesi gerektiğini gösterir.',
-  'component.upstream.fields.checks.active.unhealthy.required':
-    'Lütfen sağlıksız aralığı girin ',
+    'Sağlıksız hedefler için aktif sağlık kontrolleri arasındaki aralık (saniye cinsinden). Sıfır değeri, sağlıklı hedefler için aktif probların gerçekleştirilmemesi gerektiğini gösterir.',
+  'component.upstream.fields.checks.active.unhealthy.required': 'Lütfen sağlıksız aralığı girin ',
 
   'component.upstream.fields.checks.passive.healthy.successes': 'Başarımlar',
   'component.upstream.fields.checks.passive.healthy.successes.tooltip':
@@ -146,7 +146,7 @@ export default {
 
   'component.upstream.fields.checks.passive.unhealthy.timeouts': 'Zaman Aşımı',
   'component.upstream.fields.checks.passive.unhealthy.timeouts.tooltip':
-  'Pasif sağlık kontrollerinde gözlemlendiği gibi, bir hedefi sağlıksız olarak değerlendirmek için proxy trafiğindeki zaman aşımlarının sayısı.',
+    'Pasif sağlık kontrollerinde gözlemlendiği gibi, bir hedefi sağlıksız olarak değerlendirmek için proxy trafiğindeki zaman aşımlarının sayısı.',
 
   'component.upstream.other.none': 'Yok (Yalnızca hizmeti bağlarken kullanılabilir)',
   'component.upstream.other.pass_host-with-multiple-nodes.title':
@@ -154,6 +154,7 @@ export default {
   'component.upstream.other.pass_host-with-multiple-nodes':
     'Hedef düğüm listesinde bir ana bilgisayar adı veya IP kullanırken yalnızca bir hedef düğüm olduğundan emin olun',
   'component.upstream.other.health-check.passive-only':
-  'Pasif sağlık denetimi etkinleştirildiğinde, aynı anda etkin sağlık denetiminin de etkinleştirilmesi gerekir.',
-  'component.upstream.other.health-check.invalid': 'Lütfen sağlık kontrolü yapılandırmasını kontrol edin',
+    'Pasif sağlık denetimi etkinleştirildiğinde, aynı anda etkin sağlık denetiminin de etkinleştirilmesi gerekir.',
+  'component.upstream.other.health-check.invalid':
+    'Lütfen sağlık kontrolü yapılandırmasını kontrol edin',
 };

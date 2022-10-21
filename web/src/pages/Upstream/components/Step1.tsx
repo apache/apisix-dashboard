@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import { Form, Input } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
+import React from 'react';
 import { useIntl } from 'umi';
 
 import UpstreamForm from '@/components/Upstream';

@@ -14,15 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect } from 'react';
-import { Button, Drawer, Form, notification, Space } from 'antd';
-import { useIntl } from 'umi';
 import Editor from '@monaco-editor/react';
-import { Input } from 'antd';
+import { useRequest, useThrottleFn } from 'ahooks';
+import { Button, Drawer, Form, Input, notification, Space } from 'antd';
+import React, { useEffect } from 'react';
+import { useIntl } from 'umi';
 
 import { create, update } from '../../service';
 import styles from './index.less';
-import { useRequest, useThrottleFn } from 'ahooks';
 
 const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
   protoData,

@@ -28,15 +28,14 @@ export default {
   'component.plugin-flow.text.nodes-area': 'Uygun nodelar',
   'component.plugin-flow.text.nodes.not-found': 'Bulunamadı',
   'component.plugin-flow.text.search-nodes.placeholder': 'İsme göre eklenti ara',
-  'component.plugin-flow.text.condition-rule.tooltip':
-    'Nodeların karar durumu. örnek: code == 503',
+  'component.plugin-flow.text.condition-rule.tooltip': 'Nodeların karar durumu. örnek: code == 503',
   'component.plugin-flow.text.line': 'Çizgi',
   'component.plugin-flow.text.grid': 'Kare',
   'component.plugin-flow.text.background': 'Arkaplan',
   'component.plugin-flow.text.node': 'Node',
   'component.plugin-flow.text.text': 'Metin',
   'component.plugin-flow.text.condition-without-configuration':
-    "Lütfen tüm durum nodelarının verilerini kontrol edin",
+    'Lütfen tüm durum nodelarının verilerini kontrol edin',
   'component.plugin-flow.text.preview.readonly':
     'NOT: Aşağıdaki çekmecedeki işlemleriniz korunmayacak.',
   'component.plugin-flow.text.both-modes-exist':
