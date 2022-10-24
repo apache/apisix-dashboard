@@ -71,3 +71,4 @@ web/public/monaco-editor/
 
 # .env
 .env*
+/.github/actions/
