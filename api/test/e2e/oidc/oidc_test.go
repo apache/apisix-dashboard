@@ -93,7 +93,7 @@ func accessOidcLogin() (int, error) {
 			return http.ErrUseLastResponse
 		},
 	}
-
+	createClientAndUser()
 	req, _ = http.NewRequest("GET", "http://127.0.0.1:9000/apisix/admin/oidc/login", nil)
 	resp, err = Client.Do(req)
 	if err != nil {
@@ -104,25 +104,30 @@ func accessOidcLogin() (int, error) {
 	return resp.StatusCode, err
 }
 
-func createUser(authenticationUrl string) string {
-	u, _ := url.Parse(authenticationUrl)
-	client := gocloak.NewClient("http://" + u.Host)
+func createClientAndUser() {
+	client := gocloak.NewClient("http://127.0.0.1:8080")
 	ctx := context.Background()
 	token, _ := client.LoginAdmin(ctx, "admin", "admin", "master")
 
-	username := GetRandomString(3)
+	redirectURIs := []string{"http://127.0.0.1:9000/*"}
+	_, _ = client.CreateClient(ctx, token.AccessToken, "master", gocloak.Client{
+		ClientID:     gocloak.StringP("dashboard"),
+		Secret:       gocloak.StringP("dashboard"),
+		RedirectURIs: &redirectURIs,
+	})
+
+	base.Username = GetRandomString(3)
 	user := gocloak.User{
 		FirstName: gocloak.StringP(GetRandomString(3)),
 		LastName:  gocloak.StringP(GetRandomString(3)),
 		Email:     gocloak.StringP(GetRandomString(3)),
 		Enabled:   gocloak.BoolP(true),
-		Username:  gocloak.StringP(username),
+		Username:  gocloak.StringP(base.Username),
 	}
 
 	id, _ := client.CreateUser(ctx, token.AccessToken, "master", user)
 
-	_ = client.SetPassword(ctx, token.AccessToken, id, "master", "123456", false)
-	return username
+	_ = client.SetPassword(ctx, token.AccessToken, id, "master", "password", false)
 }
 
 func accessOidcCallback() (int, error) {
@@ -145,9 +150,6 @@ func accessOidcCallback() (int, error) {
 	}
 	authenticationUrl = resp.Header.Get("Location")
 
-	// create a user
-	username := createUser(authenticationUrl)
-
 	// access the authentication-url
 	req, _ = http.NewRequest("GET", authenticationUrl, nil)
 	resp, err = client.Do(req)
@@ -164,8 +166,8 @@ func accessOidcCallback() (int, error) {
 
 	// set username & password
 	formValues := url.Values{}
-	formValues.Set("username", username)
-	formValues.Set("password", "123456")
+	formValues.Set("username", base.Username)
+	formValues.Set("password", "password")
 	formDataStr := formValues.Encode()
 	formDataBytes := []byte(formDataStr)
 	formBytesReader := bytes.NewReader(formDataBytes)

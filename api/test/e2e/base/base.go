@@ -45,6 +45,7 @@ var (
 	ManagerAPIHost         = "http://127.0.0.1:9000"
 	PrometheusExporter     = "http://127.0.0.1:9091"
 	OidcCookie             []http.Cookie
+	Username               string
 )
 
 func GetToken() string {
