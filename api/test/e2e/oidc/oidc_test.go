@@ -142,6 +142,8 @@ func accessOidcCallback() (int, error) {
 		},
 	}
 
+	createClientAndUser()
+
 	// access apisix/admin/oidc/login to get the authentication-url
 	req, _ = http.NewRequest("GET", "http://127.0.0.1:9000/apisix/admin/oidc/login", nil)
 	resp, err = client.Do(req)
