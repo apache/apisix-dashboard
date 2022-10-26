@@ -9,14 +9,13 @@ require (
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
 	github.com/gin-gonic/gin v1.6.3
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/juliangruber/go-intersect v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiningrush/droplet v0.2.6-0.20210127040147-53817015cd1b
 	github.com/shiningrush/droplet/wrapper/gin v0.2.1
 	github.com/sony/sonyflake v1.0.0
-	github.com/spf13/cobra v0.0.3
+	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/gjson v1.6.7
