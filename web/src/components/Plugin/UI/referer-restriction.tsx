@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import type { FormInstance } from 'antd/es/form';
-import { Form, Input, Button, Switch, Row, Col } from 'antd';
-import { useIntl } from 'umi';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Row, Switch } from 'antd';
+import type { FormInstance } from 'antd/es/form';
+import React from 'react';
+import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;

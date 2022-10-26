@@ -50,7 +50,7 @@ context('Save Paginator Status', () => {
     cy.visit('/');
     cy.contains('Service').click();
 
-    for (let i = 0; i <= 10; i+=1) {
+    for (let i = 0; i <= 10; i += 1) {
       cy.request(
         {
           method: 'POST',

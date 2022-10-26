@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { memo, useState } from 'react';
+import { UploadOutlined } from '@ant-design/icons';
 import {
   Button,
   Col,
@@ -30,11 +30,13 @@ import {
   Space,
   Upload,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { useIntl } from '@@/plugin-locale/localeExports';
-import OpenAPI3 from './loader/OpenAPI3';
 import type { RcFile } from 'antd/lib/upload';
+import React, { memo, useState } from 'react';
+
 import { importRoutes } from '@/pages/Route/service';
+import { useIntl } from '@@/plugin-locale/localeExports';
+
+import OpenAPI3 from './loader/OpenAPI3';
 
 type Props = {
   onClose: (finish: boolean) => void;

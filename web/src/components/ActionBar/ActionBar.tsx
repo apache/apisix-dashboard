@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import { Button, Col, Row } from 'antd';
 import type { CSSProperties } from 'react';
-import { Row, Col, Button } from 'antd';
+import React from 'react';
 import { useIntl } from 'umi';
 
 type Props = {

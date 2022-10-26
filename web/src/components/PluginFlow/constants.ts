@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Shape, Dom } from '@antv/x6';
-import type { Addon, Graph, Cell } from '@antv/x6';
+import type { Addon, Cell, Graph } from '@antv/x6';
+import { Dom, Shape } from '@antv/x6';
 import { formatMessage } from 'umi';
 
 export const DEFAULT_STENCIL_WIDTH = 280;

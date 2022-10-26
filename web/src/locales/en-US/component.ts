@@ -54,7 +54,7 @@ export default {
   'component.global.notification.success.message.deleteSuccess': 'Deleted Successfully',
   'component.global.create.consumer.success': 'Create Consumer Successfully',
   'component.global.delete.consumer.success': 'Delete Consumer Successfully',
-  'component.global.delete.routes.success':'Delete Route Successfully',
+  'component.global.delete.routes.success': 'Delete Route Successfully',
   'component.global.edit.consumer.success': 'Edit Consumer Successfully',
 
   'component.global.steps.stepTitle.basicInformation': 'Basic Information',

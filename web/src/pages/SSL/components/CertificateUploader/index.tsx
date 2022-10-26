@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { Form, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { Button, Form, Upload } from 'antd';
 import type { UploadFile } from 'antd/lib/upload/interface';
-import styles from '@/pages/SSL/style.less';
+import React from 'react';
 import { useIntl } from 'umi';
+
+import styles from '@/pages/SSL/style.less';
 
 export type UploadType = 'PUBLIC_KEY' | 'PRIVATE_KEY';
 

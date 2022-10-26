@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useEffect, useState } from 'react';
-import { useLocation, history } from 'umi';
-import querystring from 'query-string';
-import type { PageInfo } from '@ant-design/pro-table/lib/typing';
 import type { ActionType } from '@ant-design/pro-table';
+import type { PageInfo } from '@ant-design/pro-table/lib/typing';
+import querystring from 'query-string';
 import type { MutableRefObject } from 'react';
+import { useEffect, useState } from 'react';
+import { history, useLocation } from 'umi';
 
 export default function usePagination() {
   const location = useLocation();

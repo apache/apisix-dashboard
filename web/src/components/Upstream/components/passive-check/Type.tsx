@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Col, Form, Row, Select } from 'antd';
 import React from 'react';
-import { Form, Select, Row, Col } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {

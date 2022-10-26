@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createContext, FC, useContext, useEffect } from 'react';
-import React, { useState } from 'react';
+import { AutoComplete, Button, Col, Input, notification, Row, Select, Switch, Tag } from 'antd';
 import Form from 'antd/es/form';
-import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col, notification } from 'antd';
+import type { FC } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
+import LabelsDrawer from '@/components/LabelsfDrawer';
 import PanelSection from '@/components/PanelSection';
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
-import LabelsDrawer from '@/components/LabelsfDrawer';
+
 import { fetchLabelList, fetchServiceList } from '../../service';
 
 const field = 'custom_normal_labels';

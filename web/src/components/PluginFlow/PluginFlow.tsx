@@ -14,11 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { Cell } from '@antv/x6';
+import { Alert, Form, Input, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Modal, Form, Input, Alert } from 'antd';
-import { Cell } from '@antv/x6';
 import { useIntl } from 'umi';
 
+import PluginDetail from '../Plugin/PluginDetail';
+import { fetchList } from '../Plugin/service';
 import FlowGraph from './components/FlowGraph';
 import Toolbar from './components/Toolbar';
 import {
@@ -29,8 +31,6 @@ import {
   FlowGraphEvent,
 } from './constants';
 import styles from './style.less';
-import PluginDetail from '../Plugin/PluginDetail';
-import { fetchList } from '../Plugin/service';
 
 type Props = {
   chart: {

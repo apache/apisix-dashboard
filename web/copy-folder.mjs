@@ -10,5 +10,7 @@ import { copyDir } from 'hexo-fs';
   const [, , ...srcDirs] = process.argv;
   const tarDir = srcDirs.pop();
 
-  await Promise.allSettled(srcDirs.map((srcDir) => copyDir(`./node_modules/${srcDir}`, `${tarDir}/${srcDir}`)));
+  await Promise.allSettled(
+    srcDirs.map((srcDir) => copyDir(`./node_modules/${srcDir}`, `${tarDir}/${srcDir}`)),
+  );
 })();

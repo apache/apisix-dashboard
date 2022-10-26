@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import type { FormInstance } from 'antd/es/form';
+import React from 'react';
 
 import CertificateForm from '@/pages/SSL/components/CertificateForm';
 
