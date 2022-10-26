@@ -478,7 +478,39 @@ stop_dashboard() {
   # check response header with custom header
   run curl -i http://127.0.0.1:9000
 
-[ $(echo "$output" | grep -c "X-Frame-Options: test") -eq '1' ]
+  [ $(echo "$output" | grep -c "X-Frame-Options: test") -eq '1' ]
+
+  stop_dashboard 6
+}
+
+#16
+@test "Check etcd auto re-watch" {
+  recover_conf
+  clean_logfile
+
+  # change log level
+  if [[ $KERNEL = "Darwin" ]]; then
+    sed -i "" 's/level: warn/level: info/' ${CONF_FILE}
+  else
+    sed -i 's/level: warn/level: info/' ${CONF_FILE}
+  fi
+
+  start_dashboard 15
+
+  [ "$(grep -c "etcd connection is fine" ${LOG_FILE})" -ge '1' ]
+
+  run docker stop etcd
+
+  sleep 30
+
+  [ "$(grep -c "etcd connection loss detected" ${LOG_FILE})" -ge '1' ]
+
+  run docker start etcd
+
+  sleep 20
+
+  [ "$(grep -c "etcd connection recovered" ${LOG_FILE})" -ge '1' ]
+  [ "$(grep -c "etcd store reinitializing" ${LOG_FILE})" -ge '1' ]
 
   stop_dashboard 6
 }
