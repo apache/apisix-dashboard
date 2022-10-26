@@ -30,8 +30,11 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
+)
 
-	"github.com/apisix/manager-api/test/e2e/base"
+var (
+	OidcCookie []http.Cookie
+	Username   string
 )
 
 var _ = ginkgo.Describe("Oidc-Login", func() {
@@ -116,13 +119,13 @@ func createClientAndUser() {
 		RedirectURIs: &redirectURIs,
 	})
 
-	base.Username = GetRandomString(3)
+	Username = GetRandomString(3)
 	user := gocloak.User{
 		FirstName: gocloak.StringP(GetRandomString(3)),
 		LastName:  gocloak.StringP(GetRandomString(3)),
 		Email:     gocloak.StringP(GetRandomString(3)),
 		Enabled:   gocloak.BoolP(true),
-		Username:  gocloak.StringP(base.Username),
+		Username:  gocloak.StringP(Username),
 	}
 
 	id, _ := client.CreateUser(ctx, token.AccessToken, "master", user)
@@ -168,7 +171,7 @@ func accessOidcCallback() (int, error) {
 
 	// set username & password
 	formValues := url.Values{}
-	formValues.Set("username", base.Username)
+	formValues.Set("username", Username)
 	formValues.Set("password", "password")
 	formDataStr := formValues.Encode()
 	formDataBytes := []byte(formDataStr)
@@ -199,7 +202,7 @@ func accessOidcCallback() (int, error) {
 	// save cookie
 	cookies = resp.Cookies()
 	for _, cookie := range cookies {
-		base.OidcCookie = append(base.OidcCookie, *cookie)
+		OidcCookie = append(OidcCookie, *cookie)
 	}
 
 	// return status-code
@@ -216,7 +219,7 @@ func accessRoutesWithCookie(setCookie bool) (int, error) {
 
 	// set cookie or not
 	if setCookie {
-		for _, cookie := range base.OidcCookie {
+		for _, cookie := range OidcCookie {
 			req.AddCookie(&cookie)
 		}
 	}
@@ -241,7 +244,7 @@ func accessOidcLogoutWithCookie(setCookie bool) (int, error) {
 
 	// set cookie or not
 	if setCookie {
-		for _, cookie := range base.OidcCookie {
+		for _, cookie := range OidcCookie {
 			req.AddCookie(&cookie)
 		}
 	}
