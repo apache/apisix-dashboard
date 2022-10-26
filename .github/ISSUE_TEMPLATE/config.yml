@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Visit Apache APISIX
+    url: https://github.com/apache/apisix
+    about: Ask questions or discuss with other community members about Apache APISIX
