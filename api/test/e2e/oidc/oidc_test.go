@@ -47,6 +47,7 @@ var _ = ginkgo.Describe("Oidc-Login", func() {
 	})
 
 	ginkgo.Context("test apisix/admin/oidc/callback", func() {
+
 		ginkgo.It("should return status-code 200", func() {
 			statusCode, err := accessOidcCallback(&OidcCookie)
 			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
