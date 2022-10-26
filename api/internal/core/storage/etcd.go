@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package storage
 
 import (
@@ -21,8 +22,8 @@ import (
 	"fmt"
 	"time"
 
-	"go.etcd.io/etcd/clientv3"
-	"go.etcd.io/etcd/pkg/transport"
+	"go.etcd.io/etcd/client/pkg/v3/transport"
+	clientv3 "go.etcd.io/etcd/client/v3"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
@@ -45,11 +46,12 @@ const (
 )
 
 var (
-	Client *clientv3.Client
+	etcdClient *clientv3.Client
 )
 
 type EtcdV3Storage struct {
-	client *clientv3.Client
+	closing bool
+	client  *clientv3.Client
 }
 
 func InitETCDClient(etcdConf *conf.Etcd) error {
@@ -80,47 +82,19 @@ func InitETCDClient(etcdConf *conf.Etcd) error {
 		return fmt.Errorf("init etcd failed: %s", err)
 	}
 
-	Client = cli
+	etcdClient = cli
 	utils.AppendToClosers(Close)
 	return nil
 }
 
 func GenEtcdStorage() *EtcdV3Storage {
 	return &EtcdV3Storage{
-		client: Client,
+		client: etcdClient,
 	}
-}
-
-func NewETCDStorage(etcdConf *conf.Etcd) (*EtcdV3Storage, error) {
-	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   etcdConf.Endpoints,
-		DialTimeout: 5 * time.Second,
-		Username:    etcdConf.Username,
-		Password:    etcdConf.Password,
-	})
-	if err != nil {
-		log.Errorf("init etcd failed: %s", err)
-		return nil, fmt.Errorf("init etcd failed: %s", err)
-	}
-
-	s := &EtcdV3Storage{
-		client: cli,
-	}
-
-	utils.AppendToClosers(s.Close)
-	return s, nil
 }
 
 func Close() error {
-	if err := Client.Close(); err != nil {
-		log.Errorf("etcd client close failed: %s", err)
-		return err
-	}
-	return nil
-}
-
-func (s *EtcdV3Storage) Close() error {
-	if err := s.client.Close(); err != nil {
+	if err := etcdClient.Close(); err != nil {
 		log.Errorf("etcd client close failed: %s", err)
 		return err
 	}
@@ -210,6 +184,12 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 	go func() {
 		defer runtime.HandlePanic()
 		for event := range eventChan {
+			if event.Err() != nil {
+				log.Errorf("etcd watch error: key: %s err: %v", key, event.Err())
+				close(ch)
+				return
+			}
+
 			output := WatchResponse{
 				Canceled: event.Canceled,
 			}
@@ -252,4 +232,8 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 	}()
 
 	return ch
+}
+
+func (s *EtcdV3Storage) GetClient() *clientv3.Client {
+	return s.client
 }
