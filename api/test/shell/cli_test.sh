@@ -376,7 +376,7 @@ stop_dashboard() {
 @test "Check etcd mTLS" {
   recover_conf
 
-  run ./etcd-v3.4.14-linux-amd64/etcd --name infra0 --data-dir infra0 \
+  run ./etcd-v3.4.20-linux-amd64/etcd --name infra0 --data-dir infra0 \
         --client-cert-auth --trusted-ca-file=$(pwd)/test/certs/mtls_ca.pem --cert-file=$(pwd)/test/certs/mtls_server.pem --key-file=$(pwd)/test/certs/mtls_server-key.pem \
         --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://127.0.0.1:3380 &
 
@@ -414,7 +414,7 @@ stop_dashboard() {
 @test "Check etcd bad data" {
   recover_conf
 
-  run ./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
+  run ./etcd-v3.4.20-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
   [ "$status" -eq 0 ]
   sleep 2
 
@@ -425,7 +425,7 @@ stop_dashboard() {
   [ $(echo "$output" | grep -c "Error occurred while initializing logical store:  /apisix/routes") -eq '1' ]
   [ $(echo "$output" | grep -c "Error: json unmarshal failed") -eq '1' ]
 
-  run ./etcd-v3.4.14-linux-amd64/etcdctl del /apisix/routes/unique1
+  run ./etcd-v3.4.20-linux-amd64/etcdctl del /apisix/routes/unique1
   [ "$status" -eq 0 ]
 
   stop_dashboard 6
