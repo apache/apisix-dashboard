@@ -56,7 +56,8 @@ type GenericStore struct {
 	cache sync.Map
 	opt   GenericStoreOption
 
-	cancel context.CancelFunc
+	cancel  context.CancelFunc
+	closing bool
 }
 
 type GenericStoreOption struct {
@@ -98,50 +99,7 @@ func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
 }
 
 func (s *GenericStore) Init() error {
-	lc, lcancel := context.WithTimeout(context.TODO(), 5*time.Second)
-	defer lcancel()
-	ret, err := s.Stg.List(lc, s.opt.BasePath)
-	if err != nil {
-		return err
-	}
-	for i := range ret {
-		key := ret[i].Key[len(s.opt.BasePath)+1:]
-		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
-		if err != nil {
-			_, _ = fmt.Fprintln(os.Stderr, "Error occurred while initializing logical store: ", s.opt.BasePath)
-			return err
-		}
-
-		s.cache.Store(s.opt.KeyFunc(objPtr), objPtr)
-	}
-
-	c, cancel := context.WithCancel(context.TODO())
-	ch := s.Stg.Watch(c, s.opt.BasePath)
-	go func() {
-		defer runtime.HandlePanic()
-		for event := range ch {
-			if event.Canceled {
-				log.Warnf("watch failed: %s", event.Error)
-			}
-
-			for i := range event.Events {
-				switch event.Events[i].Type {
-				case storage.EventTypePut:
-					key := event.Events[i].Key[len(s.opt.BasePath)+1:]
-					objPtr, err := s.StringToObjPtr(event.Events[i].Value, key)
-					if err != nil {
-						log.Warnf("value convert to obj failed: %s", err)
-						continue
-					}
-					s.cache.Store(key, objPtr)
-				case storage.EventTypeDelete:
-					s.cache.Delete(event.Events[i].Key[len(s.opt.BasePath)+1:])
-				}
-			}
-		}
-	}()
-	s.cancel = cancel
-	return nil
+	return s.listAndWatch()
 }
 
 func (s *GenericStore) Type() HubKey {
@@ -357,7 +315,68 @@ func (s *GenericStore) BatchDelete(ctx context.Context, keys []string) error {
 	return s.Stg.BatchDelete(ctx, storageKeys)
 }
 
+func (s *GenericStore) listAndWatch() error {
+	lc, lcancel := context.WithTimeout(context.TODO(), 5*time.Second)
+	defer lcancel()
+	ret, err := s.Stg.List(lc, s.opt.BasePath)
+	if err != nil {
+		return err
+	}
+	for i := range ret {
+		key := ret[i].Key[len(s.opt.BasePath)+1:]
+		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "Error occurred while initializing logical store: %s, err: %v", s.opt.BasePath, err)
+			return err
+		}
+
+		s.cache.Store(s.opt.KeyFunc(objPtr), objPtr)
+	}
+
+	// start watch
+	s.cancel = s.watch()
+
+	return nil
+}
+
+func (s *GenericStore) watch() context.CancelFunc {
+	c, cancel := context.WithCancel(context.TODO())
+	ch := s.Stg.Watch(c, s.opt.BasePath)
+	go func() {
+		defer func() {
+			if !s.closing {
+				log.Errorf("etcd watch exception closed, restarting: resource: %s", s.Type())
+				_ = s.listAndWatch()
+			}
+		}()
+		defer runtime.HandlePanic()
+		for event := range ch {
+			if event.Canceled {
+				log.Warnf("etcd watch failed: %s", event.Error)
+				return
+			}
+
+			for i := range event.Events {
+				switch event.Events[i].Type {
+				case storage.EventTypePut:
+					key := event.Events[i].Key[len(s.opt.BasePath)+1:]
+					objPtr, err := s.StringToObjPtr(event.Events[i].Value, key)
+					if err != nil {
+						log.Warnf("value convert to obj failed: %s", err)
+						continue
+					}
+					s.cache.Store(key, objPtr)
+				case storage.EventTypeDelete:
+					s.cache.Delete(event.Events[i].Key[len(s.opt.BasePath)+1:])
+				}
+			}
+		}
+	}()
+	return cancel
+}
+
 func (s *GenericStore) Close() error {
+	s.closing = true
 	s.cancel()
 	return nil
 }
