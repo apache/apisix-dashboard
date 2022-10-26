@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { Form, Row, Col, Input, Button } from 'antd';
-import { useIntl } from 'umi';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Row } from 'antd';
+import React from 'react';
+import { useIntl } from 'umi';
 
 import { removeBtnStyle } from '../../constant';
 

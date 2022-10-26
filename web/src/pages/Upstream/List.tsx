@@ -14,22 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Popconfirm, Button, notification, Space } from 'antd';
+import { Button, notification, Popconfirm, Space } from 'antd';
+import { omit } from 'lodash';
+import React, { useRef, useState } from 'react';
 import { history, useIntl } from 'umi';
 
-import { PlusOutlined } from '@ant-design/icons';
-import { omit } from 'lodash';
-import usePagination from '@/hooks/usePagination';
-import { DELETE_FIELDS } from '@/constants';
-
 import { RawDataEditor } from '@/components/RawDataEditor';
+import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
+import usePagination from '@/hooks/usePagination';
 
-import { fetchList, remove, create, update } from './service';
+import { create, fetchList, remove, update } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
@@ -39,6 +38,8 @@ const Page: React.FC = () => {
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
   const { formatMessage } = useIntl();
+
+  const [deleteLoading, setDeleteLoading] = useState('');
 
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
@@ -91,15 +92,20 @@ const Page: React.FC = () => {
             okText={formatMessage({ id: 'page.upstream.list.confirm' })}
             cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
             onConfirm={() => {
-              remove(record.id!).then(() => {
-                notification.success({
-                  message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
+              setDeleteLoading(record.id!);
+              remove(record.id!)
+                .then(() => {
+                  notification.success({
+                    message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
+                  });
+                  checkPageList(ref);
+                })
+                .finally(() => {
+                  setDeleteLoading('');
                 });
-                checkPageList(ref);
-              });
             }}
           >
-            <Button type="primary" danger>
+            <Button type="primary" danger loading={record.id === deleteLoading}>
               {formatMessage({ id: 'page.upstream.list.delete' })}
             </Button>
           </Popconfirm>

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import { Button, Col, Row } from 'antd';
 import type { CSSProperties } from 'react';
-import { Row, Col, Button } from 'antd';
+import React from 'react';
 import { useIntl } from 'umi';
 
 type Props = {
@@ -24,6 +24,7 @@ type Props = {
   lastStep: number;
   onChange: (nextStep: number) => void;
   withResultView?: boolean;
+  loading?: boolean;
 };
 
 const style: CSSProperties = {
@@ -37,7 +38,7 @@ const style: CSSProperties = {
   width: '100%',
 };
 
-const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }) => {
+const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView, loading }) => {
   const { formatMessage } = useIntl();
 
   if (step > lastStep && !withResultView) {
@@ -59,7 +60,7 @@ const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }
           </Button>
         </Col>
         <Col>
-          <Button type="primary" onClick={() => onChange(step + 1)}>
+          <Button type="primary" onClick={() => onChange(step + 1)} loading={loading}>
             {step < lastStep
               ? formatMessage({ id: 'component.actionbar.button.nextStep' })
               : formatMessage({ id: 'component.global.submit' })}

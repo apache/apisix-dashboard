@@ -15,24 +15,25 @@
  * limitations under the License.
  */
 import { Divider, Form, notification, Switch } from 'antd';
-import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
-import { useIntl, useLocation } from 'umi';
 import type { FormInstance } from 'antd/es/form';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { useIntl, useLocation } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
-import PassiveCheck from './components/passive-check';
+
 import ActiveCheck from './components/active-check';
+import KeepalivePool from './components/KeepalivePool';
+import PassHost from './components/PassHost';
+import PassiveCheck from './components/passive-check';
+import Retries from './components/Retries';
+import RetryTimeout from './components/RetryTimeout';
 import Scheme from './components/Scheme';
 import Timeout from './components/Timeout';
+import TLSComponent from './components/TLS';
 import Type from './components/Type';
 import UpstreamSelector from './components/UpstreamSelector';
-import Retries from './components/Retries';
-import PassHost from './components/PassHost';
-import TLSComponent from './components/TLS';
 import UpstreamType from './components/UpstreamType';
 import { convertToRequestData } from './service';
-import RetryTimeout from './components/RetryTimeout';
-import KeepalivePool from './components/KeepalivePool';
 
 type Upstream = {
   name?: string;

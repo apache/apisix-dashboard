@@ -156,6 +156,7 @@ context('Create Route with search service name', () => {
   it('should delete the route and services', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(4000);
     cy.get(selector.name).type(`${data.routeName}\n`);
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
@@ -171,7 +172,7 @@ context('Create Route with search service name', () => {
     cy.contains(data.serviceName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
-
+    cy.get('.ant-notification-close-icon').click().should('not.exist');
     cy.contains(data.serviceName2).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteServiceSuccess);

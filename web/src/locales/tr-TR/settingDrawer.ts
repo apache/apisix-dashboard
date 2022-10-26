@@ -41,7 +41,7 @@ export default {
   'app.setting.othersettings': 'Diğer ayarlar',
   'app.setting.weakmode': 'Zayıf mod',
   'app.setting.copy': 'Ayarları Kopyala',
-  'app.setting.copyinfo': 'Kopyalama başarılı,Lütfen, defaultSettings ayalarını src/models/setting.js da değiştirin',
-  'app.setting.production.hint':
-    'Bu panel, sadece geliştirme modunda görüntülenebilir.',
+  'app.setting.copyinfo':
+    'Kopyalama başarılı,Lütfen, defaultSettings ayalarını src/models/setting.js da değiştirin',
+  'app.setting.production.hint': 'Bu panel, sadece geliştirme modunda görüntülenebilir.',
 };

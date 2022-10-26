@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 import { GithubOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
 import { Button, notification, Tabs } from 'antd';
-import { SelectLang } from '@@/plugin-locale/SelectLang';
-import { Link, useIntl, history } from 'umi';
+import React, { useState } from 'react';
+import { history, Link, useIntl } from 'umi';
+
+import logo from '@/assets/logo.svg';
+import Footer from '@/components/Footer';
+import { getUrlQuery } from '@/helpers';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import type { UserModule } from '@/pages/User/typing';
-import logo from '@/assets/logo.svg';
-import { getUrlQuery } from '@/helpers';
-import Footer from '@/components/Footer';
+import { SelectLang } from '@@/plugin-locale/SelectLang';
+
 import styles from './Login.less';
 
 const Tab = Tabs.TabPane;

@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
 import {
   Button,
-  Table,
-  Modal,
   Form,
-  Select,
   Input,
-  Space,
+  Modal,
   notification,
-  Typography,
+  Select,
+  Space,
   Switch,
+  Table,
+  Typography,
 } from 'antd';
+import React, { useState } from 'react';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';

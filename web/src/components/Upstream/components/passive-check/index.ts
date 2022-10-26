@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 import Healthy from './Healthy';
-import Unhealthy from './Unhealthy';
 import Type from './Type';
+import Unhealthy from './Unhealthy';
 
 export default {
   Healthy,

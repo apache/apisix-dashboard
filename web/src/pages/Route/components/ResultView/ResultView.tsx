@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Button, Result } from 'antd';
 import React from 'react';
-import { Result, Button } from 'antd';
 import { history, useIntl } from 'umi';
 
 type Props = {

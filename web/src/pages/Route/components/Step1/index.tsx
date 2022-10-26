@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import { Form } from 'antd';
-import { FORM_ITEM_LAYOUT } from '@/pages/Route/constants';
-import styles from '../../Create.less';
+import React from 'react';
 
-import MetaView from './MetaView';
-import RequestConfigView from './RequestConfigView';
+import { FORM_ITEM_LAYOUT } from '@/pages/Route/constants';
+
+import styles from '../../Create.less';
 import MatchingRulesView from './MatchingRulesView';
+import MetaView from './MetaView';
 import ProxyRewrite from './ProxyRewrite';
+import RequestConfigView from './RequestConfigView';
 
 const Step1: React.FC<RouteModule.Step1PassProps> = (props) => {
   return (

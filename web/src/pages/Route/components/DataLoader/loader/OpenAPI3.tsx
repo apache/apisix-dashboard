@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { memo } from 'react';
 import { Col, Form, Row, Switch } from 'antd';
+import React, { memo } from 'react';
+
 import { useIntl } from '@@/plugin-locale/localeExports';
 
 const DataLoaderOpenAPI3: React.FC = () => {

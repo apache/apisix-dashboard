@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
 import UpstreamForm from '@/components/Upstream';
 import { fetchUpstreamList } from '@/components/Upstream/service';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 
 const FORM_LAYOUT = {

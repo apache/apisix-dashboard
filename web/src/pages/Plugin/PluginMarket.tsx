@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import { Card, notification } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { Card, notification } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 
 import PluginPage from '@/components/Plugin';
-import { fetchList, createOrUpdate } from './service';
-import { useIntl } from 'umi';
+
+import { createOrUpdate, fetchList } from './service';
 
 const PluginMarket: React.FC = () => {
   const [initialData, setInitialData] = useState({});

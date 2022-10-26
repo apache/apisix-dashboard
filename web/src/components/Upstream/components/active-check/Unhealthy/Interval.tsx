@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import { Form, InputNumber } from 'antd';
+import React from 'react';
 import { useIntl } from 'umi';
 
 import TimeUnit from '../../TimeUnit';

@@ -14,18 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useRef, useEffect } from 'react';
-import { useIntl, history } from 'umi';
-import { Card, Steps, Form, notification } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { Card, Form, notification, Steps } from 'antd';
 import { omit } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
 import { convertToFormData } from '@/components/Upstream/service';
+
 import Preview from './components/Preview';
 import Step1 from './components/Step1';
-import { create, update, fetchItem } from './service';
+import { create, fetchItem, update } from './service';
 
 const { Step } = Steps;
 
@@ -35,6 +36,7 @@ const Page: React.FC = (props) => {
   const [upstreamForm] = Form.useForm();
   const upstreamRef = useRef<any>();
   const [plugins, setPlugins] = useState<PluginComponent.Data>({});
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const STEP_HEADER = [
     formatMessage({ id: 'page.service.steps.stepTitle.basicInformation' }),
@@ -64,6 +66,7 @@ const Page: React.FC = (props) => {
   }, []);
 
   const onSubmit = () => {
+    setSubmitLoading(true);
     const data = {
       ...form.getFieldsValue(),
       plugins,
@@ -92,6 +95,9 @@ const Page: React.FC = (props) => {
       })
       .catch(() => {
         setStep(3);
+      })
+      .finally(() => {
+        setSubmitLoading(false);
       });
   };
 
@@ -142,7 +148,13 @@ const Page: React.FC = (props) => {
           )}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />
+      <ActionBar
+        loading={submitLoading}
+        step={step}
+        lastStep={3}
+        onChange={onStepChange}
+        withResultView
+      />
     </>
   );
 };

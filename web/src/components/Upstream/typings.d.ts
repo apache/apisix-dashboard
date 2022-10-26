@@ -35,9 +35,7 @@ declare namespace UpstreamComponent {
     priority?: number;
   };
 
-  type SubmitNode = {
-    [propName: string]: number;
-  };
+  type SubmitNode = Record<string, number>;
 
   type Timeout = {
     connect: number;

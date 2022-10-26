@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useEffect } from 'react';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Empty, Button, Card, Tooltip } from 'antd';
+import { Button, Card, Empty, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { history, useIntl } from 'umi';
 
 import { getGrafanaURL } from './service';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const Dashboard: React.FC = () => {
   const [grafanaURL, setGrafanaURL] = useState<string | undefined>();

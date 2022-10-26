@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect } from 'react';
-import { Button, Drawer, Form, notification, Space } from 'antd';
-import { useIntl } from 'umi';
 import Editor from '@monaco-editor/react';
-import { Input } from 'antd';
+import { useRequest, useThrottleFn } from 'ahooks';
+import { Button, Drawer, Form, Input, notification, Space } from 'antd';
+import React, { useEffect } from 'react';
+import { useIntl } from 'umi';
 
 import { create, update } from '../../service';
 import styles from './index.less';
@@ -38,11 +38,13 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
     form.setFieldsValue(protoData);
   }, [visible]);
 
-  const submit = async () => {
+  const { runAsync: createProto, loading: submitLoading } = useRequest(create, { manual: true });
+
+  const { run: submit } = useThrottleFn(async () => {
     await form.validateFields();
     const formData: ProtoModule.ProtoData = form.getFieldsValue(true);
     if (editMode === 'create') {
-      create(formData).then(() => {
+      createProto(formData).then(() => {
         notification.success({
           message: formatMessage({ id: 'page.proto.drawer.create.successfully' }),
         });
@@ -57,7 +59,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
       setVisible(false);
       refreshTable();
     }
-  };
+  });
 
   return (
     <Drawer
@@ -81,7 +83,7 @@ const ProtoDrawer: React.FC<ProtoModule.ProtoDrawerProps> = ({
             {formatMessage({ id: 'component.global.cancel' })}
           </Button>
           <Space>
-            <Button type="primary" onClick={() => submit()}>
+            <Button type="primary" onClick={() => submit()} loading={submitLoading}>
               {formatMessage({ id: 'component.global.submit' })}
             </Button>
           </Space>

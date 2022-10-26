@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import type { FormInstance } from 'antd/es/form';
 import { Form, Input, InputNumber } from 'antd';
+import type { FormInstance } from 'antd/es/form';
+import React from 'react';
 import { useIntl } from 'umi';
 
 type Props = {

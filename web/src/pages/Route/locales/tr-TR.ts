@@ -46,7 +46,7 @@ export default {
   'page.route.batchDeletion': 'Toplu yolu sil',
   'page.route.unSelect': 'Seçilme',
   'page.route.item': 'term',
-  'page.route.chosen':'Seçili',
+  'page.route.chosen': 'Seçili',
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header adı örn :HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter adı örn :userId',
