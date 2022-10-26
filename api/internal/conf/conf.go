@@ -25,8 +25,10 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/gorilla/sessions"
 	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
+	"golang.org/x/oauth2"
 
 	"github.com/apisix/manager-api/internal/utils"
 )
@@ -39,6 +41,7 @@ const (
 	EnvTEST  = "test"
 
 	WebDir = "html/"
+	State  = "123456"
 )
 
 var (
@@ -58,12 +61,16 @@ var (
 	AccessLogPath    = "logs/access.log"
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
-	OidcConf         Oidc
 	SSLDefaultStatus = 1 //enable ssl by default
 	ImportSizeLimit  = 10 * 1024 * 1024
 	AllowList        []string
 	Plugins          = map[string]bool{}
 	SecurityConf     Security
+	CookieStore      = sessions.NewCookieStore([]byte("oidc"))
+	OidcId           string
+	OidcConfig       oauth2.Config
+	OidcExpireTime   int
+	OidcUserInfoURL  string
 )
 
 type MTLS struct {
@@ -129,11 +136,13 @@ type Authentication struct {
 
 type Oidc struct {
 	ExpireTime   int    `mapstructure:"expire_time" yaml:"expire_time"`
-	AppName      string `mapstructure:"app_name"`
-	ClientId     string `mapstructure:"client_id"`
+	ClientID     string `mapstructure:"client_id"`
 	ClientSecret string `mapstructure:"client_secret"`
+	AuthURL      string `mapstructure:"auth_url"`
+	TokenURL     string `mapstructure:"token_url"`
+	UserInfoURL  string `mapstructure:"user_info_url"`
+	RedirectURL  string `mapstructure:"redirect_url"`
 	Scope        string
-	RedirectUri  string `mapstructure:"redirect_uri"`
 }
 
 type Config struct {
@@ -267,7 +276,7 @@ func setupConfig() {
 	// set authentication
 	initAuthentication(config.Authentication)
 
-	//set Oidc
+	// set Oidc
 	initOidc(config.Oidc)
 
 	// set plugin
@@ -298,7 +307,13 @@ func initAuthentication(conf Authentication) {
 }
 
 func initOidc(conf Oidc) {
-	OidcConf = conf
+	OidcExpireTime = conf.ExpireTime
+	OidcConfig.ClientID = conf.ClientID
+	OidcConfig.ClientSecret = conf.ClientSecret
+	OidcConfig.Endpoint = oauth2.Endpoint{AuthURL: conf.AuthURL, TokenURL: conf.TokenURL, AuthStyle: 1}
+	OidcConfig.Scopes = append(OidcConfig.Scopes, conf.Scope)
+	OidcConfig.RedirectURL = conf.RedirectURL
+	OidcUserInfoURL = conf.UserInfoURL
 }
 
 func initPlugins(plugins []string) {
