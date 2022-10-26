@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
 import { Button, Form, Input, Select, Tag } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
+import React, { useState } from 'react';
 import { useIntl } from 'umi';
 
 import LabelsDrawer from '@/components/LabelsfDrawer';
+
 import { fetchLabelList } from '../service';
 
 const FORM_LAYOUT = {

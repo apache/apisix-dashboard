@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import { Button, Drawer, notification, PageHeader, Select, Space } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useIntl } from 'umi';
-import { js_beautify } from 'js-beautify';
 import type { Monaco } from '@monaco-editor/react';
 import Editor from '@monaco-editor/react';
+import { Button, Drawer, notification, PageHeader, Select, Space } from 'antd';
+import { js_beautify } from 'js-beautify';
 import type { languages } from 'monaco-editor';
+import React, { useEffect, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useIntl } from 'umi';
 
 import { json2yaml, yaml2json } from '../../helpers';
 

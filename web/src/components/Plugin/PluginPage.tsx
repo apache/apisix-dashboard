@@ -14,16 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Alert, Anchor, Button, Card, Form, Layout, Select, Tabs } from 'antd';
+import { omit, orderBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Card, Button, Form, Select, Alert, Tabs } from 'antd';
-import { orderBy, omit } from 'lodash';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
+
+import defaultPluginImg from '../../../public/static/default-plugin.png';
+import { PLUGIN_FILTER_LIST, PLUGIN_ICON_LIST } from './data';
 import PluginDetail from './PluginDetail';
 import { fetchList, fetchPluginTemplateList } from './service';
-import { PLUGIN_ICON_LIST, PLUGIN_FILTER_LIST } from './data';
-import defaultPluginImg from '../../../public/static/default-plugin.png';
 
 type Props = {
   readonly?: boolean;

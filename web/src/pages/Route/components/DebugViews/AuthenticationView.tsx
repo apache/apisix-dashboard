@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Card, Form, Input, Radio } from 'antd';
 import React, { useState } from 'react';
-import { Form, Input, Radio, Card } from 'antd';
 import { useIntl } from 'umi';
+
 import { AUTH_LIST } from '../../constants';
 import styles from './index.less';
 

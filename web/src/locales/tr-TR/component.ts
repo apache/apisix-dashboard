@@ -26,6 +26,7 @@ export default {
   'component.global.enable': 'Aktifleştir',
   'component.global.disable': 'Devre dışı bırak',
   'component.global.scope': 'Kapsam',
+  'component.global.example': 'Örnek',
   'component.global.data.editor': 'Veri Editörü',
   'component.global.delete': 'Sil',
   'component.global.cancel': 'İptal',
@@ -53,7 +54,7 @@ export default {
   'component.global.notification.success.message.deleteSuccess': 'Başarıyla silindi',
   'component.global.create.consumer.success': 'Başarıyla oluşturuldu',
   'component.global.delete.consumer.success': 'Başarıyla silindi',
-  'component.global.delete.routes.success':'Sil Yöneltmeler Başarılı',
+  'component.global.delete.routes.success': 'Sil Yöneltmeler Başarılı',
   'component.global.edit.consumer.success': 'Başarıyla güncellendi',
 
   'component.global.steps.stepTitle.basicInformation': 'Temel Bilgiler',
@@ -73,9 +74,9 @@ export default {
   'component.global.name': 'Ad',
   'component.global.id': 'ID',
   'component.global.updateTime': 'Zamanı Güncelle',
-  'component.global.form.itemExtraMessage.nameGloballyUnique': 'İsim global olarak benzersiz olmalıdır',
-  'component.global.input.placeholder.description':
-    'Açıklama girin, max 256 karakter',
+  'component.global.form.itemExtraMessage.nameGloballyUnique':
+    'İsim global olarak benzersiz olmalıdır',
+  'component.global.input.placeholder.description': 'Açıklama girin, max 256 karakter',
   // User component
   'component.user.loginByPassword': 'Kullanıcı adı ve şifre',
   'component.user.login': 'Giriş',

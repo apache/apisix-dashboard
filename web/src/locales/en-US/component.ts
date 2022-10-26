@@ -26,6 +26,7 @@ export default {
   'component.global.enable': 'Enable',
   'component.global.disable': 'Disable',
   'component.global.scope': 'Scope',
+  'component.global.example': 'Example',
   'component.global.data.editor': 'Raw Data Editor',
   'component.global.delete': 'Delete',
   'component.global.cancel': 'Cancel',
@@ -53,7 +54,7 @@ export default {
   'component.global.notification.success.message.deleteSuccess': 'Deleted Successfully',
   'component.global.create.consumer.success': 'Create Consumer Successfully',
   'component.global.delete.consumer.success': 'Delete Consumer Successfully',
-  'component.global.delete.routes.success':'Delete Route Successfully',
+  'component.global.delete.routes.success': 'Delete Route Successfully',
   'component.global.edit.consumer.success': 'Edit Consumer Successfully',
 
   'component.global.steps.stepTitle.basicInformation': 'Basic Information',

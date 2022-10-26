@@ -16,17 +16,17 @@
  */
 import { ActionBarEnUS } from '@/components/ActionBar';
 
-import component from './tr-TR/component';
-import globalHeader from './tr-TR/globalHeader';
-import menu from './tr-TR/menu';
-import pwa from './tr-TR/pwa';
-import settingDrawer from './tr-TR/settingDrawer';
-import settings from './tr-TR/setting';
-import other from './tr-TR/other';
 import Plugin from '../components/Plugin/locales/tr-TR';
 import PluginFlow from '../components/PluginFlow/locales/tr-TR';
 import RawDataEditor from '../components/RawDataEditor/locales/tr-TR';
 import UpstreamComponent from '../components/Upstream/locales/tr-TR';
+import component from './tr-TR/component';
+import globalHeader from './tr-TR/globalHeader';
+import menu from './tr-TR/menu';
+import other from './tr-TR/other';
+import pwa from './tr-TR/pwa';
+import settings from './tr-TR/setting';
+import settingDrawer from './tr-TR/settingDrawer';
 
 export default {
   'navBar.lang': 'Dil Seçenekleri',

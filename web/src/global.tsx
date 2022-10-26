@@ -14,12 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button, message, notification } from 'antd';
-
-import React from 'react';
-import { formatMessage } from 'umi';
 import { loader } from '@monaco-editor/react';
-import { getLocale } from 'umi';
+import { Button, message, notification } from 'antd';
+import React from 'react';
+import { formatMessage, getLocale } from 'umi';
 
 import defaultSettings from '../config/defaultSettings';
 

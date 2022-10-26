@@ -16,9 +16,9 @@
  */
 import type React from 'react';
 
+import { getUrlQuery } from '@/helpers';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import type { UserModule } from '@/pages/User/typing';
-import { getUrlQuery } from '@/helpers';
 
 /**
  * Login Methods List

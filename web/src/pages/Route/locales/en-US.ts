@@ -46,7 +46,7 @@ export default {
   'page.route.batchDeletion': 'BatchDeletion Routes',
   'page.route.unSelect': 'Unselect',
   'page.route.item': 'items',
-  'page.route.chosen':'chosen',
+  'page.route.chosen': 'chosen',
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header name, for example: HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter name, for example: id',

@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
-import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { Card, Form, Steps } from 'antd';
 import moment from 'moment';
+import React, { useState } from 'react';
 import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import Step1 from '@/pages/SSL/components/Step1';
 import Step2 from '@/pages/SSL/components/Step2';
-import { verifyKeyPaire, create, update } from '@/pages/SSL/service';
+import { create, update, verifyKeyPaire } from '@/pages/SSL/service';
 import styles from '@/pages/SSL/style.less';
 
 const Page: React.FC = (props) => {
@@ -51,16 +51,23 @@ const Page: React.FC = (props) => {
       });
   };
 
+  const [submitLoading, setSubmitLoading] = useState(false);
+
   const submit = () => {
+    setSubmitLoading(true);
     const data = form.getFieldsValue();
     const sslData = {
       sni: data.snis,
       cert: data.cert!,
       key: data.key!,
     };
-    (id ? update(id, sslData) : create(sslData)).then(() => {
-      history.replace('/ssl/list');
-    });
+    (id ? update(id, sslData) : create(sslData))
+      .then(() => {
+        history.replace('/ssl/list');
+      })
+      .finally(() => {
+        setSubmitLoading(false);
+      });
   };
 
   const handleStepChange = (nextStep: number) => {
@@ -101,7 +108,7 @@ const Page: React.FC = (props) => {
           {Boolean(step === 2) && <Step2 form={form} />}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} lastStep={2} onChange={handleStepChange} />
+      <ActionBar loading={submitLoading} step={step} lastStep={2} onChange={handleStepChange} />
     </>
   );
 };

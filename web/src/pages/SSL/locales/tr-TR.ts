@@ -41,7 +41,7 @@ export default {
   'component.ssl.removeSSLItemModalContent': 'Bu öğeyi silmek üzeresiniz!',
 
   'component.ssl.description':
-  'Sertifika, ağ geçidi tarafından SNI ile ilişkilendirilecek ve Rotadaki ana bilgisayar adına bağlı olacak şifreli istekleri işlemek için kullanılır.',
+    'Sertifika, ağ geçidi tarafından SNI ile ilişkilendirilecek ve Rotadaki ana bilgisayar adına bağlı olacak şifreli istekleri işlemek için kullanılır.',
   'component.ssl.fields.cert.required': 'Sertifika gerekli',
   'component.ssl.fields.key.required': 'Özel anahtar gerekli',
 };

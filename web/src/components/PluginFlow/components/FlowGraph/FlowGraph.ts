@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Graph, Addon, FunctionExt } from '@antv/x6';
-import type { Model, Cell } from '@antv/x6';
-import { formatMessage } from 'umi';
-import { notification } from 'antd';
-
 import './shapes';
+
+import type { Cell, Model } from '@antv/x6';
+import { Addon, FunctionExt, Graph } from '@antv/x6';
+import { notification } from 'antd';
+import { formatMessage } from 'umi';
+
 import {
   DEFAULT_OPINIONS,
   DEFAULT_PLUGIN_FLOW_DATA,

@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { identity, pickBy } from 'lodash';
 import { request } from 'umi';
-import { pickBy, identity } from 'lodash';
 
-import { transformStepData, transformRouteData, transformUpstreamNodes } from './transform';
 import { transformLabelList } from '@/helpers';
+
+import { transformRouteData, transformStepData, transformUpstreamNodes } from './transform';
 
 export const create = (data: RouteModule.RequestData, mode?: RouteModule.RequestMode) =>
   request(`/routes`, {

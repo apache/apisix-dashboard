@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
 import { Form, Select } from 'antd';
-import type { UploadFile } from 'antd/lib/upload/interface';
 import type { FormInstance } from 'antd/es/form';
+import type { UploadFile } from 'antd/lib/upload/interface';
+import React, { useState } from 'react';
 import { useIntl } from 'umi';
 
 import CertificateForm from '@/pages/SSL/components/CertificateForm';
-import CertificateUploader from '@/pages/SSL/components/CertificateUploader';
 import type { UploadType } from '@/pages/SSL/components/CertificateUploader';
+import CertificateUploader from '@/pages/SSL/components/CertificateUploader';
 
 type CreateType = 'Upload' | 'Input';
 

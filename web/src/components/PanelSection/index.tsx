@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { CSSProperties } from 'react';
-import { Divider, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Divider, Tooltip } from 'antd';
+import type { CSSProperties } from 'react';
+import React from 'react';
 
 const PanelSection: React.FC<{
   title: string;

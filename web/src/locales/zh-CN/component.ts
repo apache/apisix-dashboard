@@ -26,6 +26,7 @@ export default {
   'component.global.enable': '启用',
   'component.global.disable': '禁用',
   'component.global.scope': '作用域',
+  'component.global.example': '例子',
   'component.global.data.editor': '数据编辑器',
   'component.global.delete': '删除',
   'component.global.cancel': '取消',
@@ -60,7 +61,7 @@ export default {
   'component.global.updateTime': '更新时间',
   'component.global.create.consumer.success': '创建消费者成功',
   'component.global.delete.consumer.success': '删除消费者成功',
-  'component.global.delete.routes.success':'删除路由成功',
+  'component.global.delete.routes.success': '删除路由成功',
   'component.global.edit.consumer.success': '配置消费者成功',
 
   'component.global.popconfirm.title.delete': '确定删除该条记录吗？',

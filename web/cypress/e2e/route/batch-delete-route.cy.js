@@ -72,6 +72,7 @@ context('Create and Batch Deletion Routes', () => {
       // config label
       cy.contains('Manage').click();
 
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
       cy.get(selector.drawerBody).within(($drawer) => {
         cy.wrap($drawer)
           .contains('button', 'Add')
@@ -115,14 +116,15 @@ context('Create and Batch Deletion Routes', () => {
   it('should batch delete the name of the route', function () {
     cy.contains('Route').click();
     const cases = [
-      [1, 0, 2], //full match
+      [1, 0, 2], // full match
       [0, 1, 2], // partial match
-      [0, 1, 2], //none match
+      [0, 1, 2], // none match
     ];
     const prefix = 'test';
     cy.wrap([0, 2, 'x']).each(($n, i) => {
       cy.get(selector.nameSearchInput).clear().type(`${prefix}${$n}`);
       cy.contains('Search').click();
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       cy.wrap(cases[i]).each(($n) => {
         cy.contains(`${prefix}${$n}`).should('not.exist');
       });
@@ -132,14 +134,15 @@ context('Create and Batch Deletion Routes', () => {
   it('should batch delete the path of the route', function () {
     cy.contains('Route').click();
     const cases = [
-      [1, 0, 2], //full match
+      [1, 0, 2], // full match
       [0, 1, 2], // partial match
-      [0, 1, 2], //none match
+      [0, 1, 2], // none match
     ];
     const prefix = '/get';
     cy.wrap([0, 2, 'x']).each(($n, i) => {
       cy.get(selector.nameSearchInput).clear().type(`${prefix}${$n}`);
       cy.contains('Search').click();
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       cy.wrap(cases[i]).each(($n) => {
         cy.contains(`${prefix}${$n}`).should('not.exist');
       });

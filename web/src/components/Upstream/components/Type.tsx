@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
 import type { FormInstance } from 'antd';
 import { AutoComplete, Form, Select } from 'antd';
+import React, { useState } from 'react';
 import { useIntl } from 'umi';
 
-import { HashOnEnum, CommonHashKeyEnum, AlgorithmEnum } from '../constant';
+import { AlgorithmEnum, CommonHashKeyEnum, HashOnEnum } from '../constant';
 
 type Props = {
   readonly?: boolean;

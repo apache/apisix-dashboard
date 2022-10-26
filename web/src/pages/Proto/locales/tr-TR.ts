@@ -24,13 +24,13 @@ export default {
   'page.proto.list.cancel': 'İptal',
   'page.proto.list.delete.successfully': 'Proto başarıyla silindi',
   'page.proto.list.delete': 'Sil',
-  'page.proto.id.tooltip': ".proto dosya türü",
+  'page.proto.id.tooltip': '.proto dosya türü',
 
   'page.proto.desc': 'açıklama',
-  'page.proto.desc.tooltip': ".proto dosya açıklaması",
+  'page.proto.desc.tooltip': '.proto dosya açıklaması',
 
   'page.proto.content': 'içerik',
-  'page.proto.content.tooltip': ".proto dosya içeriği",
+  'page.proto.content.tooltip': '.proto dosya içeriği',
 
   'page.proto.drawer.create': 'Proto Oluştur',
   'page.proto.drawer.edit': 'Proto Düzenle',

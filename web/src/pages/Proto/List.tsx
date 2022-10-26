@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import ProtoDrawer from './components/ProtoDrawer';
-import { Button, notification, Popconfirm, Space } from 'antd';
-import { useIntl } from 'umi';
-import usePagination from '@/hooks/usePagination';
-
 import { PlusOutlined } from '@ant-design/icons';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, notification, Popconfirm, Space } from 'antd';
+import React, { useRef, useState } from 'react';
+import { useIntl } from 'umi';
 
 import { timestampToLocaleString } from '@/helpers';
+import usePagination from '@/hooks/usePagination';
+
+import ProtoDrawer from './components/ProtoDrawer';
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
@@ -40,6 +40,7 @@ const Page: React.FC = () => {
   };
   const [protoData, setProtoData] = useState<ProtoModule.ProtoData>(emptyProtoData);
   const [editMode, setEditMode] = useState<ProtoModule.EditMode>('create');
+  const [deleteLoading, setDeleteLoading] = useState('');
 
   const refreshTable = () => {
     ref.current?.reload();
@@ -97,15 +98,20 @@ const Page: React.FC = () => {
             okText={formatMessage({ id: 'page.proto.list.confirm' })}
             cancelText={formatMessage({ id: 'page.proto.list.cancel' })}
             onConfirm={() => {
-              remove(record.id).then(() => {
-                notification.success({
-                  message: formatMessage({ id: 'page.proto.list.delete.successfully' }),
+              setDeleteLoading(record.id);
+              remove(record.id)
+                .then(() => {
+                  notification.success({
+                    message: formatMessage({ id: 'page.proto.list.delete.successfully' }),
+                  });
+                  checkPageList(ref);
+                })
+                .finally(() => {
+                  setDeleteLoading('');
                 });
-                checkPageList(ref);
-              });
             }}
           >
-            <Button type="primary" danger>
+            <Button type="primary" danger loading={record.id === deleteLoading}>
               {formatMessage({ id: 'page.proto.list.delete' })}
             </Button>
           </Popconfirm>
