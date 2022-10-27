@@ -136,6 +136,7 @@ func createClientAndUser() string {
 }
 
 func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
+
 	var authenticationUrl string
 	var loginUrl string
 	var err error
