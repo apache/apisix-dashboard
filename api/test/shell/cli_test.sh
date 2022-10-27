@@ -422,8 +422,7 @@ stop_dashboard() {
 
   run journalctl -u ${SERVICE_NAME}.service -n 30
 
-  [ $(echo "$output" | grep -c "Error occurred while initializing logical store:  /apisix/routes") -eq '1' ]
-  [ $(echo "$output" | grep -c "Error: json unmarshal failed") -eq '1' ]
+  [ $(echo "$output" | grep -c "Error occurred while initializing logical store: /apisix/routes, err: json unmarshal failed") -eq '1' ]
 
   run ./etcd-v3.4.20-linux-amd64/etcdctl del /apisix/routes/unique1
   [ "$status" -eq 0 ]
