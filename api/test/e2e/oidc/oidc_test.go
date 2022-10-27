@@ -170,7 +170,6 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	dom, _ := goquery.NewDocumentFromReader(strings.NewReader(string(body)))
 	dom.Find("#kc-form-login").Each(func(i int, selection *goquery.Selection) {
 		loginUrl = selection.Get(0).Attr[2].Val
-		fmt.Println(loginUrl)
 	})
 
 	// set username & password
@@ -182,7 +181,6 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	formBytesReader := bytes.NewReader(formDataBytes)
 	req, _ = http.NewRequest("POST", loginUrl, formBytesReader)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
 	// set cookies
 	cookies := resp.Cookies()
 	for _, cookie := range cookies {
@@ -193,6 +191,7 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	resp, err = client.Do(req)
 	if err != nil {
 		return 0, err
+		fmt.Println(loginUrl)
 	}
 
 	// access apisix/admin/oidc/login with code
