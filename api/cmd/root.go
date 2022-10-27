@@ -128,5 +128,18 @@ func etcdConnectionChecker() context.CancelFunc {
 		}
 	}()
 
+	// Timed re-initialization when etcd watch actively exits
+	go func() {
+		for {
+			select {
+			case <-time.Tick(2 * time.Minute):
+				err := store.ReInit()
+				if err != nil {
+					log.Errorf("resource re-initialize failed, err: %v", err)
+				}
+			}
+		}
+	}()
+
 	return cancel
 }

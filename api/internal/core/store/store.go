@@ -36,6 +36,10 @@ import (
 	"github.com/apisix/manager-api/internal/utils/runtime"
 )
 
+var (
+	storeNeedReInit = make([]*GenericStore, 0)
+)
+
 type Pagination struct {
 	PageSize   int `json:"page_size" form:"page_size" auto_read:"page_size"`
 	PageNumber int `json:"page" form:"page" auto_read:"page"`
@@ -51,7 +55,8 @@ type Interface interface {
 }
 
 type GenericStore struct {
-	Stg storage.Interface
+	Stg      storage.Interface
+	initLock sync.Mutex
 
 	cache sync.Map
 	opt   GenericStoreOption
@@ -98,7 +103,18 @@ func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
 	return s, nil
 }
 
+func ReInit() error {
+	for _, store := range storeNeedReInit {
+		if err := store.Init(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (s *GenericStore) Init() error {
+	s.initLock.Lock()
+	defer s.initLock.Unlock()
 	return s.listAndWatch()
 }
 
@@ -346,7 +362,7 @@ func (s *GenericStore) watch() context.CancelFunc {
 		defer func() {
 			if !s.closing {
 				log.Errorf("etcd watch exception closed, restarting: resource: %s", s.Type())
-				_ = s.listAndWatch()
+				storeNeedReInit = append(storeNeedReInit, s)
 			}
 		}()
 		defer runtime.HandlePanic()
