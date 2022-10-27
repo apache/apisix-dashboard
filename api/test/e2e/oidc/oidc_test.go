@@ -19,6 +19,7 @@ package oidc_test
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -47,7 +48,6 @@ var _ = ginkgo.Describe("Oidc-Login", func() {
 	})
 
 	ginkgo.Context("test apisix/admin/oidc/callback", func() {
-
 		ginkgo.It("should return status-code 200", func() {
 			statusCode, err := accessOidcCallback(&OidcCookie)
 			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
@@ -169,6 +169,7 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	dom, _ := goquery.NewDocumentFromReader(strings.NewReader(string(body)))
 	dom.Find("#kc-form-login").Each(func(i int, selection *goquery.Selection) {
 		loginUrl = selection.Get(0).Attr[2].Val
+		fmt.Println(loginUrl)
 	})
 
 	// set username & password
