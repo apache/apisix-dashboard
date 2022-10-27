@@ -179,6 +179,7 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	formDataStr := formValues.Encode()
 	formDataBytes := []byte(formDataStr)
 	formBytesReader := bytes.NewReader(formDataBytes)
+	fmt.Printf("loginUrl: %s/n", loginUrl)
 	req, _ = http.NewRequest("POST", loginUrl, formBytesReader)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	// set cookies
