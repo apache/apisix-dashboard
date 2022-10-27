@@ -101,7 +101,7 @@ func accessOidcLogin() (int, error) {
 	req, _ = http.NewRequest("GET", "http://127.0.0.1:9000/apisix/admin/oidc/login", nil)
 	resp, err = Client.Do(req)
 	if err != nil {
-		return resp.StatusCode, err
+		return 0, err
 	}
 
 	// return status-code
@@ -153,7 +153,7 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	req, _ = http.NewRequest("GET", "http://127.0.0.1:9000/apisix/admin/oidc/login", nil)
 	resp, err = client.Do(req)
 	if err != nil {
-		return resp.StatusCode, err
+		return 0, err
 	}
 	authenticationUrl = resp.Header.Get("Location")
 
@@ -161,7 +161,7 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	req, _ = http.NewRequest("GET", authenticationUrl, nil)
 	resp, err = client.Do(req)
 	if err != nil {
-		return resp.StatusCode, err
+		return 0, err
 	}
 
 	// get the login-url from html
@@ -190,7 +190,7 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	// access the login-url to login
 	resp, err = client.Do(req)
 	if err != nil {
-		return resp.StatusCode, err
+		return 0, err
 	}
 
 	// access apisix/admin/oidc/login with code
@@ -198,7 +198,7 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	req, _ = http.NewRequest("GET", callbackUrl, nil)
 	resp, err = client.Do(req)
 	if err != nil {
-		return resp.StatusCode, err
+		return 0, err
 	}
 
 	// save cookie
@@ -229,7 +229,7 @@ func accessRoutesWithCookie(setCookie bool, OidcCookie []http.Cookie) (int, erro
 	// access apisix/admin/routes
 	resp, err = client.Do(req)
 	if err != nil {
-		return resp.StatusCode, err
+		return 0, err
 	}
 
 	// return status-code
@@ -254,7 +254,7 @@ func accessOidcLogoutWithCookie(setCookie bool, OidcCookie []http.Cookie) (int, 
 	// access apisix/admin/oidc/logout
 	resp, err = client.Do(req)
 	if err != nil {
-		return resp.StatusCode, err
+		return 0, err
 	}
 
 	// return status-code
