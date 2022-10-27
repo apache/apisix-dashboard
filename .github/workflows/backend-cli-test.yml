@@ -33,6 +33,11 @@ jobs:
         with:
           submodules: recursive
 
+      - name: setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.19'
+
       - name: cache etcd
         id: cache-etcd
         uses: actions/cache@v3
