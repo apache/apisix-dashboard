@@ -17,10 +17,11 @@
 package filter
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
