@@ -17,11 +17,10 @@
 package filter
 
 import (
-	"net/http"
-	"strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"net/http"
+	"strings"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
@@ -29,6 +28,13 @@ import (
 
 func Authentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if c.Request.URL.Path == "/apisix/admin/user/login" ||
+			c.Request.URL.Path == "/apisix/admin/tool/version" ||
+			!strings.HasPrefix(c.Request.URL.Path, "/apisix") {
+			c.Next()
+			return
+		}
+
 		cookie, _ := conf.CookieStore.Get(c.Request, "oidc")
 		errResp := gin.H{
 			"code":    010013,
@@ -36,13 +42,6 @@ func Authentication() gin.HandlerFunc {
 		}
 
 		if cookie.IsNew {
-			if c.Request.URL.Path == "/apisix/admin/user/login" ||
-				c.Request.URL.Path == "/apisix/admin/tool/version" ||
-				!strings.HasPrefix(c.Request.URL.Path, "/apisix") {
-				c.Next()
-				return
-			}
-
 			tokenStr := c.GetHeader("Authorization")
 			// verify token
 			token, err := jwt.ParseWithClaims(tokenStr, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
