@@ -181,6 +181,15 @@ services:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.50
 
+  keycloak:
+    image: jboss/keycloak:9.0.2
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=h2
+    ports:
+      - "8080:8080"
+
 networks:
   apisix_dashboard_e2e:
     driver: bridge
