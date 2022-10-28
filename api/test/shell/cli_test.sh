@@ -572,6 +572,9 @@ stop_etcd() {
   [ "$(grep -c "etcd connection recovered" ${LOG_FILE})" -ge '1' ]
   [ "$(grep -c "etcd store reinitializing" ${LOG_FILE})" -ge '1' ]
 
+  # wait data reload
+  sleep 10
+
   # access manager api and check routes
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
   token=$(echo "$output" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
