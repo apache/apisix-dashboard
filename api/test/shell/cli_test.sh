@@ -79,7 +79,6 @@ stop_dashboard() {
 }
 
 start_etcd() {
-  run docker stop etcd && docker rm etcd
   run docker run -d --name etcd -p 2379:2379 -e ALLOW_NONE_AUTHENTICATION=yes bitnami/etcd:${ETCD_VERSION}
   [ "$status" -eq 0 ]
 }
