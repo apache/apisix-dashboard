@@ -117,7 +117,7 @@ func etcdConnectionChecker() context.CancelFunc {
 					store.RangeStore(func(key store.HubKey, store *store.GenericStore) bool {
 						log.Warnf("etcd store reinitializing: resource: %s", key)
 						if err := store.Init(); err != nil {
-							log.Errorf("etcd store reinitialize failed: resource: %s", key)
+							log.Errorf("etcd store reinitialize failed: resource: %s, error: %s", key, err)
 						}
 						return true
 					})
