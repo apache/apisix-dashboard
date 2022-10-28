@@ -3,23 +3,14 @@ module github.com/apisix/manager-api
 go 1.15
 
 require (
-	github.com/coreos/bbolt v1.3.2 // indirect
-	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-oidc/v3 v3.3.0
-	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
-	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
-	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.1.0
 	github.com/getkin/kin-openapi v0.33.0
 	github.com/gin-contrib/gzip v0.0.3
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
 	github.com/gin-gonic/gin v1.6.3
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/google/uuid v1.2.0 // indirect
 	github.com/gorilla/sessions v1.2.1
-	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2 // indirect
-	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/juliangruber/go-intersect v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.0
@@ -35,9 +26,6 @@ require (
 	go.etcd.io/etcd/client/pkg/v3 v3.5.5
 	go.etcd.io/etcd/client/v3 v3.5.5
 	go.uber.org/zap v1.17.0
-	golang.org/x/net v0.0.0-20210510120150-4163338589ed // indirect
 	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f // indirect
 	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094
-	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
-	sigs.k8s.io/yaml v1.2.0 // indirect
 )
