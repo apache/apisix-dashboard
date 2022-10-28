@@ -79,6 +79,7 @@ stop_dashboard() {
 }
 
 start_etcd() {
+  run docker stop etcd && docker rm etcd
   run docker run -d --name etcd -p 2379:2379 -e ALLOW_NONE_AUTHENTICATION=yes bitnami/etcd:${ETCD_VERSION}
   [ "$status" -eq 0 ]
 }
@@ -532,6 +533,9 @@ stop_etcd() {
 #17
 @test "Check etcd sync auto recovery" {
   recover_conf
+
+  sed -i 's/level: warn/level: info/' ${CONF_FILE}
+
   start_dashboard 15
 
   [ "$(grep -c "etcd connection is fine" ${LOG_FILE})" -ge '1' ]
@@ -544,7 +548,7 @@ stop_etcd() {
   [ "$(grep -c "etcd connection loss detected" ${LOG_FILE})" -ge '1' ]
 
   # create temporary dir for etcd persistence
-  tmp="$(mktemp -d)"
+  tmp="$(sudo su - runner sh -c 'mktemp -d')"
 
   # create etcd other port and enable persistence
   # the etcd on a new port for etcdctl access but not for dashboard
@@ -571,10 +575,9 @@ stop_etcd() {
   # access manager api and check routes
   run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
   token=$(echo "$output" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
-
   [ -n "${token}" ]
 
-  run curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Content-Type: application/json" -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}'
+  run curl -ig -XGET http://127.0.0.1:9000/apisix/admin/routes -i -H "Content-Type: application/json" -H "Authorization: $token"
   respCode=$(echo "$output" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
   [ "$respCode" = "0" ]
   [ "$(echo "$output" | grep -c "/new1")" -eq '1' ]
