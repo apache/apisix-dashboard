@@ -99,7 +99,7 @@ func etcdConnectionChecker() context.CancelFunc {
 		for {
 			select {
 			case <-time.Tick(10 * time.Second):
-				sCtx, sCancel := context.WithTimeout(context.TODO(), 5*time.Second)
+				sCtx, sCancel := context.WithTimeout(ctx, 5*time.Second)
 				err := etcdClient.Sync(sCtx)
 				sCancel()
 				if err != nil {
