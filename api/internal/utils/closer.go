@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package utils
 
 import "log"
@@ -29,8 +30,9 @@ func AppendToClosers(c Closer) {
 }
 
 func CloseAll() {
+	closerLen := len(_closers)
 	for i := range _closers {
-		if err := _closers[i](); err != nil {
+		if err := _closers[closerLen-1-i](); err != nil {
 			log.Println(err)
 		}
 	}

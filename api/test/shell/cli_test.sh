@@ -36,6 +36,8 @@ LOG_FILE="/usr/local/apisix-dashboard/logs/error.log"
 ACCESS_LOG_FILE="/usr/local/apisix-dashboard/logs/access.log"
 SERVICE_NAME="apisix-dashboard"
 
+ETCD_VERSION="3.4.20"
+
 if [[ -f ../.githash ]]; then
   GITHASH=$(cat ../.githash)
   if [[ ! $GITHASH =~ ^[a-z0-9]{7}$ ]]; then
@@ -76,6 +78,16 @@ stop_dashboard() {
   sleep $1
 }
 
+start_etcd() {
+  run docker run -d --name etcd -p 2379:2379 -e ALLOW_NONE_AUTHENTICATION=yes bitnami/etcd:${ETCD_VERSION}
+  [ "$status" -eq 0 ]
+}
+
+stop_etcd() {
+  run docker stop etcd && docker rm etcd
+  [ "$status" -eq 0 ]
+}
+
 ### Test Case
 #pre
 @test "Build and Deploy APISIX Dashboard Manager API" {
@@ -91,6 +103,9 @@ stop_dashboard() {
   cp ./service/apisix-dashboard.service /usr/lib/systemd/system/${SERVICE_NAME}.service
   run systemctl daemon-reload
   [ "$status" -eq 0 ]
+
+  # create etcd container
+  start_etcd
 }
 
 #1
@@ -376,7 +391,7 @@ stop_dashboard() {
 @test "Check etcd mTLS" {
   recover_conf
 
-  run ./etcd-v3.4.14-linux-amd64/etcd --name infra0 --data-dir infra0 \
+  run ./etcd-v3.4.20-linux-amd64/etcd --name infra0 --data-dir infra0 \
         --client-cert-auth --trusted-ca-file=$(pwd)/test/certs/mtls_ca.pem --cert-file=$(pwd)/test/certs/mtls_server.pem --key-file=$(pwd)/test/certs/mtls_server-key.pem \
         --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://127.0.0.1:3380 &
 
@@ -414,7 +429,7 @@ stop_dashboard() {
 @test "Check etcd bad data" {
   recover_conf
 
-  run ./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
+  run ./etcd-v3.4.20-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
   [ "$status" -eq 0 ]
   sleep 2
 
@@ -422,10 +437,9 @@ stop_dashboard() {
 
   run journalctl -u ${SERVICE_NAME}.service -n 30
 
-  [ $(echo "$output" | grep -c "Error occurred while initializing logical store:  /apisix/routes") -eq '1' ]
-  [ $(echo "$output" | grep -c "Error: json unmarshal failed") -eq '1' ]
+  [ $(echo "$output" | grep -c "Error occurred while initializing logical store: /apisix/routes, err: json unmarshal failed") -eq '1' ]
 
-  run ./etcd-v3.4.14-linux-amd64/etcdctl del /apisix/routes/unique1
+  run ./etcd-v3.4.20-linux-amd64/etcdctl del /apisix/routes/unique1
   [ "$status" -eq 0 ]
 
   stop_dashboard 6
@@ -478,7 +492,98 @@ stop_dashboard() {
   # check response header with custom header
   run curl -i http://127.0.0.1:9000
 
-[ $(echo "$output" | grep -c "X-Frame-Options: test") -eq '1' ]
+  [ $(echo "$output" | grep -c "X-Frame-Options: test") -eq '1' ]
+
+  stop_dashboard 6
+}
+
+#16
+@test "Check etcd auto re-watch" {
+  recover_conf
+  clean_logfile
+
+  # change log level
+  if [[ $KERNEL = "Darwin" ]]; then
+    sed -i "" 's/level: warn/level: info/' ${CONF_FILE}
+  else
+    sed -i 's/level: warn/level: info/' ${CONF_FILE}
+  fi
+
+  start_dashboard 15
+
+  [ "$(grep -c "etcd connection is fine" ${LOG_FILE})" -ge '1' ]
+
+  run docker stop etcd
+
+  sleep 30
+
+  [ "$(grep -c "etcd connection loss detected" ${LOG_FILE})" -ge '1' ]
+
+  run docker start etcd
+
+  sleep 20
+
+  [ "$(grep -c "etcd connection recovered" ${LOG_FILE})" -ge '1' ]
+  [ "$(grep -c "etcd store reinitializing" ${LOG_FILE})" -ge '1' ]
+
+  stop_dashboard 6
+}
+
+#17
+@test "Check etcd sync auto recovery" {
+  recover_conf
+
+  sed -i 's/level: warn/level: info/' ${CONF_FILE}
+
+  start_dashboard 15
+
+  [ "$(grep -c "etcd connection is fine" ${LOG_FILE})" -ge '1' ]
+
+  # stop and remove old etcd container
+  stop_etcd
+
+  sleep 30
+
+  [ "$(grep -c "etcd connection loss detected" ${LOG_FILE})" -ge '1' ]
+
+  # create temporary dir for etcd persistence
+  tmp="$(sudo su - runner sh -c 'mktemp -d')"
+
+  # create etcd other port and enable persistence
+  # the etcd on a new port for etcdctl access but not for dashboard
+  run docker run -d --name etcd -p 12379:2379 -e ALLOW_NONE_AUTHENTICATION=yes -v "${tmp}:/bitnami/etcd" bitnami/etcd:${ETCD_VERSION}
+  [ "$status" -eq 0 ]
+
+  # write some test data
+  run ./etcd-v3.4.20-linux-amd64/etcdctl --endpoints 127.0.0.1:12379 put /apisix/routes/new1 '{"uri":"/new1","upstream":{"nodes":{"127.0.0.1:80":1},"type":"roundrobin"}}'
+  [ "$status" -eq 0 ]
+  run ./etcd-v3.4.20-linux-amd64/etcdctl --endpoints 127.0.0.1:12379 put /apisix/routes/new2 '{"uri":"/new2","upstream":{"nodes":{"127.0.0.1:80":1},"type":"roundrobin"}}'
+  [ "$status" -eq 0 ]
+
+  stop_etcd
+
+  # create etcd with existence etcd data
+  run docker run -d --name etcd -p 2379:2379 -e ALLOW_NONE_AUTHENTICATION=yes -v "${tmp}:/bitnami/etcd" bitnami/etcd:${ETCD_VERSION}
+  [ "$status" -eq 0 ]
+
+  sleep 20
+
+  [ "$(grep -c "etcd connection recovered" ${LOG_FILE})" -ge '1' ]
+  [ "$(grep -c "etcd store reinitializing" ${LOG_FILE})" -ge '1' ]
+
+  # wait data reload
+  sleep 10
+
+  # access manager api and check routes
+  run curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
+  token=$(echo "$output" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
+  [ -n "${token}" ]
+
+  run curl -ig -XGET http://127.0.0.1:9000/apisix/admin/routes -i -H "Content-Type: application/json" -H "Authorization: $token"
+  respCode=$(echo "$output" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
+  [ "$respCode" = "0" ]
+  [ "$(echo "$output" | grep -c "/new1")" -eq '1' ]
+  [ "$(echo "$output" | grep -c "/new2")" -eq '1' ]
 
   stop_dashboard 6
 }
