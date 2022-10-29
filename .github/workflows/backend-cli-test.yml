@@ -17,20 +17,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        etcd: [3.4.14]
-    services:
-      etcd:
-        image: bitnami/etcd:${{ matrix.etcd }}
-        ports:
-          - 2379:2379
-          - 2380:2380
-        env:
-          ALLOW_NONE_AUTHENTICATION: yes
+        etcd: [3.4.20]
 
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+
+      - name: setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.19'
 
       - name: cache etcd
         id: cache-etcd
