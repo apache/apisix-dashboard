@@ -30,7 +30,7 @@ import (
 func Authentication(authn config.Authentication) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.URL.Path == "/apisix/admin/user/login" ||
-			c.Request.URL.Path == "/apisix/admin/tool/version" ||
+			c.Request.URL.Path == "/apisix/admin/misc/version" ||
 			!strings.HasPrefix(c.Request.URL.Path, "/apisix") {
 			c.Next()
 			return

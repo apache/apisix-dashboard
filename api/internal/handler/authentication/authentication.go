@@ -14,17 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package authentication
 
 import (
+	"net/http"
 	"reflect"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
-	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/wrapper"
-	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
@@ -41,8 +40,8 @@ func NewHandler() (handler.RouteRegister, error) {
 
 func (h *Handler) ApplyRoute(r *gin.Engine, cfg config.Config) {
 	h.config = cfg
-	r.POST("/apisix/admin/user/login", wgin.Wraps(h.userLogin,
-		wrapper.InputType(reflect.TypeOf(LoginInput{}))))
+	r.POST("/apisix/admin/user/login",
+		handler.Wrap(h.userLogin, reflect.TypeOf(LoginInput{})))
 }
 
 type UserSession struct {
@@ -51,10 +50,10 @@ type UserSession struct {
 
 // swagger:model LoginInput
 type LoginInput struct {
-	// user name
-	Username string `json:"username" validate:"required"`
+	// username
+	Username string `json:"username" binding:"required"`
 	// password
-	Password string `json:"password" validate:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 // swagger:operation POST /apisix/admin/user/login userLogin
@@ -65,29 +64,31 @@ type LoginInput struct {
 // produces:
 // - application/json
 // parameters:
-// - name: username
-//   in: body
-//   description: user name
-//   required: true
-//   type: string
-// - name: password
-//   in: body
-//   description: password
-//   required: true
-//   type: string
+//   - name: username
+//     in: body
+//     description: user name
+//     required: true
+//     type: string
+//   - name: password
+//     in: body
+//     description: password
+//     required: true
+//     type: string
+//
 // responses:
-//   '0':
-//     description: login success
-//     schema:
-//       "$ref": "#/definitions/ApiError"
-//   default:
-//     description: unexpected error
-//     schema:
-//       "$ref": "#/definitions/ApiError"
-func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*LoginInput)
-	username := input.Username
-	password := input.Password
+//
+//	'0':
+//	  description: login success
+//	  schema:
+//	    "$ref": "#/definitions/ApiError"
+//	default:
+//	  description: unexpected error
+//	  schema:
+//	    "$ref": "#/definitions/ApiError"
+func (h *Handler) userLogin(_ *gin.Context, input interface{}) handler.Response {
+	i := input.(*LoginInput)
+	username := i.Username
+	password := i.Password
 
 	authnConfig := h.config.Authentication
 	var user *config.AuthenticationUser
@@ -98,11 +99,17 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 		}
 	}
 	if user == nil {
-		return nil, consts.ErrUsernamePassword
+		return handler.Response{
+			StatusCode: http.StatusUnauthorized,
+			Message:    consts.ErrUsernamePassword.Error(),
+		}
 	}
 
 	if username != user.Username || password != user.Password {
-		return nil, consts.ErrUsernamePassword
+		return handler.Response{
+			StatusCode: http.StatusUnauthorized,
+			Message:    consts.ErrUsernamePassword.Error(),
+		}
 	}
 
 	// create JWT for session
@@ -115,7 +122,10 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	signedToken, _ := token.SignedString([]byte(authnConfig.Secret))
 
 	// output token
-	return &UserSession{
-		Token: signedToken,
-	}, nil
+	return handler.Response{
+		Success: true,
+		Data: UserSession{
+			Token: signedToken,
+		},
+	}
 }

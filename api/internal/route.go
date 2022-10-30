@@ -19,6 +19,11 @@ package internal
 import (
 	"fmt"
 	"os"
+
+	"github.com/apache/apisix-dashboard/api/internal/handler/authentication"
+	"github.com/apache/apisix-dashboard/api/internal/handler/misc"
+	"github.com/apache/apisix-dashboard/api/internal/handler/resources"
+
 	// "github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
@@ -28,23 +33,6 @@ import (
 	"github.com/apache/apisix-dashboard/api/internal/filter"
 	"github.com/apache/apisix-dashboard/api/internal/filter/iam"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
-	"github.com/apache/apisix-dashboard/api/internal/handler/authentication"
-	"github.com/apache/apisix-dashboard/api/internal/handler/consumer"
-	"github.com/apache/apisix-dashboard/api/internal/handler/data_loader"
-	"github.com/apache/apisix-dashboard/api/internal/handler/global_rule"
-	"github.com/apache/apisix-dashboard/api/internal/handler/healthz"
-	"github.com/apache/apisix-dashboard/api/internal/handler/label"
-	"github.com/apache/apisix-dashboard/api/internal/handler/plugin_config"
-	"github.com/apache/apisix-dashboard/api/internal/handler/proto"
-	"github.com/apache/apisix-dashboard/api/internal/handler/route"
-	"github.com/apache/apisix-dashboard/api/internal/handler/schema"
-	"github.com/apache/apisix-dashboard/api/internal/handler/server_info"
-	"github.com/apache/apisix-dashboard/api/internal/handler/service"
-	"github.com/apache/apisix-dashboard/api/internal/handler/ssl"
-	"github.com/apache/apisix-dashboard/api/internal/handler/stream_route"
-	"github.com/apache/apisix-dashboard/api/internal/handler/system_config"
-	"github.com/apache/apisix-dashboard/api/internal/handler/tool"
-	"github.com/apache/apisix-dashboard/api/internal/handler/upstream"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
 
@@ -68,32 +56,19 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 
 	// misc
 	staticPath := "./html/"
-	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(cfg.Security), filter.RequestId(), filter.SchemaCheck(), filter.RecoverHandler())
+	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(cfg.Security), filter.RequestId(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(staticPath, false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", staticPath))
 	})
 
 	factories := []handler.RegisterFactory{
-		route.NewHandler,
-		ssl.NewHandler,
-		consumer.NewHandler,
-		upstream.NewHandler,
-		service.NewHandler,
-		schema.NewHandler,
-		schema.NewSchemaHandler,
-		healthz.NewHandler,
 		authentication.NewHandler,
-		global_rule.NewHandler,
-		server_info.NewHandler,
-		label.NewHandler,
-		data_loader.NewHandler,
-		data_loader.NewImportHandler,
-		tool.NewHandler,
-		plugin_config.NewHandler,
-		proto.NewHandler,
-		stream_route.NewHandler,
-		system_config.NewHandler,
+		//data_loader.NewHandler,
+		//data_loader.NewImportHandler,
+		//server_info.NewHandler,
+		misc.NewHandler,
+		resources.NewHandler,
 	}
 
 	for i := range factories {
@@ -103,8 +78,6 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 		}
 		h.ApplyRoute(r, cfg)
 	}
-
-	// pprof.Register(r)
 
 	return r
 }
