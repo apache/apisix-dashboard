@@ -31,6 +31,7 @@ import (
 
 	"github.com/apache/apisix-dashboard/api/internal/config"
 	"github.com/apache/apisix-dashboard/api/internal/filter"
+	"github.com/apache/apisix-dashboard/api/internal/filter/iam"
 	"github.com/apache/apisix-dashboard/api/internal/handler"
 	"github.com/apache/apisix-dashboard/api/internal/log"
 )
@@ -43,8 +44,15 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 	}
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
+
 	// security
-	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(cfg.Security), filter.InvalidRequest(), filter.Authentication(cfg.Authentication))
+	r.Use(
+		filter.RequestLogHandler(logger),
+		filter.IPFilter(cfg.Security),
+		filter.InvalidRequest(),
+		filter.Authentication(cfg.Authentication),
+		iam.Filter(cfg),
+	)
 
 	// misc
 	staticPath := "./html/"

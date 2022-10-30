@@ -82,7 +82,9 @@ func NewDefaultConfig() Config {
 				},
 			},
 		},
-		FeatureGate: FeatureGate{},
+		FeatureGate: FeatureGate{
+			DemoIAMAccess: true,
+		},
 	}
 }
 
