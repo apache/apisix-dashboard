@@ -61,7 +61,7 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", staticPath))
 	})
-	
+
 	factories := []handler.RegisterFactory{
 		authentication.NewHandler,
 		//data_loader.NewHandler,
@@ -70,7 +70,7 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 		misc.NewHandler,
 		resources.NewHandler,
 	}
-	
+
 	for i := range factories {
 		h, err := factories[i]()
 		if err != nil {

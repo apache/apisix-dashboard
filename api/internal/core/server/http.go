@@ -30,7 +30,7 @@ func (s *server) setupAPI() {
 	r := internal.SetUpRouter(s.options.Config)
 
 	// HTTP
-	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
+	addr := s.options.Config.Server.HTTPListen
 	s.server = &http.Server{
 		Addr:         addr,
 		Handler:      r,
