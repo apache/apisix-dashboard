@@ -34,7 +34,7 @@ feature_gate:
   demoIAMAccess:true
 ```
 
-​	the default strategy where we use the `casbin` framework to achieve. Also, we can add and delete this route in **`internal/pkg/iam/demo/policy.csv`** that only can be accessed by **admin**
+​the default strategy where we use the `casbin` framework to achieve. Also, we can add and delete this route in **`internal/pkg/iam/demo/policy.csv`** that only can be accessed by **admin**
 
 2.Adopt a **customized authentication method**
 
@@ -50,19 +50,22 @@ feature_gate:
 // in the method Check, you can customize some way to authenticate these interviewers
 // if interviewers aren't permitted to request this resource. you can throw an error
 type Access interface {
-    Check(identity, resource, action string) error
+  Check(identity, resource, action string) error
 }
 
 type MyAccess struct{}
-func (m MyAccess)Check(identity, resource, action string) error {
-	// customized way
+
+func (m MyAccess) Check(identity, resource, action string) error {
+  // customized way
 }
+
 func main(){
-	// add your customized method into APISIX-DashBoard
-    ok := SetAccessImplementation(MyAccess{})
-	if ok {
-		// add successfully
-    } else {
-		// there is an existing method in dashboard
+  // add your customized method into APISIX-DashBoard
+  ok := SetAccessImplementation(MyAccess{})
+  if ok {
+    // add successfully
+  } else {
+    // there is an existing method in dashboard
+  }
 }
 ```
