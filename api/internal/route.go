@@ -78,5 +78,6 @@ func SetUpRouter(cfg config.Config) *gin.Engine {
 		}
 		h.ApplyRoute(r, cfg)
 	}
+
 	return r
 }
