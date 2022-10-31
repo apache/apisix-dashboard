@@ -1,13 +1,11 @@
 name: Frontend e2e test for plugin
 on:
   push:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
     paths-ignore:
       - 'docs/**'
   pull_request:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
     paths-ignore:
       - 'docs/**'
 

@@ -2,13 +2,11 @@ name: Test and Deploy with Docker
 
 on:
   push:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
     paths-ignore:
       - 'docs/**'
   pull_request:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
     paths-ignore:
       - 'docs/**'
 

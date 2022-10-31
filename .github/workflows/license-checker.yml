@@ -2,11 +2,9 @@ name: License checker
 
 on:
   push:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
   pull_request:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
 
 jobs:
   check-license:
