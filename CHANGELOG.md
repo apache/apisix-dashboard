@@ -43,6 +43,7 @@
 # 2.13.1
 
 ### Core
+
 - feat: add etcd store auto re-initialize [#2650](https://github.com/apache/apisix-dashboard/pull/2650)
 
 ### Bugfix
