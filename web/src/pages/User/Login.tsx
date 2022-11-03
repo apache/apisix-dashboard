@@ -19,7 +19,7 @@ import { Button, notification, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { history, Link, useIntl } from 'umi';
 
-import logo from '@/assets/logo.svg';
+import logo from '@/assets/genting.png';
 import Footer from '@/components/Footer';
 import { getUrlQuery } from '@/helpers';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
@@ -105,7 +105,7 @@ const Page: React.FC = () => {
             </Link>
           </div>
           <div className={styles.desc}>
-            Apache APISIX Dashboard
+            Genting API Gateway Dashboard
             <br />
             Cloud-Native Microservices API Gateway
           </div>
