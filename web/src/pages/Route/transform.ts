@@ -271,6 +271,7 @@ export const transformStepData = ({
     data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
     data.host ? 'host' : '',
     data.remote_addr ? 'remote_addr' : '',
+    data.plugin_config_id ? 'plugin_config_id' : '',
   ]);
 };
 
