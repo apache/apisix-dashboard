@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { request } from 'umi';
+
 import { transformData } from './transform';
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>

@@ -35,7 +35,7 @@ context('Create Route with advanced matching conditions', () => {
   };
 
   const data = {
-    routeName: `test_route_${new Date().valueOf()}`,
+    routeName: `test_route_${Date.now()}`,
     submitSuccess: 'Submit Successfully',
     ip1: '127.0.0.1',
     port: '80',
@@ -44,7 +44,7 @@ context('Create Route with advanced matching conditions', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
   };
 
-  const opreatorList = [
+  const operatorList = [
     // 'Equal(==)' : '1234',
     'Unequal(~=)',
     'Greater Than(>)',
@@ -57,8 +57,14 @@ context('Create Route with advanced matching conditions', () => {
 
   const matchingValueList2 = ['2000', '1800', '3000', '["2800","2888"]'];
 
-  beforeEach(() => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
     cy.login();
+    cy.saveLocalStorage();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
   });
 
   it('should create route with advanced matching conditions', function () {
@@ -68,7 +74,8 @@ context('Create Route with advanced matching conditions', () => {
     cy.get(selector.name).type(data.routeName);
 
     // All Of Operational Character Should Exist And Can be Created
-    cy.wrap(opreatorList).each((opreator, index) => {
+    cy.wrap(operatorList).each((op, index) => {
+      cy.wait(2000);
       cy.contains('Advanced Routing Matching Conditions')
         .parent()
         .siblings()
@@ -94,13 +101,14 @@ context('Create Route with advanced matching conditions', () => {
             .click()
             .and('have.class', 'ant-switch-checked');
           cy.get(selector.operator).click();
-          cy.get(`[title="${opreator}"]`).should('be.visible').click();
+          cy.wait(2000);
+          cy.get(`[title="${op}"]`).should('be.visible').click();
           cy.get(selector.value).type(matchingValueList1[index]);
-          cy.contains('Confirm').click();
+          cy.contains('Confirm').click({ force: true });
         });
     });
     cy.get(selector.advancedMatchingTable).should('exist');
-    cy.wrap(opreatorList).each((operator, index) => {
+    cy.wrap(operatorList).each((operator, index) => {
       cy.get(selector.advancedMatchingTableCell).within(() => {
         cy.contains('th', 'Reverse the result(!)').should('be.visible');
         cy.contains('td', 'Built-in Parameter').should('be.visible');
@@ -126,9 +134,9 @@ context('Create Route with advanced matching conditions', () => {
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();
     cy.get(selector.advancedMatchingTable).should('exist');
-    cy.wrap(opreatorList).each((opreator, index) => {
+    cy.wrap(operatorList).each((op, index) => {
       cy.get(selector.advancedMatchingTableCell).within(() => {
-        cy.contains(`${opreator}`)
+        cy.contains(`${op}`)
           .parent('tr')
           .within(() => {
             cy.get(selector.advancedMatchingTableOperation).within(() => {
@@ -140,7 +148,7 @@ context('Create Route with advanced matching conditions', () => {
         cy.get(`[title="Built-in Parameter"]`).should('have.class', 'ant-select-selection-item');
         cy.get(selector.name).clear().type(data.matchingParamName);
         cy.get(selector.reverse).should('have.class', 'ant-switch-checked');
-        cy.get(`[title="${opreator}"]`).should('have.class', 'ant-select-selection-item');
+        cy.get(`[title="${op}"]`).should('have.class', 'ant-select-selection-item');
         cy.get(selector.value).clear().type(matchingValueList2[index]);
         cy.contains('Confirm').click();
       });
@@ -168,7 +176,7 @@ context('Create Route with advanced matching conditions', () => {
     cy.contains(data.routeName).siblings().contains('Configure').click();
     cy.get(selector.name).should('value', data.routeName);
     cy.get(selector.advancedMatchingTable).should('exist');
-    cy.wrap(opreatorList).each(() => {
+    cy.wrap(operatorList).each(() => {
       cy.get(selector.advancedMatchingTableOperation).within(() => {
         cy.contains('Delete').click().should('not.exist');
       });

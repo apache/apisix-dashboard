@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
-import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Radio, Tooltip } from 'antd';
+import React, { useState } from 'react';
 import { isChrome, isChromium, isEdgeChromium } from 'react-device-detect';
 import { useIntl } from 'umi';
 
 import PluginPage from '@/components/Plugin';
 import PluginFlow from '@/components/PluginFlow';
-import { DEFAULT_PLUGIN_FLOW_DATA } from '@/components/PluginFlow/constants';
 import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
+import { DEFAULT_PLUGIN_FLOW_DATA } from '@/components/PluginFlow/constants';
 
 type Props = {
   data: {

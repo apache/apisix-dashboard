@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef, useState } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { history, useIntl } from 'umi';
-import usePagination from '@/hooks/usePagination';
-import ProTable from '@ant-design/pro-table';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Button, Popconfirm, Space, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { Button, notification, Popconfirm, Space } from 'antd';
 import { omit } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import { history, useIntl } from 'umi';
 
 import PluginDetail from '@/components/Plugin/PluginDetail';
+import usePagination from '@/hooks/usePagination';
 
-import { fetchList, fetchPluginList, createOrUpdate } from './service';
+import { createOrUpdate, fetchList, fetchPluginList } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
@@ -36,6 +36,7 @@ const Page: React.FC = () => {
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState('');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
+  const [pluginId, setPluginId] = useState<string>('');
 
   useEffect(() => {
     fetchPluginList().then(setPluginList);
@@ -79,19 +80,24 @@ const Page: React.FC = () => {
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
                 const plugins = omit(initialData, [`${record.name}`]);
-                createOrUpdate({ plugins }).then(() => {
-                  notification.success({
-                    message: formatMessage({ id: 'page.plugin.delete' }),
+                setPluginId(record.id);
+                createOrUpdate({ plugins })
+                  .then(() => {
+                    notification.success({
+                      message: formatMessage({ id: 'page.plugin.delete' }),
+                    });
+                    checkPageList(ref);
+                    setInitialData(plugins);
+                    setName('');
+                  })
+                  .finally(() => {
+                    setPluginId('');
                   });
-                  checkPageList(ref);
-                  setInitialData(plugins);
-                  setName('');
-                });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
-              <Button type="primary" danger>
+              <Button type="primary" danger loading={record.id === pluginId}>
                 {formatMessage({ id: 'component.global.delete' })}
               </Button>
             </Popconfirm>

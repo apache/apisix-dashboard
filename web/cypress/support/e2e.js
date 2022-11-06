@@ -17,6 +17,8 @@
 /* eslint-disable no-undef */
 import './commands';
 import '@cypress/code-coverage/support';
+import 'cypress-localstorage-commands';
+
 const { SERVE_ENV = 'dev' } = Cypress.env();
 
 before(() => {

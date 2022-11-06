@@ -14,18 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { history } from 'umi';
-import type { RequestConfig } from 'umi';
+import './libs/iconfont';
+
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { isPlainObject } from 'lodash';
+import React from 'react';
+import type { RequestConfig } from 'umi';
+import { history } from 'umi';
 
-import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
+import RightContent from '@/components/RightContent';
+import { errorHandler, getMenuData, getUrlQuery } from '@/helpers';
 import { queryCurrent } from '@/services/user';
-import { getMenuData, errorHandler, getUrlQuery } from '@/helpers';
 
-import './libs/iconfont';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{

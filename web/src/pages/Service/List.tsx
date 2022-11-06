@@ -14,19 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
-import { history, useIntl } from 'umi';
-import usePagination from '@/hooks/usePagination';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable from '@ant-design/pro-table';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { Button, notification, Popconfirm, Space } from 'antd';
 import { omit } from 'lodash';
+import React, { useRef, useState } from 'react';
+import { history, useIntl } from 'umi';
 
-import { DELETE_FIELDS } from '@/constants';
 import { RawDataEditor } from '@/components/RawDataEditor';
-import { fetchList, remove, create, update } from './service';
+import { DELETE_FIELDS } from '@/constants';
+import usePagination from '@/hooks/usePagination';
+
+import { create, fetchList, remove, update } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
@@ -36,6 +37,8 @@ const Page: React.FC = () => {
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
+
+  const [deleteLoading, setDeleteLoading] = useState('');
 
   const columns: ProColumns<ServiceModule.ResponseBody>[] = [
     {
@@ -76,19 +79,26 @@ const Page: React.FC = () => {
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
-                remove(record.id!).then(() => {
-                  notification.success({
-                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.service',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                setDeleteLoading(record.id!);
+                remove(record.id!)
+                  .then(() => {
+                    notification.success({
+                      message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage(
+                        {
+                          id: 'menu.service',
+                        },
+                      )} ${formatMessage({ id: 'component.status.success' })}`,
+                    });
+                    checkPageList(ref);
+                  })
+                  .finally(() => {
+                    setDeleteLoading('');
                   });
-                  checkPageList(ref);
-                });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
-              <Button type="primary" danger>
+              <Button type="primary" danger loading={record.id === deleteLoading}>
                 {formatMessage({ id: 'component.global.delete' })}
               </Button>
             </Popconfirm>

@@ -23,14 +23,14 @@
 */
 import { BellOutlined } from '@ant-design/icons';
 import { Badge, Spin, Tabs } from 'antd';
-import useMergeValue from 'use-merge-value';
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
+import useMergeValue from 'use-merge-value';
 
-import NoticeList from './NoticeList';
-import type { NoticeIconTabProps } from './NoticeList';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import type { NoticeIconTabProps } from './NoticeList';
+import NoticeList from './NoticeList';
 
 const { TabPane } = Tabs;
 

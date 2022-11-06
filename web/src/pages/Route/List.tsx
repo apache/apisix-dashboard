@@ -14,58 +14,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ReactNode } from 'react';
-import React, { useRef, useEffect, useState } from 'react';
+import { DownOutlined, ExportOutlined, ImportOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import { useThrottleFn } from 'ahooks';
 import {
   Button,
-  Popconfirm,
-  notification,
-  Tag,
-  Space,
-  Select,
-  Radio,
-  Form,
-  Modal,
-  Menu,
   Dropdown,
+  Form,
+  Menu,
+  Modal,
+  notification,
+  Popconfirm,
+  Radio,
+  Select,
+  Space,
   Table,
+  Tag,
   Tooltip,
 } from 'antd';
-import { history, useIntl } from 'umi';
-import usePagination from '@/hooks/usePagination';
-import { PlusOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
+import { saveAs } from 'file-saver';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
-import moment from 'moment';
-import { saveAs } from 'file-saver';
 import { omit } from 'lodash';
+import moment from 'moment';
+import type { ReactNode } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { history, useIntl } from 'umi';
 
+import { RawDataEditor } from '@/components/RawDataEditor';
 import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
+import usePagination from '@/hooks/usePagination';
+import DataLoaderImport from '@/pages/Route/components/DataLoader/Import';
 
+import { DebugDrawView } from './components/DebugViews';
+import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
 import {
-  update,
   create,
+  exportRoutes,
+  fetchLabelList,
   fetchList,
   remove,
-  fetchLabelList,
+  update,
   updateRouteStatus,
-  exportRoutes,
 } from './service';
-import { DebugDrawView } from './components/DebugViews';
-import { RawDataEditor } from '@/components/RawDataEditor';
-import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
-import DataLoaderImport from '@/pages/Route/components/DataLoader/Import';
 
 const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
-  const [exportFileTypeForm] = Form.useForm();
 
   enum RouteStatus {
     Offline = 0,
@@ -86,6 +86,7 @@ const Page: React.FC = () => {
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
   const [debugDrawVisible, setDebugDrawVisible] = useState(false);
+  const [routeId, setRouteId] = useState<string>('');
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
@@ -109,18 +110,25 @@ const Page: React.FC = () => {
     checkPageList(ref);
   };
 
-  const handlePublishOffline = (rid: string, status: RouteModule.RouteStatus) => {
-    updateRouteStatus(rid, status).then(() => {
-      const actionName = status
-        ? formatMessage({ id: 'page.route.publish' })
-        : formatMessage({ id: 'page.route.offline' });
-      handleTableActionSuccessResponse(
-        `${actionName} ${formatMessage({
-          id: 'menu.routes',
-        })} ${formatMessage({ id: 'component.status.success' })}`,
-      );
-    });
-  };
+  const { run: handlePublishOffline } = useThrottleFn(
+    (rid: string, status: RouteModule.RouteStatus) => {
+      setRouteId(rid);
+      updateRouteStatus(rid, status)
+        .then(() => {
+          const actionName = status
+            ? formatMessage({ id: 'page.route.publish' })
+            : formatMessage({ id: 'page.route.offline' });
+          handleTableActionSuccessResponse(
+            `${actionName} ${formatMessage({
+              id: 'menu.routes',
+            })} ${formatMessage({ id: 'component.status.success' })}`,
+          );
+        })
+        .finally(() => {
+          setRouteId('');
+        });
+    },
+  );
 
   const handleExport = (exportFileType: ExportFileType) => {
     exportRoutes(selectedRowKeys.join(',')).then((resp) => {
@@ -270,6 +278,7 @@ const Page: React.FC = () => {
   };
 
   const ListFooter: React.FC = () => {
+    const [exportFileTypeForm] = Form.useForm();
     return (
       <Popconfirm
         title={
@@ -325,8 +334,8 @@ const Page: React.FC = () => {
         const list = record.hosts || (record.host && [record.host]) || [];
 
         return list.map((item) => (
-          <Tooltip placement="topLeft" title={item}>
-            <Tag key={item} color="geekblue" style={tagStyle}>
+          <Tooltip key={item} placement="topLeft" title={item}>
+            <Tag color="geekblue" style={tagStyle}>
               {item}
             </Tag>
           </Tooltip>
@@ -341,8 +350,8 @@ const Page: React.FC = () => {
         const list = record.uris || (record.uri && [record.uri]) || [];
 
         return list.map((item) => (
-          <Tooltip placement="topLeft" title={item}>
-            <Tag key={item} color="geekblue" style={tagStyle}>
+          <Tooltip key={item} placement="topLeft" title={item}>
+            <Tag color="geekblue" style={tagStyle}>
               {item}
             </Tag>
           </Tooltip>
@@ -369,6 +378,8 @@ const Page: React.FC = () => {
           ));
       },
       renderFormItem: (_, { type }) => {
+        console.log(labelList);
+
         if (type === 'form') {
           return null;
         }
@@ -501,6 +512,7 @@ const Page: React.FC = () => {
                 onClick={() => {
                   handlePublishOffline(record.id, RouteStatus.Publish);
                 }}
+                loading={record.id === routeId}
               >
                 {formatMessage({ id: 'page.route.publish' })}
               </Button>
@@ -517,7 +529,12 @@ const Page: React.FC = () => {
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
               >
-                <Button type="primary" danger disabled={Boolean(!record.status)}>
+                <Button
+                  type="primary"
+                  danger
+                  disabled={Boolean(!record.status)}
+                  loading={record.id === routeId}
+                >
                   {formatMessage({ id: 'page.route.offline' })}
                 </Button>
               </Popconfirm>
@@ -549,7 +566,8 @@ const Page: React.FC = () => {
         tableAlertRender={() => (
           <Space size={24}>
             <span>
-            {formatMessage({ id: 'page.route.chosen' })} {selectedRowKeys.length} {formatMessage({ id: 'page.route.item' })}
+              {formatMessage({ id: 'page.route.chosen' })} {selectedRowKeys.length}{' '}
+              {formatMessage({ id: 'page.route.item' })}
             </span>
           </Space>
         )}
@@ -557,16 +575,17 @@ const Page: React.FC = () => {
           return (
             <Space size={16}>
               <Button
-               onClick={async () => {
-               await remove(selectedRowKeys).then(() => {
-                handleTableActionSuccessResponse(
-                  `${formatMessage({ id: 'component.global.delete.routes.success' })}`,
-                );
-               });
-               ref.current?.reloadAndRest?.();
-             }}>
-             {formatMessage({ id: 'page.route.batchDeletion' })}
-             </Button>
+                onClick={async () => {
+                  await remove(selectedRowKeys).then(() => {
+                    handleTableActionSuccessResponse(
+                      `${formatMessage({ id: 'component.global.delete.routes.success' })}`,
+                    );
+                  });
+                  ref.current?.reloadAndRest?.();
+                }}
+              >
+                {formatMessage({ id: 'page.route.batchDeletion' })}
+              </Button>
             </Space>
           );
         }}

@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import type { FormInstance } from 'antd/lib/form';
+import React from 'react';
 import { useIntl } from 'umi';
 
 import PluginPage from '@/components/Plugin';
 import PluginFlow from '@/components/PluginFlow';
+
 import Step1 from '../Step1';
 import Step2 from '../Step2';
 

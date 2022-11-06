@@ -29,6 +29,7 @@
   :global(.anticon) {
     margin-right: 8px;
   }
+
   :global(.ant-dropdown-menu-item) {
     min-width: 160px;
   }
@@ -40,6 +41,7 @@
   height: 48px;
   margin-left: auto;
   overflow: hidden;
+
   .action {
     display: flex;
     align-items: center;
@@ -51,22 +53,26 @@
     &:hover {
       background: @pro-header-hover-bg;
     }
+
     &:global(.opened) {
       background: @pro-header-hover-bg;
     }
   }
+
   .search {
     padding: 0 12px;
+
     &:hover {
       background: transparent;
     }
   }
+
   .account {
     .avatar {
       margin-right: 8px;
       color: @primary-color;
       vertical-align: top;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgb(255 255 255 / 85%);
     }
   }
 }
@@ -76,6 +82,7 @@
     &:hover {
       background: #252a3d;
     }
+
     &:global(.opened) {
       background: #252a3d;
     }
@@ -86,18 +93,22 @@
   :global(.ant-divider-vertical) {
     vertical-align: unset;
   }
+
   .name {
     display: none;
   }
+
   .right {
     position: absolute;
     top: 0;
     right: 12px;
+
     .account {
       .avatar {
         margin-right: 0;
       }
     }
+
     .search {
       display: none;
     }

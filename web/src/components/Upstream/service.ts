@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { notification } from 'antd';
-import { isNil, omitBy, omit, cloneDeep } from 'lodash';
+import { cloneDeep, isNil, omit, omitBy } from 'lodash';
 import { formatMessage, request } from 'umi';
 
 /**
@@ -58,9 +58,9 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
   // nodes have two types
   // https://github.com/apache/apisix-dashboard/issues/2080
   if (data.nodes instanceof Array) {
-    data['submitNodes'] = data.nodes;
+    data.submitNodes = data.nodes;
   } else if (data.nodes) {
-    data['submitNodes'] = Object.keys(data.nodes as Object).map((key) => ({
+    data.submitNodes = Object.keys(data.nodes as Object).map((key) => ({
       host: key.split(':')[0],
       port: key.split(':')[1],
       weight: (data.nodes as Object)[key],

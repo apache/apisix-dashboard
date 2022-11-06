@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import { LockTwoTone, UserOutlined } from '@ant-design/icons';
 import { Form, Input, Tooltip } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
-import { UserOutlined, LockTwoTone } from '@ant-design/icons';
-import { request, formatMessage } from 'umi';
+import React from 'react';
+import { formatMessage, request } from 'umi';
 
 import type { UserModule } from '@/pages/User/typing';
 

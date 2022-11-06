@@ -20,7 +20,7 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, SERVE_URL_DEV, SERVE_URL_TEST } = process.env;
 
 export default defineConfig({
   hash: true,
@@ -49,6 +49,10 @@ export default defineConfig({
   publicPath: '/',
   define: {
     REACT_APP_ENV: REACT_APP_ENV || false,
+    'process.env': {
+      SERVE_URL_DEV,
+      SERVE_URL_TEST,
+    },
   },
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {

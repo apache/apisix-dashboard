@@ -69,3 +69,5 @@ web/public/monaco-editor/
 *.swp
 *.swo
 
+# .env
+.env*

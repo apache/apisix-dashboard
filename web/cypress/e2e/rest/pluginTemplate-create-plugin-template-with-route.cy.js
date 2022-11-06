@@ -57,6 +57,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.contains('Route').click();
     cy.get(selector.empty).should('be.visible');
     cy.contains('Advanced').should('be.visible').click();
+    cy.contains('Advanced').trigger('mouseover');
     cy.contains('Plugin Template Config').should('be.visible').click();
     cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
@@ -121,15 +122,6 @@ context('Create PluginTemplate Binding To Route', () => {
   });
 
   it('should delete the pluginTemplate successfully', function () {
-    cy.visit('plugin-template/list');
-
-    cy.get(selector.refresh).click();
-    cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
-    cy.contains('button', 'Search').click();
-    cy.contains(data.pluginTemplateName).siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(selector.notification).should('contain', data.deletePluginTemplateSuccess);
-
     cy.visit('/routes/list');
     cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
@@ -141,5 +133,13 @@ context('Create PluginTemplate Binding To Route', () => {
         cy.contains('OK').click();
       });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+
+    cy.visit('plugin-template/list');
+    cy.get(selector.refresh).click();
+    cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
+    cy.contains('button', 'Search').click();
+    cy.contains(data.pluginTemplateName).siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(selector.notification).should('contain', data.deletePluginTemplateSuccess);
   });
 });

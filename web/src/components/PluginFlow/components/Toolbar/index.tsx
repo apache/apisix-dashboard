@@ -21,21 +21,23 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-import React, { useEffect, useState } from 'react';
-import { Toolbar } from '@antv/x6-react-components';
-import FlowGraph from '../FlowGraph';
-import { DataUri } from '@antv/x6';
+import '@antv/x6-react-components/es/toolbar/style/index.css';
+
 import {
   ClearOutlined,
-  SaveOutlined,
-  PrinterOutlined,
-  UndoOutlined,
-  RedoOutlined,
   CopyOutlined,
+  PrinterOutlined,
+  RedoOutlined,
+  SaveOutlined,
   ScissorOutlined,
   SnippetsOutlined,
+  UndoOutlined,
 } from '@ant-design/icons';
-import '@antv/x6-react-components/es/toolbar/style/index.css';
+import { DataUri } from '@antv/x6';
+import { Toolbar } from '@antv/x6-react-components';
+import React, { useEffect, useState } from 'react';
+
+import FlowGraph from '../FlowGraph';
 
 const { Item, Group } = Toolbar;
 

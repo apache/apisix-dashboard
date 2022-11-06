@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import { Form, Select } from 'antd';
-import { useIntl } from 'umi';
 import type { FormInstance } from 'antd/lib/form';
+import React from 'react';
+import { useIntl } from 'umi';
+
 import Nodes from '@/components/Upstream/components/Nodes';
 import ServiceDiscovery from '@/components/Upstream/components/ServiceDiscovery';
 

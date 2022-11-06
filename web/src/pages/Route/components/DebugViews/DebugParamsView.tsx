@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
-import { Form, Input, Row, Col, Checkbox, AutoComplete } from 'antd';
-import { useIntl } from 'umi';
 import { MinusCircleOutlined } from '@ant-design/icons';
+import { AutoComplete, Checkbox, Col, Form, Input, Row } from 'antd';
+import React, { useState } from 'react';
+import { useIntl } from 'umi';
+
 import { HEADER_LIST } from '@/pages/Route/constants';
 
 import styles from './index.less';
