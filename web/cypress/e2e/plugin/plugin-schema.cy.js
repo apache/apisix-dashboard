@@ -38,7 +38,7 @@ describe('Plugin Schema Test', () => {
     cy.get('#root > div > section > aside > div > div:nth-child(1) > ul', { timeout })
       .contains('Plugin')
       .click();
-    cy.get('#ant-design-pro-table > div > div > div.ant-pro-table-list-toolbar', { timeout })
+    cy.get('.ant-pro-table > div > div > div.ant-pro-table-list-toolbar', { timeout })
       .contains('Enable')
       .click();
     cy.url().should('include', '/plugin/market');
