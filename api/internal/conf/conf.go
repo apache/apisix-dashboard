@@ -41,7 +41,7 @@ const (
 	EnvTEST  = "test"
 
 	WebDir = "html/"
-  
+
 	DefaultCSP = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
 	State  = "123456"
 )
