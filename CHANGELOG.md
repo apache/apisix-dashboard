@@ -54,6 +54,9 @@
 - fix: route duplicate ID [#2501](https://github.com/apache/apisix-dashboard/pull/2501)
 - fix: add a judgement for last_report_time [#2551](https://github.com/apache/apisix-dashboard/pull/2551)
 - fix: drawer components delete plugin not working [#2573](https://github.com/apache/apisix-dashboard/pull/2573)
+- fix: plugin_config missing on service exist [#2657](https://github.com/apache/apisix-dashboard/pull/2657)
+- fix: ant-table unable to request [#2641](https://github.com/apache/apisix-dashboard/pull/2641)
+- fix: change default CSP value [#2601](https://github.com/apache/apisix-dashboard/pull/2601)
 
 ### Test
 
