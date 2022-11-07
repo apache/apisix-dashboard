@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.13.1](#2131)
 - [2.13.0](#2130)
 - [2.11.0](#2110)
 - [2.10.1](#2101)
@@ -38,6 +39,29 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+# 2.13.1
+
+### Core
+
+- feat: add etcd store auto re-initialize [#2650](https://github.com/apache/apisix-dashboard/pull/2650)
+
+### Bugfix
+
+- fix: advance matching in the route create page causes the page to crash [#2440](https://github.com/apache/apisix-dashboard/pull/2440)
+- fix: Users can create a Consumer in Dashboard without enabling the plugin [#2442](https://github.com/apache/apisix-dashboard/pull/2442)
+- fix: block arbitrary file index [#2497](https://github.com/apache/apisix-dashboard/pull/2497)
+- fix: route duplicate ID [#2501](https://github.com/apache/apisix-dashboard/pull/2501)
+- fix: add a judgement for last_report_time [#2551](https://github.com/apache/apisix-dashboard/pull/2551)
+- fix: drawer components delete plugin not working [#2573](https://github.com/apache/apisix-dashboard/pull/2573)
+- fix: plugin_config missing on service exist [#2657](https://github.com/apache/apisix-dashboard/pull/2657)
+- fix: ant-table unable to request [#2641](https://github.com/apache/apisix-dashboard/pull/2641)
+- fix: change default CSP value [#2601](https://github.com/apache/apisix-dashboard/pull/2601)
+
+### Test
+
+- test: remove stale E2E cases [#2475](https://github.com/apache/apisix-dashboard/pull/2475)
+- fix: cli test invalid etcd [#2544](https://github.com/apache/apisix-dashboard/pull/2544)
 
 # 2.13.0
 

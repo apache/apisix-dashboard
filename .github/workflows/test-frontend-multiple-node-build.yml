@@ -6,11 +6,9 @@ name: Test building web in multiple node version
 # events but only for the master branch
 on:
   push:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
   pull_request:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/master' && github.run_number || github.ref }}

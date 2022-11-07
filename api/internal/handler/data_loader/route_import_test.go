@@ -19,7 +19,6 @@ package data_loader
 import (
 	"bytes"
 	"errors"
-	"github.com/shiningrush/droplet/data"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
@@ -28,6 +27,8 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+
+	"github.com/shiningrush/droplet/data"
 
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
@@ -98,7 +99,7 @@ func ReadFile(t *testing.T, filePath string) []byte {
 	if runtime.GOOS == "windows" {
 		bound = `\api\`
 	}
-	apiDir := filepath.Join(strings.Split(pwd,bound)[0], bound)
+	apiDir := filepath.Join(strings.Split(pwd, bound)[0], bound)
 	fileContent, err := ioutil.ReadFile(filepath.Join(apiDir, filePath))
 	assert.Nil(t, err)
 

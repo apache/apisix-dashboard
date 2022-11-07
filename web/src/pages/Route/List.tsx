@@ -228,47 +228,47 @@ const Page: React.FC = () => {
       onClick: () => void;
       icon?: ReactNode;
     }[] = [
-        {
-          name: formatMessage({ id: 'component.global.view' }),
-          onClick: () => {
-            setId(record.id);
-            setRawData(omit(record, DELETE_FIELDS));
-            setVisible(true);
-            setEditorMode('update');
-          },
+      {
+        name: formatMessage({ id: 'component.global.view' }),
+        onClick: () => {
+          setId(record.id);
+          setRawData(omit(record, DELETE_FIELDS));
+          setVisible(true);
+          setEditorMode('update');
         },
-        {
-          name: formatMessage({ id: 'component.global.duplicate' }),
-          onClick: () => {
-            history.push(`/routes/${record.id}/duplicate`);
-          },
+      },
+      {
+        name: formatMessage({ id: 'component.global.duplicate' }),
+        onClick: () => {
+          history.push(`/routes/${record.id}/duplicate`);
         },
-        {
-          name: formatMessage({ id: 'component.global.delete' }),
-          onClick: () => {
-            Modal.confirm({
-              type: 'warning',
-              title: formatMessage({ id: 'component.global.popconfirm.title.delete' }),
-              content: (
-                <>
-                  {formatMessage({ id: 'component.global.name' })} - {record.name}
-                  <br />
-                  ID - {record.id}
-                </>
-              ),
-              onOk: () => {
-                return remove(record.id!).then(() => {
-                  handleTableActionSuccessResponse(
-                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.routes',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
-                  );
-                });
-              },
-            });
-          },
+      },
+      {
+        name: formatMessage({ id: 'component.global.delete' }),
+        onClick: () => {
+          Modal.confirm({
+            type: 'warning',
+            title: formatMessage({ id: 'component.global.popconfirm.title.delete' }),
+            content: (
+              <>
+                {formatMessage({ id: 'component.global.name' })} - {record.name}
+                <br />
+                ID - {record.id}
+              </>
+            ),
+            onOk: () => {
+              return remove(record.id!).then(() => {
+                handleTableActionSuccessResponse(
+                  `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                    id: 'menu.routes',
+                  })} ${formatMessage({ id: 'component.status.success' })}`,
+                );
+              });
+            },
+          });
         },
-      ];
+      },
+    ];
 
     return (
       <Dropdown

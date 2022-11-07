@@ -172,6 +172,7 @@ const RawDataEditor: React.FC<Props> = ({
           title=""
           extra={[
             <Select
+              key={'monaco-language'}
               defaultValue={monacoLanguageList.JSON}
               value={monacoLanguage}
               options={modeOptions}
@@ -181,6 +182,7 @@ const RawDataEditor: React.FC<Props> = ({
               data-cy="monaco-language"
             />,
             <CopyToClipboard
+              key={'copy'}
               text={content}
               onCopy={(_: string, result: boolean) => {
                 if (!result) {
@@ -204,7 +206,7 @@ const RawDataEditor: React.FC<Props> = ({
               onClick={() => {
                 window.open(`https://apisix.apache.org/docs/apisix/admin-api#${type}`);
               }}
-              key={1}
+              key={'document'}
             >
               {formatMessage({ id: 'component.global.document' })}
             </Button>,

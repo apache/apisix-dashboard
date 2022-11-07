@@ -34,6 +34,7 @@ context('Create and Delete Consumer', () => {
 
   const data = {
     consumerName: 'test_consumer',
+    noPluginsConsumerName: 'no_plugins_consumer',
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
@@ -47,6 +48,27 @@ context('Create and Delete Consumer', () => {
     cy.fixture('data.json').as('data');
   });
 
+  it('creates consumer without plugins', function () {
+    cy.visit('/consumer/list');
+    cy.contains('Create').click();
+    // basic information
+    cy.get(selector.username).type(data.noPluginsConsumerName);
+    cy.get(selector.description).type(data.description);
+    cy.contains('Next').click();
+
+    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Submit').click();
+    cy.get(selector.notification).should('contain', data.createConsumerSuccess);
+
+    cy.contains(data.noPluginsConsumerName)
+      .should('be.visible')
+      .siblings()
+      .contains('Delete')
+      .click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
+  });
+
   it('creates consumer with key-auth', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
@@ -56,13 +78,6 @@ context('Create and Delete Consumer', () => {
     cy.get(selector.username).type(data.consumerName);
     cy.get(selector.description).type(data.description);
     cy.contains('Next').click();
-
-    cy.contains('Next').click();
-    cy.get(selector.notification).should(
-      'contain',
-      'Please enable at least one of the following authentication plugin: basic-auth, hmac-auth, jwt-auth, key-auth, ldap-auth, wolf-rbac',
-    );
-    cy.get(selector.notificationCloseIcon).click().should('not.exist');
 
     // plugin config
     cy.contains(selector.pluginCard, 'key-auth').within(() => {

@@ -1,13 +1,11 @@
 name: go-lint
 on:
   push:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
     paths:
       - 'api/**'
   pull_request:
-    branches:
-      - master
+    branches: [master, 'release/2.13']
     paths:
       - 'api/**'
 
@@ -33,7 +31,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.15'
+          go-version: '1.19'
 
       - uses: actions/cache@v2
         with:

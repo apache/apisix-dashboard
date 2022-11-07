@@ -59,7 +59,8 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'menu.plugin' }),
       dataIndex: 'plugins',
       hideInSearch: true,
-      render: (_, record) => Object.keys(record.plugins || []).join(','),
+      render: (_, record) =>
+        Object.keys(record.plugins || {}).length > 0 ? Object.keys(record.plugins).join(',') : '-',
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
@@ -116,7 +117,7 @@ const Page: React.FC = () => {
       <ProTable<ConsumerModule.ResEntity>
         actionRef={ref}
         columns={columns}
-        rowKey="id"
+        rowKey="username"
         request={fetchList}
         pagination={{
           onChange: (page, pageSize?) => savePageList(page, pageSize),

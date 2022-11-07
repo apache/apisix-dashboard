@@ -25,11 +25,11 @@ import (
 
 func (s *server) setupStore() error {
 	if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
-		log.Errorf("init etcd client fail: %w", err)
+		log.Errorf("init etcd client fail: %v", err)
 		return err
 	}
 	if err := store.InitStores(); err != nil {
-		log.Errorf("init stores fail: %w", err)
+		log.Errorf("init stores fail: %v", err)
 		return err
 	}
 	return nil
