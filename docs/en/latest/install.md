@@ -48,7 +48,7 @@ Please replace `<CONFIG_FILE>` to your configure file path.
 
 ```shell
 # 1. install RPM package
-sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.13/apisix-dashboard-2.13-0.el7.x86_64.rpm
+sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.13.1/apisix-dashboard-2.13.1-0.el7.x86_64.rpm
 ```
 
 ### Launch
