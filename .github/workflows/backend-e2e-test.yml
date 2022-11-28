@@ -45,7 +45,7 @@ jobs:
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' ./api/conf/conf.yaml
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' ./api/conf/conf.yaml
           sed -i 's@0.0.0.0/0:9000@127.0.0.1:9000@' ./api/conf/conf.yaml
-
+          sed -i 's/enabled: false/enabled: true/' ./api/conf/conf.yaml
 
       - name: download file Dockerfile-apisix
         working-directory: ./api/test/docker

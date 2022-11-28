@@ -81,6 +81,7 @@ authentication:
       password: user
 
 oidc:
+  enabled: false
   expire_time: 3600
   client_id: dashboard
   client_secret: dashboard

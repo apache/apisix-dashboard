@@ -43,7 +43,7 @@ const (
 	WebDir = "html/"
 
 	DefaultCSP = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
-	State  = "123456"
+	State      = "123456"
 )
 
 var (
@@ -69,6 +69,7 @@ var (
 	Plugins          = map[string]bool{}
 	SecurityConf     Security
 	CookieStore      = sessions.NewCookieStore([]byte("oidc"))
+	OidcEnabled      = false
 	OidcId           string
 	OidcConfig       oauth2.Config
 	OidcExpireTime   int
@@ -137,6 +138,7 @@ type Authentication struct {
 }
 
 type Oidc struct {
+	Enabled      bool   `mapstructure:"enabled"`
 	ExpireTime   int    `mapstructure:"expire_time" yaml:"expire_time"`
 	ClientID     string `mapstructure:"client_id"`
 	ClientSecret string `mapstructure:"client_secret"`
@@ -309,6 +311,7 @@ func initAuthentication(conf Authentication) {
 }
 
 func initOidc(conf Oidc) {
+	OidcEnabled = conf.Enabled
 	OidcExpireTime = conf.ExpireTime
 	OidcConfig.ClientID = conf.ClientID
 	OidcConfig.ClientSecret = conf.ClientSecret
