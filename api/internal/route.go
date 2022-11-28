@@ -58,7 +58,13 @@ func SetUpRouter() *gin.Engine {
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
 	// security
-	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(), filter.InvalidRequest(), filter.Oidc(), filter.Authentication())
+	r.Use(filter.RequestLogHandler(logger), filter.IPFilter(), filter.InvalidRequest())
+
+	// authenticate
+	if conf.OidcEnabled {
+		r.Use(filter.Oidc())
+	}
+	r.Use(filter.Authentication())
 
 	// misc
 	r.Use(gzip.Gzip(gzip.DefaultCompression), filter.CORS(), filter.RequestId(), filter.SchemaCheck(), filter.RecoverHandler())
