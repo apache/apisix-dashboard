@@ -76,7 +76,8 @@ type HttpMethod =
   | 'HEAD'
   | 'PATCH'
   | 'CONNECT'
-  | 'TRACE';
+  | 'TRACE'
+  | 'PURGE';
 
 type ResponseLabelList = Record<string, string>[];
 

@@ -24,6 +24,7 @@ export const HTTP_METHOD_OPTION_LIST: HttpMethod[] = [
   'OPTIONS',
   'CONNECT',
   'TRACE',
+  'PURGE',
 ];
 
 export const FORM_ITEM_LAYOUT = {
