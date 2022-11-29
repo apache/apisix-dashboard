@@ -45,6 +45,11 @@ export default {
   'component.upstream.fields.service_name.tooltip': 'Service Name',
   'component.upstream.fields.service_name.placeholder': 'Please enter the service name',
 
+  'component.upstream.fields.scheme.tooltip.stream':
+    'This type is only used for Stream Route, which is a layer 4 proxy. Reference: https://apisix.apache.org/docs/apisix/stream-proxy/',
+  'component.upstream.fields.scheme.tooltip.pubsub':
+    'This type is only used in publish subscription. Reference: https://apisix.apache.org/docs/apisix/pubsub/',
+
   'component.upstream.fields.tls': 'TLS',
   'component.upstream.fields.tls.tooltip': 'TLS Certificate',
 

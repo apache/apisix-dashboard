@@ -45,6 +45,11 @@ export default {
   'component.upstream.fields.service_name.tooltip': 'Servis Adı',
   'component.upstream.fields.service_name.placeholder': 'Lütfen servis adını giriniz',
 
+  'component.upstream.fields.scheme.tooltip.stream':
+    'Bu tür yalnızca Akış yönlendirme, yani katman 4 proxy için kullanılır. Referans: https://apisix.apache.org/docs/apisix/stream-proxy/',
+  'component.upstream.fields.scheme.tooltip.pubsub':
+    'Bu tür yalnızca abonelik senaryolarını yayınlamak için kullanılır. Referans: https://apisix.apache.org/docs/apisix/pubsub/',
+
   'component.upstream.fields.tls': 'TLS',
   'component.upstream.fields.tls.tooltip': 'TLS Sertifikası',
 
