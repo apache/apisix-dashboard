@@ -65,8 +65,8 @@
 - docs: add data loader and new OpenAPI 3 loader [#2484](https://github.com/apache/apisix-dashboard/pull/2484)
 - docs: add new import and export docs to sidebar [#2485](https://github.com/apache/apisix-dashboard/pull/2485)
 - docs: update deploy-with-docker.md [#2472](https://github.com/apache/apisix-dashboard/pull/2472)
-- doc: add a notice about the compatibility of Ingress and Dashboard [#2552](https://github.com/apache/apisix-dashboard/pull/2552)
-- doc(csp): add correct csp rule [#2548](https://github.com/apache/apisix-dashboard/pull/2548)
+- docs: add a notice about the compatibility of Ingress and Dashboard [#2552](https://github.com/apache/apisix-dashboard/pull/2552)
+- docs: add correct csp rule [#2548](https://github.com/apache/apisix-dashboard/pull/2548)
 - docs: add Slack invitation link badge [#2617](https://github.com/apache/apisix-dashboard/pull/2617)
 
 ### Bugfix
@@ -89,7 +89,7 @@
 - feat: fix actions version to root version [#2521](https://github.com/apache/apisix-dashboard/pull/2521)
 - test: reduce fe ci time [#2557](https://github.com/apache/apisix-dashboard/pull/2557)
 - feat: set serverUrlMap with env, update cypress, update stylelint [#2583](https://github.com/apache/apisix-dashboard/pull/2583)
-- Feat: add tip and preset model for plugin editor, improve e2e stability [#2581](https://github.com/apache/apisix-dashboard/pull/2581)
+- feat: add tip and preset model for plugin editor, improve e2e stability [#2581](https://github.com/apache/apisix-dashboard/pull/2581)
 
 ### Other
 
