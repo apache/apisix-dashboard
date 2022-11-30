@@ -44,6 +44,11 @@ export default {
   'component.upstream.fields.service_name.tooltip': '服务名称',
   'component.upstream.fields.service_name.placeholder': '请输入服务名称',
 
+  'component.upstream.fields.scheme.tooltip.stream':
+    '该类型仅用于 Stream Route，即四层代理。参考文档：https://apisix.apache.org/zh/docs/apisix/stream-proxy/',
+  'component.upstream.fields.scheme.tooltip.pubsub':
+    '该类型仅用于发布订阅场景。参考文档：https://apisix.apache.org/zh/docs/apisix/pubsub/',
+
   'component.upstream.fields.tls': 'TLS',
   'component.upstream.fields.tls.tooltip': 'TLS 证书',
 
