@@ -94,7 +94,7 @@
 ### Other
 
 - feat: dashboard support windows [#2619](https://github.com/apache/apisix-dashboard/pull/2619)
-- feat: configure plug-ins to support this feature [#2647](https://github.com/apache/apisix-dashboard/pull/2647)
+- feat: configure eslint plugins to support format import and export [#2647](https://github.com/apache/apisix-dashboard/pull/2647)
 
 ## 2.13.1
 
