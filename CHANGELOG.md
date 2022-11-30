@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.13.1](#2131)
 - [2.13.0](#2130)
 - [2.11.0](#2110)
 - [2.10.1](#2101)
@@ -38,6 +39,12 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+## 2.13.1
+
+**This is a maintenance release, and you can see the CHANGELOG in `release/2.13` branch.**
+
+[https://github.com/apache/apisix-dashboard/blob/release/2.13/CHANGELOG.md#2131](https://github.com/apache/apisix-dashboard/blob/release/2.13/CHANGELOG.md#2131)
 
 # 2.13.0
 
