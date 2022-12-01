@@ -91,49 +91,79 @@ oidc:
   redirect_url: http://127.0.0.1:9000/apisix/admin/oidc/callback
   scope: openid
 
-plugins:                          # plugin list (sorted in alphabetical order)
-  - api-breaker
-  - authz-keycloak
-  - basic-auth
-  - batch-requests
-  - consumer-restriction
-  - cors
-  # - dubbo-proxy
-  - echo
-  # - error-log-logger
-  # - example-plugin
+plugins:
+  - real-ip
+  - client-control
+  - proxy-control
+  - request-id
+  - zipkin
+  - skywalking
+  - opentelemetry
+  - ext-plugin-pre-req
   - fault-injection
-  - grpc-transcode
-  - hmac-auth
-  - http-logger
+  - mocking
+  - serverless-pre-function
+  #- batch-requests
+  - cors
   - ip-restriction
+  - ua-restriction
+  - referer-restriction
+  - csrf
+  - uri-blocker
+  - request-validation
+  - openid-connect
+  - authz-casbin
+  - authz-casdoor
+  - wolf-rbac
+  - ldap-auth
+  - hmac-auth
+  - basic-auth
   - jwt-auth
-  - kafka-logger
   - key-auth
+  - consumer-restriction
+  - forward-auth
+  - opa
+  - authz-keycloak
+  #- error-log-logger
+  - proxy-mirror
+  - proxy-cache
+  - proxy-rewrite
+  - api-breaker
   - limit-conn
   - limit-count
   - limit-req
-  # - log-rotate
-  # - node-status
-  - openid-connect
-  - prometheus
-  - proxy-cache
-  - proxy-mirror
-  - proxy-rewrite
-  - redirect
-  - referer-restriction
-  - request-id
-  - request-validation
-  - response-rewrite
-  - serverless-post-function
-  - serverless-pre-function
-  # - skywalking
-  - sls-logger
-  - syslog
-  - tcp-logger
-  - udp-logger
-  - uri-blocker
-  - wolf-rbac
-  - zipkin
+  #- node-status
+  - gzip
   - server-info
   - traffic-split
+  - redirect
+  - response-rewrite
+  - kafka-proxy
+  #- dubbo-proxy
+  - grpc-transcode
+  - grpc-web
+  - public-api
+  - prometheus
+  - datadog
+  - echo
+  - loggly
+  - http-logger
+  - splunk-hec-logging
+  - skywalking-logger
+  - google-cloud-logging
+  - sls-logger
+  - tcp-logger
+  - kafka-logger
+  - rocketmq-logger
+  - syslog
+  - udp-logger
+  - file-logger
+  - clickhouse-logger
+  #- log-rotate
+  #- example-plugin
+  - aws-lambda
+  - azure-functions
+  - openwhisk
+  - serverless-post-function
+  - ext-plugin-post-req
+  - ext-plugin-post-resp
