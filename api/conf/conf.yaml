@@ -103,6 +103,7 @@ plugins:
   - fault-injection
   - mocking
   - serverless-pre-function
+  # - batch-requests
   - cors
   - ip-restriction
   - ua-restriction
@@ -123,6 +124,7 @@ plugins:
   - forward-auth
   - opa
   - authz-keycloak
+  # - error-log-logger
   - proxy-mirror
   - proxy-cache
   - proxy-rewrite
@@ -130,12 +132,14 @@ plugins:
   - limit-conn
   - limit-count
   - limit-req
+  # - node-status
   - gzip
   - server-info
   - traffic-split
   - redirect
   - response-rewrite
   - kafka-proxy
+  # - dubbo-proxy
   - grpc-transcode
   - grpc-web
   - public-api
@@ -155,15 +159,11 @@ plugins:
   - udp-logger
   - file-logger
   - clickhouse-logger
+  # - log-rotate
+  # - example-plugin
   - aws-lambda
   - azure-functions
   - openwhisk
   - serverless-post-function
   - ext-plugin-post-req
   - ext-plugin-post-resp
-  #- batch-requests
-  #- error-log-logger
-  #- node-status
-  #- dubbo-proxy
-  #- log-rotate
-  #- example-plugin
