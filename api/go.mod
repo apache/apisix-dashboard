@@ -1,6 +1,6 @@
 module github.com/apisix/manager-api
 
-go 1.15
+go 1.16
 
 require (
 	github.com/coreos/go-oidc/v3 v3.3.0
