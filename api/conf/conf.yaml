@@ -132,7 +132,7 @@ plugins:
   - limit-count
   - limit-req
   - loggly
-  #- log-rotate
+  # - log-rotate
   - mocking
   # - node-status
   - opa
