@@ -99,6 +99,10 @@ export const PLUGIN_LIST = {
   'basic-auth': {
     type: PluginType.authentication,
   },
+  'batch-requests': {
+    type: PluginType.other,
+    hidden: true,
+  },
   'clickhouse-logger': {
     type: PluginType.observability,
   },
@@ -117,7 +121,19 @@ export const PLUGIN_LIST = {
   datadog: {
     type: PluginType.observability,
   },
+  'dubbo-proxy': {
+    type: PluginType.other,
+    hidden: true,
+  },
   echo: {
+    type: PluginType.other,
+    hidden: true,
+  },
+  'error-log-logger': {
+    type: PluginType.observability,
+    hidden: true,
+  },
+  'example-plugin': {
     type: PluginType.other,
     hidden: true,
   },
@@ -187,8 +203,16 @@ export const PLUGIN_LIST = {
   loggly: {
     type: PluginType.observability,
   },
+  'log-rotate': {
+    type: PluginType.observability,
+    hidden: true,
+  },
   mocking: {
     type: PluginType.other,
+  },
+  'node-status': {
+    type: PluginType.other,
+    hidden: true,
   },
   opa: {
     type: PluginType.authentication,
@@ -289,29 +313,6 @@ export const PLUGIN_LIST = {
     type: PluginType.observability,
   },
   'mqtt-proxy': {
-    type: PluginType.other,
-    hidden: true,
-  },
-  // plugins not listed
-  'batch-requests': {
-    type: PluginType.other,
-  },
-  'dubbo-proxy': {
-    type: PluginType.other,
-    hidden: true,
-  },
-  'error-log-logger': {
-    type: PluginType.observability,
-  },
-  'example-plugin': {
-    type: PluginType.other,
-    hidden: true,
-  },
-  'log-rotate': {
-    type: PluginType.observability,
-    hidden: true,
-  },
-  'node-status': {
     type: PluginType.other,
     hidden: true,
   },

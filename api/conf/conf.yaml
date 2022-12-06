@@ -99,13 +99,17 @@ plugins:
   - aws-lambda
   - azure-functions
   - basic-auth
+  # - batch-requests
   - clickhouse-logger
   - client-control
   - consumer-restriction
   - cors
   - csrf
   - datadog
+  # - dubbo-proxy
   - echo
+  - error-log-logger
+  # - example-plugin
   - ext-plugin-post-req
   - ext-plugin-post-resp
   - ext-plugin-pre-req
@@ -128,7 +132,9 @@ plugins:
   - limit-count
   - limit-req
   - loggly
+  #- log-rotate
   - mocking
+  # - node-status
   - opa
   - openid-connect
   - opentelemetry
