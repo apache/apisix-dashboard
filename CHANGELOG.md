@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.15.0](#2150)
 - [2.14.0](#2140)
 - [2.13.1](#2131)
 - [2.13.0](#2130)
@@ -40,6 +41,16 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+## 2.15.0
+
+### Core
+
+- feat: basic support Apache APISIX 2.15.0 [#2680](https://github.com/apache/apisix-dashboard/pull/2680)
+
+### Bugfix
+
+- fix: bump go version to 1.16 [#2678](https://github.com/apache/apisix-dashboard/pull/2678)
 
 ## 2.14.0
 
