@@ -78,82 +78,36 @@ export enum PluginType {
  * Plugin List that contains type field
  */
 export const PLUGIN_LIST = {
-  'hmac-auth': {
+  'api-breaker': {
+    type: PluginType.security,
+  },
+  'authz-casbin': {
     type: PluginType.authentication,
   },
-  'serverless-post-function': {
+  'authz-casdoor': {
+    type: PluginType.authentication,
+  },
+  'authz-keycloak': {
+    type: PluginType.authentication,
+  },
+  'aws-lambda': {
     type: PluginType.serverless,
   },
-  'mqtt-proxy': {
-    type: PluginType.other,
-    hidden: true,
-  },
-  'response-rewrite': {
-    type: PluginType.other,
+  'azure-functions': {
+    type: PluginType.serverless,
   },
   'basic-auth': {
     type: PluginType.authentication,
   },
-  'error-log-logger': {
+  'batch-requests': {
+    type: PluginType.other,
+    hidden: true,
+  },
+  'clickhouse-logger': {
     type: PluginType.observability,
   },
-  'fault-injection': {
-    type: PluginType.security,
-  },
-  'limit-count': {
+  'client-control': {
     type: PluginType.traffic,
-  },
-  prometheus: {
-    type: PluginType.observability,
-  },
-  'proxy-rewrite': {
-    type: PluginType.other,
-  },
-  syslog: {
-    type: PluginType.observability,
-  },
-  'traffic-split': {
-    type: PluginType.traffic,
-  },
-  'jwt-auth': {
-    type: PluginType.authentication,
-  },
-  'kafka-logger': {
-    type: PluginType.observability,
-  },
-  'limit-conn': {
-    type: PluginType.traffic,
-  },
-  'udp-logger': {
-    type: PluginType.observability,
-  },
-  zipkin: {
-    type: PluginType.observability,
-  },
-  echo: {
-    type: PluginType.other,
-    hidden: true,
-  },
-  'log-rotate': {
-    type: PluginType.observability,
-    hidden: true,
-  },
-  'serverless-pre-function': {
-    type: PluginType.serverless,
-  },
-  'dubbo-proxy': {
-    type: PluginType.other,
-    hidden: true,
-  },
-  'node-status': {
-    type: PluginType.other,
-    hidden: true,
-  },
-  'referer-restriction': {
-    type: PluginType.security,
-  },
-  'api-breaker': {
-    type: PluginType.security,
   },
   'consumer-restriction': {
     type: PluginType.security,
@@ -161,51 +115,192 @@ export const PLUGIN_LIST = {
   cors: {
     type: PluginType.security,
   },
-  'limit-req': {
-    type: PluginType.traffic,
-  },
-  'proxy-mirror': {
-    type: PluginType.other,
-  },
-  'request-validation': {
+  csrf: {
     type: PluginType.security,
+  },
+  datadog: {
+    type: PluginType.observability,
+  },
+  'dubbo-proxy': {
+    type: PluginType.other,
+    hidden: true,
+  },
+  echo: {
+    type: PluginType.other,
+    hidden: true,
+  },
+  'error-log-logger': {
+    type: PluginType.observability,
+    hidden: true,
   },
   'example-plugin': {
     type: PluginType.other,
     hidden: true,
   },
+  'ext-plugin-post-req': {
+    type: PluginType.other,
+  },
+  'ext-plugin-post-resp': {
+    type: PluginType.other,
+  },
+  'ext-plugin-pre-req': {
+    type: PluginType.other,
+  },
+  'fault-injection': {
+    type: PluginType.security,
+  },
+  'file-logger': {
+    type: PluginType.observability,
+  },
+  'forward-auth': {
+    type: PluginType.authentication,
+  },
+  'google-cloud-logging': {
+    type: PluginType.observability,
+  },
+  'grpc-transcode': {
+    type: PluginType.other,
+  },
+  'grpc-web': {
+    type: PluginType.other,
+  },
+  gzip: {
+    type: PluginType.other,
+  },
+  'hmac-auth': {
+    type: PluginType.authentication,
+  },
+  'http-logger': {
+    type: PluginType.observability,
+  },
   'ip-restriction': {
     type: PluginType.security,
+  },
+  'jwt-auth': {
+    type: PluginType.authentication,
+  },
+  'kafka-logger': {
+    type: PluginType.observability,
+  },
+  'kafka-proxy': {
+    type: PluginType.other,
   },
   'key-auth': {
     type: PluginType.authentication,
   },
+  'ldap-auth': {
+    type: PluginType.authentication,
+  },
+  'limit-conn': {
+    type: PluginType.traffic,
+  },
+  'limit-count': {
+    type: PluginType.traffic,
+  },
+  'limit-req': {
+    type: PluginType.traffic,
+  },
+  loggly: {
+    type: PluginType.observability,
+  },
+  'log-rotate': {
+    type: PluginType.observability,
+    hidden: true,
+  },
+  mocking: {
+    type: PluginType.other,
+  },
+  'node-status': {
+    type: PluginType.other,
+    hidden: true,
+  },
+  opa: {
+    type: PluginType.authentication,
+  },
+  'openid-connect': {
+    type: PluginType.authentication,
+  },
+  opentelemetry: {
+    type: PluginType.observability,
+  },
+  openwhisk: {
+    type: PluginType.serverless,
+  },
+  prometheus: {
+    type: PluginType.observability,
+  },
   'proxy-cache': {
+    type: PluginType.other,
+  },
+  'proxy-control': {
+    type: PluginType.other,
+  },
+  'proxy-mirror': {
+    type: PluginType.other,
+  },
+  'proxy-rewrite': {
+    type: PluginType.other,
+  },
+  'public-api': {
+    type: PluginType.security,
+  },
+  'real-ip': {
     type: PluginType.other,
   },
   redirect: {
     type: PluginType.other,
     hidden: true,
   },
+  'referer-restriction': {
+    type: PluginType.security,
+  },
   'request-id': {
     type: PluginType.observability,
+  },
+  'request-validation': {
+    type: PluginType.security,
+  },
+  'response-rewrite': {
+    type: PluginType.other,
+  },
+  'rocketmq-logger': {
+    type: PluginType.observability,
+  },
+  'server-info': {
+    type: PluginType.other,
+    hidden: true,
+  },
+  'serverless-post-function': {
+    type: PluginType.serverless,
+  },
+  'serverless-pre-function': {
+    type: PluginType.serverless,
   },
   skywalking: {
     type: PluginType.observability,
   },
-  'batch-requests': {
-    type: PluginType.other,
-  },
-  'http-logger': {
+  'skywalking-logger': {
     type: PluginType.observability,
-  },
-  'openid-connect': {
-    type: PluginType.authentication,
   },
   'sls-logger': {
     type: PluginType.observability,
   },
+  'splunk-hec-logging': {
+    type: PluginType.observability,
+  },
+  syslog: {
+    type: PluginType.observability,
+  },
   'tcp-logger': {
+    type: PluginType.observability,
+  },
+  'traffic-split': {
+    type: PluginType.traffic,
+  },
+  'ua-restriction': {
+    type: PluginType.security,
+  },
+  'udp-logger': {
     type: PluginType.observability,
   },
   'uri-blocker': {
@@ -214,98 +309,11 @@ export const PLUGIN_LIST = {
   'wolf-rbac': {
     type: PluginType.authentication,
   },
-  'authz-keycloak': {
-    type: PluginType.authentication,
+  zipkin: {
+    type: PluginType.observability,
   },
-  'grpc-transcode': {
-    type: PluginType.other,
-  },
-  'server-info': {
+  'mqtt-proxy': {
     type: PluginType.other,
     hidden: true,
-  },
-  'authz-casbin': {
-    type: PluginType.authentication,
-  },
-  'ldap-auth': {
-    type: PluginType.authentication,
-  },
-  datadog: {
-    type: PluginType.observability,
-  },
-  'skywalking-logger': {
-    type: PluginType.observability,
-  },
-  'azure-functions': {
-    type: PluginType.serverless,
-  },
-  'ua-restriction': {
-    type: PluginType.security,
-  },
-  'splunk-hec-logging': {
-    type: PluginType.observability,
-  },
-  'rocketmq-logger': {
-    type: PluginType.observability,
-  },
-  'proxy-control': {
-    type: PluginType.other,
-  },
-  openwhisk: {
-    type: PluginType.serverless,
-  },
-  opa: {
-    type: PluginType.authentication,
-  },
-  'grpc-web': {
-    type: PluginType.other,
-  },
-  'google-cloud-logging': {
-    type: PluginType.observability,
-  },
-  'forward-auth': {
-    type: PluginType.authentication,
-  },
-  'aws-lambda': {
-    type: PluginType.serverless,
-  },
-  'clickhouse-logger': {
-    type: PluginType.observability,
-  },
-  'client-control': {
-    type: PluginType.traffic,
-  },
-  csrf: {
-    type: PluginType.security,
-  },
-  'ext-plugin-post-req': {
-    type: PluginType.other,
-  },
-  'ext-plugin-pre-req': {
-    type: PluginType.other,
-  },
-  'file-logger': {
-    type: PluginType.observability,
-  },
-  gzip: {
-    type: PluginType.other,
-  },
-  loggly: {
-    type: PluginType.observability,
-  },
-  'public-api': {
-    type: PluginType.security,
-  },
-  'real-ip': {
-    type: PluginType.other,
-  },
-  'authz-casdoor': {
-    type: PluginType.authentication,
-  },
-  mocking: {
-    type: PluginType.other,
-  },
-  opentelemetry: {
-    type: PluginType.observability,
   },
 };
