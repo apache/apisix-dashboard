@@ -49,7 +49,7 @@ export default {
   'component.pluginForm.cors.allow_origins_by_metadata.tooltip':
     'Eklenti meta verilerindeki allow_origins kümesine başvurarak CORSu etkinleştirmek için hangi Origine izin verildiğini eşleştirin.',
   'component.pluginForm.cors.allow_origins_by_regex.tooltip':
-    'CORSu etkinleştirmek için izin verilen kaynakları eşleştirmek için regex ifadelerini kullanın. Her form sadece tek bir, bağımsız düzenli ifadeyle yapılandırılabilir, örneğin ".*.test.com" gibi, test.com\'un her alt etki alanını eşleştirebilir.',
+    'CORSu etkinleştirmek için izin verilen kaynakları eşleştirmek için regex ifadelerini kullanın. Her giriş kutusu yalnızca bir bağımsız normal ifade ile yapılandırılabilir, örneğin ".*.test.com" gibi, test.com\'un her alt etki alanını eşleştirebilir.',
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':
     'Whiteliste alınacak ana bilgisayar adı listesi. Ana bilgisayar adı, joker karakter olarak * ile başlatılabilir.',
