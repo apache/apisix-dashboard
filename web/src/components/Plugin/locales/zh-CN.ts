@@ -48,7 +48,7 @@ export default {
   'component.pluginForm.cors.allow_origins_by_metadata.tooltip':
     '通过引用插件元数据的 allow_origins 配置允许跨域访问的 Origin。',
   'component.pluginForm.cors.allow_origins_by_regex.tooltip':
-    '使用正则表达式数组来匹配允许跨域访问的 Origin, 如[".*.test.com"] 可以匹配任何test.com的子域名 * 。',
+    '使用正则表达式来匹配允许跨域访问的 Origin, 每一个输入框仅可以配置一个独立的正则表达式，如".*.test.com" 可以匹配任何test.com的子域名 * 。',
 
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':

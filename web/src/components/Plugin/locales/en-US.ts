@@ -49,7 +49,7 @@ export default {
   'component.pluginForm.cors.allow_origins_by_metadata.tooltip':
     'Match which origin is allowed to enable CORS by referencing allow_origins set in plugin metadata.',
   'component.pluginForm.cors.allow_origins_by_regex.tooltip':
-    'Use regex expressions to match which origin is allowed to enable CORS, for example, [".*.test.com"] can use to match all subdomain of test.com.',
+    'Use regex expressions to match which origin is allowed to enable CORS. Each input box can only be configured with a single, standalone regular expression, such as ".*.test.com" which can match any subdomain of test.com.',
 
   // referer-restriction
   'component.pluginForm.referer-restriction.whitelist.tooltip':
