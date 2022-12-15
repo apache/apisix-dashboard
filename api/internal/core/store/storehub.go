@@ -137,7 +137,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeySsl, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/ssl",
+		BasePath: conf.ETCDConfig.Prefix + "/ssls",
 		ObjType:  reflect.TypeOf(entity.SSL{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.SSL)
@@ -209,7 +209,7 @@ func InitStores() error {
 	}
 
 	err = InitStore(HubKeyProto, GenericStoreOption{
-		BasePath: conf.ETCDConfig.Prefix + "/proto",
+		BasePath: conf.ETCDConfig.Prefix + "/protos",
 		ObjType:  reflect.TypeOf(entity.Proto{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Proto)
