@@ -43,7 +43,7 @@ var _ = DescribeTable("Id Not In Body",
 	}),
 	Entry("create route that has no ID in request body by admin api", func() {
 		base.RunTestCase(base.HttpTestCase{
-			Object: base.APISIXExpect(),
+			Object: base.APISIXAdminAPIExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -102,7 +102,7 @@ var _ = DescribeTable("Id Not In Body",
 	}),
 	Entry("create route that has no ID in request body by admin api (POST)", func() {
 		base.RunTestCase(base.HttpTestCase{
-			Object: base.APISIXExpect(),
+			Object: base.APISIXAdminAPIExpect(),
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/routes",
 			Body: `{
