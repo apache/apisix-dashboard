@@ -27,6 +27,7 @@ services:
       - "2379:2379"
     networks:
       apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.10
 
   upstream:
     image: johz/upstream:v2.0
@@ -44,6 +45,7 @@ services:
       - '1992:1992/udp'
     networks:
       apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.20
 
   upstream_grpc:
     image: grpc_server_example
@@ -53,6 +55,7 @@ services:
       - '50052:50052'
     networks:
       apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.21
 
   apisix:
     hostname: apisix_server1
@@ -78,6 +81,7 @@ services:
       - '10095:10095/udp'
     networks:
       apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.30
 
   apisix2:
     hostname: apisix_server2
@@ -94,6 +98,7 @@ services:
       - '9181:9180/tcp'
     networks:
       apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.31
 
   managerapi:
     build:
@@ -109,6 +114,7 @@ services:
       - '9000:9000/tcp'
     networks:
       apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.40
 
   skywalking:
     image: apache/skywalking-oap-server:8.3.0-es6
@@ -119,6 +125,7 @@ services:
       - '12800:12800/tcp'
     networks:
       apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.50
 
   keycloak:
     image: jboss/keycloak:9.0.2
@@ -131,3 +138,8 @@ services:
 
 networks:
   apisix_dashboard_e2e:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
