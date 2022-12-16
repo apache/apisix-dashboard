@@ -40,6 +40,7 @@ var (
 	UpstreamIp             = "172.16.238.20"
 	UpstreamGrpcIp         = "172.16.238.21"
 	APISIXHost             = "http://127.0.0.1:9080"
+	APISIXAdminAPIHost     = "http://127.0.0.1:9180"
 	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
 	ManagerAPIHost         = "http://127.0.0.1:9000"
@@ -80,6 +81,11 @@ func ManagerApiExpect() *httpexpect.Expect {
 func APISIXExpect() *httpexpect.Expect {
 	t := getTestingHandle()
 	return httpexpect.New(t, APISIXHost)
+}
+
+func APISIXAdminAPIExpect() *httpexpect.Expect {
+	t := getTestingHandle()
+	return httpexpect.New(t, APISIXAdminAPIHost)
 }
 
 func APISIXStreamProxyExpect(port uint16, sni string) *httpexpect.Expect {

@@ -29,7 +29,7 @@ var _ = DescribeTable("Id Crossing",
 		base.RunTestCase(tc)
 	},
 	Entry("create upstream by admin api", base.HttpTestCase{
-		Object: base.APISIXExpect(),
+		Object: base.APISIXAdminAPIExpect(),
 		Method: http.MethodPut,
 		Path:   "/apisix/admin/upstreams",
 		Body: `{
@@ -45,7 +45,7 @@ var _ = DescribeTable("Id Crossing",
 		ExpectStatus: http.StatusCreated,
 	}),
 	Entry("create route by admin api", base.HttpTestCase{
-		Object: base.APISIXExpect(),
+		Object: base.APISIXAdminAPIExpect(),
 		Method: http.MethodPut,
 		Path:   "/apisix/admin/routes/3",
 		Body: `{
