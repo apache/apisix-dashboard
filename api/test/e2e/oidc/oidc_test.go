@@ -19,7 +19,6 @@ package oidc_test
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -179,7 +178,7 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	formDataStr := formValues.Encode()
 	formDataBytes := []byte(formDataStr)
 	formBytesReader := bytes.NewReader(formDataBytes)
-	fmt.Printf("loginUrl: %s/n", loginUrl)
+	//fmt.Printf("loginUrl: %s/n", loginUrl)
 	req, _ = http.NewRequest("POST", loginUrl, formBytesReader)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	// set cookies
@@ -192,7 +191,6 @@ func accessOidcCallback(OidcCookie *[]http.Cookie) (int, error) {
 	resp, err = client.Do(req)
 	if err != nil {
 		return 0, err
-		fmt.Println(loginUrl)
 	}
 
 	// access apisix/admin/oidc/login with code
