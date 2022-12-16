@@ -393,14 +393,12 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusTooManyRequests,
-			ExpectBody:   "hello world",
 		}),
 		table.Entry("verify route that should be limited (exceed config count again)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusTooManyRequests,
-			ExpectBody:   "hello world",
 		}),
 		table.Entry("delete route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
