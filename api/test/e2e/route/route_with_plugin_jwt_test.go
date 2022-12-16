@@ -160,7 +160,7 @@ var _ = ginkgo.Describe("route with jwt plugin", func() {
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": "invalid-token"},
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"invalid jwt string"}`,
+			ExpectBody:   `{"message":"JWT token invalid"}`,
 		}),
 		table.Entry("delete consumer", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
