@@ -362,8 +362,8 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			   "plugins": {
 				   "limit-count": {
 					   "count": 1,
-					   "time_window": 2,
-					   "rejected_code": 503,
+					   "time_window": 30,
+					   "rejected_code": 429,
 					   "key": "remote_addr",
 					   "disable": true,
 					   "policy": "local"
@@ -388,18 +388,18 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("verify route that should not be limited (exceed config count)", base.HttpTestCase{
+		table.Entry("verify route that should be limited (exceed config count)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusTooManyRequests,
 			ExpectBody:   "hello world",
 		}),
-		table.Entry("verify route that should not be limited (exceed config count again)", base.HttpTestCase{
+		table.Entry("verify route that should be limited (exceed config count again)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusTooManyRequests,
 			ExpectBody:   "hello world",
 		}),
 		table.Entry("delete route", base.HttpTestCase{
