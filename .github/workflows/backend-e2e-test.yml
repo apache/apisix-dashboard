@@ -47,11 +47,6 @@ jobs:
           sed -i 's@0.0.0.0/0:9000@127.0.0.1:9000@' ./api/conf/conf.yaml
           sed -i 's/enabled: false/enabled: true/' ./api/conf/conf.yaml
 
-      - name: download file Dockerfile-apisix
-        working-directory: ./api/test/docker
-        run: |
-          curl -o Dockerfile-apisix https://raw.githubusercontent.com/apache/apisix-docker/master/alpine/Dockerfile
-
       - name: build docker images
         working-directory: ./api/test/docker
         continue-on-error: true
