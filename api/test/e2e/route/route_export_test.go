@@ -1513,7 +1513,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Method: http.MethodPut,
 				Path:   "/apisix/admin/routes/jwt-sign",
 				Body: `{
-					"name": "route1",
+					"name": "jwt-auth",
 					"uri": "/apisix/plugin/jwt/sign",
 					"plugins": {
 						"public-api": {}
