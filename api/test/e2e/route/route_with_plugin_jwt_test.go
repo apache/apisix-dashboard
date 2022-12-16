@@ -90,6 +90,33 @@ var _ = ginkgo.Describe("route with jwt plugin", func() {
 			ExpectBody:   []string{`"code":0`, `"username":"jack"`, `"key":"user-key"`, `"secret":"my-secret-key"`},
 		}),
 	)
+
+	ginkgo.It("create public api for JWT sign", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/jwt-sign",
+			Body: `{
+				"name": "route1",
+				"uri": "/apisix/plugin/jwt/sign",
+				"plugins": {
+					"public-api": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"code":0`,
+		})
+	})
+
 	ginkgo.It("sign jwt token", func() {
 		time.Sleep(base.SleepTime)
 

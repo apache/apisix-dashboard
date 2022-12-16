@@ -41,7 +41,7 @@ var (
 	UpstreamGrpcIp         = "upstream_grpc"
 	APISIXHost             = "http://127.0.0.1:9080"
 	APISIXAdminAPIHost     = "http://127.0.0.1:9180"
-	APISIXInternalUrl      = "http://172.16.238.30:9080"
+	APISIXInternalUrl      = "http://apisix:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
 	ManagerAPIHost         = "http://127.0.0.1:9000"
 	PrometheusExporter     = "http://127.0.0.1:9091"

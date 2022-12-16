@@ -1507,19 +1507,45 @@ var _ = ginkgo.Describe("Route", func() {
 			})
 		})
 
+		ginkgo.It("create public api for JWT sign", func() {
+			base.RunTestCase(base.HttpTestCase{
+				Object: base.ManagerApiExpect(),
+				Method: http.MethodPut,
+				Path:   "/apisix/admin/routes/jwt-sign",
+				Body: `{
+					"name": "route1",
+					"uri": "/apisix/plugin/jwt/sign",
+					"plugins": {
+						"public-api": {}
+					},
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "` + base.UpstreamIp + `",
+							"port": 1980,
+							"weight": 1
+						}]
+					}
+				}`,
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+				ExpectBody:   `"code":0`,
+			})
+		})
+
 		jwtToken := ""
 		exportStrJWT := ""
 		ginkgo.It("sign jwt token", func() {
 			time.Sleep(base.SleepTime)
 			// sign jwt token
 			t := ginkgo.GinkgoT()
-			body, status, err := base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key", nil)
+			body, status, err := base.HttpGet(base.APISIXHost+"/apisix/plugin/jwt/sign?key=user-key", nil)
 			assert.Nil(t, err)
 			assert.Equal(t, http.StatusOK, status)
 			jwtToken = string(body)
 
 			// sign jwt token with not exists key
-			_, status, err = base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key", nil)
+			_, status, err = base.HttpGet(base.APISIXHost+"/apisix/plugin/jwt/sign?key=not-exist-key", nil)
 			assert.Nil(t, err)
 			assert.Equal(t, http.StatusNotFound, status)
 
@@ -1683,7 +1709,7 @@ var _ = ginkgo.Describe("Route", func() {
 		ginkgo.It("sign jwt token", func() {
 			// sign jwt token
 			t := ginkgo.GinkgoT()
-			body, status, err := base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key", nil)
+			body, status, err := base.HttpGet(base.APISIXHost+"/apisix/plugin/jwt/sign?key=user-key", nil)
 			assert.Nil(t, err)
 			assert.Equal(t, http.StatusOK, status)
 			jwttoken = string(body)
