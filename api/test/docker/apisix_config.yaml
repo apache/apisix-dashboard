@@ -28,18 +28,11 @@ apisix:
     - name: "admin"
       key: edd1c9f034335f136f87ad84b625c8f1
       role: admin
-
   allow_admin:
     - 0.0.0.0/0
   admin_listen:
     ip: 0.0.0.0
     port: 9180
-
-  ssl:
-    enable: true
-    ssl_cert: "/usr/local/apisix/certs/apisix.crt"
-    ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
-
   enable_control: true
   control:
     ip: "0.0.0.0"

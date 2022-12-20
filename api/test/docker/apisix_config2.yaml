@@ -33,10 +33,6 @@ apisix:
   admin_listen:
     ip: 0.0.0.0
     port: 9180
-  ssl:
-    enable: true
-    ssl_cert: "/usr/local/apisix/certs/apisix.crt"
-    ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
 
 nginx_config:
   error_log_level: "debug"
