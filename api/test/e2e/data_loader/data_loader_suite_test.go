@@ -32,8 +32,6 @@ func TestDataLoader(t *testing.T) {
 }
 
 var _ = AfterSuite(func() {
-	base.CleanResource("routes")
-	base.CleanResource("upstreams")
-	base.CleanResource("services")
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

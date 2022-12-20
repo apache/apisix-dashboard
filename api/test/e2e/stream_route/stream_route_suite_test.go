@@ -32,8 +32,6 @@ func TestStreamRoute(t *testing.T) {
 }
 
 var _ = AfterSuite(func() {
-	base.CleanResource("stream_routes")
-	base.CleanResource("upstreams")
-	base.CleanResource("ssl")
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

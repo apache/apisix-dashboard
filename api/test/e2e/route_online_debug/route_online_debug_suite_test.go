@@ -32,7 +32,6 @@ func TestRoute(t *testing.T) {
 }
 
 var _ = AfterSuite(func() {
-	base.CleanResource("routes")
-	base.CleanResource("consumers")
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

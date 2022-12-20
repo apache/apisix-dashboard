@@ -316,6 +316,18 @@ func CleanResource(resource string) {
 	time.Sleep(SleepTime)
 }
 
+func CleanAllResource() {
+	CleanResource("routes")
+	CleanResource("upstreams")
+	CleanResource("consumers")
+	CleanResource("services")
+	CleanResource("global_rules")
+	CleanResource("plugin_configs")
+	CleanResource("proto")
+	CleanResource("ssl")
+	CleanResource("stream_routes")
+}
+
 var jwtToken string
 
 func GetJwtToken(userKey string) string {

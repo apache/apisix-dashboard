@@ -30,7 +30,6 @@ func TestPluginConfig(t *testing.T) {
 }
 
 var _ = AfterSuite(func() {
-	base.CleanResource("plugin_configs")
-	base.CleanResource("routes")
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

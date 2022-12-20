@@ -32,5 +32,6 @@ func TestServerInfo(t *testing.T) {
 }
 
 var _ = AfterSuite(func() {
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

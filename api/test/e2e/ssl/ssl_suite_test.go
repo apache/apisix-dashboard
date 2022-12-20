@@ -32,6 +32,6 @@ func TestSSL(t *testing.T) {
 }
 
 var _ = AfterSuite(func() {
-	base.CleanResource("ssl")
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

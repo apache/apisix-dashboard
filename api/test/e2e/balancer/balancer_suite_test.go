@@ -30,7 +30,6 @@ func TestAuth(t *testing.T) {
 }
 
 var _ = AfterSuite(func() {
-	base.CleanResource("upstreams")
-	base.CleanResource("routes")
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })
