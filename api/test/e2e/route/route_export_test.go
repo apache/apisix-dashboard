@@ -36,7 +36,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/export/routes",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"code\":10000,\"message\":\"Route data is empty, cannot be exported\",\"data\":null",
+				ExpectBody:   `{"code":10000,"message":"Route data is empty, cannot be exported","data":null`,
 			})
 		})
 	})
@@ -124,7 +124,7 @@ var _ = Describe("Route", func() {
 				Path:         "/hello_",
 				Headers:      map[string]string{"Host": "foo.com"},
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			})
 		})
 		It("create route with uris and hosts to test whether the uris parsing is correct", func() {
@@ -171,7 +171,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/export/routes/r1",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR1 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR1 + "}}",
 			})
 		})
 		// 2.Export data as the route of URI host
@@ -257,7 +257,7 @@ var _ = Describe("Route", func() {
 				Path:         "/hello2",
 				Headers:      map[string]string{"Host": "bar.com"},
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			})
 		})
 		It("create route2 with uri and host to test whether the uri parsing is correct", func() {
@@ -303,7 +303,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/export/routes/r2",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version\":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "}}",
 			})
 		})
 		It("export route and route2", func() {
