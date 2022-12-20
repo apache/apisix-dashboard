@@ -350,5 +350,5 @@ var _ = DescribeTable("Test label",
 		Path:         "/apisix/admin/plugin_configs/1",
 		Headers:      map[string]string{"Authorization": base.GetToken()},
 		ExpectStatus: http.StatusOK,
-	})
+	}),
 )

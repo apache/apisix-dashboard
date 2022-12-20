@@ -28,7 +28,7 @@ import (
 
 func TestStreamRoute(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "stream route suite")
+	RunSpecs(t, "Stream Route Suite")
 }
 
 var _ = AfterSuite(func() {

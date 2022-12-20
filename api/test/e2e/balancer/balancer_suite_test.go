@@ -26,7 +26,7 @@ import (
 )
 
 func TestAuth(t *testing.T) {
-	RunSpecs(t, "balancer suite")
+	RunSpecs(t, "Balancer Suite")
 }
 
 var _ = AfterSuite(func() {

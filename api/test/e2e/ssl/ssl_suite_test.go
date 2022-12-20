@@ -28,7 +28,7 @@ import (
 
 func TestSSL(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "ssl suite")
+	RunSpecs(t, "SSL Suite")
 }
 
 var _ = AfterSuite(func() {

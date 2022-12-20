@@ -26,7 +26,7 @@ import (
 )
 
 func TestPluginConfig(t *testing.T) {
-	RunSpecs(t, "plugin config suite")
+	RunSpecs(t, "Plugin Config Suite")
 }
 
 var _ = AfterSuite(func() {

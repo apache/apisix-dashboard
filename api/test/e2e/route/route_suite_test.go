@@ -28,7 +28,7 @@ import (
 
 func TestRoute(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "route suite")
+	RunSpecs(t, "Route Suite")
 }
 
 var _ = AfterSuite(func() {

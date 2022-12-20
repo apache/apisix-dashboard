@@ -28,7 +28,7 @@ import (
 
 func TestServerInfo(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "server info suite")
+	RunSpecs(t, "Server Info Suite")
 }
 
 var _ = AfterSuite(func() {

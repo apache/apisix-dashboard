@@ -25,5 +25,5 @@ import (
 
 func TestOidc(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Oidc Suite")
+	RunSpecs(t, "OIDC Suite")
 }

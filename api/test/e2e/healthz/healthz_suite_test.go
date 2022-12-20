@@ -23,5 +23,5 @@ import (
 )
 
 func TestHealthz(t *testing.T) {
-	RunSpecs(t, "healthz suite")
+	RunSpecs(t, "Health Suite")
 }
