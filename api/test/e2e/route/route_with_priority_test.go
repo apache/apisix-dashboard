@@ -24,7 +24,7 @@ import (
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = Describe("route with priority test",
+var _ = DescribeTable("route with priority test",
 	func(tc base.HttpTestCase) {
 		base.RunTestCase(tc)
 	},
