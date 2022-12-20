@@ -31,7 +31,7 @@ func TestStreamRoute(t *testing.T) {
 	RunSpecs(t, "Stream Route Suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

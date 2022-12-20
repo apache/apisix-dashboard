@@ -30,7 +30,7 @@ func TestVersion(t *testing.T) {
 	RunSpecs(t, "Version Suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

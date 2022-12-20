@@ -30,7 +30,7 @@ func TestMiddlewares(t *testing.T) {
 	RunSpecs(t, "Middlewares Suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

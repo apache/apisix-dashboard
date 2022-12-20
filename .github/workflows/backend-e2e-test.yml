@@ -82,7 +82,7 @@ jobs:
         working-directory: ./api/test/e2e
         run: |
           go mod download
-          ginkgo -r
+          ginkgo -r --flake-attempts=3
 
       - name: tmate debugger
         if: ${{ failure() }}

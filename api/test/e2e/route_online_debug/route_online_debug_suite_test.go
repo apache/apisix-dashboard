@@ -31,7 +31,7 @@ func TestRoute(t *testing.T) {
 	//ginkgo.RunSpecs(t, "route online debug suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

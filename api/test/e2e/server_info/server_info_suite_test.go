@@ -31,7 +31,7 @@ func TestServerInfo(t *testing.T) {
 	RunSpecs(t, "Server Info Suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

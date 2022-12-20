@@ -31,7 +31,7 @@ func TestGlobalRule(t *testing.T) {
 	RunSpecs(t, "Global Rule Suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

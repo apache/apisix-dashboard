@@ -30,7 +30,7 @@ func TestLabel(t *testing.T) {
 	RunSpecs(t, "Label Suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

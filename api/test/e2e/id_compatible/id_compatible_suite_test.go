@@ -31,7 +31,7 @@ func TestIdCompatible(t *testing.T) {
 	RunSpecs(t, "Id Compatible Suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

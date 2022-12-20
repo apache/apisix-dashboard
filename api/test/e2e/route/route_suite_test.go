@@ -31,7 +31,7 @@ func TestRoute(t *testing.T) {
 	RunSpecs(t, "Route Suite")
 }
 
-var _ = AfterSuite(func() {
+var _ = BeforeSuite(func() {
 	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })
