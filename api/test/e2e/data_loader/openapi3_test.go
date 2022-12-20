@@ -308,6 +308,7 @@ var _ = Describe("OpenAPI 3", func() {
 				Body:         string(_body),
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
+				Sleep:        base.SleepTime,
 			})
 		}),
 		Entry("Request API", func() {
