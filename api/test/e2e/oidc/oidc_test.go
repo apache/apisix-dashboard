@@ -28,61 +28,61 @@ import (
 
 	"github.com/Nerzal/gocloak/v11"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-var _ = ginkgo.Describe("Oidc-Login", func() {
+var _ = Describe("Oidc-Login", func() {
 
 	var (
 		OidcCookie []http.Cookie
 	)
 
-	ginkgo.Context("test apisix/admin/oidc/login", func() {
-		ginkgo.It("should return status-code 302", func() {
+	Context("test apisix/admin/oidc/login", func() {
+		It("should return status-code 302", func() {
 			statusCode, err := accessOidcLogin()
-			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
-			gomega.Expect(statusCode).To(gomega.Equal(http.StatusFound))
+			Expect(err).ShouldNot(HaveOccurred(), "do request")
+			Expect(statusCode).To(Equal(http.StatusFound))
 		})
 	})
 
-	ginkgo.Context("test apisix/admin/oidc/callback", func() {
-		ginkgo.It("should return status-code 200", func() {
+	Context("test apisix/admin/oidc/callback", func() {
+		It("should return status-code 200", func() {
 			statusCode, err := accessOidcCallback(&OidcCookie)
-			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
-			gomega.Expect(statusCode).To(gomega.Equal(http.StatusOK))
+			Expect(err).ShouldNot(HaveOccurred(), "do request")
+			Expect(statusCode).To(Equal(http.StatusOK))
 		})
 	})
 
-	ginkgo.Context("access apisix/admin/routes with cookie", func() {
-		ginkgo.It("should return status-code 200", func() {
+	Context("access apisix/admin/routes with cookie", func() {
+		It("should return status-code 200", func() {
 			statusCode, err := accessRoutesWithCookie(true, OidcCookie)
-			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
-			gomega.Expect(statusCode).To(gomega.Equal(http.StatusOK))
+			Expect(err).ShouldNot(HaveOccurred(), "do request")
+			Expect(statusCode).To(Equal(http.StatusOK))
 		})
 	})
 
-	ginkgo.Context("access apisix/admin/oidc/logout with cookie", func() {
-		ginkgo.It("should return status-code 200", func() {
+	Context("access apisix/admin/oidc/logout with cookie", func() {
+		It("should return status-code 200", func() {
 			statusCode, err := accessOidcLogoutWithCookie(true, OidcCookie)
-			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
-			gomega.Expect(statusCode).To(gomega.Equal(http.StatusOK))
+			Expect(err).ShouldNot(HaveOccurred(), "do request")
+			Expect(statusCode).To(Equal(http.StatusOK))
 		})
 	})
 
-	ginkgo.Context("access apisix/admin/routes with invalid cookie", func() {
-		ginkgo.It("should return status-code 401", func() {
+	Context("access apisix/admin/routes with invalid cookie", func() {
+		It("should return status-code 401", func() {
 			statusCode, err := accessRoutesWithCookie(false, OidcCookie)
-			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
-			gomega.Expect(statusCode).To(gomega.Equal(http.StatusUnauthorized))
+			Expect(err).ShouldNot(HaveOccurred(), "do request")
+			Expect(statusCode).To(Equal(http.StatusUnauthorized))
 		})
 	})
 
-	ginkgo.Context("access apisix/admin/oidc/logout with invalid cookie", func() {
-		ginkgo.It("should return status-code 403", func() {
+	Context("access apisix/admin/oidc/logout with invalid cookie", func() {
+		It("should return status-code 403", func() {
 			statusCode, err := accessOidcLogoutWithCookie(false, OidcCookie)
-			gomega.Expect(err).ShouldNot(gomega.HaveOccurred(), "do request")
-			gomega.Expect(statusCode).To(gomega.Equal(http.StatusForbidden))
+			Expect(err).ShouldNot(HaveOccurred(), "do request")
+			Expect(statusCode).To(Equal(http.StatusForbidden))
 		})
 	})
 })

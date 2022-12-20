@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package system_config
+package system_config_test
 
 import (
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/gomega"
 	"testing"
+
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 func TestSystemConfig(t *testing.T) {
-	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "system config suite")
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "system config suite")
 }

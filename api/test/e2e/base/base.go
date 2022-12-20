@@ -29,7 +29,7 @@ import (
 	"time"
 
 	"github.com/gavv/httpexpect/v2"
-	"github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
 )
@@ -70,35 +70,31 @@ func GetToken() string {
 }
 
 func getTestingHandle() httpexpect.LoggerReporter {
-	return ginkgo.GinkgoT()
+	return GinkgoT()
 }
 
 func ManagerApiExpect() *httpexpect.Expect {
-	t := getTestingHandle()
-	return httpexpect.New(t, ManagerAPIHost)
+	return httpexpect.New(GinkgoT(), ManagerAPIHost)
 }
 
 func APISIXExpect() *httpexpect.Expect {
-	t := getTestingHandle()
-	return httpexpect.New(t, APISIXHost)
+	return httpexpect.New(GinkgoT(), APISIXHost)
 }
 
 func APISIXAdminAPIExpect() *httpexpect.Expect {
-	t := getTestingHandle()
-	return httpexpect.New(t, APISIXAdminAPIHost)
+	return httpexpect.New(GinkgoT(), APISIXAdminAPIHost)
 }
 
 func APISIXStreamProxyExpect(port uint16, sni string) *httpexpect.Expect {
 	if port == 0 {
 		port = 10090
 	}
-	t := getTestingHandle()
 
 	if sni != "" {
 		addr := net.JoinHostPort(sni, strconv.Itoa(int(port)))
 		return httpexpect.WithConfig(httpexpect.Config{
 			BaseURL:  "https://" + addr,
-			Reporter: httpexpect.NewAssertReporter(t),
+			Reporter: httpexpect.NewAssertReporter(GinkgoT()),
 			Client: &http.Client{
 				Transport: &http.Transport{
 					TLSClientConfig: &tls.Config{
@@ -114,20 +110,18 @@ func APISIXStreamProxyExpect(port uint16, sni string) *httpexpect.Expect {
 			},
 		})
 	} else {
-		return httpexpect.New(t, "http://"+net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
+		return httpexpect.New(GinkgoT(), "http://"+net.JoinHostPort("127.0.0.1", strconv.Itoa(int(port))))
 	}
 }
 
 func PrometheusExporterExpect() *httpexpect.Expect {
-	t := getTestingHandle()
-	return httpexpect.New(t, PrometheusExporter)
+	return httpexpect.New(GinkgoT(), PrometheusExporter)
 }
 
 func APISIXHTTPSExpect() *httpexpect.Expect {
-	t := getTestingHandle()
 	e := httpexpect.WithConfig(httpexpect.Config{
 		BaseURL:  "https://www.test2.com:9443",
-		Reporter: httpexpect.NewAssertReporter(t),
+		Reporter: httpexpect.NewAssertReporter(GinkgoT()),
 		Client: &http.Client{
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
@@ -272,21 +266,19 @@ func RunTestCase(tc HttpTestCase) {
 }
 
 func ReadAPISIXErrorLog() string {
-	t := getTestingHandle()
 	cmd := exec.Command("pwd")
 	pwdByte, err := cmd.CombinedOutput()
 	pwd := string(pwdByte)
 	pwd = strings.Replace(pwd, "\n", "", 1)
 	pwd = pwd[:strings.Index(pwd, "/e2e")]
 	bytes, err := ioutil.ReadFile(pwd + "/docker/apisix_logs/error.log")
-	assert.Nil(t, err)
+	assert.Nil(GinkgoT(), err)
 	logContent := string(bytes)
 
 	return logContent
 }
 
 func CleanAPISIXErrorLog() {
-	t := getTestingHandle()
 	cmd := exec.Command("pwd")
 	pwdByte, err := cmd.CombinedOutput()
 	pwd := string(pwdByte)
@@ -298,13 +290,12 @@ func CleanAPISIXErrorLog() {
 	if err != nil {
 		fmt.Println("cmd error:", err.Error())
 	}
-	assert.Nil(t, err)
+	assert.Nil(GinkgoT(), err)
 }
 
 func GetResourceList(resource string) string {
-	t := getTestingHandle()
 	body, _, err := HttpGet(ManagerAPIHost+"/apisix/admin/"+resource, map[string]string{"Authorization": GetToken()})
-	assert.Nil(t, err)
+	assert.Nil(GinkgoT(), err)
 	return string(body)
 }
 
@@ -334,8 +325,8 @@ func GetJwtToken(userKey string) string {
 	time.Sleep(SleepTime)
 
 	body, status, err := HttpGet(APISIXHost+"/apisix/plugin/jwt/sign?key="+userKey, nil)
-	assert.Nil(ginkgo.GinkgoT(), err)
-	assert.Equal(ginkgo.GinkgoT(), http.StatusOK, status)
+	assert.Nil(GinkgoT(), err)
+	assert.Equal(GinkgoT(), http.StatusOK, status)
 	jwtToken = string(body)
 
 	return jwtToken

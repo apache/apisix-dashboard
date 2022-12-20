@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package healthz
+package healthz_test
 
 import (
 	"net/http"
 
-	"github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("Healthy check", func() {
-	ginkgo.It("ping manager-api", func() {
+var _ = Describe("Healthy check", func() {
+	It("ping manager-api", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,

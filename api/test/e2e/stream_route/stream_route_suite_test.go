@@ -20,18 +20,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 func TestStreamRoute(t *testing.T) {
-	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "stream route suite")
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "stream route suite")
 }
 
-var _ = ginkgo.AfterSuite(func() {
+var _ = AfterSuite(func() {
 	base.CleanResource("stream_routes")
 	base.CleanResource("upstreams")
 	base.CleanResource("ssl")

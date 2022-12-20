@@ -14,24 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ssl
+package ssl_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 func TestSSL(t *testing.T) {
-	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "ssl suite")
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "ssl suite")
 }
 
-var _ = ginkgo.AfterSuite(func() {
+var _ = AfterSuite(func() {
 	base.CleanResource("ssl")
 	time.Sleep(base.SleepTime)
 })

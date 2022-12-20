@@ -14,21 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+package trace_test
 
 import (
 	"net/http"
 	"time"
 
-	"github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("Route", func() {
-	ginkgo.Context("test route plugin skywalking", func() {
-		ginkgo.It("make sure the route is not created", func() {
+var _ = Describe("Route", func() {
+	Context("test route plugin skywalking", func() {
+		It("make sure the route is not created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -37,7 +37,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			})
 		})
-		ginkgo.It("create route", func() {
+		It("create route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -63,7 +63,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("trigger skywalking", func() {
+		It("trigger skywalking", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -73,10 +73,10 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("verify the log", func() {
+		It("verify the log", func() {
 			// sleep for process log
 			time.Sleep(4 * time.Second)
-			t := ginkgo.GinkgoT()
+			t := GinkgoT()
 
 			// verify by checking log
 			logContent := base.ReadAPISIXErrorLog()
@@ -85,7 +85,7 @@ var _ = ginkgo.Describe("Route", func() {
 			// clean log
 			base.CleanAPISIXErrorLog()
 		})
-		ginkgo.It("create route", func() {
+		It("create route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -111,7 +111,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("trigger skywalking", func() {
+		It("trigger skywalking", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -121,11 +121,11 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("verify the log", func() {
+		It("verify the log", func() {
 
 			// sleep for process log
 			time.Sleep(4 * time.Second)
-			t := ginkgo.GinkgoT()
+			t := GinkgoT()
 
 			// verify by checking log
 			logContent := base.ReadAPISIXErrorLog()
@@ -134,7 +134,7 @@ var _ = ginkgo.Describe("Route", func() {
 			// clean log
 			base.CleanAPISIXErrorLog()
 		})
-		ginkgo.It("delete route", func() {
+		It("delete route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -143,7 +143,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("make sure the route has been deleted", func() {
+		It("make sure the route has been deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,

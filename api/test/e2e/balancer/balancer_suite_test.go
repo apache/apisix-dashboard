@@ -14,22 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package balancer
+package balancer_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 func TestAuth(t *testing.T) {
-	ginkgo.RunSpecs(t, "balancer suite")
+	RunSpecs(t, "balancer suite")
 }
 
-var _ = ginkgo.AfterSuite(func() {
+var _ = AfterSuite(func() {
 	base.CleanResource("upstreams")
 	base.CleanResource("routes")
 	time.Sleep(base.SleepTime)

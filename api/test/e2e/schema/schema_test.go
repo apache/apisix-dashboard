@@ -14,21 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package schema
+package schema_test
 
 import (
 	"net/http"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 var _ = Describe("Schema Test", func() {
-	DescribeTable("test schema basic", func(testCase base.HttpTestCase) {
-		base.RunTestCase(testCase)
-	},
+	DescribeTable("test schema basic",
+		func(testCase base.HttpTestCase) {
+			base.RunTestCase(testCase)
+		},
 		Entry("get consumer schema of plugin", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,

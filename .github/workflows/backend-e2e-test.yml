@@ -22,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: setup go
         uses: actions/setup-go@v3
@@ -74,11 +76,17 @@ jobs:
           docker logs docker_managerapi_1
 
       - name: install ginkgo cli
-        run: go install github.com/onsi/ginkgo/ginkgo@v1.16.5
+        run: go install -mod=mod github.com/onsi/ginkgo/v2/ginkgo@latest
 
       - name: run test
         working-directory: ./api/test/e2e
-        run: ginkgo -r
+        run: |
+          go mod download
+          ginkgo -r
+
+      - name: tmate debugger
+        if: ${{ failure() }}
+        uses: ./.github/actions/tmate-action
 
       - name: stop docker compose
         working-directory: ./api/test/docker
