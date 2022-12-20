@@ -33,5 +33,5 @@ func TestRoute(t *testing.T) {
 
 var _ = BeforeSuite(func() {
 	base.CleanAllResource()
-	time.Sleep(base.SleepTime)
+	time.Sleep(5 * time.Second)
 })

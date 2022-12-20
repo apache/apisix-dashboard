@@ -142,7 +142,7 @@ func APISIXHTTPSExpect() *httpexpect.Expect {
 	return e
 }
 
-var SleepTime = 1 * time.Second
+var SleepTime = 300 * time.Millisecond
 
 type HttpTestCase struct {
 	Desc          string
