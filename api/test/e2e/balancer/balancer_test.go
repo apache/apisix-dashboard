@@ -14,25 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package balancer
+package balancer_test
 
 import (
 	"net/http"
 	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("Balancer", func() {
-	table.DescribeTable("test create upstream and route",
+var _ = Describe("Balancer", func() {
+	DescribeTable("test create upstream and route",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("create upstream (roundrobin with same weight)", base.HttpTestCase{
+		Entry("create upstream (roundrobin with same weight)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/1",
@@ -57,7 +56,7 @@ var _ = ginkgo.Describe("Balancer", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("create route using the upstream just created", base.HttpTestCase{
+		Entry("create route using the upstream just created", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
@@ -71,20 +70,20 @@ var _ = ginkgo.Describe("Balancer", func() {
 			Sleep:        base.SleepTime,
 		}),
 	)
-	ginkgo.It("verify balancer by access count(same weight)", func() {
+	It("verify balancer by access count(same weight)", func() {
 		time.Sleep(base.SleepTime)
 		// batch test /server_port api
 		res := base.BatchTestServerPort(18, nil, "")
-		assert.Equal(ginkgo.GinkgoT(), 6, res["1980"])
-		assert.Equal(ginkgo.GinkgoT(), 6, res["1981"])
-		assert.Equal(ginkgo.GinkgoT(), 6, res["1982"])
+		assert.Equal(GinkgoT(), 6, res["1980"])
+		assert.Equal(GinkgoT(), 6, res["1981"])
+		assert.Equal(GinkgoT(), 6, res["1982"])
 	})
 
-	table.DescribeTable("test update upstream",
+	DescribeTable("test update upstream",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("update upstream (roundrobin with different weight)", base.HttpTestCase{
+		Entry("update upstream (roundrobin with different weight)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/1",
@@ -110,20 +109,20 @@ var _ = ginkgo.Describe("Balancer", func() {
 			ExpectStatus: http.StatusOK,
 		}),
 	)
-	ginkgo.It("verify balancer by access count(different weight)", func() {
+	It("verify balancer by access count(different weight)", func() {
 		time.Sleep(base.SleepTime)
 		// batch test /server_port api
 		res := base.BatchTestServerPort(18, nil, "")
-		assert.Equal(ginkgo.GinkgoT(), 3, res["1980"])
-		assert.Equal(ginkgo.GinkgoT(), 6, res["1981"])
-		assert.Equal(ginkgo.GinkgoT(), 9, res["1982"])
+		assert.Equal(GinkgoT(), 3, res["1980"])
+		assert.Equal(GinkgoT(), 6, res["1981"])
+		assert.Equal(GinkgoT(), 9, res["1982"])
 	})
 
-	table.DescribeTable("update upstream",
+	DescribeTable("update upstream",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("update upstream (roundrobin with weight 1 and 0)", base.HttpTestCase{
+		Entry("update upstream (roundrobin with weight 1 and 0)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/1",
@@ -144,18 +143,18 @@ var _ = ginkgo.Describe("Balancer", func() {
 			ExpectStatus: http.StatusOK,
 		}),
 	)
-	ginkgo.It("verify balancer by access count(weight 1 and 0)", func() {
+	It("verify balancer by access count(weight 1 and 0)", func() {
 		time.Sleep(base.SleepTime)
 		// batch test /server_port api
 		res := base.BatchTestServerPort(18, nil, "")
-		assert.Equal(ginkgo.GinkgoT(), 18, res["1980"])
+		assert.Equal(GinkgoT(), 18, res["1980"])
 	})
 
-	table.DescribeTable("update upstream",
+	DescribeTable("update upstream",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("update upstream (roundrobin with weight only 1)", base.HttpTestCase{
+		Entry("update upstream (roundrobin with weight only 1)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/1",
@@ -171,15 +170,15 @@ var _ = ginkgo.Describe("Balancer", func() {
 			ExpectStatus: http.StatusOK,
 		}),
 	)
-	ginkgo.It("verify balancer by access count(weight only 1)", func() {
+	It("verify balancer by access count(weight only 1)", func() {
 		time.Sleep(base.SleepTime)
 		// batch test /server_port api
 		res := base.BatchTestServerPort(18, nil, "")
-		assert.Equal(ginkgo.GinkgoT(), 18, res["1980"])
+		assert.Equal(GinkgoT(), 18, res["1980"])
 	})
 
-	ginkgo.Context("test balancer delete", func() {
-		ginkgo.It("delete route", func() {
+	Context("test balancer delete", func() {
+		It("delete route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -188,7 +187,7 @@ var _ = ginkgo.Describe("Balancer", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("delete upstream", func() {
+		It("delete upstream", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -197,7 +196,7 @@ var _ = ginkgo.Describe("Balancer", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route just deleted", func() {
+		It("hit the route just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -208,5 +207,4 @@ var _ = ginkgo.Describe("Balancer", func() {
 			})
 		})
 	})
-
 })

@@ -14,25 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package service
+package service_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 func TestRoute(t *testing.T) {
-	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "service suite")
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Service Suite")
 }
 
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("services")
-	base.CleanResource("routes")
+var _ = BeforeSuite(func() {
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

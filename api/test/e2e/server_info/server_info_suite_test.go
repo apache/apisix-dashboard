@@ -14,21 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package server_info
+package server_info_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-func TestRoute(t *testing.T) {
-	ginkgo.RunSpecs(t, "server info suite")
+func TestServerInfo(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Server Info Suite")
 }
 
-var _ = ginkgo.AfterSuite(func() {
+var _ = BeforeSuite(func() {
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

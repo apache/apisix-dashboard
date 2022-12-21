@@ -14,31 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+package route_test
 
 import (
 	"net/http"
 	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("route with limit plugin", func() {
-	table.DescribeTable("test route with limit plugin",
+var _ = Describe("route with limit plugin", func() {
+	DescribeTable("test route with limit plugin",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("make sure the route is not created", base.HttpTestCase{
+		Entry("make sure the route is not created", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		}),
-		table.Entry("create route with limit plugin", base.HttpTestCase{
+		Entry("create route with limit plugin", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -65,7 +64,7 @@ var _ = ginkgo.Describe("route with limit plugin", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
 		}),
-		table.Entry("verify route that should not be limited", base.HttpTestCase{
+		Entry("verify route that should not be limited", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -73,21 +72,21 @@ var _ = ginkgo.Describe("route with limit plugin", func() {
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("verify route that should not be limited 2", base.HttpTestCase{
+		Entry("verify route that should not be limited 2", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
-		table.Entry("verify route that should be limited", base.HttpTestCase{
+		Entry("verify route that should be limited", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusServiceUnavailable,
 			ExpectBody:   "503 Service Temporarily Unavailable",
 		}),
-		table.Entry("verify route that should not be limited since time window pass", base.HttpTestCase{
+		Entry("verify route that should not be limited since time window pass", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -95,14 +94,14 @@ var _ = ginkgo.Describe("route with limit plugin", func() {
 			ExpectBody:   "hello world",
 			Sleep:        3 * time.Second,
 		}),
-		table.Entry("delete route", base.HttpTestCase{
+		Entry("delete route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("hit the route just deleted", base.HttpTestCase{
+		Entry("hit the route just deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -113,19 +112,19 @@ var _ = ginkgo.Describe("route with limit plugin", func() {
 	)
 })
 
-var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
-	table.DescribeTable("test route with limit plugin by consumer",
+var _ = Describe("route with limit plugin by consumer", func() {
+	DescribeTable("test route with limit plugin by consumer",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("make sure the route is not created", base.HttpTestCase{
+		Entry("make sure the route is not created", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		}),
-		table.Entry("create route with limit plugin", base.HttpTestCase{
+		Entry("create route with limit plugin", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -153,14 +152,14 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
 		}),
-		table.Entry("make sure the consumer is not created", base.HttpTestCase{
+		Entry("make sure the consumer is not created", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
 		}),
-		table.Entry("create consumer", base.HttpTestCase{
+		Entry("create consumer", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/consumers",
 			Method: http.MethodPut,
@@ -175,7 +174,7 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("create consumer 2", base.HttpTestCase{
+		Entry("create consumer 2", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/consumers",
 			Method: http.MethodPut,
@@ -190,7 +189,7 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("verify route that should not be limited", base.HttpTestCase{
+		Entry("verify route that should not be limited", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -199,7 +198,7 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("verify route that should not be limited 2", base.HttpTestCase{
+		Entry("verify route that should not be limited 2", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -207,7 +206,7 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
-		table.Entry("verify route that should be limited", base.HttpTestCase{
+		Entry("verify route that should be limited", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -215,7 +214,7 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			ExpectStatus: http.StatusServiceUnavailable,
 			ExpectBody:   "503 Service Temporarily Unavailable",
 		}),
-		table.Entry("verify route that should not be limited (other consumer)", base.HttpTestCase{
+		Entry("verify route that should not be limited (other consumer)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -223,7 +222,7 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
-		table.Entry("verify route that should not be limited since time window pass", base.HttpTestCase{
+		Entry("verify route that should not be limited since time window pass", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -232,21 +231,21 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			ExpectBody:   "hello world",
 			Sleep:        2 * time.Second,
 		}),
-		table.Entry("delete consumer pony", base.HttpTestCase{
+		Entry("delete consumer pony", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/pony",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("delete consumer jack", base.HttpTestCase{
+		Entry("delete consumer jack", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("make sure pony has been deleted", base.HttpTestCase{
+		Entry("make sure pony has been deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -255,7 +254,7 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			ExpectBody:   `{"message":"Missing related consumer"}`,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("make sure jack has been deleted", base.HttpTestCase{
+		Entry("make sure jack has been deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -264,14 +263,14 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 			ExpectBody:   `{"message":"Missing related consumer"}`,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("delete route", base.HttpTestCase{
+		Entry("delete route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("hit the route just deleted", base.HttpTestCase{
+		Entry("hit the route just deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -282,19 +281,19 @@ var _ = ginkgo.Describe("route with limit plugin by consumer", func() {
 	)
 })
 
-var _ = ginkgo.Describe("route with limit count and disable", func() {
-	table.DescribeTable("test route with limit count and disable",
+var _ = Describe("route with limit count and disable", func() {
+	DescribeTable("test route with limit count and disable",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("make sure the route is not created", base.HttpTestCase{
+		Entry("make sure the route is not created", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		}),
-		table.Entry("create route with limit plugin", base.HttpTestCase{
+		Entry("create route with limit plugin", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -322,7 +321,7 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
 		}),
-		table.Entry("verify route that should not be limited", base.HttpTestCase{
+		Entry("verify route that should not be limited", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -330,21 +329,21 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("verify route that should not be limited 2", base.HttpTestCase{
+		Entry("verify route that should not be limited 2", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
-		table.Entry("verify route that should be limited", base.HttpTestCase{
+		Entry("verify route that should be limited", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusServiceUnavailable,
 			ExpectBody:   "503 Service Temporarily Unavailable",
 		}),
-		table.Entry("verify route that should not be limited since time window pass", base.HttpTestCase{
+		Entry("verify route that should not be limited since time window pass", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -352,7 +351,7 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			ExpectBody:   "hello world",
 			Sleep:        2 * time.Second,
 		}),
-		table.Entry("update route to disable plugin limit-count", base.HttpTestCase{
+		Entry("update route to disable plugin limit-count", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -362,8 +361,8 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			   "plugins": {
 				   "limit-count": {
 					   "count": 1,
-					   "time_window": 2,
-					   "rejected_code": 503,
+					   "time_window": 30,
+					   "rejected_code": 429,
 					   "key": "remote_addr",
 					   "disable": true,
 					   "policy": "local"
@@ -380,7 +379,7 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
 		}),
-		table.Entry("verify route that should not be limited", base.HttpTestCase{
+		Entry("verify route that should not be limited", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -388,28 +387,26 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("verify route that should not be limited (exceed config count)", base.HttpTestCase{
+		Entry("verify route that should be limited (exceed config count)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
+			ExpectStatus: http.StatusTooManyRequests,
 		}),
-		table.Entry("verify route that should not be limited (exceed config count again)", base.HttpTestCase{
+		Entry("verify route that should be limited (exceed config count again)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
+			ExpectStatus: http.StatusTooManyRequests,
 		}),
-		table.Entry("delete route", base.HttpTestCase{
+		Entry("delete route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("hit the route just deleted", base.HttpTestCase{
+		Entry("hit the route just deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",

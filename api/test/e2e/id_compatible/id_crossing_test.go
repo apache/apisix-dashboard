@@ -19,7 +19,7 @@ package id_compatible_test
 import (
 	"net/http"
 
-	. "github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )

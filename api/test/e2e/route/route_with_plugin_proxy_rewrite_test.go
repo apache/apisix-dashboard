@@ -14,34 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+package route_test
 
 import (
 	"net/http"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
-	table.DescribeTable("test route with plugin proxy rewrite",
-		func(tc base.HttpTestCase) {
-			base.RunTestCase(tc)
-		},
-		table.Entry("make sure the route is not created", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-		}),
-		table.Entry("create route that will rewrite host and uri", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
+var _ = DescribeTable("route with plugin proxy rewrite",
+	func(tc base.HttpTestCase) {
+		base.RunTestCase(tc)
+	},
+	Entry("make sure the route is not created", base.HttpTestCase{
+		Object:       base.APISIXExpect(),
+		Method:       http.MethodGet,
+		Path:         "/hello",
+		ExpectStatus: http.StatusNotFound,
+		ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+	}),
+	Entry("create route that will rewrite host and uri", base.HttpTestCase{
+		Object: base.ManagerApiExpect(),
+		Method: http.MethodPut,
+		Path:   "/apisix/admin/routes/r1",
+		Body: `{
 				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
@@ -57,22 +55,22 @@ var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
 					}
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("verify route that rewrite host and uri", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "uri: /plugin_proxy_rewrite\nhost: test.com",
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("update route that will rewrite headers", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+	}),
+	Entry("verify route that rewrite host and uri", base.HttpTestCase{
+		Object:       base.APISIXExpect(),
+		Method:       http.MethodGet,
+		Path:         "/hello",
+		ExpectStatus: http.StatusOK,
+		ExpectBody:   "uri: /plugin_proxy_rewrite\nhost: test.com",
+		Sleep:        base.SleepTime,
+	}),
+	Entry("update route that will rewrite headers", base.HttpTestCase{
+		Object: base.ManagerApiExpect(),
+		Method: http.MethodPut,
+		Path:   "/apisix/admin/routes/r1",
+		Body: `{
 				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
@@ -90,23 +88,23 @@ var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
 					}
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("verify route that rewrite headers", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"X-Api-Version": "v1"},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "x-api-version: v2",
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("update route using regex_uri", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+	}),
+	Entry("verify route that rewrite headers", base.HttpTestCase{
+		Object:       base.APISIXExpect(),
+		Method:       http.MethodGet,
+		Path:         "/hello",
+		Headers:      map[string]string{"X-Api-Version": "v1"},
+		ExpectStatus: http.StatusOK,
+		ExpectBody:   "x-api-version: v2",
+		Sleep:        base.SleepTime,
+	}),
+	Entry("update route using regex_uri", base.HttpTestCase{
+		Object: base.ManagerApiExpect(),
+		Method: http.MethodPut,
+		Path:   "/apisix/admin/routes/r1",
+		Body: `{
 				"name": "route1",
 				"uri": "/test/*",
 				"plugins": {
@@ -121,22 +119,22 @@ var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
 					}
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("verify route that using regex_uri", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         `/test/plugin/proxy/rewrite`,
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "uri: /plugin_proxy_rewrite",
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("update route that will rewrite args", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+	}),
+	Entry("verify route that using regex_uri", base.HttpTestCase{
+		Object:       base.APISIXExpect(),
+		Method:       http.MethodGet,
+		Path:         `/test/plugin/proxy/rewrite`,
+		ExpectStatus: http.StatusOK,
+		ExpectBody:   "uri: /plugin_proxy_rewrite",
+		Sleep:        base.SleepTime,
+	}),
+	Entry("update route that will rewrite args", base.HttpTestCase{
+		Object: base.ManagerApiExpect(),
+		Method: http.MethodPut,
+		Path:   "/apisix/admin/routes/r1",
+		Body: `{
 				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
@@ -151,33 +149,32 @@ var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
 					}
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("verify route that rewrite args", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         `/hello`,
-			Query:        "name=api7",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "uri: /plugin_proxy_rewrite_args\nname: api6",
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("delete route", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("make sure the route deleted", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-			Sleep:        base.SleepTime,
-		}),
-	)
-})
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+	}),
+	Entry("verify route that rewrite args", base.HttpTestCase{
+		Object:       base.APISIXExpect(),
+		Method:       http.MethodGet,
+		Path:         `/hello`,
+		Query:        "name=api7",
+		ExpectStatus: http.StatusOK,
+		ExpectBody:   "uri: /plugin_proxy_rewrite_args\nname: api6",
+		Sleep:        base.SleepTime,
+	}),
+	Entry("delete route", base.HttpTestCase{
+		Object:       base.ManagerApiExpect(),
+		Method:       http.MethodDelete,
+		Path:         "/apisix/admin/routes/r1",
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+		Sleep:        base.SleepTime,
+	}),
+	Entry("make sure the route deleted", base.HttpTestCase{
+		Object:       base.APISIXExpect(),
+		Method:       http.MethodGet,
+		Path:         "/hello",
+		ExpectStatus: http.StatusNotFound,
+		ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		Sleep:        base.SleepTime,
+	}),
+)

@@ -14,31 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+package route_test
 
 import (
 	"io/ioutil"
 	"net/http"
 	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/extensions/table"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	"github.com/tidwall/gjson"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("route with management fields", func() {
+var _ = Describe("route with management fields", func() {
 	var (
 		createtime, updatetime gjson.Result
 	)
 
-	table.DescribeTable("test for route with name description",
+	DescribeTable("test for route with name description",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("config route with name and desc (r1)", base.HttpTestCase{
+		Entry("config route with name and desc (r1)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
@@ -59,7 +58,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				`"upstream":{"nodes":{"` + base.UpstreamIp + `:1980":1},"type":"roundrobin"}`},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("check route exists by name", base.HttpTestCase{
+		Entry("check route exists by name", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/notexist/routes",
@@ -69,7 +68,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			ExpectBody:   "Route name is reduplicate",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("check route exists by name (exclude it self)", base.HttpTestCase{
+		Entry("check route exists by name (exclude it self)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/notexist/routes",
@@ -77,7 +76,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("access the route's uri (r1)", base.HttpTestCase{
+		Entry("access the route's uri (r1)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -85,7 +84,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
-		table.Entry("verify the route's content (r1)", base.HttpTestCase{
+		Entry("verify the route's content (r1)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
@@ -95,33 +94,33 @@ var _ = ginkgo.Describe("route with management fields", func() {
 		}),
 	)
 
-	ginkgo.It("get the route information", func() {
+	It("get the route information", func() {
 		time.Sleep(time.Duration(100) * time.Millisecond)
 		basepath := base.ManagerAPIHost + "/apisix/admin/routes"
 		request, _ := http.NewRequest("GET", basepath+"/r1", nil)
 		request.Header.Add("Authorization", base.GetToken())
 		resp, err := http.DefaultClient.Do(request)
-		gomega.Expect(err).Should(gomega.BeNil())
+		Expect(err).Should(BeNil())
 		defer resp.Body.Close()
 		respBody, _ := ioutil.ReadAll(resp.Body)
 		createtime = gjson.Get(string(respBody), "data.create_time")
 		updatetime = gjson.Get(string(respBody), "data.update_time")
-		gomega.Expect(createtime.Int()).To(gomega.SatisfyAll(
-			gomega.BeNumerically(">=", time.Now().Unix()-1),
-			gomega.BeNumerically("<=", time.Now().Unix()+1),
+		Expect(createtime.Int()).To(SatisfyAll(
+			BeNumerically(">=", time.Now().Unix()-1),
+			BeNumerically("<=", time.Now().Unix()+1),
 		))
 
-		gomega.Expect(updatetime.Int()).To(gomega.SatisfyAll(
-			gomega.BeNumerically(">=", time.Now().Unix()-1),
-			gomega.BeNumerically("<=", time.Now().Unix()+1),
+		Expect(updatetime.Int()).To(SatisfyAll(
+			BeNumerically(">=", time.Now().Unix()-1),
+			BeNumerically("<=", time.Now().Unix()+1),
 		))
 	})
 
-	table.DescribeTable("test for route with name description",
+	DescribeTable("test for route with name description",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("update the route (r1)", base.HttpTestCase{
+		Entry("update the route (r1)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
@@ -143,7 +142,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				`"upstream":{"nodes":{"` + base.UpstreamIp + `:1980":1},"type":"roundrobin"}`},
 			Sleep: time.Duration(2) * time.Second,
 		}),
-		table.Entry("access the route's uri (r1)", base.HttpTestCase{
+		Entry("access the route's uri (r1)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -154,7 +153,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 		}),
 	)
 
-	ginkgo.It("get the updated route information", func() {
+	It("get the updated route information", func() {
 		time.Sleep(time.Duration(100) * time.Millisecond)
 		basepath := base.ManagerAPIHost + "/apisix/admin/routes"
 
@@ -165,13 +164,13 @@ var _ = ginkgo.Describe("route with management fields", func() {
 		createtime2 := gjson.Get(string(respBody), "data.create_time")
 		updatetime2 := gjson.Get(string(respBody), "data.update_time")
 		//verify the route and compare result
-		gomega.Expect(gjson.Get(string(respBody), "data.name").String()).To(gomega.Equal("new jack"))
-		gomega.Expect(gjson.Get(string(respBody), "data.desc").String()).To(gomega.Equal("new desc"))
-		gomega.Expect(createtime2.String()).To(gomega.Equal(createtime.String()))
-		gomega.Expect(updatetime2.String()).NotTo(gomega.Equal(updatetime.String()))
+		Expect(gjson.Get(string(respBody), "data.name").String()).To(Equal("new jack"))
+		Expect(gjson.Get(string(respBody), "data.desc").String()).To(Equal("new desc"))
+		Expect(createtime2.String()).To(Equal(createtime.String()))
+		Expect(updatetime2.String()).NotTo(Equal(updatetime.String()))
 	})
 
-	ginkgo.It("delete the route (r1)", func() {
+	It("delete the route (r1)", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
@@ -181,7 +180,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 		})
 	})
 
-	ginkgo.It("verify delete route (r1) success", func() {
+	It("verify delete route (r1) success", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
@@ -194,12 +193,12 @@ var _ = ginkgo.Describe("route with management fields", func() {
 	})
 })
 
-var _ = ginkgo.Describe("route with management fields", func() {
-	table.DescribeTable("test route with label",
+var _ = Describe("route with management fields", func() {
+	DescribeTable("test route with label",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("config route with labels (r1)", base.HttpTestCase{
+		Entry("config route with labels (r1)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
@@ -224,7 +223,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				`"labels":{"build":"16","env":"production","version":"v2"}`},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("access the route's uri (r1)", base.HttpTestCase{
+		Entry("access the route's uri (r1)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -233,23 +232,23 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("verify the route's detail (r1)", base.HttpTestCase{
+		Entry("verify the route's detail (r1)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"",
+			ExpectBody:   `"labels":{"build":"16","env":"production","version":"v2"`,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("delete the route (r1)", base.HttpTestCase{
+		Entry("delete the route (r1)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("access the route after delete it", base.HttpTestCase{
+		Entry("access the route after delete it", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -261,12 +260,12 @@ var _ = ginkgo.Describe("route with management fields", func() {
 	)
 })
 
-var _ = ginkgo.Describe("route with management fields", func() {
-	table.DescribeTable("test route search with label",
+var _ = Describe("route with management fields", func() {
+	DescribeTable("test route search with label",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("config route with labels (r1)", base.HttpTestCase{
+		Entry("config route with labels (r1)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
@@ -291,7 +290,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				`"labels":{"build":"16","env":"production","version":"v2"}`},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("config route with labels (r2)", base.HttpTestCase{
+		Entry("config route with labels (r2)", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/routes/r2",
 			Method: http.MethodPut,
@@ -318,7 +317,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("access the route's uri (r1)", base.HttpTestCase{
+		Entry("access the route's uri (r1)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -327,70 +326,70 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("verify the route's detail (r1)", base.HttpTestCase{
+		Entry("verify the route's detail (r1)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"",
+			ExpectBody:   `"labels":{"build":"16","env":"production","version":"v2"`,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("search the route by label", base.HttpTestCase{
+		Entry("search the route by label", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/routes",
 			Query:        "label=build:16",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"",
+			ExpectBody:   `"labels":{"build":"16","env":"production","version":"v2"`,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("search the route by label (only key)", base.HttpTestCase{
+		Entry("search the route by label (only key)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/routes",
 			Query:        "label=extra",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"labels\":{\"build\":\"17\",\"env\":\"dev\",\"extra\":\"test\",\"version\":\"v2\"",
+			ExpectBody:   `"labels":{"build":"17","env":"dev","extra":"test","version":"v2"`,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("search the route by label (combination)", base.HttpTestCase{
+		Entry("search the route by label (combination)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/routes",
 			Query:        "label=extra,build:16",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"total_size\":2",
+			ExpectBody:   `"total_size":2`,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("search the route by label (combination)", base.HttpTestCase{
+		Entry("search the route by label (combination)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/routes",
 			Query:        "label=build:16,build:17",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"total_size\":2",
+			ExpectBody:   `"total_size":2`,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("delete the route (r1)", base.HttpTestCase{
+		Entry("delete the route (r1)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("delete the route (r2)", base.HttpTestCase{
+		Entry("delete the route (r2)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("access the route after delete it", base.HttpTestCase{
+		Entry("access the route after delete it", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -402,12 +401,12 @@ var _ = ginkgo.Describe("route with management fields", func() {
 	)
 })
 
-var _ = ginkgo.Describe("route with management fields", func() {
-	table.DescribeTable("test route search with create time",
+var _ = Describe("route with management fields", func() {
+	DescribeTable("test route search with create time",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("create route with create_time", base.HttpTestCase{
+		Entry("create route with create_time", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
@@ -426,7 +425,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			ExpectBody:   `"message":"we don't accept create_time from client"`,
 			ExpectStatus: http.StatusBadRequest,
 		}),
-		table.Entry("create route with update_time", base.HttpTestCase{
+		Entry("create route with update_time", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
@@ -445,7 +444,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			ExpectBody:   `"message":"we don't accept update_time from client"`,
 			ExpectStatus: http.StatusBadRequest,
 		}),
-		table.Entry("create route with create_time and update_time", base.HttpTestCase{
+		Entry("create route with create_time and update_time", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
@@ -465,7 +464,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			ExpectBody:   `"message":"we don't accept create_time from client"`,
 			ExpectStatus: http.StatusBadRequest,
 		}),
-		table.Entry("make sure the route not created", base.HttpTestCase{
+		Entry("make sure the route not created", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",

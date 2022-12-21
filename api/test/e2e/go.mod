@@ -12,4 +12,9 @@ require (
 	github.com/stretchr/testify v1.8.1
 	github.com/tidwall/gjson v1.14.4
 	moul.io/http2curl v1.0.1-0.20190925090545-5cd742060b0e // indirect
+	github.com/onsi/ginkgo/v2 v2.6.1 // indirect
+	github.com/onsi/gomega v1.24.2
+	github.com/savsgio/gotils v0.0.0-20210617111740-97865ed5a873
+	github.com/stretchr/testify v1.7.1
+	github.com/tidwall/gjson v1.11.0
 )

@@ -19,19 +19,17 @@ package auth_test
 import (
 	"net/http"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("Authentication", func() {
-
-	table.DescribeTable("test auth module",
+var _ = Describe("Authentication", func() {
+	DescribeTable("test auth module",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("Access with valid authentication token", base.HttpTestCase{
+		Entry("Access with valid authentication token", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
@@ -39,7 +37,7 @@ var _ = ginkgo.Describe("Authentication", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
 		}),
-		table.Entry("Access with malformed authentication token", base.HttpTestCase{
+		Entry("Access with malformed authentication token", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
@@ -47,7 +45,7 @@ var _ = ginkgo.Describe("Authentication", func() {
 			ExpectStatus: http.StatusUnauthorized,
 			ExpectBody:   `"message":"request unauthorized"`,
 		}),
-		table.Entry("Access without authentication token", base.HttpTestCase{
+		Entry("Access without authentication token", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
