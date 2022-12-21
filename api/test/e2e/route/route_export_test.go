@@ -303,7 +303,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/export/routes/r2",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version\":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "}}",
 			})
 		})
 		It("export route and route2", func() {
@@ -313,7 +313,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/export/routes/r1,r2",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title\":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "," + exportStrR1 + "}}",
 			})
 		})
 		It("use the exportall interface to export all routes", func() {
@@ -323,7 +323,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/export/routes",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "," + exportStrR1 + "}}",
 			})
 		})
 		It("delete the route just created", func() {
@@ -342,7 +342,7 @@ var _ = Describe("Route", func() {
 				Path:         "/hello_",
 				Headers:      map[string]string{"Host": "bar.com"},
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -362,7 +362,7 @@ var _ = Describe("Route", func() {
 				Path:         "/hello2",
 				Headers:      map[string]string{"Host": "bar.com"},
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -734,7 +734,7 @@ var _ = Describe("Route", func() {
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			})
 		})
 		It("delete the service2", func() {
@@ -934,7 +934,7 @@ var _ = Describe("Route", func() {
 				Object:     base.APISIXExpect(),
 				Method:     http.MethodGet,
 				Path:       "/hello5",
-				ExpectBody: "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody: `{"error_msg":"404 Route Not Found"}`,
 				Sleep:      base.SleepTime,
 			})
 		})
@@ -1056,7 +1056,7 @@ var _ = Describe("Route", func() {
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -1239,7 +1239,7 @@ var _ = Describe("Route", func() {
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -1417,7 +1417,7 @@ var _ = Describe("Route", func() {
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -1662,7 +1662,7 @@ var _ = Describe("Route", func() {
 					}
 				}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
-				ExpectBody:   "\"code\":0",
+				ExpectBody:   `"code":0`,
 				ExpectStatus: http.StatusOK,
 				Sleep:        base.SleepTime,
 			})
@@ -1674,7 +1674,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/consumers/consumer_1",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "\"username\":\"consumer_1\"",
+				ExpectBody:   `"username":"consumer_1"`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -1740,7 +1740,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/consumers/consumer_1",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "\"code\":0",
+				ExpectBody:   `"code":0`,
 			})
 		})
 		It("after delete consumer verify it again", func() {
@@ -2046,7 +2046,7 @@ var _ = Describe("Route", func() {
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -2325,7 +2325,7 @@ var _ = Describe("Route", func() {
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -2509,7 +2509,7 @@ var _ = Describe("Route", func() {
 				Method:     http.MethodGet,
 				Path:       "/hello",
 				Headers:    map[string]string{"Authorization": base.GetToken()},
-				ExpectBody: "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody: `{"error_msg":"404 Route Not Found"}`,
 				Sleep:      base.SleepTime,
 			})
 		})
@@ -2528,7 +2528,7 @@ var _ = Describe("Route", func() {
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
