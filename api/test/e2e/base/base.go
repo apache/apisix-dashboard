@@ -39,6 +39,7 @@ var (
 
 	UpstreamIp             = "upstream"
 	UpstreamGrpcIp         = "upstream_grpc"
+	UpstreamHTTPBinIp      = "upstream_httpbin"
 	APISIXHost             = "http://127.0.0.1:9080"
 	APISIXAdminAPIHost     = "http://127.0.0.1:9180"
 	APISIXInternalUrl      = "http://apisix:9080"
