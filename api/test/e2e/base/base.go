@@ -85,11 +85,6 @@ func APISIXAdminAPIExpect() *httpexpect.Expect {
 	return httpexpect.New(GinkgoT(), APISIXAdminAPIHost)
 }
 
-func APISIXAdminAPIExpect() *httpexpect.Expect {
-	t := getTestingHandle()
-	return httpexpect.New(t, APISIXAdminAPIHost)
-}
-
 func APISIXStreamProxyExpect(port uint16, sni string) *httpexpect.Expect {
 	if port == 0 {
 		port = 10090
