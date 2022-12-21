@@ -116,17 +116,6 @@ services:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.40
 
-  skywalking:
-    image: apache/skywalking-oap-server:8.3.0-es6
-    restart: always
-    ports:
-      - '1234:1234/tcp'
-      - '11800:11800/tcp'
-      - '12800:12800/tcp'
-    networks:
-      apisix_dashboard_e2e:
-        ipv4_address: 172.16.238.50
-
   keycloak:
     image: jboss/keycloak:9.0.2
     environment:
