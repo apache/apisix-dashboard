@@ -84,10 +84,6 @@ jobs:
           go mod download
           ginkgo -r --flake-attempts=3 -v
 
-      - name: tmate debugger
-        if: ${{ failure() }}
-        uses: ./.github/actions/tmate-action
-
       - name: stop docker compose
         working-directory: ./api/test/docker
         run: |
