@@ -14,34 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+package route_test
 
 import (
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
-var _ = ginkgo.Describe("Route", func() {
-	ginkgo.Context("test route export data empty", func() {
-		ginkgo.It("Export route when data is empty", func() {
+var _ = Describe("Route", func() {
+	Context("test route export data empty", func() {
+		It("Export route when data is empty", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
 				Path:         "/apisix/admin/export/routes",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"code\":10000,\"message\":\"Route data is empty, cannot be exported\",\"data\":null",
+				ExpectBody:   `{"code":10000,"message":"Route data is empty, cannot be exported","data":null`,
 			})
 		})
 	})
 
-	ginkgo.Context("test route export", func() {
+	Context("test route export", func() {
 		// 1.Export data as the route of URIs Hosts
 		exportStrR1 := `
 			"/hello_": {
@@ -117,17 +117,17 @@ var _ = ginkgo.Describe("Route", func() {
 				}
 			}`
 		exportStrR1 = replaceStr(exportStrR1)
-		ginkgo.It("hit route that not exist", func() {
+		It("hit route that not exist", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello_",
 				Headers:      map[string]string{"Host": "foo.com"},
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			})
 		})
-		ginkgo.It("create route with uris and hosts to test whether the uris parsing is correct", func() {
+		It("create route with uris and hosts to test whether the uris parsing is correct", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -164,14 +164,14 @@ var _ = ginkgo.Describe("Route", func() {
 			})
 		})
 
-		ginkgo.It("export route", func() {
+		It("export route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
 				Path:         "/apisix/admin/export/routes/r1",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR1 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR1 + "}}",
 			})
 		})
 		// 2.Export data as the route of URI host
@@ -250,17 +250,17 @@ var _ = ginkgo.Describe("Route", func() {
 			}`
 		exportStrR2 = replaceStr(exportStrR2)
 
-		ginkgo.It("hit route2 that not exist", func() {
+		It("hit route2 that not exist", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello2",
 				Headers:      map[string]string{"Host": "bar.com"},
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			})
 		})
-		ginkgo.It("create route2 with uri and host to test whether the uri parsing is correct", func() {
+		It("create route2 with uri and host to test whether the uri parsing is correct", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -296,37 +296,37 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("export route2", func() {
+		It("export route2", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
 				Path:         "/apisix/admin/export/routes/r2",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "}}",
 			})
 		})
-		ginkgo.It("export route and route2", func() {
+		It("export route and route2", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
 				Path:         "/apisix/admin/export/routes/r1,r2",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "," + exportStrR1 + "}}",
 			})
 		})
-		ginkgo.It("use the exportall interface to export all routes", func() {
+		It("use the exportall interface to export all routes", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
 				Path:         "/apisix/admin/export/routes",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "," + exportStrR1 + "}}",
 			})
 		})
-		ginkgo.It("delete the route just created", func() {
+		It("delete the route just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -335,18 +335,18 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route just deleted", func() {
+		It("hit the route just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello_",
 				Headers:      map[string]string{"Host": "bar.com"},
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the route2 just created", func() {
+		It("delete the route2 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -355,14 +355,14 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route2 just deleted", func() {
+		It("hit the route2 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello2",
 				Headers:      map[string]string{"Host": "bar.com"},
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
@@ -444,7 +444,7 @@ var _ = ginkgo.Describe("Route", func() {
 			}`
 		exportStrR3 = replaceStr(exportStrR3)
 
-		ginkgo.It("create service with all options", func() {
+		It("create service with all options", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:  base.ManagerApiExpect(),
 				Method:  http.MethodPut,
@@ -482,7 +482,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("get the service s1", func() {
+		It("get the service s1", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:     base.ManagerApiExpect(),
 				Method:     http.MethodGet,
@@ -492,7 +492,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody: serviceStrS1,
 			})
 		})
-		ginkgo.It("create route3 using the service id just created", func() {
+		It("create route3 using the service id just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -508,7 +508,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:      base.SleepTime,
 			})
 		})
-		ginkgo.It("export route3", func() {
+		It("export route3", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:     base.ManagerApiExpect(),
 				Method:     http.MethodGet,
@@ -518,7 +518,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody: exportStrR3,
 			})
 		})
-		ginkgo.It("delete the route3 just created", func() {
+		It("delete the route3 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:     base.ManagerApiExpect(),
 				Method:     http.MethodDelete,
@@ -527,7 +527,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectCode: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route3 just deleted", func() {
+		It("hit the route3 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -536,7 +536,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the service1", func() {
+		It("delete the service1", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -631,7 +631,7 @@ var _ = ginkgo.Describe("Route", func() {
 			}`
 		exportStrR4 = replaceStr(exportStrR4)
 
-		ginkgo.It("create service with all options", func() {
+		It("create service with all options", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:  base.ManagerApiExpect(),
 				Method:  http.MethodPut,
@@ -669,7 +669,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("get the service s2", func() {
+		It("get the service s2", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -679,7 +679,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   serviceStrS2,
 			})
 		})
-		ginkgo.It("Create Route4 and test the priority merging function of upstream, label and plugin when both service and route are included", func() {
+		It("Create Route4 and test the priority merging function of upstream, label and plugin when both service and route are included", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -709,7 +709,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route4", func() {
+		It("export route4", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -719,7 +719,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrR4,
 			})
 		})
-		ginkgo.It("delete the route4 just created", func() {
+		It("delete the route4 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -728,16 +728,16 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route4 just deleted", func() {
+		It("hit the route4 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			})
 		})
-		ginkgo.It("delete the service2", func() {
+		It("delete the service2", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -822,7 +822,7 @@ var _ = ginkgo.Describe("Route", func() {
 				}
 			}`
 		exportStrR5 = replaceStr(exportStrR5)
-		ginkgo.It("create upstream", func() {
+		It("create upstream", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:  base.ManagerApiExpect(),
 				Method:  http.MethodPut,
@@ -841,7 +841,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("create service with upstream id", func() {
+		It("create service with upstream id", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:  base.ManagerApiExpect(),
 				Method:  http.MethodPut,
@@ -870,7 +870,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("get the service s3", func() {
+		It("get the service s3", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -880,7 +880,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   serviceStrS3,
 			})
 		})
-		ginkgo.It("Create a route5 with the id of the service3 created with upstream id", func() {
+		It("Create a route5 with the id of the service3 created with upstream id", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -910,7 +910,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route5", func() {
+		It("export route5", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -920,7 +920,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrR5,
 			})
 		})
-		ginkgo.It("delete the route5 just created", func() {
+		It("delete the route5 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -929,16 +929,16 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route5 just deleted", func() {
+		It("hit the route5 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:     base.APISIXExpect(),
 				Method:     http.MethodGet,
 				Path:       "/hello5",
-				ExpectBody: "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody: `{"error_msg":"404 Route Not Found"}`,
 				Sleep:      base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the service3", func() {
+		It("delete the service3", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -948,7 +948,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("remove upstream", func() {
+		It("remove upstream", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -990,7 +990,7 @@ var _ = ginkgo.Describe("Route", func() {
 				`
 		exportStrR8 = replaceStr(exportStrR8)
 
-		ginkgo.It("create upstream3", func() {
+		It("create upstream3", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1009,7 +1009,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("Create a route8 using upstream id", func() {
+		It("Create a route8 using upstream id", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1031,7 +1031,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route8", func() {
+		It("export route8", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1041,7 +1041,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrR8,
 			})
 		})
-		ginkgo.It("delete the route8 just created", func() {
+		It("delete the route8 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1050,17 +1050,17 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route8 just deleted", func() {
+		It("hit the route8 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("remove upstream3", func() {
+		It("remove upstream3", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1117,7 +1117,7 @@ var _ = ginkgo.Describe("Route", func() {
 						`
 		exportStrR9 = replaceStr(exportStrR9)
 
-		ginkgo.It("create upstream4", func() {
+		It("create upstream4", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1136,7 +1136,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("create upstream5", func() {
+		It("create upstream5", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1156,7 +1156,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("create service", func() {
+		It("create service", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1171,7 +1171,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("get the service s4", func() {
+		It("get the service s4", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1181,7 +1181,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   serviceStrS4,
 			})
 		})
-		ginkgo.It("Create a route9 using upstream id and service id", func() {
+		It("Create a route9 using upstream id and service id", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1214,7 +1214,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route9", func() {
+		It("export route9", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1224,7 +1224,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrR9,
 			})
 		})
-		ginkgo.It("delete the route9 just created", func() {
+		It("delete the route9 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1233,17 +1233,17 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route9 just deleted", func() {
+		It("hit the route9 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the service4", func() {
+		It("delete the service4", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1253,7 +1253,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("remove upstream4", func() {
+		It("remove upstream4", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1262,7 +1262,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("remove upstream5", func() {
+		It("remove upstream5", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1316,7 +1316,7 @@ var _ = ginkgo.Describe("Route", func() {
 							"id": "6"
 						`
 		exportStrR10 = replaceStr(exportStrR10)
-		ginkgo.It("create upstream6", func() {
+		It("create upstream6", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1335,7 +1335,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("create service", func() {
+		It("create service", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1350,7 +1350,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("get the service s5", func() {
+		It("get the service s5", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1360,7 +1360,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   serviceStrS5,
 			})
 		})
-		ginkgo.It("Creating route10 using service ID does not contain upstream data", func() {
+		It("Creating route10 using service ID does not contain upstream data", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1392,7 +1392,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route10", func() {
+		It("export route10", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1402,7 +1402,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrR10,
 			})
 		})
-		ginkgo.It("delete the route10 just created", func() {
+		It("delete the route10 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1411,17 +1411,17 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route10 just deleted", func() {
+		It("hit the route10 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the service5", func() {
+		It("delete the service5", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1431,7 +1431,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("remove upstream6", func() {
+		It("remove upstream6", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1441,8 +1441,8 @@ var _ = ginkgo.Describe("Route", func() {
 			})
 		})
 	})
-	ginkgo.Context("test export route with jwt plugin", func() {
-		ginkgo.It("make sure the route is not created", func() {
+	Context("test export route with jwt plugin", func() {
+		It("make sure the route is not created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1452,7 +1452,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			})
 		})
-		ginkgo.It("create route", func() {
+		It("create route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1477,7 +1477,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   `"code":0`,
 			})
 		})
-		ginkgo.It("make sure the consumer is not created", func() {
+		It("make sure the consumer is not created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1486,7 +1486,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusNotFound,
 			})
 		})
-		ginkgo.It("create consumer", func() {
+		It("create consumer", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1507,21 +1507,46 @@ var _ = ginkgo.Describe("Route", func() {
 			})
 		})
 
+		It("create public api for JWT sign", func() {
+			base.RunTestCase(base.HttpTestCase{
+				Object: base.ManagerApiExpect(),
+				Method: http.MethodPut,
+				Path:   "/apisix/admin/routes/jwt-sign",
+				Body: `{
+					"name": "jwt-auth",
+					"uri": "/apisix/plugin/jwt/sign",
+					"plugins": {
+						"public-api": {}
+					},
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "` + base.UpstreamIp + `",
+							"port": 1980,
+							"weight": 1
+						}]
+					}
+				}`,
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+				ExpectBody:   `"code":0`,
+			})
+		})
+
 		jwtToken := ""
 		exportStrJWT := ""
-		ginkgo.It("sign jwt token", func() {
+		It("sign jwt token", func() {
 			time.Sleep(base.SleepTime)
 			// sign jwt token
-			t := ginkgo.GinkgoT()
-			body, status, err := base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key", nil)
-			assert.Nil(t, err)
-			assert.Equal(t, http.StatusOK, status)
+			body, status, err := base.HttpGet(base.APISIXHost+"/apisix/plugin/jwt/sign?key=user-key", nil)
+			assert.Nil(GinkgoT(), err)
+			assert.Equal(GinkgoT(), http.StatusOK, status)
 			jwtToken = string(body)
 
 			// sign jwt token with not exists key
-			_, status, err = base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key", nil)
-			assert.Nil(t, err)
-			assert.Equal(t, http.StatusNotFound, status)
+			_, status, err = base.HttpGet(base.APISIXHost+"/apisix/plugin/jwt/sign?key=not-exist-key", nil)
+			assert.Nil(GinkgoT(), err)
+			assert.Equal(GinkgoT(), http.StatusNotFound, status)
 
 			exportStrJWT = `
 				"components": {
@@ -1542,7 +1567,7 @@ var _ = ginkgo.Describe("Route", func() {
 			exportStrJWT = replaceStr(exportStrJWT)
 			// verify token and clean test data
 		})
-		ginkgo.It("verify route with correct jwt token", func() {
+		It("verify route with correct jwt token", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1553,7 +1578,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route", func() {
+		It("export route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1563,7 +1588,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrJWT,
 			})
 		})
-		ginkgo.It("delete consumer", func() {
+		It("delete consumer", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1572,7 +1597,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("verify route with the jwt token from just deleted consumer", func() {
+		It("verify route with the jwt token from just deleted consumer", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1583,7 +1608,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete route", func() {
+		It("delete route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1592,7 +1617,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("verify the deleted route", func() {
+		It("verify the deleted route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1620,7 +1645,7 @@ var _ = ginkgo.Describe("Route", func() {
 			`
 		exportStrJWTNoAlgorithm = replaceStr(exportStrJWTNoAlgorithm)
 
-		ginkgo.It("create consumer with jwt (no algorithm)", func() {
+		It("create consumer with jwt (no algorithm)", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1637,23 +1662,23 @@ var _ = ginkgo.Describe("Route", func() {
 					}
 				}`,
 				Headers:      map[string]string{"Authorization": base.GetToken()},
-				ExpectBody:   "\"code\":0",
+				ExpectBody:   `"code":0`,
 				ExpectStatus: http.StatusOK,
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("get the consumer", func() {
+		It("get the consumer", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
 				Path:         "/apisix/admin/consumers/consumer_1",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "\"username\":\"consumer_1\"",
+				ExpectBody:   `"username":"consumer_1"`,
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("create the route", func() {
+		It("create the route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1680,15 +1705,14 @@ var _ = ginkgo.Describe("Route", func() {
 		})
 
 		jwttoken := ""
-		ginkgo.It("sign jwt token", func() {
+		It("sign jwt token", func() {
 			// sign jwt token
-			t := ginkgo.GinkgoT()
-			body, status, err := base.HttpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key", nil)
-			assert.Nil(t, err)
-			assert.Equal(t, http.StatusOK, status)
+			body, status, err := base.HttpGet(base.APISIXHost+"/apisix/plugin/jwt/sign?key=user-key", nil)
+			assert.Nil(GinkgoT(), err)
+			assert.Equal(GinkgoT(), http.StatusOK, status)
 			jwttoken = string(body)
 		})
-		ginkgo.It("hit route with jwt token", func() {
+		It("hit route with jwt token", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1699,7 +1723,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route", func() {
+		It("export route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1709,17 +1733,17 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrJWTNoAlgorithm,
 			})
 		})
-		ginkgo.It("delete consumer", func() {
+		It("delete consumer", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
 				Path:         "/apisix/admin/consumers/consumer_1",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   "\"code\":0",
+				ExpectBody:   `"code":0`,
 			})
 		})
-		ginkgo.It("after delete consumer verify it again", func() {
+		It("after delete consumer verify it again", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1729,7 +1753,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the route", func() {
+		It("delete the route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1740,8 +1764,8 @@ var _ = ginkgo.Describe("Route", func() {
 		})
 	})
 
-	ginkgo.Context("test export route with auth plugin", func() {
-		ginkgo.It("make sure the route is not created", func() {
+	Context("test export route with auth plugin", func() {
+		It("make sure the route is not created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1750,7 +1774,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusNotFound,
 			})
 		})
-		ginkgo.It("create route", func() {
+		It("create route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1776,7 +1800,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("make sure the consumer is not created", func() {
+		It("make sure the consumer is not created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1785,7 +1809,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusNotFound,
 			})
 		})
-		ginkgo.It("create consumer", func() {
+		It("create consumer", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1834,7 +1858,7 @@ var _ = ginkgo.Describe("Route", func() {
 
 		exportStrAuth = replaceStr(exportStrAuth)
 
-		ginkgo.It("verify route with correct basic-auth and key-auth token", func() {
+		It("verify route with correct basic-auth and key-auth token", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1845,7 +1869,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route", func() {
+		It("export route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -1855,7 +1879,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrAuth,
 			})
 		})
-		ginkgo.It("delete consumer", func() {
+		It("delete consumer", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1864,7 +1888,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("verify route with the basic-auth and key-auth token from just deleted consumer", func() {
+		It("verify route with the basic-auth and key-auth token from just deleted consumer", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1875,7 +1899,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete route", func() {
+		It("delete route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -1884,7 +1908,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("verify the deleted route", func() {
+		It("verify the deleted route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -1895,7 +1919,7 @@ var _ = ginkgo.Describe("Route", func() {
 			})
 		})
 	})
-	ginkgo.Context("test route export label", func() {
+	Context("test route export label", func() {
 		// 10.Create a service with label data and a route with label data, and export the route.
 		// Label is the original data of the route
 		serviceStrS1 := `
@@ -1944,7 +1968,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}`
 		exportStrR1 = replaceStr(exportStrR1)
 
-		ginkgo.It("create service", func() {
+		It("create service", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:  base.ManagerApiExpect(),
 				Method:  http.MethodPut,
@@ -1961,7 +1985,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("get the service s1", func() {
+		It("get the service s1", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:     base.ManagerApiExpect(),
 				Method:     http.MethodGet,
@@ -1971,7 +1995,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody: serviceStrS1,
 			})
 		})
-		ginkgo.It("Create a service with label data and a route with label data", func() {
+		It("Create a service with label data and a route with label data", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -1997,7 +2021,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:      base.SleepTime,
 			})
 		})
-		ginkgo.It("export route1", func() {
+		It("export route1", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:     base.ManagerApiExpect(),
 				Method:     http.MethodGet,
@@ -2007,7 +2031,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody: exportStrR1,
 			})
 		})
-		ginkgo.It("delete the route1 just created", func() {
+		It("delete the route1 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:     base.ManagerApiExpect(),
 				Method:     http.MethodDelete,
@@ -2016,17 +2040,17 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectCode: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route1 just deleted", func() {
+		It("hit the route1 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the service1", func() {
+		It("delete the service1", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -2087,7 +2111,7 @@ var _ = ginkgo.Describe("Route", func() {
 						}`
 		exportStrR2 = replaceStr(exportStrR2)
 
-		ginkgo.It("create service", func() {
+		It("create service", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:  base.ManagerApiExpect(),
 				Method:  http.MethodPut,
@@ -2106,7 +2130,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("get the service s2", func() {
+		It("get the service s2", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -2116,7 +2140,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("Create a service with label data and a route without label data", func() {
+		It("Create a service with label data and a route without label data", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -2137,7 +2161,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route2", func() {
+		It("export route2", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -2147,7 +2171,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("delete the route2 just created", func() {
+		It("delete the route2 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -2156,7 +2180,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route2 just deleted", func() {
+		It("hit the route2 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
@@ -2166,7 +2190,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the service2", func() {
+		It("delete the service2", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -2177,7 +2201,7 @@ var _ = ginkgo.Describe("Route", func() {
 			})
 		})
 	})
-	ginkgo.Context("test route export request validation", func() {
+	Context("test route export request validation", func() {
 		// 12.Test export route request_ validation data correctness
 		exportStrR1 := `
 			"components": {},
@@ -2232,7 +2256,7 @@ var _ = ginkgo.Describe("Route", func() {
 			}`
 		exportStrR1 = replaceStr(exportStrR1)
 
-		ginkgo.It("Create a route containing request_ validation data", func() {
+		It("Create a route containing request_ validation data", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -2276,7 +2300,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("export route1", func() {
+		It("export route1", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -2286,7 +2310,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrR1,
 			})
 		})
-		ginkgo.It("delete the route1 just created", func() {
+		It("delete the route1 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -2295,18 +2319,18 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route1 just deleted", func() {
+		It("hit the route1 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})
 	})
-	ginkgo.Context("test route export equal uri", func() {
+	Context("test route export equal uri", func() {
 		// 13.Add suffix when testing the same URI export
 		exportStrAll := `
 			"components": {},
@@ -2388,7 +2412,7 @@ var _ = ginkgo.Describe("Route", func() {
 			}`
 		exportStrAll = replaceStr(exportStrAll)
 
-		ginkgo.It("Create a route", func() {
+		It("Create a route", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -2412,7 +2436,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("Create a route2", func() {
+		It("Create a route2", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -2436,7 +2460,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("Create a route3", func() {
+		It("Create a route3", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object: base.ManagerApiExpect(),
 				Method: http.MethodPut,
@@ -2460,7 +2484,7 @@ var _ = ginkgo.Describe("Route", func() {
 				Sleep:        base.SleepTime,
 			})
 		})
-		ginkgo.It("use the exportall interface to export all routes", func() {
+		It("use the exportall interface to export all routes", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodGet,
@@ -2470,7 +2494,7 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectBody:   exportStrAll,
 			})
 		})
-		ginkgo.It("delete the route1 just created", func() {
+		It("delete the route1 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -2479,17 +2503,17 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route1 just deleted", func() {
+		It("hit the route1 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:     base.APISIXExpect(),
 				Method:     http.MethodGet,
 				Path:       "/hello",
 				Headers:    map[string]string{"Authorization": base.GetToken()},
-				ExpectBody: "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody: `{"error_msg":"404 Route Not Found"}`,
 				Sleep:      base.SleepTime,
 			})
 		})
-		ginkgo.It("delete the route2 just created", func() {
+		It("delete the route2 just created", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.ManagerApiExpect(),
 				Method:       http.MethodDelete,
@@ -2498,13 +2522,13 @@ var _ = ginkgo.Describe("Route", func() {
 				ExpectStatus: http.StatusOK,
 			})
 		})
-		ginkgo.It("hit the route2 just deleted", func() {
+		It("hit the route2 just deleted", func() {
 			base.RunTestCase(base.HttpTestCase{
 				Object:       base.APISIXExpect(),
 				Method:       http.MethodGet,
 				Path:         "/hello",
 				ExpectStatus: http.StatusNotFound,
-				ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+				ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 				Sleep:        base.SleepTime,
 			})
 		})

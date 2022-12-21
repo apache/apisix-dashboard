@@ -14,25 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route_online_debug
+package route_online_debug_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 func TestRoute(t *testing.T) {
-	gomega.RegisterFailHandler(ginkgo.Fail)
+	RegisterFailHandler(Fail)
 	//ginkgo.RunSpecs(t, "route online debug suite")
 }
 
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("routes")
-	base.CleanResource("consumers")
+var _ = BeforeSuite(func() {
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

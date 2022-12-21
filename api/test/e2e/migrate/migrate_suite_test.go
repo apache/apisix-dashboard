@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
@@ -32,9 +32,7 @@ func TestMigrate(t *testing.T) {
 	RunSpecs(t, "Migrate Suite")
 }
 
-var _ = AfterSuite(func() {
-	base.CleanResource("routes")
-	base.CleanResource("upstreams")
-	base.CleanResource("consumers")
+var _ = BeforeSuite(func() {
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

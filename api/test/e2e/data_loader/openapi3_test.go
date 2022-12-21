@@ -21,8 +21,7 @@ import (
 	"net/http"
 	"path/filepath"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/savsgio/gotils/bytes"
 	"github.com/tidwall/gjson"
@@ -309,6 +308,7 @@ var _ = Describe("OpenAPI 3", func() {
 				Body:         string(_body),
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
+				Sleep:        base.SleepTime,
 			})
 		}),
 		Entry("Request API", func() {

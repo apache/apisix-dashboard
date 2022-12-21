@@ -14,21 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package upstream
+package upstream_test
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/onsi/ginkgo"
-	"github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
 )
 
 // just test for schema check
-var _ = ginkgo.Describe("Upstream keepalive pool", func() {
-	ginkgo.It("create upstream with keepalive pool", func() {
+var _ = Describe("Upstream keepalive pool", func() {
+	It("create upstream with keepalive pool", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
@@ -41,7 +41,7 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 		createUpstreamBody["retries"] = 5
 		createUpstreamBody["retry_timeout"] = 5.5
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		gomega.Expect(err).To(gomega.BeNil())
+		Expect(err).To(BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -51,7 +51,7 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
-	ginkgo.It("delete upstream", func() {
+	It("delete upstream", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
@@ -60,7 +60,7 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
-	ginkgo.It("zero retry field", func() {
+	It("zero retry field", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
@@ -72,7 +72,7 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 		createUpstreamBody["retries"] = 0
 		createUpstreamBody["retry_timeout"] = 5.5
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		gomega.Expect(err).To(gomega.BeNil())
+		Expect(err).To(BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -91,7 +91,7 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 			ExpectBody:   `"retries":0`,
 		})
 	})
-	ginkgo.It("nil retry field", func() {
+	It("nil retry field", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
@@ -101,7 +101,7 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 			}}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		gomega.Expect(err).To(gomega.BeNil())
+		Expect(err).To(BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -119,7 +119,7 @@ var _ = ginkgo.Describe("Upstream keepalive pool", func() {
 			UnexpectBody: `"retries"`,
 		})
 	})
-	ginkgo.It("delete upstream", func() {
+	It("delete upstream", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,

@@ -14,14 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package healthz
+package healthz_test
 
 import (
 	"testing"
+	"time"
 
-	"github.com/onsi/ginkgo"
+	"github.com/apisix/manager-api/test/e2e/base"
+	. "github.com/onsi/ginkgo/v2"
 )
 
 func TestHealthz(t *testing.T) {
-	ginkgo.RunSpecs(t, "healthz suite")
+	RunSpecs(t, "Health Suite")
 }
+
+var _ = BeforeSuite(func() {
+	base.CleanAllResource()
+	time.Sleep(base.SleepTime)
+})

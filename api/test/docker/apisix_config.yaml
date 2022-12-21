@@ -19,28 +19,20 @@
 #
 etcd:
   host:
-    - "http://172.16.238.10:2379"
-    - "http://172.16.238.11:2379"
-    - "http://172.16.238.12:2379"
-  resync_delay: 0  # sync data from etcd quickly for e2e test
+    - "http://etcd:2379"
+  resync_delay: 0
 
 apisix:
   id: "apisix-server1"
   admin_key:
-    -
-      name: "admin"                          # yamllint disable rule:comments-indentation
-      key: edd1c9f034335f136f87ad84b625c8f1  # using fixed API token has security risk, please
-                                             # update it when you deploy to production environment
-      role: admin                            # yamllint enable rule:comments-indentation
-
-  allow_admin:               # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
-    - 0.0.0.0/0              # If we don't set any IP list, then any IP access is allowed by default.
-
-  ssl:
-    enable: true
-    ssl_cert: "/usr/local/apisix/certs/apisix.crt"
-    ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
-
+    - name: "admin"
+      key: edd1c9f034335f136f87ad84b625c8f1
+      role: admin
+  allow_admin:
+    - 0.0.0.0/0
+  admin_listen:
+    ip: 0.0.0.0
+    port: 9180
   enable_control: true
   control:
     ip: "0.0.0.0"
@@ -59,53 +51,7 @@ apisix:
 nginx_config:
   error_log_level: "debug"
 
-plugins:                          # plugin list (sorted in alphabetical order)
-  - api-breaker
-  - authz-keycloak
-  - basic-auth
-  - batch-requests
-  - consumer-restriction
-  - cors
-  - echo
-  - fault-injection
-  - grpc-transcode
-  - hmac-auth
-  - http-logger
-  - ip-restriction
-  - jwt-auth
-  - kafka-logger
-  - key-auth
-  - limit-conn
-  - limit-count
-  - limit-req
-  - node-status
-  - openid-connect
-  - prometheus
-  - proxy-cache
-  - proxy-mirror
-  - proxy-rewrite
-  - redirect
-  - referer-restriction
-  - request-id
-  - request-validation
-  - response-rewrite
-  - serverless-post-function
-  - serverless-pre-function
-  - skywalking
-  - sls-logger
-  - syslog
-  - tcp-logger
-  - udp-logger
-  - uri-blocker
-  - wolf-rbac
-  - zipkin
-  - server-info
-
 plugin_attr:
-  skywalking:
-    service_name: APISIX
-    service_instance_name: "APISIX Instance Name"
-    endpoint_addr: http://172.16.238.50:12800
   server-info:
     report_interval: 60
     report_ttl: 3600

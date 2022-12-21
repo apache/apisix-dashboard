@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
@@ -31,9 +31,8 @@ func TestDataLoader(t *testing.T) {
 	RunSpecs(t, "Data Loader Suite")
 }
 
-var _ = AfterSuite(func() {
-	base.CleanResource("routes")
-	base.CleanResource("upstreams")
-	base.CleanResource("services")
+var _ = BeforeSuite(func() {
+	base.CleanAllResource()
+	base.RestartManagerAPI()
 	time.Sleep(base.SleepTime)
 })

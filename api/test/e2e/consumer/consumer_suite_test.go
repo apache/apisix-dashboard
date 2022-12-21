@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2e/base"
@@ -31,8 +31,7 @@ func TestConsumer(t *testing.T) {
 	RunSpecs(t, "Consumer Suite")
 }
 
-var _ = AfterSuite(func() {
-	base.CleanResource("routes")
-	base.CleanResource("consumers")
+var _ = BeforeSuite(func() {
+	base.CleanAllResource()
 	time.Sleep(base.SleepTime)
 })

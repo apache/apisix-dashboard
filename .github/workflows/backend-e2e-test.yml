@@ -22,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: setup go
         uses: actions/setup-go@v3
@@ -40,10 +42,8 @@ jobs:
 
       - name: Modify conf.yaml Configure for use by the manage-api cluster
         run: |
-          sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' ./api/conf/conf.yaml
+          sed -i 's/127.0.0.1:2379/etcd:2379/' ./api/conf/conf.yaml
           sed -i 's@127.0.0.1@0.0.0.0/0@' ./api/conf/conf.yaml
-          sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' ./api/conf/conf.yaml
-          sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' ./api/conf/conf.yaml
           sed -i 's@0.0.0.0/0:9000@127.0.0.1:9000@' ./api/conf/conf.yaml
           sed -i 's/enabled: false/enabled: true/' ./api/conf/conf.yaml
 
@@ -76,11 +76,13 @@ jobs:
           docker logs docker_managerapi_1
 
       - name: install ginkgo cli
-        run: go install github.com/onsi/ginkgo/ginkgo@v1.16.5
+        run: go install -mod=mod github.com/onsi/ginkgo/v2/ginkgo@latest
 
       - name: run test
         working-directory: ./api/test/e2e
-        run: ginkgo -r
+        run: |
+          go mod download
+          ginkgo -r --flake-attempts=3 -v
 
       - name: stop docker compose
         working-directory: ./api/test/docker
