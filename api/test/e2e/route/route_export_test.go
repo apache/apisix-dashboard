@@ -313,7 +313,7 @@ var _ = Describe("Route", func() {
 				Path:         "/apisix/admin/export/routes/r1,r2",
 				Headers:      map[string]string{"Authorization": base.GetToken()},
 				ExpectStatus: http.StatusOK,
-				ExpectBody:   `{"components":{},"info":{"title\":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "," + exportStrR1 + "}}",
+				ExpectBody:   `{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{` + exportStrR2 + "," + exportStrR1 + "}}",
 			})
 		})
 		It("use the exportall interface to export all routes", func() {
