@@ -328,6 +328,11 @@ func CleanAllResource() {
 	CleanResource("stream_routes")
 }
 
+func RestartManagerAPI() {
+	e := exec.Command("docker", "restart", "docker_managerapi")
+	e.Run()
+}
+
 var jwtToken string
 
 func GetJwtToken(userKey string) string {

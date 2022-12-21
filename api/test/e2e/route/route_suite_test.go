@@ -33,5 +33,6 @@ func TestRoute(t *testing.T) {
 
 var _ = BeforeSuite(func() {
 	base.CleanAllResource()
+	base.RestartManagerAPI()
 	time.Sleep(5 * time.Second)
 })

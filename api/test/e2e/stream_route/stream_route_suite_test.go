@@ -33,5 +33,6 @@ func TestStreamRoute(t *testing.T) {
 
 var _ = BeforeSuite(func() {
 	base.CleanAllResource()
+	base.RestartManagerAPI()
 	time.Sleep(base.SleepTime)
 })
