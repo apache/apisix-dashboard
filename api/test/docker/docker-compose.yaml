@@ -57,6 +57,12 @@ services:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.21
 
+  upstream_httpbin:
+    image: kennethreitz/httpbin
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.22
+
   apisix:
     hostname: apisix_server1
     image: apache/apisix:2.15.1-debian

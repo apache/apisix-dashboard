@@ -329,114 +329,95 @@ var _ = Describe("Upstream", func() {
 	})
 })
 
-var _ = Describe("Upstream update with domain", func() {
-	It("create upstream success", func() {
-		createUpstreamBody := make(map[string]interface{})
-		createUpstreamBody["name"] = "upstream1"
-		createUpstreamBody["nodes"] = []map[string]interface{}{
-			{
-				"host":     base.UpstreamIp,
-				"port":     1980,
-				"weight":   1,
-				"priority": 10,
-			},
-		}
-		createUpstreamBody["type"] = "roundrobin"
-		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		Expect(err).To(BeNil())
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/upstreams/1",
-			Body:         string(_createUpstreamBody),
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"code":0`,
-		})
-	})
-	It("create route using the upstream(use proxy rewriteproxy rewrite plugin)", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/1",
-			Body: `{
-				"name": "route1",
-				 "uri": "/*",
-				 "upstream_id": "1",
-				 "plugins": {
-					"proxy-rewrite": {
-						"uri": "/",
-						"scheme": "https"
-					}
-				}
-			 }`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			Sleep:        base.SleepTime,
-		})
-	})
-	It("update upstream with domain", func() {
-		createUpstreamBody := make(map[string]interface{})
-		createUpstreamBody["nodes"] = []map[string]interface{}{
-			{
-				"host":     "www.google.com",
-				"port":     443,
-				"weight":   1,
-				"priority": 10,
-			},
-		}
-		createUpstreamBody["type"] = "roundrobin"
-		createUpstreamBody["pass_host"] = "node"
-		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		Expect(err).To(BeNil())
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/upstreams/1",
-			Body:         string(_createUpstreamBody),
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		})
-	})
-	It("hit the route using upstream 1", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "google",
-			Sleep:        base.SleepTime,
-		})
-	})
-	It("delete route", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		})
-	})
-	It("delete upstream", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		})
-	})
-	It("hit the route just deleted", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/get",
-			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
-			Sleep:        base.SleepTime,
-		})
-	})
-})
+var _ = DescribeTable("Upstream update with domain",
+	func(tc base.HttpTestCase) {
+		base.RunTestCase(tc)
+	},
+	Entry("create upstream success", base.HttpTestCase{
+		Object: base.ManagerApiExpect(),
+		Method: http.MethodPut,
+		Path:   "/apisix/admin/upstreams/1",
+		Body: `{
+			"name": "upstream1",
+			"nodes": [{
+				"host": "` + base.UpstreamIp + `",
+				"port": 1980,
+				"weight": 1,
+				"priority": 10
+			}],
+			"type": "roundrobin"
+		}`,
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+		ExpectBody:   `"code":0`,
+		Sleep:        base.SleepTime,
+	}),
+	Entry("create route using the upstream(use proxy rewriteproxy rewrite plugin)", base.HttpTestCase{
+		Object: base.ManagerApiExpect(),
+		Method: http.MethodPut,
+		Path:   "/apisix/admin/routes/1",
+		Body: `{
+			"name": "route1",
+			"uri": "/*",
+			"upstream_id": "1"
+		}`,
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+		Sleep:        base.SleepTime,
+	}),
+	Entry("update upstream with domain", base.HttpTestCase{
+		Object: base.ManagerApiExpect(),
+		Method: http.MethodPut,
+		Path:   "/apisix/admin/upstreams/1",
+		Body: `{
+			"name": "upstream1",
+			"nodes": [{
+				"host": "` + base.UpstreamHTTPBinIp + `",
+				"port": 80,
+				"weight": 1,
+				"priority": 10
+			}],
+			"type": "roundrobin",
+			"pass_host": "node"
+		}`,
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+		Sleep:        base.SleepTime,
+	}),
+	Entry("hit the route using upstream 1", base.HttpTestCase{
+		Object: base.APISIXExpect(),
+		Method: http.MethodGet,
+		Headers: map[string]string{
+			"Host": "iamhttpbin.org",
+		},
+		Path:         "/anything",
+		ExpectStatus: http.StatusOK,
+		ExpectBody:   "http://iamhttpbin.org/anything",
+		Sleep:        base.SleepTime,
+	}),
+	Entry("delete route", base.HttpTestCase{
+		Object:       base.ManagerApiExpect(),
+		Method:       http.MethodDelete,
+		Path:         "/apisix/admin/routes/1",
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+	}),
+	Entry("delete upstream", base.HttpTestCase{
+		Object:       base.ManagerApiExpect(),
+		Method:       http.MethodDelete,
+		Path:         "/apisix/admin/upstreams/1",
+		Headers:      map[string]string{"Authorization": base.GetToken()},
+		ExpectStatus: http.StatusOK,
+	}),
+	Entry("hit the route just deleted", base.HttpTestCase{
+		Object:       base.APISIXExpect(),
+		Method:       http.MethodGet,
+		Path:         "/get",
+		ExpectStatus: http.StatusNotFound,
+		ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		Sleep:        base.SleepTime,
+	}),
+)
 
 var _ = Describe("Upstream chash remote addr", func() {
 	It("create chash upstream with key (remote_addr)", func() {
