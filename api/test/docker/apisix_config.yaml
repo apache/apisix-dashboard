@@ -17,22 +17,18 @@
 # If you want to set the specified configuration value, you can set the new
 # in this file. For example if you want to specify the etcd address:
 #
-etcd:
-  host:
-    - "http://etcd:2379"
-  resync_delay: 0
+
+deployment:
+  admin:
+    allow_admin:
+      - 0.0.0.0/0
+  etcd:
+    host:
+      - "http://etcd:2379"
+    resync_delay: 0
 
 apisix:
   id: "apisix-server1"
-  admin_key:
-    - name: "admin"
-      key: edd1c9f034335f136f87ad84b625c8f1
-      role: admin
-  allow_admin:
-    - 0.0.0.0/0
-  admin_listen:
-    ip: 0.0.0.0
-    port: 9180
   enable_control: true
   control:
     ip: "0.0.0.0"

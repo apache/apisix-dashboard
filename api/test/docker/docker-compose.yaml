@@ -65,12 +65,10 @@ services:
 
   apisix:
     hostname: apisix_server1
-    image: apache/apisix:2.15.1-debian
+    image: apache/apisix:3.0.0-debian
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
-      - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
-      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
       - ./apisix_logs:/usr/local/apisix/logs
     depends_on:
       - etcd
@@ -91,12 +89,10 @@ services:
 
   apisix2:
     hostname: apisix_server2
-    image: apache/apisix:2.15.1-debian
+    image: apache/apisix:3.0.0-debian
     restart: always
     volumes:
       - ./apisix_config2.yaml:/usr/local/apisix/conf/config.yaml:ro
-      - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
-      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
     depends_on:
       - etcd
     ports:

@@ -8,18 +8,18 @@ require (
 	github.com/getkin/kin-openapi v0.33.0
 	github.com/gin-contrib/gzip v0.0.3
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
-	github.com/gin-gonic/gin v1.6.3
+	github.com/gin-gonic/gin v1.7.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/sessions v1.2.1
 	github.com/juliangruber/go-intersect v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.0
-	github.com/shiningrush/droplet v0.2.6-0.20210127040147-53817015cd1b
-	github.com/shiningrush/droplet/wrapper/gin v0.2.1
+	github.com/shiningrush/droplet v0.3.0
+	github.com/shiningrush/droplet/wrapper/gin v0.3.0
 	github.com/sony/sonyflake v1.0.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.8.1
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.8.0
 	github.com/tidwall/gjson v1.6.7
 	github.com/xeipuuv/gojsonschema v1.2.0
 	github.com/yuin/gopher-lua v0.0.0-20200816102855-ee81675732da
