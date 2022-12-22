@@ -20,7 +20,7 @@ require (
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.8.0
-	github.com/tidwall/gjson v1.6.7
+	github.com/tidwall/gjson v1.9.3
 	github.com/xeipuuv/gojsonschema v1.2.0
 	github.com/yuin/gopher-lua v0.0.0-20200816102855-ee81675732da
 	go.etcd.io/etcd/client/pkg/v3 v3.5.5
