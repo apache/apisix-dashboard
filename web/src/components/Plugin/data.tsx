@@ -316,4 +316,19 @@ export const PLUGIN_LIST = {
     type: PluginType.other,
     hidden: true,
   },
+  'elasticsearch-logger': {
+    type: PluginType.observability,
+  },
+  openfunction: {
+    type: PluginType.serverless,
+  },
+  'tencent-cloud-cls': {
+    type: PluginType.observability,
+  },
+  ai: {
+    type: PluginType.other,
+  },
+  'cas-auth': {
+    type: PluginType.authentication,
+  },
 };

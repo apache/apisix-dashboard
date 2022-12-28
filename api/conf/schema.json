@@ -3139,6 +3139,42 @@
 		}
 	},
 	"plugins": {
+		"ai": {
+			"priority": 22900,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
+					}
+				}
+			},
+			"scope": "global",
+			"version": 0.1
+		},
 		"api-breaker": {
 			"priority": 1005,
 			"schema": {
@@ -3907,6 +3943,56 @@
 				"type": "object"
 			},
 			"scope": "global",
+			"version": 0.1
+		},
+		"cas-auth": {
+			"priority": 2597,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
+					},
+					"cas_callback_uri": {
+						"type": "string"
+					},
+					"idp_uri": {
+						"type": "string"
+					},
+					"logout_uri": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"cas_callback_uri",
+					"idp_uri",
+					"logout_uri"
+				],
+				"type": "object"
+			},
 			"version": 0.1
 		},
 		"clickhouse-logger": {
@@ -10944,6 +11030,46 @@
 					"protocol_level",
 					"protocol_name"
 				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"prometheus": {
+			"priority": 500,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
+					},
+					"prefer_name": {
+						"default": false,
+						"type": "boolean"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
