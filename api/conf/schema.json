@@ -9,6 +9,20 @@
 					"maxLength": 256,
 					"type": "string"
 				},
+				"group_id": {
+					"anyOf": [
+						{
+							"maxLength": 64,
+							"minLength": 1,
+							"pattern": "^[a-zA-Z0-9-_.]+$",
+							"type": "string"
+						},
+						{
+							"minimum": 1,
+							"type": "integer"
+						}
+					]
+				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
 					"patternProperties": {
@@ -521,12 +535,6 @@
 							"minimum": 1,
 							"type": "integer"
 						}
-					]
-				},
-				"service_protocol": {
-					"enum": [
-						"grpc",
-						"http"
 					]
 				},
 				"status": {
@@ -3138,6 +3146,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -3150,10 +3161,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -3190,9 +3197,6 @@
 							"type": "object"
 						},
 						"type": "array"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"healthy": {
 						"default": {
@@ -3303,6 +3307,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -3315,10 +3322,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -3327,9 +3330,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"model": {
 						"type": "string"
@@ -3358,6 +3358,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -3370,10 +3373,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -3392,9 +3391,6 @@
 					},
 					"client_secret": {
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"endpoint_addr": {
 						"pattern": "^[^%?]+[^/]$",
@@ -3426,20 +3422,6 @@
 							{
 								"required": [
 									"token_endpoint"
-								]
-							}
-						]
-					},
-					{
-						"anyOf": [
-							{
-								"required": [
-									"client_id"
-								]
-							},
-							{
-								"required": [
-									"audience"
 								]
 							}
 						]
@@ -3482,6 +3464,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -3494,10 +3479,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -3522,12 +3503,6 @@
 						"minimum": 0,
 						"type": "integer"
 					},
-					"audience": {
-						"description": "Deprecated, use `client_id` instead.",
-						"maxLength": 100,
-						"minLength": 1,
-						"type": "string"
-					},
 					"cache_ttl_seconds": {
 						"default": 86400,
 						"minimum": 1,
@@ -3542,9 +3517,6 @@
 						"maxLength": 100,
 						"minLength": 1,
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"discovery": {
 						"maxLength": 4096,
@@ -3635,6 +3607,9 @@
 						"type": "string"
 					}
 				},
+				"required": [
+					"client_id"
+				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -3646,6 +3621,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -3658,10 +3636,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -3705,9 +3679,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"function_uri": {
 						"type": "string"
@@ -3763,6 +3734,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -3775,10 +3749,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -3798,9 +3768,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"function_uri": {
 						"type": "string"
@@ -3859,6 +3826,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -3871,10 +3841,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -3883,9 +3849,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"hide_credentials": {
 						"default": false,
@@ -3896,6 +3859,54 @@
 				"type": "object"
 			},
 			"type": "auth",
+			"version": 0.1
+		},
+		"batch-requests": {
+			"metadata_schema": {
+				"properties": {
+					"max_body_size": {
+						"default": 1048576,
+						"description": "max pipeline body size in bytes",
+						"exclusiveMinimum": 0,
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 4010,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"scope": "global",
 			"version": 0.1
 		},
 		"clickhouse-logger": {
@@ -3915,9 +3926,32 @@
 			"priority": 398,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
+				"oneOf": [
+					{
+						"required": [
+							"database",
+							"endpoint_addr",
+							"logtable",
+							"password",
+							"user"
+						]
+					},
+					{
+						"required": [
+							"database",
+							"endpoint_addrs",
+							"logtable",
+							"password",
+							"user"
+						]
+					}
+				],
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -3930,10 +3964,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -3957,12 +3987,17 @@
 						"default": "",
 						"type": "string"
 					},
-					"disable": {
-						"type": "boolean"
-					},
 					"endpoint_addr": {
 						"pattern": "^[^\\/]+:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?",
 						"type": "string"
+					},
+					"endpoint_addrs": {
+						"items": {
+							"pattern": "^[^\\/]+:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?",
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
 					},
 					"inactive_timeout": {
 						"default": 5,
@@ -4005,13 +4040,6 @@
 						"type": "string"
 					}
 				},
-				"required": [
-					"database",
-					"endpoint_addr",
-					"logtable",
-					"password",
-					"user"
-				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -4023,6 +4051,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4035,10 +4066,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4047,9 +4074,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"max_body_size": {
 						"minimum": 0,
@@ -4084,6 +4108,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4096,10 +4123,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4146,9 +4169,6 @@
 						},
 						"minItems": 1,
 						"type": "array"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"rejected_code": {
 						"default": 403,
@@ -4198,6 +4218,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4210,10 +4233,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4266,9 +4285,6 @@
 						"type": "array",
 						"uniqueItems": true
 					},
-					"disable": {
-						"type": "boolean"
-					},
 					"expose_headers": {
 						"default": "*",
 						"description": "you can use '*' to expose all header when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple header use ',' to split. default: *.",
@@ -4291,6 +4307,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4303,10 +4322,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4315,9 +4330,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"expires": {
 						"default": 7200,
@@ -4375,6 +4387,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4387,10 +4402,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4409,9 +4420,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"inactive_timeout": {
 						"default": 5,
@@ -4446,8 +4454,31 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"disable": {
-						"type": "boolean"
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
 					},
 					"method": {
 						"minLength": 1,
@@ -4495,6 +4526,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4507,10 +4541,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4532,15 +4562,138 @@
 						"description": "body to replace upstream response.",
 						"type": "string"
 					},
-					"disable": {
-						"type": "boolean"
-					},
 					"headers": {
 						"description": "new headers for response",
 						"minProperties": 1,
 						"type": "object"
 					}
 				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"elasticsearch-logger": {
+			"metadata_schema": {
+				"properties": {
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 413,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
+					},
+					"auth": {
+						"properties": {
+							"password": {
+								"minLength": 1,
+								"type": "string"
+							},
+							"username": {
+								"minLength": 1,
+								"type": "string"
+							}
+						},
+						"required": [
+							"password",
+							"username"
+						],
+						"type": "object"
+					},
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"endpoint_addr": {
+						"pattern": "[^/]$",
+						"type": "string"
+					},
+					"field": {
+						"properties": {
+							"index": {
+								"type": "string"
+							},
+							"type": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"index"
+						],
+						"type": "object"
+					},
+					"inactive_timeout": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "elasticsearch-logger",
+						"type": "string"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"ssl_verify": {
+						"default": true,
+						"type": "boolean"
+					},
+					"timeout": {
+						"default": 10,
+						"minimum": 1,
+						"type": "integer"
+					}
+				},
+				"required": [
+					"endpoint_addr",
+					"field"
+				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -4616,13 +4769,6 @@
 						],
 						"type": "object"
 					},
-					"host": {
-						"1": {
-							"pattern": "^\\*?[0-9a-zA-Z-._\\[\\]:]+$",
-							"type": "string"
-						},
-						"description": "Deprecated, use `tcp.host` instead."
-					},
 					"inactive_timeout": {
 						"default": 3,
 						"minimum": 1,
@@ -4657,11 +4803,6 @@
 					"name": {
 						"default": "error-log-logger",
 						"type": "string"
-					},
-					"port": {
-						"description": "Deprecated, use `tcp.port` instead.",
-						"minimum": 0,
-						"type": "integer"
 					},
 					"retry_delay": {
 						"default": 1,
@@ -4712,15 +4853,6 @@
 						"default": 3,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"tls": {
-						"default": false,
-						"description": "Deprecated, use `tcp.tls` instead.",
-						"type": "boolean"
-					},
-					"tls_server_name": {
-						"description": "Deprecated, use `tcp.tls_server_name` instead.",
-						"type": "string"
 					}
 				},
 				"type": "object"
@@ -4729,8 +4861,31 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"disable": {
-						"type": "boolean"
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
 					}
 				},
 				"type": "object"
@@ -4761,6 +4916,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4773,10 +4931,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4785,9 +4939,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"i": {
 						"minimum": 0,
@@ -4821,6 +4972,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4833,10 +4987,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4870,9 +5020,6 @@
 						},
 						"minItems": 1,
 						"type": "array"
-					},
-					"disable": {
-						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -4886,6 +5033,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4898,10 +5048,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -4935,9 +5081,6 @@
 						},
 						"minItems": 1,
 						"type": "array"
-					},
-					"disable": {
-						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -4951,6 +5094,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -4963,10 +5109,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5000,9 +5142,6 @@
 						},
 						"minItems": 1,
 						"type": "array"
-					},
-					"disable": {
-						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -5017,6 +5156,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5029,10 +5171,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5093,9 +5231,6 @@
 							"duration"
 						],
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -5122,6 +5257,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5134,10 +5272,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5146,9 +5280,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"path": {
 						"type": "string"
@@ -5168,6 +5299,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5180,10 +5314,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5200,9 +5330,6 @@
 							"type": "string"
 						},
 						"type": "array"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"keepalive": {
 						"default": true,
@@ -5284,6 +5411,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5296,10 +5426,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5361,9 +5487,6 @@
 						"minimum": 1,
 						"type": "integer"
 					},
-					"disable": {
-						"type": "boolean"
-					},
 					"inactive_timeout": {
 						"default": 5,
 						"minimum": 1,
@@ -5421,6 +5544,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5433,10 +5559,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5450,9 +5572,6 @@
 						"default": 0,
 						"description": "deadline for grpc, millisecond",
 						"type": "number"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"method": {
 						"description": "the method name in the grpc service.",
@@ -5543,6 +5662,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5555,10 +5677,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5567,9 +5685,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -5583,6 +5698,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5595,10 +5713,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5632,9 +5746,6 @@
 						"maximum": 9,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"http_version": {
 						"default": 1.1,
@@ -5744,6 +5855,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5756,10 +5870,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5768,9 +5878,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					}
 				},
 				"title": "work with route or service object",
@@ -5799,6 +5906,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5811,10 +5921,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5844,9 +5950,6 @@
 							"new_line"
 						],
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"inactive_timeout": {
 						"default": 5,
@@ -5922,6 +6025,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -5934,10 +6040,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -5974,9 +6076,6 @@
 						},
 						"minItems": 1,
 						"type": "array"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"message": {
 						"default": "Your IP address is not allowed",
@@ -6037,6 +6136,7 @@
 								"properties": {
 									"algorithm": {
 										"enum": [
+											"ES256",
 											"RS256"
 										]
 									},
@@ -6056,6 +6156,7 @@
 								"properties": {
 									"algorithm": {
 										"enum": [
+											"ES256",
 											"RS256"
 										]
 									},
@@ -6075,6 +6176,7 @@
 					"algorithm": {
 						"default": "HS256",
 						"enum": [
+							"ES256",
 							"HS256",
 							"HS512",
 							"RS256"
@@ -6092,6 +6194,11 @@
 					},
 					"key": {
 						"type": "string"
+					},
+					"lifetime_grace_period": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
 					},
 					"secret": {
 						"type": "string"
@@ -6112,6 +6219,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6124,10 +6234,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6140,9 +6246,6 @@
 					"cookie": {
 						"default": "jwt",
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"header": {
 						"default": "authorization",
@@ -6175,9 +6278,26 @@
 			"priority": 403,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
+				"oneOf": [
+					{
+						"required": [
+							"broker_list",
+							"kafka_topic"
+						]
+					},
+					{
+						"required": [
+							"brokers",
+							"kafka_topic"
+						]
+					}
+				],
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6190,10 +6310,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6220,6 +6336,55 @@
 						},
 						"type": "object"
 					},
+					"brokers": {
+						"items": {
+							"properties": {
+								"host": {
+									"description": "the host of kafka broker",
+									"type": "string"
+								},
+								"port": {
+									"description": "the port of kafka broker",
+									"maximum": 65535,
+									"minimum": 1,
+									"type": "integer"
+								},
+								"sasl_config": {
+									"description": "sasl config",
+									"properties": {
+										"mechanism": {
+											"default": "PLAIN",
+											"enum": [
+												"PLAIN"
+											],
+											"type": "string"
+										},
+										"password": {
+											"description": "password",
+											"type": "string"
+										},
+										"user": {
+											"description": "user",
+											"type": "string"
+										}
+									},
+									"required": [
+										"password",
+										"user"
+									],
+									"type": "object"
+								}
+							},
+							"required": [
+								"host",
+								"port"
+							],
+							"type": "object"
+						},
+						"minItems": 1,
+						"type": "array",
+						"uniqueItems": true
+					},
 					"buffer_duration": {
 						"default": 60,
 						"minimum": 1,
@@ -6229,9 +6394,6 @@
 						"default": 1,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"inactive_timeout": {
 						"default": 5,
@@ -6331,10 +6493,6 @@
 						"type": "integer"
 					}
 				},
-				"required": [
-					"broker_list",
-					"kafka_topic"
-				],
 				"type": "object"
 			},
 			"version": 0.1
@@ -6346,6 +6504,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6358,10 +6519,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6370,9 +6527,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"sasl": {
 						"properties": {
@@ -6412,6 +6566,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6424,10 +6581,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6436,9 +6589,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"header": {
 						"default": "apikey",
@@ -6477,6 +6627,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6489,10 +6642,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6505,16 +6654,19 @@
 					"base_dn": {
 						"type": "string"
 					},
-					"disable": {
-						"type": "boolean"
-					},
 					"ldap_uri": {
 						"type": "string"
 					},
+					"tls_verify": {
+						"default": false,
+						"type": "boolean"
+					},
 					"uid": {
+						"default": "cn",
 						"type": "string"
 					},
 					"use_tls": {
+						"default": false,
 						"type": "boolean"
 					}
 				},
@@ -6535,6 +6687,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6547,10 +6702,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6575,9 +6726,6 @@
 					"default_conn_delay": {
 						"exclusiveMinimum": 0,
 						"type": "number"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"key": {
 						"type": "string"
@@ -6662,6 +6810,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6674,10 +6825,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6694,9 +6841,6 @@
 					"count": {
 						"exclusiveMinimum": 0,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"group": {
 						"type": "string"
@@ -6796,6 +6940,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6808,10 +6955,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6828,9 +6971,6 @@
 					"burst": {
 						"minimum": 0,
 						"type": "number"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"key": {
 						"type": "string"
@@ -6876,8 +7016,31 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"disable": {
-						"type": "boolean"
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
 					}
 				},
 				"type": "object"
@@ -6922,6 +7085,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -6934,10 +7100,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -6959,9 +7121,6 @@
 					},
 					"customer_token": {
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"inactive_timeout": {
 						"default": 5,
@@ -7091,6 +7250,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7103,10 +7265,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7123,9 +7281,6 @@
 					"delay": {
 						"default": 0,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"response_example": {
 						"type": "string"
@@ -7152,8 +7307,31 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"disable": {
-						"type": "boolean"
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
 					}
 				},
 				"type": "object"
@@ -7168,6 +7346,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7180,10 +7361,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7192,9 +7369,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"host": {
 						"type": "string"
@@ -7248,13 +7422,16 @@
 			},
 			"version": 0.1
 		},
-		"openid-connect": {
-			"priority": 2599,
+		"openfunction": {
+			"priority": -1902,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7267,10 +7444,76 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
+					},
+					"authorization": {
+						"service_token": {
+							"type": "string"
+						}
+					},
+					"function_uri": {
+						"type": "string"
+					},
+					"keepalive": {
+						"default": true,
+						"type": "boolean"
+					},
+					"keepalive_pool": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"keepalive_timeout": {
+						"default": 60000,
+						"minimum": 1000,
+						"type": "integer"
+					},
+					"ssl_verify": {
+						"default": true,
+						"type": "boolean"
+					},
+					"timeout": {
+						"default": 3000,
+						"minimum": 100,
+						"type": "integer"
+					}
+				},
+				"required": [
+					"function_uri"
+				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"openid-connect": {
+			"priority": 2599,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
 								"type": "array"
 							},
 							"priority": {
@@ -7294,9 +7537,6 @@
 					},
 					"client_secret": {
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"discovery": {
 						"type": "string"
@@ -7330,6 +7570,20 @@
 					"scope": {
 						"default": "openid",
 						"type": "string"
+					},
+					"session": {
+						"additionalProperties": false,
+						"properties": {
+							"secret": {
+								"description": "the key used for the encrypt and HMAC calculation",
+								"minLength": 16,
+								"type": "string"
+							}
+						},
+						"required": [
+							"secret"
+						],
+						"type": "object"
 					},
 					"set_access_token_header": {
 						"default": true,
@@ -7377,13 +7631,39 @@
 				],
 				"type": "object"
 			},
-			"version": 0.1
+			"version": 0.2
 		},
 		"opentelemetry": {
 			"priority": 12009,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
+					},
 					"additional_attributes": {
 						"items": {
 							"minLength": 1,
@@ -7391,8 +7671,12 @@
 						},
 						"type": "array"
 					},
-					"disable": {
-						"type": "boolean"
+					"additional_header_prefix_attributes": {
+						"items": {
+							"minLength": 1,
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"sampler": {
 						"default": {
@@ -7482,6 +7766,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7494,10 +7781,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7514,9 +7797,6 @@
 					},
 					"api_host": {
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"keepalive": {
 						"default": true,
@@ -7578,6 +7858,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7590,10 +7873,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7602,9 +7881,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"prefer_name": {
 						"default": false,
@@ -7622,6 +7898,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7634,10 +7913,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7725,9 +8000,6 @@
 						"minLength": 1,
 						"type": "string"
 					},
-					"disable": {
-						"type": "boolean"
-					},
 					"hide_cache_headers": {
 						"default": false,
 						"type": "boolean"
@@ -7752,6 +8024,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7764,10 +8039,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7776,9 +8047,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"request_buffering": {
 						"default": true,
@@ -7796,6 +8064,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7808,10 +8079,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7820,9 +8087,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"host": {
 						"pattern": "^http(s)?:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?$",
@@ -7854,6 +8118,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7866,10 +8133,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7878,9 +8141,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"headers": {
 						"description": "new headers for request",
@@ -7922,14 +8182,6 @@
 						"minItems": 2,
 						"type": "array"
 					},
-					"scheme": {
-						"description": "new scheme for upstream",
-						"enum": [
-							"http",
-							"https"
-						],
-						"type": "string"
-					},
 					"uri": {
 						"description": "new uri for upstream",
 						"maxLength": 4096,
@@ -7954,6 +8206,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -7966,10 +8221,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -7978,9 +8229,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"uri": {
 						"type": "string"
@@ -7997,6 +8245,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8009,10 +8260,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8021,9 +8268,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"recursive": {
 						"default": false,
@@ -8085,11 +8329,6 @@
 						]
 					},
 					{
-						"not": {
-							"required": [
-								"append_query_string"
-							]
-						},
 						"required": [
 							"http_to_https"
 						]
@@ -8098,6 +8337,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8110,10 +8352,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8124,9 +8362,7 @@
 						"type": "object"
 					},
 					"append_query_string": {
-						"type": "boolean"
-					},
-					"disable": {
+						"default": false,
 						"type": "boolean"
 					},
 					"encode_uri": {
@@ -8180,6 +8416,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8192,10 +8431,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8215,9 +8450,6 @@
 					},
 					"bypass_missing": {
 						"default": false,
-						"type": "boolean"
-					},
-					"disable": {
 						"type": "boolean"
 					},
 					"message": {
@@ -8246,6 +8478,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8258,10 +8493,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8279,9 +8510,6 @@
 							"uuid"
 						],
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"header_name": {
 						"default": "X-Request-Id",
@@ -8315,6 +8543,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8327,10 +8558,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8342,9 +8569,6 @@
 					},
 					"body_schema": {
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"header_schema": {
 						"type": "object"
@@ -8370,25 +8594,28 @@
 			"priority": 899,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
-                "dependencies": {
-                    "filters": {
-                        "not": {
-                            "required": [
-                                "body"
-                            ]
-                        }
-                    },
-                    "body": {
-                        "not": {
-                            "required": [
-                                "filters"
-                            ]
-                        }
-                    }
-                },
+				"dependencies": {
+					"body": {
+						"not": {
+							"required": [
+								"filters"
+							]
+						}
+					},
+					"filters": {
+						"not": {
+							"required": [
+								"body"
+							]
+						}
+					}
+				},
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8401,10 +8628,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8421,9 +8644,6 @@
 					"body_base64": {
 						"default": false,
 						"description": "whether new body for response need base64 decode before return",
-						"type": "boolean"
-					},
-					"disable": {
 						"type": "boolean"
 					},
 					"filters": {
@@ -8465,9 +8685,61 @@
 						"type": "array"
 					},
 					"headers": {
-						"description": "new headers for response",
-						"minProperties": 1,
-						"type": "object"
+						"anyOf": [
+							{
+								"minProperties": 1,
+								"patternProperties": {
+									"^[^:]+$": {
+										"oneOf": [
+											{
+												"type": "string"
+											},
+											{
+												"type": "number"
+											}
+										]
+									}
+								},
+								"type": "object"
+							},
+							{
+								"properties": {
+									"add": {
+										"items": {
+											"pattern": "^[^:]+:[^:]+[^/]$",
+											"type": "string"
+										},
+										"minItems": 1,
+										"type": "array"
+									},
+									"remove": {
+										"items": {
+											"pattern": "^[^:]+$",
+											"type": "string"
+										},
+										"minItems": 1,
+										"type": "array"
+									},
+									"set": {
+										"minProperties": 1,
+										"patternProperties": {
+											"^[^:]+$": {
+												"oneOf": [
+													{
+														"type": "string"
+													},
+													{
+														"type": "number"
+													}
+												]
+											}
+										},
+										"type": "object"
+									}
+								}
+							}
+						],
+						"description": "new headers for response"
 					},
 					"status_code": {
 						"description": "new status code for response",
@@ -8503,6 +8775,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8515,10 +8790,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8541,9 +8812,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"inactive_timeout": {
 						"default": 5,
@@ -8639,6 +8907,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8651,10 +8922,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8663,9 +8930,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -8680,6 +8944,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8692,10 +8959,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8704,9 +8967,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"functions": {
 						"items": {
@@ -8742,6 +9002,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8754,10 +9017,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8766,9 +9025,6 @@
 							}
 						},
 						"type": "object"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"functions": {
 						"items": {
@@ -8802,8 +9058,31 @@
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"disable": {
-						"type": "boolean"
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
 					},
 					"sample_ratio": {
 						"default": 1,
@@ -8836,6 +9115,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8848,10 +9130,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8870,9 +9148,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"endpoint_addr": {
 						"pattern": "^[^\\/]+:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?",
@@ -8929,6 +9204,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -8941,10 +9219,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -8969,9 +9243,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"host": {
 						"type": "string"
@@ -9033,6 +9304,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -9045,10 +9319,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -9067,9 +9337,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"endpoint": {
 						"properties": {
@@ -9133,6 +9400,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -9145,10 +9415,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -9167,9 +9433,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"drop_limit": {
 						"default": 1048576,
@@ -9197,10 +9460,6 @@
 						"minimum": 0,
 						"type": "integer"
 					},
-					"max_retry_times": {
-						"minimum": 1,
-						"type": "integer"
-					},
 					"name": {
 						"default": "http sys logger",
 						"type": "string"
@@ -9215,10 +9474,6 @@
 					},
 					"retry_delay": {
 						"default": 1,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"retry_interval": {
 						"minimum": 0,
 						"type": "integer"
 					},
@@ -9255,6 +9510,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -9267,10 +9525,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -9289,9 +9543,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"host": {
 						"type": "string"
@@ -9344,13 +9595,29 @@
 			},
 			"version": 0.1
 		},
-		"traffic-split": {
-			"priority": 966,
+		"tencent-cloud-cls": {
+			"metadata_schema": {
+				"properties": {
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 397,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -9363,10 +9630,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -9376,8 +9639,105 @@
 						},
 						"type": "object"
 					},
-					"disable": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"cls_host": {
+						"type": "string"
+					},
+					"cls_topic": {
+						"type": "string"
+					},
+					"global_tag": {
+						"type": "object"
+					},
+					"inactive_timeout": {
+						"default": 5,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"include_req_body": {
+						"default": false,
 						"type": "boolean"
+					},
+					"include_resp_body": {
+						"default": false,
+						"type": "boolean"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "tencent-cloud-cls",
+						"type": "string"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"sample_ratio": {
+						"default": 1,
+						"maximum": 1,
+						"minimum": 0.00001,
+						"type": "number"
+					},
+					"secret_id": {
+						"type": "string"
+					},
+					"secret_key": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"cls_host",
+					"cls_topic",
+					"secret_id",
+					"secret_key"
+				],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"traffic-split": {
+			"priority": 966,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
 					},
 					"rules": {
 						"items": {
@@ -9977,6 +10337,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -9989,10 +10352,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10022,9 +10381,6 @@
 						"minItems": 1,
 						"type": "array"
 					},
-					"disable": {
-						"type": "boolean"
-					},
 					"message": {
 						"default": "Not allowed",
 						"maxLength": 1024,
@@ -10043,6 +10399,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -10055,10 +10414,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10077,9 +10432,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"host": {
 						"type": "string"
@@ -10132,6 +10484,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -10144,10 +10499,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10168,9 +10519,6 @@
 					},
 					"case_insensitive": {
 						"default": false,
-						"type": "boolean"
-					},
-					"disable": {
 						"type": "boolean"
 					},
 					"rejected_code": {
@@ -10197,6 +10545,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -10209,10 +10560,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10225,9 +10572,6 @@
 					"appid": {
 						"default": "unset",
 						"type": "string"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"header_prefix": {
 						"default": "X-",
@@ -10243,13 +10587,16 @@
 			"type": "auth",
 			"version": 0.1
 		},
-		"zipkin": {
-			"priority": 12011,
+		"workflow": {
+			"priority": 1006,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -10262,10 +10609,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10275,8 +10618,74 @@
 						},
 						"type": "object"
 					},
-					"disable": {
-						"type": "boolean"
+					"rules": {
+						"items": {
+							"properties": {
+								"actions": {
+									"items": {
+										"minItems": 1,
+										"type": "array"
+									},
+									"type": "array"
+								},
+								"case": {
+									"items": {
+										"anyOf": [
+											{
+												"type": "array"
+											},
+											{
+												"type": "string"
+											}
+										]
+									},
+									"minItems": 1,
+									"type": "array"
+								}
+							},
+							"required": [
+								"actions",
+								"case"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"zipkin": {
+			"priority": 12011,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"_meta": {
+						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
+							"error_response": {
+								"oneOf": [
+									{
+										"type": "string"
+									},
+									{
+										"type": "object"
+									}
+								]
+							},
+							"filter": {
+								"description": "filter determines whether the plugin needs to be executed at runtime",
+								"type": "array"
+							},
+							"priority": {
+								"description": "priority of plugins by customized order",
+								"type": "integer"
+							}
+						},
+						"type": "object"
 					},
 					"endpoint": {
 						"type": "string"
@@ -10333,6 +10742,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -10345,10 +10757,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10385,9 +10793,6 @@
 						},
 						"minItems": 1,
 						"type": "array"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"message": {
 						"default": "Your IP address is not allowed",
@@ -10435,6 +10840,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -10447,10 +10855,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10471,9 +10875,6 @@
 					"default_conn_delay": {
 						"exclusiveMinimum": 0,
 						"type": "number"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"key": {
 						"type": "string"
@@ -10508,6 +10909,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -10520,10 +10924,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10533,43 +10933,11 @@
 						},
 						"type": "object"
 					},
-					"disable": {
-						"type": "boolean"
-					},
 					"protocol_level": {
 						"type": "integer"
 					},
 					"protocol_name": {
 						"type": "string"
-					},
-					"upstream": {
-						"description": "Deprecated. We should configure upstream outside of the plugin",
-						"oneOf": [
-							{
-								"required": [
-									"host",
-									"port"
-								]
-							},
-							{
-								"required": [
-									"ip",
-									"port"
-								]
-							}
-						],
-						"properties": {
-							"host": {
-								"type": "string"
-							},
-							"ip": {
-								"type": "string"
-							},
-							"port": {
-								"type": "number"
-							}
-						},
-						"type": "object"
 					}
 				},
 				"required": [
@@ -10600,6 +10968,9 @@
 				"properties": {
 					"_meta": {
 						"properties": {
+							"disable": {
+								"type": "boolean"
+							},
 							"error_response": {
 								"oneOf": [
 									{
@@ -10612,10 +10983,6 @@
 							},
 							"filter": {
 								"description": "filter determines whether the plugin needs to be executed at runtime",
-								"items": {
-									"type": "array"
-								},
-								"maxItems": 20,
 								"type": "array"
 							},
 							"priority": {
@@ -10634,9 +11001,6 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
-					},
-					"disable": {
-						"type": "boolean"
 					},
 					"drop_limit": {
 						"default": 1048576,
