@@ -280,12 +280,14 @@ func TestAPISIXJsonSchemaValidator_Plugin(t *testing.T) {
 		"id": "1",
 		"uri": "/hello",
 		"plugins": {
-                        "ip-restriction": {
-                            "blacklist": [
-                                "127.0.0.0/24"
-                            ],
-                            "disable": 1
-                        }
+			"ip-restriction": {
+				"blacklist": [
+					"127.0.0.0/24"
+				],
+				"_meta": {
+					"disable": 1
+				}
+			}
 		}
 	}`
 	err = json.Unmarshal([]byte(reqBody), route)
