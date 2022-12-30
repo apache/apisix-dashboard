@@ -63,7 +63,7 @@ var _ = Describe("Schema Test", func() {
 			Path:         "/apisix/admin/schemas/consumer",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `{"properties":{"create_time":{"type":"integer"},"desc":{"maxLength":256,"type":"string"},"group_id":{"anyOf":[{"maxLength":64,"minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$","type":"string"},{"minimum":1,"type":"integer"}]},"labels":{"description":"key/value pairs to specify attributes","patternProperties":{".*":{"description":"value of label","maxLength":64,"minLength":1,"pattern":"^\\\\S+$","type":"string"}},"type":"object"},"plugins":{"type":"object"},"update_time":{"type":"integer"},"username":{"maxLength":100,"minLength":1,"pattern":"^[a-zA-Z0-9_]+$","type":"string"}},"required":["username"],"type":"object"}`,
+			ExpectBody:   `{"properties":{"create_time":{"type":"integer"},"desc":{"maxLength":256,"type":"string"},"group_id":{"anyOf":[{"maxLength":64,"minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$","type":"string"},{"minimum":1,"type":"integer"}]},"labels":{"description":"key/value pairs to specify attributes","patternProperties":{".*":{"description":"value of label","maxLength":64,"minLength":1,"pattern":"^\\S+$","type":"string"}},"type":"object"},"plugins":{"type":"object"},"update_time":{"type":"integer"},"username":{"maxLength":100,"minLength":1,"pattern":"^[a-zA-Z0-9_]+$","type":"string"}},"required":["username"],"type":"object"}`,
 			Sleep:        base.SleepTime,
 		}),
 		Entry("get schema of non-existent resources", base.HttpTestCase{
