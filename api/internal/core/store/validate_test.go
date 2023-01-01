@@ -280,18 +280,20 @@ func TestAPISIXJsonSchemaValidator_Plugin(t *testing.T) {
 		"id": "1",
 		"uri": "/hello",
 		"plugins": {
-                        "ip-restriction": {
-                            "blacklist": [
-                                "127.0.0.0/24"
-                            ],
-                            "disable": 1
-                        }
+			"ip-restriction": {
+				"blacklist": [
+					"127.0.0.0/24"
+				],
+				"_meta": {
+					"disable": 1
+				}
+			}
 		}
 	}`
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
 	err = validator.Validate(route)
-	assert.Equal(t, fmt.Errorf("schema validate failed: disable: Invalid type. Expected: boolean, given: integer"), err)
+	assert.Equal(t, fmt.Errorf("schema validate failed: _meta.disable: Invalid type. Expected: boolean, given: integer"), err)
 }
 
 func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {

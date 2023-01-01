@@ -167,3 +167,8 @@ plugins:
   - uri-blocker
   - wolf-rbac
   - zipkin
+  - elasticsearch-logge
+  - openfunction
+  - tencent-cloud-cls
+  - ai
+  - cas-auth

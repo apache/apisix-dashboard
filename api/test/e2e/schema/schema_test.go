@@ -36,7 +36,7 @@ var _ = Describe("Schema Test", func() {
 			Query:        "schema_type=consumer",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `{"dependencies":{"algorithm":{"oneOf":[{"properties":{"algorithm":{"default":"HS256","enum":["HS256","HS512"]}}},{"properties":{"algorithm":{"enum":["RS256"]},"private_key":{"type":"string"},"public_key":{"type":"string"}},"required":["private_key","public_key"]},{"properties":{"algorithm":{"enum":["RS256"]},"vault":{"properties":{},"type":"object"}},"required":["vault"]}]}},"properties":{"algorithm":{"default":"HS256","enum":["HS256","HS512","RS256"],"type":"string"},"base64_secret":{"default":false,"type":"boolean"},"exp":{"default":86400,"minimum":1,"type":"integer"},"key":{"type":"string"},"secret":{"type":"string"},"vault":{"properties":{},"type":"object"}},"required":["key"],"type":"object"}`,
+			ExpectBody:   `{"dependencies":{"algorithm":{"oneOf":[{"properties":{"algorithm":{"default":"HS256","enum":["HS256","HS512"]}}},{"properties":{"algorithm":{"enum":["ES256","RS256"]},"private_key":{"type":"string"},"public_key":{"type":"string"}},"required":["private_key","public_key"]},{"properties":{"algorithm":{"enum":["ES256","RS256"]},"vault":{"properties":{},"type":"object"}},"required":["vault"]}]}},"properties":{"algorithm":{"default":"HS256","enum":["ES256","HS256","HS512","RS256"],"type":"string"},"base64_secret":{"default":false,"type":"boolean"},"exp":{"default":86400,"minimum":1,"type":"integer"},"key":{"type":"string"},"lifetime_grace_period":{"default":0,"minimum":0,"type":"integer"},"secret":{"type":"string"},"vault":{"properties":{},"type":"object"}},"required":["key"],"type":"object"}`,
 			Sleep:        base.SleepTime,
 		}),
 		Entry("get route schema of plugin", base.HttpTestCase{
@@ -45,7 +45,7 @@ var _ = Describe("Schema Test", func() {
 			Path:         "/apisix/admin/schema/plugins/jwt-auth",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `{"$comment":"this is a mark for our injected plugin schema","properties":{"_meta":{"properties":{"error_response":{"oneOf":[{"type":"string"},{"type":"object"}]},"filter":{"description":"filter determines whether the plugin needs to be executed at runtime","items":{"type":"array"},"maxItems":20,"type":"array"},"priority":{"description":"priority of plugins by customized order","type":"integer"}},"type":"object"},"cookie":{"default":"jwt","type":"string"},"disable":{"type":"boolean"},"header":{"default":"authorization","type":"string"},"query":{"default":"jwt","type":"string"}}`,
+			ExpectBody:   `{"$comment":"this is a mark for our injected plugin schema","properties":{"_meta":{"properties":{"disable":{"type":"boolean"},"error_response":{"oneOf":[{"type":"string"},{"type":"object"}]},"filter":{"description":"filter determines whether the plugin needs to be executed at runtime","type":"array"},"priority":{"description":"priority of plugins by customized order","type":"integer"}},"type":"object"},"cookie":{"default":"jwt","type":"string"},"header":{"default":"authorization","type":"string"},"query":{"default":"jwt","type":"string"}},"type":"object"}`,
 			Sleep:        base.SleepTime,
 		}),
 		Entry("get schema of non-existent plugin", base.HttpTestCase{
@@ -63,7 +63,7 @@ var _ = Describe("Schema Test", func() {
 			Path:         "/apisix/admin/schemas/consumer",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"properties":{"create_time":{"type":"integer"},"desc":{"maxLength":256,"type":"string"},"labels":{"description":"key/value pairs to specify attributes","patternProperties":{".*":{"description":"value of label","maxLength":64,"minLength":1,"pattern":"^\\S+$","type":"string"}},"type":"object"},"plugins":{"type":"object"},"update_time":{"type":"integer"},"username":{"maxLength":100,"minLength":1,"pattern":"^[a-zA-Z0-9_]+$","type":"string"}}`,
+			ExpectBody:   `{"properties":{"create_time":{"type":"integer"},"desc":{"maxLength":256,"type":"string"},"group_id":{"anyOf":[{"maxLength":64,"minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$","type":"string"},{"minimum":1,"type":"integer"}]},"labels":{"description":"key/value pairs to specify attributes","patternProperties":{".*":{"description":"value of label","maxLength":64,"minLength":1,"pattern":"^\\S+$","type":"string"}},"type":"object"},"plugins":{"type":"object"},"update_time":{"type":"integer"},"username":{"maxLength":100,"minLength":1,"pattern":"^[a-zA-Z0-9_]+$","type":"string"}},"required":["username"],"type":"object"}`,
 			Sleep:        base.SleepTime,
 		}),
 		Entry("get schema of non-existent resources", base.HttpTestCase{
