@@ -214,6 +214,7 @@ declare namespace RouteModule {
     create_time: number;
     update_time: number;
     status: number;
+    plugins: Record<string, any>;
   };
 
   type RouteStatus = 0 | 1;
