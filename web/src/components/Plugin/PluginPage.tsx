@@ -101,7 +101,7 @@ const PluginPage: React.FC<Props> = ({
 
   useEffect(() => {
     const openPluginList = pluginList.filter(
-      (item) => initialData[item.name] && !initialData[item.name].disable,
+      (item) => initialData[item.name] && !initialData[item.name]._meta.disable,
     );
     setPlugins(initialData);
     setEnablePluginsList(openPluginList);
@@ -244,16 +244,16 @@ const PluginPage: React.FC<Props> = ({
                   actions={[
                     <Button
                       type={
-                        initialData[item.name] && !initialData[item.name].disable
+                        initialData[item.name] && !initialData[item.name]._meta.disable
                           ? 'primary'
                           : 'default'
                       }
-                      danger={initialData[item.name] && !initialData[item.name].disable}
+                      danger={initialData[item.name] && !initialData[item.name]._meta.disable}
                       onClick={() => {
                         setName(item.name);
                       }}
                     >
-                      {initialData[item.name] && !initialData[item.name].disable
+                      {initialData[item.name] && !initialData[item.name]._meta.disable
                         ? formatMessage({ id: 'component.plugin.disable' })
                         : formatMessage({ id: 'component.plugin.enable' })}
                     </Button>,
@@ -315,7 +315,7 @@ const PluginPage: React.FC<Props> = ({
       onChange={({ monacoData, formData, shouldDelete }) => {
         let newPlugins = {
           ...initialData,
-          [name]: { ...monacoData, disable: !formData.disable },
+          [name]: { ...monacoData, _meta: { disable: !formData.disable } },
         };
         let handleType = 'edit';
         if (shouldDelete === true) {
