@@ -555,7 +555,7 @@ const Page: React.FC = () => {
       render: (_, record) => {
         const plugins = record.plugins || {};
         return Object.keys(plugins).length > 0
-          ? Object.keys(plugins).map((key) => <Tag key={key}> {key}</Tag>)
+          ? Object.keys(plugins).map((key) => <Tag key={key}>{key}</Tag>)
           : '-';
       },
     },
