@@ -181,7 +181,7 @@ const PluginDetail: React.FC<Props> = ({
 
   useEffect(() => {
     form.setFieldsValue({
-      disable: isEnabled ? true : initialData[name] && !initialData[name].disable,
+      disable: isEnabled ? true : initialData[name] && !initialData[name]._meta.disable,
       scope: 'global',
     });
     if (PLUGIN_UI_LIST.includes(name)) {
@@ -415,7 +415,9 @@ const PluginDetail: React.FC<Props> = ({
           name="disable"
         >
           <Switch
-            defaultChecked={isEnabled ? true : initialData[name] && !initialData[name].disable}
+            defaultChecked={
+              isEnabled ? true : initialData[name] && !initialData[name]._meta.disable
+            }
             disabled={readonly || isEnabled}
           />
         </Form.Item>
