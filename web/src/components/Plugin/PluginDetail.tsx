@@ -490,7 +490,7 @@ const PluginDetail: React.FC<Props> = ({
             // NOTE: for debug & test
             // @ts-ignore
             window.monacoEditor = editor;
-            if (targetModel) editor.setValue(targetModelCode);
+            if (targetModel && content === '{}') editor.setValue(targetModelCode);
           }}
           options={{
             scrollbar: {
