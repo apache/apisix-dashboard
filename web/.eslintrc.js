@@ -33,6 +33,7 @@ module.exports = {
     'import/order': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
+    'no-underscore-dangle': 'off',
   },
   settings: {
     'import/resolver': {
