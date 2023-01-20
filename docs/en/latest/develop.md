@@ -30,7 +30,7 @@ Before development, refer to this [guide](./install.md) to install dependencies.
 ## Clone the project
 
 ```sh
-$ git clone -b release/2.15 https://github.com/apache/apisix-dashboard.git
+$ git clone -b release/3.0 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Start developing
