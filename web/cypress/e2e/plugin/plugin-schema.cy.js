@@ -109,5 +109,35 @@ describe('Plugin Schema Test', () => {
       // check if plugin list is empty
       cy.get(domSelector.empty).should('be.visible');
     });
+
+    it('click plugin Edit button the existing configuration should display', () => {
+      cy.visit('/');
+      cy.contains('Consumer').click();
+      cy.get('.ant-empty-normal').should('be.visible');
+      cy.contains('Create').click();
+
+      cy.get('#username').type('test');
+      cy.contains('Next').click();
+      cy.contains('.ant-card', 'client-control').within(() => {
+        cy.contains('Enable').click({
+          force: true,
+        });
+      });
+      cy.focused('.ant-drawer-content').should('exist');
+      cy.get('.view-zones').should('exist');
+      cy.contains('max_body_size').should('be.visible');
+      cy.window().then((window) => {
+        window.monacoEditor.setValue(JSON.stringify({ max_body_size: 1024 }));
+        cy.contains('button', 'Submit').click();
+      });
+      cy.wait(3000);
+      cy.contains('.ant-card', 'client-control').within(() => {
+        cy.contains('Enable').click({
+          force: true,
+        });
+      });
+      cy.focused('.ant-drawer-content').should('exist');
+      cy.contains('1024').should('be.visible');
+    });
   });
 });
