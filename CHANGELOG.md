@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.16.0](#2160)
 - [2.15.0](#2150)
 - [2.14.0](#2140)
 - [2.13.1](#2131)
@@ -41,6 +42,24 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+## 2.16.0
+
+### Core
+
+- feat: basic support Apache APISIX 3.0.0 [#2701](https://github.com/apache/apisix-dashboard/pull/2701)
+- feat: change etcd prefix for ssl and proto [#2693](https://github.com/apache/apisix-dashboard/pull/2693)
+
+### Bugfix
+
+- fix: remove cases external service dependency [#2697](https://github.com/apache/apisix-dashboard/pull/2697)
+- fix: adapt APISIX plugin disabled [#2717](https://github.com/apache/apisix-dashboard/pull/2717)
+- fix: plugin configuration lost in editor [#2718](https://github.com/apache/apisix-dashboard/pull/2718)
+
+### Other
+
+- chore: optimize "allow_origins_by_regex tooltip" description [#2690](https://github.com/apache/apisix-dashboard/pull/2690)
+- chore: simplify e2e env [#2694](https://github.com/apache/apisix-dashboard/pull/2694)
 
 ## 2.15.0
 
