@@ -42,9 +42,8 @@ const Page: React.FC = () => {
 
   const columns: ProColumns<ServiceModule.ResponseBody>[] = [
     {
-      title: 'ID',
+      title: formatMessage({ id: 'component.global.id' }),
       dataIndex: 'id',
-      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'component.global.name' }),
@@ -53,7 +52,6 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
-      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
