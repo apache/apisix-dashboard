@@ -199,6 +199,7 @@ context('Create and Search Route', () => {
         force: true,
         multiple: true,
       });
+      cy.wait(timeout);
     }
   });
 });
