@@ -124,7 +124,7 @@ const Page: React.FC = () => {
         const disable = !formData.disable;
         let plugins = {
           ...initialData,
-          [name]: { ...monacoData, disable },
+          [name]: { ...monacoData, _meta: { disable } },
         };
         if (shouldDelete === true) {
           plugins = omit(plugins, name);
