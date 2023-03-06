@@ -225,7 +225,7 @@ context('Delete Plugin List with the Drawer', () => {
     cy.get(selector.empty).should('be.visible');
   });
 
-  it.only('should disabled global plugin normally', () => {
+  it('should disabled global plugin normally', () => {
     cy.visit('/plugin/list');
     cy.get(selector.refresh).click();
     cy.contains('button', 'Enable').click();
