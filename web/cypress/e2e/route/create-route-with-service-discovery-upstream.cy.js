@@ -167,7 +167,7 @@ context('Create Route with Service Discovery Upstream', () => {
       force: true,
     });
 
-    cy.contains('DNS').should('exist');
+    cy.contains('Nacos').should('exist');
 
     // set another service discovery
     cy.get(selector.discovery_type).click({ force: true });
