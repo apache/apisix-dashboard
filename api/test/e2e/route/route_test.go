@@ -63,6 +63,23 @@ var _ = Describe("Route", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
+		Entry("create long name route3 success", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r3",
+			Body: `{
+				"name": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+				"uri": "/hello_",
+				"upstream": {
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
 		Entry("create route failed, name existed", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
@@ -143,6 +160,13 @@ var _ = Describe("Route", func() {
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		Entry("delete route3", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r3",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
