@@ -18,6 +18,7 @@ import { FileTextOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import type { MenuDataItem } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import yaml from 'js-yaml';
+import { isNumber } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { history } from 'umi';
@@ -128,12 +129,11 @@ export const getUrlQuery: (key: string) => string | false = (key: string) => {
 };
 
 export const timestampToLocaleString = (timestamp: number) => {
-  if (!timestamp) {
-    // TODO: i18n
-    return 'None';
+  if (isNumber(timestamp)) {
+    return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
   }
 
-  return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
+  return 'None';
 };
 
 /**
