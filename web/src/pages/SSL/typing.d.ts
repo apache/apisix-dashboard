@@ -52,7 +52,7 @@ declare namespace SSLModule {
     snis: string[];
     status: number;
     update_time: number;
-    validity_start: number;
-    validity_end: number;
+    validity_start?: number;
+    validity_end?: number;
   };
 }
