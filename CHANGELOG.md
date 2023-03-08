@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.15.1](#2151)
 - [2.15.0](#2150)
 - [2.14.0](#2140)
 - [2.13.1](#2131)
@@ -41,6 +42,21 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+## 2.15.1
+
+This release contains bugfix, and all the existing functionalities are compatible with Apache APISIX 2.15.0.
+
+### Core
+
+- chore: update golang dependency [#2755](https://github.com/apache/apisix-dashboard/pull/2755)
+
+### Bugfix
+
+- fix: plugin configuration lost in editor [#2718](https://github.com/apache/apisix-dashboard/pull/2718)
+- fix: remove route name length limit [#2759](https://github.com/apache/apisix-dashboard/pull/2759)
+- fix: change regex template to optional in proxy write [#2762](https://github.com/apache/apisix-dashboard/pull/2762)
+- fix: ssl table expiration time display [#2763](https://github.com/apache/apisix-dashboard/pull/2763)
 
 ## 2.15.0
 
