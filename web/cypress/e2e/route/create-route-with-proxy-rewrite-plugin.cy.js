@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
-import menuLocaleUS from '../../../src/locales/en-US/menu';
 import componentLocaleUS from '../../../src/locales/en-US/component';
+import menuLocaleUS from '../../../src/locales/en-US/menu';
 import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
 
 context('create route with proxy-rewrite plugin', () => {
@@ -29,6 +29,7 @@ context('create route with proxy-rewrite plugin', () => {
     deleteAlert: '.ant-modal-body',
     notification: '.ant-notification-notice-message',
     staticUri: '[data-cy=uri-static]',
+    regexUri: '[data-cy=uri-regex]',
     staticHost: '[data-cy=host-static]',
     keepHost: '[data-cy=host-keep]',
     newUri: '#proxyRewrite_uri',
@@ -56,6 +57,7 @@ context('create route with proxy-rewrite plugin', () => {
     rewriteHeaderKey2: 'test2',
     rewriteHeaderValue1: '1',
     rewriteHeaderValue2: '2',
+    regex: '^/iresty/(.)/(.)/(.*)',
   };
 
   beforeEach(() => {
@@ -148,6 +150,30 @@ context('create route with proxy-rewrite plugin', () => {
     cy.contains('Next').click();
 
     // should not see proxy-rewrite plugin in the step3
+    cy.contains('proxy-rewrite').should('not.exist');
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.contains(data.submitSuccess).should('be.visible');
+  });
+
+  it('should use proxy rewrite in regex uri moode without template', () => {
+    cy.visit('/');
+    cy.contains(menuLocaleUS['menu.routes']).click();
+
+    cy.get(selector.nameSelector).type(data.routeName);
+    cy.contains('Search').click();
+    cy.contains(data.routeName).siblings().contains('Configure').click();
+
+    cy.get('#status').should('have.class', 'ant-switch-checked');
+    cy.get(selector.regexUri).click();
+    cy.get(selector.uriRewriteReg).should('be.visible').type(data.regex);
+    cy.get(selector.uriRewriteTemp).should('have.value', '');
+    cy.contains('Next').click();
+    cy.get(selector.nodes_0_host).type(data.host2);
+    cy.get(selector.nodes_0_port).type(data.port);
+    cy.get(selector.nodes_0_weight).type(data.weight);
+    cy.contains('Next').click();
+
     cy.contains('proxy-rewrite').should('not.exist');
     cy.contains('Next').click();
     cy.contains('Submit').click();
