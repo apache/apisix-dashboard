@@ -45,7 +45,7 @@
 
 ## 2.15.1
 
-This release contains bugfix, and all the existing functionalities are compatible with Apache APISIX 2.15.0.
+This release contains bugfix, and all the existing functionalities are compatible with Apache APISIX 2.15.x.
 
 ### Core
 
