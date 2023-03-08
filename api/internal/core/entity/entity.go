@@ -65,8 +65,8 @@ type Route struct {
 	BaseInfo
 	URI             string                 `json:"uri,omitempty"`
 	Uris            []string               `json:"uris,omitempty"`
-	Name            string                 `json:"name" validate:"max=50"`
-	Desc            string                 `json:"desc,omitempty" validate:"max=256"`
+	Name            string                 `json:"name"`
+	Desc            string                 `json:"desc,omitempty"`
 	Priority        int                    `json:"priority,omitempty"`
 	Methods         []string               `json:"methods,omitempty"`
 	Host            string                 `json:"host,omitempty"`
@@ -280,7 +280,7 @@ type ServerInfo struct {
 // swagger:model GlobalPlugins
 type PluginConfig struct {
 	BaseInfo
-	Desc    string                 `json:"desc,omitempty" validate:"max=256"`
+	Desc    string                 `json:"desc,omitempty"`
 	Plugins map[string]interface{} `json:"plugins"`
 	Labels  map[string]string      `json:"labels,omitempty"`
 }
