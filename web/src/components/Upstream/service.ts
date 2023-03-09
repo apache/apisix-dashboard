@@ -66,7 +66,7 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
       if (key.indexOf(']:') !== 0) {
         // handle ipv6 address
         return {
-          host: key.split(']:')[0],
+          host: key.match(/\[(.*?)\]/)?.[1] || '',
           port: key.split(']:')[1],
           weight: (data.nodes as Object)[key],
         };
