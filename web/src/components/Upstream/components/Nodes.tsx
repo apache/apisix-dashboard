@@ -54,7 +54,8 @@ const Component: React.FC<Props> = ({ readonly }) => {
                         }),
                       },
                       {
-                        pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g'),
+                        // eslint-disable-next-line no-useless-escape
+                        pattern: new RegExp(/^\*?[0-9a-zA-Z-._\[\]:]+$/),
                         message: formatMessage({
                           id: 'page.route.form.itemRulesPatternMessage.domain',
                         }),
