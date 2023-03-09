@@ -96,6 +96,8 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 type ListInput struct {
 	Name string `auto_read:"name,query"`
+	ID string `auto_read:"id,query"`
+	Desc string `auto_read:"desc,query"`
 	store.Pagination
 }
 
@@ -140,6 +142,13 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" {
 				return strings.Contains(obj.(*entity.Upstream).Name, input.Name)
+			}
+
+			if input.Desc != "" {
+				return strings.Contains(obj.(*entity.Upstream).Desc, input.Desc)
+			}
+			if input.ID != "" {
+				return strings.Contains(utils.InterfaceToString(obj.(*entity.Upstream).ID), input.ID)
 			}
 			return true
 		},

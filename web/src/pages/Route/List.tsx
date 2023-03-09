@@ -322,13 +322,12 @@ const Page: React.FC = () => {
     },
     {
       title: formatMessage({ id: 'component.global.id' }),
-      hideInSearch: true,
       dataIndex: 'id',
       width: 200,
     },
     {
       title: formatMessage({ id: 'page.route.host' }),
-      hideInSearch: true,
+      dataIndex: 'host',
       width: 224,
       render: (_, record) => {
         const list = record.hosts || (record.host && [record.host]) || [];
@@ -361,7 +360,6 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
-      hideInSearch: true,
       ellipsis: true,
       width: 200,
     },
