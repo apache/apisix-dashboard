@@ -18,7 +18,9 @@ import { notification } from 'antd';
 import { cloneDeep, isNil, omit, omitBy } from 'lodash';
 import { formatMessage, request } from 'umi';
 
-const ipv6RegexExp = /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/gi;
+const ipv6RegexExp = new RegExp(
+  /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/,
+);
 
 /**
  * Because we have some `custom` field in Upstream Form, like custom.tls/custom.checks.active etc,
@@ -60,10 +62,19 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
   // nodes have two types
   // https://github.com/apache/apisix-dashboard/issues/2080
   if (data.nodes instanceof Array) {
-    data.submitNodes = data.nodes;
+    data.submitNodes = data.nodes.map((key) => {
+      if (key.host.indexOf(']') !== 0) {
+        // handle ipv6 address
+        return {
+          ...key,
+          host: key.host.match(/\[(.*?)\]/)?.[1] || '',
+        };
+      }
+      return key;
+    });
   } else if (data.nodes) {
     data.submitNodes = Object.keys(data.nodes as Object).map((key) => {
-      if (key.indexOf(']:') !== 0) {
+      if (key.indexOf(']') !== 0) {
         // handle ipv6 address
         return {
           host: key.match(/\[(.*?)\]/)?.[1] || '',
@@ -148,7 +159,7 @@ export const convertToRequestData = (
     submitNodes?.forEach((item) => {
       const port = item.port ? `:${item.port}` : '';
       if (ipv6RegexExp.test(item.host as string)) {
-        // ipv6 host need add [] on address
+        // ipv6 host need add [] on host
         // like [::1]:80
         data.nodes = {
           ...data.nodes,

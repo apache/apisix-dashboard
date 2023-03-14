@@ -116,7 +116,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
           </Form.Item>
           {!readonly && (
             <Form.Item wrapperCol={{ offset: 3 }}>
-              <Button type="dashed" onClick={add}>
+              <Button type="dashed" onClick={add} data-cy="add-node">
                 <PlusOutlined />
                 {formatMessage({ id: 'component.global.add' })}
               </Button>
