@@ -189,11 +189,11 @@ context('Create Route with Service Discovery Upstream', () => {
 
     cy.contains(data.routeName).siblings().contains('Configure').click();
     // ensure it has already changed to edit page
-    cy.get(selector.name).should('value', data.routeName);
+    cy.get(selector.name).should('have.value', data.routeName);
     cy.contains('Next').click({
       force: true,
     });
-    cy.get(selector.service_name).should('value', `another.${data.serviceName}`);
+    cy.get(selector.service_name).should('have.value', `another.${data.serviceName}`);
   });
 
   it('should delete this test route and upstream', function () {
