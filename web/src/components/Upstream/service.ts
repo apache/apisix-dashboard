@@ -63,7 +63,7 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
   // https://github.com/apache/apisix-dashboard/issues/2080
   if (data.nodes instanceof Array) {
     data.submitNodes = data.nodes.map((key) => {
-      if (key.host.indexOf(']') !== 0) {
+      if (key.host.indexOf(']') !== -1) {
         // handle ipv6 address
         return {
           ...key,
@@ -74,7 +74,7 @@ export const convertToFormData = (originData: UpstreamComponent.ResponseData) =>
     });
   } else if (data.nodes) {
     data.submitNodes = Object.keys(data.nodes as Object).map((key) => {
-      if (key.indexOf(']') !== 0) {
+      if (key.indexOf(']') !== -1) {
         // handle ipv6 address
         return {
           host: key.match(/\[(.*?)\]/)?.[1] || '',
