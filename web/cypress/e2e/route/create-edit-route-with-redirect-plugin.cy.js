@@ -26,6 +26,7 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     name: '#name',
     redirect: '[data-cy=route-redirect]',
     customRedirectSelectOpt: '#redirectOption_list_1',
+    httpsRedirectSelectOpt: '#redirectOption_list_2',
     customRedirectUrI: '#redirectURI',
     customRedirectCode: '[data-cy=redirect_code]',
     customRedirectLabel: "[title='Custom Redirect']",
@@ -34,10 +35,13 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     notification: '.ant-notification-notice-message',
     webSocketSelector: '[title=WebSocket]',
     enable_websocket_button: '#enable_websocket',
+    hosts_0: '#hosts_0',
+    nodes_0_host: '#submitNodes_0_host',
   };
 
   const data = {
     customRedirectUrI: '/test',
+    host1: 'test.com',
     submitSuccess: 'Submit Successfully',
     deleteRouteSuccess: 'Delete Route Successfully',
     step2Title: 'Define API Backend Server',
@@ -121,6 +125,42 @@ context('Create Edit and Delete Route with redirect plugin', () => {
     cy.get(selector.name).focus().clear().type(newName);
     cy.contains('Search').click();
     cy.contains(newName).siblings().contains('More').click();
+    cy.contains('Delete').click();
+    cy.get(selector.deleteAlert)
+      .should('be.visible')
+      .within(() => {
+        cy.contains('OK').click();
+      });
+    cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
+  });
+
+  it('should enable https redirect without ssl', () => {
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.wait(timeout * 2);
+    cy.get(selector.empty).should('be.visible');
+    cy.contains('Create').click();
+    cy.wait(timeout * 2);
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.get(selector.name).type(name);
+    cy.get(selector.redirect).click();
+    cy.contains('Enable HTTPS').click({ force: true });
+
+    cy.get(selector.hosts_0).type(data.host1);
+    cy.contains('Next').click();
+    cy.get(selector.nodes_0_host).type(data.host1);
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.contains(data.submitSuccess);
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
+
+    cy.get(selector.name).focus().clear().type(name);
+    cy.contains('Search').click();
+    cy.contains(name).siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
       .should('be.visible')
