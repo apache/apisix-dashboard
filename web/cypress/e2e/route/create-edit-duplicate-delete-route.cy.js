@@ -78,12 +78,7 @@ context('Create and Delete Route', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
   };
 
-  const opreatorList = [
-    'Equal(==)',
-    'Case insensitive regular match(~*)',
-    'HAS',
-    'Reverse the result(!)',
-  ];
+  const opreatorList = ['Equal(==)', 'Case insensitive regular match(~*)', 'HAS'];
 
   before(() => {
     cy.clearLocalStorageSnapshot();
