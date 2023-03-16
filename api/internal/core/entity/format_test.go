@@ -307,7 +307,7 @@ func TestNodesFormatWithMetadata(t *testing.T) {
 				"priority":10,
 				"metadata": {
 					"name": "test"
-				}	
+				}
 			}]
 		}
 	}`
