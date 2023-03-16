@@ -36,6 +36,7 @@ context('Create and Delete Route', () => {
     operator: '#operator',
     value: '#value',
     nodes_0_host: '#submitNodes_0_host',
+    nodes_1_host: '#submitNodes_1_host',
     nodes_0_port: '#submitNodes_0_port',
     nodes_0_weight: '#submitNodes_0_weight',
     pluginCardBordered: '.ant-card-bordered',
@@ -52,6 +53,7 @@ context('Create and Delete Route', () => {
     notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
     addHost: '[data-cy=addHost]',
+    addNode: '[data-cy=add-node]',
     schemaErrorMessage: '.ant-form-item-explain.ant-form-item-explain-error',
     stepCheck: '.ant-steps-finish-icon',
     advancedMatchingTable: '.ant-table-row.ant-table-row-level-0',
@@ -66,6 +68,8 @@ context('Create and Delete Route', () => {
     host3: '10.10.10.10',
     host4: '@',
     host5: '*1',
+    host_ipv6: '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
+    host_ipv6_2: '::1',
     port: '80',
     weight: 1,
     basicAuthPlugin: 'basic-auth',
@@ -74,12 +78,7 @@ context('Create and Delete Route', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
   };
 
-  const opreatorList = [
-    'Equal(==)',
-    'Case insensitive regular match(~*)',
-    'HAS',
-    'Reverse the result(!)',
-  ];
+  const opreatorList = ['Equal(==)', 'Case insensitive regular match(~*)', 'HAS'];
 
   before(() => {
     cy.clearLocalStorageSnapshot();
@@ -92,7 +91,7 @@ context('Create and Delete Route', () => {
     cy.visit('/');
   });
 
-  it.only('should not create route with name above 100 characters', function () {
+  it('should not create route with name above 100 characters', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(selector.empty).should('be.visible');
@@ -324,5 +323,71 @@ context('Create and Delete Route', () => {
       cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
       cy.get(selector.notificationCloseIcon).click();
     });
+  });
+
+  it('should create route with ipv6 upstream node', () => {
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(selector.empty).should('be.visible');
+    cy.contains('Create').click();
+
+    // step 1
+    cy.get(selector.name).type(name);
+    cy.get(selector.description).type(data.description);
+    cy.contains('Next').click();
+
+    // step2
+    cy.get(selector.nodes_0_host).type(data.host_ipv6);
+    cy.get(selector.nodes_0_port).type(80);
+    cy.get(selector.addNode).click();
+    cy.get(selector.nodes_1_host).type(data.host_ipv6_2);
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('button', 'Submit').click();
+    cy.contains(data.submitSuccess);
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
+
+    cy.get(selector.nameSelector).type(name);
+    cy.contains('Search').click();
+    cy.contains(name).siblings().contains('Configure').click();
+    cy.get('#status').should('have.class', 'ant-switch-checked');
+
+    cy.contains('Next').click();
+    cy.get(selector.nodes_0_host).should('have.value', data.host_ipv6);
+    cy.get(selector.nodes_0_port).should('have.value', 80);
+    cy.get(selector.nodes_1_host).should('have.value', data.host_ipv6_2);
+
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.contains(data.submitSuccess);
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
+    cy.contains(name).siblings().contains('More').click();
+    cy.contains('View').click();
+    cy.get(selector.drawer).should('be.visible');
+
+    cy.get(selector.monacoScroll).within(() => {
+      cy.contains(name).should('exist');
+      cy.contains(`[${data.host_ipv6}]`).should('exist');
+      cy.contains(`[${data.host_ipv6_2}]`).should('exist');
+    });
+
+    cy.visit('/routes/list');
+    cy.get(selector.name).clear().type(name);
+    cy.contains('Search').click();
+    cy.contains(name).siblings().contains('More').click();
+    cy.contains('Delete').click();
+    cy.get(selector.deleteAlert)
+      .should('be.visible')
+      .within(() => {
+        cy.contains('OK').click();
+      });
+    cy.get(selector.deleteAlert).within(() => {
+      cy.get('.ant-btn-loading-icon').should('be.visible');
+    });
+    cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(selector.notificationCloseIcon).click();
   });
 });
