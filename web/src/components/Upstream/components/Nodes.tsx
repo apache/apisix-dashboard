@@ -54,7 +54,8 @@ const Component: React.FC<Props> = ({ readonly }) => {
                         }),
                       },
                       {
-                        pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g'),
+                        // eslint-disable-next-line no-useless-escape
+                        pattern: new RegExp(/^\*?[0-9a-zA-Z-._\[\]:]+$/),
                         message: formatMessage({
                           id: 'page.route.form.itemRulesPatternMessage.domain',
                         }),
@@ -115,7 +116,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
           </Form.Item>
           {!readonly && (
             <Form.Item wrapperCol={{ offset: 3 }}>
-              <Button type="dashed" onClick={add}>
+              <Button type="dashed" onClick={add} data-cy="add-node">
                 <PlusOutlined />
                 {formatMessage({ id: 'component.global.add' })}
               </Button>
