@@ -99,6 +99,11 @@ func NodesFormat(obj interface{}) interface{} {
 			if _, ok := val["priority"]; ok {
 				node.Priority = int(val["priority"].(float64))
 			}
+
+			if _, ok := val["metadata"]; ok {
+				node.Metadata = val["metadata"].(map[string]interface{})
+			}
+
 			nodes = append(nodes, node)
 		}
 		return nodes

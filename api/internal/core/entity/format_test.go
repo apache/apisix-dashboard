@@ -385,3 +385,40 @@ func TestMapKV2Node(t *testing.T) {
 		})
 	}
 }
+
+func TestNodesFormatWithMetadata(t *testing.T) {
+	// route data saved in ETCD
+	routeStr := `{
+		"uris": ["/*"],
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "127.0.0.1",
+				"port": 80,
+				"weight": 0,
+				"priority":10,
+				"metadata": {
+					"name": "test"
+				}
+			}]
+		}
+	}`
+
+	// bind struct
+	var route Route
+	err := json.Unmarshal([]byte(routeStr), &route)
+	assert.Nil(t, err)
+
+	// nodes format
+	nodes := NodesFormat(route.Upstream.Nodes)
+
+	// json encode for client
+	res, err := json.Marshal(nodes)
+	assert.Nil(t, err)
+	jsonStr := string(res)
+	assert.Contains(t, jsonStr, `"weight":0`)
+	assert.Contains(t, jsonStr, `"port":80`)
+	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
+	assert.Contains(t, jsonStr, `"priority":10`)
+	assert.Contains(t, jsonStr, `"metadata":{"name":"test"}`)
+}
