@@ -196,6 +196,23 @@ context('Create Route with Service Discovery Upstream', () => {
     cy.get(selector.service_name).should('have.value', `another.${data.serviceName}`);
   });
 
+  it('should view the test route contain Consul', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    cy.get(selector.nameSelector).type(data.routeName);
+    cy.contains('Search').click();
+    cy.contains(data.routeName).siblings().contains('More').click();
+    cy.contains('View').click();
+    cy.get(selector.drawer).should('be.visible');
+
+    cy.get(selector.monacoScroll).within(() => {
+      cy.contains('service_name').should('exist');
+      cy.contains('discovery').should('exist');
+      cy.contains('consul').should('exist');
+    });
+  });
+
   it('should delete this test route and upstream', function () {
     cy.visit('/routes/list');
     cy.get(selector.nameSelector).type(data.routeName);
