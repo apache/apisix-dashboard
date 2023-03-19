@@ -51,8 +51,11 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	if input.All {
 		var res []map[string]interface{}
 		list := plugins.Value().(map[string]interface{})
-		for name, conf := range list {
-			plugin := conf.(map[string]interface{})
+		for name, schemaConfig := range list {
+			if enable, ok := conf.Plugins[name]; !ok || !enable {
+				continue
+			}
+			plugin := schemaConfig.(map[string]interface{})
 			plugin["name"] = name
 			if _, ok := plugin["type"]; !ok {
 				plugin["type"] = "other"
@@ -65,7 +68,7 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	var ret []string
 	list := plugins.Map()
 	for pluginName := range list {
-		if res, ok := conf.Plugins[pluginName]; !ok || !res {
+		if enable, ok := conf.Plugins[pluginName]; !ok || !enable {
 			continue
 		}
 

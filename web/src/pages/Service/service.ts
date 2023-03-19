@@ -21,6 +21,8 @@ import { transformData } from './transform';
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
   request('/services', {
     params: {
+      id: res.id || '',
+      desc: res.desc || '',
       name: res.name,
       page: current,
       page_size: pageSize,

@@ -311,6 +311,13 @@ var _ = Describe("route with jwt plugin", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
+		Entry("delete the route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/jwt-sign",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
 		Entry("verify the deleted route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,

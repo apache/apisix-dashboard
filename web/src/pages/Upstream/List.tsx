@@ -45,7 +45,6 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'page.upstream.list.id' }),
       dataIndex: 'id',
-      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'page.upstream.list.name' }),
@@ -59,7 +58,6 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'page.upstream.list.description' }),
       dataIndex: 'desc',
-      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'page.upstream.list.edit.time' }),

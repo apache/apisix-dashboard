@@ -18,6 +18,7 @@ package entity
 
 import (
 	"errors"
+	"net"
 	"strconv"
 	"strings"
 
@@ -25,15 +26,21 @@ import (
 )
 
 func mapKV2Node(key string, val float64) (*Node, error) {
-	hp := strings.Split(key, ":")
-	host := hp[0]
-	//  according to APISIX upstream nodes policy, port is optional
-	port := "0"
+	host, port, err := net.SplitHostPort(key)
 
-	if len(hp) > 2 {
-		return nil, errors.New("invalid upstream node")
-	} else if len(hp) == 2 {
-		port = hp[1]
+	// ipv6 address
+	if strings.Count(host, ":") >= 2 {
+		host = "[" + host + "]"
+	}
+
+	if err != nil {
+		if strings.Contains(err.Error(), "missing port in address") {
+			//  according to APISIX upstream nodes policy, port is optional
+			host = key
+			port = "0"
+		} else {
+			return nil, errors.New("invalid upstream node")
+		}
 	}
 
 	portInt, err := strconv.Atoi(port)
@@ -92,6 +99,11 @@ func NodesFormat(obj interface{}) interface{} {
 			if _, ok := val["priority"]; ok {
 				node.Priority = int(val["priority"].(float64))
 			}
+
+			if _, ok := val["metadata"]; ok {
+				node.Metadata = val["metadata"].(map[string]interface{})
+			}
+
 			nodes = append(nodes, node)
 		}
 		return nodes
