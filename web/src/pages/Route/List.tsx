@@ -322,13 +322,12 @@ const Page: React.FC = () => {
     },
     {
       title: formatMessage({ id: 'component.global.id' }),
-      hideInSearch: true,
       dataIndex: 'id',
       width: 200,
     },
     {
       title: formatMessage({ id: 'page.route.host' }),
-      hideInSearch: true,
+      dataIndex: 'host',
       width: 224,
       render: (_, record) => {
         const list = record.hosts || (record.host && [record.host]) || [];
@@ -361,13 +360,13 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
-      hideInSearch: true,
       ellipsis: true,
       width: 200,
     },
     {
       title: formatMessage({ id: 'component.global.labels' }),
       dataIndex: 'labels',
+      width: 240,
       render: (_, record) => {
         return Object.keys(record.labels || {})
           .filter((item) => item !== 'API_VERSION')
@@ -550,6 +549,13 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'menu.plugin' }),
       dataIndex: 'plugins',
+      width: 240,
+      render: (_, record) => {
+        const plugins = record.plugins || {};
+        return Object.keys(plugins).length > 0
+          ? Object.keys(plugins).map((key) => <Tag key={key}>{key}</Tag>)
+          : '-';
+      },
     },
   ];
 

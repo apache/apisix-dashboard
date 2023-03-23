@@ -47,7 +47,7 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 
 ## Demo
 
-[Online Playground](http://20.210.250.99:9000/)
+[Online Playground](https://apisix-dashboard.apiseven.com/)
 
 ```text
 Username: admin

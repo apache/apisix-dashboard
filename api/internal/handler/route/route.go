@@ -194,6 +194,9 @@ type ListInput struct {
 	URI    string `auto_read:"uri,query"`
 	Label  string `auto_read:"label,query"`
 	Status string `auto_read:"status,query"`
+	Host string `auto_read:"host,query"`
+	ID string `auto_read:"id,query"`
+	Desc string `auto_read:"desc,query"`
 	store.Pagination
 }
 
@@ -234,6 +237,20 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 			if input.Status != "" && strconv.Itoa(int(obj.(*entity.Route).Status)) != input.Status {
 				return false
+			}
+
+			if input.Host != "" && !strings.Contains(obj.(*entity.Route).Host, input.Host) {
+				return false
+			}
+
+			if input.Desc != "" && !strings.Contains(obj.(*entity.Route).Desc, input.Desc) {
+				return false
+			}
+
+			if obj != nil && obj.(*entity.Route) != nil && obj.(*entity.Route).ID != nil && input.ID != "" {
+				if !strings.Contains(utils.InterfaceToString(obj.(*entity.Route).ID), input.ID) {
+					return false // IDs do not match, so object should not be included in the filtered result
+				}
 			}
 
 			return true

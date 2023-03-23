@@ -31,7 +31,7 @@ import Step2 from './components/Step2';
 import Step3 from './components/Step3';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import styles from './Create.less';
-import { checkHostWithSSL, checkUniqueName, create, fetchItem, update } from './service';
+import { checkUniqueName, create, fetchItem, update } from './service';
 import { transformProxyRewrite2Plugin } from './transform';
 
 const { Step } = Steps;
@@ -260,17 +260,10 @@ const Page: React.FC<Props> = (props) => {
     if (nextStep === 2) {
       if (step === 1) {
         form1.validateFields().then((value) => {
-          const { redirectOption, hosts } = value;
-          const filterHosts = hosts.filter(Boolean);
-          Promise.all([
-            redirectOption === 'forceHttps' && filterHosts.length !== 0
-              ? checkHostWithSSL(hosts)
-              : Promise.resolve(),
-            checkUniqueName(
-              value.name,
-              props.route.path.indexOf('edit') > 0 ? (props as any).match.params.rid : '',
-            ),
-          ]).then(() => {
+          checkUniqueName(
+            value.name,
+            props.route.path.indexOf('edit') > 0 ? (props as any).match.params.rid : '',
+          ).then(() => {
             setStep(nextStep);
           });
         });
