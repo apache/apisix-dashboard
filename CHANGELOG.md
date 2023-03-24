@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [3.0.1](#301)
 - [3.0.0](#300)
 - [2.15.0](#2150)
 - [2.14.0](#2140)
@@ -42,6 +43,32 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+## 3.0.1
+
+### Core
+
+- feat: add search functionality for ID, host, and description fields [#2750](https://github.com/apache/apisix-dashboard/pull/2750)
+- feat: support ipv6 in upstream nodes [#2766](https://github.com/apache/apisix-dashboard/pull/2766)
+
+### Bugfix
+
+- fix: plugins display in list of routes [#2704](https://github.com/apache/apisix-dashboard/pull/2704)
+- fix: plugin config page error [#2739](https://github.com/apache/apisix-dashboard/pull/2739)
+- fix: Plugin disable invalid in API /plugin?all=true [#2737](https://github.com/apache/apisix-dashboard/pull/2737)
+- fix: update URL of the online playground [#2760](https://github.com/apache/apisix-dashboard/pull/2760)
+- fix: remove route name length limit [#2759](https://github.com/apache/apisix-dashboard/pull/2759)
+- fix: change regex template to optional in proxy write [#2762](https://github.com/apache/apisix-dashboard/pull/2762)
+- fix: ssl table expiration time display [#2763](https://github.com/apache/apisix-dashboard/pull/2763)
+- fix: disable global plugin invalid [#2757](https://github.com/apache/apisix-dashboard/pull/2757)
+- fix: upstream nodes metadata miss [#2773](https://github.com/apache/apisix-dashboard/pull/2773)
+- fix: remove ssl check in redirect https [#2770](https://github.com/apache/apisix-dashboard/pull/2770)
+
+### Chore
+
+- chore(deps): bump http-cache-semantics from 4.1.0 to 4.1.1 in /web [#2730](https://github.com/apache/apisix-dashboard/pull/2730)
+- chore: update dependency [#2752](https://github.com/apache/apisix-dashboard/pull/2752)
+- chore: update the year in the  NOTICE [#2726](https://github.com/apache/apisix-dashboard/pull/2726)
 
 ## 3.0.0
 
