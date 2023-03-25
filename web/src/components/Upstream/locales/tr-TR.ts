@@ -28,6 +28,7 @@ export default {
   'component.upstream.fields.discovery_type.tooltip': 'Keşif Tipi',
   'component.upstream.fields.discovery_type.placeholder': 'Keşif tipini seçiniz',
   'component.upstream.fields.discovery_type.type.dns': 'DNS',
+  'component.upstream.fields.discovery_type.type.consul': 'Consul',
   'component.upstream.fields.discovery_type.type.consul_kv': 'Consul KV',
   'component.upstream.fields.discovery_type.type.nacos': 'Nacos',
   'component.upstream.fields.discovery_type.type.eureka': 'Eureka',

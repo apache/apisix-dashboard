@@ -41,6 +41,7 @@ context('Create Route with Service Discovery Upstream', () => {
     upstreamName: 'test_upstream',
     routeName: 'test_route',
     serviceName: 'test.cluster.local',
+    consul: 'Consul',
   };
 
   beforeEach(() => {
@@ -151,6 +152,47 @@ context('Create Route with Service Discovery Upstream', () => {
     cy.get(selector.monacoScroll).within(() => {
       cy.contains('service_name').should('exist');
       cy.contains('discovery').should('exist');
+    });
+  });
+
+  it('should edit this route with Consul Service Discovery upstream', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(selector.nameSelector).type(data.routeName);
+
+    cy.contains('Search').click();
+    cy.contains(data.routeName).siblings().contains('Configure').click();
+
+    cy.get(selector.name).should('value', data.routeName);
+    cy.contains('Next').click({
+      force: true,
+    });
+
+    cy.contains('Nacos').should('exist');
+
+    // set another service discovery
+    cy.get(selector.discovery_type).click({ force: true });
+    cy.get('[title="Consul"] > .ant-select-item-option-content').click();
+    cy.get(selector.service_name).clear().type(`another.${data.serviceName}`);
+
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.contains(data.submitSuccess).should('be.visible');
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
+
+    // check if the changes have been saved
+    cy.get(selector.nameSelector).type(data.routeName);
+    cy.contains('Search').click();
+
+    cy.contains(data.routeName).siblings().contains('More').click();
+    cy.contains('View').click();
+    cy.get(selector.drawer).should('be.visible');
+
+    cy.get(selector.monacoScroll).within(() => {
+      cy.contains(`another.${data.serviceName}`).should('exist');
+      cy.contains('consul').should('exist');
     });
   });
 
