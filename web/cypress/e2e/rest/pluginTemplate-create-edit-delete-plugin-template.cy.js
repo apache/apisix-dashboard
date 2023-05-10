@@ -46,7 +46,9 @@ context('Create Configure and Delete PluginTemplate', () => {
 
   it('should create pluginTemplate', function () {
     cy.visit('/');
+    cy.intercept('GET', '/apisix/admin/routes?*').as('view');
     cy.contains('Route').click();
+    cy.wait('@view');
     cy.get(selector.empty).should('be.visible');
     cy.contains('Advanced').should('be.visible').click();
     cy.contains('Advanced').trigger('mouseover');
