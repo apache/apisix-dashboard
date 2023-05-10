@@ -97,6 +97,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.contains('button', 'Search').click();
     cy.contains(data.pluginTemplateName).siblings().contains('Configure').click();
 
+    cy.get(selector.description).should('have.value', data.pluginTemplateName);
     cy.get(selector.description).clear().type(data.pluginTemplateName2);
     cy.contains('Next').click();
     cy.contains('Next').click();
