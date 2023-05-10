@@ -113,12 +113,3 @@ Save the upstream configuration.
 6. Test API
 
 Use the test tool to call the API to determine if it is configured correctly.
-
-### Export
-
-1. Open the route, and select routes you want to export.
-   ![Select route](../../../../assets/images/modules/data_loader/openapi3-7.png)
-2. Click `Export OpenAPI` button.
-   ![Select route](../../../../assets/images/modules/data_loader/openapi3-8.png)
-3. Select the export format, eg `Yaml`. Then click `Confirm` to export.
-   ![Select route](../../../../assets/images/modules/data_loader/openapi3-9.png)
