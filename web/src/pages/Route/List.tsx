@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DownOutlined, ExportOutlined, ImportOutlined, PlusOutlined } from '@ant-design/icons';
+import { DownOutlined, ImportOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
@@ -22,23 +22,17 @@ import { useThrottleFn } from 'ahooks';
 import {
   Button,
   Dropdown,
-  Form,
   Menu,
   Modal,
   notification,
   Popconfirm,
-  Radio,
   Select,
   Space,
   Table,
   Tag,
   Tooltip,
 } from 'antd';
-import { saveAs } from 'file-saver';
-import { js_beautify } from 'js-beautify';
-import yaml from 'js-yaml';
 import { omit } from 'lodash';
-import moment from 'moment';
 import type { ReactNode } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
 import { history, useIntl } from 'umi';
@@ -50,16 +44,7 @@ import usePagination from '@/hooks/usePagination';
 import DataLoaderImport from '@/pages/Route/components/DataLoader/Import';
 
 import { DebugDrawView } from './components/DebugViews';
-import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
-import {
-  create,
-  exportRoutes,
-  fetchLabelList,
-  fetchList,
-  remove,
-  update,
-  updateRouteStatus,
-} from './service';
+import { create, fetchLabelList, fetchList, remove, update, updateRouteStatus } from './service';
 
 const { OptGroup, Option } = Select;
 
@@ -70,11 +55,6 @@ const Page: React.FC = () => {
   enum RouteStatus {
     Offline = 0,
     Publish,
-  }
-
-  enum ExportFileType {
-    JSON = 0,
-    YAML,
   }
 
   const [labelList, setLabelList] = useState<LabelList>({});
@@ -129,37 +109,6 @@ const Page: React.FC = () => {
         });
     },
   );
-
-  const handleExport = (exportFileType: ExportFileType) => {
-    exportRoutes(selectedRowKeys.join(',')).then((resp) => {
-      let exportFile: string;
-      let exportFileName = `APISIX_routes_${moment().format('YYYYMMDDHHmmss')}`;
-
-      switch (exportFileType) {
-        case ExportFileType.YAML:
-          exportFile = yaml.dump(resp.data);
-          exportFileName = `${exportFileName}.${ExportFileType[
-            ExportFileType.YAML
-          ].toLocaleLowerCase()}`;
-          break;
-        case ExportFileType.JSON:
-        default:
-          exportFile = js_beautify(JSON.stringify(resp.data), {
-            indent_size: 2,
-          });
-          exportFileName = `${exportFileName}.${ExportFileType[
-            ExportFileType.JSON
-          ].toLocaleLowerCase()}`;
-          break;
-      }
-
-      const blob = new Blob([exportFile], {
-        type: EXPORT_FILE_MIME_TYPE_SUPPORTED[exportFileType],
-      });
-
-      saveAs(window.URL.createObjectURL(blob), exportFileName);
-    });
-  };
 
   const ListToolbar = () => {
     const tools = [
@@ -277,37 +226,6 @@ const Page: React.FC = () => {
     );
   };
 
-  const ListFooter: React.FC = () => {
-    const [exportFileTypeForm] = Form.useForm();
-    return (
-      <Popconfirm
-        title={
-          <Form form={exportFileTypeForm} initialValues={{ fileType: ExportFileType.JSON }}>
-            <div style={{ marginBottom: 8 }}>
-              {formatMessage({ id: 'page.route.exportRoutesTips' })}
-            </div>
-            <Form.Item name="fileType" noStyle>
-              <Radio.Group>
-                <Radio value={ExportFileType.JSON}>Json</Radio>
-                <Radio value={ExportFileType.YAML}>Yaml</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Form>
-        }
-        onConfirm={() => {
-          handleExport(exportFileTypeForm.getFieldValue('fileType'));
-        }}
-        okText={formatMessage({ id: 'component.global.confirm' })}
-        cancelText={formatMessage({ id: 'component.global.cancel' })}
-        disabled={selectedRowKeys.length === 0}
-      >
-        <Button type="primary" disabled={selectedRowKeys.length === 0}>
-          <ExportOutlined />
-          {formatMessage({ id: 'page.route.button.exportOpenApi' })}
-        </Button>
-      </Popconfirm>
-    );
-  };
   const tagStyle = {
     maxWidth: '200px',
     overflow: 'hidden',
@@ -612,7 +530,6 @@ const Page: React.FC = () => {
           </Button>,
           <ListToolbar />,
         ]}
-        footer={() => <ListFooter />}
         scroll={{ x: 1300 }}
       />
       <DebugDrawView
