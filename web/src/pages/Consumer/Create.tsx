@@ -39,7 +39,7 @@ const Page: React.FC = (props) => {
       fetchItem(username).then(({ data }) => {
         const { desc, ...rest } = data;
         form1.setFieldsValue({ username, desc });
-        setPlugins(rest.plugins);
+        setPlugins(rest?.plugins || {});
       });
     }
   }, []);
