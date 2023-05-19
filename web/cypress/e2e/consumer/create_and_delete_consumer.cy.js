@@ -38,6 +38,7 @@ context('Create and Delete Consumer', () => {
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
+    editConsumerSuccess: 'Edit Consumer Successfully',
     pluginErrorAlert: 'Invalid plugin data',
   };
 
@@ -59,6 +60,21 @@ context('Create and Delete Consumer', () => {
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
     cy.get(selector.notification).should('contain', data.createConsumerSuccess);
+
+    // should configure the comsumer
+    cy.contains(data.noPluginsConsumerName)
+      .should('be.visible')
+      .siblings()
+      .contains('Configure')
+      .click();
+    cy.url().should('contain', `/${data.noPluginsConsumerName}/edit`);
+    cy.get('#username').should('have.value', data.noPluginsConsumerName);
+    cy.get('#desc').should('have.value', data.description);
+    cy.contains('button', 'Next').click();
+    cy.get('[data-cy-plugin-name="basic-auth"]').should('be.visible');
+    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Submit').click();
+    cy.get(selector.notification).should('contain', data.editConsumerSuccess);
 
     cy.contains(data.noPluginsConsumerName)
       .should('be.visible')
