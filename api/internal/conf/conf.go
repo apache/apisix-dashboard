@@ -22,10 +22,12 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strings"
 
 	"github.com/gorilla/sessions"
+	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 	"golang.org/x/oauth2"
@@ -184,6 +186,16 @@ func InitConf() {
 	initSchema()
 }
 
+func unmarshalConfig() *Config {
+	config := Config{}
+	err := viper.Unmarshal(&config, viper.DecodeHook(substituteEnvironmentVariables()))
+	if err != nil {
+		panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
+	}
+
+	return &config
+}
+
 func setupConfig() {
 	// setup config file path
 	if ConfigFile == "" {
@@ -204,11 +216,7 @@ func setupConfig() {
 	}
 
 	// unmarshal config
-	config := Config{}
-	err := viper.Unmarshal(&config)
-	if err != nil {
-		panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
-	}
+	config := unmarshalConfig()
 
 	// listen
 	if config.Conf.Listen.Port != 0 {
@@ -251,7 +259,7 @@ func setupConfig() {
 		if strings.HasPrefix(ErrorLogPath, "winfile") {
 			return
 		}
-		ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
+		ErrorLogPath, err := filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
 		if err != nil {
 			panic(err)
 		}
@@ -263,7 +271,7 @@ func setupConfig() {
 		if strings.HasPrefix(AccessLogPath, "winfile") {
 			return
 		}
-		AccessLogPath, err = filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
+		AccessLogPath, err := filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
 		if err != nil {
 			panic(err)
 		}
@@ -430,5 +438,20 @@ func initSecurity(conf Security) {
 	SecurityConf = Security{
 		XFrameOptions:         "deny",
 		ContentSecurityPolicy: DefaultCSP,
+	}
+}
+
+// substituteEnvironmentVariables substitutes environment variables in the configuration with real values
+func substituteEnvironmentVariables() mapstructure.DecodeHookFuncKind {
+	return func(
+		f reflect.Kind,
+		t reflect.Kind,
+		data interface{},
+	) (interface{}, error) {
+		if f != reflect.String {
+			return data, nil
+		}
+
+		return os.ExpandEnv(data.(string)), nil
 	}
 }
