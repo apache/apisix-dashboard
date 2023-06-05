@@ -186,14 +186,14 @@ func InitConf() {
 	initSchema()
 }
 
-func unmarshalConfig() *Config {
+func unmarshalConfig() (*Config, error) {
 	config := Config{}
 	err := viper.Unmarshal(&config, viper.DecodeHook(substituteEnvironmentVariables()))
 	if err != nil {
-		panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
+		return nil, err
 	}
 
-	return &config
+	return &config, nil
 }
 
 func setupConfig() {
@@ -216,7 +216,10 @@ func setupConfig() {
 	}
 
 	// unmarshal config
-	config := unmarshalConfig()
+	config, err := unmarshalConfig()
+	if err != nil {
+		panic(fmt.Sprintf("fail to unmarshal configuration: %s, err: %s", ConfigFile, err.Error()))
+	}
 
 	// listen
 	if config.Conf.Listen.Port != 0 {
@@ -259,7 +262,7 @@ func setupConfig() {
 		if strings.HasPrefix(ErrorLogPath, "winfile") {
 			return
 		}
-		ErrorLogPath, err := filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
+		ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
 		if err != nil {
 			panic(err)
 		}
@@ -271,7 +274,7 @@ func setupConfig() {
 		if strings.HasPrefix(AccessLogPath, "winfile") {
 			return
 		}
-		AccessLogPath, err := filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
+		AccessLogPath, err = filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
 		if err != nil {
 			panic(err)
 		}

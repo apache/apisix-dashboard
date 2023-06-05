@@ -115,7 +115,11 @@ func Test_unmarshalConfig(t *testing.T) {
 				t.Errorf("unable to read config: %v", err)
 				return
 			}
-			config := unmarshalConfig()
+			config, err := unmarshalConfig()
+			if err != nil {
+				t.Errorf("unable to unmarshall config: %v", err)
+				return
+			}
 
 			tt.assert(config, t)
 		})
