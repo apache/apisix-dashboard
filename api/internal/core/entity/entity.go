@@ -171,7 +171,7 @@ type UpstreamDef struct {
 	Key           string                 `json:"key,omitempty"`
 	Scheme        string                 `json:"scheme,omitempty"`
 	DiscoveryType string                 `json:"discovery_type,omitempty"`
-	DiscoveryArgs map[string]string      `json:"discovery_args,omitempty"`
+	DiscoveryArgs map[string]interface{} `json:"discovery_args,omitempty"`
 	PassHost      string                 `json:"pass_host,omitempty"`
 	UpstreamHost  string                 `json:"upstream_host,omitempty"`
 	Name          string                 `json:"name,omitempty"`
