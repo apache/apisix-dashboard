@@ -45,6 +45,8 @@ conf:
       key_file: ""          # Path of your self-signed client side key
       cert_file: ""         # Path of your self-signed client side cert
       ca_file: ""           # Path of your self-signed ca cert, the CA is used to sign callers' certificates
+      sni: ""               # The SNI for etcd TLS requests
+      skipverify: false     # Verify the etcd certificate when establishing a TLS connection with etcd
     # prefix: /apisix       # apisix config's prefix in etcd, /apisix by default
   log:
     error_log:
