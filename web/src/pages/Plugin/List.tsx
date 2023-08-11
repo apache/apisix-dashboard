@@ -121,10 +121,17 @@ const Page: React.FC = () => {
         setVisible(false);
       }}
       onChange={({ formData, monacoData, shouldDelete }) => {
-        const disable = !formData.disable;
+        const keyInclude_metaFlag = Object.keys(monacoData)?.includes("_meta")
+        let newPluginsValue = {}
+        if(keyInclude_metaFlag){
+          monacoData['_meta'].disable = !formData.disable
+          newPluginsValue = monacoData
+        }else{
+          newPluginsValue = {...monacoData, _meta: { disable: !formData.disable }}
+        }
         let plugins = {
           ...initialData,
-          [name]: { ...monacoData, _meta: { disable } },
+          [name]: newPluginsValue,
         };
         if (shouldDelete === true) {
           plugins = omit(plugins, name);
