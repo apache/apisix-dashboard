@@ -313,9 +313,17 @@ const PluginPage: React.FC<Props> = ({
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
       onChange={({ monacoData, formData, shouldDelete }) => {
+        const keyInclude_metaFlag = Object.keys(monacoData)?.includes("_meta")
+        let newPluginsValue = {}
+        if(keyInclude_metaFlag){
+          monacoData['_meta'].disable = !formData.disable
+          newPluginsValue = monacoData
+        }else{
+          newPluginsValue = {...monacoData, _meta: { disable: !formData.disable }}
+        }
         let newPlugins = {
           ...initialData,
-          [name]: { ...monacoData, _meta: { disable: !formData.disable } },
+          [name]: newPluginsValue,
         };
         let handleType = 'edit';
         if (shouldDelete === true) {

@@ -92,6 +92,7 @@ export default {
   'page.upstream.list': '上游列表',
   'page.upstream.list.input': '请输入',
   'page.upstream.list.create': '创建',
+  'page.upstream.cannot.delete.tipsInfo': '正在使用中的上游服务不可删除',
 
   'page.upstream.type.roundrobin': '带权轮询（Round Robin）',
   'page.upstream.type.chash': '一致性哈希（CHash）',

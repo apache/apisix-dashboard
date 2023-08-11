@@ -18,9 +18,9 @@ import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, notification, Popconfirm, Space } from 'antd';
+import { Button, notification, Popconfirm, Space, Tooltip } from 'antd';
 import { omit } from 'lodash';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { history, useIntl } from 'umi';
 
 import { RawDataEditor } from '@/components/RawDataEditor';
@@ -29,6 +29,8 @@ import { timestampToLocaleString } from '@/helpers';
 import usePagination from '@/hooks/usePagination';
 
 import { create, fetchList, remove, update } from './service';
+import { fetchList as fetchRouteList} from '../Route/service';
+
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
@@ -38,9 +40,23 @@ const Page: React.FC = () => {
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const { paginationConfig, savePageList, checkPageList } = usePagination();
   const { formatMessage } = useIntl();
-
   const [deleteLoading, setDeleteLoading] = useState('');
-
+  const [upstreamUsed,setUpstreamUsed] = useState([])
+  const getUpstreamUsedFn = async ()=>{
+    try {
+      const {data=[]} = await fetchRouteList({ current :1, pageSize:9999 })
+      const upstreamUsedIds = data?.filter(item=>item.upstream_id)?.map(item=>item.upstream_id)||[]
+      if(upstreamUsedIds.length){
+        setUpstreamUsed(upstreamUsedIds)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getUpstreamUsedFn()
+  }, [])
+  
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
       title: formatMessage({ id: 'page.upstream.list.id' }),
@@ -85,7 +101,18 @@ const Page: React.FC = () => {
           >
             {formatMessage({ id: 'component.global.view' })}
           </Button>
-          <Popconfirm
+          {upstreamUsed.includes(record.id)?
+          <Tooltip
+          placement="top"
+          title={formatMessage({
+            id: 'page.upstream.cannot.delete.tipsInfo',
+          })}
+        >
+          <Button disabled={upstreamUsed.includes(record.id)} type="primary" danger loading={record.id === deleteLoading}>
+              {formatMessage({ id: 'page.upstream.list.delete' })}
+            </Button>
+        </Tooltip>
+          :<Popconfirm
             title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
             okText={formatMessage({ id: 'page.upstream.list.confirm' })}
             cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
@@ -106,7 +133,7 @@ const Page: React.FC = () => {
             <Button type="primary" danger loading={record.id === deleteLoading}>
               {formatMessage({ id: 'page.upstream.list.delete' })}
             </Button>
-          </Popconfirm>
+          </Popconfirm>}
         </Space>
       ),
     },
