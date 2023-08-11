@@ -93,7 +93,7 @@ export default {
   'page.upstream.list': 'Upstream List',
   'page.upstream.list.input': 'Please enter',
   'page.upstream.list.create': 'Create',
-
+  'page.upstream.cannot.delete.tipsInfo': 'The upstream service in use cannot be deleted',
   'page.upstream.type.roundrobin': 'Round Robin',
   'page.upstream.type.chash': 'CHash',
   'page.upstream.type.ewma': 'EWMA',

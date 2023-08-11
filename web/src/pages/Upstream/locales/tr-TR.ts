@@ -95,7 +95,7 @@ export default {
   'page.upstream.list': 'Upstream Listesi',
   'page.upstream.list.input': 'Lütfen girin',
   'page.upstream.list.create': 'Yarat',
-
+  'page.upstream.cannot.delete.tipsInfo': 'Kullanılan yukarı akış hizmeti silinemez',
   'page.upstream.type.roundrobin': 'Round Robin',
   'page.upstream.type.chash': 'CHash',
   'page.upstream.type.ewma': 'EWMA',
