@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default } from './ActionBar';
-export { default as ActionBarEnUS } from './locales/en-US';
-export { default as ActionBarPtBR } from './locales/pt-BR';
-export { default as ActionBarZhCN } from './locales/zh-CN';
+export default {
+  'app.pwa.offline': 'Você está off-line agora',
+  'app.pwa.serviceworker.updated': 'Novo conteúdo está disponível',
+  'app.pwa.serviceworker.updated.hint':
+    'Por favor, pressione o botão "Atualizar" para recarregar a página atual',
+  'app.pwa.serviceworker.updated.ok': 'Atualizar',
+};
