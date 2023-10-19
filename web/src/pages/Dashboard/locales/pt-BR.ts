@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default } from './ActionBar';
-export { default as ActionBarEnUS } from './locales/en-US';
-export { default as ActionBarPtBR } from './locales/pt-BR';
-export { default as ActionBarZhCN } from './locales/zh-CN';
+export default {
+  'page.dashboard.empty.description.grafanaNotConfig': 'Você não configurou o Grafana',
+  'page.dashboard.button.grafanaConfig': 'Configurar',
+  'page.dashboard.tip':
+    'Use o localStorage do navegador para armazenar o URL da página do monitor, apenas local.',
+};

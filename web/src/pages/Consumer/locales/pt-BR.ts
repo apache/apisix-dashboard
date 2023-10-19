@@ -14,7 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default } from './ActionBar';
-export { default as ActionBarEnUS } from './locales/en-US';
-export { default as ActionBarPtBR } from './locales/pt-BR';
-export { default as ActionBarZhCN } from './locales/zh-CN';
+export default {
+  'page.consumer.form.itemRuleMessage.username':
+    'O comprimento máximo é 100, apenas letras, números e _ são suportados.',
+  'page.consumer.form.itemExtraMessage.username': 'O nome deve ser único',
+  'page.consumer.username': 'Nome',
+  'page.consumer.username.required': 'Insira o nome do consumidor',
+  'page.consumer.updateTime': 'Tempo de atualização',
+  'page.consumer.list': 'Lista de consumidores',
+  'page.consumer.description':
+    'Os consumidores são os consumidores de rotas, por exemplo, desenvolvedores, usuários finais, chamadas de API, etc.',
+  'page.consumer.create': 'Criar consumidor',
+  'page.consumer.configure': 'Configurar consumidor',
+};

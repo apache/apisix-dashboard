@@ -14,7 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default } from './ActionBar';
-export { default as ActionBarEnUS } from './locales/en-US';
-export { default as ActionBarPtBR } from './locales/pt-BR';
-export { default as ActionBarZhCN } from './locales/zh-CN';
+export default {
+  'page.plugin.drawer.popconfirm.title.delete': 'Tem certeza que deseja excluir este item?',
+  'page.plugin.list': 'Lista de plug-ins',
+  'page.plugin.list.enabled': 'Lista de plugins ativados',
+  'page.plugin.market.config': 'Lista Global de Plugins',
+  'page.plugin.edit': 'Plug-in configurado com sucesso',
+  'page.plugin.delete': 'Plug-in removido com sucesso',
+};
