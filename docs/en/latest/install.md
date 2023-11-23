@@ -37,7 +37,7 @@ docker run -d --name dashboard \
 ```
 
 :::note
-Please replace `<CONFIG_FILE>` to your configure file path.
+Please replace `<CONFIG_FILE>` with the **absolute path** to your [configuration file](https://github.com/apache/apisix-dashboard/blob/master/api/conf/conf.yaml).
 :::
 
 ## RPM {#rpm}
