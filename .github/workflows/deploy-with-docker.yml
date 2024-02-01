@@ -41,8 +41,6 @@ jobs:
           load: true
           tags: dashboard:ci
           context: .
-          build-args: |
-            APISIX_DASHBOARD_VERSION=master
           cache-from: |
             type=local,src=/tmp/.buildx-cache
           cache-to: |

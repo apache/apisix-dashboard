@@ -2048,13 +2048,13 @@
     extend "3.0.2"
 
 "@monaco-editor/loader@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.2.0.tgz#373fad69973384624e3d9b60eefd786461a76acd"
-  integrity sha512-cJVCG/T/KxXgzYnjKqyAgsKDbH9mGLjcXxN6AmwumBwa2rVFkwvGcUj1RJtD0ko4XqLqJxwqsN/Z/KURB5f1OQ==
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.4.0.tgz#f08227057331ec890fa1e903912a5b711a2ad558"
+  integrity sha512-00ioBig0x642hytVspPl7DbQyaSWRaolYie/UFNjoTdvoKPzo6xrXLhTk9ixgIKcLH5b5vDOjVNiGyY+uDCUlg==
   dependencies:
     state-local "^1.0.6"
 
-"@monaco-editor/react@^4.3.1":
+"@monaco-editor/react@4.3.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.3.1.tgz#d65bcbf174c39b6d4e7fec43d0cddda82b70a12a"
   integrity sha512-f+0BK1PP/W5I50hHHmwf11+Ea92E5H1VZXs+wvKplWUWOfyMa1VVwqkJrXjRvbcqHL+XdIGYWhWNdi4McEvnZg==
@@ -15734,8 +15734,8 @@ start-server-and-test@^1.11.5:
 
 state-local@^1.0.6:
   version "1.0.7"
-  resolved "https://registry.npm.taobao.org/state-local/download/state-local-1.0.7.tgz#da50211d07f05748d53009bee46307a37db386d5"
-  integrity sha1-2lAhHQfwV0jVMAm+5GMHo32zhtU=
+  resolved "https://registry.yarnpkg.com/state-local/-/state-local-1.0.7.tgz#da50211d07f05748d53009bee46307a37db386d5"
+  integrity sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==
 
 state-toggle@^1.0.0:
   version "1.0.3"
