@@ -14,7 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default } from './ActionBar';
-export { default as ActionBarEnUS } from './locales/en-US';
-export { default as ActionBarPtBR } from './locales/pt-BR';
-export { default as ActionBarZhCN } from './locales/zh-CN';
+export default {
+  'page.systemStatus.pageContainer.title': 'Informação do sistema',
+  'page.systemStatus.select.placeholder': 'Por favor, selecione um nó Apache apisix',
+  'page.systemStatus.desc':
+    'O plug-in relevante precisa ser ativado para relatar as informações do servidor.',
+  'page.systemStatus.link': 'Como habilitar?',
+  'page.systemStatus.dashboardInfo': 'Dashboard',
+  'page.systemStatus.nodeInfo': 'Nós APISIX',
+};

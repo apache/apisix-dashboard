@@ -14,7 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default } from './ActionBar';
-export { default as ActionBarEnUS } from './locales/en-US';
-export { default as ActionBarPtBR } from './locales/pt-BR';
-export { default as ActionBarZhCN } from './locales/zh-CN';
+export default {
+  'page.setting.notification.update.configuration.successfully':
+    'Configuração atualizada com sucesso',
+  'page.setting.pageContainer.title': 'Configurações',
+  'page.setting.form.item.grafanaURL': 'Endereço Grafana',
+  'page.setting.form.item.grafanaURL.inputHelpMessage':
+    'O endereço Grafana deve começar com HTTP ou HTTPS',
+  'page.setting.form.item.grafanaURL.inputErrorMessage': 'O endereço é inválido',
+};
