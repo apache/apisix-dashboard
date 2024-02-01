@@ -68,6 +68,8 @@ func InitETCDClient(etcdConf *conf.Etcd) error {
 			CertFile:      etcdConf.MTLS.CertFile,
 			KeyFile:       etcdConf.MTLS.KeyFile,
 			TrustedCAFile: etcdConf.MTLS.CaFile,
+			ServerName:    etcdConf.MTLS.ServerName,
+			InsecureSkipVerify: etcdConf.MTLS.SkipVerify,
 		}
 		tlsConfig, err := tlsInfo.ClientConfig()
 		if err != nil {

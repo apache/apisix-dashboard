@@ -77,9 +77,11 @@ var (
 )
 
 type MTLS struct {
-	CaFile   string `mapstructure:"ca_file"`
-	CertFile string `mapstructure:"cert_file"`
-	KeyFile  string `mapstructure:"key_file"`
+	CaFile     string `mapstructure:"ca_file"`
+	CertFile   string `mapstructure:"cert_file"`
+	KeyFile    string `mapstructure:"key_file"`
+	ServerName string `mapstructure:"sni"`
+	SkipVerify bool `mapstructure:"skipverify"`
 }
 
 type Etcd struct {
