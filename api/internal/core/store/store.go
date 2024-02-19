@@ -63,6 +63,7 @@ type GenericStore struct {
 
 	cancel  context.CancelFunc
 	closing bool
+	inited  bool //is inited
 }
 
 type GenericStoreOption struct {
@@ -109,12 +110,20 @@ func ReInit() error {
 			return err
 		}
 	}
+
+	//clear storeNeedReInit
+	storeNeedReInit = storeNeedReInit[:0]
 	return nil
 }
 
 func (s *GenericStore) Init() error {
 	s.initLock.Lock()
 	defer s.initLock.Unlock()
+	//return if inited
+	if s.IsInited() {
+		return nil
+	}
+
 	return s.listAndWatch()
 }
 
@@ -351,6 +360,7 @@ func (s *GenericStore) listAndWatch() error {
 
 	// start watch
 	s.cancel = s.watch()
+	s.SetIsInited(true)
 
 	return nil
 }
@@ -362,7 +372,11 @@ func (s *GenericStore) watch() context.CancelFunc {
 		defer func() {
 			if !s.closing {
 				log.Errorf("etcd watch exception closed, restarting: resource: %s", s.Type())
-				storeNeedReInit = append(storeNeedReInit, s)
+				//only add to storeNeedReInit when from inited to uninited
+				if s.IsInited() {
+					s.SetIsInited(false)
+					storeNeedReInit = append(storeNeedReInit, s)
+				}
 			}
 		}()
 		defer runtime.HandlePanic()
@@ -420,4 +434,12 @@ func (s *GenericStore) GetObjStorageKey(obj interface{}) string {
 
 func (s *GenericStore) GetStorageKey(key string) string {
 	return fmt.Sprintf("%s/%s", s.opt.BasePath, key)
+}
+
+func (s *GenericStore) IsInited() bool {
+	return s.inited
+}
+
+func (s *GenericStore) SetIsInited(inited bool) {
+	s.inited = inited
 }
