@@ -199,8 +199,10 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		ssl := &entity.SSL{}
 		_ = utils.ObjectClone(item, ssl)
 		x509_validity, _ := x509CertValidity(ssl.Cert)
-		ssl.ValidityStart = x509_validity.NotBefore
-		ssl.ValidityEnd = x509_validity.NotAfter
+		if x509_validity != nil {
+			ssl.ValidityStart = x509_validity.NotBefore
+			ssl.ValidityEnd = x509_validity.NotAfter
+		}
 		ssl.Key = ""
 		ssl.Keys = nil
 		list = append(list, ssl)
@@ -455,8 +457,10 @@ func (h *Handler) Validate(c droplet.Context) (interface{}, error) {
 	}
 
 	x509_validity, _ := x509CertValidity(input.Cert)
-	ssl.ValidityStart = x509_validity.NotBefore
-	ssl.ValidityEnd = x509_validity.NotAfter
+	if x509_validity != nil {
+		ssl.ValidityStart = x509_validity.NotBefore
+		ssl.ValidityEnd = x509_validity.NotAfter
+	}
 
 	return ssl, nil
 }
