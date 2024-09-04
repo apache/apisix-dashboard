@@ -198,6 +198,11 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	for _, item := range ret.Rows {
 		ssl := &entity.SSL{}
 		_ = utils.ObjectClone(item, ssl)
+		x509_validity, _ := x509CertValidity(ssl.Cert)
+		if x509_validity != nil {
+			ssl.ValidityStart = x509_validity.NotBefore
+			ssl.ValidityEnd = x509_validity.NotAfter
+		}
 		ssl.Key = ""
 		ssl.Keys = nil
 		list = append(list, ssl)
@@ -327,6 +332,35 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
+// validity allows unmarshaling the certificate validity date range
+type validity struct {
+	NotBefore, NotAfter int64
+}
+
+func x509CertValidity(crt string) (*validity, error) {
+	if crt == "" {
+		return nil, consts.ErrSSLCertificate
+	}
+
+	certDERBlock, _ := pem.Decode([]byte(crt))
+	if certDERBlock == nil {
+		return nil, consts.ErrSSLCertificateResolution
+	}
+
+	x509Cert, err := x509.ParseCertificate(certDERBlock.Bytes)
+
+	if err != nil {
+		return nil, consts.ErrSSLCertificateResolution
+	}
+
+	val := validity{}
+
+	val.NotBefore = x509Cert.NotBefore.Unix()
+	val.NotAfter = x509Cert.NotAfter.Unix()
+
+	return &val, nil
+}
+
 func ParseCert(crt, key string) (*entity.SSL, error) {
 	if crt == "" || key == "" {
 		return nil, consts.ErrSSLCertificate
@@ -383,8 +417,6 @@ func ParseCert(crt, key string) (*entity.SSL, error) {
 
 	ssl.Snis = snis
 	ssl.Key = key
-	ssl.ValidityStart = x509Cert.NotBefore.Unix()
-	ssl.ValidityEnd = x509Cert.NotAfter.Unix()
 	ssl.Cert = crt
 
 	return &ssl, nil
@@ -422,6 +454,12 @@ func (h *Handler) Validate(c droplet.Context) (interface{}, error) {
 	ssl, err := ParseCert(input.Cert, input.Key)
 	if err != nil {
 		return nil, err
+	}
+
+	x509_validity, _ := x509CertValidity(input.Cert)
+	if x509_validity != nil {
+		ssl.ValidityStart = x509_validity.NotBefore
+		ssl.ValidityEnd = x509_validity.NotAfter
 	}
 
 	return ssl, nil
