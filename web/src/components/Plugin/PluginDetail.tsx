@@ -62,6 +62,7 @@ type Props = {
 };
 
 const ajv = new Ajv();
+ajv.addKeyword('encrypt_fields');
 addFormats(ajv);
 
 const FORM_ITEM_LAYOUT = {
