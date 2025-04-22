@@ -1,3 +1,4 @@
+import { BASE_PATH } from './src/config/global';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
@@ -7,7 +8,7 @@ import postcssSimpleVars from 'postcss-simple-vars';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/ui',
+  base: BASE_PATH,
   plugins: [
     tsconfigPaths(),
     TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),

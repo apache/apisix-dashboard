@@ -8,9 +8,10 @@ import { routeTree } from './routeTree.gen';
 // Import the global CSS styles
 import '@mantine/core/styles.css';
 import './styles/global.css';
+import { BASE_PATH } from './config/global';
 
 // Create a new router instance
-const router = createRouter({ routeTree });
+const router = createRouter({ routeTree, basepath: BASE_PATH });
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
