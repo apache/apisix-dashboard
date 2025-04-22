@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/refs/heads/main/schemas/devContainer.base.schema.json",
+  "name": "APISIX Dashboard Dev Environment",
+  "dockerComposeFile": [
+    "./docker-compose.yml"
+  ],
+  "service": "apisix-dashboard",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "pnpm i && pnpm dev",
+  "forwardPorts": [
+    9080,
+    9180,
+    5173,
+    4173
+  ]
+}
