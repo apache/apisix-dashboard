@@ -31,7 +31,7 @@ const Root = () => {
         </AppShell.Main>
       </AppShell>
       <TanStackRouterDevtools />
-      <ReactQueryDevtools />
+      <ReactQueryDevtools initialIsOpen={false} />
     </I18nextProvider>
   );
 };

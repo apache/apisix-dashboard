@@ -1,4 +1,4 @@
-import { BASE_PATH } from './src/config/constant';
+import { API_PREFIX, BASE_PATH } from './src/config/constant';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
@@ -9,6 +9,14 @@ import postcssSimpleVars from 'postcss-simple-vars';
 // https://vite.dev/config/
 export default defineConfig({
   base: BASE_PATH,
+  server: {
+    proxy: {
+      [API_PREFIX]: {
+        target: 'http://apisix:9180',
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [
     tsconfigPaths(),
     TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),

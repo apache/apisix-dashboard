@@ -2,16 +2,15 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from '@tanstack/react-router';
 import { createTheme, MantineProvider } from '@mantine/core';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 
-import { router } from './config/global';
+import { queryClient, router } from './config/global';
 
 import '@mantine/core/styles.css';
 import './styles/global.css';
 
 const theme = createTheme({});
 
-const queryClient = new QueryClient({});
 
 // Render the app
 const rootElement = document.getElementById('root')!;

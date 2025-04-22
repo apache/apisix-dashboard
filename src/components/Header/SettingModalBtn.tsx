@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE_ADMIN_KEY } from '@/config/constant';
 import { ActionIcon, Modal, TextInput } from '@mantine/core';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
@@ -7,7 +8,7 @@ export const SettingModalBtn = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
   const [value, setValue] = useLocalStorage({
-    key: 'apisix-admin-key',
+    key: LOCAL_STORAGE_ADMIN_KEY,
     defaultValue: '',
   });
 
