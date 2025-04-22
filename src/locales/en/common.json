@@ -7,5 +7,9 @@
     "secret": "Secret",
     "service": "Service",
     "ssl": "SSL"
+  },
+  "setting": {
+    "adminKey": "Admin Key",
+    "title": "Setting"
   }
 }
