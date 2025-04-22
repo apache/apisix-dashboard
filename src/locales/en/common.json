@@ -8,6 +8,9 @@
     "service": "Service",
     "ssl": "SSL"
   },
+  "route": {
+    "create": "Create"
+  },
   "setting": {
     "adminKey": "Admin Key",
     "title": "Setting"

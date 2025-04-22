@@ -8,6 +8,9 @@
     "service": "服务",
     "ssl": "SSL"
   },
+  "route": {
+    "create": ""
+  },
   "setting": {
     "adminKey": "",
     "title": ""

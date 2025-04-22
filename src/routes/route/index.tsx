@@ -1,8 +1,10 @@
-import { req } from '@/api/req';
+import { req } from '@/config/req';
 import { queryClient } from '@/config/global';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { AxiosResponse } from 'axios';
+import { Button } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 const routesQueryOptions = queryOptions({
   queryKey: ['routes'],
@@ -12,15 +14,31 @@ const routesQueryOptions = queryOptions({
       .then((v) => v.data),
 });
 
+const ToCreatePageBtn = () => {
+  const { t } = useTranslation();
+  const router = useRouter();
+  return (
+    <Button component={Link} to={router.routesById['/route/create'].to}>
+      {t('route.create')}
+    </Button>
+  );
+};
+
+function RouteComponent() {
+  const { data } = useSuspenseQuery(routesQueryOptions);
+  return (
+    <>
+      <ToCreatePageBtn />
+      {data.total === 0 ? (
+        <div>Empty</div>
+      ) : (
+        <div>{JSON.stringify(data.list, null, 2)}</div>
+      )}
+    </>
+  );
+}
+
 export const Route = createFileRoute('/route/')({
   component: RouteComponent,
   loader: () => queryClient.ensureQueryData(routesQueryOptions),
 });
-
-function RouteComponent() {
-  const { data } = useSuspenseQuery(routesQueryOptions);
-  if (data.total === 0) {
-    return <div>Empty</div>;
-  }
-  return <div>{JSON.stringify(data.list, null, 2)}</div>;
-}
