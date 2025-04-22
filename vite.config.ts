@@ -7,6 +7,7 @@ import postcssSimpleVars from 'postcss-simple-vars';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/ui',
   plugins: [
     tsconfigPaths(),
     TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),

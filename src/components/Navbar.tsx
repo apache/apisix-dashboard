@@ -2,7 +2,7 @@ import { AppShellNavbar, NavLink, NavLinkProps } from '@mantine/core';
 
 import * as React from 'react';
 import { createLink, LinkComponent } from '@tanstack/react-router';
-import { navRoutes } from '../config/navRoutes';
+import { navRoutes } from '@/config/navRoutes';
 import { useTranslation } from 'react-i18next';
 
 const MantineLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
