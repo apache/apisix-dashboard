@@ -7,7 +7,7 @@
   "service": "apisix-dashboard",
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
-  "postCreateCommand": "pnpm i && pnpm dev",
+  "postCreateCommand": "pnpm i && pnpm dev --host 0.0.0.0",
   "forwardPorts": [
     9080,
     9180,
