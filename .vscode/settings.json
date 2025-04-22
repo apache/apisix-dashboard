@@ -11,5 +11,24 @@
   },
   "search.exclude": {
     "**/routeTree.gen.ts": true
-  }
+  },
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "node_modules/@mantine/core/styles.css"
+  ],
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.keepFulfilled": true,
+  "i18n-ally.localesPaths": [
+    "src/locales",
+  ],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.enabledFrameworks": [
+    "react-i18next"
+  ],
+  "i18n-ally.pathMatcher": "{locale}/{namespaces}.json",
+  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.translate.saveAsCandidates": true,
 }

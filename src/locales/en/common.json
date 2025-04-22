@@ -1,0 +1,11 @@
+{
+  "APISIX Dashboard": "APISIX Dashboard",
+  "navbar": {
+    "consumer": "Consumer",
+    "pluginGlobalRules": "Plugin Global Rules",
+    "route": "Route",
+    "secret": "Secret",
+    "service": "Service",
+    "ssl": "SSL"
+  }
+}

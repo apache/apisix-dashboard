@@ -11,20 +11,55 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as SslIndexImport } from './routes/ssl/index'
+import { Route as ServiceIndexImport } from './routes/service/index'
+import { Route as SecretIndexImport } from './routes/secret/index'
+import { Route as RouteIndexImport } from './routes/route/index'
+import { Route as PluginGlobalRulesIndexImport } from './routes/plugin-global-rules/index'
+import { Route as ConsumerIndexImport } from './routes/consumer/index'
 
 // Create/Update Routes
-
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SslIndexRoute = SslIndexImport.update({
+  id: '/ssl/',
+  path: '/ssl/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ServiceIndexRoute = ServiceIndexImport.update({
+  id: '/service/',
+  path: '/service/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SecretIndexRoute = SecretIndexImport.update({
+  id: '/secret/',
+  path: '/secret/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RouteIndexRoute = RouteIndexImport.update({
+  id: '/route/',
+  path: '/route/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PluginGlobalRulesIndexRoute = PluginGlobalRulesIndexImport.update({
+  id: '/plugin-global-rules/',
+  path: '/plugin-global-rules/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ConsumerIndexRoute = ConsumerIndexImport.update({
+  id: '/consumer/',
+  path: '/consumer/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,11 +74,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
+    '/consumer/': {
+      id: '/consumer/'
+      path: '/consumer'
+      fullPath: '/consumer'
+      preLoaderRoute: typeof ConsumerIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/plugin-global-rules/': {
+      id: '/plugin-global-rules/'
+      path: '/plugin-global-rules'
+      fullPath: '/plugin-global-rules'
+      preLoaderRoute: typeof PluginGlobalRulesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/route/': {
+      id: '/route/'
+      path: '/route'
+      fullPath: '/route'
+      preLoaderRoute: typeof RouteIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/secret/': {
+      id: '/secret/'
+      path: '/secret'
+      fullPath: '/secret'
+      preLoaderRoute: typeof SecretIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/service/': {
+      id: '/service/'
+      path: '/service'
+      fullPath: '/service'
+      preLoaderRoute: typeof ServiceIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/ssl/': {
+      id: '/ssl/'
+      path: '/ssl'
+      fullPath: '/ssl'
+      preLoaderRoute: typeof SslIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -53,37 +123,84 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/consumer': typeof ConsumerIndexRoute
+  '/plugin-global-rules': typeof PluginGlobalRulesIndexRoute
+  '/route': typeof RouteIndexRoute
+  '/secret': typeof SecretIndexRoute
+  '/service': typeof ServiceIndexRoute
+  '/ssl': typeof SslIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/consumer': typeof ConsumerIndexRoute
+  '/plugin-global-rules': typeof PluginGlobalRulesIndexRoute
+  '/route': typeof RouteIndexRoute
+  '/secret': typeof SecretIndexRoute
+  '/service': typeof ServiceIndexRoute
+  '/ssl': typeof SslIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/consumer/': typeof ConsumerIndexRoute
+  '/plugin-global-rules/': typeof PluginGlobalRulesIndexRoute
+  '/route/': typeof RouteIndexRoute
+  '/secret/': typeof SecretIndexRoute
+  '/service/': typeof ServiceIndexRoute
+  '/ssl/': typeof SslIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/consumer'
+    | '/plugin-global-rules'
+    | '/route'
+    | '/secret'
+    | '/service'
+    | '/ssl'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/consumer'
+    | '/plugin-global-rules'
+    | '/route'
+    | '/secret'
+    | '/service'
+    | '/ssl'
+  id:
+    | '__root__'
+    | '/'
+    | '/consumer/'
+    | '/plugin-global-rules/'
+    | '/route/'
+    | '/secret/'
+    | '/service/'
+    | '/ssl/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
+  ConsumerIndexRoute: typeof ConsumerIndexRoute
+  PluginGlobalRulesIndexRoute: typeof PluginGlobalRulesIndexRoute
+  RouteIndexRoute: typeof RouteIndexRoute
+  SecretIndexRoute: typeof SecretIndexRoute
+  ServiceIndexRoute: typeof ServiceIndexRoute
+  SslIndexRoute: typeof SslIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
+  ConsumerIndexRoute: ConsumerIndexRoute,
+  PluginGlobalRulesIndexRoute: PluginGlobalRulesIndexRoute,
+  RouteIndexRoute: RouteIndexRoute,
+  SecretIndexRoute: SecretIndexRoute,
+  ServiceIndexRoute: ServiceIndexRoute,
+  SslIndexRoute: SslIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,14 +214,34 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about"
+        "/consumer/",
+        "/plugin-global-rules/",
+        "/route/",
+        "/secret/",
+        "/service/",
+        "/ssl/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/about": {
-      "filePath": "about.tsx"
+    "/consumer/": {
+      "filePath": "consumer/index.tsx"
+    },
+    "/plugin-global-rules/": {
+      "filePath": "plugin-global-rules/index.tsx"
+    },
+    "/route/": {
+      "filePath": "route/index.tsx"
+    },
+    "/secret/": {
+      "filePath": "secret/index.tsx"
+    },
+    "/service/": {
+      "filePath": "service/index.tsx"
+    },
+    "/ssl/": {
+      "filePath": "ssl/index.tsx"
     }
   }
 }

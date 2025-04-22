@@ -4,6 +4,9 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
+// Import the global CSS styles
+import '@mantine/core/styles.css';
+import { createTheme, MantineProvider } from '@mantine/core';
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -15,13 +18,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+const theme = createTheme({});
+
 // Render the app
 const rootElement = document.getElementById('root')!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <MantineProvider theme={theme}>
+        <RouterProvider router={router} />
+      </MantineProvider>
     </StrictMode>
   );
 }
