@@ -13,5 +13,20 @@
     9180,
     5173,
     4173
-  ]
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vunguyentuan.vscode-css-variables",
+        "dbaeumer.vscode-eslint",
+        "drKnoxy.eslint-disable-snippets",
+        "esbenp.prettier-vscode",
+        "christian-kohler.path-intellisense",
+        "lokalise.i18n-ally",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "github.vscode-pull-request-github"
+      ]
+    }
+  }
 }
