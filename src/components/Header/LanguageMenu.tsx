@@ -1,7 +1,7 @@
 import { Menu, ActionIcon } from '@mantine/core';
 import { IconLanguage } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { Resources } from '@/locales/i18n';
+import { Resources } from '@/config/i18n';
 
 const LangMap: Record<keyof Resources, string> = {
   en: 'English',

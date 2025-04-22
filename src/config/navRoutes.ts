@@ -1,4 +1,4 @@
-import { Resources } from '@/locales/i18n';
+import { Resources } from '@/config/i18n';
 import { FileRouteTypes } from '@/routeTree.gen';
 
 export type NavRoute = {

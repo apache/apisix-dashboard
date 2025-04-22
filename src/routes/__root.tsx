@@ -6,7 +6,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { Navbar } from '@/components/Navbar';
 import { Header } from '@/components/Header';
 import { I18nextProvider } from 'react-i18next';
-import i18n from '@/locales/i18n';
+import i18n from '@/config/i18n';
 
 const Root = () => {
   const [opened, { toggle }] = useDisclosure(false);
