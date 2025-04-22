@@ -1,26 +1,17 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { RouterProvider } from '@tanstack/react-router';
 import { createTheme, MantineProvider } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// Import the generated route tree
-import { routeTree } from './routeTree.gen';
-// Import the global CSS styles
+import { router } from './config/global';
+
 import '@mantine/core/styles.css';
 import './styles/global.css';
-import { BASE_PATH } from './config/global';
-
-// Create a new router instance
-const router = createRouter({ routeTree, basepath: BASE_PATH });
-
-// Register the router instance for type safety
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-}
 
 const theme = createTheme({});
+
+const queryClient = new QueryClient({});
 
 // Render the app
 const rootElement = document.getElementById('root')!;
@@ -29,7 +20,9 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <MantineProvider theme={theme}>
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
       </MantineProvider>
     </StrictMode>
   );

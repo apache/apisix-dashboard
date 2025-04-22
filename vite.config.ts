@@ -1,4 +1,4 @@
-import { BASE_PATH } from './src/config/global';
+import { BASE_PATH } from './src/config/constant';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';

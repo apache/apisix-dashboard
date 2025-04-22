@@ -1,6 +1,7 @@
 import { AppShell } from '@mantine/core';
 import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useDisclosure } from '@mantine/hooks';
 import { Navbar } from '@/components/Navbar';
 import { Header } from '@/components/Header';
@@ -30,6 +31,7 @@ const Root = () => {
         </AppShell.Main>
       </AppShell>
       <TanStackRouterDevtools />
+      <ReactQueryDevtools />
     </I18nextProvider>
   );
 };
