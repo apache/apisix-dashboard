@@ -1,33 +1,33 @@
-import i18n from '../locales/i18n';
+import { Resources } from '../locales/i18n';
 import { FileRouteTypes } from '../routeTree.gen';
 
 export type NavRoute = {
   to: FileRouteTypes['to'];
-  label: string;
+  label: keyof Resources['en']['common']['navbar'];
 };
 export const navRoutes: NavRoute[] = [
   {
     to: '/service',
-    label: i18n.t('navbar.service'),
+    label: 'service',
   },
   {
     to: '/route',
-    label: i18n.t('navbar.route'),
+    label: 'route',
   },
   {
     to: '/consumer',
-    label: i18n.t('navbar.consumer'),
+    label: 'consumer',
   },
   {
     to: '/ssl',
-    label: i18n.t('navbar.ssl'),
+    label: 'ssl',
   },
   {
     to: '/plugin-global-rules',
-    label: i18n.t('navbar.pluginGlobalRules'),
+    label: 'pluginGlobalRules',
   },
   {
     to: '/secret',
-    label: i18n.t('navbar.secret'),
+    label: 'secret',
   },
 ];

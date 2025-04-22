@@ -12,6 +12,7 @@
   "dependencies": {
     "@mantine/core": "^7.17.4",
     "@mantine/hooks": "^7.17.4",
+    "@tabler/icons-react": "^3.31.0",
     "@tanstack/react-router": "^1.116.0",
     "@tanstack/react-router-devtools": "^1.116.0",
     "i18next": "^25.0.1",

@@ -1,10 +1,14 @@
 import { initReactI18next } from 'react-i18next';
 import i18n from 'i18next';
-import common from './en/common.json';
+import en_common from './en/common.json';
+import zh_common from './zh/common.json';
 
 export const resources = {
   en: {
-    common,
+    common: en_common,
+  },
+  zh: {
+    common: zh_common,
   },
 } as const;
 
