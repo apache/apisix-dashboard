@@ -8,6 +8,9 @@ services:
       - ..:/workspace:cached
     networks:
       - apisix
+    ports:
+      - '5173:5173'
+      - '5174:5174'
 
   apisix:
     image: 'apache/apisix:3.12.0-debian'

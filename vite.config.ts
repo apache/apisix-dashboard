@@ -6,16 +6,32 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
 
+const inDevContainer = process.env.REMOTE_CONTAINERS === 'true';
+
+if (inDevContainer) {
+  console.info('Running in dev container');
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   base: BASE_PATH,
   server: {
-    proxy: {
-      [API_PREFIX]: {
-        target: 'http://apisix:9180',
-        changeOrigin: true,
+    ...(inDevContainer && {
+      host: '0.0.0.0',
+      port: 5173,
+      strictPort: true,
+      hmr: {
+        protocol: 'ws',
+        host: '127.0.0.1',
+        port: 5174,
       },
-    },
+      proxy: {
+        [API_PREFIX]: {
+          target: 'http://apisix:9180',
+          changeOrigin: true,
+        },
+      },
+    }),
   },
   plugins: [
     tsconfigPaths(),

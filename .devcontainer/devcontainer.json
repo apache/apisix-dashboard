@@ -7,13 +7,28 @@
   "service": "apisix-dashboard",
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
-  "postCreateCommand": "pnpm i && pnpm dev --host 0.0.0.0",
+  "postCreateCommand": "pnpm i && echo '\nUse `pnpm dev` to continue'",
   "forwardPorts": [
     9080,
     9180,
     5173,
+    5174,
     4173
   ],
+  "portsAttributes": {
+    "5173": {
+      "label": "APISIX Dashboard",
+      "onAutoForward": "ignore"
+    },
+    "5174": {
+      "label": "APISIX Dashboard HMR WS",
+      "onAutoForward": "silent"
+    },
+    "9180": {
+      "label": "APISIX Admin API Port",
+      "onAutoForward": "notify"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
