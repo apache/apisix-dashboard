@@ -1,5 +1,5 @@
 import { AppShell, Group, Burger, Image } from '@mantine/core';
-import { FC } from 'react';
+import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import apisixLogo from '@/assets/apisix-logo.svg';

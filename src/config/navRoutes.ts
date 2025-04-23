@@ -1,5 +1,5 @@
-import { Resources } from '@/config/i18n';
-import { FileRouteTypes } from '@/routeTree.gen';
+import type { Resources } from '@/config/i18n';
+import type { FileRouteTypes } from '@/routeTree.gen';
 
 export type NavRoute = {
   to: FileRouteTypes['to'];

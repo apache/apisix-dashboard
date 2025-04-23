@@ -1,7 +1,7 @@
-import { AppShellNavbar, NavLink, NavLinkProps } from '@mantine/core';
+import { AppShellNavbar, NavLink, type NavLinkProps } from '@mantine/core';
 
 import * as React from 'react';
-import { createLink, LinkComponent } from '@tanstack/react-router';
+import { createLink, type LinkComponent } from '@tanstack/react-router';
 import { navRoutes } from '@/config/navRoutes';
 import { useTranslation } from 'react-i18next';
 
