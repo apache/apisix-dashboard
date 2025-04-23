@@ -10,7 +10,7 @@ import { API_ROUTES } from '@/config/constant';
 const routesQueryOptions = queryOptions({
   queryKey: ['routes'],
   queryFn: () =>
-    req.get<unknown, A6Type.RespRouteList>(API_ROUTES).then((v) => v.data),
+    req.get<unknown, A6Type['RespRouteList']>(API_ROUTES).then((v) => v.data),
 });
 
 const ToCreatePageBtn = () => {

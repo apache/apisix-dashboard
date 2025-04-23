@@ -10,7 +10,6 @@ import { req } from '@/config/req';
 import { useMutation } from '@tanstack/react-query';
 import { API_ROUTES } from '@/config/constant';
 export const RoutePostSchema = A6.Route.omit({
-  id: true,
   status: true,
 });
 
@@ -18,7 +17,7 @@ const RouteAddForm = () => {
   const { t } = useTranslation();
   const postRoute = useMutation({
     mutationFn: (data: object) =>
-      req.post<A6Type.Route, A6Type.RespRouteList>(API_ROUTES, data),
+      req.post<A6Type['Route'], A6Type['RespRouteList']>(API_ROUTES, data),
   });
   const form = useAppForm({
     defaultValues: zGetDefault(RoutePostSchema),
