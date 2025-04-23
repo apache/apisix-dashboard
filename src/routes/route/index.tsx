@@ -2,9 +2,10 @@ import { req } from '@/config/req';
 import { queryClient } from '@/config/global';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { Button } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import type { A6 } from '@/types/schema/apisix';
 
 const routesQueryOptions = queryOptions({
   queryKey: ['routes'],
