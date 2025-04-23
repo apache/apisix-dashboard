@@ -4,6 +4,7 @@ import {
   LOCAL_STORAGE_ADMIN_KEY,
 } from '@/config/constant';
 import { readLocalStorageValue } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
 import axios from 'axios';
 import { stringify } from 'qs';
 
@@ -22,9 +23,22 @@ req.interceptors.request.use((conf) => {
   return conf;
 });
 
+type A6RespErr = {
+  error_msg: string;
+};
+
 req.interceptors.response.use(
   (res) => res,
   (err) => {
+    if (err.response) {
+      const d = err.response.data as A6RespErr;
+      notifications.show({
+        id: d.error_msg,
+        message: d.error_msg,
+        color: 'red',
+      });
+      console.log(d);
+    }
     return Promise.reject(err);
   }
 );

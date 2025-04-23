@@ -1,5 +1,16 @@
 {
   "APISIX Dashboard": "APISIX Dashboard",
+  "form": {
+    "btn": {
+      "add": "Add"
+    },
+    "basic": {
+      "title": "Basic Infomation"
+    },
+    "upstream": {
+      "title": "Upstream"
+    }
+  },
   "navbar": {
     "consumer": "Consumer",
     "pluginGlobalRules": "Plugin Global Rules",
@@ -9,7 +20,16 @@
     "ssl": "SSL"
   },
   "route": {
-    "add": "Add Route"
+    "add": {
+      "form": {
+        "desc": "Description",
+        "name": "Name",
+        "uri": "URI",
+        "uris": "URIs"
+      },
+      "submit": "Add",
+      "title": "Add Route"
+    }
   },
   "setting": {
     "adminKey": "Admin Key",

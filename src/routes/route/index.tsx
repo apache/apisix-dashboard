@@ -2,17 +2,15 @@ import { req } from '@/config/req';
 import { queryClient } from '@/config/global';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
-import type { AxiosResponse } from 'axios';
 import { Button } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import type { A6 } from '@/types/schema/apisix';
+import type { A6Type } from '@/types/schema/apisix';
+import { API_ROUTES } from '@/config/constant';
 
 const routesQueryOptions = queryOptions({
   queryKey: ['routes'],
   queryFn: () =>
-    req
-      .get<unknown, AxiosResponse<A6.ListResponse<A6.Route>>>('/routes')
-      .then((v) => v.data),
+    req.get<unknown, A6Type.RespRouteList>(API_ROUTES).then((v) => v.data),
 });
 
 const ToCreatePageBtn = () => {
@@ -20,7 +18,7 @@ const ToCreatePageBtn = () => {
   const router = useRouter();
   return (
     <Button component={Link} to={router.routesById['/route/add'].to}>
-      {t('route.add')}
+      {t('route.add.title')}
     </Button>
   );
 };
