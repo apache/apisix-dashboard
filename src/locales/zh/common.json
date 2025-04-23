@@ -9,7 +9,7 @@
     "ssl": "SSL"
   },
   "route": {
-    "create": ""
+    "add": ""
   },
   "setting": {
     "adminKey": "",

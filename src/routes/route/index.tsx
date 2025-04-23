@@ -18,8 +18,8 @@ const ToCreatePageBtn = () => {
   const { t } = useTranslation();
   const router = useRouter();
   return (
-    <Button component={Link} to={router.routesById['/route/create'].to}>
-      {t('route.create')}
+    <Button component={Link} to={router.routesById['/route/add'].to}>
+      {t('route.add')}
     </Button>
   );
 };

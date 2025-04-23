@@ -18,7 +18,7 @@ import { Route as SecretIndexImport } from './routes/secret/index'
 import { Route as RouteIndexImport } from './routes/route/index'
 import { Route as PluginGlobalRulesIndexImport } from './routes/plugin-global-rules/index'
 import { Route as ConsumerIndexImport } from './routes/consumer/index'
-import { Route as RouteCreateImport } from './routes/route/create'
+import { Route as RouteAddImport } from './routes/route/add'
 
 // Create/Update Routes
 
@@ -64,9 +64,9 @@ const ConsumerIndexRoute = ConsumerIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const RouteCreateRoute = RouteCreateImport.update({
-  id: '/route/create',
-  path: '/route/create',
+const RouteAddRoute = RouteAddImport.update({
+  id: '/route/add',
+  path: '/route/add',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -81,11 +81,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/route/create': {
-      id: '/route/create'
-      path: '/route/create'
-      fullPath: '/route/create'
-      preLoaderRoute: typeof RouteCreateImport
+    '/route/add': {
+      id: '/route/add'
+      path: '/route/add'
+      fullPath: '/route/add'
+      preLoaderRoute: typeof RouteAddImport
       parentRoute: typeof rootRoute
     }
     '/consumer/': {
@@ -137,7 +137,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/route/create': typeof RouteCreateRoute
+  '/route/add': typeof RouteAddRoute
   '/consumer': typeof ConsumerIndexRoute
   '/plugin-global-rules': typeof PluginGlobalRulesIndexRoute
   '/route': typeof RouteIndexRoute
@@ -148,7 +148,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/route/create': typeof RouteCreateRoute
+  '/route/add': typeof RouteAddRoute
   '/consumer': typeof ConsumerIndexRoute
   '/plugin-global-rules': typeof PluginGlobalRulesIndexRoute
   '/route': typeof RouteIndexRoute
@@ -160,7 +160,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/route/create': typeof RouteCreateRoute
+  '/route/add': typeof RouteAddRoute
   '/consumer/': typeof ConsumerIndexRoute
   '/plugin-global-rules/': typeof PluginGlobalRulesIndexRoute
   '/route/': typeof RouteIndexRoute
@@ -173,7 +173,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/route/create'
+    | '/route/add'
     | '/consumer'
     | '/plugin-global-rules'
     | '/route'
@@ -183,7 +183,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/route/create'
+    | '/route/add'
     | '/consumer'
     | '/plugin-global-rules'
     | '/route'
@@ -193,7 +193,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/route/create'
+    | '/route/add'
     | '/consumer/'
     | '/plugin-global-rules/'
     | '/route/'
@@ -205,7 +205,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  RouteCreateRoute: typeof RouteCreateRoute
+  RouteAddRoute: typeof RouteAddRoute
   ConsumerIndexRoute: typeof ConsumerIndexRoute
   PluginGlobalRulesIndexRoute: typeof PluginGlobalRulesIndexRoute
   RouteIndexRoute: typeof RouteIndexRoute
@@ -216,7 +216,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  RouteCreateRoute: RouteCreateRoute,
+  RouteAddRoute: RouteAddRoute,
   ConsumerIndexRoute: ConsumerIndexRoute,
   PluginGlobalRulesIndexRoute: PluginGlobalRulesIndexRoute,
   RouteIndexRoute: RouteIndexRoute,
@@ -236,7 +236,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/route/create",
+        "/route/add",
         "/consumer/",
         "/plugin-global-rules/",
         "/route/",
@@ -248,8 +248,8 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
-    "/route/create": {
-      "filePath": "route/create.tsx"
+    "/route/add": {
+      "filePath": "route/add.tsx"
     },
     "/consumer/": {
       "filePath": "consumer/index.tsx"
