@@ -1,7 +1,7 @@
 import { LOCAL_STORAGE_ADMIN_KEY } from '@/config/constant';
 import { ActionIcon, Modal, TextInput } from '@mantine/core';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
-import { IconSettings } from '@tabler/icons-react';
+import IconSettings from '~icons/material-symbols/settings';
 import { useTranslation } from 'react-i18next';
 
 export const SettingModalBtn = () => {

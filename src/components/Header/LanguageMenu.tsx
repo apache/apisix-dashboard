@@ -1,5 +1,5 @@
 import { Menu, ActionIcon } from '@mantine/core';
-import { IconLanguage } from '@tabler/icons-react';
+import IconLanguage from '~icons/material-symbols/language-chinese-array';
 import { useTranslation } from 'react-i18next';
 import type { Resources } from '@/config/i18n';
 

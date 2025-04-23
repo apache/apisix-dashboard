@@ -5,6 +5,7 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
+import UnpluginIcons from 'unplugin-icons/vite';
 
 const inDevContainer = process.env.REMOTE_CONTAINERS === 'true';
 
@@ -35,6 +36,11 @@ export default defineConfig({
   },
   plugins: [
     tsconfigPaths(),
+    UnpluginIcons({
+      autoInstall: true,
+      compiler: 'jsx',
+      jsx: 'react',
+    }),
     TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),
     react(),
   ],

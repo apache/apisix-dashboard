@@ -20,7 +20,6 @@
     "node_modules/@mantine/core/styles.css"
   ],
   "i18n-ally.sortKeys": true,
-  "i18n-ally.keepFulfilled": true,
   "i18n-ally.localesPaths": [
     "src/locales",
   ],
@@ -31,4 +30,5 @@
   "i18n-ally.pathMatcher": "{locale}/{namespaces}.json",
   "i18n-ally.editor.preferEditor": true,
   "i18n-ally.translate.saveAsCandidates": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
 }
