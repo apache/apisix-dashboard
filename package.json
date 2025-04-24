@@ -11,6 +11,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@ant-design/pro-components": "^2.8.7",
     "@mantine/core": "^7.17.4",
     "@mantine/hooks": "^7.17.4",
     "@mantine/modals": "^7.17.4",
@@ -18,6 +19,7 @@
     "@tanstack/react-form": "^1.6.3",
     "@tanstack/react-query": "^5.74.4",
     "@tanstack/react-router": "^1.116.0",
+    "antd": "^5.24.8",
     "axios": "^1.8.4",
     "clsx": "^2.1.1",
     "fast-clean": "^1.4.0",
@@ -49,6 +51,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
