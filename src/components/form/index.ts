@@ -3,7 +3,6 @@ import { Text } from './Text';
 import { SubmitBtn } from './SubscribeBtn';
 import { TextArray } from './TextArray';
 import { Textarea } from './Textarea';
-import { Section } from './Section';
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts();
@@ -18,7 +17,6 @@ export const { useAppForm, withForm } = createFormHook({
   },
   formComponents: {
     SubmitBtn,
-    Section,
   },
 });
 

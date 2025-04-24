@@ -3,6 +3,7 @@ import { withForm } from '../form';
 import { A6 } from '@/types/schema/apisix';
 import { useTranslation } from 'react-i18next';
 import { FormItemLabels } from './FormItemLabels';
+import { FormSection } from './FormSection';
 
 export const FormPartBasic = withForm({
   defaultValues: zGetDefault(A6.Basic),
@@ -16,7 +17,7 @@ export const FormPartBasic = withForm({
     const { t } = useTranslation();
 
     return (
-      <form.Section legend={legend || t('form.basic.title')}>
+      <FormSection legend={legend || t('form.basic.title')}>
         <form.AppField
           name="name"
           children={(field) => <field.Text label={t('route.add.form.name')} />}
@@ -28,7 +29,7 @@ export const FormPartBasic = withForm({
           )}
         />
         <form.AppField name="labels" children={() => <FormItemLabels />} />
-      </form.Section>
+      </FormSection>
     );
   },
 });

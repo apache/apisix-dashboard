@@ -11,6 +11,7 @@ import { useMutation } from '@tanstack/react-query';
 import { API_UPSTREAMS } from '@/config/constant';
 import { FormPartBasic } from '@/components/form-slice/FormPartBasic';
 import PageHeader from '@/components/page/PageHeader';
+import { FormSectionTOCBox } from '@/components/form-slice/FormSection';
 export const UpstreamPostSchema = A6.Upstream;
 
 const UpstreamAddForm = () => {
@@ -48,7 +49,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader title={t('upstreams.add.title')} />
-      <UpstreamAddForm />
+      <FormSectionTOCBox>
+        <UpstreamAddForm />
+      </FormSectionTOCBox>
     </>
   );
 }
