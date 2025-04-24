@@ -12,12 +12,14 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as UpstreamsIndexImport } from './routes/upstreams/index'
 import { Route as SslIndexImport } from './routes/ssl/index'
 import { Route as ServiceIndexImport } from './routes/service/index'
 import { Route as SecretIndexImport } from './routes/secret/index'
 import { Route as RouteIndexImport } from './routes/route/index'
 import { Route as PluginGlobalRulesIndexImport } from './routes/plugin-global-rules/index'
 import { Route as ConsumerIndexImport } from './routes/consumer/index'
+import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as RouteAddImport } from './routes/route/add'
 
 // Create/Update Routes
@@ -25,6 +27,12 @@ import { Route as RouteAddImport } from './routes/route/add'
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const UpstreamsIndexRoute = UpstreamsIndexImport.update({
+  id: '/upstreams/',
+  path: '/upstreams/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -64,6 +72,12 @@ const ConsumerIndexRoute = ConsumerIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const UpstreamsAddRoute = UpstreamsAddImport.update({
+  id: '/upstreams/add',
+  path: '/upstreams/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RouteAddRoute = RouteAddImport.update({
   id: '/route/add',
   path: '/route/add',
@@ -86,6 +100,13 @@ declare module '@tanstack/react-router' {
       path: '/route/add'
       fullPath: '/route/add'
       preLoaderRoute: typeof RouteAddImport
+      parentRoute: typeof rootRoute
+    }
+    '/upstreams/add': {
+      id: '/upstreams/add'
+      path: '/upstreams/add'
+      fullPath: '/upstreams/add'
+      preLoaderRoute: typeof UpstreamsAddImport
       parentRoute: typeof rootRoute
     }
     '/consumer/': {
@@ -130,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SslIndexImport
       parentRoute: typeof rootRoute
     }
+    '/upstreams/': {
+      id: '/upstreams/'
+      path: '/upstreams'
+      fullPath: '/upstreams'
+      preLoaderRoute: typeof UpstreamsIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -138,35 +166,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/route/add': typeof RouteAddRoute
+  '/upstreams/add': typeof UpstreamsAddRoute
   '/consumer': typeof ConsumerIndexRoute
   '/plugin-global-rules': typeof PluginGlobalRulesIndexRoute
   '/route': typeof RouteIndexRoute
   '/secret': typeof SecretIndexRoute
   '/service': typeof ServiceIndexRoute
   '/ssl': typeof SslIndexRoute
+  '/upstreams': typeof UpstreamsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/route/add': typeof RouteAddRoute
+  '/upstreams/add': typeof UpstreamsAddRoute
   '/consumer': typeof ConsumerIndexRoute
   '/plugin-global-rules': typeof PluginGlobalRulesIndexRoute
   '/route': typeof RouteIndexRoute
   '/secret': typeof SecretIndexRoute
   '/service': typeof ServiceIndexRoute
   '/ssl': typeof SslIndexRoute
+  '/upstreams': typeof UpstreamsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/route/add': typeof RouteAddRoute
+  '/upstreams/add': typeof UpstreamsAddRoute
   '/consumer/': typeof ConsumerIndexRoute
   '/plugin-global-rules/': typeof PluginGlobalRulesIndexRoute
   '/route/': typeof RouteIndexRoute
   '/secret/': typeof SecretIndexRoute
   '/service/': typeof ServiceIndexRoute
   '/ssl/': typeof SslIndexRoute
+  '/upstreams/': typeof UpstreamsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -174,55 +208,65 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/route/add'
+    | '/upstreams/add'
     | '/consumer'
     | '/plugin-global-rules'
     | '/route'
     | '/secret'
     | '/service'
     | '/ssl'
+    | '/upstreams'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/route/add'
+    | '/upstreams/add'
     | '/consumer'
     | '/plugin-global-rules'
     | '/route'
     | '/secret'
     | '/service'
     | '/ssl'
+    | '/upstreams'
   id:
     | '__root__'
     | '/'
     | '/route/add'
+    | '/upstreams/add'
     | '/consumer/'
     | '/plugin-global-rules/'
     | '/route/'
     | '/secret/'
     | '/service/'
     | '/ssl/'
+    | '/upstreams/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   RouteAddRoute: typeof RouteAddRoute
+  UpstreamsAddRoute: typeof UpstreamsAddRoute
   ConsumerIndexRoute: typeof ConsumerIndexRoute
   PluginGlobalRulesIndexRoute: typeof PluginGlobalRulesIndexRoute
   RouteIndexRoute: typeof RouteIndexRoute
   SecretIndexRoute: typeof SecretIndexRoute
   ServiceIndexRoute: typeof ServiceIndexRoute
   SslIndexRoute: typeof SslIndexRoute
+  UpstreamsIndexRoute: typeof UpstreamsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RouteAddRoute: RouteAddRoute,
+  UpstreamsAddRoute: UpstreamsAddRoute,
   ConsumerIndexRoute: ConsumerIndexRoute,
   PluginGlobalRulesIndexRoute: PluginGlobalRulesIndexRoute,
   RouteIndexRoute: RouteIndexRoute,
   SecretIndexRoute: SecretIndexRoute,
   ServiceIndexRoute: ServiceIndexRoute,
   SslIndexRoute: SslIndexRoute,
+  UpstreamsIndexRoute: UpstreamsIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -237,12 +281,14 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/route/add",
+        "/upstreams/add",
         "/consumer/",
         "/plugin-global-rules/",
         "/route/",
         "/secret/",
         "/service/",
-        "/ssl/"
+        "/ssl/",
+        "/upstreams/"
       ]
     },
     "/": {
@@ -250,6 +296,9 @@ export const routeTree = rootRoute
     },
     "/route/add": {
       "filePath": "route/add.tsx"
+    },
+    "/upstreams/add": {
+      "filePath": "upstreams/add.tsx"
     },
     "/consumer/": {
       "filePath": "consumer/index.tsx"
@@ -268,6 +317,9 @@ export const routeTree = rootRoute
     },
     "/ssl/": {
       "filePath": "ssl/index.tsx"
+    },
+    "/upstreams/": {
+      "filePath": "upstreams/index.tsx"
     }
   }
 }

@@ -10,6 +10,6 @@ const allFalsy = (obj: object) =>
 type hasTimeout = Pick<A6Type['Route'], 'timeout'>;
 export const produceTimeout = produce<Partial<hasTimeout>>((draft) => {
   if (draft.timeout && allFalsy(draft.timeout)) {
-    delete draft?.timeout;
+    delete draft.timeout;
   }
 });

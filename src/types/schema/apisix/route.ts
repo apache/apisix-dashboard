@@ -2,30 +2,31 @@ import { z } from 'zod';
 import { A6Common } from './common';
 import { A6Upstream } from './upstream';
 
-const Route = A6Common.Basic.merge(
-  z.object({
-    uri: z.string().optional(),
-    uris: z.array(z.string()).optional(),
-    host: z.string().optional(),
-    hosts: z.array(z.string()).optional(),
-    methods: z.array(z.string()).optional(),
-    remote_addr: z.string().optional(),
-    remote_addrs: z.array(z.string()).optional(),
-    vars: A6Common.Expr.optional(),
-    filter_func: z.string().optional(),
-    script: z.string().optional(),
-    script_id: z.string().optional(),
-    plugins: A6Common.Plugins.optional(),
-    plugin_config_id: z.string().optional(),
-    upstream: A6Upstream.Upstream.optional(),
-    upstream_id: z.string().optional(),
-    service_id: z.string().optional(),
+const Route = z
+  .object({
+    uri: z.string(),
+    uris: z.array(z.string()),
+    host: z.string(),
+    hosts: z.array(z.string()),
+    methods: z.array(z.string()),
+    remote_addr: z.string(),
+    remote_addrs: z.array(z.string()),
+    vars: A6Common.Expr,
+    filter_func: z.string(),
+    script: z.string(),
+    script_id: z.string(),
+    plugins: A6Common.Plugins,
+    plugin_config_id: z.string(),
+    upstream: A6Upstream.Upstream,
+    upstream_id: z.string(),
+    service_id: z.string(),
     timeout: A6Upstream.UpstreamTimeout.partial(),
-    enable_websocket: z.boolean().optional(),
-    priority: z.number().optional(),
-    status: z.number().optional(),
+    enable_websocket: z.boolean(),
+    priority: z.number(),
+    status: z.number(),
   })
-);
+  .partial()
+  .merge(A6Common.Basic);
 
 export const A6Route = {
   Route,

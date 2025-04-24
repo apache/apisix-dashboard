@@ -1,11 +1,18 @@
 {
   "APISIX Dashboard": "APISIX Dashboard",
   "form": {
+    "basic": {
+      "labels": {
+        "errorFormat": "The format of label is wrong, it should be `key:value`",
+        "key": "Key",
+        "placeholder": "Input text like `key:value`, then enter or blur",
+        "title": "Labels",
+        "value": "Value"
+      },
+      "title": "Basic Infomation"
+    },
     "btn": {
       "add": "Add"
-    },
-    "basic": {
-      "title": "Basic Infomation"
     },
     "upstream": {
       "title": "Upstream"
@@ -17,7 +24,8 @@
     "route": "Route",
     "secret": "Secret",
     "service": "Service",
-    "ssl": "SSL"
+    "ssl": "SSL",
+    "upstreams": "Upstreams"
   },
   "route": {
     "add": {
@@ -34,5 +42,10 @@
   "setting": {
     "adminKey": "Admin Key",
     "title": "Setting"
+  },
+  "upstreams": {
+    "add": {
+      "title": "Add Upstream"
+    }
   }
 }

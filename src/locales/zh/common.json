@@ -7,12 +7,5 @@
     "secret": "Secret",
     "service": "服务",
     "ssl": "SSL"
-  },
-  "route": {
-    "add": ""
-  },
-  "setting": {
-    "adminKey": "",
-    "title": ""
   }
 }

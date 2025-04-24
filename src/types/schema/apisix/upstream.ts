@@ -126,7 +126,7 @@ const Upstream = A6Common.Basic.merge(
     retries: z.number().optional(),
     retry_timeout: z.number().optional(),
     timeout: UpstreamTimeout.optional(),
-    tls: UpstreamTls.optional(),
+    tls: UpstreamTls.partial(),
     keepalive_pool: UpstreamKeepalivePool.optional(),
   })
 );
