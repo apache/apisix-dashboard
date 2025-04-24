@@ -31,4 +31,7 @@
   "i18n-ally.editor.preferEditor": true,
   "i18n-ally.translate.saveAsCandidates": true,
   "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
 }

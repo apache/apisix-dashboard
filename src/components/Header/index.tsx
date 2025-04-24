@@ -25,7 +25,7 @@ export const Header: FC<HeaderProps> = (props) => {
           <Logo />
           <div>{t('APISIX Dashboard')}</div>
         </Group>
-        <Group h={'100%'} gap="sm">
+        <Group h="100%" gap="sm">
           <SettingModalBtn />
           <LanguageMenu />
         </Group>

@@ -1,21 +1,25 @@
 import { AppShellNavbar, NavLink, type NavLinkProps } from '@mantine/core';
 
 import * as React from 'react';
-import { createLink, type LinkComponent } from '@tanstack/react-router';
+import { createLink } from '@tanstack/react-router';
 import { navRoutes } from '@/config/navRoutes';
 import { useTranslation } from 'react-i18next';
+import type { FC } from 'react';
 
 const MantineLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
   (props, ref) => {
     return <NavLink ref={ref} {...props} />;
   }
 );
+MantineLinkComponent.displayName = 'MantineLinkComponent';
 
 const CreatedLinkComponent = createLink(MantineLinkComponent);
 
-export const NavbarLink: LinkComponent<typeof MantineLinkComponent> = (
-  props
-) => {
+interface NavbarLinkProps extends NavLinkProps {
+  to: string;
+}
+
+export const NavbarLink: FC<NavbarLinkProps> = (props) => {
   return (
     <CreatedLinkComponent
       key={props.to}

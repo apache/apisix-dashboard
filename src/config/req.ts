@@ -37,7 +37,6 @@ req.interceptors.response.use(
         message: d.error_msg,
         color: 'red',
       });
-      console.log(d);
     }
     return Promise.reject(err);
   }

@@ -1,22 +1,22 @@
 import { useFieldContext } from '../form';
-import { useCallback, useEffect, useState, type FC } from 'react';
+import { useCallback, useState, type FC } from 'react';
 import type { A6Type } from '@/types/schema/apisix';
 import { useTranslation } from 'react-i18next';
 import { useListState } from '@mantine/hooks';
 import { TagsInput, type TagsInputProps } from '@mantine/core';
 import type { IssueData } from 'zod';
-
+import { useMount } from 'react-use';
 export const FormItemLabels: FC<TagsInputProps> = (props) => {
   const field = useFieldContext<A6Type['Labels']>();
   const { t } = useTranslation();
   const [values, handle] = useListState<string>();
   const [internalError, setInternalError] = useState<string | null>();
 
-  useEffect(() => {
+  useMount(() => {
     Object.entries(field.state.value).forEach(([key, value]) => {
       handle.append(`${key}:${value}`);
     });
-  }, []);
+  });
 
   const onSearchChange = useCallback(
     (val: string) => {
@@ -33,8 +33,6 @@ export const FormItemLabels: FC<TagsInputProps> = (props) => {
 
   const onChange = useCallback(
     (vals: string[]) => {
-      console.log('vals', vals);
-
       const obj: A6Type['Labels'] = {};
       for (const val of vals) {
         const tuple = val.split(':');
@@ -48,7 +46,7 @@ export const FormItemLabels: FC<TagsInputProps> = (props) => {
       handle.setState(vals);
       field.handleChange(obj);
     },
-    [values, t]
+    [handle, field, t]
   );
 
   return (

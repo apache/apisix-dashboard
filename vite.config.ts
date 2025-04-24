@@ -10,6 +10,7 @@ import UnpluginIcons from 'unplugin-icons/vite';
 const inDevContainer = process.env.REMOTE_CONTAINERS === 'true';
 
 if (inDevContainer) {
+  // eslint-disable-next-line no-console
   console.info('Running in dev container');
 }
 
