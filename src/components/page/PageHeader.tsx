@@ -1,23 +1,16 @@
-import React from 'react';
-import { Title, Text, Box, Group, Stack, useMantineTheme } from '@mantine/core';
+import { type FC } from 'react';
+import { Title, Text, Box, Group, Stack } from '@mantine/core';
 
-interface PageHeaderProps {
+type PageHeaderProps = {
   title: string;
   desc?: string;
   extra?: React.ReactNode;
-}
+};
 
-const PageHeader: React.FC<PageHeaderProps> = ({ title, desc, extra }) => {
-  const theme = useMantineTheme();
-
+const PageHeader: FC<PageHeaderProps> = (props) => {
+  const { title, desc, extra } = props;
   return (
-    <Box
-      py="md"
-      mb="lg"
-      style={{
-        borderBottom: `1px solid ${theme.colors.gray[3]}`,
-      }}
-    >
+    <Box py="md" mb="lg">
       <Group justify="space-between" align="flex-start">
         <Stack gap="xs">
           <Title order={2}>{title}</Title>
