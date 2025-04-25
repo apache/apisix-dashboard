@@ -1,7 +1,4 @@
-import {
-  Textarea as MTextarea,
-  type TextareaProps as MTextareaProps,
-} from '@mantine/core';
+import { TextInput, type TextInputProps } from '@mantine/core';
 import {
   useController,
   type FieldValues,
@@ -9,11 +6,11 @@ import {
 } from 'react-hook-form';
 import { genControllerProps } from './util';
 
-export type FormItemTextareaProps<T extends FieldValues> =
-  UseControllerProps<T> & MTextareaProps;
+export type FormItemTextProps<T extends FieldValues> = UseControllerProps<T> &
+  TextInputProps;
 
-export const FormItemTextarea = <T extends FieldValues>(
-  props: FormItemTextareaProps<T>
+export const FormItemTextInput = <T extends FieldValues>(
+  props: FormItemTextProps<T>
 ) => {
   const { controllerProps, restProps } = genControllerProps(props, '');
   const {
@@ -21,7 +18,7 @@ export const FormItemTextarea = <T extends FieldValues>(
     fieldState,
   } = useController<T>(controllerProps);
   return (
-    <MTextarea
+    <TextInput
       value={value}
       error={fieldState.error?.message}
       onChange={(e) => {

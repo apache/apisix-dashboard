@@ -1,39 +1,29 @@
-import { useAppForm } from '@/components/form';
-import { A6, type A6Type } from '@/types/schema/apisix';
+import { A6 } from '@/types/schema/apisix';
 import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { zGetDefault, zOneOf } from '@/utils/zod';
-import { pipeProduce } from '@/utils/producer';
-import {} from 'axios';
-import { produceTimeout } from '@/utils/form-producer';
-import { req } from '@/config/req';
-import { useMutation } from '@tanstack/react-query';
-import { API_ROUTES } from '@/config/constant';
-import { FormPartBasic } from '@/components/form-slice/FormPartBasic';
 export const RoutePostSchema = A6.Route.omit({
   status: true,
 });
 
 const RouteAddForm = () => {
-  const { t } = useTranslation();
-  const postRoute = useMutation({
-    mutationFn: (data: object) =>
-      req.post<A6Type['Route'], A6Type['RespRouteList']>(API_ROUTES, data),
-  });
-  const form = useAppForm({
-    defaultValues: zGetDefault(RoutePostSchema),
-    validators: {
-      onChange: RoutePostSchema.superRefine(zOneOf('uri', 'uris')),
-    },
-    async onSubmit(data) {
-      const form = pipeProduce(produceTimeout)(data.value);
-      await postRoute.mutateAsync(form);
-    },
-  });
+  // const { t } = useTranslation();
+  // const postRoute = useMutation({
+  //   mutationFn: (data: object) =>
+  //     req.post<A6Type['Route'], A6Type['RespRouteList']>(API_ROUTES, data),
+  // });
+  // const form = useAppForm({
+  //   defaultValues: zGetDefault(RoutePostSchema),
+  //   validators: {
+  //     onChange: RoutePostSchema.superRefine(zOneOf('uri', 'uris')),
+  //   },
+  //   async onSubmit(data) {
+  //     const form = pipeProduce(produceTimeout)(data.value);
+  //     await postRoute.mutateAsync(form);
+  //   },
+  // });
 
   return (
     <form>
-      <form.AppForm>
+      {/* <form.AppForm>
         <FormPartBasic form={form as never} />
         <form.Section>
           <form.AppField
@@ -54,7 +44,7 @@ const RouteAddForm = () => {
           aria-required
         ></form.Section>
         <form.SubmitBtn>{t('form.btn.add')}</form.SubmitBtn>
-      </form.AppForm>
+      </form.AppForm> */}
     </form>
   );
 };

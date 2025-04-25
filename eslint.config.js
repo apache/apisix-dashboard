@@ -61,6 +61,10 @@ export default tseslint.config(
       ],
       "react/no-children-prop": ["error", {
         "allowFunctions": true
+      }],
+      "react/self-closing-comp": ["error", {
+        "component": true,
+        "html": true
       }]
     },
   },

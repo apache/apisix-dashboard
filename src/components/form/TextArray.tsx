@@ -1,19 +1,33 @@
 import { TagsInput, type TagsInputProps } from '@mantine/core';
-import { useFieldContext } from '.';
-import type { FC } from 'react';
-import type { IssueData } from 'zod';
+import {
+  useController,
+  type FieldValues,
+  type UseControllerProps,
+} from 'react-hook-form';
+import { genControllerProps } from './util';
 
-export const TextArray: FC<TagsInputProps> = (props) => {
-  const field = useFieldContext<string[]>();
+export type FormItemTextArrayProps<T extends FieldValues> =
+  UseControllerProps<T> & TagsInputProps;
+
+export const FormItemTextArray = <T extends FieldValues>(
+  props: FormItemTextArrayProps<T>
+) => {
+  const { controllerProps, restProps } = genControllerProps(props, []);
+
+  const {
+    field: { value, onChange: fOnChange, ...restField },
+    fieldState,
+  } = useController<T>(controllerProps);
   return (
     <TagsInput
-      value={field.state.value}
-      onChange={(data) => field.handleChange(data)}
-      onBlur={field.handleBlur}
-      {...(field.state.meta.errors.length && {
-        error: (field.state.meta.errors as IssueData[])[0].message,
-      })}
-      {...props}
+      value={value}
+      error={fieldState.error?.message}
+      onChange={(value) => {
+        fOnChange(value);
+        restProps?.onChange?.(value);
+      }}
+      {...restField}
+      {...restProps}
     />
   );
 };

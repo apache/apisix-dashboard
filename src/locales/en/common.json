@@ -12,9 +12,41 @@
       "title": "Basic Infomation"
     },
     "btn": {
-      "add": "Add"
+      "add": "Add",
+      "delete": "Delete",
+      "edit": "Edit",
+      "save": "Save"
     },
     "upstream": {
+      "discoveryType": {
+        "title": "Discovery Type"
+      },
+      "findUpstreamFrom": "Find Upstream From",
+      "nodes": {
+        "action": {
+          "title": "Action"
+        },
+        "add": "Add a Node",
+        "host": {
+          "title": "Host"
+        },
+        "port": {
+          "title": "Port"
+        },
+        "priority": {
+          "title": "Priority"
+        },
+        "title": "Nodes",
+        "weight": {
+          "title": "Weight"
+        }
+      },
+      "serviceDiscovery": {
+        "title": "Service Discovery"
+      },
+      "serviceName": {
+        "title": "Service Name"
+      },
       "title": "Upstream"
     }
   },
@@ -27,6 +59,7 @@
     "ssl": "SSL",
     "upstreams": "Upstreams"
   },
+  "noData": "No Data",
   "route": {
     "add": {
       "form": {

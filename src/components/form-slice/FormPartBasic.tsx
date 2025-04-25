@@ -1,35 +1,27 @@
-import { zGetDefault } from '@/utils/zod';
-import { withForm } from '../form';
-import { A6 } from '@/types/schema/apisix';
 import { useTranslation } from 'react-i18next';
 import { FormItemLabels } from './FormItemLabels';
-import { FormSection } from './FormSection';
+import { FormSection, type FormSectionProps } from './FormSection';
+import { FormItemTextInput } from '../form/TextInput';
+import { FormItemTextarea } from '../form/Textarea';
+import { useFormContext } from 'react-hook-form';
+import type { A6Type } from '@/types/schema/apisix';
 
-export const FormPartBasic = withForm({
-  defaultValues: zGetDefault(A6.Basic),
-  validators: {
-    onChange: A6.Basic,
-  },
-  props: {
-    legend: '',
-  } as { legend?: string },
-  render: function Render({ form, legend }) {
-    const { t } = useTranslation();
-
-    return (
-      <FormSection legend={legend || t('form.basic.title')}>
-        <form.AppField
-          name="name"
-          children={(field) => <field.Text label={t('route.add.form.name')} />}
-        />
-        <form.AppField
-          name="desc"
-          children={(field) => (
-            <field.Textarea label={t('route.add.form.desc')} />
-          )}
-        />
-        <form.AppField name="labels" children={() => <FormItemLabels />} />
-      </FormSection>
-    );
-  },
-});
+export const FormPartBasic = (props: Omit<FormSectionProps, 'form'>) => {
+  const { control } = useFormContext<A6Type['Basic']>();
+  const { t } = useTranslation();
+  return (
+    <FormSection legend={t('form.basic.title')} {...props}>
+      <FormItemTextInput
+        name="name"
+        label={t('route.add.form.name')}
+        control={control}
+      />
+      <FormItemTextarea
+        name="desc"
+        label={t('route.add.form.desc')}
+        control={control}
+      />
+      <FormItemLabels name="labels" control={control} />
+    </FormSection>
+  );
+};

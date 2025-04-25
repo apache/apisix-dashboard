@@ -1,24 +1,41 @@
-import { useFieldContext } from '../form';
-import { useCallback, useState, type FC } from 'react';
+import { useCallback, useState } from 'react';
 import type { A6Type } from '@/types/schema/apisix';
 import { useTranslation } from 'react-i18next';
 import { useListState } from '@mantine/hooks';
 import { TagsInput, type TagsInputProps } from '@mantine/core';
-import type { IssueData } from 'zod';
 import { useMount } from 'react-use';
-export const FormItemLabels: FC<TagsInputProps> = (props) => {
-  const field = useFieldContext<A6Type['Labels']>();
+import {
+  useController,
+  type FieldValues,
+  type UseControllerProps,
+} from 'react-hook-form';
+import { genControllerProps } from '../form/util';
+
+export type FormItemLabels<T extends FieldValues> = UseControllerProps<T> &
+  Omit<TagsInputProps, 'value' | 'onChange' | 'onBlur' | 'defaultValue'> & {
+    onChange?: (value: A6Type['Labels']) => void;
+    defaultValue?: A6Type['Labels'];
+  };
+
+export const FormItemLabels = <T extends FieldValues>(
+  props: FormItemLabels<T>
+) => {
+  const { controllerProps, restProps } = genControllerProps(props);
+  const {
+    field: { value, onChange: fOnChange, name: fName, ...restField },
+    fieldState,
+  } = useController<T>(controllerProps);
   const { t } = useTranslation();
   const [values, handle] = useListState<string>();
   const [internalError, setInternalError] = useState<string | null>();
 
   useMount(() => {
-    Object.entries(field.state.value).forEach(([key, value]) => {
+    Object.entries(value || {}).forEach(([key, value]) => {
       handle.append(`${key}:${value}`);
     });
   });
 
-  const onSearchChange = useCallback(
+  const handleSearchChange = useCallback(
     (val: string) => {
       const tuple = val.split(':');
       // when clear input, val can be ''
@@ -31,7 +48,7 @@ export const FormItemLabels: FC<TagsInputProps> = (props) => {
     [t]
   );
 
-  const onChange = useCallback(
+  const handleChange = useCallback(
     (vals: string[]) => {
       const obj: A6Type['Labels'] = {};
       for (const val of vals) {
@@ -44,29 +61,27 @@ export const FormItemLabels: FC<TagsInputProps> = (props) => {
       }
       setInternalError(null);
       handle.setState(vals);
-      field.handleChange(obj);
+      fOnChange(obj);
+      restProps.onChange?.(obj);
     },
-    [handle, field, t]
+    [handle, fOnChange, restProps, t]
   );
 
   return (
-    <TagsInput
-      acceptValueOnBlur
-      clearable
-      value={values}
-      onBlur={field.handleBlur}
-      onSearchChange={onSearchChange}
-      onChange={onChange}
-      splitChars={[',']}
-      label={t('form.basic.labels.title')}
-      placeholder={t('form.basic.labels.placeholder')}
-      {...(internalError && {
-        error: internalError,
-      })}
-      {...(field.state.meta.errors.length && {
-        error: (field.state.meta.errors as IssueData[])[0].message,
-      })}
-      {...props}
-    ></TagsInput>
+    <>
+      <input name={fName} style={{ display: 'none' }} />
+      <TagsInput
+        acceptValueOnBlur
+        clearable
+        value={values}
+        onSearchChange={handleSearchChange}
+        onChange={handleChange}
+        splitChars={[',']}
+        label={t('form.basic.labels.title')}
+        placeholder={t('form.basic.labels.placeholder')}
+        error={internalError || fieldState.error?.message}
+        {...restField}
+      />
+    </>
   );
 };

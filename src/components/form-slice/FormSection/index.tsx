@@ -7,15 +7,15 @@ import {
 import {
   createContext,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   type FC,
   type PropsWithChildren,
 } from 'react';
 import classes from './style.module.css';
+import { useMount } from 'react-use';
 
-export type SectionProps = FieldsetProps;
+export type FormSectionProps = Omit<FieldsetProps, 'form'>;
 
 const SectionDepthCtx = createContext<number>(0);
 
@@ -26,7 +26,7 @@ const tocSelector = 'form-section';
 const tocValue = 'data-label';
 const tocDepth = 'data-depth';
 
-export const FormSection: FC<FieldsetProps> = (props) => {
+export const FormSection: FC<FormSectionProps> = (props) => {
   const { className } = props;
   const parentDepth = useContext(SectionDepthCtx);
   const depth = useMemo(() => parentDepth + 1, [parentDepth]);
@@ -49,31 +49,39 @@ export const FormSection: FC<FieldsetProps> = (props) => {
 export const FormSectionTOCBox: FC<PropsWithChildren> = ({ children }) => {
   const reinitializeRef = useRef(() => {});
 
-  useEffect(() => {
+  useMount(() => {
     reinitializeRef.current();
-  }, []);
+  });
+
   return (
     <Group
-      grow
       preventGrowOverflow={false}
       wrap="nowrap"
       align="start"
       gap={30}
+      style={{ paddingInlineEnd: '10%' }}
     >
       <TableOfContents
         variant="light"
         color="blue"
-        size="xs"
+        size="sm"
         radius="sm"
-        maw={240}
+        style={{ flexShrink: 0 }}
+        w={200}
         mt={10}
+        minDepthToOffset={0}
+        depthOffset={40}
         scrollSpyOptions={{
           selector: `.${tocSelector}`,
           getDepth: (el) => Number(el.getAttribute(tocDepth)),
           getValue: (el) => el.getAttribute(tocValue) || '',
         }}
+        getControlProps={({ data }) => ({
+          onClick: () => data.getNode().scrollIntoView(),
+          children: data.value,
+        })}
       />
-      {children}
+      <div style={{ width: '80%' }}>{children}</div>
     </Group>
   );
 };
