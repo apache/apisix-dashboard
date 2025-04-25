@@ -1,3 +1,7 @@
 .root {
-  margin-bottom: var(--mantine-font-size-md, 0);
+  margin-block: var(--mantine-font-size-md, 0);
+
+  & > fieldset {
+    margin-bottom: 0;
+  }
 }

@@ -6,11 +6,11 @@ import {
 } from 'react-hook-form';
 import { genControllerProps } from './util';
 
-export type FormItemTextProps<T extends FieldValues> = UseControllerProps<T> &
-  TextInputProps;
+export type FormItemTextInputProps<T extends FieldValues> =
+  UseControllerProps<T> & TextInputProps;
 
 export const FormItemTextInput = <T extends FieldValues>(
-  props: FormItemTextProps<T>
+  props: FormItemTextInputProps<T>
 ) => {
   const { controllerProps, restProps } = genControllerProps(props, '');
   const {

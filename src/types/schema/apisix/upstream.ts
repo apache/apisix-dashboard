@@ -7,18 +7,32 @@ const UpstreamBalancer = z.union([
   z.literal('least_conn'),
   z.literal('ewma'),
 ]);
+const UpstreamHashOn = z.union([
+  z.literal('vars'),
+  z.literal('header'),
+  z.literal('cookie'),
+  z.literal('consumer'),
+  z.literal('vars_combinations'),
+]);
 
-const UpstreamScheme = z.union([
-  z.literal('grpc'),
-  z.literal('grpcs'),
-  z.literal('http'),
-  z.literal('https'),
+const UpstreamSchemeL4 = z.union([
   z.literal('tcp'),
   z.literal('tls'),
   z.literal('udp'),
-  z.literal('kafka'),
+]);
+// keep the order, unless apisix change the order
+const UpstreamSchemeL7 = z.union([
+  z.literal('http'),
+  z.literal('https'),
+  z.literal('grpc'),
+  z.literal('grpcs'),
+]);
+const UpstreamScheme = z.union([
+  ...UpstreamSchemeL4.options,
+  ...UpstreamSchemeL7.options,
 ]);
 
+// keep the order, unless apisix change the order
 const UpstreamPassHost = z.union([
   z.literal('pass'),
   z.literal('node'),
@@ -38,6 +52,12 @@ const UpstreamNodeObj = z.record(z.number());
 
 const UpstreamNodeListOrObj = z.union([UpstreamNodes, UpstreamNodeObj]);
 
+const UpstreamDiscovery = z.object({
+  discovery_type: z.string().optional(),
+  service_name: z.string().optional(),
+  discovery_args: z.record(z.unknown()).optional(),
+});
+
 const UpstreamTimeout = z.object({
   connect: z.number(),
   send: z.number(),
@@ -52,9 +72,9 @@ const UpstreamClientTLS = z.object({
 });
 
 const UpstreamKeepalivePool = z.object({
-  size: z.number(),
-  idle_timeout: z.number(),
-  requests: z.number(),
+  size: z.number().min(1).default(320),
+  idle_timeout: z.number().min(0).default(60),
+  requests: z.number().int().min(1).default(1000),
 });
 
 const UpstreamHealthCheckPassiveHealthy = z.object({
@@ -114,22 +134,19 @@ const UpstreamTls = z.object({
   verify: z.boolean(),
 });
 
-const Upstream = A6Common.Basic.merge(
+const Upstream = A6Common.Basic.merge(UpstreamDiscovery).merge(
   z.object({
     nodes: UpstreamNodeListOrObj.optional(),
     scheme: UpstreamScheme.optional(),
     type: UpstreamBalancer.optional(),
-    hash_on: z.string().optional(),
+    hash_on: UpstreamHashOn.optional(),
     key: z.string().optional(),
     checks: UpstreamHealthCheck.optional(),
-    discovery_type: z.string().optional(),
-    service_name: z.string().optional(),
-    discovery_args: z.record(z.unknown()).optional(),
     pass_host: UpstreamPassHost.optional(),
     upstream_host: z.string().optional(),
     retries: z.number().optional(),
     retry_timeout: z.number().optional(),
-    timeout: UpstreamTimeout.optional(),
+    timeout: UpstreamTimeout.partial().optional(),
     tls: UpstreamTls.optional(),
     keepalive_pool: UpstreamKeepalivePool.optional(),
   })
@@ -138,12 +155,16 @@ const Upstream = A6Common.Basic.merge(
 export const A6Upstream = {
   Upstream,
   UpstreamBalancer,
+  UpstreamHashOn,
+  UpstreamSchemeL4,
+  UpstreamSchemeL7,
   UpstreamScheme,
   UpstreamPassHost,
   UpstreamNode,
   UpstreamNodes,
   UpstreamNodeObj,
   UpstreamNodeListOrObj,
+  UpstreamDiscovery,
   UpstreamTimeout,
   UpstreamClientTLS,
   UpstreamKeepalivePool,

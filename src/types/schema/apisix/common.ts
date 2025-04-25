@@ -16,7 +16,7 @@ const Basic = z
   })
   .partial();
 
-const RespRequired = z.object({
+const ID = z.object({
   id: z.string(),
 });
 
@@ -26,5 +26,5 @@ export const A6Common = {
   Plugin,
   Plugins,
   Expr,
-  RespRequired,
+  ID,
 };

@@ -14,6 +14,7 @@ import {
 } from 'react';
 import classes from './style.module.css';
 import { useMount } from 'react-use';
+import { APPSHELL_HEADER_HEIGHT } from '@/config/constant';
 
 export type FormSectionProps = Omit<FieldsetProps, 'form'>;
 
@@ -31,7 +32,7 @@ export const FormSection: FC<FormSectionProps> = (props) => {
   const parentDepth = useContext(SectionDepthCtx);
   const depth = useMemo(() => parentDepth + 1, [parentDepth]);
 
-  const newClass = `${tocSelector} ${classes.root} ${className}`;
+  const newClass = `${tocSelector} ${classes.root} ${className || ''}`;
   return (
     <SectionDepthProvider value={depth}>
       <Fieldset
@@ -59,14 +60,18 @@ export const FormSectionTOCBox: FC<PropsWithChildren> = ({ children }) => {
       wrap="nowrap"
       align="start"
       gap={30}
-      style={{ paddingInlineEnd: '10%' }}
+      style={{ paddingInlineEnd: '10%', position: 'relative' }}
     >
       <TableOfContents
         variant="light"
         color="blue"
         size="sm"
         radius="sm"
-        style={{ flexShrink: 0 }}
+        style={{
+          flexShrink: 0,
+          position: 'sticky',
+          top: APPSHELL_HEADER_HEIGHT + 20,
+        }}
         w={200}
         mt={10}
         minDepthToOffset={0}
@@ -77,7 +82,13 @@ export const FormSectionTOCBox: FC<PropsWithChildren> = ({ children }) => {
           getValue: (el) => el.getAttribute(tocValue) || '',
         }}
         getControlProps={({ data }) => ({
-          onClick: () => data.getNode().scrollIntoView(),
+          onClick: () => {
+            return data.getNode().scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+              inline: 'end',
+            });
+          },
           children: data.value,
         })}
       />

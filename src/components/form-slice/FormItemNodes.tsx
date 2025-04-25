@@ -2,6 +2,8 @@ import { A6, type A6Type } from '@/types/schema/apisix';
 import { zGetDefault } from '@/utils/zod';
 import {
   EditableProTable,
+  nanoid,
+  type ActionType,
   type EditableFormInstance,
   type ProColumns,
 } from '@ant-design/pro-components';
@@ -16,14 +18,13 @@ import { useListState } from '@mantine/hooks';
 import '@ant-design/v5-patch-for-react-19';
 import {
   useController,
+  useFormContext,
   type FieldValues,
   type UseControllerProps,
 } from 'react-hook-form';
 import { genControllerProps } from '../form/util';
 
-type DataSource = A6Type['UpstreamNode'] & {
-  id: string;
-};
+type DataSource = A6Type['UpstreamNode'] & A6Type['ID'];
 
 const portValueEnum = range(1, 65535).reduce((acc, val) => {
   acc[val] = { text: String(val) };
@@ -44,8 +45,13 @@ const zValidateField = <T extends ZodRawShape, R extends keyof T>(
   return Promise.reject(new Error(error.message));
 };
 
-const genId = (val: A6Type['UpstreamNode']) => {
-  return `${val.host}-${val.port}-${val.weight}`;
+const genId = nanoid;
+
+const genRecord = () => {
+  return {
+    id: genId(),
+    ...zGetDefault(A6.UpstreamNode),
+  };
 };
 
 const parseToUpstreamNodes = (data: A6Type['UpstreamNodeObj']) => {
@@ -65,11 +71,24 @@ const parseToDataSource = (data: A6Type['UpstreamNodeListOrObj']) => {
   const val =
     typeof data === 'object'
       ? parseToUpstreamNodes(data as A6Type['UpstreamNodeObj'])
-      : (data as A6Type['UpstreamNodes']);
+      : (data as A6Type['UpstreamNodes']) ?? [];
   return val.map((item) => {
     const d: DataSource = {
       ...item,
-      id: genId(item),
+      id: genId(),
+    };
+    return d;
+  });
+};
+
+const parseFromDataSourceToUpstreamNodes = (data: DataSource[] | undefined) => {
+  if (!data?.length) return [];
+  return data.map((item) => {
+    const d: A6Type['UpstreamNode'] = {
+      host: item.host,
+      port: item.port,
+      weight: item.weight,
+      priority: item.priority,
     };
     return d;
   });
@@ -77,19 +96,21 @@ const parseToDataSource = (data: A6Type['UpstreamNodeListOrObj']) => {
 export type FormItemNodes<T extends FieldValues> = UseControllerProps<T> & {
   onChange?: (value: A6Type['UpstreamNode'][]) => void;
   defaultValue?: A6Type['UpstreamNode'][];
-  label: ReactNode;
+  label?: ReactNode;
 };
 
 export const FormItemNodes = <T extends FieldValues>(
   props: FormItemNodes<T>
 ) => {
   const { controllerProps, restProps } = genControllerProps(props);
+  const { control } = useFormContext<T>();
   const {
     field: { value, onChange: fOnChange, name: fName, ...restField },
     fieldState,
-  } = useController<T>(controllerProps);
+  } = useController<T>({ ...controllerProps, control });
   const { t } = useTranslation();
   const editorFormRef = useRef<EditableFormInstance<DataSource>>(null);
+  const actionRef = useRef<ActionType | undefined>(null);
   const [values, handle] = useListState<DataSource>(parseToDataSource(value));
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
     values.map((item) => item.id)
@@ -99,11 +120,12 @@ export const FormItemNodes = <T extends FieldValues>(
     (vals: DataSource[]) => {
       editorFormRef.current?.validateFields().then(() => {
         handle.setState(vals);
-        fOnChange(vals);
-        restProps.onChange?.(vals);
+        const newVals = parseFromDataSourceToUpstreamNodes(values);
+        fOnChange?.(newVals);
+        restProps.onChange?.(newVals);
       });
     },
-    [handle, fOnChange, restProps]
+    [fOnChange, handle, restProps, values]
   );
 
   const genProps = useCallback((field: keyof A6Type['UpstreamNode']) => {
@@ -164,6 +186,7 @@ export const FormItemNodes = <T extends FieldValues>(
               size="compact-xs"
               px={0}
               onClick={() => {
+                // action?.addEditRecord
                 action?.startEditable?.(r.id);
               }}
             >
@@ -195,46 +218,61 @@ export const FormItemNodes = <T extends FieldValues>(
           bordered
           controlled
           value={values}
-          onValuesChange={(values) => {
-            saveChange(values);
+          onValuesChange={(v) => {
+            saveChange(v);
           }}
           editableFormRef={editorFormRef}
+          actionRef={actionRef}
           columns={columns}
-          recordCreatorProps={{
-            newRecordType: 'dataSource',
-            record: () => {
-              return {
-                id: Date.now().toString(),
-                ...zGetDefault(A6.UpstreamNode),
-              };
-            },
-            icon: false,
-            creatorButtonText: t('form.upstream.nodes.add'),
-            style: { borderStyle: 'solid' },
-          }}
+          recordCreatorProps={false}
           editable={{
             type: 'multiple',
             editableKeys: editableKeys,
+            // onValuesChange(record, dataSource) {
+            //   console.log('editable onValuesChange', record, dataSource);
+            // },
+            // onSave: (k, r, or) => {
+            //   console.log('editable onSave', k, r, or);
+
+            //   const idx = values.findIndex((item) => item.id === k);
+            //   if (idx > -1) {
+            //     handle.setItem(idx, r);
+            //   } else {
+            //     handle.append(r);
+            //   }
+            //   return Promise.resolve();
+            // },
+            // onDelete: (k) => {
+            //   const idx = values.findIndex((item) => item.id === k);
+            //   if (idx > -1) {
+            //     handle.remove(idx);
+            //   }
+            //   return Promise.resolve();
+            // },
             onChange: setEditableRowKeys,
-            actionRender: (row, config) => {
-              const idx = values.findIndex((item) => item.id === row.id);
+            actionRender: (row) => {
+              // const _idx = values.findIndex((item) => item.id === row.id);
               return [
                 <Button
                   key="save"
                   variant="transparent"
                   size="compact-xs"
                   px={0}
-                  onClick={() => {
-                    const newData = {
-                      ...row,
-                      id: genId(row),
-                    };
-                    if (idx > -1) {
-                      editorFormRef.current?.validateFields().then(() => {
-                        handle.setItem(idx, newData);
-                        config.cancelEditable?.(row.id);
-                      });
-                    }
+                  onClick={async () => {
+                    await editorFormRef.current?.validateFields();
+                    await actionRef.current?.saveEditable(row.id);
+                    // const d = {
+                    //   ...editorFormRef.current?.getRowData?.(row.id),
+                    //   id: row.id,
+                    // } as DataSource;
+                    // if (idx > -1) {
+                    //   handle.setItem(idx, d);
+                    // } else {
+                    //   handle.append(d);
+                    // }
+                    // config.cancelEditable?.(row.id);
+                    // saveChange(values);
+                    // });
                   }}
                 >
                   {t('form.btn.save')}
@@ -244,7 +282,12 @@ export const FormItemNodes = <T extends FieldValues>(
                   variant="transparent"
                   size="compact-xs"
                   px={0}
-                  onClick={() => handle.remove(idx)}
+                  onClick={() => {
+                    // handle.remove(idx);
+                    // config.cancelEditable?.(row.id);
+                    actionRef.current?.cancelEditable?.(row.id);
+                    // saveChange(values);
+                  }}
                 >
                   {t('form.btn.delete')}
                 </Button>,
@@ -254,6 +297,21 @@ export const FormItemNodes = <T extends FieldValues>(
           {...restField}
         />
       </ConfigProvider>
+      <Button
+        fullWidth
+        variant="default"
+        mt={8}
+        size="xs"
+        color="cyan"
+        style={{ borderColor: 'whitesmoke' }}
+        onClick={() => {
+          const r = genRecord();
+          actionRef.current?.addEditRecord?.(r);
+          actionRef.current?.startEditable?.(r.id);
+        }}
+      >
+        {t('form.upstream.nodes.add')}
+      </Button>
     </Input.Wrapper>
   );
 };
