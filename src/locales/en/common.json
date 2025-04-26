@@ -21,10 +21,43 @@
     "upstream": {
       "checks": {
         "active": {
+          "concurrency": "Concurrency",
+          "healthy": {
+            "http_statuses": "HTTP Statuses",
+            "interval": "Interval",
+            "successes": "Successes",
+            "title": "Healthy"
+          },
+          "unhealthy": {
+            "http_statuses": "HTTP Statuses",
+            "interval": "Interval",
+            "http_failures": "HTTP Failures",
+            "tcp_failures": "TCP Failures",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          },
+          "host": "Host",
+          "http_path": "HTTP Path",
+          "http_request_headers": "HTTP Request Headers",
+          "https_verify_certificate": "Https Verify Certificate",
+          "port": "Port",
+          "timeout": "Timeout",
           "title": "Active",
           "type": "Type"
         },
         "passive": {
+          "healthy": {
+            "http_statuses": "HTTP Statuses",
+            "successes": "Successes",
+            "title": "Healthy"
+          },
+          "unhealthy": {
+            "http_statuses": "HTTP Statuses",
+            "http_failures": "HTTP Failures",
+            "tcp_failures": "TCP Failures",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          },
           "title": "Passive",
           "type": "Type"
         },
@@ -91,7 +124,8 @@
         "clientCert": "Client Cert",
         "clientCertId": "Client Cert ID",
         "clientKey": "Client Key",
-        "title": "TLS"
+        "title": "TLS",
+        "verify": "Verify"
       },
       "type": "Type",
       "upstreamHost": "Upstream Host",

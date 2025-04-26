@@ -41,14 +41,10 @@ export const FormSection: FC<FormSectionProps> = (props) => {
       <Fieldset
         className={newClass}
         legend={
-          extra ? (
-            <Group>
-              {legend}
-              {extra}
-            </Group>
-          ) : (
-            legend
-          )
+          <Group>
+            {legend}
+            {extra}
+          </Group>
         }
         {...restProps}
         {...{

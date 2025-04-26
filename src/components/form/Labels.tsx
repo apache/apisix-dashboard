@@ -9,7 +9,7 @@ import {
   type FieldValues,
   type UseControllerProps,
 } from 'react-hook-form';
-import { genControllerProps } from '../form/util';
+import { genControllerProps } from './util';
 
 export type FormItemLabels<T extends FieldValues> = UseControllerProps<T> &
   Omit<TagsInputProps, 'value' | 'onChange' | 'onBlur' | 'defaultValue'> & {

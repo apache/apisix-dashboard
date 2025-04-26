@@ -21,6 +21,7 @@ export const FormItemSwitch = <T extends FieldValues>(
   } = useController<T>(controllerProps);
   return (
     <Switch
+      labelPosition="left"
       value={value}
       checked={value}
       error={fieldState.error?.message}

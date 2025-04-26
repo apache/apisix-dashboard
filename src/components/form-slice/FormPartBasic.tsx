@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FormItemLabels } from './FormItemLabels';
+import { FormItemLabels } from '../form/Labels';
 import { FormSection, type FormSectionProps } from './FormSection';
 import { FormItemTextInput } from '../form/TextInput';
 import { FormItemTextarea } from '../form/Textarea';

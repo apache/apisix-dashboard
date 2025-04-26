@@ -65,32 +65,34 @@ const UpstreamTimeout = z.object({
 });
 
 const UpstreamKeepalivePool = z.object({
-  size: z.number().min(1),
-  idle_timeout: z.number().min(0),
-  requests: z.number().int().min(1),
+  size: z.number().min(1).optional(),
+  idle_timeout: z.number().min(0).optional(),
+  requests: z.number().int().min(1).optional(),
 });
 
+const httpStatuses = z.array(z.number().int().min(200).max(599));
+
 const UpstreamHealthCheckPassiveHealthy = z.object({
-  http_statuses: z.array(z.number()),
-  successes: z.number(),
+  http_statuses: httpStatuses,
+  successes: z.number().int().min(1).max(254),
 });
 
 const UpstreamHealthCheckPassiveUnhealthy = z.object({
-  http_statuses: z.array(z.number()),
-  http_failures: z.number(),
-  tcp_failures: z.number(),
-  timeouts: z.number(),
+  http_statuses: httpStatuses,
+  http_failures: z.number().int().max(254),
+  tcp_failures: z.number().int().max(254),
+  timeouts: z.number().int().max(254),
 });
 
 const UpstreamHealthCheckActiveHealthy = z
   .object({
-    interval: z.number(),
+    interval: z.number().int().min(1),
   })
   .merge(UpstreamHealthCheckPassiveHealthy);
 
 const UpstreamHealthCheckActiveUnhealthy = z
   .object({
-    interval: z.number(),
+    interval: z.number().int().min(1),
   })
   .merge(UpstreamHealthCheckPassiveUnhealthy);
 
@@ -107,10 +109,10 @@ const UpstreamHealthCheckActive = z.object({
   host: z.string(),
   port: z.number(),
   http_path: z.string(),
-  https_verify_cert: z.boolean(),
+  https_verify_certificate: z.boolean(),
   http_request_headers: z.array(z.string()),
-  healthy: UpstreamHealthCheckActiveHealthy,
-  unhealthy: UpstreamHealthCheckActiveUnhealthy,
+  healthy: UpstreamHealthCheckActiveHealthy.partial(),
+  unhealthy: UpstreamHealthCheckActiveUnhealthy.partial(),
 });
 
 const UpstreamHealthCheckPassiveType = UpstreamHealthCheckActiveType;

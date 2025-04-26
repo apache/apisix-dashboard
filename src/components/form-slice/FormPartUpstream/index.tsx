@@ -13,28 +13,36 @@ import { FormSectionDiscovery } from './FormSectionDiscovery';
 import { Divider } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import type { FormPartUpstreamType } from './schema';
+import { FormItemSwitch } from '@/components/form/Switch';
 
 export const FormSectionTLS = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<FormPartUpstreamType>();
   return (
     <FormSection legend={t('form.upstream.tls.title')}>
-      <FormItemTextarea
+      <FormItemSwitch
         control={control}
-        name="tls.client_cert"
-        label={t('form.upstream.tls.clientCert')}
+        name="tls.verify"
+        label={t('form.upstream.tls.verify')}
       />
-      <FormItemTextarea
-        control={control}
-        name="tls.client_key"
-        label={t('form.upstream.tls.clientKey')}
-      />
-      <Divider my="xs" label={t('or')} />
-      <FormItemTextInput
-        control={control}
-        name="tls.client_cert_id"
-        label={t('form.upstream.tls.clientCertId')}
-      />
+      <FormSection>
+        <FormItemTextarea
+          control={control}
+          name="tls.client_cert"
+          label={t('form.upstream.tls.clientCert')}
+        />
+        <FormItemTextarea
+          control={control}
+          name="tls.client_key"
+          label={t('form.upstream.tls.clientKey')}
+        />
+        <Divider my="xs" label={t('or')} />
+        <FormItemTextInput
+          control={control}
+          name="tls.client_cert_id"
+          label={t('form.upstream.tls.clientCertId')}
+        />
+      </FormSection>
     </FormSection>
   );
 };

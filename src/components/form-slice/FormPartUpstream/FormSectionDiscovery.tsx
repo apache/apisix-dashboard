@@ -20,12 +20,14 @@ export const FormSectionDiscovery = () => {
         name="discovery_type"
         label={t('form.upstream.discoveryType.title')}
         control={control}
+        withAsterisk
       />
       <FormItemJsonInput
         name="discovery_args"
         label={t('form.upstream.discoveryArgs.title')}
         control={control}
         resize="vertical"
+        toObject
       />
     </FormSection>
   );
