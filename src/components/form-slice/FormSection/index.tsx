@@ -11,12 +11,11 @@ import {
   useRef,
   type FC,
   type PropsWithChildren,
+  type ReactNode,
 } from 'react';
 import classes from './style.module.css';
 import { useMount } from 'react-use';
 import { APPSHELL_HEADER_HEIGHT } from '@/config/constant';
-
-export type FormSectionProps = Omit<FieldsetProps, 'form'>;
 
 const SectionDepthCtx = createContext<number>(0);
 
@@ -27,8 +26,12 @@ const tocSelector = 'form-section';
 const tocValue = 'data-label';
 const tocDepth = 'data-depth';
 
+export type FormSectionProps = Omit<FieldsetProps, 'form'> & {
+  extra?: ReactNode;
+};
+
 export const FormSection: FC<FormSectionProps> = (props) => {
-  const { className } = props;
+  const { className, legend, extra, ...restProps } = props;
   const parentDepth = useContext(SectionDepthCtx);
   const depth = useMemo(() => parentDepth + 1, [parentDepth]);
 
@@ -36,10 +39,20 @@ export const FormSection: FC<FormSectionProps> = (props) => {
   return (
     <SectionDepthProvider value={depth}>
       <Fieldset
-        {...props}
         className={newClass}
+        legend={
+          extra ? (
+            <>
+              {legend}
+              {extra}
+            </>
+          ) : (
+            legend
+          )
+        }
+        {...restProps}
         {...{
-          [tocValue]: props.legend,
+          [tocValue]: legend,
           [tocDepth]: depth,
         }}
       />

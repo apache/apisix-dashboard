@@ -18,6 +18,17 @@
       "save": "Save"
     },
     "upstream": {
+      "checks": {
+        "active": {
+          "title": "Active",
+          "type": "Type"
+        },
+        "passive": {
+          "title": "Passive",
+          "type": "Type"
+        },
+        "title": "Health Checks"
+      },
       "connectionConfiguration": "Connection Configuration",
       "discoveryArgs": {
         "title": "Discovery Args"
@@ -75,6 +86,12 @@
         "title": "Timeout"
       },
       "title": "Upstream",
+      "tls": {
+        "clientCert": "Client Cert",
+        "clientCertId": "Client Cert ID",
+        "clientKey": "Client Key",
+        "title": "TLS"
+      },
       "type": "Type",
       "upstreamHost": "Upstream Host",
       "upstreamHostDesc": "Set this when `pass_host` is `rewrite`"

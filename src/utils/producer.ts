@@ -17,10 +17,10 @@ export const produceDeepCleanEmptyKeys = (opts: ICleanerOptions = {}) =>
     deepCleanEmptyKeys(draft, opts);
   });
 
-export const pipeProduce = <T extends object>(
-  ...funcs: Parameters<typeof pipe>
-) => {
-  return produce((draft: T) =>
-    pipe(...funcs, produceDeepCleanEmptyKeys())(draft)
-  );
-};
+  type PipeParams = Parameters<typeof pipe>;
+  type R = PipeParams extends [PipeParams[0], ...infer R] ? R : never;
+  export const pipeProduce = <T extends object>(...funcs: R) => {
+    return produce((draft: T) =>
+      pipe(...funcs, produceDeepCleanEmptyKeys())(draft)
+    );
+  };

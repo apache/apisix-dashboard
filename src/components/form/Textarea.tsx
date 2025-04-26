@@ -28,6 +28,7 @@ export const FormItemTextarea = <T extends FieldValues>(
         fOnChange(e);
         restProps.onChange?.(e);
       }}
+      resize="vertical"
       {...restField}
       {...restProps}
     />

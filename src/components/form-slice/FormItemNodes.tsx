@@ -116,18 +116,6 @@ export const FormItemNodes = <T extends FieldValues>(
     values.map((item) => item.id)
   );
 
-  const saveChange = useCallback(
-    (vals: DataSource[]) => {
-      editorFormRef.current?.validateFields().then(() => {
-        handle.setState(vals);
-        const newVals = parseFromDataSourceToUpstreamNodes(values);
-        fOnChange?.(newVals);
-        restProps.onChange?.(newVals);
-      });
-    },
-    [fOnChange, handle, restProps, values]
-  );
-
   const genProps = useCallback((field: keyof A6Type['UpstreamNode']) => {
     return {
       onBlur: () => {
@@ -216,42 +204,22 @@ export const FormItemNodes = <T extends FieldValues>(
           defaultSize="small"
           rowKey="id"
           bordered
-          controlled
           value={values}
-          onValuesChange={(v) => {
-            saveChange(v);
+          onValuesChange={(d) => {
+            const newVals = parseFromDataSourceToUpstreamNodes(d);
+            fOnChange?.(newVals);
+            restProps.onChange?.(newVals);
           }}
+          recordCreatorProps={false}
           editableFormRef={editorFormRef}
           actionRef={actionRef}
           columns={columns}
-          recordCreatorProps={false}
           editable={{
             type: 'multiple',
             editableKeys: editableKeys,
-            // onValuesChange(record, dataSource) {
-            //   console.log('editable onValuesChange', record, dataSource);
-            // },
-            // onSave: (k, r, or) => {
-            //   console.log('editable onSave', k, r, or);
-
-            //   const idx = values.findIndex((item) => item.id === k);
-            //   if (idx > -1) {
-            //     handle.setItem(idx, r);
-            //   } else {
-            //     handle.append(r);
-            //   }
-            //   return Promise.resolve();
-            // },
-            // onDelete: (k) => {
-            //   const idx = values.findIndex((item) => item.id === k);
-            //   if (idx > -1) {
-            //     handle.remove(idx);
-            //   }
-            //   return Promise.resolve();
-            // },
             onChange: setEditableRowKeys,
             actionRender: (row) => {
-              // const _idx = values.findIndex((item) => item.id === row.id);
+              const idx = values.findIndex((item) => item.id === row.id);
               return [
                 <Button
                   key="save"
@@ -260,19 +228,16 @@ export const FormItemNodes = <T extends FieldValues>(
                   px={0}
                   onClick={async () => {
                     await editorFormRef.current?.validateFields();
-                    await actionRef.current?.saveEditable(row.id);
-                    // const d = {
-                    //   ...editorFormRef.current?.getRowData?.(row.id),
-                    //   id: row.id,
-                    // } as DataSource;
-                    // if (idx > -1) {
-                    //   handle.setItem(idx, d);
-                    // } else {
-                    //   handle.append(d);
-                    // }
-                    // config.cancelEditable?.(row.id);
-                    // saveChange(values);
-                    // });
+                    const d = {
+                      ...editorFormRef.current?.getRowData?.(row.id),
+                      id: row.id,
+                    } as DataSource;
+                    if (idx > -1) {
+                      handle.setItem(idx, d);
+                    } else {
+                      handle.append(d);
+                    }
+                    await actionRef.current?.cancelEditable(row.id);
                   }}
                 >
                   {t('form.btn.save')}
@@ -282,11 +247,9 @@ export const FormItemNodes = <T extends FieldValues>(
                   variant="transparent"
                   size="compact-xs"
                   px={0}
-                  onClick={() => {
-                    // handle.remove(idx);
-                    // config.cancelEditable?.(row.id);
-                    actionRef.current?.cancelEditable?.(row.id);
-                    // saveChange(values);
+                  onClick={async () => {
+                    handle.remove(idx);
+                    await actionRef.current?.cancelEditable(row.id);
                   }}
                 >
                   {t('form.btn.delete')}
@@ -305,9 +268,9 @@ export const FormItemNodes = <T extends FieldValues>(
         color="cyan"
         style={{ borderColor: 'whitesmoke' }}
         onClick={() => {
-          const r = genRecord();
-          actionRef.current?.addEditRecord?.(r);
-          actionRef.current?.startEditable?.(r.id);
+          const d = genRecord();
+          handle.append(d);
+          actionRef.current?.startEditable?.(d.id);
         }}
       >
         {t('form.upstream.nodes.add')}

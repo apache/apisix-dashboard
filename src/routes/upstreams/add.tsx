@@ -20,6 +20,9 @@ import { Divider } from '@mantine/core';
 import { FormItemSelect } from '@/components/form/Select';
 import { FormItemNumberInput } from '@/components/form/NumberInput';
 import { FormItemTextInput } from '@/components/form/TextInput';
+import { FormItemTextarea } from '@/components/form/Textarea';
+import { FormSectionChecks } from '@/components/form-slice/FormSectionChecks';
+import { pipeProduce } from '@/utils/producer';
 
 export const UpstreamPostSchema = A6.Upstream;
 
@@ -37,13 +40,19 @@ const UpstreamAddForm = () => {
     mode: 'onChange',
   });
 
-  const submit = async (data: A6Type['Upstream']) => {
+  const submit = async (form: A6Type['Upstream']) => {
+    const data = pipeProduce()(form);
     await postUpstream.mutateAsync(data);
   };
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(submit)}>
+      <form
+        onSubmit={form.handleSubmit(submit, (e) =>
+          // eslint-disable-next-line no-console
+          console.log(e)
+        )}
+      >
         <FormPartBasic />
         <FormSection legend={t('form.upstream.findUpstreamFrom')}>
           <FormSection legend={t('form.upstream.nodes.title')}>
@@ -164,7 +173,26 @@ const UpstreamAddForm = () => {
               allowDecimal={false}
             />
           </FormSection>
+          <FormSection legend={t('form.upstream.tls.title')}>
+            <FormItemTextarea
+              control={form.control}
+              name="tls.client_cert"
+              label={t('form.upstream.tls.clientCert')}
+            />
+            <FormItemTextarea
+              control={form.control}
+              name="tls.client_key"
+              label={t('form.upstream.tls.clientKey')}
+            />
+            <Divider my="xs" label={t('or')} />
+            <FormItemTextInput
+              control={form.control}
+              name="tls.client_cert_id"
+              label={t('form.upstream.tls.clientCertId')}
+            />
+          </FormSection>
         </FormSection>
+        <FormSectionChecks />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
     </FormProvider>

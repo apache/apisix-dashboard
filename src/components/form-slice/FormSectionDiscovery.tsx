@@ -3,7 +3,6 @@ import { FormSection } from './FormSection';
 import { useFormContext } from 'react-hook-form';
 import type { A6Type } from '@/types/schema/apisix';
 import { FormItemTextInput } from '../form/TextInput';
-import { FormItemTextarea } from '../form/Textarea';
 
 export const FormSectionDiscovery = () => {
   const { t } = useTranslation();
@@ -20,11 +19,11 @@ export const FormSectionDiscovery = () => {
         label={t('form.upstream.discoveryType.title')}
         control={control}
       />
-      <FormItemTextarea
+      {/* <FormItemTextarea
         name="discovery_args"
         label={t('form.upstream.discoveryArgs.title')}
         control={control}
-      />
+      /> */}
     </FormSection>
   );
 };

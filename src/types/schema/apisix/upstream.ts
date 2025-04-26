@@ -41,7 +41,7 @@ const UpstreamPassHost = z.union([
 
 const UpstreamNode = z.object({
   host: z.string().min(1),
-  port: z.number().int().gte(0).lte(65535),
+  port: z.number().int().gt(0).lte(65535),
   weight: z.number().int(),
   priority: z.number().int().optional(),
 });
@@ -55,20 +55,13 @@ const UpstreamNodeListOrObj = z.union([UpstreamNodes, UpstreamNodeObj]);
 const UpstreamDiscovery = z.object({
   discovery_type: z.string().optional(),
   service_name: z.string().optional(),
-  discovery_args: z.record(z.unknown()).optional(),
+  discovery_args: z.string().optional(),
 });
 
 const UpstreamTimeout = z.object({
   connect: z.number(),
   send: z.number(),
   read: z.number(),
-});
-
-const UpstreamClientTLS = z.object({
-  client_cert: z.string(),
-  client_key: z.string(),
-  client_cert_id: z.string(),
-  verify: z.boolean(),
 });
 
 const UpstreamKeepalivePool = z.object({
@@ -101,10 +94,14 @@ const UpstreamHealthCheckActiveUnhealthy = z
   })
   .merge(UpstreamHealthCheckPassiveUnhealthy);
 
+const UpstreamHealthCheckActiveType = z.union([
+  z.literal('http'),
+  z.literal('https'),
+  z.literal('tcp'),
+]);
+
 const UpstreamHealthCheckActive = z.object({
-  type: z
-    .union([z.literal('http'), z.literal('https'), z.literal('tcp')])
-    .optional(),
+  type: UpstreamHealthCheckActiveType.optional(),
   timeout: z.number().optional(),
   concurrency: z.number().optional(),
   host: z.string(),
@@ -116,8 +113,9 @@ const UpstreamHealthCheckActive = z.object({
   unhealthy: UpstreamHealthCheckActiveUnhealthy,
 });
 
+const UpstreamHealthCheckPassiveType = UpstreamHealthCheckActiveType;
 const UpstreamHealthCheckPassive = z.object({
-  type: z.string(),
+  type: UpstreamHealthCheckActiveType.optional(),
   healthy: UpstreamHealthCheckPassiveHealthy,
   unhealthy: UpstreamHealthCheckPassiveUnhealthy,
 });
@@ -131,7 +129,7 @@ const UpstreamTls = z.object({
   client_cert_id: z.string().optional(),
   client_cert: z.string().optional(),
   client_key: z.string().optional(),
-  verify: z.boolean(),
+  verify: z.boolean().optional().default(false),
 });
 
 const Upstream = A6Common.Basic.merge(UpstreamDiscovery).merge(
@@ -166,10 +164,11 @@ export const A6Upstream = {
   UpstreamNodeListOrObj,
   UpstreamDiscovery,
   UpstreamTimeout,
-  UpstreamClientTLS,
   UpstreamKeepalivePool,
+  UpstreamHealthCheckPassiveType,
   UpstreamHealthCheckPassiveHealthy,
   UpstreamHealthCheckPassiveUnhealthy,
+  UpstreamHealthCheckActiveType,
   UpstreamHealthCheckActiveHealthy,
   UpstreamHealthCheckActiveUnhealthy,
   UpstreamHealthCheckActive,
