@@ -7,18 +7,32 @@ import type { A6Type } from '@/types/schema/apisix';
 import { API_UPSTREAMS } from '@/config/constant';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
 import { RouteLinkBtn } from '@/components/Btn';
 import IconPlus from '~icons/material-symbols/add';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
-const upstreamsQueryOptions = queryOptions({
-  queryKey: ['upstreams'],
-  queryFn: () =>
-    req
-      .get<unknown, A6Type['RespUpstreamList']>(API_UPSTREAMS)
-      .then((v) => v.data),
-});
+import { usePagination } from '@/utils/usePagination';
+import {
+  pageSearchSchema,
+  type PageSearchType,
+} from '@/types/schema/pageSearch';
+
+const genUpstreamsQueryOptions = (props: PageSearchType) => {
+  const { page, pageSize } = props;
+  return queryOptions({
+    queryKey: ['upstreams', page, pageSize],
+    queryFn: () =>
+      req
+        .get<unknown, A6Type['RespUpstreamList']>(API_UPSTREAMS, {
+          params: {
+            page,
+            page_size: pageSize,
+          },
+        })
+        .then((v) => v.data),
+  });
+};
 
 const ToAddPageBtn = () => {
   const { t } = useTranslation();
@@ -58,9 +72,22 @@ const DetailPageBtn = (props: DetailPageBtnProps) => {
 };
 
 function RouteComponent() {
-  const query = useSuspenseQuery(upstreamsQueryOptions);
-  const { data, isLoading } = query;
   const { t } = useTranslation();
+
+  // Use the pagination hook
+  const { pagination, handlePageChange, refreshData, updateTotal } =
+    usePagination({
+      queryKey: 'upstreams',
+    });
+
+  const upstreamQuery = useSuspenseQuery(genUpstreamsQueryOptions(pagination));
+  const { data, isLoading } = upstreamQuery;
+
+  useEffect(() => {
+    if (data?.total) {
+      updateTotal(data.total);
+    }
+  }, [data?.total, updateTotal]);
 
   const columns = useMemo<
     ProColumns<A6Type['RespUpstreamList']['data']['list'][number]>[]
@@ -98,7 +125,6 @@ function RouteComponent() {
         sorter: true,
         renderText: (text) => {
           if (!text) return '-';
-          // 将 Unix 时间戳（秒级）转换为毫秒级时间戳，以便正确显示
           return new Date(Number(text) * 1000).toISOString();
         },
       },
@@ -123,11 +149,14 @@ function RouteComponent() {
           loading={isLoading}
           search={false}
           options={{
-            reload: true,
+            reload: refreshData,
           }}
           pagination={{
-            defaultPageSize: 10,
+            current: pagination.page,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
             showSizeChanger: true,
+            onChange: handlePageChange,
           }}
           cardProps={{ bodyStyle: { padding: 0 } }}
           toolbar={{
@@ -149,5 +178,8 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/upstreams/')({
   component: RouteComponent,
-  loader: () => queryClient.ensureQueryData(upstreamsQueryOptions),
+  validateSearch: pageSearchSchema,
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps }) =>
+    queryClient.ensureQueryData(genUpstreamsQueryOptions(deps)),
 });
