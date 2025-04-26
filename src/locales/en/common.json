@@ -17,6 +17,7 @@
       "edit": "Edit",
       "save": "Save"
     },
+    "disabled": "Disabled, click switch to enable",
     "upstream": {
       "checks": {
         "active": {

@@ -17,10 +17,29 @@ export const produceDeepCleanEmptyKeys = (opts: ICleanerOptions = {}) =>
     deepCleanEmptyKeys(draft, opts);
   });
 
-  type PipeParams = Parameters<typeof pipe>;
-  type R = PipeParams extends [PipeParams[0], ...infer R] ? R : never;
-  export const pipeProduce = <T extends object>(...funcs: R) => {
-    return produce((draft: T) =>
-      pipe(...funcs, produceDeepCleanEmptyKeys())(draft)
-    );
-  };
+export const rmDoubleUnderscoreKeys = (obj: object) => {
+  Object.keys(obj).forEach((key) => {
+    const k = key as keyof typeof obj;
+    if ((key as string).startsWith('__')) return delete obj[k];
+    if (typeof obj[k] === 'object' && !Array.isArray(obj[k])) {
+      (obj[k] as object) = rmDoubleUnderscoreKeys(obj[k]);
+    }
+  });
+  return obj;
+};
+
+export const produceRmDoubleUnderscoreKeys = produce((draft) => {
+  rmDoubleUnderscoreKeys(draft);
+});
+
+type PipeParams = Parameters<typeof pipe>;
+type R = PipeParams extends [PipeParams[0], ...infer R] ? R : never;
+export const pipeProduce = <T extends object>(...funcs: R) => {
+  return produce((draft: T) =>
+    pipe(
+      ...funcs,
+      produceRmDoubleUnderscoreKeys,
+      produceDeepCleanEmptyKeys()
+    )(draft)
+  );
+};

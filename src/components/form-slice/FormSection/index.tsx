@@ -14,8 +14,8 @@ import {
   type ReactNode,
 } from 'react';
 import classes from './style.module.css';
-import { useMount } from 'react-use';
 import { APPSHELL_HEADER_HEIGHT } from '@/config/constant';
+import { useDeepCompareEffect } from 'react-use';
 
 const SectionDepthCtx = createContext<number>(0);
 
@@ -42,10 +42,10 @@ export const FormSection: FC<FormSectionProps> = (props) => {
         className={newClass}
         legend={
           extra ? (
-            <>
+            <Group>
               {legend}
               {extra}
-            </>
+            </Group>
           ) : (
             legend
           )
@@ -60,12 +60,17 @@ export const FormSection: FC<FormSectionProps> = (props) => {
   );
 };
 
-export const FormSectionTOCBox: FC<PropsWithChildren> = ({ children }) => {
+export type FormTOCBoxProps = PropsWithChildren & {
+  deps?: unknown[];
+};
+
+export const FormTOCBox = (props: FormTOCBoxProps) => {
+  const { children, deps } = props;
   const reinitializeRef = useRef(() => {});
 
-  useMount(() => {
+  useDeepCompareEffect(() => {
     reinitializeRef.current();
-  });
+  }, [deps]);
 
   return (
     <Group

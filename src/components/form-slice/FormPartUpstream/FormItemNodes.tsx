@@ -7,8 +7,8 @@ import {
   type EditableFormInstance,
   type ProColumns,
 } from '@ant-design/pro-components';
-import { Button, Input } from '@mantine/core';
-import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Button, Input, type InputWrapperProps } from '@mantine/core';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConfigProvider } from 'antd';
 import enUS from 'antd/locale/en_US';
@@ -22,7 +22,7 @@ import {
   type FieldValues,
   type UseControllerProps,
 } from 'react-hook-form';
-import { genControllerProps } from '../form/util';
+import { genControllerProps } from '../../form/util';
 
 type DataSource = A6Type['UpstreamNode'] & A6Type['ID'];
 
@@ -96,8 +96,7 @@ const parseFromDataSourceToUpstreamNodes = (data: DataSource[] | undefined) => {
 export type FormItemNodes<T extends FieldValues> = UseControllerProps<T> & {
   onChange?: (value: A6Type['UpstreamNode'][]) => void;
   defaultValue?: A6Type['UpstreamNode'][];
-  label?: ReactNode;
-};
+} & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
 
 export const FormItemNodes = <T extends FieldValues>(
   props: FormItemNodes<T>
@@ -186,9 +185,14 @@ export const FormItemNodes = <T extends FieldValues>(
     ],
     [genProps, t]
   );
-
+  const { label, required, withAsterisk } = props;
   return (
-    <Input.Wrapper error={fieldState.error?.message} label={props.label}>
+    <Input.Wrapper
+      error={fieldState.error?.message}
+      label={label}
+      required={required}
+      withAsterisk={withAsterisk}
+    >
       <input name={fName} style={{ display: 'none' }} />
       <ConfigProvider
         virtual

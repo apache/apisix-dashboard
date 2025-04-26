@@ -65,9 +65,9 @@ const UpstreamTimeout = z.object({
 });
 
 const UpstreamKeepalivePool = z.object({
-  size: z.number().min(1).default(320),
-  idle_timeout: z.number().min(0).default(60),
-  requests: z.number().int().min(1).default(1000),
+  size: z.number().min(1),
+  idle_timeout: z.number().min(0),
+  requests: z.number().int().min(1),
 });
 
 const UpstreamHealthCheckPassiveHealthy = z.object({
@@ -121,15 +121,15 @@ const UpstreamHealthCheckPassive = z.object({
 });
 
 const UpstreamHealthCheck = z.object({
-  active: UpstreamHealthCheckActive,
-  passive: UpstreamHealthCheckPassive,
+  active: UpstreamHealthCheckActive.optional(),
+  passive: UpstreamHealthCheckPassive.optional(),
 });
 
 const UpstreamTls = z.object({
   client_cert_id: z.string().optional(),
   client_cert: z.string().optional(),
   client_key: z.string().optional(),
-  verify: z.boolean().optional().default(false),
+  verify: z.boolean().optional(),
 });
 
 const Upstream = A6Common.Basic.merge(UpstreamDiscovery).merge(
