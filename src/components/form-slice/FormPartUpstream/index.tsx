@@ -196,11 +196,11 @@ export const FormSectionKeepAlive = () => {
     </FormSection>
   );
 };
-export const FormPartUpstream = () => {
+export const FormPartUpstream = ({ showId }: { showId?: boolean }) => {
   const { t } = useTranslation();
   return (
     <>
-      <FormPartBasic />
+      <FormPartBasic showId={showId} />
       <FormSection legend={t('form.upstream.findUpstreamFrom')}>
         <FormSection legend={t('form.upstream.nodes.title')}>
           <FormItemNodes

@@ -49,9 +49,8 @@ const ToAddPageBtn = () => {
   );
 };
 
-type UpstreamItem = A6Type['RespUpstreamList']['data']['list'][number];
 type DetailPageBtnProps = {
-  record: UpstreamItem;
+  record: A6Type['RespUpstreamItem'];
 };
 const DetailPageBtn = (props: DetailPageBtnProps) => {
   const { record } = props;

@@ -1,3 +1,3 @@
-export const upstreamdefaulValues = {
+export const upstreamdefaultValues = {
   __checksEnabled: false,
 };

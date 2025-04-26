@@ -14,25 +14,33 @@ import { pipeProduce } from '@/utils/producer';
 import { FormPartUpstream } from '@/components/form-slice/FormPartUpstream';
 import { FormPartUpstreamSchema } from '@/components/form-slice/FormPartUpstream/schema';
 import { DevTool } from '@hookform/devtools';
-import { upstreamdefaulValues } from '@/components/form-slice/FormPartUpstream/config';
+import { upstreamdefaultValues } from '@/components/form-slice/FormPartUpstream/config';
+import type { z } from 'zod';
+
+const PostUpstreamSchema = FormPartUpstreamSchema.omit({
+  id: true,
+});
+
+type PostUpstreamType = z.infer<typeof PostUpstreamSchema>;
+
 const UpstreamAddForm = () => {
   const { t } = useTranslation();
   const postUpstream = useMutation({
     mutationFn: (data: object) =>
-      req.post<A6Type['Upstream'], A6Type['RespUpstreamList']>(
+      req.post<PostUpstreamType, A6Type['RespUpstreamList']>(
         API_UPSTREAMS,
         data
       ),
   });
   const form = useForm({
-    resolver: zodResolver(FormPartUpstreamSchema),
+    resolver: zodResolver(PostUpstreamSchema),
     shouldUnregister: true,
     shouldFocusError: true,
-    defaultValues: upstreamdefaulValues,
+    defaultValues: upstreamdefaultValues,
     mode: 'onChange',
   });
 
-  const submit = async (form: A6Type['Upstream']) => {
+  const submit = async (form: PostUpstreamType) => {
     const data = pipeProduce()(form);
     await postUpstream.mutateAsync(data);
   };
