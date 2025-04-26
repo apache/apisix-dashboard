@@ -1,7 +1,9 @@
 import { A6 } from '@/types/schema/apisix';
 import { z } from 'zod';
 
-export const FormPartUpstreamSchema = A6.Upstream.extend({
+export const FormPartUpstreamSchema = A6.Upstream.omit({
+  id: true,
+}).extend({
   __checksEnabled: z.boolean(),
 });
 

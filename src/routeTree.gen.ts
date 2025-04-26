@@ -21,6 +21,7 @@ import { Route as PluginGlobalRulesIndexImport } from './routes/plugin-global-ru
 import { Route as ConsumerIndexImport } from './routes/consumer/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as RouteAddImport } from './routes/route/add'
+import { Route as UpstreamsDetailUpstreamIdImport } from './routes/upstreams/detail.$upstreamId'
 
 // Create/Update Routes
 
@@ -81,6 +82,12 @@ const UpstreamsAddRoute = UpstreamsAddImport.update({
 const RouteAddRoute = RouteAddImport.update({
   id: '/route/add',
   path: '/route/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const UpstreamsDetailUpstreamIdRoute = UpstreamsDetailUpstreamIdImport.update({
+  id: '/upstreams/detail/$upstreamId',
+  path: '/upstreams/detail/$upstreamId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -158,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UpstreamsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/upstreams/detail/$upstreamId': {
+      id: '/upstreams/detail/$upstreamId'
+      path: '/upstreams/detail/$upstreamId'
+      fullPath: '/upstreams/detail/$upstreamId'
+      preLoaderRoute: typeof UpstreamsDetailUpstreamIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -174,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/service': typeof ServiceIndexRoute
   '/ssl': typeof SslIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -187,6 +202,7 @@ export interface FileRoutesByTo {
   '/service': typeof ServiceIndexRoute
   '/ssl': typeof SslIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
 
 export interface FileRoutesById {
@@ -201,6 +217,7 @@ export interface FileRoutesById {
   '/service/': typeof ServiceIndexRoute
   '/ssl/': typeof SslIndexRoute
   '/upstreams/': typeof UpstreamsIndexRoute
+  '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
 
 export interface FileRouteTypes {
@@ -216,6 +233,7 @@ export interface FileRouteTypes {
     | '/service'
     | '/ssl'
     | '/upstreams'
+    | '/upstreams/detail/$upstreamId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -228,6 +246,7 @@ export interface FileRouteTypes {
     | '/service'
     | '/ssl'
     | '/upstreams'
+    | '/upstreams/detail/$upstreamId'
   id:
     | '__root__'
     | '/'
@@ -240,6 +259,7 @@ export interface FileRouteTypes {
     | '/service/'
     | '/ssl/'
     | '/upstreams/'
+    | '/upstreams/detail/$upstreamId'
   fileRoutesById: FileRoutesById
 }
 
@@ -254,6 +274,7 @@ export interface RootRouteChildren {
   ServiceIndexRoute: typeof ServiceIndexRoute
   SslIndexRoute: typeof SslIndexRoute
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
+  UpstreamsDetailUpstreamIdRoute: typeof UpstreamsDetailUpstreamIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -267,6 +288,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServiceIndexRoute: ServiceIndexRoute,
   SslIndexRoute: SslIndexRoute,
   UpstreamsIndexRoute: UpstreamsIndexRoute,
+  UpstreamsDetailUpstreamIdRoute: UpstreamsDetailUpstreamIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -288,7 +310,8 @@ export const routeTree = rootRoute
         "/secret/",
         "/service/",
         "/ssl/",
-        "/upstreams/"
+        "/upstreams/",
+        "/upstreams/detail/$upstreamId"
       ]
     },
     "/": {
@@ -320,6 +343,9 @@ export const routeTree = rootRoute
     },
     "/upstreams/": {
       "filePath": "upstreams/index.tsx"
+    },
+    "/upstreams/detail/$upstreamId": {
+      "filePath": "upstreams/detail.$upstreamId.tsx"
     }
   }
 }

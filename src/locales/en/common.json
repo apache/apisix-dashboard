@@ -1,7 +1,9 @@
 {
   "APISIX Dashboard": "APISIX Dashboard",
+  "actions": "Actions",
   "form": {
     "basic": {
+      "desc": "Description",
       "labels": {
         "errorFormat": "The format of label is wrong, it should be `key:value`",
         "key": "Key",
@@ -9,6 +11,7 @@
         "title": "Labels",
         "value": "Value"
       },
+      "name": "Name",
       "title": "Basic Infomation"
     },
     "btn": {
@@ -28,14 +31,6 @@
             "successes": "Successes",
             "title": "Healthy"
           },
-          "unhealthy": {
-            "http_statuses": "HTTP Statuses",
-            "interval": "Interval",
-            "http_failures": "HTTP Failures",
-            "tcp_failures": "TCP Failures",
-            "timeouts": "Timeouts",
-            "title": "Unhealthy"
-          },
           "host": "Host",
           "http_path": "HTTP Path",
           "http_request_headers": "HTTP Request Headers",
@@ -43,7 +38,15 @@
           "port": "Port",
           "timeout": "Timeout",
           "title": "Active",
-          "type": "Type"
+          "type": "Type",
+          "unhealthy": {
+            "http_failures": "HTTP Failures",
+            "http_statuses": "HTTP Statuses",
+            "interval": "Interval",
+            "tcp_failures": "TCP Failures",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          }
         },
         "passive": {
           "healthy": {
@@ -51,15 +54,15 @@
             "successes": "Successes",
             "title": "Healthy"
           },
+          "title": "Passive",
+          "type": "Type",
           "unhealthy": {
-            "http_statuses": "HTTP Statuses",
             "http_failures": "HTTP Failures",
+            "http_statuses": "HTTP Statuses",
             "tcp_failures": "TCP Failures",
             "timeouts": "Timeouts",
             "title": "Unhealthy"
-          },
-          "title": "Passive",
-          "type": "Type"
+          }
         },
         "title": "Health Checks"
       },
@@ -128,6 +131,7 @@
         "verify": "Verify"
       },
       "type": "Type",
+      "updateTime": "Update Time",
       "upstreamHost": "Upstream Host",
       "upstreamHostDesc": "Set this when `pass_host` is `rewrite`"
     }
@@ -146,8 +150,6 @@
   "route": {
     "add": {
       "form": {
-        "desc": "Description",
-        "name": "Name",
         "uri": "URI",
         "uris": "URIs"
       },
@@ -163,6 +165,11 @@
   "upstreams": {
     "add": {
       "title": "Add Upstream"
-    }
-  }
+    },
+    "detail": {
+      "title": "Upstream Details"
+    },
+    "title": "Upstreams"
+  },
+  "view": "View"
 }

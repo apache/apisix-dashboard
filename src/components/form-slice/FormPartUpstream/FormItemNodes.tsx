@@ -10,12 +10,9 @@ import {
 import { Button, Input, type InputWrapperProps } from '@mantine/core';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ConfigProvider } from 'antd';
-import enUS from 'antd/locale/en_US';
 import { range } from 'rambdax';
 import type { ZodObject, ZodRawShape } from 'zod';
 import { useListState } from '@mantine/hooks';
-import '@ant-design/v5-patch-for-react-19';
 import {
   useController,
   useFormContext,
@@ -23,6 +20,7 @@ import {
   type UseControllerProps,
 } from 'react-hook-form';
 import { genControllerProps } from '../../form/util';
+import { AntdConfigProvider } from '@/config/antdConfigProvider';
 
 type DataSource = A6Type['UpstreamNode'] & A6Type['ID'];
 
@@ -194,16 +192,7 @@ export const FormItemNodes = <T extends FieldValues>(
       withAsterisk={withAsterisk}
     >
       <input name={fName} style={{ display: 'none' }} />
-      <ConfigProvider
-        virtual
-        locale={enUS}
-        renderEmpty={() => <div>{t('noData')}</div>}
-        theme={{
-          token: {
-            borderRadiusSM: 2,
-          },
-        }}
-      >
+      <AntdConfigProvider>
         <EditableProTable<DataSource>
           defaultSize="small"
           rowKey="id"
@@ -263,7 +252,7 @@ export const FormItemNodes = <T extends FieldValues>(
           }}
           {...restField}
         />
-      </ConfigProvider>
+      </AntdConfigProvider>
       <Button
         fullWidth
         variant="default"

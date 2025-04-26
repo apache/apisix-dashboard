@@ -13,12 +13,12 @@ export const FormPartBasic = (props: Omit<FormSectionProps, 'form'>) => {
     <FormSection legend={t('form.basic.title')} {...props}>
       <FormItemTextInput
         name="name"
-        label={t('route.add.form.name')}
+        label={t('form.basic.name')}
         control={control}
       />
       <FormItemTextarea
         name="desc"
-        label={t('route.add.form.desc')}
+        label={t('form.basic.desc')}
         control={control}
       />
       <FormItemLabels name="labels" control={control} />

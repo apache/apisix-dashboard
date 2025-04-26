@@ -134,23 +134,25 @@ const UpstreamTls = z.object({
   verify: z.boolean().optional(),
 });
 
-const Upstream = A6Common.Basic.merge(UpstreamDiscovery).merge(
-  z.object({
-    nodes: UpstreamNodeListOrObj.optional(),
-    scheme: UpstreamScheme.optional(),
-    type: UpstreamBalancer.optional(),
-    hash_on: UpstreamHashOn.optional(),
-    key: z.string().optional(),
-    checks: UpstreamHealthCheck.optional(),
-    pass_host: UpstreamPassHost.optional(),
-    upstream_host: z.string().optional(),
-    retries: z.number().optional(),
-    retry_timeout: z.number().optional(),
-    timeout: UpstreamTimeout.partial().optional(),
-    tls: UpstreamTls.optional(),
-    keepalive_pool: UpstreamKeepalivePool.optional(),
-  })
-);
+const Upstream = A6Common.Basic.merge(A6Common.ID)
+  .merge(UpstreamDiscovery)
+  .merge(
+    z.object({
+      nodes: UpstreamNodeListOrObj.optional(),
+      scheme: UpstreamScheme.optional(),
+      type: UpstreamBalancer.optional(),
+      hash_on: UpstreamHashOn.optional(),
+      key: z.string().optional(),
+      checks: UpstreamHealthCheck.optional(),
+      pass_host: UpstreamPassHost.optional(),
+      upstream_host: z.string().optional(),
+      retries: z.number().optional(),
+      retry_timeout: z.number().optional(),
+      timeout: UpstreamTimeout.partial().optional(),
+      tls: UpstreamTls.optional(),
+      keepalive_pool: UpstreamKeepalivePool.optional(),
+    })
+  );
 
 export const A6Upstream = {
   Upstream,

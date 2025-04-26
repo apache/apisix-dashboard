@@ -6,6 +6,9 @@ import { Button } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import type { A6Type } from '@/types/schema/apisix';
 import { API_ROUTES } from '@/config/constant';
+import { ProTable } from '@ant-design/pro-components';
+import type { ProColumns } from '@ant-design/pro-components';
+import { useMemo } from 'react';
 
 const routesQueryOptions = queryOptions({
   queryKey: ['routes'],
@@ -24,16 +27,58 @@ const ToCreatePageBtn = () => {
 };
 
 function RouteComponent() {
-  const { data } = useSuspenseQuery(routesQueryOptions);
+  const query = useSuspenseQuery(routesQueryOptions);
+  const { data, isLoading } = query;
+  const { t } = useTranslation();
+
+  const columns = useMemo<
+    ProColumns<A6Type['RespRouteList']['data']['list'][number]>[]
+  >(() => {
+    return [
+      {
+        dataIndex: 'id',
+        title: 'ID',
+        key: 'id',
+        valueType: 'text',
+      },
+      {
+        dataIndex: 'name',
+        title: t('form.basic.name'),
+        key: 'name',
+        valueType: 'text',
+      },
+      {
+        dataIndex: 'desc',
+        title: t('form.basic.desc'),
+        key: 'desc',
+        valueType: 'text',
+      },
+      {
+        dataIndex: 'uri',
+        title: 'URI',
+        key: 'uri',
+        valueType: 'text',
+      },
+    ];
+  }, [t]);
+
   return (
-    <>
-      <ToCreatePageBtn />
-      {data.total === 0 ? (
-        <div>Empty</div>
-      ) : (
-        <div>{JSON.stringify(data.list, null, 2)}</div>
-      )}
-    </>
+    <ProTable
+      columns={columns}
+      dataSource={data.list}
+      rowKey="id"
+      loading={isLoading}
+      search={false}
+      options={{
+        reload: true,
+      }}
+      pagination={{
+        defaultPageSize: 10,
+        showSizeChanger: true,
+        total: data.total,
+      }}
+      toolBarRender={() => [<ToCreatePageBtn key="add" />]}
+    />
   );
 }
 
