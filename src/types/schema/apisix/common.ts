@@ -20,6 +20,13 @@ const ID = z.object({
   id: z.string(),
 });
 
+const Timestamp = z.object({
+  create_time: z.number(),
+  update_time: z.number(),
+});
+
+const Info = ID.merge(Timestamp);
+
 export const A6Common = {
   Basic,
   Labels,
@@ -27,4 +34,6 @@ export const A6Common = {
   Plugins,
   Expr,
   ID,
+  Timestamp,
+  Info,
 };

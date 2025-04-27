@@ -10,10 +10,12 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { DevTool } from '@hookform/devtools';
 import { A6Proto } from '@/types/schema/apisix/proto';
 import type { A6Type } from '@/types/schema/apisix';
-import { FileUploadTextarea } from '@/components/form/FileUploadTextarea';
-import { Box, Stack } from '@mantine/core';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
-import { defaultValues } from './_config';
+import { FormPartProto } from '@/components/form-slice/FormPartProto';
+
+const defaultValues: A6Type['ProtoPost'] = {
+  content: '',
+};
 
 const ProtoAddForm = () => {
   const { t } = useTranslation();
@@ -39,22 +41,11 @@ const ProtoAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <Box>
-        <form onSubmit={form.handleSubmit(submit)}>
-          <Stack gap="md">
-            <FileUploadTextarea
-              name="content"
-              label={t('protos.form.content')}
-              placeholder={t('protos.form.contentPlaceholder')}
-              control={form.control}
-              minRows={10}
-              acceptFileTypes=".proto,.pb"
-            />
-            <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
-          </Stack>
-        </form>
-        <DevTool control={form.control} />
-      </Box>
+      <form onSubmit={form.handleSubmit(submit)}>
+        <FormPartProto />
+        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+      </form>
+      <DevTool control={form.control} />
     </FormProvider>
   );
 };

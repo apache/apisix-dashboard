@@ -44,6 +44,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       fast-clean:
         specifier: ^1.4.0
         version: 1.4.0

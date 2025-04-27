@@ -22,6 +22,11 @@
       "upload": "Upload"
     },
     "disabled": "Disabled, click switch to enable",
+    "info": {
+      "create_time": "Create Time",
+      "title": "Information",
+      "update_time": "Update Time"
+    },
     "upload": {
       "fileOverSize": "file size is overed",
       "readError": "file read error:"
@@ -144,12 +149,12 @@
   "navbar": {
     "consumer": "Consumer",
     "pluginGlobalRules": "Plugin Global Rules",
+    "protos": "Protos",
     "route": "Route",
     "secret": "Secret",
     "service": "Service",
     "ssl": "SSL",
-    "upstreams": "Upstreams",
-    "protos": "Protos"
+    "upstreams": "Upstreams"
   },
   "noData": "No Data",
   "or": "OR",

@@ -6,25 +6,13 @@ import { FormItemTextarea } from '../form/Textarea';
 import { useFormContext } from 'react-hook-form';
 import type { A6Type } from '@/types/schema/apisix';
 
-export type FormPartBasicProps = Omit<FormSectionProps, 'form'> & {
-  showId?: boolean;
-};
+export type FormPartBasicProps = Omit<FormSectionProps, 'form'>;
 
 export const FormPartBasic = (props: FormPartBasicProps) => {
-  const { showId, ...restProps } = props;
-  const { control } = useFormContext<A6Type['Basic'] & { id?: string }>();
+  const { control } = useFormContext<A6Type['Basic']>();
   const { t } = useTranslation();
   return (
-    <FormSection legend={t('form.basic.title')} {...restProps}>
-      {showId && (
-        <FormItemTextInput
-          name="id"
-          label="ID"
-          control={control}
-          readOnly
-          disabled
-        />
-      )}
+    <FormSection legend={t('form.basic.title')} {...props}>
       <FormItemTextInput
         name="name"
         label={t('form.basic.name')}

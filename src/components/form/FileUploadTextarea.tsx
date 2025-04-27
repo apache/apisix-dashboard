@@ -16,18 +16,19 @@ import IconUpload from '~icons/material-symbols/upload';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export type FileUploadTextareaProps<T extends FieldValues> =
-  UseControllerProps<T> &
-    MTextareaProps & {
-      acceptFileTypes?: string;
-      uploadButtonText?: string;
-      maxFileSize?: number;
-      onFileLoaded?: (content: string, fileName: string) => void;
-    };
+export type FileUploadTextareaProps<T extends FieldValues> = UseControllerProps<T> &
+  MTextareaProps & {
+    acceptFileTypes?: string;
+    uploadButtonText?: string;
+    maxFileSize?: number;
+    onFileLoaded?: (content: string, fileName: string) => void;
+    allowUpload?: boolean;
+  };
 
 export const FileUploadTextarea = <T extends FieldValues>(
   props: FileUploadTextareaProps<T>
 ) => {
+  const { allowUpload = true } = props;
   const { controllerProps, restProps } = genControllerProps(props, '');
   const {
     field: { value, onChange: fOnChange, ...restField },
@@ -83,27 +84,30 @@ export const FileUploadTextarea = <T extends FieldValues>(
           onChange?.(e);
         }}
         resize="vertical"
+        autosize={restField.disabled}
         {...restField}
         {...textareaProps}
       />
-      <Group mb="xs" mt={4}>
-        <Button
-          leftSection={<IconUpload />}
-          size="compact-xs"
-          variant="outline"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={restField.disabled}
-        >
-          {uploadButtonText || t('form.btn.upload')}
-        </Button>
-        <input
-          type="file"
-          accept={acceptFileTypes}
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-          ref={fileInputRef}
-        />
-      </Group>
+      {allowUpload && (
+        <Group mb="xs" mt={4}>
+          <Button
+            leftSection={<IconUpload />}
+            size="compact-xs"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={restField.disabled}
+          >
+            {uploadButtonText || t('form.btn.upload')}
+          </Button>
+          <input
+            type="file"
+            accept={acceptFileTypes}
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            ref={fileInputRef}
+          />
+        </Group>
+      )}
       <Input.Error>{fieldState.error?.message || fileError}</Input.Error>
     </Box>
   );
