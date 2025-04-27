@@ -9,7 +9,7 @@ export const FormDisplayDate = (props: FormDisplayDateProps) => {
   return (
     <InputWrapper {...rest}>
       <Text size="sm" c="gray.6">
-        {dayjs(date).format('YYYY-MM-DD HH:mm:ss')}
+        {date ? dayjs(date).format('YYYY-MM-DD HH:mm:ss') : '-'}
       </Text>
     </InputWrapper>
   );
