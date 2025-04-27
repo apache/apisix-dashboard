@@ -23,8 +23,10 @@ import { Route as ConsumerIndexImport } from './routes/consumer/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as RouteAddImport } from './routes/route/add'
 import { Route as ProtosAddImport } from './routes/protos/add'
+import { Route as PluginGlobalRulesAddImport } from './routes/plugin-global-rules/add'
 import { Route as UpstreamsDetailUpstreamIdImport } from './routes/upstreams/detail.$upstreamId'
 import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
+import { Route as PluginGlobalRulesDetailIdImport } from './routes/plugin-global-rules/detail.$id'
 
 // Create/Update Routes
 
@@ -100,6 +102,12 @@ const ProtosAddRoute = ProtosAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const PluginGlobalRulesAddRoute = PluginGlobalRulesAddImport.update({
+  id: '/plugin-global-rules/add',
+  path: '/plugin-global-rules/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const UpstreamsDetailUpstreamIdRoute = UpstreamsDetailUpstreamIdImport.update({
   id: '/upstreams/detail/$upstreamId',
   path: '/upstreams/detail/$upstreamId',
@@ -112,6 +120,12 @@ const ProtosDetailIdRoute = ProtosDetailIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const PluginGlobalRulesDetailIdRoute = PluginGlobalRulesDetailIdImport.update({
+  id: '/plugin-global-rules/detail/$id',
+  path: '/plugin-global-rules/detail/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -121,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/plugin-global-rules/add': {
+      id: '/plugin-global-rules/add'
+      path: '/plugin-global-rules/add'
+      fullPath: '/plugin-global-rules/add'
+      preLoaderRoute: typeof PluginGlobalRulesAddImport
       parentRoute: typeof rootRoute
     }
     '/protos/add': {
@@ -200,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UpstreamsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/plugin-global-rules/detail/$id': {
+      id: '/plugin-global-rules/detail/$id'
+      path: '/plugin-global-rules/detail/$id'
+      fullPath: '/plugin-global-rules/detail/$id'
+      preLoaderRoute: typeof PluginGlobalRulesDetailIdImport
+      parentRoute: typeof rootRoute
+    }
     '/protos/detail/$id': {
       id: '/protos/detail/$id'
       path: '/protos/detail/$id'
@@ -221,6 +249,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/plugin-global-rules/add': typeof PluginGlobalRulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/route/add': typeof RouteAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -232,12 +261,14 @@ export interface FileRoutesByFullPath {
   '/service': typeof ServiceIndexRoute
   '/ssl': typeof SslIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/plugin-global-rules/detail/$id': typeof PluginGlobalRulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/plugin-global-rules/add': typeof PluginGlobalRulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/route/add': typeof RouteAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -249,6 +280,7 @@ export interface FileRoutesByTo {
   '/service': typeof ServiceIndexRoute
   '/ssl': typeof SslIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/plugin-global-rules/detail/$id': typeof PluginGlobalRulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
@@ -256,6 +288,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/plugin-global-rules/add': typeof PluginGlobalRulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/route/add': typeof RouteAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -267,6 +300,7 @@ export interface FileRoutesById {
   '/service/': typeof ServiceIndexRoute
   '/ssl/': typeof SslIndexRoute
   '/upstreams/': typeof UpstreamsIndexRoute
+  '/plugin-global-rules/detail/$id': typeof PluginGlobalRulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
@@ -275,6 +309,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/plugin-global-rules/add'
     | '/protos/add'
     | '/route/add'
     | '/upstreams/add'
@@ -286,11 +321,13 @@ export interface FileRouteTypes {
     | '/service'
     | '/ssl'
     | '/upstreams'
+    | '/plugin-global-rules/detail/$id'
     | '/protos/detail/$id'
     | '/upstreams/detail/$upstreamId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/plugin-global-rules/add'
     | '/protos/add'
     | '/route/add'
     | '/upstreams/add'
@@ -302,11 +339,13 @@ export interface FileRouteTypes {
     | '/service'
     | '/ssl'
     | '/upstreams'
+    | '/plugin-global-rules/detail/$id'
     | '/protos/detail/$id'
     | '/upstreams/detail/$upstreamId'
   id:
     | '__root__'
     | '/'
+    | '/plugin-global-rules/add'
     | '/protos/add'
     | '/route/add'
     | '/upstreams/add'
@@ -318,6 +357,7 @@ export interface FileRouteTypes {
     | '/service/'
     | '/ssl/'
     | '/upstreams/'
+    | '/plugin-global-rules/detail/$id'
     | '/protos/detail/$id'
     | '/upstreams/detail/$upstreamId'
   fileRoutesById: FileRoutesById
@@ -325,6 +365,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PluginGlobalRulesAddRoute: typeof PluginGlobalRulesAddRoute
   ProtosAddRoute: typeof ProtosAddRoute
   RouteAddRoute: typeof RouteAddRoute
   UpstreamsAddRoute: typeof UpstreamsAddRoute
@@ -336,12 +377,14 @@ export interface RootRouteChildren {
   ServiceIndexRoute: typeof ServiceIndexRoute
   SslIndexRoute: typeof SslIndexRoute
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
+  PluginGlobalRulesDetailIdRoute: typeof PluginGlobalRulesDetailIdRoute
   ProtosDetailIdRoute: typeof ProtosDetailIdRoute
   UpstreamsDetailUpstreamIdRoute: typeof UpstreamsDetailUpstreamIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PluginGlobalRulesAddRoute: PluginGlobalRulesAddRoute,
   ProtosAddRoute: ProtosAddRoute,
   RouteAddRoute: RouteAddRoute,
   UpstreamsAddRoute: UpstreamsAddRoute,
@@ -353,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServiceIndexRoute: ServiceIndexRoute,
   SslIndexRoute: SslIndexRoute,
   UpstreamsIndexRoute: UpstreamsIndexRoute,
+  PluginGlobalRulesDetailIdRoute: PluginGlobalRulesDetailIdRoute,
   ProtosDetailIdRoute: ProtosDetailIdRoute,
   UpstreamsDetailUpstreamIdRoute: UpstreamsDetailUpstreamIdRoute,
 }
@@ -368,6 +412,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/plugin-global-rules/add",
         "/protos/add",
         "/route/add",
         "/upstreams/add",
@@ -379,12 +424,16 @@ export const routeTree = rootRoute
         "/service/",
         "/ssl/",
         "/upstreams/",
+        "/plugin-global-rules/detail/$id",
         "/protos/detail/$id",
         "/upstreams/detail/$upstreamId"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/plugin-global-rules/add": {
+      "filePath": "plugin-global-rules/add.tsx"
     },
     "/protos/add": {
       "filePath": "protos/add.tsx"
@@ -418,6 +467,9 @@ export const routeTree = rootRoute
     },
     "/upstreams/": {
       "filePath": "upstreams/index.tsx"
+    },
+    "/plugin-global-rules/detail/$id": {
+      "filePath": "plugin-global-rules/detail.$id.tsx"
     },
     "/protos/detail/$id": {
       "filePath": "protos/detail.$id.tsx"

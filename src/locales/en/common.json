@@ -158,6 +158,17 @@
   },
   "noData": "No Data",
   "or": "OR",
+  "pluginGlobalRules": {
+    "title": "Plugin Global Rules",
+    "add": {
+      "success": "Add Plugin Global Rule Successfully",
+      "title": "Add Plugin Global Rule"
+    },
+    "detail": {
+      "title": "Plugin Global Rule Detail"
+    },
+    "plugins": "Plugins"
+  },
   "protos": {
     "add": {
       "success": "Add Proto Successfully",
