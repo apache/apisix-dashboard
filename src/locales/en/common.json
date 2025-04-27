@@ -18,9 +18,14 @@
       "add": "Add",
       "delete": "Delete",
       "edit": "Edit",
-      "save": "Save"
+      "save": "Save",
+      "upload": "Upload"
     },
     "disabled": "Disabled, click switch to enable",
+    "upload": {
+      "fileOverSize": "file size is overed",
+      "readError": "file read error:"
+    },
     "upstream": {
       "checks": {
         "active": {
@@ -143,10 +148,24 @@
     "secret": "Secret",
     "service": "Service",
     "ssl": "SSL",
-    "upstreams": "Upstreams"
+    "upstreams": "Upstreams",
+    "protos": "Protos"
   },
   "noData": "No Data",
   "or": "OR",
+  "protos": {
+    "add": {
+      "title": "Add Proto"
+    },
+    "detail": {
+      "title": "Proto Detail"
+    },
+    "form": {
+      "content": "Content",
+      "contentPlaceholder": "Paste or upload .proto, .pb file"
+    },
+    "title": "Protos"
+  },
   "route": {
     "add": {
       "form": {

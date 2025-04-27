@@ -34,4 +34,8 @@ export const navRoutes: NavRoute[] = [
     to: '/secret',
     label: 'secret',
   },
+  {
+    to: '/protos',
+    label: 'protos',
+  },
 ];
