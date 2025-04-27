@@ -20,4 +20,6 @@ export type A6Type = RawA6Type & {
   RespRouteList: AxiosResponse<A6ListResponse<A6Type['Route']>>;
   RespUpstreamList: AxiosResponse<A6ListResponse<A6Type['Upstream']>>;
   RespUpstreamItem: A6Type['RespUpstreamList']['data']['list'][number];
+  RespProtoList: AxiosResponse<A6ListResponse<A6Type['Proto']>>;
+  RespProtoItem: A6Type['RespProtoList']['data']['list'][number];
 };
