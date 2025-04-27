@@ -12,6 +12,7 @@ import { A6Proto } from '@/types/schema/apisix/proto';
 import type { A6Type } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
+import { notifications } from '@mantine/notifications';
 
 const defaultValues: A6Type['ProtoPost'] = {
   content: '',
@@ -36,6 +37,11 @@ const ProtoAddForm = () => {
 
   const submit = async (data: A6Type['ProtoPost']) => {
     await postProto.mutateAsync(data);
+    notifications.show({
+      id: 'add-proto',
+      message: t('protos.add.success'),
+      color: 'green',
+    });
     await router.navigate({ to: '/protos' });
   };
 

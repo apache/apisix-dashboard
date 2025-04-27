@@ -23,12 +23,12 @@
     },
     "disabled": "Disabled, click switch to enable",
     "info": {
-      "create_time": "Create Time",
+      "create_time": "Created At",
       "title": "Information",
-      "update_time": "Update Time"
+      "update_time": "Updated At"
     },
     "upload": {
-      "fileOverSize": "file size is overed",
+      "fileOverSize": "file size is too large",
       "readError": "file read error:"
     },
     "upstream": {
@@ -160,6 +160,7 @@
   "or": "OR",
   "protos": {
     "add": {
+      "success": "Add Proto Successfully",
       "title": "Add Proto"
     },
     "detail": {
