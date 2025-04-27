@@ -17,11 +17,14 @@ import { Route as SslIndexImport } from './routes/ssl/index'
 import { Route as ServiceIndexImport } from './routes/service/index'
 import { Route as SecretIndexImport } from './routes/secret/index'
 import { Route as RouteIndexImport } from './routes/route/index'
+import { Route as ProtosIndexImport } from './routes/protos/index'
 import { Route as PluginGlobalRulesIndexImport } from './routes/plugin-global-rules/index'
 import { Route as ConsumerIndexImport } from './routes/consumer/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as RouteAddImport } from './routes/route/add'
+import { Route as ProtosAddImport } from './routes/protos/add'
 import { Route as UpstreamsDetailUpstreamIdImport } from './routes/upstreams/detail.$upstreamId'
+import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
 
 // Create/Update Routes
 
@@ -61,6 +64,12 @@ const RouteIndexRoute = RouteIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ProtosIndexRoute = ProtosIndexImport.update({
+  id: '/protos/',
+  path: '/protos/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const PluginGlobalRulesIndexRoute = PluginGlobalRulesIndexImport.update({
   id: '/plugin-global-rules/',
   path: '/plugin-global-rules/',
@@ -85,9 +94,21 @@ const RouteAddRoute = RouteAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ProtosAddRoute = ProtosAddImport.update({
+  id: '/protos/add',
+  path: '/protos/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const UpstreamsDetailUpstreamIdRoute = UpstreamsDetailUpstreamIdImport.update({
   id: '/upstreams/detail/$upstreamId',
   path: '/upstreams/detail/$upstreamId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProtosDetailIdRoute = ProtosDetailIdImport.update({
+  id: '/protos/detail/$id',
+  path: '/protos/detail/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -100,6 +121,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/protos/add': {
+      id: '/protos/add'
+      path: '/protos/add'
+      fullPath: '/protos/add'
+      preLoaderRoute: typeof ProtosAddImport
       parentRoute: typeof rootRoute
     }
     '/route/add': {
@@ -128,6 +156,13 @@ declare module '@tanstack/react-router' {
       path: '/plugin-global-rules'
       fullPath: '/plugin-global-rules'
       preLoaderRoute: typeof PluginGlobalRulesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/protos/': {
+      id: '/protos/'
+      path: '/protos'
+      fullPath: '/protos'
+      preLoaderRoute: typeof ProtosIndexImport
       parentRoute: typeof rootRoute
     }
     '/route/': {
@@ -165,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UpstreamsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/protos/detail/$id': {
+      id: '/protos/detail/$id'
+      path: '/protos/detail/$id'
+      fullPath: '/protos/detail/$id'
+      preLoaderRoute: typeof ProtosDetailIdImport
+      parentRoute: typeof rootRoute
+    }
     '/upstreams/detail/$upstreamId': {
       id: '/upstreams/detail/$upstreamId'
       path: '/upstreams/detail/$upstreamId'
@@ -179,44 +221,53 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/protos/add': typeof ProtosAddRoute
   '/route/add': typeof RouteAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumer': typeof ConsumerIndexRoute
   '/plugin-global-rules': typeof PluginGlobalRulesIndexRoute
+  '/protos': typeof ProtosIndexRoute
   '/route': typeof RouteIndexRoute
   '/secret': typeof SecretIndexRoute
   '/service': typeof ServiceIndexRoute
   '/ssl': typeof SslIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/protos/add': typeof ProtosAddRoute
   '/route/add': typeof RouteAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumer': typeof ConsumerIndexRoute
   '/plugin-global-rules': typeof PluginGlobalRulesIndexRoute
+  '/protos': typeof ProtosIndexRoute
   '/route': typeof RouteIndexRoute
   '/secret': typeof SecretIndexRoute
   '/service': typeof ServiceIndexRoute
   '/ssl': typeof SslIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/protos/add': typeof ProtosAddRoute
   '/route/add': typeof RouteAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumer/': typeof ConsumerIndexRoute
   '/plugin-global-rules/': typeof PluginGlobalRulesIndexRoute
+  '/protos/': typeof ProtosIndexRoute
   '/route/': typeof RouteIndexRoute
   '/secret/': typeof SecretIndexRoute
   '/service/': typeof ServiceIndexRoute
   '/ssl/': typeof SslIndexRoute
   '/upstreams/': typeof UpstreamsIndexRoute
+  '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
 }
 
@@ -224,70 +275,85 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/protos/add'
     | '/route/add'
     | '/upstreams/add'
     | '/consumer'
     | '/plugin-global-rules'
+    | '/protos'
     | '/route'
     | '/secret'
     | '/service'
     | '/ssl'
     | '/upstreams'
+    | '/protos/detail/$id'
     | '/upstreams/detail/$upstreamId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/protos/add'
     | '/route/add'
     | '/upstreams/add'
     | '/consumer'
     | '/plugin-global-rules'
+    | '/protos'
     | '/route'
     | '/secret'
     | '/service'
     | '/ssl'
     | '/upstreams'
+    | '/protos/detail/$id'
     | '/upstreams/detail/$upstreamId'
   id:
     | '__root__'
     | '/'
+    | '/protos/add'
     | '/route/add'
     | '/upstreams/add'
     | '/consumer/'
     | '/plugin-global-rules/'
+    | '/protos/'
     | '/route/'
     | '/secret/'
     | '/service/'
     | '/ssl/'
     | '/upstreams/'
+    | '/protos/detail/$id'
     | '/upstreams/detail/$upstreamId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProtosAddRoute: typeof ProtosAddRoute
   RouteAddRoute: typeof RouteAddRoute
   UpstreamsAddRoute: typeof UpstreamsAddRoute
   ConsumerIndexRoute: typeof ConsumerIndexRoute
   PluginGlobalRulesIndexRoute: typeof PluginGlobalRulesIndexRoute
+  ProtosIndexRoute: typeof ProtosIndexRoute
   RouteIndexRoute: typeof RouteIndexRoute
   SecretIndexRoute: typeof SecretIndexRoute
   ServiceIndexRoute: typeof ServiceIndexRoute
   SslIndexRoute: typeof SslIndexRoute
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
+  ProtosDetailIdRoute: typeof ProtosDetailIdRoute
   UpstreamsDetailUpstreamIdRoute: typeof UpstreamsDetailUpstreamIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProtosAddRoute: ProtosAddRoute,
   RouteAddRoute: RouteAddRoute,
   UpstreamsAddRoute: UpstreamsAddRoute,
   ConsumerIndexRoute: ConsumerIndexRoute,
   PluginGlobalRulesIndexRoute: PluginGlobalRulesIndexRoute,
+  ProtosIndexRoute: ProtosIndexRoute,
   RouteIndexRoute: RouteIndexRoute,
   SecretIndexRoute: SecretIndexRoute,
   ServiceIndexRoute: ServiceIndexRoute,
   SslIndexRoute: SslIndexRoute,
   UpstreamsIndexRoute: UpstreamsIndexRoute,
+  ProtosDetailIdRoute: ProtosDetailIdRoute,
   UpstreamsDetailUpstreamIdRoute: UpstreamsDetailUpstreamIdRoute,
 }
 
@@ -302,20 +368,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/protos/add",
         "/route/add",
         "/upstreams/add",
         "/consumer/",
         "/plugin-global-rules/",
+        "/protos/",
         "/route/",
         "/secret/",
         "/service/",
         "/ssl/",
         "/upstreams/",
+        "/protos/detail/$id",
         "/upstreams/detail/$upstreamId"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/protos/add": {
+      "filePath": "protos/add.tsx"
     },
     "/route/add": {
       "filePath": "route/add.tsx"
@@ -328,6 +400,9 @@ export const routeTree = rootRoute
     },
     "/plugin-global-rules/": {
       "filePath": "plugin-global-rules/index.tsx"
+    },
+    "/protos/": {
+      "filePath": "protos/index.tsx"
     },
     "/route/": {
       "filePath": "route/index.tsx"
@@ -343,6 +418,9 @@ export const routeTree = rootRoute
     },
     "/upstreams/": {
       "filePath": "upstreams/index.tsx"
+    },
+    "/protos/detail/$id": {
+      "filePath": "protos/detail.$id.tsx"
     },
     "/upstreams/detail/$upstreamId": {
       "filePath": "upstreams/detail.$upstreamId.tsx"

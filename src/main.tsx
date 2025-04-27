@@ -9,7 +9,6 @@ import { queryClient, router } from './config/global';
 
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import 'mantine-react-table/styles.css';
 import './styles/global.css';
 
 const theme = createTheme({});

@@ -28,7 +28,19 @@ type A6RespErr = {
 };
 
 req.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    // it's a apisix design
+    // when list is empty, it will be a object
+    // but we need a array
+    if (
+      res.data?.list &&
+      !Array.isArray(res.data.list) &&
+      Object.keys(res.data.list).length === 0
+    ) {
+      res.data.list = [];
+    }
+    return res;
+  },
   (err) => {
     if (err.response) {
       const d = err.response.data as A6RespErr;

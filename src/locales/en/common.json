@@ -18,9 +18,19 @@
       "add": "Add",
       "delete": "Delete",
       "edit": "Edit",
-      "save": "Save"
+      "save": "Save",
+      "upload": "Upload"
     },
     "disabled": "Disabled, click switch to enable",
+    "info": {
+      "create_time": "Created At",
+      "title": "Information",
+      "update_time": "Updated At"
+    },
+    "upload": {
+      "fileOverSize": "file size is too large",
+      "readError": "file read error:"
+    },
     "upstream": {
       "checks": {
         "active": {
@@ -139,6 +149,7 @@
   "navbar": {
     "consumer": "Consumer",
     "pluginGlobalRules": "Plugin Global Rules",
+    "protos": "Protos",
     "route": "Route",
     "secret": "Secret",
     "service": "Service",
@@ -147,6 +158,20 @@
   },
   "noData": "No Data",
   "or": "OR",
+  "protos": {
+    "add": {
+      "success": "Add Proto Successfully",
+      "title": "Add Proto"
+    },
+    "detail": {
+      "title": "Proto Detail"
+    },
+    "form": {
+      "content": "Content",
+      "contentPlaceholder": "Paste or upload .proto, .pb file"
+    },
+    "title": "Protos"
+  },
   "route": {
     "add": {
       "form": {

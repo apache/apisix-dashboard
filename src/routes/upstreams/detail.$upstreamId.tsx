@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { type A6Type } from '@/types/schema/apisix';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ import {
 import { DevTool } from '@hookform/devtools';
 import { upstreamdefaultValues } from '@/components/form-slice/FormPartUpstream/config';
 import { Skeleton } from '@mantine/core';
+import { FormSectionInfo } from '@/components/form-slice/FormSectionInfo';
 
 export const Route = createFileRoute('/upstreams/detail/$upstreamId')({
   component: RouteComponent,
@@ -57,9 +58,8 @@ const UpstreamDetailForm = ({ upstreamId }: { upstreamId: string }) => {
   return (
     <FormProvider {...form}>
       <FormTOCBox>
-        <div>
-          <FormPartUpstream showId={true} />
-        </div>
+        <FormSectionInfo />
+        <FormPartUpstream />
         <DevTool control={form.control} />
       </FormTOCBox>
     </FormProvider>
