@@ -1,4 +1,5 @@
 import { A6Common } from './common';
+import { A6PluginGlobalRule } from './plugin-global-rule';
 import { A6Proto } from './proto';
 import { A6Route } from './route';
 import { A6Upstream } from './upstream';
@@ -8,4 +9,5 @@ export const A6 = {
   ...A6Upstream,
   ...A6Route,
   ...A6Proto,
+  ...A6PluginGlobalRule,
 };

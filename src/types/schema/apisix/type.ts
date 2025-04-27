@@ -24,4 +24,8 @@ export type A6Type = RawA6Type & {
   RespProtoList: AxiosResponse<A6ListResponse<A6Type['Proto']>>;
   RespProtoItem: A6Type['RespProtoList']['data']['list'][number];
   RespProtoDetail: AxiosResponse<A6DetailResponse<A6Type['Proto']>>;
+  RespPluginGlobalRuleList: AxiosResponse<
+    A6ListResponse<A6Type['PluginGlobalRule']>
+  >;
+  RespPluginGlobalRuleItem: A6Type['RespPluginGlobalRuleList']['data']['list'][number];
 };
