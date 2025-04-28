@@ -22,11 +22,25 @@
       "upload": "Upload"
     },
     "disabled": "Disabled, click switch to enable",
+    "general": {
+      "title": "General"
+    },
     "info": {
       "create_time": "Created At",
+      "id": "ID",
       "title": "Information",
       "update_time": "Updated At"
     },
+    "plugins": {
+      "addPlugin": "Add Plugin",
+      "editPlugin": "Edit Plugin",
+      "label": "Plugins",
+      "searchForSelectedPlugins": "Search for Selected Plugins",
+      "selectPlugins": {
+        "title": "Select Plugins"
+      }
+    },
+    "search": "Search",
     "upload": {
       "fileOverSize": "file size is too large",
       "readError": "file read error:"
@@ -148,7 +162,7 @@
   },
   "navbar": {
     "consumer": "Consumer",
-    "pluginGlobalRules": "Plugin Global Rules",
+    "globalRules": "Global Rules",
     "protos": "Protos",
     "route": "Route",
     "secret": "Secret",
@@ -158,6 +172,17 @@
   },
   "noData": "No Data",
   "or": "OR",
+  "globalRules": {
+    "add": {
+      "success": "Add Global Rule Successfully",
+      "title": "Add Global Rule"
+    },
+    "detail": {
+      "title": "Global Rule Detail"
+    },
+    "plugins": "Plugins",
+    "title": "Global Rules"
+  },
   "protos": {
     "add": {
       "success": "Add Proto Successfully",

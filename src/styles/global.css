@@ -1,1 +1,7 @@
-/* placeholder */
+.monaco-editor, .monaco-editor .overflow-guard {
+  border-radius: var(--mantine-radius-sm);
+}
+
+.monaco-editor .suggest-widget {
+  width: 200px !important;
+}

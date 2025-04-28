@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { A6Common } from './common';
 import { A6Upstream } from './upstream';
+import { A6Plugin } from './plugin';
 
 const Route = z
   .object({
@@ -15,7 +16,7 @@ const Route = z
     filter_func: z.string(),
     script: z.string(),
     script_id: z.string(),
-    plugins: A6Common.Plugins,
+    plugins: A6Plugin.Plugins,
     plugin_config_id: z.string(),
     upstream: A6Upstream.Upstream,
     upstream_id: z.string(),

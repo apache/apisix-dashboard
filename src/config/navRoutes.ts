@@ -27,8 +27,8 @@ export const navRoutes: NavRoute[] = [
     label: 'ssl',
   },
   {
-    to: '/plugin-global-rules',
-    label: 'pluginGlobalRules',
+    to: '/global-rules',
+    label: 'globalRules',
   },
   {
     to: '/secret',

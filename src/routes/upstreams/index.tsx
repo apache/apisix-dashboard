@@ -10,7 +10,7 @@ import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
 import { RouteLinkBtn } from '@/components/Btn';
-import IconPlus from '~icons/material-symbols/add';
+import ToAddPageBtn from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import {
@@ -32,21 +32,6 @@ const genUpstreamsQueryOptions = (props: PageSearchType) => {
         })
         .then((v) => v.data),
   });
-};
-
-const ToAddPageBtn = () => {
-  const { t } = useTranslation();
-  const router = useRouter();
-  return (
-    <RouteLinkBtn
-      leftSection={<IconPlus />}
-      size="compact-sm"
-      variant="gradient"
-      to={router.routesById['/upstreams/add'].to}
-    >
-      {t('upstreams.add.title')}
-    </RouteLinkBtn>
-  );
 };
 
 type DetailPageBtnProps = {
@@ -164,7 +149,13 @@ function RouteComponent() {
               items: [
                 {
                   key: 'add',
-                  label: <ToAddPageBtn key="add" />,
+                  label: (
+                    <ToAddPageBtn
+                      key="add"
+                      to="/upstreams/add"
+                      label={t('upstreams.add.title')}
+                    />
+                  ),
                 },
               ],
             },
