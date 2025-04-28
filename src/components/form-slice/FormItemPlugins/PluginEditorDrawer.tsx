@@ -3,7 +3,7 @@ import { Drawer, Group, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { getPluginSchemaQueryOptions } from './req';
+import { getPluginSchemaQueryOptions } from '@/apis/plugins';
 import { isEmpty } from 'rambdax';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import type { PluginCardListProps } from './PluginCardList';
