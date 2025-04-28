@@ -3,10 +3,7 @@ import { Drawer, Group, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  getPluginSchemaQueryOptions,
-  type NeedPluginSchema,
-} from '@/apis/plugins';
+import { getPluginSchemaQueryOptions } from '@/apis/plugins';
 import { isEmpty } from 'rambdax';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import type { PluginCardListProps } from './PluginCardList';
@@ -19,7 +16,8 @@ export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
   onClose: () => void;
   onSave: (props: PluginConfig) => void;
   plugin: PluginConfig;
-} & NeedPluginSchema;
+  schema?: object;
+};
 
 const toConfigStr = (p: object): string => {
   return !isEmpty(p) ? JSON.stringify(p, null, 2) : '{}';
@@ -37,7 +35,7 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
     onClose();
     methods.reset();
   };
-  const getSchemaReq = useQuery(getPluginSchemaQueryOptions(name, schema));
+  const getSchemaReq = useQuery(getPluginSchemaQueryOptions(name, !schema));
 
   useDeepCompareEffect(() => {
     methods.setValue('config', toConfigStr(config));
@@ -64,28 +62,28 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
           <FormItemEditor
             name="config"
             h={500}
-            customSchema={getSchemaReq.data}
+            customSchema={getSchemaReq.data || schema}
             isLoading={getSchemaReq.isLoading}
             required
           />
         </form>
-      </FormProvider>
 
-      {mode !== 'view' && (
-        <Group justify="flex-end" mt={8}>
-          <FormSubmitBtn
-            size="xs"
-            variant="light"
-            onClick={methods.handleSubmit(({ config }) => {
-              onSave({ name, config: JSON.parse(config) });
-              handleClose();
-            })}
-          >
-            {mode === 'add' && t('form.btn.add')}
-            {mode === 'edit' && t('form.btn.edit')}
-          </FormSubmitBtn>
-        </Group>
-      )}
+        {mode !== 'view' && (
+          <Group justify="flex-end" mt={8}>
+            <FormSubmitBtn
+              size="xs"
+              variant="light"
+              onClick={methods.handleSubmit(({ config }) => {
+                onSave({ name, config: JSON.parse(config) });
+                handleClose();
+              })}
+            >
+              {mode === 'add' && t('form.btn.add')}
+              {mode === 'edit' && t('form.btn.edit')}
+            </FormSubmitBtn>
+          </Group>
+        )}
+      </FormProvider>
     </Drawer>
   );
 };

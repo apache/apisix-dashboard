@@ -30,4 +30,7 @@ export type A6Type = RawA6Type & {
   RespPluginsList: AxiosResponse<string[]>;
   RespPluginSchema: AxiosResponse<A6Type['PluginSchema']>;
   RespPlugins: AxiosResponse<A6Type['Plugins']>;
+  RespPluginMetadataDetail: AxiosResponse<
+    A6DetailResponse<A6Type['PluginMetadata']>
+  >;
 };

@@ -27,10 +27,7 @@ export type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
 const FormItemPluginsCore = <T extends FieldValues>(
   props: FormItemPluginsProps<T>
 ) => {
-  const {
-    controllerProps,
-    restProps: { schema, ...restProps },
-  } = genControllerProps(props, {});
+  const { controllerProps, restProps } = genControllerProps(props, {});
   const { t } = useTranslation();
 
   const {
@@ -94,7 +91,6 @@ const FormItemPluginsCore = <T extends FieldValues>(
         <PluginCardListSearch search={search} setSearch={setSearch} />
         {!restField.disabled && (
           <SelectPluginsDrawer
-            schema={schema}
             plugins={pluginsOb.unSelected}
             onSave={pluginsOb.update}
           />
@@ -116,7 +112,6 @@ const FormItemPluginsCore = <T extends FieldValues>(
         onClose={pluginsOb.closeEditor}
         plugin={pluginsOb.curPlugin}
         onSave={pluginsOb.update}
-        schema={schema}
       />
     </InputWrapper>
   );

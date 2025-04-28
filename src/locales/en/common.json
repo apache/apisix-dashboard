@@ -166,6 +166,7 @@
 "navbar": {
   "consumer": "Consumer",
   "globalRules": "Global Rules",
+  "pluginMetadata": "Plugin Metadata",
   "protos": "Protos",
   "route": "Route",
   "secret": "Secret",
@@ -189,6 +190,21 @@
   },
   "plugins": "Plugins",
   "title": "Global Rules"
+},
+"pluginMetadata": {
+  "detail": {
+    "title": "Plugin Metadata"
+  },
+  "edit": {
+    "success": "Edit Plugin Metadata Successfully",
+    "error": "Failed to Edit Plugin Metadata",
+    "title": "Edit Plugin Metadata"
+  },
+  "search": "Search Plugin Metadata",
+  "editor": {
+    "label": "Plugin Metadata",
+    "description": "Configure metadata for plugins"
+  }
 },
 "protos": {
   "add": {
