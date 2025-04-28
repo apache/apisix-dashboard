@@ -12,19 +12,19 @@ import { notifications } from '@mantine/notifications';
 import { A6 } from '@/types/schema/apisix';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { nanoid } from 'nanoid';
-import { FormPartPluginGlobalRules } from '@/components/form-slice/FormPartPluginGlobalRules';
-import { putPluginGlobalRuleReq } from '@/apis/plugins';
+import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
+import { putGlobalRuleReq } from '@/apis/plugins';
 
-const PluginGlobalRuleAddForm = () => {
+const GlobalRuleAddForm = () => {
   const { t } = useTranslation();
   const router = useReactRouter();
 
-  const putPluginGlobalRule = useMutation({
-    mutationFn: putPluginGlobalRuleReq,
+  const putGlobalRule = useMutation({
+    mutationFn: putGlobalRuleReq,
   });
 
   const form = useForm({
-    resolver: zodResolver(A6.PluginGlobalRulePut),
+    resolver: zodResolver(A6.GlobalRulePut),
     shouldUnregister: true,
     shouldFocusError: true,
     defaultValues: {
@@ -34,15 +34,15 @@ const PluginGlobalRuleAddForm = () => {
     mode: 'onChange',
   });
 
-  const submit = async (data: A6Type['PluginGlobalRulePut']) => {
-    const res = await putPluginGlobalRule.mutateAsync(data);
+  const submit = async (data: A6Type['GlobalRulePut']) => {
+    const res = await putGlobalRule.mutateAsync(data);
     notifications.show({
-      id: 'add-plugin-global-rule',
-      message: t('pluginGlobalRules.add.success'),
+      id: 'add-global-rule',
+      message: t('globalRules.add.success'),
       color: 'green',
     });
     await router.navigate({
-      to: '/plugin-global-rules/detail/$id',
+      to: '/global-rules/detail/$id',
       params: { id: res.data.value.id },
     });
   };
@@ -50,7 +50,7 @@ const PluginGlobalRuleAddForm = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submit)}>
-        <FormPartPluginGlobalRules />
+        <FormPartGlobalRules />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
       <DevTool control={form.control} />
@@ -62,14 +62,14 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('pluginGlobalRules.add.title')} />
+      <PageHeader title={t('globalRules.add.title')} />
       <FormTOCBox>
-        <PluginGlobalRuleAddForm />
+        <GlobalRuleAddForm />
       </FormTOCBox>
     </>
   );
 }
 
-export const Route = createFileRoute('/plugin-global-rules/add')({
+export const Route = createFileRoute('/global-rules/add')({
   component: RouteComponent,
 });

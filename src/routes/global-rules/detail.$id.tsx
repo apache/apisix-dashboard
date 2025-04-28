@@ -10,11 +10,8 @@ import type { A6Type } from '@/types/schema/apisix';
 import { notifications } from '@mantine/notifications';
 import { A6 } from '@/types/schema/apisix';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormPartPluginGlobalRules } from '@/components/form-slice/FormPartPluginGlobalRules';
-import {
-  getPluginGlobalRuleQueryOptions,
-  putPluginGlobalRuleReq,
-} from '@/apis/plugins';
+import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
+import { getGlobalRuleQueryOptions, putGlobalRuleReq } from '@/apis/plugins';
 import { useEffect } from 'react';
 import { useBoolean } from 'react-use';
 import { Button, Group } from '@mantine/core';
@@ -23,14 +20,14 @@ type Props = {
   readOnly: boolean;
   setReadOnly: (v: boolean) => void;
 };
-const PluginGlobalRuleDetailForm = (props: Props) => {
+const GlobalRuleDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/plugin-global-rules/detail/$id' });
-  const detailReq = useQuery(getPluginGlobalRuleQueryOptions(id));
+  const { id } = useParams({ from: '/global-rules/detail/$id' });
+  const detailReq = useQuery(getGlobalRuleQueryOptions(id));
 
   const form = useForm({
-    resolver: zodResolver(A6.PluginGlobalRulePut),
+    resolver: zodResolver(A6.GlobalRulePut),
     shouldUnregister: true,
     shouldFocusError: true,
     defaultValues: {},
@@ -44,13 +41,13 @@ const PluginGlobalRuleDetailForm = (props: Props) => {
     }
   }, [detailReq.data, form]);
 
-  const putPluginGlobalRule = useMutation({
-    mutationFn: putPluginGlobalRuleReq,
+  const putglobalRule = useMutation({
+    mutationFn: putGlobalRuleReq,
   });
-  const submit = async (data: A6Type['PluginGlobalRulePut']) => {
-    await putPluginGlobalRule.mutateAsync(data);
+  const submit = async (data: A6Type['GlobalRulePut']) => {
+    await putglobalRule.mutateAsync(data);
     notifications.show({
-      message: t('pluginGlobalRules.edit.success'),
+      message: t('globalRules.edit.success'),
       color: 'green',
     });
     await detailReq.refetch();
@@ -60,7 +57,7 @@ const PluginGlobalRuleDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submit)}>
-        <FormPartPluginGlobalRules />
+        <FormPartGlobalRules />
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
@@ -82,9 +79,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('pluginGlobalRules.edit.title')}
+        title={t('globalRules.edit.title')}
         {...(readOnly && {
-          title: t('pluginGlobalRules.detail.title'),
+          title: t('globalRules.detail.title'),
           extra: (
             <Button
               onClick={() => setReadOnly(false)}
@@ -97,15 +94,12 @@ function RouteComponent() {
         })}
       />
       <FormTOCBox>
-        <PluginGlobalRuleDetailForm
-          readOnly={readOnly}
-          setReadOnly={setReadOnly}
-        />
+        <GlobalRuleDetailForm readOnly={readOnly} setReadOnly={setReadOnly} />
       </FormTOCBox>
     </>
   );
 }
 
-export const Route = createFileRoute('/plugin-global-rules/detail/$id')({
+export const Route = createFileRoute('/global-rules/detail/$id')({
   component: RouteComponent,
 });

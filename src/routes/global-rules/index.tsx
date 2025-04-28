@@ -4,7 +4,7 @@ import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import type { A6Type } from '@/types/schema/apisix';
-import { API_PLUGIN_GLOBAL_RULES } from '@/config/constant';
+import { API_GLOBAL_RULES } from '@/config/constant';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
@@ -18,27 +18,24 @@ import {
   type PageSearchType,
 } from '@/types/schema/pageSearch';
 
-const genPluginGlobalRulesQueryOptions = (props: PageSearchType) => {
+const genGlobalRulesQueryOptions = (props: PageSearchType) => {
   const { page, pageSize } = props;
   return queryOptions({
-    queryKey: ['plugin-global-rules', page, pageSize],
+    queryKey: ['global-rules', page, pageSize],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespPluginGlobalRuleList']>(
-          API_PLUGIN_GLOBAL_RULES,
-          {
-            params: {
-              page,
-              page_size: pageSize,
-            },
-          }
-        )
+        .get<unknown, A6Type['RespGlobalRuleList']>(API_GLOBAL_RULES, {
+          params: {
+            page,
+            page_size: pageSize,
+          },
+        })
         .then((v) => v.data),
   });
 };
 
 type DetailPageBtnProps = {
-  record: A6Type['RespPluginGlobalRuleItem'];
+  record: A6Type['RespGlobalRuleItem'];
 };
 const DetailPageBtn = (props: DetailPageBtnProps) => {
   const { record } = props;
@@ -47,7 +44,7 @@ const DetailPageBtn = (props: DetailPageBtnProps) => {
     <RouteLinkBtn
       size="xs"
       variant="transparent"
-      to="/plugin-global-rules/detail/$id"
+      to="/global-rules/detail/$id"
       params={{ id: record.value.id }}
     >
       {t('view')}
@@ -60,13 +57,13 @@ function RouteComponent() {
 
   // Use the pagination hook
   const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'plugin-global-rules',
+    queryKey: 'global-rules',
   });
 
-  const pluginGlobalRulesQuery = useSuspenseQuery(
-    genPluginGlobalRulesQueryOptions(pagination)
+  const globalRulesQuery = useSuspenseQuery(
+    genGlobalRulesQueryOptions(pagination)
   );
-  const { data, isLoading } = pluginGlobalRulesQuery;
+  const { data, isLoading } = globalRulesQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -75,7 +72,7 @@ function RouteComponent() {
   }, [data?.total, updateTotal]);
 
   const columns = useMemo<
-    ProColumns<A6Type['RespPluginGlobalRuleList']['data']['list'][number]>[]
+    ProColumns<A6Type['RespGlobalRuleList']['data']['list'][number]>[]
   >(() => {
     return [
       {
@@ -96,7 +93,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('pluginGlobalRules.title')} />
+      <PageHeader title={t('globalRules.title')} />
       <AntdConfigProvider>
         <ProTable
           columns={columns}
@@ -122,8 +119,8 @@ function RouteComponent() {
                   label: (
                     <ToAddPageBtn
                       key="add"
-                      to="/plugin-global-rules/add"
-                      label={t('pluginGlobalRules.add.title')}
+                      to="/global-rules/add"
+                      label={t('globalRules.add.title')}
                     />
                   ),
                 },
@@ -136,10 +133,10 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/plugin-global-rules/')({
+export const Route = createFileRoute('/global-rules/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) =>
-    queryClient.ensureQueryData(genPluginGlobalRulesQueryOptions(deps)),
+    queryClient.ensureQueryData(genGlobalRulesQueryOptions(deps)),
 });
