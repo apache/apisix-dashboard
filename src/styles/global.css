@@ -2,6 +2,8 @@
   border-radius: var(--mantine-radius-sm);
 }
 
+/* This is to fix the suggest widget offset problem */
 .monaco-editor .suggest-widget {
   width: 200px !important;
+  left: 60px !important;
 }
