@@ -1,4 +1,5 @@
-.monaco-editor, .monaco-editor .overflow-guard {
+.monaco-editor,
+.monaco-editor .overflow-guard {
   border-radius: var(--mantine-radius-sm);
 }
 
