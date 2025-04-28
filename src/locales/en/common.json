@@ -16,10 +16,12 @@
     },
     "btn": {
       "add": "Add",
+      "cancel": "Cancel",
       "delete": "Delete",
       "edit": "Edit",
       "save": "Save",
-      "upload": "Upload"
+      "upload": "Upload",
+      "view": "View"
     },
     "disabled": "Disabled, click switch to enable",
     "general": {
@@ -179,6 +181,10 @@
     },
     "detail": {
       "title": "Plugin Global Rule Detail"
+    },
+    "edit": {
+      "success": "Edit Plugin Global Rule Successfully",
+      "title": "Edit Plugin Global Rule"
     },
     "plugins": "Plugins",
     "title": "Plugin Global Rules"

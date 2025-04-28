@@ -4,14 +4,15 @@ import { useTranslation } from 'react-i18next';
 export type PluginCardProps = {
   name: string;
   desc?: string;
-  mode: 'add' | 'edit';
+  mode: 'add' | 'edit' | 'view';
   onAdd?: (name: string) => void;
   onEdit?: (name: string) => void;
   onDelete: (name: string) => void;
+  onView?: (name: string) => void;
 };
 
 export const PluginCard = (props: PluginCardProps) => {
-  const { name, desc, mode, onAdd, onEdit, onDelete } = props;
+  const { name, desc, mode, onAdd, onEdit, onView, onDelete } = props;
   const { t } = useTranslation();
   return (
     <Card withBorder radius="md" p="md">
@@ -36,6 +37,11 @@ export const PluginCard = (props: PluginCardProps) => {
             onClick={() => onAdd?.(name)}
           >
             {t('form.btn.add')}
+          </Button>
+        )}
+        {mode === 'view' && (
+          <Button size="xs" variant="light" onClick={() => onView?.(name)}>
+            {t('form.btn.view')}
           </Button>
         )}
         {mode === 'edit' && (
