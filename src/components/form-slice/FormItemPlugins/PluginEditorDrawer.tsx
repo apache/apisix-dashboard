@@ -17,6 +17,10 @@ export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
   onSave: (props: PluginConfig) => void;
   plugin: PluginConfig;
 };
+
+const toConfigStr = (p: object): string => {
+  return !isEmpty(p) ? JSON.stringify(p, null, 2) : '{}';
+};
 const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
   const { opened, onSave, onClose, plugin, mode } = props;
   const { name, config } = plugin;
@@ -24,18 +28,16 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
   const methods = useForm<{ config: string }>({
     criteriaMode: 'all',
     disabled: mode === 'view',
+    defaultValues: { config: toConfigStr(plugin) },
   });
   const handleClose = () => {
-    methods.reset();
     onClose();
+    methods.reset();
   };
   const getSchemaReq = useQuery(getPluginSchemaQueryOptions(name));
 
   useDeepCompareEffect(() => {
-    methods.setValue(
-      'config',
-      !isEmpty(config) ? JSON.stringify(config, null, 2) : '{}'
-    );
+    methods.setValue('config', toConfigStr(config));
   }, [config]);
 
   if (!name) return null;

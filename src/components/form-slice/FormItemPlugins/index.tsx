@@ -14,7 +14,6 @@ import { SelectPluginsDrawer } from './SelectPluginsDrawer';
 import { difference } from 'rambdax';
 import { PluginEditorDrawer, type PluginConfig } from './PluginEditorDrawer';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { toJS } from 'mobx';
 
 type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
   UseControllerProps<T> & {
@@ -72,6 +71,7 @@ const FormItemPluginsCore = <T extends FieldValues>(
     },
     closeEditor() {
       this.editorOpened = false;
+      this.curPlugin = {} as PluginConfig;
     },
   }));
 
@@ -106,7 +106,7 @@ const FormItemPluginsCore = <T extends FieldValues>(
         mode={isView ? 'view' : 'edit'}
         opened={pluginsOb.editorOpened}
         onClose={pluginsOb.closeEditor}
-        plugin={toJS(pluginsOb.curPlugin)}
+        plugin={pluginsOb.curPlugin}
         onSave={pluginsOb.update}
       />
     </InputWrapper>
