@@ -8,22 +8,29 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo, useState } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { getPluginsListQueryOptions } from './req';
+import { getPluginsListQueryOptions } from '@/apis/plugins';
 import { PluginCardList, PluginCardListSearch } from './PluginCardList';
 import { SelectPluginsDrawer } from './SelectPluginsDrawer';
 import { difference } from 'rambdax';
-import { PluginEditorDrawer, type PluginConfig } from './PluginEditorDrawer';
+import {
+  PluginEditorDrawer,
+  type PluginConfig,
+  type PluginEditorDrawerProps,
+} from './PluginEditorDrawer';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 
-type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
+export type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
   UseControllerProps<T> & {
     onChange?: (value: Record<string, unknown>) => void;
-  };
+  } & Pick<PluginEditorDrawerProps, 'schema'>;
 
 const FormItemPluginsCore = <T extends FieldValues>(
   props: FormItemPluginsProps<T>
 ) => {
-  const { controllerProps, restProps } = genControllerProps(props, {});
+  const {
+    controllerProps,
+    restProps: { schema, ...restProps },
+  } = genControllerProps(props, {});
   const { t } = useTranslation();
 
   const {
@@ -87,6 +94,7 @@ const FormItemPluginsCore = <T extends FieldValues>(
         <PluginCardListSearch search={search} setSearch={setSearch} />
         {!restField.disabled && (
           <SelectPluginsDrawer
+            schema={schema}
             plugins={pluginsOb.unSelected}
             onSave={pluginsOb.update}
           />
@@ -108,6 +116,7 @@ const FormItemPluginsCore = <T extends FieldValues>(
         onClose={pluginsOb.closeEditor}
         plugin={pluginsOb.curPlugin}
         onSave={pluginsOb.update}
+        schema={schema}
       />
     </InputWrapper>
   );

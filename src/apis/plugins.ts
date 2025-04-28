@@ -26,32 +26,52 @@ export const getGlobalRuleQueryOptions = (id: string) =>
         .then((v) => v.data),
   });
 
+export type NeedPluginSchema = {
+  schema: A6Type['PluginSchemaKeys'];
+};
+
 export const getPluginsListQueryOptions = (
-  props: A6Type['PluginsQuery'] = {}
+  props: A6Type['PluginsQuery'] & NeedPluginSchema = { schema: 'normal' }
 ) => {
-  const { all, subsystem } = props;
+  const { subsystem, schema } = props;
   return queryOptions({
-    queryKey: ['plugins-list', all, subsystem],
-    queryFn: () =>
-      req
-        .get<unknown, A6Type['RespPluginsList']>(API_PLUGINS_LIST, {
-          params: {
-            all,
-            subsystem,
-          },
-        })
-        .then((v) => v.data),
+    queryKey: ['plugins-list', subsystem, schema],
+    queryFn:
+      schema === 'normal'
+        ? () =>
+            req
+              .get<unknown, A6Type['RespPluginsList']>(API_PLUGINS_LIST)
+              .then((v) => v.data)
+        : // filter consumer_schema or metadata_schema plugins
+          () =>
+            req
+              .get<unknown, A6Type['RespPlugins']>(API_PLUGINS, {
+                params: { subsystem },
+              })
+              .then((v) => {
+                const data = Object.entries(v.data);
+                const list = [];
+                for (const [name, config] of data) {
+                  if (config[schema]) {
+                    list.push(name);
+                  }
+                }
+                return list;
+              }),
   });
 };
 
-export const getPluginSchemaQueryOptions = (name: string) => {
+export const getPluginSchemaQueryOptions = (
+  name: string,
+  schema: A6Type['PluginSchemaKeys']
+) => {
   return queryOptions({
-    queryKey: ['plugin-schema', name],
+    queryKey: ['plugin-schema', name, schema],
     queryFn: name
       ? () =>
           req
             .get<unknown, A6Type['RespPluginSchema']>(`${API_PLUGINS}/${name}`)
-            .then((v) => v.data)
+            .then((v) => (schema === 'normal' ? v.data : v.data[schema]))
       : skipToken,
   });
 };

@@ -14,9 +14,9 @@ import {
 import { observer } from 'mobx-react-lite';
 
 export type SelectPluginsDrawerProps = Pick<PluginCardListProps, 'plugins'> &
-  Pick<PluginEditorDrawerProps, 'onSave'>;
+  Pick<PluginEditorDrawerProps, 'onSave' | 'schema'>;
 export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
-  const { plugins, onSave } = props;
+  const { plugins, onSave, schema } = props;
   const { t } = useTranslation();
   const [opened, handlers] = useDisclosure(false);
   const [search, setSearch] = useState('');
@@ -58,6 +58,7 @@ export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
       </Button>
 
       <PluginEditorDrawer
+        schema={schema}
         opened={updateOpened}
         onClose={updateHandlers.close}
         plugin={{ name: selectedPlugin, config: {} }}

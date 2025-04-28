@@ -3,7 +3,10 @@ import { Drawer, Group, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { getPluginSchemaQueryOptions } from '@/apis/plugins';
+import {
+  getPluginSchemaQueryOptions,
+  type NeedPluginSchema,
+} from '@/apis/plugins';
 import { isEmpty } from 'rambdax';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import type { PluginCardListProps } from './PluginCardList';
@@ -16,13 +19,13 @@ export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
   onClose: () => void;
   onSave: (props: PluginConfig) => void;
   plugin: PluginConfig;
-};
+} & NeedPluginSchema;
 
 const toConfigStr = (p: object): string => {
   return !isEmpty(p) ? JSON.stringify(p, null, 2) : '{}';
 };
 const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
-  const { opened, onSave, onClose, plugin, mode } = props;
+  const { opened, onSave, onClose, plugin, mode, schema } = props;
   const { name, config } = plugin;
   const { t } = useTranslation();
   const methods = useForm<{ config: string }>({
@@ -34,7 +37,7 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
     onClose();
     methods.reset();
   };
-  const getSchemaReq = useQuery(getPluginSchemaQueryOptions(name));
+  const getSchemaReq = useQuery(getPluginSchemaQueryOptions(name, schema));
 
   useDeepCompareEffect(() => {
     methods.setValue('config', toConfigStr(config));

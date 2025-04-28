@@ -12,7 +12,7 @@ import { notifications } from '@mantine/notifications';
 import { A6 } from '@/types/schema/apisix';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { nanoid } from 'nanoid';
-import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
+import { FormPartPlugins } from '@/components/form-slice/FormPartPlugins';
 import { putGlobalRuleReq } from '@/apis/plugins';
 
 const GlobalRuleAddForm = () => {
@@ -50,7 +50,7 @@ const GlobalRuleAddForm = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submit)}>
-        <FormPartGlobalRules />
+        <FormPartPlugins schema="normal" />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
       <DevTool control={form.control} />
