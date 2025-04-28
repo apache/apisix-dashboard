@@ -59,10 +59,9 @@ function RouteComponent() {
   const { t } = useTranslation();
 
   // Use the pagination hook
-  const { pagination, handlePageChange, updateTotal, refreshData } =
-    usePagination({
-      queryKey: 'plugin-global-rules',
-    });
+  const { pagination, handlePageChange, updateTotal } = usePagination({
+    queryKey: 'plugin-global-rules',
+  });
 
   const pluginGlobalRulesQuery = useSuspenseQuery(
     genPluginGlobalRulesQueryOptions(pagination)
@@ -105,9 +104,7 @@ function RouteComponent() {
           rowKey="id"
           loading={isLoading}
           search={false}
-          options={{
-            reload: refreshData,
-          }}
+          options={false}
           pagination={{
             current: pagination.page,
             pageSize: pagination.pageSize,

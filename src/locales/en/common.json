@@ -27,6 +27,16 @@
       "title": "Information",
       "update_time": "Updated At"
     },
+    "plugins": {
+      "addPlugin": "Add Plugin",
+      "editPlugin": "Edit Plugin",
+      "label": "Plugins",
+      "searchForSelectedPlugins": "Search for Selected Plugins",
+      "selectPlugins": {
+        "title": "Select Plugins"
+      }
+    },
+    "search": "Search",
     "upload": {
       "fileOverSize": "file size is too large",
       "readError": "file read error:"
@@ -159,7 +169,6 @@
   "noData": "No Data",
   "or": "OR",
   "pluginGlobalRules": {
-    "title": "Plugin Global Rules",
     "add": {
       "success": "Add Plugin Global Rule Successfully",
       "title": "Add Plugin Global Rule"
@@ -167,7 +176,8 @@
     "detail": {
       "title": "Plugin Global Rule Detail"
     },
-    "plugins": "Plugins"
+    "plugins": "Plugins",
+    "title": "Plugin Global Rules"
   },
   "protos": {
     "add": {

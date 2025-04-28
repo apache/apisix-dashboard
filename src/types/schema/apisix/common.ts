@@ -2,10 +2,6 @@ import { z } from 'zod';
 
 const Labels = z.record(z.string());
 
-const Plugin = z.record(z.unknown());
-
-const Plugins = z.record(Plugin);
-
 const Expr = z.array(z.unknown());
 
 const Basic = z
@@ -30,8 +26,6 @@ const Info = ID.merge(Timestamp);
 export const A6Common = {
   Basic,
   Labels,
-  Plugin,
-  Plugins,
   Expr,
   ID,
   Timestamp,

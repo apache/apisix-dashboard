@@ -12,6 +12,7 @@ import type { A6Type } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
 import { notifications } from '@mantine/notifications';
 import { A6 } from '@/types/schema/apisix';
+import { FormItemPlugins } from '@/components/form-slice/FormItemPlugins';
 
 const defaultValues: A6Type['PluginGlobalRulePost'] = {
   plugins: {},
@@ -50,6 +51,7 @@ const PluginGlobalRuleAddForm = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submit)}>
+        <FormItemPlugins name="plugins" />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
       <DevTool control={form.control} />
