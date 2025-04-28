@@ -24,13 +24,9 @@ export type A6Type = RawA6Type & {
   RespProtoList: AxiosResponse<A6ListResponse<A6Type['Proto']>>;
   RespProtoItem: A6Type['RespProtoList']['data']['list'][number];
   RespProtoDetail: AxiosResponse<A6DetailResponse<A6Type['Proto']>>;
-  RespPluginGlobalRuleList: AxiosResponse<
-    A6ListResponse<A6Type['PluginGlobalRule']>
-  >;
-  RespPluginGlobalRuleItem: A6Type['RespPluginGlobalRuleList']['data']['list'][number];
-  RespPluginGlobalRuleDetail: AxiosResponse<
-    A6DetailResponse<A6Type['PluginGlobalRule']>
-  >;
+  RespGlobalRuleList: AxiosResponse<A6ListResponse<A6Type['GlobalRule']>>;
+  RespGlobalRuleItem: A6Type['RespGlobalRuleList']['data']['list'][number];
+  RespGlobalRuleDetail: AxiosResponse<A6DetailResponse<A6Type['GlobalRule']>>;
   RespPluginsList: AxiosResponse<string[]>;
   RespPluginSchema: AxiosResponse<A6Type['PluginSchema']>;
 };

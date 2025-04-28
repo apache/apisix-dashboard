@@ -6,7 +6,7 @@ export const API_PREFIX = '/apisix/admin';
 export const API_ROUTES = '/routes';
 export const API_UPSTREAMS = '/upstreams';
 export const API_PROTOS = '/protos';
-export const API_PLUGIN_GLOBAL_RULES = '/global_rules';
+export const API_GLOBAL_RULES = '/global_rules';
 export const API_PLUGINS = '/plugins';
 export const API_PLUGINS_LIST = '/plugins/list';
 

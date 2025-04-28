@@ -3,7 +3,7 @@ import { FormItemPlugins } from './FormItemPlugins';
 import { FormSection } from './FormSection';
 import { FormSectionInfo } from './FormSectionInfo';
 
-export const FormPartPluginGlobalRules = () => {
+export const FormPartGlobalRules = () => {
   return (
     <>
       <FormSectionInfo showDate={false} />
