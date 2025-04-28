@@ -162,7 +162,7 @@
   },
   "navbar": {
     "consumer": "Consumer",
-    "globalRules": "Plugin Global Rules",
+    "globalRules": "Global Rules",
     "protos": "Protos",
     "route": "Route",
     "secret": "Secret",
@@ -174,14 +174,14 @@
   "or": "OR",
   "globalRules": {
     "add": {
-      "success": "Add Plugin Global Rule Successfully",
-      "title": "Add Plugin Global Rule"
+      "success": "Add Global Rule Successfully",
+      "title": "Add Global Rule"
     },
     "detail": {
-      "title": "Plugin Global Rule Detail"
+      "title": "Global Rule Detail"
     },
     "plugins": "Plugins",
-    "title": "Plugin Global Rules"
+    "title": "Global Rules"
   },
   "protos": {
     "add": {
