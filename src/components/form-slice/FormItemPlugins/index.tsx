@@ -6,14 +6,15 @@ import {
   type UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getPluginsListQueryOptions } from './req';
 import { PluginCardList, PluginCardListSearch } from './PluginCardList';
 import { SelectPluginsDrawer } from './SelectPluginsDrawer';
 import { difference } from 'rambdax';
-import type { PluginConfig } from './UpdatePluginDrawer';
+import { PluginEditorDrawer, type PluginConfig } from './PluginEditorDrawer';
 import { observer, useLocalObservable } from 'mobx-react-lite';
+import { toJS } from 'mobx';
 
 type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
   UseControllerProps<T> & {
@@ -30,17 +31,13 @@ const FormItemPluginsCore = <T extends FieldValues>(
     field: { value: rawObject, onChange: fOnChange, name: fName, ...restField },
     fieldState,
   } = useController<T>(controllerProps);
-
+  const isView = useMemo(() => restField.disabled, [restField.disabled]);
   const pluginsListReq = useSuspenseQuery(getPluginsListQueryOptions());
   const [search, setSearch] = useState('');
   const pluginsOb = useLocalObservable(() => ({
     __map: new Map<string, object>(),
     init(obj: Record<string, object>) {
       this.__map = new Map(Object.entries(obj));
-    },
-    set(name: string, config: object) {
-      this.__map.set(name, config);
-      this.save();
     },
     delete(name: string) {
       this.__map.delete(name);
@@ -56,17 +53,32 @@ const FormItemPluginsCore = <T extends FieldValues>(
       const obj = Object.fromEntries(this.__map);
       fOnChange(obj);
     },
+    update(config: PluginConfig) {
+      const { name, config: pluginConfig } = config;
+      this.__map.set(name, pluginConfig);
+      this.save();
+    },
+    curPlugin: {} as PluginConfig,
+    setCurPlugin(name: string) {
+      this.curPlugin = {
+        name,
+        config: this.__map.get(name),
+      } as PluginConfig;
+      this.setEditorOpened(true);
+    },
+    editorOpened: false,
+    setEditorOpened(val: boolean) {
+      this.editorOpened = val;
+    },
+    closeEditor() {
+      this.editorOpened = false;
+    },
   }));
 
   // init the selected plugins
   useEffect(() => {
     pluginsOb.init(rawObject);
   }, [pluginsOb, rawObject]);
-
-  const handleSave = (props: PluginConfig) => {
-    const { name, config } = props;
-    pluginsOb.set(name, config);
-  };
 
   return (
     <InputWrapper error={fieldState.error?.message} {...restProps}>
@@ -76,17 +88,26 @@ const FormItemPluginsCore = <T extends FieldValues>(
         {!restField.disabled && (
           <SelectPluginsDrawer
             plugins={pluginsOb.unSelected}
-            onSave={handleSave}
+            onSave={pluginsOb.update}
           />
         )}
       </Group>
       <PluginCardList
-        mode={restField.disabled ? 'view' : 'edit'}
+        mode={isView ? 'view' : 'edit'}
         placeholder={t('form.plugins.searchForSelectedPlugins')}
         mah="60vh"
         search={search}
         plugins={pluginsOb.selected}
         onDelete={pluginsOb.delete}
+        onView={pluginsOb.setCurPlugin}
+        onEdit={pluginsOb.setCurPlugin}
+      />
+      <PluginEditorDrawer
+        mode={isView ? 'view' : 'edit'}
+        opened={pluginsOb.editorOpened}
+        onClose={pluginsOb.closeEditor}
+        plugin={toJS(pluginsOb.curPlugin)}
+        onSave={pluginsOb.update}
       />
     </InputWrapper>
   );

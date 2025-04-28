@@ -11,6 +11,7 @@ import { PluginCard, type PluginCardProps } from './PluginCard';
 import { useTranslation } from 'react-i18next';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useLayoutEffect } from 'react';
+import { string } from 'zod';
 
 type PluginCardListSearchProps = Pick<TextInputProps, 'placeholder'> & {
   search: string;
@@ -94,6 +95,11 @@ const PluginCardListCore = (props: PluginCardListProps) => {
     search: search,
     plugins: plugins,
     mode: mode,
+    viewPlugin: string,
+    viewOpened: false,
+    setViewOpened(opened: boolean) {
+      this.viewOpened = opened;
+    },
     get list() {
       const arr = !this.search
         ? this.plugins
@@ -101,7 +107,7 @@ const PluginCardListCore = (props: PluginCardListProps) => {
       return arr.map((name) => ({
         name,
         mode: this.mode,
-        onAdd,
+        onAdd: onAdd,
         onEdit,
         onDelete,
         onView,

@@ -82,13 +82,10 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={
-          readOnly
-            ? t('pluginGlobalRules.detail.title')
-            : t('pluginGlobalRules.edit.title')
-        }
-        extra={
-          readOnly && (
+        title={t('pluginGlobalRules.edit.title')}
+        {...(readOnly && {
+          title: t('pluginGlobalRules.detail.title'),
+          extra: (
             <Button
               onClick={() => setReadOnly(false)}
               size="compact-sm"
@@ -96,8 +93,8 @@ function RouteComponent() {
             >
               {t('form.btn.edit')}
             </Button>
-          )
-        }
+          ),
+        })}
       />
       <FormTOCBox>
         <PluginGlobalRuleDetailForm

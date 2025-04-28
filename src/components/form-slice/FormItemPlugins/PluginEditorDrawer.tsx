@@ -6,28 +6,39 @@ import { useTranslation } from 'react-i18next';
 import { getPluginSchemaQueryOptions } from './req';
 import { isEmpty } from 'rambdax';
 import { FormSubmitBtn } from '@/components/form/Btn';
+import type { PluginCardListProps } from './PluginCardList';
+import { observer } from 'mobx-react-lite';
+import { useDeepCompareEffect } from 'react-use';
 
 export type PluginConfig = { name: string; config: object };
-export type UpdatePluginDrawerProps = PluginConfig & {
-  mode: 'add' | 'edit';
+export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
   opened: boolean;
   onClose: () => void;
   onSave: (props: PluginConfig) => void;
+  plugin: PluginConfig;
 };
-export const UpdatePluginDrawer = (props: UpdatePluginDrawerProps) => {
-  const { opened, onSave, onClose, name, config, mode } = props;
+const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
+  const { opened, onSave, onClose, plugin, mode } = props;
+  const { name, config } = plugin;
   const { t } = useTranslation();
-  const methods = useForm({
+  const methods = useForm<{ config: string }>({
     criteriaMode: 'all',
-    defaultValues: {
-      config: !isEmpty(config) ? JSON.stringify(config, null, 2) : '{}',
-    },
+    disabled: mode === 'view',
   });
   const handleClose = () => {
     methods.reset();
     onClose();
   };
   const getSchemaReq = useQuery(getPluginSchemaQueryOptions(name));
+
+  useDeepCompareEffect(() => {
+    methods.setValue(
+      'config',
+      !isEmpty(config) ? JSON.stringify(config, null, 2) : '{}'
+    );
+  }, [config]);
+
+  if (!name) return null;
 
   return (
     <Drawer
@@ -40,6 +51,7 @@ export const UpdatePluginDrawer = (props: UpdatePluginDrawerProps) => {
       onClose={handleClose}
       {...(mode === 'add' && { title: t('form.plugins.addPlugin') })}
       {...(mode === 'edit' && { title: t('form.plugins.editPlugin') })}
+      {...(mode === 'view' && { title: t('form.plugins.viewPlugin') })}
     >
       <Title order={3}>{name}</Title>
       <FormProvider {...methods}>
@@ -54,19 +66,23 @@ export const UpdatePluginDrawer = (props: UpdatePluginDrawerProps) => {
         </form>
       </FormProvider>
 
-      <Group justify="flex-end" mt={8}>
-        <FormSubmitBtn
-          size="xs"
-          variant="light"
-          onClick={methods.handleSubmit(({ config }) => {
-            onSave({ name, config: JSON.parse(config) });
-            handleClose();
-          })}
-        >
-          {mode === 'add' && t('form.btn.add')}
-          {mode === 'edit' && t('form.btn.edit')}
-        </FormSubmitBtn>
-      </Group>
+      {mode !== 'view' && (
+        <Group justify="flex-end" mt={8}>
+          <FormSubmitBtn
+            size="xs"
+            variant="light"
+            onClick={methods.handleSubmit(({ config }) => {
+              onSave({ name, config: JSON.parse(config) });
+              handleClose();
+            })}
+          >
+            {mode === 'add' && t('form.btn.add')}
+            {mode === 'edit' && t('form.btn.edit')}
+          </FormSubmitBtn>
+        </Group>
+      )}
     </Drawer>
   );
 };
+
+export const PluginEditorDrawer = observer(PluginEditorDrawerCore);

@@ -7,7 +7,7 @@ export type PluginCardProps = {
   mode: 'add' | 'edit' | 'view';
   onAdd?: (name: string) => void;
   onEdit?: (name: string) => void;
-  onDelete: (name: string) => void;
+  onDelete?: (name: string) => void;
   onView?: (name: string) => void;
 };
 

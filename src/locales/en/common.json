@@ -40,7 +40,8 @@
       "searchForSelectedPlugins": "Search for Selected Plugins",
       "selectPlugins": {
         "title": "Select Plugins"
-      }
+      },
+      "viewPlugin": "View Plugin"
     },
     "search": "Search",
     "upload": {
