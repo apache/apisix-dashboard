@@ -22,8 +22,12 @@
       "upload": "Upload"
     },
     "disabled": "Disabled, click switch to enable",
+    "general": {
+      "title": "General"
+    },
     "info": {
       "create_time": "Created At",
+      "id": "ID",
       "title": "Information",
       "update_time": "Updated At"
     },

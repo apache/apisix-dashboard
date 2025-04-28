@@ -34,7 +34,7 @@ const FormItemPluginsCore = <T extends FieldValues>(
 
   const pluginsListReq = useSuspenseQuery(getPluginsListQueryOptions());
   const [search, setSearch] = useState('');
-  const plugins$ = useLocalObservable(() => ({
+  const pluginsOb = useLocalObservable(() => ({
     __map: new Map<string, object>(),
     init(obj: Record<string, object>) {
       this.__map = new Map(Object.entries(obj));
@@ -60,12 +60,12 @@ const FormItemPluginsCore = <T extends FieldValues>(
   }));
 
   useMount(() => {
-    plugins$.init(rawObject);
+    pluginsOb.init(rawObject);
   });
 
   const handleSave = (props: PluginConfig) => {
     const { name, config } = props;
-    plugins$.set(name, config);
+    pluginsOb.set(name, config);
   };
 
   return (
@@ -78,7 +78,7 @@ const FormItemPluginsCore = <T extends FieldValues>(
       <Group>
         <PluginCardListSearch search={search} setSearch={setSearch} />
         <SelectPluginsDrawer
-          plugins={plugins$.unSelected}
+          plugins={pluginsOb.unSelected}
           onSave={handleSave}
         />
       </Group>
@@ -87,8 +87,8 @@ const FormItemPluginsCore = <T extends FieldValues>(
         placeholder={t('form.plugins.searchForSelectedPlugins')}
         mah="60vh"
         search={search}
-        plugins={plugins$.selected}
-        onDelete={plugins$.delete}
+        plugins={pluginsOb.selected}
+        onDelete={pluginsOb.delete}
       />
     </InputWrapper>
   );

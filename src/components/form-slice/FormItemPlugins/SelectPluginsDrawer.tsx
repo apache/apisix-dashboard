@@ -46,6 +46,7 @@ export const SelectPluginsDrawer = (props: SelectPluginsDrawerProps) => {
         <PluginCardList
           mode="add"
           cols={2}
+          h="80vh"
           search={search}
           onAdd={handleAddPlugin}
           plugins={plugins}

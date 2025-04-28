@@ -10,8 +10,7 @@ const PluginGlobalRule = z
 
 export const A6PluginGlobalRule = {
   PluginGlobalRule,
-  PluginGlobalRulePost: PluginGlobalRule.omit({
-    id: true,
+  PluginGlobalRulePut: PluginGlobalRule.omit({
     create_time: true,
     update_time: true,
   }),

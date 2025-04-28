@@ -1,8 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { req } from '@/config/req';
 import { useMutation } from '@tanstack/react-query';
-import { API_PLUGIN_GLOBAL_RULES } from '@/config/constant';
 import PageHeader from '@/components/page/PageHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,46 +10,47 @@ import type { A6Type } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
 import { notifications } from '@mantine/notifications';
 import { A6 } from '@/types/schema/apisix';
-import { FormItemPlugins } from '@/components/form-slice/FormItemPlugins';
-
-const defaultValues: A6Type['PluginGlobalRulePost'] = {
-  plugins: {},
-};
+import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { nanoid } from 'nanoid';
+import { FormPartPluginGlobalRules } from '@/components/form-slice/FormPartPluginGlobalRules';
+import { putPluginGlobalRuleReq } from '@/apis/plugins';
 
 const PluginGlobalRuleAddForm = () => {
   const { t } = useTranslation();
   const router = useReactRouter();
 
-  const postPluginGlobalRule = useMutation({
-    mutationFn: (data: object) =>
-      req.post<
-        A6Type['PluginGlobalRulePost'],
-        A6Type['RespPluginGlobalRuleList']
-      >(API_PLUGIN_GLOBAL_RULES, data),
+  const putPluginGlobalRule = useMutation({
+    mutationFn: putPluginGlobalRuleReq,
   });
 
   const form = useForm({
-    resolver: zodResolver(A6.PluginGlobalRulePost),
+    resolver: zodResolver(A6.PluginGlobalRulePut),
     shouldUnregister: true,
     shouldFocusError: true,
-    defaultValues,
+    defaultValues: {
+      plugins: {},
+      id: nanoid(),
+    },
     mode: 'onChange',
   });
 
-  const submit = async (data: A6Type['PluginGlobalRulePost']) => {
-    await postPluginGlobalRule.mutateAsync(data);
+  const submit = async (data: A6Type['PluginGlobalRulePut']) => {
+    const res = await putPluginGlobalRule.mutateAsync(data);
     notifications.show({
       id: 'add-plugin-global-rule',
       message: t('pluginGlobalRules.add.success'),
       color: 'green',
     });
-    await router.navigate({ to: '/plugin-global-rules' });
+    await router.navigate({
+      to: '/plugin-global-rules/detail/$id',
+      params: { id: res.data.value.id },
+    });
   };
 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submit)}>
-        <FormItemPlugins name="plugins" />
+        <FormPartPluginGlobalRules />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
       <DevTool control={form.control} />
@@ -64,7 +63,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader title={t('pluginGlobalRules.add.title')} />
-      <PluginGlobalRuleAddForm />
+      <FormTOCBox>
+        <PluginGlobalRuleAddForm />
+      </FormTOCBox>
     </>
   );
 }
