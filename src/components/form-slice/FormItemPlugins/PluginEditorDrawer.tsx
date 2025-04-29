@@ -38,8 +38,6 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
     methods.setValue('config', toConfigStr(config));
   }, [config]);
 
-  if (!name) return null;
-
   return (
     <Drawer
       offset={0}
