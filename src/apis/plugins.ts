@@ -102,7 +102,7 @@ export const getPluginMetadataQueryOptions = (
   headers?: AxiosRequestConfig<unknown>['headers']
 ) =>
   queryOptions({
-    queryKey: ['plugin-metadata', plugin_name],
+    queryKey: ['plugin_metadata', plugin_name],
     queryFn: () =>
       req
         .get<unknown, A6Type['RespPluginMetadataDetail']>(

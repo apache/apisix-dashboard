@@ -31,7 +31,7 @@ export const navRoutes: NavRoute[] = [
     label: 'globalRules',
   },
   {
-    to: '/plugin-metadata',
+    to: '/plugin_metadata',
     label: 'pluginMetadata',
   },
   {
