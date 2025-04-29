@@ -53,7 +53,7 @@ req.interceptors.response.use(
   },
   (err) => {
     if (err.response) {
-      if (matchSkipInterceptor(err)) return;
+      if (matchSkipInterceptor(err)) return Promise.reject(err);
       const d = err.response.data as A6RespErr;
       notifications.show({
         id: d.error_msg,
