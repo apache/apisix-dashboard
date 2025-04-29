@@ -14,7 +14,7 @@ import { getGlobalRuleQueryOptions, putGlobalRuleReq } from '@/apis/plugins';
 import { useEffect } from 'react';
 import { useBoolean } from 'react-use';
 import { Button, Group } from '@mantine/core';
-import { FormPartPlugins } from '@/components/form-slice/FormPartPlugins';
+import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
 
 type Props = {
   readOnly: boolean;
@@ -57,7 +57,7 @@ const GlobalRuleDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submit)}>
-        <FormPartPlugins schema="normal" />
+        <FormPartGlobalRules />
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
