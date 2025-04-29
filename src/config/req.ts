@@ -2,10 +2,11 @@ import {
   API_HEADER_KEY,
   API_PREFIX,
   LOCAL_STORAGE_ADMIN_KEY,
+  SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
 import { readLocalStorageValue } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { stringify } from 'qs';
 
 export const req = axios.create();
@@ -27,6 +28,15 @@ type A6RespErr = {
   error_msg: string;
 };
 
+/**
+ * use request header `[SKIP_INTERCEPTOR_HEADER]: ['404', ...]` to skip interceptor for specific status code.
+ */
+const matchSkipInterceptor = (err: AxiosError) => {
+  const interceptors = err.config?.headers?.[SKIP_INTERCEPTOR_HEADER] || [];
+  const status = err.response?.status;
+  return interceptors.some((v: string) => v === String(status));
+};
+
 req.interceptors.response.use(
   (res) => {
     // it's a apisix design
@@ -43,6 +53,7 @@ req.interceptors.response.use(
   },
   (err) => {
     if (err.response) {
+      if (matchSkipInterceptor(err)) return Promise.reject(err);
       const d = err.response.data as A6RespErr;
       notifications.show({
         id: d.error_msg,

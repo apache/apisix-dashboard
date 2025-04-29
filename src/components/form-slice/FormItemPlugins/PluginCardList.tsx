@@ -94,11 +94,6 @@ const PluginCardListCore = (props: PluginCardListProps) => {
     search: search,
     plugins: plugins,
     mode: mode,
-    viewPlugin: '',
-    viewOpened: false,
-    setViewOpened(opened: boolean) {
-      this.viewOpened = opened;
-    },
     get list() {
       const arr = !this.search
         ? this.plugins

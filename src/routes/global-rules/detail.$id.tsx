@@ -10,11 +10,11 @@ import type { A6Type } from '@/types/schema/apisix';
 import { notifications } from '@mantine/notifications';
 import { A6 } from '@/types/schema/apisix';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
 import { getGlobalRuleQueryOptions, putGlobalRuleReq } from '@/apis/plugins';
 import { useEffect } from 'react';
 import { useBoolean } from 'react-use';
 import { Button, Group } from '@mantine/core';
+import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
 
 type Props = {
   readOnly: boolean;

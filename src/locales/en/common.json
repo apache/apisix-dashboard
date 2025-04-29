@@ -163,6 +163,19 @@
       "upstreamHostDesc": "Set this when `pass_host` is `rewrite`"
     }
   },
+  "navbar": {
+    "consumer": "Consumer",
+    "globalRules": "Global Rules",
+    "protos": "Protos",
+    "route": "Route",
+    "secret": "Secret",
+    "service": "Service",
+    "ssl": "SSL",
+    "upstreams": "Upstreams",
+    "pluginMetadata": "Plugin Metadata"
+  },
+  "noData": "No Data",
+  "or": "OR",
   "globalRules": {
     "add": {
       "success": "Add Global Rule Successfully",
@@ -178,18 +191,17 @@
     "plugins": "Plugins",
     "title": "Global Rules"
   },
-  "navbar": {
-    "consumer": "Consumer",
-    "globalRules": "Global Rules",
-    "protos": "Protos",
-    "route": "Route",
-    "secret": "Secret",
-    "service": "Service",
-    "ssl": "SSL",
-    "upstreams": "Upstreams"
+  "pluginMetadata": {
+    "title": "Plugin Metadata",
+    "delete": {
+      "success": "Delete Plugin Metadata of {{name}} Successfully"
+    },
+    "search": "Search Plugin Metadata",
+    "update": {
+      "success": "Update Plugin Metadata of {{name}} Successfully"
+    }
   },
-  "noData": "No Data",
-  "or": "OR",
+  "plugins": "Plugins",
   "protos": {
     "add": {
       "success": "Add Proto Successfully",

@@ -6,19 +6,27 @@ import {
   type UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useMemo, useState } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { getPluginsListQueryOptions } from './req';
+import { useEffect, useMemo } from 'react';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  getPluginSchemaQueryOptions,
+  getPluginsListQueryOptions,
+} from '@/apis/plugins';
 import { PluginCardList, PluginCardListSearch } from './PluginCardList';
 import { SelectPluginsDrawer } from './SelectPluginsDrawer';
 import { difference } from 'rambdax';
-import { PluginEditorDrawer, type PluginConfig } from './PluginEditorDrawer';
+import {
+  PluginEditorDrawer,
+  type PluginConfig,
+  type PluginEditorDrawerProps,
+} from './PluginEditorDrawer';
 import { observer, useLocalObservable } from 'mobx-react-lite';
+import type { PluginCardProps } from './PluginCard';
 
-type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
+export type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
   UseControllerProps<T> & {
     onChange?: (value: Record<string, unknown>) => void;
-  };
+  } & Pick<PluginEditorDrawerProps, 'schema'>;
 
 const FormItemPluginsCore = <T extends FieldValues>(
   props: FormItemPluginsProps<T>
@@ -32,7 +40,6 @@ const FormItemPluginsCore = <T extends FieldValues>(
   } = useController<T>(controllerProps);
   const isView = useMemo(() => restField.disabled, [restField.disabled]);
   const pluginsListReq = useSuspenseQuery(getPluginsListQueryOptions());
-  const [search, setSearch] = useState('');
   const pluginsOb = useLocalObservable(() => ({
     __map: new Map<string, object>(),
     init(obj: Record<string, object>) {
@@ -70,10 +77,28 @@ const FormItemPluginsCore = <T extends FieldValues>(
       this.editorOpened = val;
     },
     closeEditor() {
-      this.editorOpened = false;
+      this.setEditorOpened(false);
+      this.setSelectPluginsOpened(false);
       this.curPlugin = {} as PluginConfig;
     },
+    search: '',
+    setSearch(val: string) {
+      this.search = val;
+    },
+    mode: 'edit' as PluginCardProps['mode'],
+    selectPluginsOpened: false,
+    setSelectPluginsOpened(val: boolean) {
+      this.selectPluginsOpened = val;
+    },
+    on(mode: PluginCardProps['mode'], name: string) {
+      this.setCurPlugin(name);
+      this.mode = mode;
+    },
   }));
+
+  const getSchemaReq = useQuery(
+    getPluginSchemaQueryOptions(pluginsOb.curPlugin.name)
+  );
 
   // init the selected plugins
   useEffect(() => {
@@ -84,11 +109,16 @@ const FormItemPluginsCore = <T extends FieldValues>(
     <InputWrapper error={fieldState.error?.message} {...restProps}>
       <input name={fName} type="hidden" />
       <Group>
-        <PluginCardListSearch search={search} setSearch={setSearch} />
+        <PluginCardListSearch
+          search={pluginsOb.search}
+          setSearch={pluginsOb.setSearch}
+        />
         {!restField.disabled && (
           <SelectPluginsDrawer
             plugins={pluginsOb.unSelected}
-            onSave={pluginsOb.update}
+            opened={pluginsOb.selectPluginsOpened}
+            onAdd={(name) => pluginsOb.on('add', name)}
+            setOpened={pluginsOb.setSelectPluginsOpened}
           />
         )}
       </Group>
@@ -96,14 +126,15 @@ const FormItemPluginsCore = <T extends FieldValues>(
         mode={isView ? 'view' : 'edit'}
         placeholder={t('form.plugins.searchForSelectedPlugins')}
         mah="60vh"
-        search={search}
+        search={pluginsOb.search}
         plugins={pluginsOb.selected}
         onDelete={pluginsOb.delete}
-        onView={pluginsOb.setCurPlugin}
-        onEdit={pluginsOb.setCurPlugin}
+        onView={(name) => pluginsOb.on('view', name)}
+        onEdit={(name) => pluginsOb.on('edit', name)}
       />
       <PluginEditorDrawer
         mode={isView ? 'view' : 'edit'}
+        schema={getSchemaReq.data}
         opened={pluginsOb.editorOpened}
         onClose={pluginsOb.closeEditor}
         plugin={pluginsOb.curPlugin}
