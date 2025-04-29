@@ -3,7 +3,8 @@ import { z } from 'zod';
 
 // We don't omit id now, as we need it for detail view
 export const FormPartUpstreamSchema = A6.Upstream.extend({
-  __checksEnabled: z.boolean(),
+  __checksEnabled: z.boolean().optional().default(false),
+  __checksPassiveEnabled: z.boolean().optional().default(false),
 });
 
 export type FormPartUpstreamType = z.infer<typeof FormPartUpstreamSchema>;

@@ -1,71 +1,121 @@
-import { useEffect } from 'react';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormPartUpstream } from '@/components/form-slice/FormPartUpstream';
-import {
-  FormPartUpstreamSchema,
-  type FormPartUpstreamType,
-} from '@/components/form-slice/FormPartUpstream/schema';
-import { DevTool } from '@hookform/devtools';
-import { upstreamdefaultValues } from '@/components/form-slice/FormPartUpstream/config';
-import { Skeleton } from '@mantine/core';
+import { FormPartUpstreamSchema } from '@/components/form-slice/FormPartUpstream/schema';
+import { Skeleton, Button, Group } from '@mantine/core';
 import { FormSectionInfo } from '@/components/form-slice/FormSectionInfo';
-import { getUpstreamReq } from '@/apis/upstreams';
+import { getUpstreamReq, putUpstreamReq } from '@/apis/upstreams';
 import type { A6Type } from '@/types/schema/apisix';
+import { useBoolean, useDeepCompareEffect } from 'react-use';
+import { notifications } from '@mantine/notifications';
+import { FormSubmitBtn } from '@/components/form/Btn';
+import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
+import { pipeProduce } from '@/utils/producer';
 
-export const Route = createFileRoute('/upstreams/detail/$id')({
-  component: RouteComponent,
-});
+type Props = {
+  readOnly: boolean;
+  setReadOnly: (v: boolean) => void;
+};
 
-const UpstreamDetailForm = (props: Pick<A6Type['Upstream'], 'id'>) => {
-  const { id } = props;
-  // Fetch the upstream details
-  const { data: upstreamData, isLoading } = useQuery(getUpstreamReq(id));
+const UpstreamDetailForm = (props: Props & Pick<A6Type['Upstream'], 'id'>) => {
+  const { id, readOnly, setReadOnly } = props;
+  const { t } = useTranslation();
+  const {
+    data: { value: upstreamData } = { value: undefined },
+    isLoading,
+    refetch,
+  } = useQuery(getUpstreamReq(id));
 
-  const form = useForm<FormPartUpstreamType>({
+  const form = useForm({
     resolver: zodResolver(FormPartUpstreamSchema),
-    shouldUnregister: false,
-    shouldFocusError: false,
-    defaultValues: upstreamdefaultValues,
-    mode: 'onChange',
-    disabled: true, // Disable all form fields
+    shouldUnregister: true,
+    mode: 'all',
+    disabled: readOnly,
+  });
+
+  const putUpstream = useMutation({
+    mutationFn: putUpstreamReq,
+    async onSuccess() {
+      notifications.show({
+        message: t('upstreams.edit.success'),
+        color: 'green',
+      });
+      await refetch();
+      setReadOnly(true);
+    },
   });
 
   // Update form values when data is loaded
-  useEffect(() => {
-    if (upstreamData?.value) {
-      form.reset(upstreamData.value);
+  useDeepCompareEffect(() => {
+    if (upstreamData && !isLoading) {
+      form.reset(produceToUpstreamForm(upstreamData));
     }
-  }, [upstreamData, form]);
+  }, [upstreamData, form, isLoading]);
 
   if (isLoading) {
     return <Skeleton height={400} />;
   }
 
   return (
-    <FormProvider {...form}>
-      <FormTOCBox>
-        <FormSectionInfo />
-        <FormPartUpstream />
-        <DevTool control={form.control} />
-      </FormTOCBox>
-    </FormProvider>
+    <FormTOCBox>
+      <FormProvider {...form}>
+        <form
+          onSubmit={form.handleSubmit((d) => {
+            putUpstream.mutateAsync(pipeProduce()(d));
+          })}
+        >
+          <FormSectionInfo />
+          <FormPartUpstream />
+          {!readOnly && (
+            <Group>
+              <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
+              <Button variant="outline" onClick={() => setReadOnly(true)}>
+                {t('form.btn.cancel')}
+              </Button>
+            </Group>
+          )}
+        </form>
+      </FormProvider>
+    </FormTOCBox>
   );
 };
 
 function RouteComponent() {
   const { t } = useTranslation();
   const { id } = useParams({ from: '/upstreams/detail/$id' });
+  const [readOnly, setReadOnly] = useBoolean(true);
 
   return (
     <>
-      <PageHeader title={t('upstreams.detail.title')} />
-      <UpstreamDetailForm id={id} />
+      <PageHeader
+        title={t('upstreams.edit.title')}
+        {...(readOnly && {
+          title: t('upstreams.detail.title'),
+          extra: (
+            <Button
+              onClick={() => setReadOnly(false)}
+              size="compact-sm"
+              variant="gradient"
+            >
+              {t('form.btn.edit')}
+            </Button>
+          ),
+        })}
+      />
+      <UpstreamDetailForm
+        id={id}
+        readOnly={readOnly}
+        setReadOnly={setReadOnly}
+      />
     </>
   );
 }
+
+export const Route = createFileRoute('/upstreams/detail/$id')({
+  component: RouteComponent,
+});

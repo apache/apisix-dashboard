@@ -14,13 +14,11 @@ export const FormSectionDiscovery = () => {
         name="service_name"
         label={t('form.upstream.serviceName.title')}
         control={control}
-        withAsterisk
       />
       <FormItemTextInput
         name="discovery_type"
         label={t('form.upstream.discoveryType.title')}
         control={control}
-        withAsterisk
       />
       <FormItemJsonInput
         name="discovery_args"
