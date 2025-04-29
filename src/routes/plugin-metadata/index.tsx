@@ -8,7 +8,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('pluginMetadata.edit.title')} />
+      <PageHeader title={t('pluginMetadata.title')} />
       <PluginMetadata />
     </>
   );

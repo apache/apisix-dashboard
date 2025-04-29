@@ -171,7 +171,8 @@
     "secret": "Secret",
     "service": "Service",
     "ssl": "SSL",
-    "upstreams": "Upstreams"
+    "upstreams": "Upstreams",
+    "pluginMetadata": "Plugin Metadata"
   },
   "noData": "No Data",
   "or": "OR",
@@ -191,20 +192,9 @@
     "title": "Global Rules"
   },
   "pluginMetadata": {
+    "title": "Plugin Metadata",
     "delete": {
       "success": "Delete Plugin Metadata of {{name}} Successfully"
-    },
-    "detail": {
-      "title": "Plugin Metadata"
-    },
-    "edit": {
-      "error": "Failed to Edit Plugin Metadata",
-      "success": "Edit Plugin Metadata Successfully",
-      "title": "Edit Plugin Metadata"
-    },
-    "editor": {
-      "description": "Configure metadata for plugins",
-      "label": "Plugin Metadata"
     },
     "search": "Search Plugin Metadata",
     "update": {
