@@ -1,9 +1,11 @@
 import { A6Common } from './common';
-import { A6Plugin } from './plugin';
+import { A6Plugins } from './plugins';
 
-const PluginMetadata = A6Plugin.PluginMetadataSchema.merge(A6Common.Info).omit({
-  id: true,
-});
+const PluginMetadata = A6Plugins.PluginMetadataSchema.merge(A6Common.Info).omit(
+  {
+    id: true,
+  }
+);
 
 export const A6PluginMetadata = {
   PluginMetadata: PluginMetadata,
