@@ -42,191 +42,203 @@
         "title": "Select Plugins"
       },
       "viewPlugin": "View Plugin"
-  },
-  "search": "Search",
-  "upload": {
-    "fileOverSize": "file size is too large",
-    "readError": "file read error:"
-  },
-  "upstream": {
-    "checks": {
-      "active": {
-        "concurrency": "Concurrency",
-        "healthy": {
-          "http_statuses": "HTTP Statuses",
-          "interval": "Interval",
-          "successes": "Successes",
-          "title": "Healthy"
+    },
+    "search": "Search",
+    "upload": {
+      "fileOverSize": "file size is too large",
+      "readError": "file read error:"
+    },
+    "upstream": {
+      "checks": {
+        "active": {
+          "concurrency": "Concurrency",
+          "healthy": {
+            "http_statuses": "HTTP Statuses",
+            "interval": "Interval",
+            "successes": "Successes",
+            "title": "Healthy"
+          },
+          "host": "Host",
+          "http_path": "HTTP Path",
+          "http_request_headers": "HTTP Request Headers",
+          "https_verify_certificate": "Https Verify Certificate",
+          "port": "Port",
+          "timeout": "Timeout",
+          "title": "Active",
+          "type": "Type",
+          "unhealthy": {
+            "http_failures": "HTTP Failures",
+            "http_statuses": "HTTP Statuses",
+            "interval": "Interval",
+            "tcp_failures": "TCP Failures",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          }
         },
-        "host": "Host",
-        "http_path": "HTTP Path",
-        "http_request_headers": "HTTP Request Headers",
-        "https_verify_certificate": "Https Verify Certificate",
-        "port": "Port",
-        "timeout": "Timeout",
-        "title": "Active",
-        "type": "Type",
-        "unhealthy": {
-          "http_failures": "HTTP Failures",
-          "http_statuses": "HTTP Statuses",
-          "interval": "Interval",
-          "tcp_failures": "TCP Failures",
-          "timeouts": "Timeouts",
-          "title": "Unhealthy"
+        "passive": {
+          "healthy": {
+            "http_statuses": "HTTP Statuses",
+            "successes": "Successes",
+            "title": "Healthy"
+          },
+          "title": "Passive",
+          "type": "Type",
+          "unhealthy": {
+            "http_failures": "HTTP Failures",
+            "http_statuses": "HTTP Statuses",
+            "tcp_failures": "TCP Failures",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          }
+        },
+        "title": "Health Checks"
+      },
+      "connectionConfiguration": "Connection Configuration",
+      "discoveryArgs": {
+        "title": "Discovery Args"
+      },
+      "discoveryType": {
+        "title": "Discovery Type"
+      },
+      "findUpstreamFrom": "Find Upstream From",
+      "hashOn": "Hash On",
+      "hashOnDesc": "This will be valid when `type` is `chash`",
+      "keepalivePool": {
+        "idleTimeout": "IDLE Timeout",
+        "requests": "Requests",
+        "size": "Size",
+        "title": "Keepalive Pool"
+      },
+      "key": "Key",
+      "keyDesc": "This will be valid when `type` is `chash`",
+      "loadBalancing": "Load Balancing",
+      "nodes": {
+        "action": {
+          "title": "Action"
+        },
+        "add": "Add a Node",
+        "host": {
+          "title": "Host"
+        },
+        "port": {
+          "title": "Port"
+        },
+        "priority": {
+          "title": "Priority"
+        },
+        "title": "Nodes",
+        "weight": {
+          "title": "Weight"
         }
       },
-      "passive": {
-        "healthy": {
-          "http_statuses": "HTTP Statuses",
-          "successes": "Successes",
-          "title": "Healthy"
-        },
-        "title": "Passive",
-        "type": "Type",
-        "unhealthy": {
-          "http_failures": "HTTP Failures",
-          "http_statuses": "HTTP Statuses",
-          "tcp_failures": "TCP Failures",
-          "timeouts": "Timeouts",
-          "title": "Unhealthy"
-        }
+      "passHost": "Pass Host",
+      "retries": "Retries",
+      "retry": "Retry",
+      "retryTimeout": "Retry timeout",
+      "scheme": "Scheme",
+      "serviceDiscovery": {
+        "serviceName": "Service Name",
+        "title": "Service Discovery"
       },
-      "title": "Health Checks"
-    },
-    "connectionConfiguration": "Connection Configuration",
-    "discoveryArgs": {
-      "title": "Discovery Args"
-    },
-    "discoveryType": {
-      "title": "Discovery Type"
-    },
-    "findUpstreamFrom": "Find Upstream From",
-    "hashOn": "Hash On",
-    "hashOnDesc": "This will be valid when `type` is `chash`",
-    "keepalivePool": {
-      "idleTimeout": "IDLE Timeout",
-      "requests": "Requests",
-      "size": "Size",
-      "title": "Keepalive Pool"
-    },
-    "key": "Key",
-    "keyDesc": "This will be valid when `type` is `chash`",
-    "loadBalancing": "Load Balancing",
-    "nodes": {
-      "action": {
-        "title": "Action"
+      "serviceName": {
+        "title": "Service Name"
       },
-      "add": "Add a Node",
-      "host": {
-        "title": "Host"
+      "timeout": {
+        "connect": "Connect",
+        "read": "Read",
+        "send": "Send",
+        "title": "Timeout"
       },
-      "port": {
-        "title": "Port"
+      "title": "Upstream",
+      "tls": {
+        "clientCert": "Client Cert",
+        "clientCertId": "Client Cert ID",
+        "clientKey": "Client Key",
+        "title": "TLS",
+        "verify": "Verify"
       },
-      "priority": {
-        "title": "Priority"
-      },
-      "title": "Nodes",
-      "weight": {
-        "title": "Weight"
-      }
-    },
-    "passHost": "Pass Host",
-    "retries": "Retries",
-    "retry": "Retry",
-    "retryTimeout": "Retry timeout",
-    "scheme": "Scheme",
-    "serviceDiscovery": {
-      "serviceName": "Service Name",
-      "title": "Service Discovery"
-    },
-    "serviceName": {
-      "title": "Service Name"
-    },
-    "timeout": {
-      "connect": "Connect",
-      "read": "Read",
-      "send": "Send",
-      "title": "Timeout"
-    },
-    "title": "Upstream",
-    "tls": {
-      "clientCert": "Client Cert",
-      "clientCertId": "Client Cert ID",
-      "clientKey": "Client Key",
-      "title": "TLS",
-      "verify": "Verify"
-    },
-    "type": "Type",
-    "updateTime": "Update Time",
-    "upstreamHost": "Upstream Host",
-    "upstreamHostDesc": "Set this when `pass_host` is `rewrite`"
-  }
-},
-"navbar": {
-  "consumer": "Consumer",
-  "globalRules": "Global Rules",
-  "protos": "Protos",
-  "route": "Route",
-  "secret": "Secret",
-  "service": "Service",
-  "ssl": "SSL",
-  "upstreams": "Upstreams"
-},
-"noData": "No Data",
-"or": "OR",
-"globalRules": {
-  "add": {
-    "success": "Add Global Rule Successfully",
-    "title": "Add Global Rule"
+      "type": "Type",
+      "updateTime": "Update Time",
+      "upstreamHost": "Upstream Host",
+      "upstreamHostDesc": "Set this when `pass_host` is `rewrite`"
+    }
   },
-  "detail": {
-    "title": "Global Rule Detail"
+  "navbar": {
+    "consumer": "Consumer",
+    "globalRules": "Global Rules",
+    "protos": "Protos",
+    "route": "Route",
+    "secret": "Secret",
+    "service": "Service",
+    "ssl": "SSL",
+    "upstreams": "Upstreams",
+    "pluginMetadata": "Plugin Metadata"
   },
-  "edit": {
-    "success": "Edit Plugin Global Rule Successfully",
-    "title": "Edit Plugin Global Rule"
+  "noData": "No Data",
+  "or": "OR",
+  "globalRules": {
+    "add": {
+      "success": "Add Global Rule Successfully",
+      "title": "Add Global Rule"
+    },
+    "detail": {
+      "title": "Global Rule Detail"
+    },
+    "edit": {
+      "success": "Edit Plugin Global Rule Successfully",
+      "title": "Edit Plugin Global Rule"
+    },
+    "plugins": "Plugins",
+    "title": "Global Rules"
+  },
+  "pluginMetadata": {
+    "title": "Plugin Metadata",
+    "delete": {
+      "success": "Delete Plugin Metadata of {{name}} Successfully"
+    },
+    "search": "Search Plugin Metadata",
+    "update": {
+      "success": "Update Plugin Metadata of {{name}} Successfully"
+    }
   },
   "plugins": "Plugins",
-  "title": "Global Rules"
-},
-"protos": {
-  "add": {
-    "success": "Add Proto Successfully",
-    "title": "Add Proto"
-  },
-  "detail": {
-    "title": "Proto Detail"
-  },
-  "form": {
-    "content": "Content",
-    "contentPlaceholder": "Paste or upload .proto, .pb file"
-  },
-  "title": "Protos"
-},
-"route": {
-  "add": {
-    "form": {
-      "uri": "URI",
-      "uris": "URIs"
+  "protos": {
+    "add": {
+      "success": "Add Proto Successfully",
+      "title": "Add Proto"
     },
-    "submit": "Add",
-    "title": "Add Route"
-  }
-},
-"seconds": "Seconds",
-"setting": {
-  "adminKey": "Admin Key",
-  "title": "Setting"
-},
-"upstreams": {
-  "add": {
-    "title": "Add Upstream"
+    "detail": {
+      "title": "Proto Detail"
+    },
+    "form": {
+      "content": "Content",
+      "contentPlaceholder": "Paste or upload .proto, .pb file"
+    },
+    "title": "Protos"
   },
-  "detail": {
-    "title": "Upstream Detail"
+  "route": {
+    "add": {
+      "form": {
+        "uri": "URI",
+        "uris": "URIs"
+      },
+      "submit": "Add",
+      "title": "Add Route"
+    }
   },
-  "title": "Upstreams"
-},
-"view": "View"
+  "seconds": "Seconds",
+  "setting": {
+    "adminKey": "Admin Key",
+    "title": "Setting"
+  },
+  "upstreams": {
+    "add": {
+      "title": "Add Upstream"
+    },
+    "detail": {
+      "title": "Upstream Detail"
+    },
+    "title": "Upstreams"
+  },
+  "view": "View"
 }

@@ -31,6 +31,10 @@ export const navRoutes: NavRoute[] = [
     label: 'globalRules',
   },
   {
+    to: '/plugin-metadata',
+    label: 'pluginMetadata',
+  },
+  {
     to: '/secret',
     label: 'secret',
   },

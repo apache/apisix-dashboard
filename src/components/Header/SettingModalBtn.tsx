@@ -27,7 +27,7 @@ export const SettingModalBtn = () => {
           label={t('setting.adminKey')}
           value={value}
           onChange={(event) => setValue(event.currentTarget.value)}
-        ></TextInput>
+         />
       </Modal>
     </>
   );
