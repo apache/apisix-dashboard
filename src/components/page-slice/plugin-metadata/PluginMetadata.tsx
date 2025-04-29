@@ -22,7 +22,7 @@ import { notifications } from '@mantine/notifications';
 export const PluginMetadata = observer(() => {
   const { t } = useTranslation();
 
-  const getMetatdataListReq = usePluginMetadataList();
+  const getMetadataListReq = usePluginMetadataList();
   const putMetadata = useMutation({
     mutationFn: putPluginMetadataReq,
     onSuccess(_, variables) {
@@ -30,7 +30,7 @@ export const PluginMetadata = observer(() => {
         message: t('pluginMetadata.update.success', { name: variables.name }),
         color: 'green',
       });
-      getMetatdataListReq.refetch();
+      getMetadataListReq.refetch();
     },
   });
   const deleteMetadata = useMutation({
@@ -40,7 +40,7 @@ export const PluginMetadata = observer(() => {
         message: t('pluginMetadata.delete.success', { name }),
         color: 'green',
       });
-      getMetatdataListReq.refetch();
+      getMetadataListReq.refetch();
     },
   });
 
@@ -100,7 +100,7 @@ export const PluginMetadata = observer(() => {
     },
   }));
 
-  const { pluginInfoMap, hasConfigNames, isLoading } = getMetatdataListReq;
+  const { pluginInfoMap, hasConfigNames, isLoading } = getMetadataListReq;
   // init the selected plugins
   useDeepCompareEffect(() => {
     if (isLoading) return;
