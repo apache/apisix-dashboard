@@ -11,7 +11,7 @@ const PageHeader: FC<PageHeaderProps> = (props) => {
   const { title, desc, extra } = props;
   return (
     <Box py="md" mb="lg">
-      <Group justify="space-between" align="flex-start">
+      <Group justify="space-between" align="center">
         <Stack gap="xs">
           <Title order={2}>{title}</Title>
           {desc && (

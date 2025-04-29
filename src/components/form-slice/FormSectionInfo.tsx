@@ -4,7 +4,7 @@ import { FormItemTextInput } from '../form/TextInput';
 import { FormSection } from './FormSection';
 import { useTranslation } from 'react-i18next';
 import { FormDisplayDate } from './FormDisplayDate';
-import { Divider, type TextInputProps } from '@mantine/core';
+import { Divider } from '@mantine/core';
 
 const DisplayDate = () => {
   const { control } = useFormContext<A6Type['Info']>();
@@ -21,18 +21,12 @@ const DisplayDate = () => {
   );
 };
 
-const FormItemID = (props: Pick<TextInputProps, 'disabled'>) => {
+const FormItemID = () => {
   const { control } = useFormContext<A6Type['Info']>();
   const { t } = useTranslation();
-  const { disabled } = props;
 
   return (
-    <FormItemTextInput
-      control={control}
-      name="id"
-      label={t('form.info.id')}
-      disabled={disabled}
-    />
+    <FormItemTextInput control={control} name="id" label={t('form.info.id')} />
   );
 };
 

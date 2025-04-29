@@ -131,7 +131,7 @@ export const FormItemEditor = <T extends FieldValues>(
           value={value}
           onChange={fOnChange}
           loading={<Skeleton visible height="100%" width="100%" />}
-          options={{ ...options, readOnly: restProps.disabled }}
+          options={{ ...options, readOnly: restField.disabled }}
           defaultLanguage="json"
           {...(language && { language })}
         />

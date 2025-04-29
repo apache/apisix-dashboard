@@ -8,7 +8,7 @@ export const FormPartGlobalRules = () => {
     <>
       <FormSectionInfo showDate={false} />
       <FormSection legend={t('form.plugins.label')}>
-        <FormItemPlugins name="plugins" label="" />
+        <FormItemPlugins name="plugins" />
       </FormSection>
     </>
   );

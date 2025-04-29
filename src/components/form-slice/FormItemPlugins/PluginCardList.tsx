@@ -43,28 +43,23 @@ export const PluginCardListSearch = (props: PluginCardListSearchProps) => {
   );
 };
 
-type OptionProps = Partial<
-  Pick<PluginCardProps, 'onAdd' | 'onEdit' | 'onDelete'>
+type OptionProps = Pick<
+  PluginCardProps,
+  'onAdd' | 'onEdit' | 'onDelete' | 'onView' | 'mode'
 > & {
-  mode: 'add' | 'edit';
   name: string;
 };
 const Option = observer((props: OptionProps) => {
-  const { mode, name, onAdd, onEdit, onDelete } = props;
+  const { mode, name, onAdd, onEdit, onDelete, onView } = props;
   return (
     <Combobox.Option key={name} value={name} p={0}>
       <PluginCard
         mode={mode}
         name={name}
-        onAdd={() => {
-          onAdd?.(name);
-        }}
-        onEdit={() => {
-          onEdit?.(name);
-        }}
-        onDelete={() => {
-          onDelete?.(name);
-        }}
+        onAdd={() => onAdd?.(name)}
+        onEdit={() => onEdit?.(name)}
+        onDelete={() => onDelete?.(name)}
+        onView={() => onView?.(name)}
       />
     </Combobox.Option>
   );
@@ -81,8 +76,7 @@ const Options = observer((props: { list: OptionProps[] }) => {
   );
 });
 
-export type PluginCardListProps = Pick<PluginCardProps, 'mode'> &
-  Omit<OptionProps, 'name'> &
+export type PluginCardListProps = Omit<OptionProps, 'name'> &
   Pick<TextInputProps, 'placeholder'> & {
     cols?: number;
     h?: number | string;
@@ -92,32 +86,30 @@ export type PluginCardListProps = Pick<PluginCardProps, 'mode'> &
   };
 
 const PluginCardListCore = (props: PluginCardListProps) => {
-  const {
-    mode,
-    onAdd,
-    onEdit,
-    onDelete,
-    search = '',
-    cols = 3,
-    h,
-    mah,
-    plugins,
-  } = props;
+  const { search = '', cols = 3, h, mah, plugins } = props;
+  const { mode, onAdd, onEdit, onDelete, onView } = props;
   const { t } = useTranslation();
   const combobox = useVirtualizedCombobox();
   const optionsOb = useLocalObservable(() => ({
     search: search,
     plugins: plugins,
+    mode: mode,
+    viewPlugin: '',
+    viewOpened: false,
+    setViewOpened(opened: boolean) {
+      this.viewOpened = opened;
+    },
     get list() {
       const arr = !this.search
         ? this.plugins
         : this.plugins.filter((d) => d.toLowerCase().includes(this.search));
       return arr.map((name) => ({
         name,
-        mode,
+        mode: this.mode,
         onAdd,
         onEdit,
         onDelete,
+        onView,
       }));
     },
   }));
@@ -126,7 +118,8 @@ const PluginCardListCore = (props: PluginCardListProps) => {
   useLayoutEffect(() => {
     optionsOb.search = search.toLowerCase().trim();
     optionsOb.plugins = plugins;
-  }, [optionsOb, search, plugins]);
+    optionsOb.mode = mode;
+  }, [optionsOb, search, plugins, mode]);
 
   return (
     <Combobox store={combobox}>

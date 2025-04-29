@@ -8,13 +8,14 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import {
-  UpdatePluginDrawer,
-  type UpdatePluginDrawerProps,
-} from './UpdatePluginDrawer';
+  PluginEditorDrawer,
+  type PluginEditorDrawerProps,
+} from './PluginEditorDrawer';
+import { observer } from 'mobx-react-lite';
 
 export type SelectPluginsDrawerProps = Pick<PluginCardListProps, 'plugins'> &
-  Pick<UpdatePluginDrawerProps, 'onSave'>;
-export const SelectPluginsDrawer = (props: SelectPluginsDrawerProps) => {
+  Pick<PluginEditorDrawerProps, 'onSave'>;
+export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
   const { plugins, onSave } = props;
   const { t } = useTranslation();
   const [opened, handlers] = useDisclosure(false);
@@ -56,11 +57,10 @@ export const SelectPluginsDrawer = (props: SelectPluginsDrawerProps) => {
         {t('form.plugins.selectPlugins.title')}
       </Button>
 
-      <UpdatePluginDrawer
+      <PluginEditorDrawer
         opened={updateOpened}
         onClose={updateHandlers.close}
-        name={selectedPlugin}
-        config={{}}
+        plugin={{ name: selectedPlugin, config: {} }}
         mode="add"
         onSave={(props) => {
           onSave(props);
@@ -70,3 +70,5 @@ export const SelectPluginsDrawer = (props: SelectPluginsDrawerProps) => {
     </Drawer.Stack>
   );
 };
+
+export const SelectPluginsDrawer = observer(SelectPluginsDrawerCore);
