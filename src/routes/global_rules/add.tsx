@@ -37,12 +37,12 @@ const GlobalRuleAddForm = () => {
   const submit = async (data: A6Type['GlobalRulePut']) => {
     const res = await putGlobalRule.mutateAsync(data);
     notifications.show({
-      id: 'add-global-rule',
+      id: 'add-global_rule',
       message: t('globalRules.add.success'),
       color: 'green',
     });
     await router.navigate({
-      to: '/global-rules/detail/$id',
+      to: '/global_rules/detail/$id',
       params: { id: res.data.value.id },
     });
   };
@@ -70,6 +70,6 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/global-rules/add')({
+export const Route = createFileRoute('/global_rules/add')({
   component: RouteComponent,
 });

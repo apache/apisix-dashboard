@@ -53,6 +53,6 @@ function RouteComponent() {
   return <RouteAddForm />;
 }
 
-export const Route = createFileRoute('/route/add')({
+export const Route = createFileRoute('/routes/add')({
   component: RouteComponent,
 });

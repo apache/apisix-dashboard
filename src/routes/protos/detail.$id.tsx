@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
 import { Skeleton } from '@mantine/core';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
-import { FormSectionInfo } from '@/components/form-slice/FormSectionInfo';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 
 const ProtoDetailForm = ({ id }: { id: string }) => {
   const { data: protoData, isLoading } = useQuery({
@@ -44,7 +44,7 @@ const ProtoDetailForm = ({ id }: { id: string }) => {
   return (
     <FormProvider {...form}>
       <FormTOCBox>
-        <FormSectionInfo />
+        <FormSectionGeneral />
         <FormPartProto allowUpload={false} />
         <DevTool control={form.control} />
       </FormTOCBox>

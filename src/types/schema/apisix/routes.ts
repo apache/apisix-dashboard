@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { A6Common } from './common';
-import { A6Upstream } from './upstream';
-import { A6Plugin } from './plugin';
+import { A6Upstreams } from './upstreams';
+import { A6Plugins } from './plugins';
 
 const Route = z
   .object({
@@ -16,12 +16,12 @@ const Route = z
     filter_func: z.string(),
     script: z.string(),
     script_id: z.string(),
-    plugins: A6Plugin.Plugins,
+    plugins: A6Plugins.Plugins,
     plugin_config_id: z.string(),
-    upstream: A6Upstream.Upstream,
+    upstream: A6Upstreams.Upstream,
     upstream_id: z.string(),
     service_id: z.string(),
-    timeout: A6Upstream.UpstreamTimeout.partial(),
+    timeout: A6Upstreams.UpstreamTimeout.partial(),
     enable_websocket: z.boolean(),
     priority: z.number(),
     status: z.number(),
@@ -29,6 +29,6 @@ const Route = z
   .partial()
   .merge(A6Common.Basic);
 
-export const A6Route = {
+export const A6Routes = {
   Route,
 };

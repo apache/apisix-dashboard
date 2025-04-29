@@ -23,7 +23,7 @@ type Props = {
 const GlobalRuleDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/global-rules/detail/$id' });
+  const { id } = useParams({ from: '/global_rules/detail/$id' });
   const detailReq = useQuery(getGlobalRuleQueryOptions(id));
 
   const form = useForm({
@@ -100,6 +100,6 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/global-rules/detail/$id')({
+export const Route = createFileRoute('/global_rules/detail/$id')({
   component: RouteComponent,
 });

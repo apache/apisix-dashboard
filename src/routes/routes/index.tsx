@@ -20,7 +20,7 @@ const ToCreatePageBtn = () => {
   const { t } = useTranslation();
   const router = useRouter();
   return (
-    <Button component={Link} to={router.routesById['/route/add'].to}>
+    <Button component={Link} to={router.routesById['/routes/add'].to}>
       {t('route.add.title')}
     </Button>
   );
@@ -82,7 +82,7 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/route/')({
+export const Route = createFileRoute('/routes/')({
   component: RouteComponent,
   loader: () => queryClient.ensureQueryData(routesQueryOptions),
 });

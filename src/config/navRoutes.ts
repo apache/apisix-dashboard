@@ -7,27 +7,27 @@ export type NavRoute = {
 };
 export const navRoutes: NavRoute[] = [
   {
-    to: '/service',
-    label: 'service',
+    to: '/services',
+    label: 'services',
   },
   {
-    to: '/route',
-    label: 'route',
+    to: '/routes',
+    label: 'routes',
   },
   {
     to: '/upstreams',
     label: 'upstreams',
   },
   {
-    to: '/consumer',
-    label: 'consumer',
+    to: '/consumers',
+    label: 'consumers',
   },
   {
-    to: '/ssl',
-    label: 'ssl',
+    to: '/ssls',
+    label: 'ssls',
   },
   {
-    to: '/global-rules',
+    to: '/global_rules',
     label: 'globalRules',
   },
   {
@@ -35,8 +35,8 @@ export const navRoutes: NavRoute[] = [
     label: 'pluginMetadata',
   },
   {
-    to: '/secret',
-    label: 'secret',
+    to: '/secrets',
+    label: 'secrets',
   },
   {
     to: '/protos',

@@ -34,7 +34,7 @@ type FormSectionInfoProps = {
   disableID?: boolean;
 };
 
-export const FormSectionInfo = (props: FormSectionInfoProps) => {
+export const FormSectionGeneral = (props: FormSectionInfoProps) => {
   const { showDate = true, disableID = false } = props;
   const { t } = useTranslation();
   return (

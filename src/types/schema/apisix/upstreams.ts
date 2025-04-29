@@ -154,7 +154,7 @@ const Upstream = A6Common.Basic.merge(A6Common.ID)
     })
   );
 
-export const A6Upstream = {
+export const A6Upstreams = {
   Upstream,
   UpstreamBalancer,
   UpstreamHashOn,

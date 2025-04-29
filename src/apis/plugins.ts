@@ -20,7 +20,7 @@ export const putGlobalRuleReq = (data: A6Type['GlobalRulePut']) => {
 
 export const getGlobalRuleQueryOptions = (id: string) =>
   queryOptions({
-    queryKey: ['global-rule', id],
+    queryKey: ['global_rule', id],
     queryFn: () =>
       req
         .get<unknown, A6Type['RespGlobalRuleDetail']>(

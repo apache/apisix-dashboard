@@ -8,7 +8,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { DevTool } from '@hookform/devtools';
-import { A6Proto } from '@/types/schema/apisix/proto';
+import { A6Protos } from '@/types/schema/apisix/protos';
 import type { A6Type } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
@@ -28,7 +28,7 @@ const ProtoAddForm = () => {
   });
 
   const form = useForm({
-    resolver: zodResolver(A6Proto.ProtoPost),
+    resolver: zodResolver(A6Protos.ProtoPost),
     shouldUnregister: true,
     shouldFocusError: true,
     defaultValues,

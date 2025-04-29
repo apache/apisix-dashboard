@@ -7,7 +7,7 @@ const Proto = z
   })
   .merge(A6Common.Info);
 
-export const A6Proto = {
+export const A6Protos = {
   Proto,
   ProtoPost: Proto.omit({ id: true, create_time: true, update_time: true }),
 };

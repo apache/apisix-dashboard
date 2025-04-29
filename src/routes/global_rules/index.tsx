@@ -21,7 +21,7 @@ import {
 const genGlobalRulesQueryOptions = (props: PageSearchType) => {
   const { page, pageSize } = props;
   return queryOptions({
-    queryKey: ['global-rules', page, pageSize],
+    queryKey: ['global_rules', page, pageSize],
     queryFn: () =>
       req
         .get<unknown, A6Type['RespGlobalRuleList']>(API_GLOBAL_RULES, {
@@ -44,7 +44,7 @@ const DetailPageBtn = (props: DetailPageBtnProps) => {
     <RouteLinkBtn
       size="xs"
       variant="transparent"
-      to="/global-rules/detail/$id"
+      to="/global_rules/detail/$id"
       params={{ id: record.value.id }}
     >
       {t('view')}
@@ -57,7 +57,7 @@ function RouteComponent() {
 
   // Use the pagination hook
   const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'global-rules',
+    queryKey: 'global_rules',
   });
 
   const globalRulesQuery = useSuspenseQuery(
@@ -119,7 +119,7 @@ function RouteComponent() {
                   label: (
                     <ToAddPageBtn
                       key="add"
-                      to="/global-rules/add"
+                      to="/global_rules/add"
                       label={t('globalRules.add.title')}
                     />
                   ),
@@ -133,7 +133,7 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/global-rules/')({
+export const Route = createFileRoute('/global_rules/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,

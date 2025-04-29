@@ -13,21 +13,21 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as UpstreamsIndexImport } from './routes/upstreams/index'
-import { Route as SslIndexImport } from './routes/ssl/index'
-import { Route as ServiceIndexImport } from './routes/service/index'
-import { Route as SecretIndexImport } from './routes/secret/index'
-import { Route as RouteIndexImport } from './routes/route/index'
+import { Route as SslsIndexImport } from './routes/ssls/index'
+import { Route as ServicesIndexImport } from './routes/services/index'
+import { Route as SecretsIndexImport } from './routes/secrets/index'
+import { Route as RoutesIndexImport } from './routes/routes/index'
 import { Route as ProtosIndexImport } from './routes/protos/index'
 import { Route as PluginMetadataIndexImport } from './routes/plugin-metadata/index'
-import { Route as GlobalRulesIndexImport } from './routes/global-rules/index'
-import { Route as ConsumerIndexImport } from './routes/consumer/index'
+import { Route as GlobalrulesIndexImport } from './routes/global_rules/index'
+import { Route as ConsumersIndexImport } from './routes/consumers/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
-import { Route as RouteAddImport } from './routes/route/add'
+import { Route as RoutesAddImport } from './routes/routes/add'
 import { Route as ProtosAddImport } from './routes/protos/add'
-import { Route as GlobalRulesAddImport } from './routes/global-rules/add'
+import { Route as GlobalrulesAddImport } from './routes/global_rules/add'
 import { Route as UpstreamsDetailIdImport } from './routes/upstreams/detail.$id'
 import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
-import { Route as GlobalRulesDetailIdImport } from './routes/global-rules/detail.$id'
+import { Route as GlobalrulesDetailIdImport } from './routes/global_rules/detail.$id'
 
 // Create/Update Routes
 
@@ -43,27 +43,27 @@ const UpstreamsIndexRoute = UpstreamsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const SslIndexRoute = SslIndexImport.update({
-  id: '/ssl/',
-  path: '/ssl/',
+const SslsIndexRoute = SslsIndexImport.update({
+  id: '/ssls/',
+  path: '/ssls/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ServiceIndexRoute = ServiceIndexImport.update({
-  id: '/service/',
-  path: '/service/',
+const ServicesIndexRoute = ServicesIndexImport.update({
+  id: '/services/',
+  path: '/services/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const SecretIndexRoute = SecretIndexImport.update({
-  id: '/secret/',
-  path: '/secret/',
+const SecretsIndexRoute = SecretsIndexImport.update({
+  id: '/secrets/',
+  path: '/secrets/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const RouteIndexRoute = RouteIndexImport.update({
-  id: '/route/',
-  path: '/route/',
+const RoutesIndexRoute = RoutesIndexImport.update({
+  id: '/routes/',
+  path: '/routes/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -79,15 +79,15 @@ const PluginMetadataIndexRoute = PluginMetadataIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const GlobalRulesIndexRoute = GlobalRulesIndexImport.update({
-  id: '/global-rules/',
-  path: '/global-rules/',
+const GlobalrulesIndexRoute = GlobalrulesIndexImport.update({
+  id: '/global_rules/',
+  path: '/global_rules/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ConsumerIndexRoute = ConsumerIndexImport.update({
-  id: '/consumer/',
-  path: '/consumer/',
+const ConsumersIndexRoute = ConsumersIndexImport.update({
+  id: '/consumers/',
+  path: '/consumers/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -97,9 +97,9 @@ const UpstreamsAddRoute = UpstreamsAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const RouteAddRoute = RouteAddImport.update({
-  id: '/route/add',
-  path: '/route/add',
+const RoutesAddRoute = RoutesAddImport.update({
+  id: '/routes/add',
+  path: '/routes/add',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -109,9 +109,9 @@ const ProtosAddRoute = ProtosAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const GlobalRulesAddRoute = GlobalRulesAddImport.update({
-  id: '/global-rules/add',
-  path: '/global-rules/add',
+const GlobalrulesAddRoute = GlobalrulesAddImport.update({
+  id: '/global_rules/add',
+  path: '/global_rules/add',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -127,9 +127,9 @@ const ProtosDetailIdRoute = ProtosDetailIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const GlobalRulesDetailIdRoute = GlobalRulesDetailIdImport.update({
-  id: '/global-rules/detail/$id',
-  path: '/global-rules/detail/$id',
+const GlobalrulesDetailIdRoute = GlobalrulesDetailIdImport.update({
+  id: '/global_rules/detail/$id',
+  path: '/global_rules/detail/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -144,11 +144,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/global-rules/add': {
-      id: '/global-rules/add'
-      path: '/global-rules/add'
-      fullPath: '/global-rules/add'
-      preLoaderRoute: typeof GlobalRulesAddImport
+    '/global_rules/add': {
+      id: '/global_rules/add'
+      path: '/global_rules/add'
+      fullPath: '/global_rules/add'
+      preLoaderRoute: typeof GlobalrulesAddImport
       parentRoute: typeof rootRoute
     }
     '/protos/add': {
@@ -158,11 +158,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtosAddImport
       parentRoute: typeof rootRoute
     }
-    '/route/add': {
-      id: '/route/add'
-      path: '/route/add'
-      fullPath: '/route/add'
-      preLoaderRoute: typeof RouteAddImport
+    '/routes/add': {
+      id: '/routes/add'
+      path: '/routes/add'
+      fullPath: '/routes/add'
+      preLoaderRoute: typeof RoutesAddImport
       parentRoute: typeof rootRoute
     }
     '/upstreams/add': {
@@ -172,18 +172,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UpstreamsAddImport
       parentRoute: typeof rootRoute
     }
-    '/consumer/': {
-      id: '/consumer/'
-      path: '/consumer'
-      fullPath: '/consumer'
-      preLoaderRoute: typeof ConsumerIndexImport
+    '/consumers/': {
+      id: '/consumers/'
+      path: '/consumers'
+      fullPath: '/consumers'
+      preLoaderRoute: typeof ConsumersIndexImport
       parentRoute: typeof rootRoute
     }
-    '/global-rules/': {
-      id: '/global-rules/'
-      path: '/global-rules'
-      fullPath: '/global-rules'
-      preLoaderRoute: typeof GlobalRulesIndexImport
+    '/global_rules/': {
+      id: '/global_rules/'
+      path: '/global_rules'
+      fullPath: '/global_rules'
+      preLoaderRoute: typeof GlobalrulesIndexImport
       parentRoute: typeof rootRoute
     }
     '/plugin-metadata/': {
@@ -200,32 +200,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtosIndexImport
       parentRoute: typeof rootRoute
     }
-    '/route/': {
-      id: '/route/'
-      path: '/route'
-      fullPath: '/route'
-      preLoaderRoute: typeof RouteIndexImport
+    '/routes/': {
+      id: '/routes/'
+      path: '/routes'
+      fullPath: '/routes'
+      preLoaderRoute: typeof RoutesIndexImport
       parentRoute: typeof rootRoute
     }
-    '/secret/': {
-      id: '/secret/'
-      path: '/secret'
-      fullPath: '/secret'
-      preLoaderRoute: typeof SecretIndexImport
+    '/secrets/': {
+      id: '/secrets/'
+      path: '/secrets'
+      fullPath: '/secrets'
+      preLoaderRoute: typeof SecretsIndexImport
       parentRoute: typeof rootRoute
     }
-    '/service/': {
-      id: '/service/'
-      path: '/service'
-      fullPath: '/service'
-      preLoaderRoute: typeof ServiceIndexImport
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesIndexImport
       parentRoute: typeof rootRoute
     }
-    '/ssl/': {
-      id: '/ssl/'
-      path: '/ssl'
-      fullPath: '/ssl'
-      preLoaderRoute: typeof SslIndexImport
+    '/ssls/': {
+      id: '/ssls/'
+      path: '/ssls'
+      fullPath: '/ssls'
+      preLoaderRoute: typeof SslsIndexImport
       parentRoute: typeof rootRoute
     }
     '/upstreams/': {
@@ -235,11 +235,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UpstreamsIndexImport
       parentRoute: typeof rootRoute
     }
-    '/global-rules/detail/$id': {
-      id: '/global-rules/detail/$id'
-      path: '/global-rules/detail/$id'
-      fullPath: '/global-rules/detail/$id'
-      preLoaderRoute: typeof GlobalRulesDetailIdImport
+    '/global_rules/detail/$id': {
+      id: '/global_rules/detail/$id'
+      path: '/global_rules/detail/$id'
+      fullPath: '/global_rules/detail/$id'
+      preLoaderRoute: typeof GlobalrulesDetailIdImport
       parentRoute: typeof rootRoute
     }
     '/protos/detail/$id': {
@@ -263,40 +263,40 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/global-rules/add': typeof GlobalRulesAddRoute
+  '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
-  '/route/add': typeof RouteAddRoute
+  '/routes/add': typeof RoutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
-  '/consumer': typeof ConsumerIndexRoute
-  '/global-rules': typeof GlobalRulesIndexRoute
+  '/consumers': typeof ConsumersIndexRoute
+  '/global_rules': typeof GlobalrulesIndexRoute
   '/plugin-metadata': typeof PluginMetadataIndexRoute
   '/protos': typeof ProtosIndexRoute
-  '/route': typeof RouteIndexRoute
-  '/secret': typeof SecretIndexRoute
-  '/service': typeof ServiceIndexRoute
-  '/ssl': typeof SslIndexRoute
+  '/routes': typeof RoutesIndexRoute
+  '/secrets': typeof SecretsIndexRoute
+  '/services': typeof ServicesIndexRoute
+  '/ssls': typeof SslsIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
-  '/global-rules/detail/$id': typeof GlobalRulesDetailIdRoute
+  '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/global-rules/add': typeof GlobalRulesAddRoute
+  '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
-  '/route/add': typeof RouteAddRoute
+  '/routes/add': typeof RoutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
-  '/consumer': typeof ConsumerIndexRoute
-  '/global-rules': typeof GlobalRulesIndexRoute
+  '/consumers': typeof ConsumersIndexRoute
+  '/global_rules': typeof GlobalrulesIndexRoute
   '/plugin-metadata': typeof PluginMetadataIndexRoute
   '/protos': typeof ProtosIndexRoute
-  '/route': typeof RouteIndexRoute
-  '/secret': typeof SecretIndexRoute
-  '/service': typeof ServiceIndexRoute
-  '/ssl': typeof SslIndexRoute
+  '/routes': typeof RoutesIndexRoute
+  '/secrets': typeof SecretsIndexRoute
+  '/services': typeof ServicesIndexRoute
+  '/ssls': typeof SslsIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
-  '/global-rules/detail/$id': typeof GlobalRulesDetailIdRoute
+  '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
@@ -304,20 +304,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/global-rules/add': typeof GlobalRulesAddRoute
+  '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
-  '/route/add': typeof RouteAddRoute
+  '/routes/add': typeof RoutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
-  '/consumer/': typeof ConsumerIndexRoute
-  '/global-rules/': typeof GlobalRulesIndexRoute
+  '/consumers/': typeof ConsumersIndexRoute
+  '/global_rules/': typeof GlobalrulesIndexRoute
   '/plugin-metadata/': typeof PluginMetadataIndexRoute
   '/protos/': typeof ProtosIndexRoute
-  '/route/': typeof RouteIndexRoute
-  '/secret/': typeof SecretIndexRoute
-  '/service/': typeof ServiceIndexRoute
-  '/ssl/': typeof SslIndexRoute
+  '/routes/': typeof RoutesIndexRoute
+  '/secrets/': typeof SecretsIndexRoute
+  '/services/': typeof ServicesIndexRoute
+  '/ssls/': typeof SslsIndexRoute
   '/upstreams/': typeof UpstreamsIndexRoute
-  '/global-rules/detail/$id': typeof GlobalRulesDetailIdRoute
+  '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
@@ -326,58 +326,58 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/global-rules/add'
+    | '/global_rules/add'
     | '/protos/add'
-    | '/route/add'
+    | '/routes/add'
     | '/upstreams/add'
-    | '/consumer'
-    | '/global-rules'
+    | '/consumers'
+    | '/global_rules'
     | '/plugin-metadata'
     | '/protos'
-    | '/route'
-    | '/secret'
-    | '/service'
-    | '/ssl'
+    | '/routes'
+    | '/secrets'
+    | '/services'
+    | '/ssls'
     | '/upstreams'
-    | '/global-rules/detail/$id'
+    | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/upstreams/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/global-rules/add'
+    | '/global_rules/add'
     | '/protos/add'
-    | '/route/add'
+    | '/routes/add'
     | '/upstreams/add'
-    | '/consumer'
-    | '/global-rules'
+    | '/consumers'
+    | '/global_rules'
     | '/plugin-metadata'
     | '/protos'
-    | '/route'
-    | '/secret'
-    | '/service'
-    | '/ssl'
+    | '/routes'
+    | '/secrets'
+    | '/services'
+    | '/ssls'
     | '/upstreams'
-    | '/global-rules/detail/$id'
+    | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/upstreams/detail/$id'
   id:
     | '__root__'
     | '/'
-    | '/global-rules/add'
+    | '/global_rules/add'
     | '/protos/add'
-    | '/route/add'
+    | '/routes/add'
     | '/upstreams/add'
-    | '/consumer/'
-    | '/global-rules/'
+    | '/consumers/'
+    | '/global_rules/'
     | '/plugin-metadata/'
     | '/protos/'
-    | '/route/'
-    | '/secret/'
-    | '/service/'
-    | '/ssl/'
+    | '/routes/'
+    | '/secrets/'
+    | '/services/'
+    | '/ssls/'
     | '/upstreams/'
-    | '/global-rules/detail/$id'
+    | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/upstreams/detail/$id'
   fileRoutesById: FileRoutesById
@@ -385,40 +385,40 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  GlobalRulesAddRoute: typeof GlobalRulesAddRoute
+  GlobalrulesAddRoute: typeof GlobalrulesAddRoute
   ProtosAddRoute: typeof ProtosAddRoute
-  RouteAddRoute: typeof RouteAddRoute
+  RoutesAddRoute: typeof RoutesAddRoute
   UpstreamsAddRoute: typeof UpstreamsAddRoute
-  ConsumerIndexRoute: typeof ConsumerIndexRoute
-  GlobalRulesIndexRoute: typeof GlobalRulesIndexRoute
+  ConsumersIndexRoute: typeof ConsumersIndexRoute
+  GlobalrulesIndexRoute: typeof GlobalrulesIndexRoute
   PluginMetadataIndexRoute: typeof PluginMetadataIndexRoute
   ProtosIndexRoute: typeof ProtosIndexRoute
-  RouteIndexRoute: typeof RouteIndexRoute
-  SecretIndexRoute: typeof SecretIndexRoute
-  ServiceIndexRoute: typeof ServiceIndexRoute
-  SslIndexRoute: typeof SslIndexRoute
+  RoutesIndexRoute: typeof RoutesIndexRoute
+  SecretsIndexRoute: typeof SecretsIndexRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
+  SslsIndexRoute: typeof SslsIndexRoute
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
-  GlobalRulesDetailIdRoute: typeof GlobalRulesDetailIdRoute
+  GlobalrulesDetailIdRoute: typeof GlobalrulesDetailIdRoute
   ProtosDetailIdRoute: typeof ProtosDetailIdRoute
   UpstreamsDetailIdRoute: typeof UpstreamsDetailIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  GlobalRulesAddRoute: GlobalRulesAddRoute,
+  GlobalrulesAddRoute: GlobalrulesAddRoute,
   ProtosAddRoute: ProtosAddRoute,
-  RouteAddRoute: RouteAddRoute,
+  RoutesAddRoute: RoutesAddRoute,
   UpstreamsAddRoute: UpstreamsAddRoute,
-  ConsumerIndexRoute: ConsumerIndexRoute,
-  GlobalRulesIndexRoute: GlobalRulesIndexRoute,
+  ConsumersIndexRoute: ConsumersIndexRoute,
+  GlobalrulesIndexRoute: GlobalrulesIndexRoute,
   PluginMetadataIndexRoute: PluginMetadataIndexRoute,
   ProtosIndexRoute: ProtosIndexRoute,
-  RouteIndexRoute: RouteIndexRoute,
-  SecretIndexRoute: SecretIndexRoute,
-  ServiceIndexRoute: ServiceIndexRoute,
-  SslIndexRoute: SslIndexRoute,
+  RoutesIndexRoute: RoutesIndexRoute,
+  SecretsIndexRoute: SecretsIndexRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
+  SslsIndexRoute: SslsIndexRoute,
   UpstreamsIndexRoute: UpstreamsIndexRoute,
-  GlobalRulesDetailIdRoute: GlobalRulesDetailIdRoute,
+  GlobalrulesDetailIdRoute: GlobalrulesDetailIdRoute,
   ProtosDetailIdRoute: ProtosDetailIdRoute,
   UpstreamsDetailIdRoute: UpstreamsDetailIdRoute,
 }
@@ -434,20 +434,20 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/global-rules/add",
+        "/global_rules/add",
         "/protos/add",
-        "/route/add",
+        "/routes/add",
         "/upstreams/add",
-        "/consumer/",
-        "/global-rules/",
+        "/consumers/",
+        "/global_rules/",
         "/plugin-metadata/",
         "/protos/",
-        "/route/",
-        "/secret/",
-        "/service/",
-        "/ssl/",
+        "/routes/",
+        "/secrets/",
+        "/services/",
+        "/ssls/",
         "/upstreams/",
-        "/global-rules/detail/$id",
+        "/global_rules/detail/$id",
         "/protos/detail/$id",
         "/upstreams/detail/$id"
       ]
@@ -455,23 +455,23 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
-    "/global-rules/add": {
-      "filePath": "global-rules/add.tsx"
+    "/global_rules/add": {
+      "filePath": "global_rules/add.tsx"
     },
     "/protos/add": {
       "filePath": "protos/add.tsx"
     },
-    "/route/add": {
-      "filePath": "route/add.tsx"
+    "/routes/add": {
+      "filePath": "routes/add.tsx"
     },
     "/upstreams/add": {
       "filePath": "upstreams/add.tsx"
     },
-    "/consumer/": {
-      "filePath": "consumer/index.tsx"
+    "/consumers/": {
+      "filePath": "consumers/index.tsx"
     },
-    "/global-rules/": {
-      "filePath": "global-rules/index.tsx"
+    "/global_rules/": {
+      "filePath": "global_rules/index.tsx"
     },
     "/plugin-metadata/": {
       "filePath": "plugin-metadata/index.tsx"
@@ -479,23 +479,23 @@ export const routeTree = rootRoute
     "/protos/": {
       "filePath": "protos/index.tsx"
     },
-    "/route/": {
-      "filePath": "route/index.tsx"
+    "/routes/": {
+      "filePath": "routes/index.tsx"
     },
-    "/secret/": {
-      "filePath": "secret/index.tsx"
+    "/secrets/": {
+      "filePath": "secrets/index.tsx"
     },
-    "/service/": {
-      "filePath": "service/index.tsx"
+    "/services/": {
+      "filePath": "services/index.tsx"
     },
-    "/ssl/": {
-      "filePath": "ssl/index.tsx"
+    "/ssls/": {
+      "filePath": "ssls/index.tsx"
     },
     "/upstreams/": {
       "filePath": "upstreams/index.tsx"
     },
-    "/global-rules/detail/$id": {
-      "filePath": "global-rules/detail.$id.tsx"
+    "/global_rules/detail/$id": {
+      "filePath": "global_rules/detail.$id.tsx"
     },
     "/protos/detail/$id": {
       "filePath": "protos/detail.$id.tsx"
