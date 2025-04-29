@@ -1,3 +1,4 @@
+import type { PluginConfig } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
 import {
   API_GLOBAL_RULES,
   API_PLUGINS,
@@ -80,14 +81,18 @@ export const getPluginSchemaQueryOptions = (
   });
 };
 
-export const putPluginMetadataReq = (
-  name: string,
-  data: A6Type['PluginMetadataPut']
-) => {
+export const putPluginMetadataReq = (props: PluginConfig) => {
+  const { name, config } = props;
   return req.put<
     A6Type['PluginMetadataPut'],
     A6Type['RespPluginMetadataDetail']
-  >(`${API_PLUGIN_METADATA}/${name}`, data);
+  >(`${API_PLUGIN_METADATA}/${name}`, config);
+};
+
+export const deletePluginMetadataReq = (name: string) => {
+  return req.delete<unknown, A6Type['RespPluginMetadataDetail']>(
+    `${API_PLUGIN_METADATA}/${name}`
+  );
 };
 
 export const getPluginMetadataQueryOptions = (

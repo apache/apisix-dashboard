@@ -1,9 +1,7 @@
 import { FormItemEditor } from '@/components/form/Editor';
 import { Drawer, Group, Title } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { getPluginSchemaQueryOptions } from '@/apis/plugins';
 import { isEmpty } from 'rambdax';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import type { PluginCardListProps } from './PluginCardList';
@@ -35,7 +33,6 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
     onClose();
     methods.reset();
   };
-  const getSchemaReq = useQuery(getPluginSchemaQueryOptions(name, !schema));
 
   useDeepCompareEffect(() => {
     methods.setValue('config', toConfigStr(config));
@@ -62,8 +59,7 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
           <FormItemEditor
             name="config"
             h={500}
-            customSchema={getSchemaReq.data || schema}
-            isLoading={getSchemaReq.isLoading}
+            customSchema={schema}
             required
           />
         </form>
@@ -79,7 +75,7 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
               })}
             >
               {mode === 'add' && t('form.btn.add')}
-              {mode === 'edit' && t('form.btn.edit')}
+              {mode === 'edit' && t('form.btn.save')}
             </FormSubmitBtn>
           </Group>
         )}

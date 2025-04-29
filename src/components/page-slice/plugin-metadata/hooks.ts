@@ -10,51 +10,56 @@ import { useQueries, useSuspenseQuery } from '@tanstack/react-query';
 import { useDeepCompareEffect } from 'react-use';
 
 export type PluginInfo = PluginConfig & { schema: object };
+
+// waiting apisix api to help handle the request
 export const usePluginMetadataList = () => {
   const pluginsListQuery = useSuspenseQuery(
     getPluginsListWithSchemaQueryOptions({ schema: 'metadata_schema' })
   );
 
-  // 只有当插件列表加载完成后再获取元数据
   const { names, originObj } = pluginsListQuery.data;
 
-  // 为每个插件创建元数据查询
   const metadataQueries = useQueries({
-    queries: names.map((pluginName) => ({
-      ...getPluginMetadataQueryOptions(pluginName, {
-        [SKIP_INTERCEPTOR_HEADER]: ['500'],
-      }),
-      // 避免当一个插件没有元数据时显示错误
-      retry: false,
-      // 只有当插件列表已加载时才开始获取
-      enabled: !pluginsListQuery.isPending && !pluginsListQuery.isError,
-    })),
+    queries: names
+      ? names.map((pluginName) => ({
+          ...getPluginMetadataQueryOptions(pluginName, {
+            // skip show 500 error toast
+            [SKIP_INTERCEPTOR_HEADER]: ['500'],
+          }),
+          retry: false,
+        }))
+      : [],
   });
   const [hasConfigNames, hasConfigNamesOp] = useListState<string>();
   const pluginInfoMap = useMap<string, PluginInfo>();
+  const isLoading =
+    pluginsListQuery.isPending ||
+    metadataQueries.some((query) => query.isPending);
 
   useDeepCompareEffect(() => {
+    if (isLoading) return;
+    // clear the list first
+    hasConfigNamesOp.setState([]);
     for (const [index, pluginName] of names.entries()) {
-      const metadataQuery = metadataQueries[index];
+      const req = metadataQueries[index];
       const info = {
         name: pluginName,
-        config: metadataQuery.isSuccess ? metadataQuery.data.value : {},
+        config: req.isSuccess ? req.data?.value : {},
         schema: originObj[pluginName].metadata_schema as object,
       };
       pluginInfoMap.set(pluginName, info);
-      if (metadataQuery.isSuccess) {
+      if (req.isSuccess) {
         hasConfigNamesOp.append(pluginName);
       }
     }
   }, [metadataQueries, names]);
 
   return {
-    isLoading: pluginsListQuery.isPending,
+    isLoading,
     isError: pluginsListQuery.isError,
     error: pluginsListQuery.error,
     hasConfigNames,
     pluginInfoMap,
-    isMetadataLoading: metadataQueries.some((query) => query.isPending),
     allPluginNames: names,
     originalMetadataQueries: metadataQueries,
     refetch: () => {

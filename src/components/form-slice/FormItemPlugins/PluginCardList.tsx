@@ -51,6 +51,7 @@ type OptionProps = Pick<
 };
 const Option = observer((props: OptionProps) => {
   const { mode, name, onAdd, onEdit, onDelete, onView } = props;
+
   return (
     <Combobox.Option key={name} value={name} p={0}>
       <PluginCard
@@ -94,11 +95,6 @@ const PluginCardListCore = (props: PluginCardListProps) => {
     search: search,
     plugins: plugins,
     mode: mode,
-    viewPlugin: '',
-    viewOpened: false,
-    setViewOpened(opened: boolean) {
-      this.viewOpened = opened;
-    },
     get list() {
       const arr = !this.search
         ? this.plugins
