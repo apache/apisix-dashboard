@@ -11,12 +11,12 @@ import { observer } from 'mobx-react-lite';
 
 export type SelectPluginsDrawerProps = Pick<PluginCardListProps, 'plugins'> &
   Pick<PluginEditorDrawerProps, 'schema'> & {
-    setCurPlugin: (name: string) => void;
+    onAdd: (name: string) => void;
     opened: boolean;
     setOpened: (open: boolean) => void;
   };
 export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
-  const { plugins, setCurPlugin, opened, setOpened } = props;
+  const { plugins, onAdd, opened, setOpened } = props;
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
 
@@ -41,7 +41,7 @@ export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
           cols={2}
           h="80vh"
           search={search}
-          onAdd={setCurPlugin}
+          onAdd={onAdd}
           plugins={plugins}
         />
       </Drawer>

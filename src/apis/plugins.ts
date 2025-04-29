@@ -75,7 +75,9 @@ export const getPluginSchemaQueryOptions = (
     queryKey: ['plugin-schema', name],
     queryFn: name
       ? () =>
-          req.get<unknown, A6Type['RespPluginSchema']>(`${API_PLUGINS}/${name}`)
+          req
+            .get<unknown, A6Type['RespPluginSchema']>(`${API_PLUGINS}/${name}`)
+            .then((v) => v.data)
       : skipToken,
     enabled,
   });

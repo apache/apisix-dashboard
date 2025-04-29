@@ -90,6 +90,10 @@ const FormItemPluginsCore = <T extends FieldValues>(
     setSelectPluginsOpened(val: boolean) {
       this.selectPluginsOpened = val;
     },
+    on(mode: PluginCardProps['mode'], name: string) {
+      this.setCurPlugin(name);
+      this.mode = mode;
+    },
   }));
 
   const getSchemaReq = useQuery(
@@ -113,7 +117,7 @@ const FormItemPluginsCore = <T extends FieldValues>(
           <SelectPluginsDrawer
             plugins={pluginsOb.unSelected}
             opened={pluginsOb.selectPluginsOpened}
-            setCurPlugin={pluginsOb.setCurPlugin}
+            onAdd={(name) => pluginsOb.on('add', name)}
             setOpened={pluginsOb.setSelectPluginsOpened}
           />
         )}
@@ -125,12 +129,12 @@ const FormItemPluginsCore = <T extends FieldValues>(
         search={pluginsOb.search}
         plugins={pluginsOb.selected}
         onDelete={pluginsOb.delete}
-        onView={pluginsOb.setCurPlugin}
-        onEdit={pluginsOb.setCurPlugin}
+        onView={(name) => pluginsOb.on('view', name)}
+        onEdit={(name) => pluginsOb.on('edit', name)}
       />
       <PluginEditorDrawer
         mode={isView ? 'view' : 'edit'}
-        schema={getSchemaReq.data?.data}
+        schema={getSchemaReq.data}
         opened={pluginsOb.editorOpened}
         onClose={pluginsOb.closeEditor}
         plugin={pluginsOb.curPlugin}

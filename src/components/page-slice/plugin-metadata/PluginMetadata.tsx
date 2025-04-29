@@ -98,6 +98,10 @@ export const PluginMetadata = observer(() => {
     setSelectPluginsOpened(val: boolean) {
       this.selectPluginsOpened = val;
     },
+    on(mode: PluginCardProps['mode'], name: string) {
+      this.setCurPlugin(name);
+      this.mode = mode;
+    },
   }));
 
   const { pluginInfoMap, hasConfigNames, isLoading } = getMetadataListReq;
@@ -116,7 +120,7 @@ export const PluginMetadata = observer(() => {
         />
         <SelectPluginsDrawer
           plugins={pluginsOb.unSelected}
-          setCurPlugin={pluginsOb.setCurPlugin}
+          onAdd={(name) => pluginsOb.on('add', name)}
           opened={pluginsOb.selectPluginsOpened}
           setOpened={pluginsOb.setSelectPluginsOpened}
         />
@@ -128,8 +132,7 @@ export const PluginMetadata = observer(() => {
         search={pluginsOb.search}
         plugins={pluginsOb.selected}
         onDelete={pluginsOb.delete}
-        onView={pluginsOb.setCurPlugin}
-        onEdit={pluginsOb.setCurPlugin}
+        onAdd={(name) => pluginsOb.on('edit', name)}
       />
       <PluginEditorDrawer
         mode={pluginsOb.mode}
