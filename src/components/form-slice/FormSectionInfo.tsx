@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import type { A6Type } from '@/types/schema/apisix';
 import { FormItemTextInput } from '../form/TextInput';
 import { FormSection } from './FormSection';
@@ -7,10 +7,10 @@ import { FormDisplayDate } from './FormDisplayDate';
 import { Divider } from '@mantine/core';
 
 const DisplayDate = () => {
-  const { getValues } = useFormContext<A6Type['Info']>();
+  const { control } = useFormContext<A6Type['Info']>();
   const { t } = useTranslation();
-  const createTime = getValues('create_time');
-  const updateTime = getValues('update_time');
+  const createTime = useWatch({ control, name: 'create_time' });
+  const updateTime = useWatch({ control, name: 'update_time' });
   return (
     <>
       <Divider my="lg" />

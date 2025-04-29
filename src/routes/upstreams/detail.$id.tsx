@@ -1,6 +1,6 @@
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -11,11 +11,12 @@ import { Skeleton, Button, Group } from '@mantine/core';
 import { FormSectionInfo } from '@/components/form-slice/FormSectionInfo';
 import { getUpstreamReq, putUpstreamReq } from '@/apis/upstreams';
 import type { A6Type } from '@/types/schema/apisix';
-import { useBoolean, useDeepCompareEffect } from 'react-use';
+import { useBoolean } from 'react-use';
 import { notifications } from '@mantine/notifications';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
 import { pipeProduce } from '@/utils/producer';
+import { useEffect } from 'react';
 
 type Props = {
   readOnly: boolean;
@@ -26,10 +27,10 @@ const UpstreamDetailForm = (props: Props & Pick<A6Type['Upstream'], 'id'>) => {
   const { id, readOnly, setReadOnly } = props;
   const { t } = useTranslation();
   const {
-    data: { value: upstreamData } = { value: undefined },
+    data: { value: upstreamData },
     isLoading,
     refetch,
-  } = useQuery(getUpstreamReq(id));
+  } = useSuspenseQuery(getUpstreamReq(id));
 
   const form = useForm({
     resolver: zodResolver(FormPartUpstreamSchema),
@@ -50,8 +51,7 @@ const UpstreamDetailForm = (props: Props & Pick<A6Type['Upstream'], 'id'>) => {
     },
   });
 
-  // Update form values when data is loaded
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     if (upstreamData && !isLoading) {
       form.reset(produceToUpstreamForm(upstreamData));
     }
