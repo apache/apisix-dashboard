@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
-import { type A6Type } from '@/types/schema/apisix';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { req } from '@/config/req';
 import { useQuery } from '@tanstack/react-query';
-import { API_UPSTREAMS } from '@/config/constant';
 import PageHeader from '@/components/page/PageHeader';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -18,22 +15,17 @@ import { DevTool } from '@hookform/devtools';
 import { upstreamdefaultValues } from '@/components/form-slice/FormPartUpstream/config';
 import { Skeleton } from '@mantine/core';
 import { FormSectionInfo } from '@/components/form-slice/FormSectionInfo';
+import { getUpstreamReq } from '@/apis/upstreams';
+import type { A6Type } from '@/types/schema/apisix';
 
-export const Route = createFileRoute('/upstreams/detail/$upstreamId')({
+export const Route = createFileRoute('/upstreams/detail/$id')({
   component: RouteComponent,
 });
 
-const UpstreamDetailForm = ({ upstreamId }: { upstreamId: string }) => {
+const UpstreamDetailForm = (props: Pick<A6Type['Upstream'], 'id'>) => {
+  const { id } = props;
   // Fetch the upstream details
-  const { data: upstreamData, isLoading } = useQuery({
-    queryKey: ['upstream', upstreamId],
-    queryFn: () =>
-      req
-        .get<unknown, A6Type['RespUpstreamItem']>(
-          `${API_UPSTREAMS}/${upstreamId}`
-        )
-        .then((v) => v),
-  });
+  const { data: upstreamData, isLoading } = useQuery(getUpstreamReq(id));
 
   const form = useForm<FormPartUpstreamType>({
     resolver: zodResolver(FormPartUpstreamSchema),
@@ -68,12 +60,12 @@ const UpstreamDetailForm = ({ upstreamId }: { upstreamId: string }) => {
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { upstreamId } = useParams({ from: '/upstreams/detail/$upstreamId' });
+  const { id } = useParams({ from: '/upstreams/detail/$id' });
 
   return (
     <>
       <PageHeader title={t('upstreams.detail.title')} />
-      <UpstreamDetailForm upstreamId={upstreamId} />
+      <UpstreamDetailForm id={id} />
     </>
   );
 }

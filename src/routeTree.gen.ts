@@ -24,7 +24,7 @@ import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as RouteAddImport } from './routes/route/add'
 import { Route as ProtosAddImport } from './routes/protos/add'
 import { Route as GlobalRulesAddImport } from './routes/global-rules/add'
-import { Route as UpstreamsDetailUpstreamIdImport } from './routes/upstreams/detail.$upstreamId'
+import { Route as UpstreamsDetailIdImport } from './routes/upstreams/detail.$id'
 import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
 import { Route as GlobalRulesDetailIdImport } from './routes/global-rules/detail.$id'
 
@@ -108,9 +108,9 @@ const GlobalRulesAddRoute = GlobalRulesAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const UpstreamsDetailUpstreamIdRoute = UpstreamsDetailUpstreamIdImport.update({
-  id: '/upstreams/detail/$upstreamId',
-  path: '/upstreams/detail/$upstreamId',
+const UpstreamsDetailIdRoute = UpstreamsDetailIdImport.update({
+  id: '/upstreams/detail/$id',
+  path: '/upstreams/detail/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -235,11 +235,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtosDetailIdImport
       parentRoute: typeof rootRoute
     }
-    '/upstreams/detail/$upstreamId': {
-      id: '/upstreams/detail/$upstreamId'
-      path: '/upstreams/detail/$upstreamId'
-      fullPath: '/upstreams/detail/$upstreamId'
-      preLoaderRoute: typeof UpstreamsDetailUpstreamIdImport
+    '/upstreams/detail/$id': {
+      id: '/upstreams/detail/$id'
+      path: '/upstreams/detail/$id'
+      fullPath: '/upstreams/detail/$id'
+      preLoaderRoute: typeof UpstreamsDetailIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -263,7 +263,7 @@ export interface FileRoutesByFullPath {
   '/upstreams': typeof UpstreamsIndexRoute
   '/global-rules/detail/$id': typeof GlobalRulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
-  '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
+  '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -282,7 +282,7 @@ export interface FileRoutesByTo {
   '/upstreams': typeof UpstreamsIndexRoute
   '/global-rules/detail/$id': typeof GlobalRulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
-  '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
+  '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
 
 export interface FileRoutesById {
@@ -302,7 +302,7 @@ export interface FileRoutesById {
   '/upstreams/': typeof UpstreamsIndexRoute
   '/global-rules/detail/$id': typeof GlobalRulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
-  '/upstreams/detail/$upstreamId': typeof UpstreamsDetailUpstreamIdRoute
+  '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
 
 export interface FileRouteTypes {
@@ -323,7 +323,7 @@ export interface FileRouteTypes {
     | '/upstreams'
     | '/global-rules/detail/$id'
     | '/protos/detail/$id'
-    | '/upstreams/detail/$upstreamId'
+    | '/upstreams/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -341,7 +341,7 @@ export interface FileRouteTypes {
     | '/upstreams'
     | '/global-rules/detail/$id'
     | '/protos/detail/$id'
-    | '/upstreams/detail/$upstreamId'
+    | '/upstreams/detail/$id'
   id:
     | '__root__'
     | '/'
@@ -359,7 +359,7 @@ export interface FileRouteTypes {
     | '/upstreams/'
     | '/global-rules/detail/$id'
     | '/protos/detail/$id'
-    | '/upstreams/detail/$upstreamId'
+    | '/upstreams/detail/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -379,7 +379,7 @@ export interface RootRouteChildren {
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
   GlobalRulesDetailIdRoute: typeof GlobalRulesDetailIdRoute
   ProtosDetailIdRoute: typeof ProtosDetailIdRoute
-  UpstreamsDetailUpstreamIdRoute: typeof UpstreamsDetailUpstreamIdRoute
+  UpstreamsDetailIdRoute: typeof UpstreamsDetailIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -398,7 +398,7 @@ const rootRouteChildren: RootRouteChildren = {
   UpstreamsIndexRoute: UpstreamsIndexRoute,
   GlobalRulesDetailIdRoute: GlobalRulesDetailIdRoute,
   ProtosDetailIdRoute: ProtosDetailIdRoute,
-  UpstreamsDetailUpstreamIdRoute: UpstreamsDetailUpstreamIdRoute,
+  UpstreamsDetailIdRoute: UpstreamsDetailIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -426,7 +426,7 @@ export const routeTree = rootRoute
         "/upstreams/",
         "/global-rules/detail/$id",
         "/protos/detail/$id",
-        "/upstreams/detail/$upstreamId"
+        "/upstreams/detail/$id"
       ]
     },
     "/": {
@@ -474,8 +474,8 @@ export const routeTree = rootRoute
     "/protos/detail/$id": {
       "filePath": "protos/detail.$id.tsx"
     },
-    "/upstreams/detail/$upstreamId": {
-      "filePath": "upstreams/detail.$upstreamId.tsx"
+    "/upstreams/detail/$id": {
+      "filePath": "upstreams/detail.$id.tsx"
     }
   }
 }

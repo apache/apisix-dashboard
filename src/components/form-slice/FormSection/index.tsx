@@ -77,6 +77,7 @@ export const FormTOCBox = (props: FormTOCBoxProps) => {
       style={{ paddingInlineEnd: '10%', position: 'relative' }}
     >
       <TableOfContents
+        reinitializeRef={reinitializeRef}
         variant="light"
         color="blue"
         size="sm"
