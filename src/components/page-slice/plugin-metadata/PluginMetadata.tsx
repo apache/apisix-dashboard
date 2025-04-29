@@ -132,7 +132,7 @@ export const PluginMetadata = observer(() => {
         search={pluginsOb.search}
         plugins={pluginsOb.selected}
         onDelete={pluginsOb.delete}
-        onAdd={(name) => pluginsOb.on('edit', name)}
+        onEdit={(name) => pluginsOb.on('edit', name)}
       />
       <PluginEditorDrawer
         mode={pluginsOb.mode}
