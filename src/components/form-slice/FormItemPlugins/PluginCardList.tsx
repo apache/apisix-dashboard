@@ -51,7 +51,6 @@ type OptionProps = Pick<
 };
 const Option = observer((props: OptionProps) => {
   const { mode, name, onAdd, onEdit, onDelete, onView } = props;
-
   return (
     <Combobox.Option key={name} value={name} p={0}>
       <PluginCard
