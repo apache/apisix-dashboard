@@ -41,7 +41,7 @@ const UpstreamPassHost = z.union([
 
 const UpstreamNode = z.object({
   host: z.string().min(1),
-  port: z.number().int().gt(0).lte(65535),
+  port: z.number().int().gte(1).lte(65535),
   weight: z.number().int(),
   priority: z.number().int().optional(),
 });
@@ -55,7 +55,7 @@ const UpstreamNodeListOrObj = z.union([UpstreamNodes, UpstreamNodeObj]);
 const UpstreamDiscovery = z.object({
   discovery_type: z.string().optional(),
   service_name: z.string().optional(),
-  discovery_args: z.string().optional(),
+  discovery_args: z.object({}).optional(),
 });
 
 const UpstreamTimeout = z.object({
@@ -106,11 +106,11 @@ const UpstreamHealthCheckActive = z.object({
   type: UpstreamHealthCheckActiveType.optional(),
   timeout: z.number().optional(),
   concurrency: z.number().optional(),
-  host: z.string(),
-  port: z.number(),
-  http_path: z.string(),
-  https_verify_certificate: z.boolean(),
-  http_request_headers: z.array(z.string()),
+  host: z.string().optional(),
+  port: z.number().optional(),
+  http_path: z.string().optional(),
+  https_verify_certificate: z.boolean().optional(),
+  http_request_headers: z.array(z.string()).optional(),
   healthy: UpstreamHealthCheckActiveHealthy.partial(),
   unhealthy: UpstreamHealthCheckActiveUnhealthy.partial(),
 });
@@ -118,8 +118,8 @@ const UpstreamHealthCheckActive = z.object({
 const UpstreamHealthCheckPassiveType = UpstreamHealthCheckActiveType;
 const UpstreamHealthCheckPassive = z.object({
   type: UpstreamHealthCheckActiveType.optional(),
-  healthy: UpstreamHealthCheckPassiveHealthy,
-  unhealthy: UpstreamHealthCheckPassiveUnhealthy,
+  healthy: UpstreamHealthCheckPassiveHealthy.partial().optional(),
+  unhealthy: UpstreamHealthCheckPassiveUnhealthy.partial().optional(),
 });
 
 const UpstreamHealthCheck = z.object({

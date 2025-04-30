@@ -69,18 +69,19 @@ export const FormItemLabels = <T extends FieldValues>(
 
   return (
     <>
-      <input name={fName} style={{ display: 'none' }} />
+      <input name={fName} type="hidden" />
       <TagsInput
         acceptValueOnBlur
         clearable
         value={values}
         onSearchChange={handleSearchChange}
-        onChange={handleChange}
         splitChars={[',']}
         label={t('form.basic.labels.title')}
         placeholder={t('form.basic.labels.placeholder')}
         error={internalError || fieldState.error?.message}
         {...restField}
+        {...restProps}
+        onChange={handleChange}
       />
     </>
   );

@@ -34,12 +34,13 @@ export const produceRmDoubleUnderscoreKeys = produce((draft) => {
 
 type PipeParams = Parameters<typeof pipe>;
 type R = PipeParams extends [PipeParams[0], ...infer R] ? R : never;
-export const pipeProduce = <T extends object>(...funcs: R) => {
-  return produce((draft: T) =>
-    pipe(
-      ...funcs,
-      produceRmDoubleUnderscoreKeys,
-      produceDeepCleanEmptyKeys()
-    )(draft)
-  );
+export const pipeProduce = (...funcs: R) => {
+  return <T>(val: T) =>
+    produce(val, (draft) =>
+      pipe(
+        ...funcs,
+        produceRmDoubleUnderscoreKeys,
+        produceDeepCleanEmptyKeys()
+      )(draft)
+    ) as T;
 };

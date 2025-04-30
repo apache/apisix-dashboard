@@ -233,10 +233,15 @@
   },
   "upstreams": {
     "add": {
+      "success": "Add Upstream Successfully",
       "title": "Add Upstream"
     },
     "detail": {
       "title": "Upstream Detail"
+    },
+    "edit": {
+      "success": "Edit Upstream Successfully",
+      "title": "Edit Upstream"
     },
     "title": "Upstreams"
   },

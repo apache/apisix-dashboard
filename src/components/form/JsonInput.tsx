@@ -15,7 +15,10 @@ export type FormItemJsonInputProps<T extends FieldValues> =
 export const FormItemJsonInput = <T extends FieldValues>(
   props: FormItemJsonInputProps<T>
 ) => {
-  const { controllerProps, restProps } = genControllerProps(props, '');
+  const {
+    controllerProps,
+    restProps: { toObject, ...restProps },
+  } = genControllerProps(props, '');
   const {
     field: { value, onChange: fOnChange, ...restField },
     fieldState,
@@ -24,11 +27,20 @@ export const FormItemJsonInput = <T extends FieldValues>(
     <JsonInput
       value={typeof value === 'object' ? JSON.stringify(value) : value}
       error={fieldState.error?.message}
-      onChange={(e) => {
-        const res = props.toObject ? JSON.parse(e) : e;
+      onChange={(val) => {
+        let res = val;
+        if (toObject) {
+          try {
+            res = JSON.parse(val);
+          } catch {
+            res = val;
+          }
+        }
         fOnChange(res);
-        restProps.onChange?.(res);
+        restProps.onChange?.(val);
       }}
+      formatOnBlur
+      autosize
       {...restField}
       {...restProps}
     />

@@ -11,7 +11,6 @@ const DisplayDate = () => {
   const { t } = useTranslation();
   const createTime = useWatch({ control, name: 'create_time' });
   const updateTime = useWatch({ control, name: 'update_time' });
-
   return (
     <>
       <Divider my="lg" />

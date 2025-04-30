@@ -6,13 +6,22 @@ import {
 } from 'react-hook-form';
 import { genControllerProps } from './util';
 
-export type FormItemTagsInputProps<T extends FieldValues> =
-  UseControllerProps<T> & TagsInputProps;
+export type FormItemTagsInputProps<
+  T extends FieldValues,
+  R
+> = UseControllerProps<T> &
+  TagsInputProps & {
+    from?: (v: R) => string;
+    to?: (v: string) => R;
+  };
 
-export const FormItemTagsInput = <T extends FieldValues>(
-  props: FormItemTagsInputProps<T>
+export const FormItemTagsInput = <T extends FieldValues, R>(
+  props: FormItemTagsInputProps<T, R>
 ) => {
-  const { controllerProps, restProps } = genControllerProps(props, []);
+  const {
+    controllerProps,
+    restProps: { from, to, ...restProps },
+  } = genControllerProps(props, []);
 
   const {
     field: { value, onChange: fOnChange, ...restField },
@@ -20,10 +29,11 @@ export const FormItemTagsInput = <T extends FieldValues>(
   } = useController<T>(controllerProps);
   return (
     <TagsInput
-      value={value}
+      value={from ? value.map(from) : value}
       error={fieldState.error?.message}
       onChange={(value) => {
-        fOnChange(value);
+        const val = to ? value.map(to) : value;
+        fOnChange(val);
         restProps?.onChange?.(value);
       }}
       comboboxProps={{ shadow: 'md' }}

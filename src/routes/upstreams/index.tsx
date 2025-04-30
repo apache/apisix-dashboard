@@ -46,8 +46,8 @@ const DetailPageBtn = (props: DetailPageBtnProps) => {
       <RouteLinkBtn
         size="xs"
         variant="transparent"
-        to={router.routesById['/upstreams/detail/$upstreamId'].to}
-        params={{ upstreamId: record.value.id }}
+        to={router.routesById['/upstreams/detail/$id'].to}
+        params={{ id: record.value.id }}
       >
         {t('view')}
       </RouteLinkBtn>
@@ -59,10 +59,9 @@ function RouteComponent() {
   const { t } = useTranslation();
 
   // Use the pagination hook
-  const { pagination, handlePageChange, refreshData, updateTotal } =
-    usePagination({
-      queryKey: 'upstreams',
-    });
+  const { pagination, handlePageChange, updateTotal } = usePagination({
+    queryKey: 'upstreams',
+  });
 
   const upstreamQuery = useSuspenseQuery(genUpstreamsQueryOptions(pagination));
   const { data, isLoading } = upstreamQuery;
@@ -132,9 +131,7 @@ function RouteComponent() {
           rowKey="id"
           loading={isLoading}
           search={false}
-          options={{
-            reload: refreshData,
-          }}
+          options={false}
           pagination={{
             current: pagination.page,
             pageSize: pagination.pageSize,

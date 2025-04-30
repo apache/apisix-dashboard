@@ -3,24 +3,22 @@ import { zGetDefault } from '@/utils/zod';
 import {
   EditableProTable,
   nanoid,
-  type ActionType,
-  type EditableFormInstance,
   type ProColumns,
 } from '@ant-design/pro-components';
-import { Button, Input, type InputWrapperProps } from '@mantine/core';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { Button, InputWrapper, type InputWrapperProps } from '@mantine/core';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { range } from 'rambdax';
+import { equals, isNil, range } from 'rambdax';
 import type { ZodObject, ZodRawShape } from 'zod';
-import { useListState } from '@mantine/hooks';
 import {
   useController,
-  useFormContext,
   type FieldValues,
   type UseControllerProps,
 } from 'react-hook-form';
 import { genControllerProps } from '../../form/util';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import { observer, useLocalObservable } from 'mobx-react-lite';
+import { toJS } from 'mobx';
 
 type DataSource = A6Type['UpstreamNode'] & A6Type['ID'];
 
@@ -52,12 +50,12 @@ const genRecord = () => {
   };
 };
 
-const parseToUpstreamNodes = (data: A6Type['UpstreamNodeObj']) => {
+const objToUpstreamNodes = (data: A6Type['UpstreamNodeObj']) => {
   return Object.entries(data).map(([key, val]) => {
     const [host, port] = key.split(':');
     const d: A6Type['UpstreamNode'] = {
       host,
-      port: Number(port) || 0,
+      port: Number(port) || 1,
       weight: val,
       priority: 0,
     };
@@ -66,20 +64,21 @@ const parseToUpstreamNodes = (data: A6Type['UpstreamNodeObj']) => {
 };
 
 const parseToDataSource = (data: A6Type['UpstreamNodeListOrObj']) => {
-  const val =
-    typeof data === 'object'
-      ? parseToUpstreamNodes(data as A6Type['UpstreamNodeObj'])
-      : (data as A6Type['UpstreamNodes']) ?? [];
+  let val: A6Type['UpstreamNodes'];
+  if (isNil(data)) val = [];
+  else if (Array.isArray(data)) val = data as A6Type['UpstreamNodes'];
+  else val = objToUpstreamNodes(data as A6Type['UpstreamNodeObj']);
+
   return val.map((item) => {
     const d: DataSource = {
+      id: `${item.host}-${item.port}-${item.weight}-${item.priority}`,
       ...item,
-      id: genId(),
     };
     return d;
   });
 };
 
-const parseFromDataSourceToUpstreamNodes = (data: DataSource[] | undefined) => {
+const parseToUpstreamNodes = (data: DataSource[] | undefined) => {
   if (!data?.length) return [];
   return data.map((item) => {
     const d: A6Type['UpstreamNode'] = {
@@ -91,42 +90,38 @@ const parseFromDataSourceToUpstreamNodes = (data: DataSource[] | undefined) => {
     return d;
   });
 };
-export type FormItemNodes<T extends FieldValues> = UseControllerProps<T> & {
-  onChange?: (value: A6Type['UpstreamNode'][]) => void;
-  defaultValue?: A6Type['UpstreamNode'][];
-} & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
 
-export const FormItemNodes = <T extends FieldValues>(
-  props: FormItemNodes<T>
-) => {
-  const { controllerProps, restProps } = genControllerProps(props);
-  const { control } = useFormContext<T>();
-  const {
-    field: { value, onChange: fOnChange, name: fName, ...restField },
-    fieldState,
-  } = useController<T>({ ...controllerProps, control });
-  const { t } = useTranslation();
-  const editorFormRef = useRef<EditableFormInstance<DataSource>>(null);
-  const actionRef = useRef<ActionType | undefined>(null);
-  const [values, handle] = useListState<DataSource>(parseToDataSource(value));
-  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
-    values.map((item) => item.id)
-  );
-
-  const genProps = useCallback((field: keyof A6Type['UpstreamNode']) => {
-    return {
-      onBlur: () => {
-        editorFormRef.current?.validateFields();
+const genProps = (field: keyof A6Type['UpstreamNode']) => {
+  return {
+    rules: [
+      {
+        validator: (_: unknown, value: unknown) =>
+          zValidateField(A6.UpstreamNode, field, value),
       },
-      rules: [
-        {
-          validator: (_: unknown, value: unknown) =>
-            zValidateField(A6.UpstreamNode, field, value),
-        },
-      ],
-    };
-  }, []);
+    ],
+  };
+};
 
+export type FormItemNodesProps<T extends FieldValues> =
+  UseControllerProps<T> & {
+    onChange?: (value: A6Type['UpstreamNode'][]) => void;
+    defaultValue?: A6Type['UpstreamNode'][];
+  } & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
+
+const ObEditableProTable = observer(EditableProTable);
+
+const FormItemNodesCore = <T extends FieldValues>(
+  props: FormItemNodesProps<T>
+) => {
+  const { controllerProps, restProps } = useMemo(
+    () => genControllerProps(props),
+    [props]
+  );
+  const { t } = useTranslation();
+  const {
+    field: { value, onChange: fOnChange, name: fName, disabled },
+    fieldState,
+  } = useController<T>(controllerProps);
   const columns = useMemo<ProColumns<DataSource>[]>(
     () => [
       {
@@ -163,86 +158,64 @@ export const FormItemNodes = <T extends FieldValues>(
         title: t('form.upstream.nodes.action.title'),
         valueType: 'option',
         width: 100,
-        render: (_n, r, _idx, action) => {
-          return (
-            <Button
-              key="edit"
-              variant="transparent"
-              size="compact-xs"
-              px={0}
-              onClick={() => {
-                // action?.addEditRecord
-                action?.startEditable?.(r.id);
-              }}
-            >
-              {t('form.btn.edit')}
-            </Button>
-          );
-        },
+        hidden: disabled,
+        render: () => null,
       },
     ],
-    [genProps, t]
+    [disabled, t]
   );
   const { label, required, withAsterisk } = props;
+  const ob = useLocalObservable(() => ({
+    values: [] as DataSource[],
+    setValues(data: DataSource[]) {
+      if (equals(toJS(this.values), data)) return;
+      this.values = data;
+    },
+    get editableKeys() {
+      return disabled ? [] : ob.values.map((item) => item.id);
+    },
+  }));
+  useEffect(() => {
+    ob.setValues(parseToDataSource(value));
+  }, [ob, value]);
+
   return (
-    <Input.Wrapper
+    <InputWrapper
       error={fieldState.error?.message}
       label={label}
       required={required}
       withAsterisk={withAsterisk}
+      onBlur={() => {
+        const vals = parseToUpstreamNodes(ob.values);
+        fOnChange?.(vals);
+        restProps.onChange?.(vals);
+      }}
     >
-      <input name={fName} style={{ display: 'none' }} />
+      <input name={fName} type="hidden" />
       <AntdConfigProvider>
-        <EditableProTable<DataSource>
+        <ObEditableProTable<DataSource>
           defaultSize="small"
           rowKey="id"
           bordered
-          value={values}
-          onValuesChange={(d) => {
-            const newVals = parseFromDataSourceToUpstreamNodes(d);
-            fOnChange?.(newVals);
-            restProps.onChange?.(newVals);
-          }}
+          controlled={false}
+          value={ob.values}
           recordCreatorProps={false}
-          editableFormRef={editorFormRef}
-          actionRef={actionRef}
           columns={columns}
           editable={{
             type: 'multiple',
-            editableKeys: editableKeys,
-            onChange: setEditableRowKeys,
-            actionRender: (row) => {
-              const idx = values.findIndex((item) => item.id === row.id);
+            editableKeys: ob.editableKeys,
+            onValuesChange(_, dataSource) {
+              ob.setValues(dataSource);
+            },
+            actionRender: (row, config) => {
               return [
-                <Button
-                  key="save"
-                  variant="transparent"
-                  size="compact-xs"
-                  px={0}
-                  onClick={async () => {
-                    await editorFormRef.current?.validateFields();
-                    const d = {
-                      ...editorFormRef.current?.getRowData?.(row.id),
-                      id: row.id,
-                    } as DataSource;
-                    if (idx > -1) {
-                      handle.setItem(idx, d);
-                    } else {
-                      handle.append(d);
-                    }
-                    await actionRef.current?.cancelEditable(row.id);
-                  }}
-                >
-                  {t('form.btn.save')}
-                </Button>,
                 <Button
                   key="delete"
                   variant="transparent"
                   size="compact-xs"
                   px={0}
-                  onClick={async () => {
-                    handle.remove(idx);
-                    await actionRef.current?.cancelEditable(row.id);
+                  onClick={() => {
+                    config.onDelete?.(row.id, row);
                   }}
                 >
                   {t('form.btn.delete')}
@@ -250,7 +223,6 @@ export const FormItemNodes = <T extends FieldValues>(
               ];
             },
           }}
-          {...restField}
         />
       </AntdConfigProvider>
       <Button
@@ -262,12 +234,14 @@ export const FormItemNodes = <T extends FieldValues>(
         style={{ borderColor: 'whitesmoke' }}
         onClick={() => {
           const d = genRecord();
-          handle.append(d);
-          actionRef.current?.startEditable?.(d.id);
+          ob.values.push(d);
         }}
+        {...(disabled && { display: 'none' })}
       >
         {t('form.upstream.nodes.add')}
       </Button>
-    </Input.Wrapper>
+    </InputWrapper>
   );
 };
+
+export const FormItemNodes = observer(FormItemNodesCore);
