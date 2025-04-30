@@ -34,7 +34,7 @@ export type APISIXType = RawAPISIXType & {
   RespGlobalRuleDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['GlobalRule']>
   >;
-  RespPluginsList: AxiosResponse<string[]>;
+  RespPluginList: AxiosResponse<string[]>;
   RespPluginSchema: AxiosResponse<APISIXType['PluginSchema']>;
   RespPlugins: AxiosResponse<APISIXType['Plugins']>;
   RespPluginMetadataDetail: AxiosResponse<

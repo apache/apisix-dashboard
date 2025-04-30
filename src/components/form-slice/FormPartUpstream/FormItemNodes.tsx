@@ -102,10 +102,11 @@ const genProps = (field: keyof APISIXType['UpstreamNode']) => {
   };
 };
 
-export type FormItemNodesProps<T extends FieldValues> = UseControllerProps<T> & {
-  onChange?: (value: APISIXType['UpstreamNode'][]) => void;
-  defaultValue?: APISIXType['UpstreamNode'][];
-} & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
+export type FormItemNodesProps<T extends FieldValues> =
+  UseControllerProps<T> & {
+    onChange?: (value: APISIXType['UpstreamNode'][]) => void;
+    defaultValue?: APISIXType['UpstreamNode'][];
+  } & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
 
 const ObEditableProTable = observer(EditableProTable);
 
