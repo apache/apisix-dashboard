@@ -37,14 +37,12 @@ const RouteDetailForm = (props: Props) => {
     disabled: readOnly,
   });
 
-  // 将API数据加载到表单中
   useEffect(() => {
     if (routeData?.value && !isLoading) {
       form.reset(routeData.value);
     }
   }, [routeData, form, isLoading]);
 
-  // 处理表单提交和路由更新
   const putRoute = useMutation({
     mutationFn: putRouteReq,
     async onSuccess() {
