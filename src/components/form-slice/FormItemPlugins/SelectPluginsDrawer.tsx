@@ -14,9 +14,13 @@ export type SelectPluginsDrawerProps = Pick<PluginCardListProps, 'plugins'> &
     onAdd: (name: string) => void;
     opened: boolean;
     setOpened: (open: boolean) => void;
+    disabled?: boolean;
   };
+/**
+ * because we need keep the drawer order when using the Drawer.Stack, so we pass disabled to the btn
+ */
 export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
-  const { plugins, onAdd, opened, setOpened } = props;
+  const { plugins, onAdd, opened, setOpened, disabled = false } = props;
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
 
@@ -45,9 +49,11 @@ export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
           plugins={plugins}
         />
       </Drawer>
-      <Button ml={8} onClick={() => setOpened(true)}>
-        {t('form.plugins.selectPlugins.title')}
-      </Button>
+      {!disabled && (
+        <Button ml={8} onClick={() => setOpened(true)}>
+          {t('form.plugins.selectPlugins.title')}
+        </Button>
+      )}
     </>
   );
 };

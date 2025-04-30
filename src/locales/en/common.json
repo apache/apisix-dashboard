@@ -209,8 +209,8 @@
       "title": "Global Rule Detail"
     },
     "edit": {
-      "success": "Edit Plugin Global Rule Successfully",
-      "title": "Edit Plugin Global Rule"
+      "success": "Edit Global Rule Successfully",
+      "title": "Edit Global Rule"
     },
     "plugins": "Plugins",
     "title": "Global Rules"
