@@ -24,7 +24,7 @@ const PluginSchemaKeys = z.union([
   z.literal('metadata_schema'),
 ]);
 
-export const A6Plugins = {
+export const APISIXPlugins = {
   Plugin,
   Plugins,
   PluginsQuery,

@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { A6Common } from './common';
-import { A6Upstreams } from './upstreams';
-import { A6Plugins } from './plugins';
+import { APISIXCommon } from './common';
+import { APISIXUpstreams } from './upstreams';
+import { APISIXPlugins } from './plugins';
 
 const RouteStatus = z.union([z.literal(0), z.literal(1)]);
 
@@ -11,28 +11,28 @@ const Route = z
     uris: z.array(z.string()),
     host: z.string(),
     hosts: z.array(z.string()),
-    methods: z.array(A6Common.HttpMethod),
+    methods: z.array(APISIXCommon.HttpMethod),
     remote_addr: z.string(),
     remote_addrs: z.array(z.string()),
-    vars: A6Common.Expr,
+    vars: APISIXCommon.Expr,
     filter_func: z.string(),
     script: z.string(),
     script_id: z.string(),
-    plugins: A6Plugins.Plugins,
+    plugins: APISIXPlugins.Plugins,
     plugin_config_id: z.string(),
-    upstream: A6Upstreams.Upstream.partial().optional(),
+    upstream: APISIXUpstreams.Upstream,
     upstream_id: z.string(),
     service_id: z.string(),
-    timeout: A6Upstreams.UpstreamTimeout.partial(),
+    timeout: APISIXUpstreams.UpstreamTimeout.partial(),
     enable_websocket: z.boolean(),
     priority: z.number(),
     status: RouteStatus,
   })
   .partial()
-  .merge(A6Common.Basic)
-  .merge(A6Common.Info);
+  .merge(APISIXCommon.Basic)
+  .merge(APISIXCommon.Info);
 
-export const A6Routes = {
+export const APISIXRoutes = {
   Route,
   RouteStatus,
 };

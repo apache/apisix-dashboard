@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { A6Common } from './common';
+import { APISIXCommon } from './common';
 
 const UpstreamBalancer = z.union([
   z.literal('roundrobin'),
@@ -134,7 +134,7 @@ const UpstreamTls = z.object({
   verify: z.boolean().optional(),
 });
 
-const Upstream = A6Common.Basic.merge(A6Common.ID)
+const Upstream = APISIXCommon.Basic.merge(APISIXCommon.ID)
   .merge(UpstreamDiscovery)
   .merge(
     z.object({
@@ -154,7 +154,7 @@ const Upstream = A6Common.Basic.merge(A6Common.ID)
     })
   );
 
-export const A6Upstreams = {
+export const APISIXUpstreams = {
   Upstream,
   UpstreamBalancer,
   UpstreamHashOn,

@@ -1,4 +1,4 @@
-import { A6 } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 import { useTranslation } from 'react-i18next';
 
 import { FormItemNumberInput } from '@/components/form/NumberInput';
@@ -59,15 +59,15 @@ export const FormItemScheme = () => {
       control={control}
       name={np('scheme')}
       label={t('form.upstream.scheme')}
-      defaultValue={A6.UpstreamSchemeL7.options[0].value}
+      defaultValue={APISIX.UpstreamSchemeL7.options[0].value}
       data={[
         {
           group: 'L7',
-          items: A6.UpstreamSchemeL7.options.map((v) => v.value),
+          items: APISIX.UpstreamSchemeL7.options.map((v) => v.value),
         },
         {
           group: 'L4',
-          items: A6.UpstreamSchemeL4.options.map((v) => v.value),
+          items: APISIX.UpstreamSchemeL4.options.map((v) => v.value),
         },
       ]}
     />
@@ -84,15 +84,15 @@ export const FormSectionLoadbalancing = () => {
         control={control}
         name={np('type')}
         label={t('form.upstream.type')}
-        defaultValue={A6.UpstreamBalancer.options[0].value}
-        data={A6.UpstreamBalancer.options.map((v) => v.value)}
+        defaultValue={APISIX.UpstreamBalancer.options[0].value}
+        data={APISIX.UpstreamBalancer.options.map((v) => v.value)}
       />
       <FormItemSelect
         control={control}
         name={np('hash_on')}
         label={t('form.upstream.hashOn')}
-        defaultValue={A6.UpstreamHashOn.options[0].value}
-        data={A6.UpstreamHashOn.options.map((v) => v.value)}
+        defaultValue={APISIX.UpstreamHashOn.options[0].value}
+        data={APISIX.UpstreamHashOn.options.map((v) => v.value)}
         description={t('form.upstream.hashOnDesc')}
       />
       <FormItemTextInput
@@ -115,8 +115,8 @@ export const FormSectionPassHost = () => {
         control={control}
         name={np('pass_host')}
         label={t('form.upstream.passHost')}
-        defaultValue={A6.UpstreamPassHost.options[0].value}
-        data={A6.UpstreamPassHost.options.map((v) => v.value)}
+        defaultValue={APISIX.UpstreamPassHost.options[0].value}
+        data={APISIX.UpstreamPassHost.options.map((v) => v.value)}
       />
       <FormItemTextInput
         control={control}

@@ -2,7 +2,7 @@ import { queryClient } from '@/config/global';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
@@ -28,7 +28,7 @@ const RouteList = () => {
     }
   }, [data?.total, updateTotal]);
 
-  const columns = useMemo<ProColumns<A6Type['RespRouteItem']>[]>(() => {
+  const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
       {
         dataIndex: ['value', 'id'],

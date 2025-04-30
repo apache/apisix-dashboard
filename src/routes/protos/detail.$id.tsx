@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { A6, type A6Type } from '@/types/schema/apisix';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { req } from '@/config/req';
@@ -19,12 +19,12 @@ const ProtoDetailForm = ({ id }: { id: string }) => {
     queryKey: ['proto', id],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespProtoDetail']>(`${API_PROTOS}/${id}`)
+        .get<unknown, APISIXType['RespProtoDetail']>(`${API_PROTOS}/${id}`)
         .then((v) => v.data),
   });
 
-  const form = useForm<A6Type['Proto']>({
-    resolver: zodResolver(A6.Proto),
+  const form = useForm<APISIXType['Proto']>({
+    resolver: zodResolver(APISIX.Proto),
     shouldUnregister: true,
     mode: 'onChange',
     disabled: true,

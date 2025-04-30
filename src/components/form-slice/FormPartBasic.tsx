@@ -4,7 +4,7 @@ import { FormSection, type FormSectionProps } from './FormSection';
 import { FormItemTextInput } from '../form/TextInput';
 import { FormItemTextarea } from '../form/Textarea';
 import { useFormContext } from 'react-hook-form';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { useNamePrefix } from '@/utils/useNamePrefix';
 import type { PropsWithChildren } from 'react';
 
@@ -13,7 +13,7 @@ export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
 
 export const FormPartBasic = (props: FormPartBasicProps) => {
   const { children, ...restProps } = props;
-  const { control } = useFormContext<A6Type['Basic']>();
+  const { control } = useFormContext<APISIXType['Basic']>();
   const { t } = useTranslation();
   const np = useNamePrefix();
 

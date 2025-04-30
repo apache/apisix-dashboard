@@ -3,7 +3,7 @@ import { queryClient } from '@/config/global';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { API_GLOBAL_RULES } from '@/config/constant';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
@@ -24,7 +24,7 @@ const genGlobalRulesQueryOptions = (props: PageSearchType) => {
     queryKey: ['global_rules', page, pageSize],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespGlobalRuleList']>(API_GLOBAL_RULES, {
+        .get<unknown, APISIXType['RespGlobalRuleList']>(API_GLOBAL_RULES, {
           params: {
             page,
             page_size: pageSize,
@@ -35,7 +35,7 @@ const genGlobalRulesQueryOptions = (props: PageSearchType) => {
 };
 
 type DetailPageBtnProps = {
-  record: A6Type['RespGlobalRuleItem'];
+  record: APISIXType['RespGlobalRuleItem'];
 };
 const DetailPageBtn = (props: DetailPageBtnProps) => {
   const { record } = props;
@@ -72,7 +72,7 @@ function RouteComponent() {
   }, [data?.total, updateTotal]);
 
   const columns = useMemo<
-    ProColumns<A6Type['RespGlobalRuleList']['data']['list'][number]>[]
+    ProColumns<APISIXType['RespGlobalRuleList']['data']['list'][number]>[]
   >(() => {
     return [
       {

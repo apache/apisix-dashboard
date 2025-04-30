@@ -1,13 +1,13 @@
 import { z } from 'zod';
-import { A6Common } from './common';
+import { APISIXCommon } from './common';
 
 const Proto = z
   .object({
     content: z.string(),
   })
-  .merge(A6Common.Info);
+  .merge(APISIXCommon.Info);
 
-export const A6Protos = {
+export const APISIXProtos = {
   Proto,
   ProtoPost: Proto.omit({ id: true, create_time: true, update_time: true }),
 };

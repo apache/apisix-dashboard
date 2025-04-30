@@ -8,22 +8,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormPartUpstream } from '@/components/form-slice/FormPartUpstream';
 import { FormPartUpstreamSchema } from '@/components/form-slice/FormPartUpstream/schema';
 import { Skeleton, Button, Group } from '@mantine/core';
-import { FormSectionInfo } from '@/components/form-slice/FormSectionInfo';
 import { getUpstreamReq, putUpstreamReq } from '@/apis/upstreams';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { useBoolean } from 'react-use';
 import { notifications } from '@mantine/notifications';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
 import { pipeProduce } from '@/utils/producer';
 import { useEffect } from 'react';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 
 type Props = {
   readOnly: boolean;
   setReadOnly: (v: boolean) => void;
 };
 
-const UpstreamDetailForm = (props: Props & Pick<A6Type['Upstream'], 'id'>) => {
+const UpstreamDetailForm = (
+  props: Props & Pick<APISIXType['Upstream'], 'id'>
+) => {
   const { id, readOnly, setReadOnly } = props;
   const { t } = useTranslation();
   const {
@@ -69,7 +71,7 @@ const UpstreamDetailForm = (props: Props & Pick<A6Type['Upstream'], 'id'>) => {
             putUpstream.mutateAsync(pipeProduce()(d));
           })}
         >
-          <FormSectionInfo />
+          <FormSectionGeneral />
           <FormPartUpstream />
           {!readOnly && (
             <Group>
