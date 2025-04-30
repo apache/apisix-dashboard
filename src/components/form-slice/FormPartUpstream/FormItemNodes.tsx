@@ -166,18 +166,25 @@ const FormItemNodesCore = <T extends FieldValues>(
   );
   const { label, required, withAsterisk } = props;
   const ob = useLocalObservable(() => ({
+    disabled: false,
+    setDisabled(disabled: boolean | undefined) {
+      this.disabled = disabled || false;
+    },
     values: [] as DataSource[],
     setValues(data: DataSource[]) {
       if (equals(toJS(this.values), data)) return;
       this.values = data;
     },
     get editableKeys() {
-      return disabled ? [] : ob.values.map((item) => item.id);
+      return this.disabled ? [] : this.values.map((item) => item.id);
     },
   }));
   useEffect(() => {
     ob.setValues(parseToDataSource(value));
   }, [ob, value]);
+  useEffect(() => {
+    ob.setDisabled(disabled);
+  }, [disabled, ob]);
 
   return (
     <InputWrapper
