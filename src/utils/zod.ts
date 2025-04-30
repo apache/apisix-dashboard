@@ -1,6 +1,6 @@
 import { type RefinementCtx, z } from 'zod';
 import { init } from 'zod-empty';
-import { xor } from 'rambdax';
+import { memoize, xor } from 'rambdax';
 
 // ref: https://github.com/colinhacks/zod/issues/61#issuecomment-1741983149
 export const zOneOf =
@@ -31,4 +31,4 @@ export const zOneOf =
     return true;
   };
 
-export const zGetDefault = init;
+export const zGetDefault = memoize(init);

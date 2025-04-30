@@ -25,7 +25,7 @@ const Route = z
     service_id: z.string(),
     timeout: APISIXUpstreams.UpstreamTimeout.partial(),
     enable_websocket: z.boolean(),
-    priority: z.number(),
+    priority: z.number().default(0),
     status: RouteStatus,
   })
   .partial()
