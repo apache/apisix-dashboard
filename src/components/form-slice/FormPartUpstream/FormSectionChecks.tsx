@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { FormSection } from '../FormSection';
 import { FormItemSelect } from '@/components/form/Select';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { A6 } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 import { FormItemSwitch } from '@/components/form/Switch';
 import type { FormPartUpstreamType } from './schema';
 import { Text } from '@mantine/core';
@@ -24,9 +24,9 @@ const FormSectionChecksActive = () => {
       <FormItemSelect
         control={control}
         name="checks.active.type"
-        defaultValue={A6.UpstreamHealthCheckActiveType.options[0].value}
+        defaultValue={APISIX.UpstreamHealthCheckActiveType.options[0].value}
         label={t('form.upstream.checks.active.type')}
-        data={A6.UpstreamHealthCheckActiveType.options.map((v) => v.value)}
+        data={APISIX.UpstreamHealthCheckActiveType.options.map((v) => v.value)}
       />
       <FormItemNumberInput
         control={control}
@@ -137,9 +137,11 @@ const FormSectionChecksPassiveCore = () => {
         <FormItemSelect
           control={control}
           name="checks.passive.type"
-          defaultValue={A6.UpstreamHealthCheckPassiveType.options[0].value}
+          defaultValue={APISIX.UpstreamHealthCheckPassiveType.options[0].value}
           label={t('form.upstream.checks.passive.type')}
-          data={A6.UpstreamHealthCheckPassiveType.options.map((v) => v.value)}
+          data={APISIX.UpstreamHealthCheckPassiveType.options.map(
+            (v) => v.value
+          )}
         />
 
         <FormSection legend={t('form.upstream.checks.passive.healthy.title')}>

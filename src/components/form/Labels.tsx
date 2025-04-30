@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { useTranslation } from 'react-i18next';
 import { useListState } from '@mantine/hooks';
 import { TagsInput, type TagsInputProps } from '@mantine/core';
@@ -13,8 +13,8 @@ import { genControllerProps } from './util';
 
 export type FormItemLabels<T extends FieldValues> = UseControllerProps<T> &
   Omit<TagsInputProps, 'value' | 'onChange' | 'onBlur' | 'defaultValue'> & {
-    onChange?: (value: A6Type['Labels']) => void;
-    defaultValue?: A6Type['Labels'];
+    onChange?: (value: APISIXType['Labels']) => void;
+    defaultValue?: APISIXType['Labels'];
   };
 
 export const FormItemLabels = <T extends FieldValues>(
@@ -50,7 +50,7 @@ export const FormItemLabels = <T extends FieldValues>(
 
   const handleChange = useCallback(
     (vals: string[]) => {
-      const obj: A6Type['Labels'] = {};
+      const obj: APISIXType['Labels'] = {};
       for (const val of vals) {
         const tuple = val.split(':');
         if (tuple.length !== 2) {

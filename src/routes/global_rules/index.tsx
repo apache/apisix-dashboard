@@ -3,7 +3,7 @@ import { queryClient } from '@/config/global';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { API_GLOBAL_RULES } from '@/config/constant';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
@@ -21,10 +21,10 @@ import {
 const genGlobalRulesQueryOptions = (props: PageSearchType) => {
   const { page, pageSize } = props;
   return queryOptions({
-    queryKey: ['global-rules', page, pageSize],
+    queryKey: ['global_rules', page, pageSize],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespGlobalRuleList']>(API_GLOBAL_RULES, {
+        .get<unknown, APISIXType['RespGlobalRuleList']>(API_GLOBAL_RULES, {
           params: {
             page,
             page_size: pageSize,
@@ -35,7 +35,7 @@ const genGlobalRulesQueryOptions = (props: PageSearchType) => {
 };
 
 type DetailPageBtnProps = {
-  record: A6Type['RespGlobalRuleItem'];
+  record: APISIXType['RespGlobalRuleItem'];
 };
 const DetailPageBtn = (props: DetailPageBtnProps) => {
   const { record } = props;
@@ -44,7 +44,7 @@ const DetailPageBtn = (props: DetailPageBtnProps) => {
     <RouteLinkBtn
       size="xs"
       variant="transparent"
-      to="/global-rules/detail/$id"
+      to="/global_rules/detail/$id"
       params={{ id: record.value.id }}
     >
       {t('view')}
@@ -57,7 +57,7 @@ function RouteComponent() {
 
   // Use the pagination hook
   const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'global-rules',
+    queryKey: 'global_rules',
   });
 
   const globalRulesQuery = useSuspenseQuery(
@@ -72,7 +72,7 @@ function RouteComponent() {
   }, [data?.total, updateTotal]);
 
   const columns = useMemo<
-    ProColumns<A6Type['RespGlobalRuleList']['data']['list'][number]>[]
+    ProColumns<APISIXType['RespGlobalRuleList']['data']['list'][number]>[]
   >(() => {
     return [
       {
@@ -119,7 +119,7 @@ function RouteComponent() {
                   label: (
                     <ToAddPageBtn
                       key="add"
-                      to="/global-rules/add"
+                      to="/global_rules/add"
                       label={t('globalRules.add.title')}
                     />
                   ),
@@ -133,7 +133,7 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/global-rules/')({
+export const Route = createFileRoute('/global_rules/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,

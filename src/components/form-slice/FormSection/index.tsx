@@ -40,12 +40,14 @@ export const FormSection: FC<FormSectionProps> = (props) => {
     <SectionDepthProvider value={depth}>
       <Fieldset
         className={newClass}
-        legend={
-          <Group>
-            {legend}
-            {extra}
-          </Group>
-        }
+        {...((legend || extra) && {
+          legend: (
+            <Group>
+              {legend}
+              {extra}
+            </Group>
+          ),
+        })}
         {...restProps}
         {...{
           [tocValue]: legend,

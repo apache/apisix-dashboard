@@ -1,5 +1,5 @@
 import { useFormContext, useWatch } from 'react-hook-form';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { FormItemTextInput } from '../form/TextInput';
 import { FormSection } from './FormSection';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,7 @@ import { FormDisplayDate } from './FormDisplayDate';
 import { Divider } from '@mantine/core';
 
 const DisplayDate = () => {
-  const { control } = useFormContext<A6Type['Info']>();
+  const { control } = useFormContext<APISIXType['Info']>();
   const { t } = useTranslation();
   const createTime = useWatch({ control, name: 'create_time' });
   const updateTime = useWatch({ control, name: 'update_time' });
@@ -21,7 +21,7 @@ const DisplayDate = () => {
 };
 
 const FormItemID = () => {
-  const { control } = useFormContext<A6Type['Info']>();
+  const { control } = useFormContext<APISIXType['Info']>();
   const { t } = useTranslation();
 
   return (
@@ -34,7 +34,7 @@ type FormSectionInfoProps = {
   disableID?: boolean;
 };
 
-export const FormSectionInfo = (props: FormSectionInfoProps) => {
+export const FormSectionGeneral = (props: FormSectionInfoProps) => {
   const { showDate = true, disableID = false } = props;
   const { t } = useTranslation();
   return (

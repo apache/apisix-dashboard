@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import PageHeader from '@/components/page/PageHeader';
-import { PluginMetadata } from '@/components/page-slice/plugin-metadata/PluginMetadata';
+import { PluginMetadata } from '@/components/page-slice/plugin_metadata/PluginMetadata';
 
 function RouteComponent() {
   const { t } = useTranslation();
@@ -14,6 +14,6 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/plugin-metadata/')({
+export const Route = createFileRoute('/plugin_metadata/')({
   component: RouteComponent,
 });

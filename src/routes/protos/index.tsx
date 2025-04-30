@@ -3,7 +3,7 @@ import { queryClient } from '@/config/global';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { API_PROTOS } from '@/config/constant';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
@@ -24,7 +24,7 @@ const genProtosQueryOptions = (props: PageSearchType) => {
     queryKey: ['protos', page, pageSize],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespProtoList']>(API_PROTOS, {
+        .get<unknown, APISIXType['RespProtoList']>(API_PROTOS, {
           params: {
             page,
             page_size: pageSize,
@@ -35,7 +35,7 @@ const genProtosQueryOptions = (props: PageSearchType) => {
 };
 
 type DetailPageBtnProps = {
-  record: A6Type['RespProtoItem'];
+  record: APISIXType['RespProtoItem'];
 };
 const DetailPageBtn = (props: DetailPageBtnProps) => {
   const { record } = props;
@@ -71,7 +71,7 @@ function RouteComponent() {
   }, [data?.total, updateTotal]);
 
   const columns = useMemo<
-    ProColumns<A6Type['RespProtoList']['data']['list'][number]>[]
+    ProColumns<APISIXType['RespProtoList']['data']['list'][number]>[]
   >(() => {
     return [
       {

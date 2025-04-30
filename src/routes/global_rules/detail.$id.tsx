@@ -6,9 +6,9 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { DevTool } from '@hookform/devtools';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { notifications } from '@mantine/notifications';
-import { A6 } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { getGlobalRuleQueryOptions, putGlobalRuleReq } from '@/apis/plugins';
 import { useEffect } from 'react';
@@ -23,11 +23,11 @@ type Props = {
 const GlobalRuleDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/global-rules/detail/$id' });
+  const { id } = useParams({ from: '/global_rules/detail/$id' });
   const detailReq = useQuery(getGlobalRuleQueryOptions(id));
 
   const form = useForm({
-    resolver: zodResolver(A6.GlobalRulePut),
+    resolver: zodResolver(APISIX.GlobalRulePut),
     shouldUnregister: true,
     shouldFocusError: true,
     defaultValues: {},
@@ -44,7 +44,7 @@ const GlobalRuleDetailForm = (props: Props) => {
   const putglobalRule = useMutation({
     mutationFn: putGlobalRuleReq,
   });
-  const submit = async (data: A6Type['GlobalRulePut']) => {
+  const submit = async (data: APISIXType['GlobalRulePut']) => {
     await putglobalRule.mutateAsync(data);
     notifications.show({
       message: t('globalRules.edit.success'),
@@ -100,6 +100,6 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/global-rules/detail/$id')({
+export const Route = createFileRoute('/global_rules/detail/$id')({
   component: RouteComponent,
 });

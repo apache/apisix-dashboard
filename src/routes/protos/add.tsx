@@ -8,13 +8,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { DevTool } from '@hookform/devtools';
-import { A6Proto } from '@/types/schema/apisix/proto';
-import type { A6Type } from '@/types/schema/apisix';
+import { APISIXProtos } from '@/types/schema/apisix/protos';
+import type { APISIXType } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
 import { notifications } from '@mantine/notifications';
 
-const defaultValues: A6Type['ProtoPost'] = {
+const defaultValues: APISIXType['ProtoPost'] = {
   content: '',
 };
 
@@ -24,18 +24,21 @@ const ProtoAddForm = () => {
 
   const postProto = useMutation({
     mutationFn: (data: object) =>
-      req.post<A6Type['ProtoPost'], A6Type['RespProtoList']>(API_PROTOS, data),
+      req.post<APISIXType['ProtoPost'], APISIXType['RespProtoList']>(
+        API_PROTOS,
+        data
+      ),
   });
 
   const form = useForm({
-    resolver: zodResolver(A6Proto.ProtoPost),
+    resolver: zodResolver(APISIXProtos.ProtoPost),
     shouldUnregister: true,
     shouldFocusError: true,
     defaultValues,
     mode: 'onChange',
   });
 
-  const submit = async (data: A6Type['ProtoPost']) => {
+  const submit = async (data: APISIXType['ProtoPost']) => {
     await postProto.mutateAsync(data);
     notifications.show({
       id: 'add-proto',

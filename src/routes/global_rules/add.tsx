@@ -6,10 +6,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { DevTool } from '@hookform/devtools';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
 import { notifications } from '@mantine/notifications';
-import { A6 } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { nanoid } from 'nanoid';
 import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
@@ -24,7 +24,7 @@ const GlobalRuleAddForm = () => {
   });
 
   const form = useForm({
-    resolver: zodResolver(A6.GlobalRulePut),
+    resolver: zodResolver(APISIX.GlobalRulePut),
     shouldUnregister: true,
     shouldFocusError: true,
     defaultValues: {
@@ -34,15 +34,15 @@ const GlobalRuleAddForm = () => {
     mode: 'onChange',
   });
 
-  const submit = async (data: A6Type['GlobalRulePut']) => {
+  const submit = async (data: APISIXType['GlobalRulePut']) => {
     const res = await putGlobalRule.mutateAsync(data);
     notifications.show({
-      id: 'add-global-rule',
+      id: 'add-global_rule',
       message: t('globalRules.add.success'),
       color: 'green',
     });
     await router.navigate({
-      to: '/global-rules/detail/$id',
+      to: '/global_rules/detail/$id',
       params: { id: res.data.value.id },
     });
   };
@@ -70,6 +70,6 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/global-rules/add')({
+export const Route = createFileRoute('/global_rules/add')({
   component: RouteComponent,
 });

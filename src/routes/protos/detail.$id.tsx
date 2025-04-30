@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { A6, type A6Type } from '@/types/schema/apisix';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { req } from '@/config/req';
@@ -12,19 +12,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
 import { Skeleton } from '@mantine/core';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
-import { FormSectionInfo } from '@/components/form-slice/FormSectionInfo';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 
 const ProtoDetailForm = ({ id }: { id: string }) => {
   const { data: protoData, isLoading } = useQuery({
     queryKey: ['proto', id],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespProtoDetail']>(`${API_PROTOS}/${id}`)
+        .get<unknown, APISIXType['RespProtoDetail']>(`${API_PROTOS}/${id}`)
         .then((v) => v.data),
   });
 
-  const form = useForm<A6Type['Proto']>({
-    resolver: zodResolver(A6.Proto),
+  const form = useForm<APISIXType['Proto']>({
+    resolver: zodResolver(APISIX.Proto),
     shouldUnregister: true,
     mode: 'onChange',
     disabled: true,
@@ -44,7 +44,7 @@ const ProtoDetailForm = ({ id }: { id: string }) => {
   return (
     <FormProvider {...form}>
       <FormTOCBox>
-        <FormSectionInfo />
+        <FormSectionGeneral />
         <FormPartProto allowUpload={false} />
         <DevTool control={form.control} />
       </FormTOCBox>

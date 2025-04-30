@@ -4,12 +4,12 @@ import { FormSection, type FormSectionProps } from './FormSection';
 import { FormItemTextInput } from '../form/TextInput';
 import { FormItemTextarea } from '../form/Textarea';
 import { useFormContext } from 'react-hook-form';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 
 export type FormPartBasicProps = Omit<FormSectionProps, 'form'>;
 
 export const FormPartBasic = (props: FormPartBasicProps) => {
-  const { control } = useFormContext<A6Type['Basic']>();
+  const { control } = useFormContext<APISIXType['Basic']>();
   const { t } = useTranslation();
   return (
     <FormSection legend={t('form.basic.title')} {...props}>

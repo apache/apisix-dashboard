@@ -6,31 +6,31 @@ import {
   API_PLUGIN_METADATA,
 } from '@/config/constant';
 import { req } from '@/config/req';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { queryOptions, skipToken } from '@tanstack/react-query';
 import type { AxiosRequestConfig } from 'axios';
 
-export const putGlobalRuleReq = (data: A6Type['GlobalRulePut']) => {
+export const putGlobalRuleReq = (data: APISIXType['GlobalRulePut']) => {
   const { id, ...rest } = data;
-  return req.put<A6Type['GlobalRulePut'], A6Type['RespGlobalRuleDetail']>(
-    `${API_GLOBAL_RULES}/${id}`,
-    rest
-  );
+  return req.put<
+    APISIXType['GlobalRulePut'],
+    APISIXType['RespGlobalRuleDetail']
+  >(`${API_GLOBAL_RULES}/${id}`, rest);
 };
 
 export const getGlobalRuleQueryOptions = (id: string) =>
   queryOptions({
-    queryKey: ['global-rule', id],
+    queryKey: ['global_rule', id],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespGlobalRuleDetail']>(
+        .get<unknown, APISIXType['RespGlobalRuleDetail']>(
           `${API_GLOBAL_RULES}/${id}`
         )
         .then((v) => v.data),
   });
 
 export type NeedPluginSchema = {
-  schema: A6Type['PluginSchemaKeys'];
+  schema: APISIXType['PluginSchemaKeys'];
 };
 
 export const getPluginsListQueryOptions = () => {
@@ -38,20 +38,20 @@ export const getPluginsListQueryOptions = () => {
     queryKey: ['plugins-list'],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespPluginsList']>(API_PLUGINS_LIST)
+        .get<unknown, APISIXType['RespPluginsList']>(API_PLUGINS_LIST)
         .then((v) => v.data),
   });
 };
 
 export const getPluginsListWithSchemaQueryOptions = (
-  props: A6Type['PluginsQuery'] & NeedPluginSchema = { schema: 'normal' }
+  props: APISIXType['PluginsQuery'] & NeedPluginSchema = { schema: 'normal' }
 ) => {
   const { subsystem, schema } = props;
   return queryOptions({
     queryKey: ['plugins-list-with-schema', subsystem, schema],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespPlugins']>(API_PLUGINS, {
+        .get<unknown, APISIXType['RespPlugins']>(API_PLUGINS, {
           params: { subsystem, all: true },
         })
         .then((v) => {
@@ -76,7 +76,9 @@ export const getPluginSchemaQueryOptions = (
     queryFn: name
       ? () =>
           req
-            .get<unknown, A6Type['RespPluginSchema']>(`${API_PLUGINS}/${name}`)
+            .get<unknown, APISIXType['RespPluginSchema']>(
+              `${API_PLUGINS}/${name}`
+            )
             .then((v) => v.data)
       : skipToken,
     enabled,
@@ -86,13 +88,13 @@ export const getPluginSchemaQueryOptions = (
 export const putPluginMetadataReq = (props: PluginConfig) => {
   const { name, config } = props;
   return req.put<
-    A6Type['PluginMetadataPut'],
-    A6Type['RespPluginMetadataDetail']
+    APISIXType['PluginMetadataPut'],
+    APISIXType['RespPluginMetadataDetail']
   >(`${API_PLUGIN_METADATA}/${name}`, config);
 };
 
 export const deletePluginMetadataReq = (name: string) => {
-  return req.delete<unknown, A6Type['RespPluginMetadataDetail']>(
+  return req.delete<unknown, APISIXType['RespPluginMetadataDetail']>(
     `${API_PLUGIN_METADATA}/${name}`
   );
 };
@@ -102,10 +104,10 @@ export const getPluginMetadataQueryOptions = (
   headers?: AxiosRequestConfig<unknown>['headers']
 ) =>
   queryOptions({
-    queryKey: ['plugin-metadata', plugin_name],
+    queryKey: ['plugin_metadata', plugin_name],
     queryFn: () =>
       req
-        .get<unknown, A6Type['RespPluginMetadataDetail']>(
+        .get<unknown, APISIXType['RespPluginMetadataDetail']>(
           `${API_PLUGIN_METADATA}/${plugin_name}`,
           { headers }
         )

@@ -164,13 +164,13 @@
     }
   },
   "navbar": {
-    "consumer": "Consumer",
+    "consumers": "Consumers",
     "globalRules": "Global Rules",
     "protos": "Protos",
-    "route": "Route",
-    "secret": "Secret",
-    "service": "Service",
-    "ssl": "SSL",
+    "routes": "Routes",
+    "secrets": "Secrets",
+    "services": "Services",
+    "ssls": "SSLs",
     "upstreams": "Upstreams",
     "pluginMetadata": "Plugin Metadata"
   },
@@ -201,7 +201,6 @@
       "success": "Update Plugin Metadata of {{name}} Successfully"
     }
   },
-  "plugins": "Plugins",
   "protos": {
     "add": {
       "success": "Add Proto Successfully",

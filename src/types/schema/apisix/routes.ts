@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { A6Common } from './common';
-import { A6Upstream } from './upstream';
-import { A6Plugin } from './plugin';
+import { APISIXCommon } from './common';
+import { APISIXUpstreams } from './upstreams';
+import { APISIXPlugins } from './plugins';
 
 const Route = z
   .object({
@@ -12,23 +12,23 @@ const Route = z
     methods: z.array(z.string()),
     remote_addr: z.string(),
     remote_addrs: z.array(z.string()),
-    vars: A6Common.Expr,
+    vars: APISIXCommon.Expr,
     filter_func: z.string(),
     script: z.string(),
     script_id: z.string(),
-    plugins: A6Plugin.Plugins,
+    plugins: APISIXPlugins.Plugins,
     plugin_config_id: z.string(),
-    upstream: A6Upstream.Upstream,
+    upstream: APISIXUpstreams.Upstream,
     upstream_id: z.string(),
     service_id: z.string(),
-    timeout: A6Upstream.UpstreamTimeout.partial(),
+    timeout: APISIXUpstreams.UpstreamTimeout.partial(),
     enable_websocket: z.boolean(),
     priority: z.number(),
     status: z.number(),
   })
   .partial()
-  .merge(A6Common.Basic);
+  .merge(APISIXCommon.Basic);
 
-export const A6Route = {
+export const APISIXRoutes = {
   Route,
 };
