@@ -7,6 +7,9 @@ type ToAddPageBtnProps = {
   label: string;
 };
 
+/**
+ * A reusable "Add" button component that navigates to a specified route
+ */
 export const ToAddPageBtn = ({ to: routeId, label }: ToAddPageBtnProps) => {
   return (
     <RouteLinkBtn
