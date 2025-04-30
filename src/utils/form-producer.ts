@@ -13,3 +13,8 @@ export const produceTimeout = produce<Partial<hasTimeout>>((draft) => {
     delete draft.timeout;
   }
 });
+
+export const produceTime = produce<Partial<APISIXType['Info']>>((draft) => {
+  if (draft.create_time) delete draft.create_time;
+  if (draft.update_time) delete draft.update_time;
+});

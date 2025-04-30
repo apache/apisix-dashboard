@@ -15,6 +15,7 @@ import { useBoolean } from 'react-use';
 import { notifications } from '@mantine/notifications';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { getProtoQueryOptions, putProtoReq } from '@/apis/protos';
+import { pipeProduce } from '@/utils/producer';
 
 type ProtoFormProps = {
   id: string;
@@ -63,7 +64,11 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
   return (
     <FormProvider {...form}>
       <FormTOCBox>
-        <form onSubmit={form.handleSubmit((d) => putProto.mutateAsync(d))}>
+        <form
+          onSubmit={form.handleSubmit((d) =>
+            putProto.mutateAsync(pipeProduce()(d))
+          )}
+        >
           <FormSectionGeneral />
           <FormPartProto allowUpload={!readOnly} />
           {!readOnly && (
