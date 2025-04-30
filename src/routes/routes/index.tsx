@@ -28,30 +28,28 @@ const RouteList = () => {
     }
   }, [data?.total, updateTotal]);
 
-  const columns = useMemo<
-    ProColumns<A6Type['RespRouteList']['data']['list'][number]>[]
-  >(() => {
+  const columns = useMemo<ProColumns<A6Type['RespRouteItem']>[]>(() => {
     return [
       {
-        dataIndex: 'id',
+        dataIndex: ['value', 'id'],
         title: 'ID',
         key: 'id',
         valueType: 'text',
       },
       {
-        dataIndex: 'name',
+        dataIndex: ['value', 'name'],
         title: t('form.basic.name'),
         key: 'name',
         valueType: 'text',
       },
       {
-        dataIndex: 'desc',
+        dataIndex: ['value', 'desc'],
         title: t('form.basic.desc'),
         key: 'desc',
         valueType: 'text',
       },
       {
-        dataIndex: 'uri',
+        dataIndex: ['value', 'uri'],
         title: 'URI',
         key: 'uri',
         valueType: 'text',

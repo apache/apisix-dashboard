@@ -20,7 +20,7 @@ const Route = z
     script_id: z.string(),
     plugins: A6Plugins.Plugins,
     plugin_config_id: z.string(),
-    upstream: A6Upstreams.Upstream,
+    upstream: A6Upstreams.Upstream.partial().optional(),
     upstream_id: z.string(),
     service_id: z.string(),
     timeout: A6Upstreams.UpstreamTimeout.partial(),
