@@ -20,7 +20,7 @@ const Route = z
     script_id: z.string(),
     plugins: APISIXPlugins.Plugins,
     plugin_config_id: z.string(),
-    upstream: APISIXUpstreams.Upstream,
+    upstream: APISIXUpstreams.Upstream.omit({ id: true }),
     upstream_id: z.string(),
     service_id: z.string(),
     timeout: APISIXUpstreams.UpstreamTimeout.partial(),

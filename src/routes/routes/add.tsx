@@ -32,9 +32,6 @@ const RouteAddForm = () => {
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
-    defaultValues: {
-      status: 1,
-    },
   });
 
   return (

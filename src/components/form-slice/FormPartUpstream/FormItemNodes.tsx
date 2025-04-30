@@ -193,7 +193,7 @@ const FormItemNodesCore = <T extends FieldValues>(
       required={required}
       withAsterisk={withAsterisk}
       onBlur={() => {
-        const vals = parseToUpstreamNodes(ob.values);
+        const vals = parseToUpstreamNodes(toJS(ob.values));
         fOnChange?.(vals);
         restProps.onChange?.(vals);
       }}

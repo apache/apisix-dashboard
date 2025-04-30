@@ -8,7 +8,7 @@ import { FormItemTextInput } from '@/components/form/TextInput';
 import { NamePrefixProvider } from '@/utils/useNamePrefix';
 import { FormItemPlugins } from '../FormItemPlugins';
 import { FormPartBasic } from '../FormPartBasic';
-import { FormPartUpstream } from '../FormPartUpstream';
+import { FormPartUpstream, FormSectionTimeout } from '../FormPartUpstream';
 import { FormSection } from '../FormSection';
 import { Divider, InputWrapper } from '@mantine/core';
 import type { RoutePostType } from './schema';
@@ -153,6 +153,7 @@ export const FormPartRoute = () => {
       <FormPartBasicWithPriority />
       <FormSectionMatchRules />
       <FormSectionService />
+      <FormSectionTimeout />
       <FormSectionUpstream />
       <FormSectionPlugins />
     </>
