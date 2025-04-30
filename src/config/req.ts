@@ -24,7 +24,7 @@ req.interceptors.request.use((conf) => {
   return conf;
 });
 
-type A6RespErr = {
+type APISIXRespErr = {
   error_msg: string;
 };
 
@@ -54,7 +54,7 @@ req.interceptors.response.use(
   (err) => {
     if (err.response) {
       if (matchSkipInterceptor(err)) return Promise.reject(err);
-      const d = err.response.data as A6RespErr;
+      const d = err.response.data as APISIXRespErr;
       notifications.show({
         id: d.error_msg,
         message: d.error_msg,

@@ -1,4 +1,4 @@
-import { A6, type A6Type } from '@/types/schema/apisix';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { zGetDefault } from '@/utils/zod';
 import {
   EditableProTable,
@@ -20,7 +20,7 @@ import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { toJS } from 'mobx';
 
-type DataSource = A6Type['UpstreamNode'] & A6Type['ID'];
+type DataSource = APISIXType['UpstreamNode'] & APISIXType['ID'];
 
 const portValueEnum = range(1, 65535).reduce((acc, val) => {
   acc[val] = { text: String(val) };
@@ -46,14 +46,14 @@ const genId = nanoid;
 const genRecord = () => {
   return {
     id: genId(),
-    ...zGetDefault(A6.UpstreamNode),
+    ...zGetDefault(APISIX.UpstreamNode),
   };
 };
 
-const objToUpstreamNodes = (data: A6Type['UpstreamNodeObj']) => {
+const objToUpstreamNodes = (data: APISIXType['UpstreamNodeObj']) => {
   return Object.entries(data).map(([key, val]) => {
     const [host, port] = key.split(':');
-    const d: A6Type['UpstreamNode'] = {
+    const d: APISIXType['UpstreamNode'] = {
       host,
       port: Number(port) || 1,
       weight: val,
@@ -63,11 +63,11 @@ const objToUpstreamNodes = (data: A6Type['UpstreamNodeObj']) => {
   });
 };
 
-const parseToDataSource = (data: A6Type['UpstreamNodeListOrObj']) => {
-  let val: A6Type['UpstreamNodes'];
+const parseToDataSource = (data: APISIXType['UpstreamNodeListOrObj']) => {
+  let val: APISIXType['UpstreamNodes'];
   if (isNil(data)) val = [];
-  else if (Array.isArray(data)) val = data as A6Type['UpstreamNodes'];
-  else val = objToUpstreamNodes(data as A6Type['UpstreamNodeObj']);
+  else if (Array.isArray(data)) val = data as APISIXType['UpstreamNodes'];
+  else val = objToUpstreamNodes(data as APISIXType['UpstreamNodeObj']);
 
   return val.map((item) => {
     const d: DataSource = {
@@ -81,7 +81,7 @@ const parseToDataSource = (data: A6Type['UpstreamNodeListOrObj']) => {
 const parseToUpstreamNodes = (data: DataSource[] | undefined) => {
   if (!data?.length) return [];
   return data.map((item) => {
-    const d: A6Type['UpstreamNode'] = {
+    const d: APISIXType['UpstreamNode'] = {
       host: item.host,
       port: item.port,
       weight: item.weight,
@@ -91,22 +91,21 @@ const parseToUpstreamNodes = (data: DataSource[] | undefined) => {
   });
 };
 
-const genProps = (field: keyof A6Type['UpstreamNode']) => {
+const genProps = (field: keyof APISIXType['UpstreamNode']) => {
   return {
     rules: [
       {
         validator: (_: unknown, value: unknown) =>
-          zValidateField(A6.UpstreamNode, field, value),
+          zValidateField(APISIX.UpstreamNode, field, value),
       },
     ],
   };
 };
 
-export type FormItemNodesProps<T extends FieldValues> =
-  UseControllerProps<T> & {
-    onChange?: (value: A6Type['UpstreamNode'][]) => void;
-    defaultValue?: A6Type['UpstreamNode'][];
-  } & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
+export type FormItemNodesProps<T extends FieldValues> = UseControllerProps<T> & {
+  onChange?: (value: APISIXType['UpstreamNode'][]) => void;
+  defaultValue?: APISIXType['UpstreamNode'][];
+} & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
 
 const ObEditableProTable = observer(EditableProTable);
 

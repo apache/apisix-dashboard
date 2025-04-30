@@ -23,7 +23,7 @@ const Timestamp = z.object({
 
 const Info = ID.merge(Timestamp);
 
-export const A6Common = {
+export const APISIXCommon = {
   Basic,
   Labels,
   Expr,

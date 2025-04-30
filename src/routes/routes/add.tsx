@@ -1,6 +1,6 @@
-import { A6 } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 import { createFileRoute } from '@tanstack/react-router';
-export const RoutePostSchema = A6.Route.omit({
+export const RoutePostSchema = APISIX.Route.omit({
   status: true,
 });
 
@@ -8,7 +8,7 @@ const RouteAddForm = () => {
   // const { t } = useTranslation();
   // const postRoute = useMutation({
   //   mutationFn: (data: object) =>
-  //     req.post<A6Type['Route'], A6Type['RespRouteList']>(API_ROUTES, data),
+  //     req.post<APISIXType['Route'], APISIXType['RespRouteList']>(API_ROUTES, data),
   // });
   // const form = useAppForm({
   //   defaultValues: zGetDefault(RoutePostSchema),

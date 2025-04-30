@@ -1,13 +1,13 @@
-import { A6Common } from './common';
-import { A6Plugins } from './plugins';
+import { APISIXCommon } from './common';
+import { APISIXPlugins } from './plugins';
 
-const PluginMetadata = A6Plugins.PluginMetadataSchema.merge(A6Common.Info).omit(
-  {
-    id: true,
-  }
-);
+const PluginMetadata = APISIXPlugins.PluginMetadataSchema.merge(
+  APISIXCommon.Info
+).omit({
+  id: true,
+});
 
-export const A6PluginMetadata = {
+export const APISIXPluginMetadata = {
   PluginMetadata: PluginMetadata,
   PluginMetadataPut: PluginMetadata.omit({
     create_time: true,

@@ -1,37 +1,43 @@
 import { z } from 'zod';
-import type { A6 } from '.';
+import type { APISIX } from '.';
 import type { AxiosResponse } from 'axios';
 
-export type A6DetailResponse<T> = {
+export type APISIXDetailResponse<T> = {
   key: string;
   value: T;
   createdIndex: number;
   modifiedIndex: number;
 };
-export type A6ListResponse<T> = {
-  list: Array<A6DetailResponse<T>>;
+export type APISIXListResponse<T> = {
+  list: Array<APISIXDetailResponse<T>>;
   total: number;
 };
 
-type RawA6Type = {
-  [K in keyof typeof A6]: z.infer<(typeof A6)[K]>;
+type RawAPISIXType = {
+  [K in keyof typeof APISIX]: z.infer<(typeof APISIX)[K]>;
 };
 
-export type A6Type = RawA6Type & {
-  RespRouteList: AxiosResponse<A6ListResponse<A6Type['Route']>>;
-  RespUpstreamList: AxiosResponse<A6ListResponse<A6Type['Upstream']>>;
-  RespUpstreamItem: A6Type['RespUpstreamList']['data']['list'][number];
-  RespUpstreamDetail: AxiosResponse<A6DetailResponse<A6Type['Upstream']>>;
-  RespProtoList: AxiosResponse<A6ListResponse<A6Type['Proto']>>;
-  RespProtoItem: A6Type['RespProtoList']['data']['list'][number];
-  RespProtoDetail: AxiosResponse<A6DetailResponse<A6Type['Proto']>>;
-  RespGlobalRuleList: AxiosResponse<A6ListResponse<A6Type['GlobalRule']>>;
-  RespGlobalRuleItem: A6Type['RespGlobalRuleList']['data']['list'][number];
-  RespGlobalRuleDetail: AxiosResponse<A6DetailResponse<A6Type['GlobalRule']>>;
+export type APISIXType = RawAPISIXType & {
+  RespRouteList: AxiosResponse<APISIXListResponse<APISIXType['Route']>>;
+  RespUpstreamList: AxiosResponse<APISIXListResponse<APISIXType['Upstream']>>;
+  RespUpstreamItem: APISIXType['RespUpstreamList']['data']['list'][number];
+  RespUpstreamDetail: AxiosResponse<
+    APISIXDetailResponse<APISIXType['Upstream']>
+  >;
+  RespProtoList: AxiosResponse<APISIXListResponse<APISIXType['Proto']>>;
+  RespProtoItem: APISIXType['RespProtoList']['data']['list'][number];
+  RespProtoDetail: AxiosResponse<APISIXDetailResponse<APISIXType['Proto']>>;
+  RespGlobalRuleList: AxiosResponse<
+    APISIXListResponse<APISIXType['GlobalRule']>
+  >;
+  RespGlobalRuleItem: APISIXType['RespGlobalRuleList']['data']['list'][number];
+  RespGlobalRuleDetail: AxiosResponse<
+    APISIXDetailResponse<APISIXType['GlobalRule']>
+  >;
   RespPluginsList: AxiosResponse<string[]>;
-  RespPluginSchema: AxiosResponse<A6Type['PluginSchema']>;
-  RespPlugins: AxiosResponse<A6Type['Plugins']>;
+  RespPluginSchema: AxiosResponse<APISIXType['PluginSchema']>;
+  RespPlugins: AxiosResponse<APISIXType['Plugins']>;
   RespPluginMetadataDetail: AxiosResponse<
-    A6DetailResponse<A6Type['PluginMetadata']>
+    APISIXDetailResponse<APISIXType['PluginMetadata']>
   >;
 };

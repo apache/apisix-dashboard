@@ -1,4 +1,4 @@
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { useFormContext, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -10,7 +10,7 @@ export const FormPartProto = <T extends FieldValues>(
   props: Pick<FileUploadTextareaProps<T>, 'allowUpload'>
 ) => {
   const { t } = useTranslation();
-  const form = useFormContext<A6Type['ProtoPost']>();
+  const form = useFormContext<APISIXType['ProtoPost']>();
   return (
     <FileUploadTextarea
       name="content"

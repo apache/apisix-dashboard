@@ -1,14 +1,14 @@
 import { z } from 'zod';
-import { A6Common } from './common';
-import { A6Plugins } from './plugins';
+import { APISIXCommon } from './common';
+import { APISIXPlugins } from './plugins';
 
 const GlobalRule = z
   .object({
-    plugins: A6Plugins.Plugins,
+    plugins: APISIXPlugins.Plugins,
   })
-  .merge(A6Common.Info);
+  .merge(APISIXCommon.Info);
 
-export const A6GlobalRules = {
+export const APISIXGlobalRules = {
   GlobalRule,
   GlobalRulePut: GlobalRule.omit({
     create_time: true,

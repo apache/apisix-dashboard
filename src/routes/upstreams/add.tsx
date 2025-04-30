@@ -1,4 +1,4 @@
-import { type A6Type } from '@/types/schema/apisix';
+import { type APISIXType } from '@/types/schema/apisix';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import {} from 'axios';
@@ -27,7 +27,7 @@ const UpstreamAddForm = () => {
   const router = useRouter();
   const postUpstream = useMutation({
     mutationFn: (data: PostUpstreamType) =>
-      req.post<unknown, A6Type['RespUpstreamDetail']>(API_UPSTREAMS, data),
+      req.post<unknown, APISIXType['RespUpstreamDetail']>(API_UPSTREAMS, data),
     async onSuccess(data) {
       notifications.show({
         message: t('upstreams.add.success'),

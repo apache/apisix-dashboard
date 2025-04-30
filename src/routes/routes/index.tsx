@@ -4,7 +4,7 @@ import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { Button } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import type { A6Type } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
 import { API_ROUTES } from '@/config/constant';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
@@ -13,7 +13,9 @@ import { useMemo } from 'react';
 const routesQueryOptions = queryOptions({
   queryKey: ['routes'],
   queryFn: () =>
-    req.get<unknown, A6Type['RespRouteList']>(API_ROUTES).then((v) => v.data),
+    req
+      .get<unknown, APISIXType['RespRouteList']>(API_ROUTES)
+      .then((v) => v.data),
 });
 
 const ToCreatePageBtn = () => {
@@ -32,7 +34,7 @@ function RouteComponent() {
   const { t } = useTranslation();
 
   const columns = useMemo<
-    ProColumns<A6Type['RespRouteList']['data']['list'][number]>[]
+    ProColumns<APISIXType['RespRouteList']['data']['list'][number]>[]
   >(() => {
     return [
       {
