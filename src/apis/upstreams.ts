@@ -14,7 +14,7 @@ export const getUpstreamReq = (id: string) =>
 
 export const putUpstreamReq = (data: A6Type['Upstream']) => {
   const { id, ...rest } = data;
-  return req.put<A6Type['Upstream'], A6Type['RespGlobalRuleDetail']>(
+  return req.put<A6Type['Upstream'], A6Type['RespUpstreamDetail']>(
     `${API_UPSTREAMS}/${id}`,
     rest
   );
