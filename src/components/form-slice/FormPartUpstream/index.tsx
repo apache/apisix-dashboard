@@ -214,11 +214,7 @@ export const FormPartUpstream = () => {
       <FormPartBasic />
       <FormSection legend={t('form.upstream.findUpstreamFrom')}>
         <FormSection legend={t('form.upstream.nodes.title')}>
-          <FormItemNodes
-            name={np('nodes')}
-            label={t('form.upstream.nodes.title')}
-            required
-          />
+          <FormItemNodes name={np('nodes')} required />
         </FormSection>
         <Divider my="xs" label={t('or')} />
         <FormSectionDiscovery />

@@ -105,11 +105,7 @@ const FormSectionUpstream = () => {
   return (
     <FormSection legend={t('form.upstream.title')}>
       <FormSection legend={t('form.upstream.upstreamId')}>
-        <FormItemTextInput
-          control={control}
-          name="upstream_id"
-          label={t('form.upstream.upstreamId')}
-        />
+        <FormItemTextInput control={control} name="upstream_id" />
       </FormSection>
       <Divider my="xs" label={t('or')} />
       <NamePrefixProvider value="upstream">
