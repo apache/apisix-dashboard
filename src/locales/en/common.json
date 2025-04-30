@@ -243,7 +243,15 @@
     "add": {
       "submit": "Add Route Successfully",
       "title": "Add Route"
-    }
+    },
+    "detail": {
+      "title": "Route Detail"
+    },
+    "edit": {
+      "success": "Edit Route Successfully",
+      "title": "Edit Route"
+    },
+    "title": "Routes"
   },
   "seconds": "Seconds",
   "setting": {
