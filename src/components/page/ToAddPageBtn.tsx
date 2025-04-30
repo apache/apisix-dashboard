@@ -24,8 +24,6 @@ export const ToAddPageBtn = ({ to, label }: ToAddPageBtnProps) => {
   );
 };
 
-export default ToAddPageBtn;
-
 type ToDetailPageBtnProps = {
   id: string;
   to: keyof FilterKeys<FileRoutesByTo, '$id'>;
