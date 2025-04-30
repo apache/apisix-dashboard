@@ -35,6 +35,7 @@
     },
     "plugins": {
       "addPlugin": "Add Plugin",
+      "configId": "Plugin Config ID",
       "editPlugin": "Edit Plugin",
       "label": "Plugins",
       "searchForSelectedPlugins": "Search for Selected Plugins",
@@ -43,7 +44,26 @@
       },
       "viewPlugin": "View Plugin"
     },
+    "route": {
+      "enableWebsocket": "Enable WebSocket",
+      "filterFunc": "Filter Func",
+      "host": "Host",
+      "hosts": "Hosts",
+      "matchRules": "Match Rules",
+      "methods": "HTTP Methods",
+      "priority": "Priority",
+      "remoteAddr": "Remote Address",
+      "remoteAddrs": "Remote Addresses",
+      "service": "Service",
+      "status": "Status",
+      "uri": "URI",
+      "uris": "URIs",
+      "vars": "Vars"
+    },
     "search": "Search",
+    "tagsInput": {
+      "placeholder": "Input text, then enter or blur"
+    },
     "upload": {
       "fileOverSize": "file size is too large",
       "readError": "file read error:"
@@ -103,6 +123,8 @@
       "findUpstreamFrom": "Find Upstream From",
       "hashOn": "Hash On",
       "hashOnDesc": "This will be valid when `type` is `chash`",
+      "identifier": "Upstream Identifier",
+      "inline": "Inline Upstream Configuration",
       "keepalivePool": {
         "idleTimeout": "IDLE Timeout",
         "requests": "Requests",
@@ -140,6 +162,7 @@
         "serviceName": "Service Name",
         "title": "Service Discovery"
       },
+      "serviceId": "Service ID",
       "serviceName": {
         "title": "Service Name"
       },
@@ -160,19 +183,20 @@
       "type": "Type",
       "updateTime": "Update Time",
       "upstreamHost": "Upstream Host",
-      "upstreamHostDesc": "Set this when `pass_host` is `rewrite`"
+      "upstreamHostDesc": "Set this when `pass_host` is `rewrite`",
+      "upstreamId": "Upstream ID"
     }
   },
   "navbar": {
     "consumers": "Consumers",
     "globalRules": "Global Rules",
+    "pluginMetadata": "Plugin Metadata",
     "protos": "Protos",
     "routes": "Routes",
     "secrets": "Secrets",
     "services": "Services",
     "ssls": "SSLs",
-    "upstreams": "Upstreams",
-    "pluginMetadata": "Plugin Metadata"
+    "upstreams": "Upstreams"
   },
   "noData": "No Data",
   "or": "OR",
@@ -192,11 +216,11 @@
     "title": "Global Rules"
   },
   "pluginMetadata": {
-    "title": "Plugin Metadata",
     "delete": {
       "success": "Delete Plugin Metadata of {{name}} Successfully"
     },
     "search": "Search Plugin Metadata",
+    "title": "Plugin Metadata",
     "update": {
       "success": "Update Plugin Metadata of {{name}} Successfully"
     }
@@ -217,11 +241,7 @@
   },
   "route": {
     "add": {
-      "form": {
-        "uri": "URI",
-        "uris": "URIs"
-      },
-      "submit": "Add",
+      "submit": "Add Route Successfully",
       "title": "Add Route"
     }
   },

@@ -1,10 +1,6 @@
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { zGetDefault } from '@/utils/zod';
-import {
-  EditableProTable,
-  nanoid,
-  type ProColumns,
-} from '@ant-design/pro-components';
+import { EditableProTable, type ProColumns } from '@ant-design/pro-components';
 import { Button, InputWrapper, type InputWrapperProps } from '@mantine/core';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +15,8 @@ import { genControllerProps } from '../../form/util';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { toJS } from 'mobx';
+import { useClickOutside } from '@mantine/hooks';
+import { nanoid } from 'nanoid';
 
 type DataSource = APISIXType['UpstreamNode'] & APISIXType['ID'];
 
@@ -41,13 +39,12 @@ const zValidateField = <T extends ZodRawShape, R extends keyof T>(
   return Promise.reject(new Error(error.message));
 };
 
-const genId = nanoid;
-
-const genRecord = () => {
+const genRecord = (data?: DataSource | APISIXType['UpstreamNode']) => {
+  const d = data || zGetDefault(APISIX.UpstreamNode);
   return {
-    id: genId(),
-    ...zGetDefault(APISIX.UpstreamNode),
-  };
+    id: nanoid(),
+    ...d,
+  } as DataSource;
 };
 
 const objToUpstreamNodes = (data: APISIXType['UpstreamNodeObj']) => {
@@ -68,14 +65,7 @@ const parseToDataSource = (data: APISIXType['UpstreamNodeListOrObj']) => {
   if (isNil(data)) val = [];
   else if (Array.isArray(data)) val = data as APISIXType['UpstreamNodes'];
   else val = objToUpstreamNodes(data as APISIXType['UpstreamNodeObj']);
-
-  return val.map((item) => {
-    const d: DataSource = {
-      id: `${item.host}-${item.port}-${item.weight}-${item.priority}`,
-      ...item,
-    };
-    return d;
-  });
+  return val.map(genRecord);
 };
 
 const parseToUpstreamNodes = (data: DataSource[] | undefined) => {
@@ -175,6 +165,14 @@ const FormItemNodesCore = <T extends FieldValues>(
       if (equals(toJS(this.values), data)) return;
       this.values = data;
     },
+    append(data: DataSource) {
+      this.values.push(data);
+    },
+    remove(id: string) {
+      const index = this.values.findIndex((item) => item.id === id);
+      if (index === -1) return;
+      this.values.splice(index, 1);
+    },
     get editableKeys() {
       return this.disabled ? [] : this.values.map((item) => item.id);
     },
@@ -186,17 +184,19 @@ const FormItemNodesCore = <T extends FieldValues>(
     ob.setDisabled(disabled);
   }, [disabled, ob]);
 
+  const ref = useClickOutside(() => {
+    const vals = parseToUpstreamNodes(toJS(ob.values));
+    fOnChange?.(vals);
+    restProps.onChange?.(vals);
+  }, ['mouseup', 'touchend', 'mousedown', 'touchstart']);
+
   return (
     <InputWrapper
       error={fieldState.error?.message}
       label={label}
       required={required}
       withAsterisk={withAsterisk}
-      onBlur={() => {
-        const vals = parseToUpstreamNodes(ob.values);
-        fOnChange?.(vals);
-        restProps.onChange?.(vals);
-      }}
+      ref={ref}
     >
       <input name={fName} type="hidden" />
       <AntdConfigProvider>
@@ -214,16 +214,14 @@ const FormItemNodesCore = <T extends FieldValues>(
             onValuesChange(_, dataSource) {
               ob.setValues(dataSource);
             },
-            actionRender: (row, config) => {
+            actionRender: (row) => {
               return [
                 <Button
                   key="delete"
                   variant="transparent"
                   size="compact-xs"
                   px={0}
-                  onClick={() => {
-                    config.onDelete?.(row.id, row);
-                  }}
+                  onClick={() => ob.remove(row.id)}
                 >
                   {t('form.btn.delete')}
                 </Button>,
@@ -239,10 +237,7 @@ const FormItemNodesCore = <T extends FieldValues>(
         size="xs"
         color="cyan"
         style={{ borderColor: 'whitesmoke' }}
-        onClick={() => {
-          const d = genRecord();
-          ob.values.push(d);
-        }}
+        onClick={() => ob.append(genRecord())}
         {...(disabled && { display: 'none' })}
       >
         {t('form.upstream.nodes.add')}

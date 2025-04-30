@@ -23,6 +23,19 @@ const Timestamp = z.object({
 
 const Info = ID.merge(Timestamp);
 
+const HttpMethod = z.union([
+  z.literal('GET'),
+  z.literal('POST'),
+  z.literal('PUT'),
+  z.literal('DELETE'),
+  z.literal('PATCH'),
+  z.literal('HEAD'),
+  z.literal('OPTIONS'),
+  z.literal('CONNECT'),
+  z.literal('TRACE'),
+  z.literal('PURGE'),
+]);
+
 export const APISIXCommon = {
   Basic,
   Labels,
@@ -30,4 +43,5 @@ export const APISIXCommon = {
   ID,
   Timestamp,
   Info,
+  HttpMethod,
 };

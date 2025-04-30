@@ -16,7 +16,7 @@ export const getUpstreamReq = (id: string) =>
 
 export const putUpstreamReq = (data: APISIXType['Upstream']) => {
   const { id, ...rest } = data;
-  return req.put<APISIXType['Upstream'], APISIXType['RespGlobalRuleDetail']>(
+  return req.put<APISIXType['Upstream'], APISIXType['RespUpstreamDetail']>(
     `${API_UPSTREAMS}/${id}`,
     rest
   );

@@ -1,56 +1,63 @@
-import { APISIX } from '@/types/schema/apisix';
-import { createFileRoute } from '@tanstack/react-router';
-export const RoutePostSchema = APISIX.Route.omit({
-  status: true,
-});
+import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
+import { useMutation } from '@tanstack/react-query';
+import PageHeader from '@/components/page/PageHeader';
+import { FormProvider, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { notifications } from '@mantine/notifications';
+import { pipeProduce } from '@/utils/producer';
+import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
+import { RoutePostSchema } from '@/components/form-slice/FormPartRoute/schema';
+import { postRouteReq } from '@/apis/routes';
 
 const RouteAddForm = () => {
-  // const { t } = useTranslation();
-  // const postRoute = useMutation({
-  //   mutationFn: (data: object) =>
-  //     req.post<APISIXType['Route'], APISIXType['RespRouteList']>(API_ROUTES, data),
-  // });
-  // const form = useAppForm({
-  //   defaultValues: zGetDefault(RoutePostSchema),
-  //   validators: {
-  //     onChange: RoutePostSchema.superRefine(zOneOf('uri', 'uris')),
-  //   },
-  //   async onSubmit(data) {
-  //     const form = pipeProduce(produceTimeout)(data.value);
-  //     await postRoute.mutateAsync(form);
-  //   },
-  // });
+  const { t } = useTranslation();
+  const router = useRouter();
+
+  const postRoute = useMutation({
+    mutationFn: postRouteReq,
+    async onSuccess() {
+      notifications.show({
+        message: t('route.add.submit'),
+        color: 'green',
+      });
+      await router.navigate({ to: '/routes' });
+    },
+  });
+
+  const form = useForm({
+    resolver: zodResolver(RoutePostSchema),
+    shouldUnregister: true,
+    shouldFocusError: true,
+    mode: 'all',
+  });
 
   return (
-    <form>
-      {/* <form.AppForm>
-        <FormPartBasic form={form as never} />
-        <form.Section>
-          <form.AppField
-            name="uri"
-            children={(field) => (
-              <field.Text label={t('route.add.form.uri')} withAsterisk />
-            )}
-          />
-          <form.AppField
-            name="uris"
-            children={(field) => (
-              <field.TextArray label={t('route.add.form.uris')} withAsterisk />
-            )}
-          />
-        </form.Section>
-        <form.Section
-          legend={t('form.upstream.title')}
-          aria-required
-        ></form.Section>
-        <form.SubmitBtn>{t('form.btn.add')}</form.SubmitBtn>
-      </form.AppForm> */}
-    </form>
+    <FormProvider {...form}>
+      <form
+        onSubmit={form.handleSubmit((d) =>
+          postRoute.mutateAsync(pipeProduce()(d))
+        )}
+      >
+        <FormPartRoute />
+        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+      </form>
+    </FormProvider>
   );
 };
 
 function RouteComponent() {
-  return <RouteAddForm />;
+  const { t } = useTranslation();
+  return (
+    <>
+      <PageHeader title={t('route.add.title')} />
+      <FormTOCBox>
+        <RouteAddForm />
+      </FormTOCBox>
+    </>
+  );
 }
 
 export const Route = createFileRoute('/routes/add')({

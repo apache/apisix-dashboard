@@ -92,7 +92,7 @@ export const FormTOCBox = (props: FormTOCBoxProps) => {
         w={200}
         mt={10}
         minDepthToOffset={0}
-        depthOffset={40}
+        depthOffset={20}
         scrollSpyOptions={{
           selector: `.${tocSelector}`,
           getDepth: (el) => Number(el.getAttribute(tocDepth)),

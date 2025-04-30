@@ -14,32 +14,35 @@ import { Divider } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import type { FormPartUpstreamType } from './schema';
 import { FormItemSwitch } from '@/components/form/Switch';
+import { useNamePrefix } from '@/utils/useNamePrefix';
 
 export const FormSectionTLS = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<FormPartUpstreamType>();
+  const np = useNamePrefix();
+
   return (
     <FormSection legend={t('form.upstream.tls.title')}>
       <FormItemSwitch
         control={control}
-        name="tls.verify"
+        name={np('tls.verify')}
         label={t('form.upstream.tls.verify')}
       />
-      <FormSection>
+      <FormSection legend={t('form.upstream.tls.clientCert')}>
         <FormItemTextarea
           control={control}
-          name="tls.client_cert"
+          name={np('tls.client_cert')}
           label={t('form.upstream.tls.clientCert')}
         />
         <FormItemTextarea
           control={control}
-          name="tls.client_key"
+          name={np('tls.client_key')}
           label={t('form.upstream.tls.clientKey')}
         />
         <Divider my="xs" label={t('or')} />
         <FormItemTextInput
           control={control}
-          name="tls.client_cert_id"
+          name={np('tls.client_cert_id')}
           label={t('form.upstream.tls.clientCertId')}
         />
       </FormSection>
@@ -50,10 +53,11 @@ export const FormSectionTLS = () => {
 export const FormItemScheme = () => {
   const { control } = useFormContext<FormPartUpstreamType>();
   const { t } = useTranslation();
+  const np = useNamePrefix();
   return (
     <FormItemSelect
       control={control}
-      name="scheme"
+      name={np('scheme')}
       label={t('form.upstream.scheme')}
       defaultValue={APISIX.UpstreamSchemeL7.options[0].value}
       data={[
@@ -73,18 +77,19 @@ export const FormItemScheme = () => {
 export const FormSectionLoadbalancing = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<FormPartUpstreamType>();
+  const np = useNamePrefix();
   return (
     <FormSection legend={t('form.upstream.loadBalancing')}>
       <FormItemSelect
         control={control}
-        name="type"
+        name={np('type')}
         label={t('form.upstream.type')}
         defaultValue={APISIX.UpstreamBalancer.options[0].value}
         data={APISIX.UpstreamBalancer.options.map((v) => v.value)}
       />
       <FormItemSelect
         control={control}
-        name="hash_on"
+        name={np('hash_on')}
         label={t('form.upstream.hashOn')}
         defaultValue={APISIX.UpstreamHashOn.options[0].value}
         data={APISIX.UpstreamHashOn.options.map((v) => v.value)}
@@ -92,7 +97,7 @@ export const FormSectionLoadbalancing = () => {
       />
       <FormItemTextInput
         control={control}
-        name="key"
+        name={np('key')}
         label={t('form.upstream.key')}
         description={t('form.upstream.keyDesc')}
       />
@@ -103,18 +108,19 @@ export const FormSectionLoadbalancing = () => {
 export const FormSectionPassHost = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<FormPartUpstreamType>();
+  const np = useNamePrefix();
   return (
     <FormSection legend={t('form.upstream.passHost')}>
       <FormItemSelect
         control={control}
-        name="pass_host"
+        name={np('pass_host')}
         label={t('form.upstream.passHost')}
         defaultValue={APISIX.UpstreamPassHost.options[0].value}
         data={APISIX.UpstreamPassHost.options.map((v) => v.value)}
       />
       <FormItemTextInput
         control={control}
-        name="upstream_host"
+        name={np('upstream_host')}
         label={t('form.upstream.upstreamHost')}
         description={t('form.upstream.upstreamHostDesc')}
       />
@@ -125,17 +131,18 @@ export const FormSectionPassHost = () => {
 export const FormSectionRetry = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<FormPartUpstreamType>();
+  const np = useNamePrefix();
   return (
     <FormSection legend={t('form.upstream.retry')}>
       <FormItemNumberInput
         control={control}
-        name="retries"
+        name={np('retries')}
         label={t('form.upstream.retries')}
         allowDecimal={false}
       />
       <FormItemNumberInput
         control={control}
-        name="retry_timeout"
+        name={np('retry_timeout')}
         label={t('form.upstream.retryTimeout')}
         suffix="s"
         allowDecimal={false}
@@ -147,23 +154,24 @@ export const FormSectionRetry = () => {
 export const FormSectionTimeout = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<FormPartUpstreamType>();
+  const np = useNamePrefix();
   return (
     <FormSection legend={t('form.upstream.timeout.title')}>
       <FormItemNumberInput
         control={control}
-        name="timeout.connect"
+        name={np('timeout.connect')}
         label={t('form.upstream.timeout.connect')}
         suffix="s"
       />
       <FormItemNumberInput
         control={control}
-        name="timeout.send"
+        name={np('timeout.send')}
         label={t('form.upstream.timeout.send')}
         suffix="s"
       />
       <FormItemNumberInput
         control={control}
-        name="timeout.read"
+        name={np('timeout.read')}
         label={t('form.upstream.timeout.read')}
         suffix="s"
       />
@@ -174,40 +182,39 @@ export const FormSectionTimeout = () => {
 export const FormSectionKeepAlive = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<FormPartUpstreamType>();
+  const np = useNamePrefix();
   return (
     <FormSection legend={t('form.upstream.keepalivePool.title')}>
       <FormItemNumberInput
         control={control}
-        name="keepalive_pool.size"
+        name={np('keepalive_pool.size')}
         label={t('form.upstream.keepalivePool.size')}
       />
       <FormItemNumberInput
         control={control}
-        name="keepalive_pool.idle_timeout"
+        name={np('keepalive_pool.idle_timeout')}
         label={t('form.upstream.keepalivePool.idleTimeout')}
         suffix="s"
       />
       <FormItemNumberInput
         control={control}
-        name="keepalive_pool.requests"
+        name={np('keepalive_pool.requests')}
         label={t('form.upstream.keepalivePool.requests')}
         allowDecimal={false}
       />
     </FormSection>
   );
 };
+
 export const FormPartUpstream = () => {
   const { t } = useTranslation();
+  const np = useNamePrefix();
   return (
     <>
       <FormPartBasic />
       <FormSection legend={t('form.upstream.findUpstreamFrom')}>
         <FormSection legend={t('form.upstream.nodes.title')}>
-          <FormItemNodes
-            name="nodes"
-            label={t('form.upstream.nodes.title')}
-            required
-          />
+          <FormItemNodes name={np('nodes')} required />
         </FormSection>
         <Divider my="xs" label={t('or')} />
         <FormSectionDiscovery />

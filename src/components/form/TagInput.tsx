@@ -37,6 +37,7 @@ export const FormItemTagsInput = <T extends FieldValues, R>(
         restProps?.onChange?.(value);
       }}
       comboboxProps={{ shadow: 'md' }}
+      acceptValueOnBlur
       {...restField}
       {...restProps}
     />

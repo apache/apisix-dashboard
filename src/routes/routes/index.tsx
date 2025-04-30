@@ -1,62 +1,55 @@
-import { req } from '@/config/req';
 import { queryClient } from '@/config/global';
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
-import { Button } from '@mantine/core';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import type { APISIXType } from '@/types/schema/apisix';
-import { API_ROUTES } from '@/config/constant';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import ToAddPageBtn from '@/components/page/ToAddPageBtn';
+import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { getRouteListQueryOptions } from '@/apis/routes';
+import { usePagination } from '@/utils/usePagination';
+import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import PageHeader from '@/components/page/PageHeader';
 
-const routesQueryOptions = queryOptions({
-  queryKey: ['routes'],
-  queryFn: () =>
-    req
-      .get<unknown, APISIXType['RespRouteList']>(API_ROUTES)
-      .then((v) => v.data),
-});
+const RouteList = () => {
+  const { pagination, handlePageChange, updateTotal } = usePagination({
+    queryKey: 'routes',
+  });
 
-const ToCreatePageBtn = () => {
-  const { t } = useTranslation();
-  const router = useRouter();
-  return (
-    <Button component={Link} to={router.routesById['/routes/add'].to}>
-      {t('route.add.title')}
-    </Button>
-  );
-};
-
-function RouteComponent() {
-  const query = useSuspenseQuery(routesQueryOptions);
+  const query = useSuspenseQuery(getRouteListQueryOptions(pagination));
   const { data, isLoading } = query;
   const { t } = useTranslation();
 
-  const columns = useMemo<
-    ProColumns<APISIXType['RespRouteList']['data']['list'][number]>[]
-  >(() => {
+  useEffect(() => {
+    if (data?.total) {
+      updateTotal(data.total);
+    }
+  }, [data?.total, updateTotal]);
+
+  const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
       {
-        dataIndex: 'id',
+        dataIndex: ['value', 'id'],
         title: 'ID',
         key: 'id',
         valueType: 'text',
       },
       {
-        dataIndex: 'name',
+        dataIndex: ['value', 'name'],
         title: t('form.basic.name'),
         key: 'name',
         valueType: 'text',
       },
       {
-        dataIndex: 'desc',
+        dataIndex: ['value', 'desc'],
         title: t('form.basic.desc'),
         key: 'desc',
         valueType: 'text',
       },
       {
-        dataIndex: 'uri',
+        dataIndex: ['value', 'uri'],
         title: 'URI',
         key: 'uri',
         valueType: 'text',
@@ -65,26 +58,59 @@ function RouteComponent() {
   }, [t]);
 
   return (
-    <ProTable
-      columns={columns}
-      dataSource={data.list}
-      rowKey="id"
-      loading={isLoading}
-      search={false}
-      options={{
-        reload: true,
-      }}
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        total: data.total,
-      }}
-      toolBarRender={() => [<ToCreatePageBtn key="add" />]}
-    />
+    <AntdConfigProvider>
+      <ProTable
+        columns={columns}
+        dataSource={data.list}
+        rowKey="id"
+        loading={isLoading}
+        search={false}
+        options={false}
+        pagination={{
+          current: pagination.page,
+          pageSize: pagination.pageSize,
+          total: pagination.total,
+          showSizeChanger: true,
+          onChange: handlePageChange,
+        }}
+        cardProps={{ bodyStyle: { padding: 0 } }}
+        toolbar={{
+          menu: {
+            type: 'inline',
+            items: [
+              {
+                key: 'add',
+                label: (
+                  <ToAddPageBtn
+                    key="add"
+                    label={t('route.add.title')}
+                    to="/routes/add"
+                  />
+                ),
+              },
+            ],
+          },
+        }}
+      />
+    </AntdConfigProvider>
+  );
+};
+
+function RouteComponent() {
+  return (
+    <>
+      <PageHeader title="Routes" />
+      <AntdConfigProvider>
+        <RouteList />
+      </AntdConfigProvider>
+    </>
   );
 }
 
 export const Route = createFileRoute('/routes/')({
   component: RouteComponent,
-  loader: () => queryClient.ensureQueryData(routesQueryOptions),
+  validateSearch: pageSearchSchema,
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps }) =>
+    queryClient.ensureQueryData(getRouteListQueryOptions(deps)),
 });
