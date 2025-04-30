@@ -5,7 +5,6 @@ import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
 import { FormItemTextarea } from '@/components/form/Textarea';
 import { FormItemTextInput } from '@/components/form/TextInput';
-import { A6 } from '@/types/schema/apisix';
 import { NamePrefixProvider } from '@/utils/useNamePrefix';
 import { FormItemPlugins } from '../FormItemPlugins';
 import { FormPartBasic } from '../FormPartBasic';
@@ -14,6 +13,7 @@ import { FormSection } from '../FormSection';
 import { Divider, InputWrapper } from '@mantine/core';
 import type { RoutePostType } from './schema';
 import { FormItemSelect } from '@/components/form/Select';
+import { APISIX } from '@/types/schema/apisix';
 
 const FormPartBasicWithPriority = () => {
   const { t } = useTranslation();
@@ -29,8 +29,8 @@ const FormPartBasicWithPriority = () => {
         control={control}
         name="status"
         label={t('form.route.status')}
-        data={A6.RouteStatus.options.map((v) => v.value.toString())}
-        defaultValue={A6.RouteStatus.options[1].value.toString()}
+        data={APISIX.RouteStatus.options.map((v) => v.value.toString())}
+        defaultValue={APISIX.RouteStatus.options[1].value.toString()}
         from={String}
         to={Number}
       />
@@ -47,7 +47,7 @@ const FormSectionMatchRules = () => {
         control={control}
         name="methods"
         label={t('form.route.methods')}
-        data={A6.HttpMethod.options.map((v) => v.value)}
+        data={APISIX.HttpMethod.options.map((v) => v.value)}
         searchValue=""
       />
       <InputWrapper label={t('form.route.enableWebsocket')}>

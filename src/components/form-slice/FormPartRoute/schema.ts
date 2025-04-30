@@ -1,7 +1,7 @@
-import { A6 } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 import type { z } from 'zod';
 
-export const RoutePostSchema = A6.Route.omit({
+export const RoutePostSchema = APISIX.Route.omit({
   id: true,
   create_time: true,
   update_time: true,
