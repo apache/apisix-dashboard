@@ -3,8 +3,7 @@ import { APISIXCommon } from './common';
 import { APISIXUpstreams } from './upstreams';
 import { APISIXPlugins } from './plugins';
 
-const RouteStatus = z.union([z.literal(0), z.literal(1)]);
-
+// Using the common Status type
 const Route = z
   .object({
     uri: z.string(),
@@ -26,7 +25,7 @@ const Route = z
     timeout: APISIXUpstreams.UpstreamTimeout.partial(),
     enable_websocket: z.boolean(),
     priority: z.number().default(0),
-    status: RouteStatus,
+    status: APISIXCommon.Status,
   })
   .partial()
   .merge(APISIXCommon.Basic)
@@ -34,5 +33,6 @@ const Route = z
 
 export const APISIXRoutes = {
   Route,
-  RouteStatus,
+  // Export RouteStatus as an alias to APISIXCommon.Status for backward compatibility
+  RouteStatus: APISIXCommon.Status,
 };

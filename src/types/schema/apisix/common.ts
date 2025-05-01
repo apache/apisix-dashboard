@@ -36,6 +36,9 @@ const HttpMethod = z.union([
   z.literal('PURGE'),
 ]);
 
+// Common status type for APISIX entities (enabled=1, disabled=0)
+const Status = z.union([z.literal(0), z.literal(1)]);
+
 export const APISIXCommon = {
   Basic,
   Labels,
@@ -44,4 +47,5 @@ export const APISIXCommon = {
   Timestamp,
   Info,
   HttpMethod,
+  Status,
 };

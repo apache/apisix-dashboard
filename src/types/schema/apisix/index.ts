@@ -5,6 +5,7 @@ import { APISIXProtos } from './protos';
 import { APISIXRoutes } from './routes';
 import { APISIXUpstreams } from './upstreams';
 import { APISIXPluginMetadata } from './plugin_metadata';
+import { APISIXSSLs } from './ssls';
 export type { APISIXType } from './type';
 export const APISIX = {
   ...APISIXCommon,
@@ -14,4 +15,5 @@ export const APISIX = {
   ...APISIXGlobalRules,
   ...APISIXPlugins,
   ...APISIXPluginMetadata,
+  ...APISIXSSLs,
 };
