@@ -61,6 +61,21 @@
       "vars": "Vars"
     },
     "search": "Search",
+    "ssls": {
+      "cert": "Certificate",
+      "key": "Private Key",
+      "sni": "Server Name Indication",
+      "snis": "Server Name Indications",
+      "validity_start": "Valid From",
+      "validity_end": "Valid Until",
+      "client": {
+        "ca": "Client CA Certificate",
+        "depth": "Verification Depth"
+      },
+      "status": "Status",
+      "type": "Certificate Type",
+      "exptime": "Expiration Time"
+    },
     "tagsInput": {
       "placeholder": "Input text, then enter or blur"
     },
@@ -264,5 +279,14 @@
     },
     "title": "Upstreams"
   },
+  "ssl": {
+    "add": {
+      "success": "Add SSL Certificate Successfully",
+      "title": "Add SSL Certificate"
+    },
+    "title": "SSL Certificates"
+  },
+  "enabled": "Enabled",
+  "disabled": "Disabled",
   "view": "View"
 }
