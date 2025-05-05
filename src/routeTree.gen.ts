@@ -27,6 +27,7 @@ import { Route as RoutesAddImport } from './routes/routes/add'
 import { Route as ProtosAddImport } from './routes/protos/add'
 import { Route as GlobalrulesAddImport } from './routes/global_rules/add'
 import { Route as UpstreamsDetailIdImport } from './routes/upstreams/detail.$id'
+import { Route as SslsDetailIdImport } from './routes/ssls/detail.$id'
 import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
 import { Route as GlobalrulesDetailIdImport } from './routes/global_rules/detail.$id'
 
@@ -125,6 +126,12 @@ const GlobalrulesAddRoute = GlobalrulesAddImport.update({
 const UpstreamsDetailIdRoute = UpstreamsDetailIdImport.update({
   id: '/upstreams/detail/$id',
   path: '/upstreams/detail/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SslsDetailIdRoute = SslsDetailIdImport.update({
+  id: '/ssls/detail/$id',
+  path: '/ssls/detail/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -263,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtosDetailIdImport
       parentRoute: typeof rootRoute
     }
+    '/ssls/detail/$id': {
+      id: '/ssls/detail/$id'
+      path: '/ssls/detail/$id'
+      fullPath: '/ssls/detail/$id'
+      preLoaderRoute: typeof SslsDetailIdImport
+      parentRoute: typeof rootRoute
+    }
     '/upstreams/detail/$id': {
       id: '/upstreams/detail/$id'
       path: '/upstreams/detail/$id'
@@ -293,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/upstreams': typeof UpstreamsIndexRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
+  '/ssls/detail/$id': typeof SslsDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
 
@@ -314,6 +329,7 @@ export interface FileRoutesByTo {
   '/upstreams': typeof UpstreamsIndexRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
+  '/ssls/detail/$id': typeof SslsDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
 
@@ -336,6 +352,7 @@ export interface FileRoutesById {
   '/upstreams/': typeof UpstreamsIndexRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
+  '/ssls/detail/$id': typeof SslsDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
 
@@ -359,6 +376,7 @@ export interface FileRouteTypes {
     | '/upstreams'
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
+    | '/ssls/detail/$id'
     | '/upstreams/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -379,6 +397,7 @@ export interface FileRouteTypes {
     | '/upstreams'
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
+    | '/ssls/detail/$id'
     | '/upstreams/detail/$id'
   id:
     | '__root__'
@@ -399,6 +418,7 @@ export interface FileRouteTypes {
     | '/upstreams/'
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
+    | '/ssls/detail/$id'
     | '/upstreams/detail/$id'
   fileRoutesById: FileRoutesById
 }
@@ -421,6 +441,7 @@ export interface RootRouteChildren {
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
   GlobalrulesDetailIdRoute: typeof GlobalrulesDetailIdRoute
   ProtosDetailIdRoute: typeof ProtosDetailIdRoute
+  SslsDetailIdRoute: typeof SslsDetailIdRoute
   UpstreamsDetailIdRoute: typeof UpstreamsDetailIdRoute
 }
 
@@ -442,6 +463,7 @@ const rootRouteChildren: RootRouteChildren = {
   UpstreamsIndexRoute: UpstreamsIndexRoute,
   GlobalrulesDetailIdRoute: GlobalrulesDetailIdRoute,
   ProtosDetailIdRoute: ProtosDetailIdRoute,
+  SslsDetailIdRoute: SslsDetailIdRoute,
   UpstreamsDetailIdRoute: UpstreamsDetailIdRoute,
 }
 
@@ -472,6 +494,7 @@ export const routeTree = rootRoute
         "/upstreams/",
         "/global_rules/detail/$id",
         "/protos/detail/$id",
+        "/ssls/detail/$id",
         "/upstreams/detail/$id"
       ]
     },
@@ -525,6 +548,9 @@ export const routeTree = rootRoute
     },
     "/protos/detail/$id": {
       "filePath": "protos/detail.$id.tsx"
+    },
+    "/ssls/detail/$id": {
+      "filePath": "ssls/detail.$id.tsx"
     },
     "/upstreams/detail/$id": {
       "filePath": "upstreams/detail.$id.tsx"

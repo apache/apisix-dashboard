@@ -1,6 +1,6 @@
 import { queryClient } from '@/config/global';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import type { APISIXType } from '@/types/schema/apisix';
 import { ProTable } from '@ant-design/pro-components';
@@ -12,6 +12,7 @@ import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { getSSLListQueryOptions } from '@/apis/ssls';
+import { Button } from '@mantine/core';
 
 function RouteComponent() {
   const { t } = useTranslation();
@@ -65,7 +66,18 @@ function RouteComponent() {
         valueType: 'option',
         key: 'option',
         width: 120,
-        // render: (_, record) => [],
+        render: (_, record) => [
+          <Link
+            key="detail"
+            to="/ssls/detail/$id"
+            params={{ id: record.value.id }}
+            style={{ textDecoration: 'none' }}
+          >
+            <Button size="xs" variant="light">
+              {t('form.btn.view')}
+            </Button>
+          </Link>,
+        ],
       },
     ];
   }, [t]);
@@ -99,7 +111,7 @@ function RouteComponent() {
                     <ToAddPageBtn
                       key="add"
                       to="/ssls/add"
-                      label={t('ssl.add.title')}
+                      label={t('ssls.add.title')}
                     />
                   ),
                 },

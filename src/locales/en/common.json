@@ -277,10 +277,17 @@
     "adminKey": "Admin Key",
     "title": "Setting"
   },
-  "ssl": {
+  "ssls": {
     "add": {
       "success": "Add SSL Certificate Successfully",
       "title": "Add SSL Certificate"
+    },
+    "detail": {
+      "title": "SSL Certificate Detail"
+    },
+    "edit": {
+      "success": "Edit SSL Certificate Successfully",
+      "title": "Edit SSL Certificate"
     },
     "title": "SSL Certificates"
   },
