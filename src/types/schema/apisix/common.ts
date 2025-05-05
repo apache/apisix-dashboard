@@ -36,6 +36,8 @@ const HttpMethod = z.union([
   z.literal('PURGE'),
 ]);
 
+const Status = z.union([z.literal(0), z.literal(1)]);
+
 export const APISIXCommon = {
   Basic,
   Labels,
@@ -44,4 +46,5 @@ export const APISIXCommon = {
   Timestamp,
   Info,
   HttpMethod,
+  Status,
 };
