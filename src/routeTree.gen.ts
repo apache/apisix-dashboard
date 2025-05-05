@@ -23,6 +23,7 @@ import { Route as PluginmetadataIndexImport } from './routes/plugin_metadata/ind
 import { Route as GlobalrulesIndexImport } from './routes/global_rules/index'
 import { Route as ConsumersIndexImport } from './routes/consumers/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
+import { Route as StreamroutesAddImport } from './routes/stream_routes/add'
 import { Route as RoutesAddImport } from './routes/routes/add'
 import { Route as ProtosAddImport } from './routes/protos/add'
 import { Route as GlobalrulesAddImport } from './routes/global_rules/add'
@@ -105,6 +106,12 @@ const UpstreamsAddRoute = UpstreamsAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const StreamroutesAddRoute = StreamroutesAddImport.update({
+  id: '/stream_routes/add',
+  path: '/stream_routes/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RoutesAddRoute = RoutesAddImport.update({
   id: '/routes/add',
   path: '/routes/add',
@@ -177,6 +184,13 @@ declare module '@tanstack/react-router' {
       path: '/routes/add'
       fullPath: '/routes/add'
       preLoaderRoute: typeof RoutesAddImport
+      parentRoute: typeof rootRoute
+    }
+    '/stream_routes/add': {
+      id: '/stream_routes/add'
+      path: '/stream_routes/add'
+      fullPath: '/stream_routes/add'
+      preLoaderRoute: typeof StreamroutesAddImport
       parentRoute: typeof rootRoute
     }
     '/upstreams/add': {
@@ -294,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumers': typeof ConsumersIndexRoute
   '/global_rules': typeof GlobalrulesIndexRoute
@@ -316,6 +331,7 @@ export interface FileRoutesByTo {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumers': typeof ConsumersIndexRoute
   '/global_rules': typeof GlobalrulesIndexRoute
@@ -339,6 +355,7 @@ export interface FileRoutesById {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumers/': typeof ConsumersIndexRoute
   '/global_rules/': typeof GlobalrulesIndexRoute
@@ -363,6 +380,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/stream_routes/add'
     | '/upstreams/add'
     | '/consumers'
     | '/global_rules'
@@ -384,6 +402,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/stream_routes/add'
     | '/upstreams/add'
     | '/consumers'
     | '/global_rules'
@@ -405,6 +424,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/stream_routes/add'
     | '/upstreams/add'
     | '/consumers/'
     | '/global_rules/'
@@ -428,6 +448,7 @@ export interface RootRouteChildren {
   GlobalrulesAddRoute: typeof GlobalrulesAddRoute
   ProtosAddRoute: typeof ProtosAddRoute
   RoutesAddRoute: typeof RoutesAddRoute
+  StreamroutesAddRoute: typeof StreamroutesAddRoute
   UpstreamsAddRoute: typeof UpstreamsAddRoute
   ConsumersIndexRoute: typeof ConsumersIndexRoute
   GlobalrulesIndexRoute: typeof GlobalrulesIndexRoute
@@ -450,6 +471,7 @@ const rootRouteChildren: RootRouteChildren = {
   GlobalrulesAddRoute: GlobalrulesAddRoute,
   ProtosAddRoute: ProtosAddRoute,
   RoutesAddRoute: RoutesAddRoute,
+  StreamroutesAddRoute: StreamroutesAddRoute,
   UpstreamsAddRoute: UpstreamsAddRoute,
   ConsumersIndexRoute: ConsumersIndexRoute,
   GlobalrulesIndexRoute: GlobalrulesIndexRoute,
@@ -481,6 +503,7 @@ export const routeTree = rootRoute
         "/global_rules/add",
         "/protos/add",
         "/routes/add",
+        "/stream_routes/add",
         "/upstreams/add",
         "/consumers/",
         "/global_rules/",
@@ -509,6 +532,9 @@ export const routeTree = rootRoute
     },
     "/routes/add": {
       "filePath": "routes/add.tsx"
+    },
+    "/stream_routes/add": {
+      "filePath": "stream_routes/add.tsx"
     },
     "/upstreams/add": {
       "filePath": "upstreams/add.tsx"

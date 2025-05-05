@@ -1,3 +1,4 @@
+import type { StreamRoutePostType } from '@/components/form-slice/FormPartStreamRoute/schema';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
@@ -36,9 +37,7 @@ export const putStreamRouteReq = (data: APISIXType['StreamRoute']) => {
   >(`${API_STREAM_ROUTES}/${id}`, rest);
 };
 
-export const postStreamRouteReq = (
-  data: Omit<APISIXType['StreamRoute'], 'id'>
-) =>
+export const postStreamRouteReq = (data: StreamRoutePostType) =>
   req.post<unknown, APISIXType['RespStreamRouteDetail']>(
     API_STREAM_ROUTES,
     data

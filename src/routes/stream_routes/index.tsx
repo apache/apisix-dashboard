@@ -93,7 +93,7 @@ const StreamRouteList = () => {
                   <ToAddPageBtn
                     key="add"
                     label={t('streamRoutes.add.title')}
-                    to="/routes/add"
+                    to="/stream_routes/add"
                   />
                 ),
               },
