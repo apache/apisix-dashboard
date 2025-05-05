@@ -63,8 +63,8 @@
     "search": "Search",
     "service": {
       "enableWebsocket": "Enable WebSocket",
-      "script": "Script",
       "hosts": "Hosts",
+      "script": "Script",
       "settings": "Service Settings"
     },
     "streamRoute": {
@@ -287,6 +287,9 @@
       "success": "Edit Service Successfully",
       "title": "Edit Service"
     },
+    "title": "Services"
+  },
+  "services": {
     "title": "Services"
   },
   "setting": {
