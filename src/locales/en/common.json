@@ -61,6 +61,12 @@
       "vars": "Vars"
     },
     "search": "Search",
+    "service": {
+      "enableWebsocket": "Enable WebSocket",
+      "script": "Script",
+      "hosts": "Hosts",
+      "settings": "Service Settings"
+    },
     "streamRoute": {
       "protocol": {
         "conf": "Conf",
@@ -269,6 +275,20 @@
     "title": "Routes"
   },
   "seconds": "Seconds",
+  "service": {
+    "add": {
+      "success": "Add Service Successfully",
+      "title": "Add Service"
+    },
+    "detail": {
+      "title": "Service Detail"
+    },
+    "edit": {
+      "success": "Edit Service Successfully",
+      "title": "Edit Service"
+    },
+    "title": "Services"
+  },
   "setting": {
     "adminKey": "Admin Key",
     "title": "Setting"
