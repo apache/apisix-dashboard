@@ -15,6 +15,10 @@ export const navRoutes: NavRoute[] = [
     label: 'routes',
   },
   {
+    to: '/stream_routes',
+    label: 'streamRoutes',
+  },
+  {
     to: '/upstreams',
     label: 'upstreams',
   },

@@ -193,6 +193,7 @@
     "pluginMetadata": "Plugin Metadata",
     "protos": "Protos",
     "routes": "Routes",
+    "streamRoutes": "Stream Routes",
     "secrets": "Secrets",
     "services": "Services",
     "ssls": "SSLs",
@@ -257,6 +258,20 @@
   "setting": {
     "adminKey": "Admin Key",
     "title": "Setting"
+  },
+  "streamRoutes": {
+    "add": {
+      "submit": "Add Stream Route Successfully",
+      "title": "Add Stream Route"
+    },
+    "detail": {
+      "title": "Stream Route Detail"
+    },
+    "edit": {
+      "success": "Edit Stream Route Successfully",
+      "title": "Edit Stream Route"
+    },
+    "title": "Stream Routes"
   },
   "upstreams": {
     "add": {
