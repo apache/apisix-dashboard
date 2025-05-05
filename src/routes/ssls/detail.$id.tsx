@@ -13,7 +13,11 @@ import { notifications } from '@mantine/notifications';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { pipeProduce } from '@/utils/producer';
 import { useEffect } from 'react';
-import { SSLPutSchema } from '@/components/form-slice/FormPartSSL/schema';
+import {
+  SSLPutSchema,
+  produceToSSLForm,
+} from '@/components/form-slice/FormPartSSL/schema';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 
 type Props = {
   readOnly: boolean;
@@ -50,10 +54,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
 
   useEffect(() => {
     if (sslData && !isLoading) {
-      form.reset({
-        ...sslData,
-        __clientEnabled: sslData.status === 1,
-      });
+      form.reset(produceToSSLForm(sslData));
     }
   }, [sslData, form, isLoading]);
 
@@ -69,6 +70,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
             putSSL.mutateAsync(pipeProduce()(d))
           )}
         >
+          <FormSectionGeneral />
           <FormPartSSL />
           {!readOnly && (
             <Group>

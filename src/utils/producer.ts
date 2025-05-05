@@ -1,6 +1,7 @@
 import { type ICleanerOptions, clean } from 'fast-clean';
 import { produce } from 'immer';
 import { pipe } from 'rambdax';
+import { produceTime } from './form-producer';
 
 export const deepCleanEmptyKeys = <T extends object>(
   obj: T,
@@ -40,6 +41,7 @@ export const pipeProduce = (...funcs: R) => {
       pipe(
         ...funcs,
         produceRmDoubleUnderscoreKeys,
+        produceTime,
         produceDeepCleanEmptyKeys()
       )(draft)
     ) as T;
