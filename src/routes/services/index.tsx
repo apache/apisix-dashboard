@@ -49,12 +49,6 @@ const ServiceList = () => {
         valueType: 'text',
       },
       {
-        dataIndex: ['value', 'enable_websocket'],
-        title: t('form.service.enableWebsocket'),
-        key: 'enable_websocket',
-        valueType: 'boolean',
-      },
-      {
         dataIndex: ['value', 'update_time'],
         title: t('form.info.update_time'),
         key: 'update_time',
