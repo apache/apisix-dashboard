@@ -16,17 +16,18 @@ import IconUpload from '~icons/material-symbols/upload';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export type FileUploadTextareaProps<T extends FieldValues> = UseControllerProps<T> &
-  MTextareaProps & {
-    acceptFileTypes?: string;
-    uploadButtonText?: string;
-    maxFileSize?: number;
-    onFileLoaded?: (content: string, fileName: string) => void;
-    allowUpload?: boolean;
-  };
+export type FormItemTextareaWithUploadProps<T extends FieldValues> =
+  UseControllerProps<T> &
+    MTextareaProps & {
+      acceptFileTypes?: string;
+      uploadButtonText?: string;
+      maxFileSize?: number;
+      onFileLoaded?: (content: string, fileName: string) => void;
+      allowUpload?: boolean;
+    };
 
-export const FileUploadTextarea = <T extends FieldValues>(
-  props: FileUploadTextareaProps<T>
+export const FormItemTextareaWithUpload = <T extends FieldValues>(
+  props: FormItemTextareaWithUploadProps<T>
 ) => {
   const { allowUpload = true } = props;
   const { controllerProps, restProps } = genControllerProps(props, '');
@@ -40,7 +41,7 @@ export const FileUploadTextarea = <T extends FieldValues>(
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
-    acceptFileTypes = '.txt,.json,.yaml,.yml',
+    acceptFileTypes = '',
     uploadButtonText = '',
     maxFileSize = 10 * 1024 * 1024,
     onFileLoaded,

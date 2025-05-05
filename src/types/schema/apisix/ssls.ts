@@ -1,65 +1,41 @@
-// filepath: /workspace/src/types/schema/apisix/ssls.ts
 import { z } from 'zod';
 import { APISIXCommon } from './common';
 
-const SSLType = z.literal('server');
+const SSLType = z.union([z.literal('server'), z.literal('client')]);
+
+const SSLProtocols = z.union([
+  z.literal('TLSv1.1'),
+  z.literal('TLSv1.2'),
+  z.literal('TLSv1.3'),
+]);
+
+const SSLClient = z.object({
+  ca: z.string().optional(),
+  depth: z.number().min(0).default(1).optional(),
+  skip_mtls_uri_regex: z.array(z.string()).optional(),
+});
 
 const SSL = z
   .object({
     cert: z.string(),
     key: z.string(),
-    sni: z.string(),
+    sni: z.string().optional(),
     snis: z.array(z.string()),
     certs: z.array(z.string()),
     keys: z.array(z.string()),
-    client: z
-      .object({
-        ca: z.string(),
-        depth: z.number().min(0).default(1),
-      })
-      .partial(),
-    type: SSLType,
-    exptime: z.number().optional(),
-    status: APISIXCommon.Status,
-    validity_start: z.number().optional(),
-    validity_end: z.number().optional(),
+    client: SSLClient.optional(),
+    type: SSLType.optional(),
+    status: APISIXCommon.Status.optional(),
+    ssl_protocols: z.array(SSLProtocols).optional(),
   })
   .partial()
   .merge(APISIXCommon.Basic)
-  .merge(APISIXCommon.Info)
-  // Based on the issues found, APISIX requires specific combinations of fields
-  .refine(
-    (data) => {
-      if (data.type === 'server') {
-        // Server type requires one of these combinations
-        const hasSingleCert =
-          data.sni !== undefined &&
-          data.cert !== undefined &&
-          data.key !== undefined;
-        const hasMultiSNI =
-          data.snis !== undefined &&
-          data.cert !== undefined &&
-          data.key !== undefined;
-        const hasMultiCerts =
-          (data.sni !== undefined || data.snis !== undefined) &&
-          data.certs !== undefined &&
-          data.keys !== undefined &&
-          data.certs.length === data.keys.length;
-
-        return hasSingleCert || hasMultiSNI || hasMultiCerts;
-      }
-      // Non-server type requires at least key and cert
-      return data.cert !== undefined && data.key !== undefined;
-    },
-    {
-      message:
-        'SSL object requires valid combinations of sni/snis, cert/certs, and key/keys fields',
-    }
-  );
+  .merge(APISIXCommon.Info);
 
 export const APISIXSSLs = {
   SSL,
-  // Export SSLStatus as an alias to APISIXCommon.Status for backward compatibility
   SSLStatus: APISIXCommon.Status,
   SSLType,
+  SSLProtocols,
+  SSLClient,
 };

@@ -1,6 +1,8 @@
 {
   "APISIX Dashboard": "APISIX Dashboard",
   "actions": "Actions",
+  "disabled": "Disabled",
+  "enabled": "Enabled",
   "form": {
     "basic": {
       "desc": "Description",
@@ -16,6 +18,7 @@
     },
     "btn": {
       "add": "Add",
+      "addARow": "Add a row",
       "cancel": "Cancel",
       "delete": "Delete",
       "edit": "Edit",
@@ -63,18 +66,27 @@
     "search": "Search",
     "ssls": {
       "cert": "Certificate",
-      "key": "Private Key",
-      "sni": "Server Name Indication",
-      "snis": "Server Name Indications",
-      "validity_start": "Valid From",
-      "validity_end": "Valid Until",
+      "cert_key_list": {
+        "add": "Add a pair",
+        "delete": "Delete the pair",
+        "title": "Certificate and Key Pairs"
+      },
+      "certs": "Cert",
       "client": {
         "ca": "Client CA Certificate",
-        "depth": "Verification Depth"
+        "depth": "Verification Depth",
+        "skipMtlsUriRegex": "Skip mTLS URI Regex",
+        "title": "Client"
       },
+      "exptime": "Expiration Time",
+      "key": "Private Key",
+      "sni": "SNI",
+      "snis": "SNIs",
+      "ssl_protocols": "SSL Protocols",
       "status": "Status",
       "type": "Certificate Type",
-      "exptime": "Expiration Time"
+      "validity_end": "Valid Until",
+      "validity_start": "Valid From"
     },
     "tagsInput": {
       "placeholder": "Input text, then enter or blur"
@@ -202,19 +214,6 @@
       "upstreamId": "Upstream ID"
     }
   },
-  "navbar": {
-    "consumers": "Consumers",
-    "globalRules": "Global Rules",
-    "pluginMetadata": "Plugin Metadata",
-    "protos": "Protos",
-    "routes": "Routes",
-    "secrets": "Secrets",
-    "services": "Services",
-    "ssls": "SSLs",
-    "upstreams": "Upstreams"
-  },
-  "noData": "No Data",
-  "or": "OR",
   "globalRules": {
     "add": {
       "success": "Add Global Rule Successfully",
@@ -230,6 +229,19 @@
     "plugins": "Plugins",
     "title": "Global Rules"
   },
+  "navbar": {
+    "consumers": "Consumers",
+    "globalRules": "Global Rules",
+    "pluginMetadata": "Plugin Metadata",
+    "protos": "Protos",
+    "routes": "Routes",
+    "secrets": "Secrets",
+    "services": "Services",
+    "ssls": "SSLs",
+    "upstreams": "Upstreams"
+  },
+  "noData": "No Data",
+  "or": "OR",
   "pluginMetadata": {
     "delete": {
       "success": "Delete Plugin Metadata of {{name}} Successfully"
@@ -265,6 +277,13 @@
     "adminKey": "Admin Key",
     "title": "Setting"
   },
+  "ssl": {
+    "add": {
+      "success": "Add SSL Certificate Successfully",
+      "title": "Add SSL Certificate"
+    },
+    "title": "SSL Certificates"
+  },
   "upstreams": {
     "add": {
       "success": "Add Upstream Successfully",
@@ -279,14 +298,5 @@
     },
     "title": "Upstreams"
   },
-  "ssl": {
-    "add": {
-      "success": "Add SSL Certificate Successfully",
-      "title": "Add SSL Certificate"
-    },
-    "title": "SSL Certificates"
-  },
-  "enabled": "Enabled",
-  "disabled": "Disabled",
   "view": "View"
 }

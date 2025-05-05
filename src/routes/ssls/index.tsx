@@ -16,7 +16,6 @@ import { getSSLListQueryOptions } from '@/apis/ssls';
 function RouteComponent() {
   const { t } = useTranslation();
 
-  // Use the pagination hook
   const { pagination, handlePageChange, updateTotal } = usePagination({
     queryKey: 'ssls',
   });
@@ -60,23 +59,6 @@ function RouteComponent() {
           1: { text: t('enabled'), status: 'Success' },
           0: { text: t('disabled'), status: 'Error' },
         },
-      },
-      {
-        dataIndex: ['value', 'validity_end'],
-        title: t('form.ssls.validity_end'),
-        key: 'validity_end',
-        valueType: 'dateTime',
-        sorter: true,
-        renderText: (text) => {
-          if (!text) return '-';
-          return new Date(Number(text) * 1000).toISOString();
-        },
-      },
-      {
-        dataIndex: ['value', 'name'],
-        title: t('form.basic.name'),
-        key: 'name',
-        valueType: 'text',
       },
       {
         title: t('actions'),

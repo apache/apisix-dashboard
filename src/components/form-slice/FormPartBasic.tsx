@@ -9,27 +9,41 @@ import { useNamePrefix } from '@/utils/useNamePrefix';
 import type { PropsWithChildren } from 'react';
 
 export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
-  PropsWithChildren;
+  PropsWithChildren & {
+    showName?: boolean;
+    showDesc?: boolean;
+    showLabels?: boolean;
+  };
 
 export const FormPartBasic = (props: FormPartBasicProps) => {
-  const { children, ...restProps } = props;
+  const {
+    children,
+    showName = true,
+    showDesc = true,
+    showLabels = true,
+    ...restProps
+  } = props;
   const { control } = useFormContext<APISIXType['Basic']>();
   const { t } = useTranslation();
   const np = useNamePrefix();
 
   return (
     <FormSection legend={t('form.basic.title')} {...restProps}>
-      <FormItemTextInput
-        name={np('name')}
-        label={t('form.basic.name')}
-        control={control}
-      />
-      <FormItemTextarea
-        name={np('desc')}
-        label={t('form.basic.desc')}
-        control={control}
-      />
-      <FormItemLabels name={np('labels')} control={control} />
+      {showName && (
+        <FormItemTextInput
+          name={np('name')}
+          label={t('form.basic.name')}
+          control={control}
+        />
+      )}
+      {showDesc && (
+        <FormItemTextarea
+          name={np('desc')}
+          label={t('form.basic.desc')}
+          control={control}
+        />
+      )}
+      {showLabels && <FormItemLabels name={np('labels')} control={control} />}
       {children}
     </FormSection>
   );
