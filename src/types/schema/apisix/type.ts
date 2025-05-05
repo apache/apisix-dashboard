@@ -33,6 +33,9 @@ export type APISIXType = RawAPISIXType & {
   RespUpstreamDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['Upstream']>
   >;
+  RespServiceList: AxiosResponse<APISIXListResponse<APISIXType['Service']>>;
+  RespServiceItem: APISIXType['RespServiceList']['data']['list'][number];
+  RespServiceDetail: AxiosResponse<APISIXDetailResponse<APISIXType['Service']>>;
   RespProtoList: AxiosResponse<APISIXListResponse<APISIXType['Proto']>>;
   RespProtoItem: APISIXType['RespProtoList']['data']['list'][number];
   RespProtoDetail: AxiosResponse<APISIXDetailResponse<APISIXType['Proto']>>;
