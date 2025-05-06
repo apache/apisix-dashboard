@@ -18,7 +18,11 @@ export type TabsProps = {
 export const Tabs = (props: TabsProps) => {
   const { defaultValue, items, listProps, ...rest } = props;
   return (
-    <MTabs defaultValue={defaultValue || items[0].value} {...rest}>
+    <MTabs
+      defaultValue={defaultValue || items[0].value}
+      keepMounted={false}
+      {...rest}
+    >
       <MTabs.List {...listProps}>
         {items.map((item) => (
           <MTabs.Tab key={item.value} value={item.value}>
