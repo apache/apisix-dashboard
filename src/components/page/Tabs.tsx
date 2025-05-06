@@ -7,7 +7,7 @@ import {
 export type TabsItem = {
   value: string;
   label: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
 };
 export type TabsProps = {
   defaultValue?: string;
@@ -30,11 +30,14 @@ export const Tabs = (props: TabsProps) => {
           </MTabs.Tab>
         ))}
       </MTabs.List>
-      {items.map((item) => (
-        <MTabs.Panel key={item.value} value={item.value}>
-          {item.content}
-        </MTabs.Panel>
-      ))}
+      {items.map(
+        (item) =>
+          item.content && (
+            <MTabs.Panel key={item.value} value={item.value}>
+              {item.content}
+            </MTabs.Panel>
+          )
+      )}
     </MTabs>
   );
 };
