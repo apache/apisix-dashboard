@@ -13,7 +13,6 @@ const DisplayDate = () => {
   const updateTime = useWatch({ control, name: 'update_time' });
   return (
     <>
-      <Divider my="lg" />
       <FormDisplayDate date={createTime} label={t('form.info.create_time')} />
       <FormDisplayDate date={updateTime} label={t('form.info.update_time')} />
     </>
@@ -31,15 +30,16 @@ const FormItemID = () => {
 
 type FormSectionInfoProps = {
   showDate?: boolean;
-  disableID?: boolean;
+  showID?: boolean;
 };
 
 export const FormSectionGeneral = (props: FormSectionInfoProps) => {
-  const { showDate = true, disableID = false } = props;
+  const { showDate = true, showID = false } = props;
   const { t } = useTranslation();
   return (
-    <FormSection legend={t('form.general.title')} disabled={disableID}>
-      <FormItemID />
+    <FormSection legend={t('form.general.title')} >
+      {showID && <FormItemID />}
+      {showID && showDate && <Divider my="lg" />}
       {showDate && <DisplayDate />}
     </FormSection>
   );
