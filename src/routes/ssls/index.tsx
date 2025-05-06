@@ -53,7 +53,7 @@ function RouteComponent() {
       },
       {
         dataIndex: ['value', 'status'],
-        title: t('form.route.status'),
+        title: t('form.basic.status'),
         key: 'status',
         valueEnum: {
           1: { text: t('enabled'), status: 'Success' },
