@@ -27,9 +27,9 @@ export const getConsumerQueryOptions = (username: string) =>
   });
 
 export const putConsumerReq = (data: APISIXType['ConsumerPut']) => {
-  const { username, ...rest } = data;
+  const { username } = data;
   return req.put<APISIXType['ConsumerPut'], APISIXType['RespConsumerDetail']>(
     `${API_CONSUMERS}/${username}`,
-    rest
+    data
   );
 };

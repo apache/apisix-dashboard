@@ -24,6 +24,10 @@
       "upload": "Upload",
       "view": "View"
     },
+    "consumer": {
+      "details": "Consumer Details",
+      "groupId": "Group ID"
+    },
     "disabled": "Disabled, click switch to enable",
     "general": {
       "title": "General"
