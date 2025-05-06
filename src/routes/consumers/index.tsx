@@ -72,8 +72,8 @@ function ConsumersList() {
     <AntdConfigProvider>
       <ProTable
         columns={columns}
-        dataSource={data?.list || []}
-        rowKey="id"
+        dataSource={data.list}
+        rowKey="username"
         loading={isLoading}
         search={false}
         options={false}
