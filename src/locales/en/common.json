@@ -12,6 +12,7 @@
         "value": "Value"
       },
       "name": "Name",
+      "status": "Status",
       "title": "Basic Infomation"
     },
     "btn": {
@@ -55,12 +56,25 @@
       "remoteAddr": "Remote Address",
       "remoteAddrs": "Remote Addresses",
       "service": "Service",
-      "status": "Status",
       "uri": "URI",
       "uris": "URIs",
       "vars": "Vars"
     },
     "search": "Search",
+    "streamRoute": {
+      "protocol": {
+        "conf": "Conf",
+        "logger": "Logger",
+        "name": "Protocol Name",
+        "superiorId": "Superior ID",
+        "title": "Protocol Information"
+      },
+      "remoteAddr": "Remote Address",
+      "server": "Server",
+      "serverAddr": "Server Address",
+      "serverPort": "Server Port",
+      "sni": "SNI"
+    },
     "tagsInput": {
       "placeholder": "Input text, then enter or blur"
     },
@@ -187,19 +201,6 @@
       "upstreamId": "Upstream ID"
     }
   },
-  "navbar": {
-    "consumers": "Consumers",
-    "globalRules": "Global Rules",
-    "pluginMetadata": "Plugin Metadata",
-    "protos": "Protos",
-    "routes": "Routes",
-    "secrets": "Secrets",
-    "services": "Services",
-    "ssls": "SSLs",
-    "upstreams": "Upstreams"
-  },
-  "noData": "No Data",
-  "or": "OR",
   "globalRules": {
     "add": {
       "success": "Add Global Rule Successfully",
@@ -215,6 +216,20 @@
     "plugins": "Plugins",
     "title": "Global Rules"
   },
+  "navbar": {
+    "consumers": "Consumers",
+    "globalRules": "Global Rules",
+    "pluginMetadata": "Plugin Metadata",
+    "protos": "Protos",
+    "routes": "Routes",
+    "secrets": "Secrets",
+    "services": "Services",
+    "ssls": "SSLs",
+    "streamRoutes": "Stream Routes",
+    "upstreams": "Upstreams"
+  },
+  "noData": "No Data",
+  "or": "OR",
   "pluginMetadata": {
     "delete": {
       "success": "Delete Plugin Metadata of {{name}} Successfully"
@@ -245,7 +260,7 @@
   },
   "route": {
     "add": {
-      "submit": "Add Route Successfully",
+      "success": "Add Route Successfully",
       "title": "Add Route"
     },
     "detail": {
@@ -261,6 +276,20 @@
   "setting": {
     "adminKey": "Admin Key",
     "title": "Setting"
+  },
+  "streamRoutes": {
+    "add": {
+      "success": "Add Stream Route Successfully",
+      "title": "Add Stream Route"
+    },
+    "detail": {
+      "title": "Stream Route Detail"
+    },
+    "edit": {
+      "success": "Edit Stream Route Successfully",
+      "title": "Edit Stream Route"
+    },
+    "title": "Stream Routes"
   },
   "upstreams": {
     "add": {

@@ -42,7 +42,7 @@ export default defineConfig({
       compiler: 'jsx',
       jsx: 'react',
     }),
-    TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),
+    TanStackRouterVite({ target: 'react', autoCodeSplitting: true, semicolons: false }),
     react(),
   ],
   css: {
