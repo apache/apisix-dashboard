@@ -10,7 +10,7 @@ import {
 import { PluginCard, type PluginCardProps } from './PluginCard';
 import { useTranslation } from 'react-i18next';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 
 type PluginCardListSearchProps = Pick<TextInputProps, 'placeholder'> & {
   search: string;
@@ -91,9 +91,18 @@ const PluginCardListCore = (props: PluginCardListProps) => {
   const { t } = useTranslation();
   const combobox = useVirtualizedCombobox();
   const optionsOb = useLocalObservable(() => ({
-    search: search,
-    plugins: plugins,
-    mode: mode,
+    search: '',
+    plugins: [] as string[],
+    mode: 'add' as OptionProps['mode'],
+    setSearch(search: string) {
+      this.search = search.toLowerCase().trim();
+    },
+    setPlugins(plugins: string[]) {
+      this.plugins = plugins;
+    },
+    setMode(mode: PluginCardProps['mode']) {
+      this.mode = mode;
+    },
     get list() {
       const arr = !this.search
         ? this.plugins
@@ -109,12 +118,9 @@ const PluginCardListCore = (props: PluginCardListProps) => {
     },
   }));
 
-  // handle state and useLocalObservable
-  useLayoutEffect(() => {
-    optionsOb.search = search.toLowerCase().trim();
-    optionsOb.plugins = plugins;
-    optionsOb.mode = mode;
-  }, [optionsOb, search, plugins, mode]);
+  useEffect(() => optionsOb.setPlugins(plugins), [optionsOb, plugins]);
+  useEffect(() => optionsOb.setSearch(search), [optionsOb, search]);
+  useEffect(() => optionsOb.setMode(mode), [optionsOb, mode]);
 
   return (
     <Combobox store={combobox}>

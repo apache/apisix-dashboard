@@ -7,7 +7,18 @@
       "title": "Add Consumer"
     },
     "credentials": {
-      "title": "Credentials"
+      "title": "Credentials",
+      "add": {
+        "success": "Add Credential Successfully",
+        "title": "Add Credential"
+      },
+      "detail": {
+        "title": "Credential Detail"
+      },
+      "edit": {
+        "success": "Edit Credential Successfully",
+        "title": "Edit Credential"
+      }
     },
     "detail": {
       "title": "Consumer Detail"

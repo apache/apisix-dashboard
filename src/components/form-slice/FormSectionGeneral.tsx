@@ -34,7 +34,7 @@ type FormSectionInfoProps = {
 };
 
 export const FormSectionGeneral = (props: FormSectionInfoProps) => {
-  const { showDate = true, showID = false } = props;
+  const { showDate = true, showID = true } = props;
   const { t } = useTranslation();
   return (
     <FormSection legend={t('form.general.title')} >

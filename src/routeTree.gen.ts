@@ -37,6 +37,7 @@ import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
 import { Route as GlobalrulesDetailIdImport } from './routes/global_rules/detail.$id'
 import { Route as ConsumersDetailUsernameIndexImport } from './routes/consumers/detail.$username/index'
 import { Route as ConsumersDetailUsernameCredentialsIndexImport } from './routes/consumers/detail.$username/credentials/index'
+import { Route as ConsumersDetailUsernameCredentialsAddImport } from './routes/consumers/detail.$username/credentials/add'
 
 // Create/Update Routes
 
@@ -195,6 +196,13 @@ const ConsumersDetailUsernameCredentialsIndexRoute =
   ConsumersDetailUsernameCredentialsIndexImport.update({
     id: '/consumers/detail/$username/credentials/',
     path: '/consumers/detail/$username/credentials/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ConsumersDetailUsernameCredentialsAddRoute =
+  ConsumersDetailUsernameCredentialsAddImport.update({
+    id: '/consumers/detail/$username/credentials/add',
+    path: '/consumers/detail/$username/credentials/add',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -377,6 +385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumersDetailUsernameIndexImport
       parentRoute: typeof rootRoute
     }
+    '/consumers/detail/$username/credentials/add': {
+      id: '/consumers/detail/$username/credentials/add'
+      path: '/consumers/detail/$username/credentials/add'
+      fullPath: '/consumers/detail/$username/credentials/add'
+      preLoaderRoute: typeof ConsumersDetailUsernameCredentialsAddImport
+      parentRoute: typeof rootRoute
+    }
     '/consumers/detail/$username/credentials/': {
       id: '/consumers/detail/$username/credentials/'
       path: '/consumers/detail/$username/credentials'
@@ -415,6 +430,7 @@ export interface FileRoutesByFullPath {
   '/stream_routes/detail/$id': typeof StreamroutesDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
   '/consumers/detail/$username': typeof ConsumersDetailUsernameIndexRoute
+  '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
 }
 
@@ -444,6 +460,7 @@ export interface FileRoutesByTo {
   '/stream_routes/detail/$id': typeof StreamroutesDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
   '/consumers/detail/$username': typeof ConsumersDetailUsernameIndexRoute
+  '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
 }
 
@@ -474,6 +491,7 @@ export interface FileRoutesById {
   '/stream_routes/detail/$id': typeof StreamroutesDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
   '/consumers/detail/$username/': typeof ConsumersDetailUsernameIndexRoute
+  '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials/': typeof ConsumersDetailUsernameCredentialsIndexRoute
 }
 
@@ -505,6 +523,7 @@ export interface FileRouteTypes {
     | '/stream_routes/detail/$id'
     | '/upstreams/detail/$id'
     | '/consumers/detail/$username'
+    | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -533,6 +552,7 @@ export interface FileRouteTypes {
     | '/stream_routes/detail/$id'
     | '/upstreams/detail/$id'
     | '/consumers/detail/$username'
+    | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials'
   id:
     | '__root__'
@@ -561,6 +581,7 @@ export interface FileRouteTypes {
     | '/stream_routes/detail/$id'
     | '/upstreams/detail/$id'
     | '/consumers/detail/$username/'
+    | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials/'
   fileRoutesById: FileRoutesById
 }
@@ -591,6 +612,7 @@ export interface RootRouteChildren {
   StreamroutesDetailIdRoute: typeof StreamroutesDetailIdRoute
   UpstreamsDetailIdRoute: typeof UpstreamsDetailIdRoute
   ConsumersDetailUsernameIndexRoute: typeof ConsumersDetailUsernameIndexRoute
+  ConsumersDetailUsernameCredentialsAddRoute: typeof ConsumersDetailUsernameCredentialsAddRoute
   ConsumersDetailUsernameCredentialsIndexRoute: typeof ConsumersDetailUsernameCredentialsIndexRoute
 }
 
@@ -620,6 +642,8 @@ const rootRouteChildren: RootRouteChildren = {
   StreamroutesDetailIdRoute: StreamroutesDetailIdRoute,
   UpstreamsDetailIdRoute: UpstreamsDetailIdRoute,
   ConsumersDetailUsernameIndexRoute: ConsumersDetailUsernameIndexRoute,
+  ConsumersDetailUsernameCredentialsAddRoute:
+    ConsumersDetailUsernameCredentialsAddRoute,
   ConsumersDetailUsernameCredentialsIndexRoute:
     ConsumersDetailUsernameCredentialsIndexRoute,
 }
@@ -659,6 +683,7 @@ export const routeTree = rootRoute
         "/stream_routes/detail/$id",
         "/upstreams/detail/$id",
         "/consumers/detail/$username/",
+        "/consumers/detail/$username/credentials/add",
         "/consumers/detail/$username/credentials/"
       ]
     },
@@ -736,6 +761,9 @@ export const routeTree = rootRoute
     },
     "/consumers/detail/$username/": {
       "filePath": "consumers/detail.$username/index.tsx"
+    },
+    "/consumers/detail/$username/credentials/add": {
+      "filePath": "consumers/detail.$username/credentials/add.tsx"
     },
     "/consumers/detail/$username/credentials/": {
       "filePath": "consumers/detail.$username/credentials/index.tsx"
