@@ -254,6 +254,10 @@
     "detail": {
       "title": "Proto Detail"
     },
+    "edit": {
+      "success": "Edit Proto Successfully",
+      "title": "Edit Proto"
+    },
     "form": {
       "content": "Content",
       "contentPlaceholder": "Paste or upload .proto, .pb file"
