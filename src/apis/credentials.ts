@@ -34,6 +34,17 @@ export const getCredentialListQueryOptions = (props: WithUsername) => {
   });
 };
 
+export const getCredentialQueryOptions = (username: string, id: string) =>
+  queryOptions({
+    queryKey: ['credential', username, id],
+    queryFn: () =>
+      req
+        .get<unknown, APISIXType['RespCredentialDetail']>(
+          `${API_CREDENTIALS(username)}/${id}`
+        )
+        .then((v) => v.data),
+  });
+
 export const putCredentialReq = (
   data: APISIXType['CredentialPut'] & WithUsername
 ) => {

@@ -38,6 +38,7 @@ import { Route as GlobalrulesDetailIdImport } from './routes/global_rules/detail
 import { Route as ConsumersDetailUsernameIndexImport } from './routes/consumers/detail.$username/index'
 import { Route as ConsumersDetailUsernameCredentialsIndexImport } from './routes/consumers/detail.$username/credentials/index'
 import { Route as ConsumersDetailUsernameCredentialsAddImport } from './routes/consumers/detail.$username/credentials/add'
+import { Route as ConsumersDetailUsernameCredentialsDetailIdImport } from './routes/consumers/detail.$username/credentials/detail.$id'
 
 // Create/Update Routes
 
@@ -203,6 +204,13 @@ const ConsumersDetailUsernameCredentialsAddRoute =
   ConsumersDetailUsernameCredentialsAddImport.update({
     id: '/consumers/detail/$username/credentials/add',
     path: '/consumers/detail/$username/credentials/add',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ConsumersDetailUsernameCredentialsDetailIdRoute =
+  ConsumersDetailUsernameCredentialsDetailIdImport.update({
+    id: '/consumers/detail/$username/credentials/detail/$id',
+    path: '/consumers/detail/$username/credentials/detail/$id',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -399,6 +407,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumersDetailUsernameCredentialsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/consumers/detail/$username/credentials/detail/$id': {
+      id: '/consumers/detail/$username/credentials/detail/$id'
+      path: '/consumers/detail/$username/credentials/detail/$id'
+      fullPath: '/consumers/detail/$username/credentials/detail/$id'
+      preLoaderRoute: typeof ConsumersDetailUsernameCredentialsDetailIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -432,6 +447,7 @@ export interface FileRoutesByFullPath {
   '/consumers/detail/$username': typeof ConsumersDetailUsernameIndexRoute
   '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -462,6 +478,7 @@ export interface FileRoutesByTo {
   '/consumers/detail/$username': typeof ConsumersDetailUsernameIndexRoute
   '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
 export interface FileRoutesById {
@@ -493,6 +510,7 @@ export interface FileRoutesById {
   '/consumers/detail/$username/': typeof ConsumersDetailUsernameIndexRoute
   '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials/': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
 export interface FileRouteTypes {
@@ -525,6 +543,7 @@ export interface FileRouteTypes {
     | '/consumers/detail/$username'
     | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials'
+    | '/consumers/detail/$username/credentials/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -554,6 +573,7 @@ export interface FileRouteTypes {
     | '/consumers/detail/$username'
     | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials'
+    | '/consumers/detail/$username/credentials/detail/$id'
   id:
     | '__root__'
     | '/'
@@ -583,6 +603,7 @@ export interface FileRouteTypes {
     | '/consumers/detail/$username/'
     | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials/'
+    | '/consumers/detail/$username/credentials/detail/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -614,6 +635,7 @@ export interface RootRouteChildren {
   ConsumersDetailUsernameIndexRoute: typeof ConsumersDetailUsernameIndexRoute
   ConsumersDetailUsernameCredentialsAddRoute: typeof ConsumersDetailUsernameCredentialsAddRoute
   ConsumersDetailUsernameCredentialsIndexRoute: typeof ConsumersDetailUsernameCredentialsIndexRoute
+  ConsumersDetailUsernameCredentialsDetailIdRoute: typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -646,6 +668,8 @@ const rootRouteChildren: RootRouteChildren = {
     ConsumersDetailUsernameCredentialsAddRoute,
   ConsumersDetailUsernameCredentialsIndexRoute:
     ConsumersDetailUsernameCredentialsIndexRoute,
+  ConsumersDetailUsernameCredentialsDetailIdRoute:
+    ConsumersDetailUsernameCredentialsDetailIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -684,7 +708,8 @@ export const routeTree = rootRoute
         "/upstreams/detail/$id",
         "/consumers/detail/$username/",
         "/consumers/detail/$username/credentials/add",
-        "/consumers/detail/$username/credentials/"
+        "/consumers/detail/$username/credentials/",
+        "/consumers/detail/$username/credentials/detail/$id"
       ]
     },
     "/": {
@@ -767,6 +792,9 @@ export const routeTree = rootRoute
     },
     "/consumers/detail/$username/credentials/": {
       "filePath": "consumers/detail.$username/credentials/index.tsx"
+    },
+    "/consumers/detail/$username/credentials/detail/$id": {
+      "filePath": "consumers/detail.$username/credentials/detail.$id.tsx"
     }
   }
 }

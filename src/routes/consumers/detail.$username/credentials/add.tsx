@@ -23,14 +23,14 @@ const CredentialAddForm = () => {
 
   const putCredential = useMutation({
     mutationFn: putCredentialReq,
-    async onSuccess() {
+    async onSuccess(_, res) {
       notifications.show({
         message: t('consumers.credentials.add.success'),
         color: 'green',
       });
       await router.navigate({
-        to: '/consumers/detail/$username/credentials',
-        params: { username },
+        to: '/consumers/detail/$username/credentials/detail/$id',
+        params: { username, id: res.id },
       });
     },
   });
