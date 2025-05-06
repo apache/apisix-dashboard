@@ -18,12 +18,12 @@ const ConsumerAddForm = () => {
 
   const putConsumer = useMutation({
     mutationFn: putConsumerReq,
-    async onSuccess() {
+    async onSuccess(_, res) {
       notifications.show({
         message: t('consumers.add.success'),
         color: 'green',
       });
-      await router.navigate({ to: '/consumers' });
+      await router.navigate({ to: '/consumers/detail/$username', params: { username: res.username } });
     },
   });
 

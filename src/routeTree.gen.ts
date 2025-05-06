@@ -33,6 +33,7 @@ import { Route as StreamroutesDetailIdImport } from './routes/stream_routes/deta
 import { Route as RoutesDetailIdImport } from './routes/routes/detail.$id'
 import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
 import { Route as GlobalrulesDetailIdImport } from './routes/global_rules/detail.$id'
+import { Route as ConsumersDetailUsernameImport } from './routes/consumers/detail.$username'
 
 // Create/Update Routes
 
@@ -168,6 +169,12 @@ const GlobalrulesDetailIdRoute = GlobalrulesDetailIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ConsumersDetailUsernameRoute = ConsumersDetailUsernameImport.update({
+  id: '/consumers/detail/$username',
+  path: '/consumers/detail/$username',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -291,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UpstreamsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/consumers/detail/$username': {
+      id: '/consumers/detail/$username'
+      path: '/consumers/detail/$username'
+      fullPath: '/consumers/detail/$username'
+      preLoaderRoute: typeof ConsumersDetailUsernameImport
+      parentRoute: typeof rootRoute
+    }
     '/global_rules/detail/$id': {
       id: '/global_rules/detail/$id'
       path: '/global_rules/detail/$id'
@@ -349,6 +363,7 @@ export interface FileRoutesByFullPath {
   '/ssls': typeof SslsIndexRoute
   '/stream_routes': typeof StreamroutesIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/consumers/detail/$username': typeof ConsumersDetailUsernameRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/routes/detail/$id': typeof RoutesDetailIdRoute
@@ -374,6 +389,7 @@ export interface FileRoutesByTo {
   '/ssls': typeof SslsIndexRoute
   '/stream_routes': typeof StreamroutesIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/consumers/detail/$username': typeof ConsumersDetailUsernameRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/routes/detail/$id': typeof RoutesDetailIdRoute
@@ -400,6 +416,7 @@ export interface FileRoutesById {
   '/ssls/': typeof SslsIndexRoute
   '/stream_routes/': typeof StreamroutesIndexRoute
   '/upstreams/': typeof UpstreamsIndexRoute
+  '/consumers/detail/$username': typeof ConsumersDetailUsernameRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/routes/detail/$id': typeof RoutesDetailIdRoute
@@ -427,6 +444,7 @@ export interface FileRouteTypes {
     | '/ssls'
     | '/stream_routes'
     | '/upstreams'
+    | '/consumers/detail/$username'
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/routes/detail/$id'
@@ -451,6 +469,7 @@ export interface FileRouteTypes {
     | '/ssls'
     | '/stream_routes'
     | '/upstreams'
+    | '/consumers/detail/$username'
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/routes/detail/$id'
@@ -475,6 +494,7 @@ export interface FileRouteTypes {
     | '/ssls/'
     | '/stream_routes/'
     | '/upstreams/'
+    | '/consumers/detail/$username'
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/routes/detail/$id'
@@ -501,6 +521,7 @@ export interface RootRouteChildren {
   SslsIndexRoute: typeof SslsIndexRoute
   StreamroutesIndexRoute: typeof StreamroutesIndexRoute
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
+  ConsumersDetailUsernameRoute: typeof ConsumersDetailUsernameRoute
   GlobalrulesDetailIdRoute: typeof GlobalrulesDetailIdRoute
   ProtosDetailIdRoute: typeof ProtosDetailIdRoute
   RoutesDetailIdRoute: typeof RoutesDetailIdRoute
@@ -526,6 +547,7 @@ const rootRouteChildren: RootRouteChildren = {
   SslsIndexRoute: SslsIndexRoute,
   StreamroutesIndexRoute: StreamroutesIndexRoute,
   UpstreamsIndexRoute: UpstreamsIndexRoute,
+  ConsumersDetailUsernameRoute: ConsumersDetailUsernameRoute,
   GlobalrulesDetailIdRoute: GlobalrulesDetailIdRoute,
   ProtosDetailIdRoute: ProtosDetailIdRoute,
   RoutesDetailIdRoute: RoutesDetailIdRoute,
@@ -560,6 +582,7 @@ export const routeTree = rootRoute
         "/ssls/",
         "/stream_routes/",
         "/upstreams/",
+        "/consumers/detail/$username",
         "/global_rules/detail/$id",
         "/protos/detail/$id",
         "/routes/detail/$id",
@@ -617,6 +640,9 @@ export const routeTree = rootRoute
     },
     "/upstreams/": {
       "filePath": "upstreams/index.tsx"
+    },
+    "/consumers/detail/$username": {
+      "filePath": "consumers/detail.$username.tsx"
     },
     "/global_rules/detail/$id": {
       "filePath": "global_rules/detail.$id.tsx"

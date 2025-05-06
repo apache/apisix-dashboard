@@ -7,7 +7,7 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import {
@@ -63,7 +63,13 @@ function ConsumersList() {
         valueType: 'option',
         key: 'option',
         width: 120,
-        render: () => [],
+        render: (_, record) => [
+          <ToDetailPageBtn 
+            key="detail" 
+            to="/consumers/detail/$username"
+            params={{ username: record.value.username }}
+          />
+        ],
       },
     ];
   }, [t]);

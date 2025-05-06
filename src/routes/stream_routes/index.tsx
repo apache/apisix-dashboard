@@ -59,7 +59,7 @@ const StreamRouteList = () => {
           <ToDetailPageBtn
             key="detail"
             to="/stream_routes/detail/$id"
-            id={record.value.id}
+            params={{ id: record.value.id }}
           />,
         ],
       },
