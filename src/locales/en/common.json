@@ -209,8 +209,8 @@
       "title": "Global Rule Detail"
     },
     "edit": {
-      "success": "Edit Plugin Global Rule Successfully",
-      "title": "Edit Plugin Global Rule"
+      "success": "Edit Global Rule Successfully",
+      "title": "Edit Global Rule"
     },
     "plugins": "Plugins",
     "title": "Global Rules"
@@ -243,7 +243,15 @@
     "add": {
       "submit": "Add Route Successfully",
       "title": "Add Route"
-    }
+    },
+    "detail": {
+      "title": "Route Detail"
+    },
+    "edit": {
+      "success": "Edit Route Successfully",
+      "title": "Edit Route"
+    },
+    "title": "Routes"
   },
   "seconds": "Seconds",
   "setting": {
