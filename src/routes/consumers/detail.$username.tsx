@@ -8,13 +8,14 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { Skeleton, Button, Group } from '@mantine/core';
 import { useBoolean } from 'react-use';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { APISIX } from '@/types/schema/apisix';
 import { getConsumerQueryOptions, putConsumerReq } from '@/apis/consumers';
 import { notifications } from '@mantine/notifications';
 import { FormPartConsumer } from '@/components/form-slice/FormPartConsumer';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { pipeProduce } from '@/utils/producer';
+import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
 type Props = {
   readOnly: boolean;
@@ -81,7 +82,7 @@ const ConsumerDetailForm = (props: Props) => {
   );
 };
 
-function RouteComponent() {
+const ConsumerDetailTab = () => {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
 
@@ -107,6 +108,26 @@ function RouteComponent() {
       </FormTOCBox>
     </>
   );
+};
+
+function RouteComponent() {
+  const { t } = useTranslation();
+  const items = useMemo(
+    (): TabsItem[] => [
+      {
+        value: 'detail',
+        label: t('consumers.detail.title'),
+        content: <ConsumerDetailTab />,
+      },
+      {
+        value: 'credentials',
+        label: t('consumers.credentials.title'),
+        content: <div>dsdasasda</div>,
+      },
+    ],
+    [t]
+  );
+  return <Tabs items={items} variant="outline" />;
 }
 
 export const Route = createFileRoute('/consumers/detail/$username')({

@@ -1,6 +1,24 @@
 {
   "APISIX Dashboard": "APISIX Dashboard",
   "actions": "Actions",
+  "consumers": {
+    "add": {
+      "success": "Add Consumer Successfully",
+      "title": "Add Consumer"
+    },
+    "credentials": {
+      "title": "Credentials"
+    },
+    "detail": {
+      "title": "Consumer Detail"
+    },
+    "edit": {
+      "success": "Edit Consumer Successfully",
+      "title": "Edit Consumer"
+    },
+    "title": "Consumers",
+    "username": "Username"
+  },
   "form": {
     "basic": {
       "desc": "Description",
@@ -267,21 +285,6 @@
       "contentPlaceholder": "Paste or upload .proto, .pb file"
     },
     "title": "Protos"
-  },
-  "consumers": {
-    "add": {
-      "success": "Add Consumer Successfully",
-      "title": "Add Consumer"
-    },
-    "detail": {
-      "title": "Consumer Detail"
-    },
-    "edit": {
-      "success": "Edit Consumer Successfully",
-      "title": "Edit Consumer"
-    },
-    "username": "Username",
-    "title": "Consumers"
   },
   "route": {
     "add": {
