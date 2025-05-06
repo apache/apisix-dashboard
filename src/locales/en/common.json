@@ -254,6 +254,21 @@
     },
     "title": "Protos"
   },
+  "consumers": {
+    "add": {
+      "success": "Add Consumer Successfully",
+      "title": "Add Consumer"
+    },
+    "detail": {
+      "title": "Consumer Detail"
+    },
+    "edit": {
+      "success": "Edit Consumer Successfully",
+      "title": "Edit Consumer"
+    },
+    "username": "Username",
+    "title": "Consumers"
+  },
   "route": {
     "add": {
       "success": "Add Route Successfully",
