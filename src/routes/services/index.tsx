@@ -101,7 +101,7 @@ const ServiceList = () => {
                 label: (
                   <ToAddPageBtn
                     key="add"
-                    label={t('service.add.title')}
+                    label={t('services.add.title')}
                     to="/services/add"
                   />
                 ),

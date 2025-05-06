@@ -47,7 +47,7 @@ const ServiceDetailForm = (props: Props) => {
     mutationFn: putServiceReq,
     async onSuccess() {
       notifications.show({
-        message: t('service.edit.success'),
+        message: t('services.edit.success'),
         color: 'green',
       });
       await refetch();
@@ -88,9 +88,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('service.edit.title')}
+        title={t('services.edit.title')}
         {...(readOnly && {
-          title: t('service.detail.title'),
+          title: t('services.detail.title'),
           extra: (
             <Button
               onClick={() => setReadOnly(false)}

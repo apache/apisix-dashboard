@@ -40,19 +40,19 @@ const FormSectionSettings = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<ServicePostType>();
   return (
-    <FormSection legend={t('form.service.settings')}>
-      <InputWrapper label={t('form.service.enableWebsocket')}>
+    <FormSection legend={t('form.services.settings')}>
+      <InputWrapper label={t('form.services.enableWebsocket')}>
         <FormItemSwitch control={control} name="enable_websocket" />
       </InputWrapper>
       <FormItemTextInput
         control={control}
         name="script"
-        label={t('form.service.script')}
+        label={t('form.services.script')}
       />
       <FormItemTagsInput
         control={control}
         name="hosts"
-        label={t('form.service.hosts')}
+        label={t('form.services.hosts')}
       />
     </FormSection>
   );

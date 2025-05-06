@@ -61,7 +61,7 @@
       "vars": "Vars"
     },
     "search": "Search",
-    "service": {
+    "services": {
       "enableWebsocket": "Enable WebSocket",
       "hosts": "Hosts",
       "script": "Script",
@@ -279,7 +279,7 @@
     "title": "Routes"
   },
   "seconds": "Seconds",
-  "service": {
+  "services": {
     "add": {
       "success": "Add Service Successfully",
       "title": "Add Service"
@@ -291,9 +291,6 @@
       "success": "Edit Service Successfully",
       "title": "Edit Service"
     },
-    "title": "Services"
-  },
-  "services": {
     "title": "Services"
   },
   "setting": {
