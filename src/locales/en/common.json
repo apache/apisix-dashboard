@@ -71,22 +71,17 @@
         "delete": "Delete the pair",
         "title": "Certificate and Key Pairs"
       },
-      "certs": "Cert",
       "client": {
         "ca": "Client CA Certificate",
         "depth": "Verification Depth",
         "skipMtlsUriRegex": "Skip mTLS URI Regex",
         "title": "Client"
       },
-      "exptime": "Expiration Time",
       "key": "Private Key",
       "sni": "SNI",
       "snis": "SNIs",
       "ssl_protocols": "SSL Protocols",
-      "status": "Status",
-      "type": "Certificate Type",
-      "validity_end": "Valid Until",
-      "validity_start": "Valid From"
+      "type": "Certificate Type"
     },
     "streamRoute": {
       "protocol": {
@@ -306,10 +301,9 @@
   },
   "ssls": {
     "add": {
-      "success": "Add SSL Certificate Successfully",
-      "title": "Add SSL Certificate"
-    },
-    "title": "SSL Certificates"
+      "success": "Add SSL Successfully",
+      "title": "Add SSL"
+    }
   },
   "streamRoutes": {
     "add": {
