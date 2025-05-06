@@ -25,11 +25,13 @@ import { Route as ConsumersIndexImport } from './routes/consumers/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as StreamroutesAddImport } from './routes/stream_routes/add'
 import { Route as SslsAddImport } from './routes/ssls/add'
+import { Route as ServicesAddImport } from './routes/services/add'
 import { Route as RoutesAddImport } from './routes/routes/add'
 import { Route as ProtosAddImport } from './routes/protos/add'
 import { Route as GlobalrulesAddImport } from './routes/global_rules/add'
 import { Route as UpstreamsDetailIdImport } from './routes/upstreams/detail.$id'
 import { Route as StreamroutesDetailIdImport } from './routes/stream_routes/detail.$id'
+import { Route as ServicesDetailIdImport } from './routes/services/detail.$id'
 import { Route as RoutesDetailIdImport } from './routes/routes/detail.$id'
 import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
 import { Route as GlobalrulesDetailIdImport } from './routes/global_rules/detail.$id'
@@ -120,6 +122,12 @@ const SslsAddRoute = SslsAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ServicesAddRoute = ServicesAddImport.update({
+  id: '/services/add',
+  path: '/services/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RoutesAddRoute = RoutesAddImport.update({
   id: '/routes/add',
   path: '/routes/add',
@@ -147,6 +155,12 @@ const UpstreamsDetailIdRoute = UpstreamsDetailIdImport.update({
 const StreamroutesDetailIdRoute = StreamroutesDetailIdImport.update({
   id: '/stream_routes/detail/$id',
   path: '/stream_routes/detail/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ServicesDetailIdRoute = ServicesDetailIdImport.update({
+  id: '/services/detail/$id',
+  path: '/services/detail/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -198,6 +212,13 @@ declare module '@tanstack/react-router' {
       path: '/routes/add'
       fullPath: '/routes/add'
       preLoaderRoute: typeof RoutesAddImport
+      parentRoute: typeof rootRoute
+    }
+    '/services/add': {
+      id: '/services/add'
+      path: '/services/add'
+      fullPath: '/services/add'
+      preLoaderRoute: typeof ServicesAddImport
       parentRoute: typeof rootRoute
     }
     '/ssls/add': {
@@ -312,6 +333,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoutesDetailIdImport
       parentRoute: typeof rootRoute
     }
+    '/services/detail/$id': {
+      id: '/services/detail/$id'
+      path: '/services/detail/$id'
+      fullPath: '/services/detail/$id'
+      preLoaderRoute: typeof ServicesDetailIdImport
+      parentRoute: typeof rootRoute
+    }
     '/stream_routes/detail/$id': {
       id: '/stream_routes/detail/$id'
       path: '/stream_routes/detail/$id'
@@ -336,6 +364,7 @@ export interface FileRoutesByFullPath {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/services/add': typeof ServicesAddRoute
   '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -352,6 +381,7 @@ export interface FileRoutesByFullPath {
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/routes/detail/$id': typeof RoutesDetailIdRoute
+  '/services/detail/$id': typeof ServicesDetailIdRoute
   '/stream_routes/detail/$id': typeof StreamroutesDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
@@ -361,6 +391,7 @@ export interface FileRoutesByTo {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/services/add': typeof ServicesAddRoute
   '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -377,6 +408,7 @@ export interface FileRoutesByTo {
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/routes/detail/$id': typeof RoutesDetailIdRoute
+  '/services/detail/$id': typeof ServicesDetailIdRoute
   '/stream_routes/detail/$id': typeof StreamroutesDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
@@ -387,6 +419,7 @@ export interface FileRoutesById {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/services/add': typeof ServicesAddRoute
   '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -403,6 +436,7 @@ export interface FileRoutesById {
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
   '/routes/detail/$id': typeof RoutesDetailIdRoute
+  '/services/detail/$id': typeof ServicesDetailIdRoute
   '/stream_routes/detail/$id': typeof StreamroutesDetailIdRoute
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
 }
@@ -414,6 +448,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/services/add'
     | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
@@ -430,6 +465,7 @@ export interface FileRouteTypes {
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/routes/detail/$id'
+    | '/services/detail/$id'
     | '/stream_routes/detail/$id'
     | '/upstreams/detail/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -438,6 +474,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/services/add'
     | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
@@ -454,6 +491,7 @@ export interface FileRouteTypes {
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/routes/detail/$id'
+    | '/services/detail/$id'
     | '/stream_routes/detail/$id'
     | '/upstreams/detail/$id'
   id:
@@ -462,6 +500,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/services/add'
     | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
@@ -478,6 +517,7 @@ export interface FileRouteTypes {
     | '/global_rules/detail/$id'
     | '/protos/detail/$id'
     | '/routes/detail/$id'
+    | '/services/detail/$id'
     | '/stream_routes/detail/$id'
     | '/upstreams/detail/$id'
   fileRoutesById: FileRoutesById
@@ -488,6 +528,7 @@ export interface RootRouteChildren {
   GlobalrulesAddRoute: typeof GlobalrulesAddRoute
   ProtosAddRoute: typeof ProtosAddRoute
   RoutesAddRoute: typeof RoutesAddRoute
+  ServicesAddRoute: typeof ServicesAddRoute
   SslsAddRoute: typeof SslsAddRoute
   StreamroutesAddRoute: typeof StreamroutesAddRoute
   UpstreamsAddRoute: typeof UpstreamsAddRoute
@@ -504,6 +545,7 @@ export interface RootRouteChildren {
   GlobalrulesDetailIdRoute: typeof GlobalrulesDetailIdRoute
   ProtosDetailIdRoute: typeof ProtosDetailIdRoute
   RoutesDetailIdRoute: typeof RoutesDetailIdRoute
+  ServicesDetailIdRoute: typeof ServicesDetailIdRoute
   StreamroutesDetailIdRoute: typeof StreamroutesDetailIdRoute
   UpstreamsDetailIdRoute: typeof UpstreamsDetailIdRoute
 }
@@ -513,6 +555,7 @@ const rootRouteChildren: RootRouteChildren = {
   GlobalrulesAddRoute: GlobalrulesAddRoute,
   ProtosAddRoute: ProtosAddRoute,
   RoutesAddRoute: RoutesAddRoute,
+  ServicesAddRoute: ServicesAddRoute,
   SslsAddRoute: SslsAddRoute,
   StreamroutesAddRoute: StreamroutesAddRoute,
   UpstreamsAddRoute: UpstreamsAddRoute,
@@ -529,6 +572,7 @@ const rootRouteChildren: RootRouteChildren = {
   GlobalrulesDetailIdRoute: GlobalrulesDetailIdRoute,
   ProtosDetailIdRoute: ProtosDetailIdRoute,
   RoutesDetailIdRoute: RoutesDetailIdRoute,
+  ServicesDetailIdRoute: ServicesDetailIdRoute,
   StreamroutesDetailIdRoute: StreamroutesDetailIdRoute,
   UpstreamsDetailIdRoute: UpstreamsDetailIdRoute,
 }
@@ -547,6 +591,7 @@ export const routeTree = rootRoute
         "/global_rules/add",
         "/protos/add",
         "/routes/add",
+        "/services/add",
         "/ssls/add",
         "/stream_routes/add",
         "/upstreams/add",
@@ -563,6 +608,7 @@ export const routeTree = rootRoute
         "/global_rules/detail/$id",
         "/protos/detail/$id",
         "/routes/detail/$id",
+        "/services/detail/$id",
         "/stream_routes/detail/$id",
         "/upstreams/detail/$id"
       ]
@@ -578,6 +624,9 @@ export const routeTree = rootRoute
     },
     "/routes/add": {
       "filePath": "routes/add.tsx"
+    },
+    "/services/add": {
+      "filePath": "services/add.tsx"
     },
     "/ssls/add": {
       "filePath": "ssls/add.tsx"
@@ -626,6 +675,9 @@ export const routeTree = rootRoute
     },
     "/routes/detail/$id": {
       "filePath": "routes/detail.$id.tsx"
+    },
+    "/services/detail/$id": {
+      "filePath": "services/detail.$id.tsx"
     },
     "/stream_routes/detail/$id": {
       "filePath": "stream_routes/detail.$id.tsx"

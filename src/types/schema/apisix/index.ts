@@ -3,6 +3,7 @@ import { APISIXPlugins } from './plugins';
 import { APISIXGlobalRules } from './global_rules';
 import { APISIXProtos } from './protos';
 import { APISIXRoutes } from './routes';
+import { APISIXServices } from './services';
 import { APISIXStreamRoutes } from './stream_routes';
 import { APISIXUpstreams } from './upstreams';
 import { APISIXPluginMetadata } from './plugin_metadata';
@@ -18,4 +19,5 @@ export const APISIX = {
   ...APISIXPlugins,
   ...APISIXPluginMetadata,
   ...APISIXSSLs,
+  ...APISIXServices,
 };
