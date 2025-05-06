@@ -18,6 +18,12 @@
 apisix:
   node_listen: 9080 # APISIX listening port
   enable_ipv6: false
+  proxy_mode: http&stream
+  stream_proxy:
+    tcp:
+      - 9100
+    udp:
+      - 9200
 
 deployment:
   admin:

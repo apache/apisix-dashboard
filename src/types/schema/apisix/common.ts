@@ -4,11 +4,14 @@ const Labels = z.record(z.string());
 
 const Expr = z.array(z.unknown());
 
+const Status = z.union([z.literal(0), z.literal(1)]);
+
 const Basic = z
   .object({
     name: z.string(),
     desc: z.string(),
     labels: Labels,
+    status: Status.optional(),
   })
   .partial();
 
@@ -35,9 +38,6 @@ const HttpMethod = z.union([
   z.literal('TRACE'),
   z.literal('PURGE'),
 ]);
-
-// Common status type for APISIX entities (enabled=1, disabled=0)
-const Status = z.union([z.literal(0), z.literal(1)]);
 
 export const APISIXCommon = {
   Basic,

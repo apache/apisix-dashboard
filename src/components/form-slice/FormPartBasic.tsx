@@ -7,9 +7,12 @@ import { useFormContext } from 'react-hook-form';
 import type { APISIXType } from '@/types/schema/apisix';
 import { useNamePrefix } from '@/utils/useNamePrefix';
 import type { PropsWithChildren } from 'react';
+import { APISIXCommon } from '@/types/schema/apisix/common';
+import { FormItemSelect } from '../form/Select';
 
 export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
   PropsWithChildren & {
+    showStatus?: boolean;
     showName?: boolean;
     showDesc?: boolean;
     showLabels?: boolean;
@@ -18,6 +21,7 @@ export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
 export const FormPartBasic = (props: FormPartBasicProps) => {
   const {
     children,
+    showStatus = false,
     showName = true,
     showDesc = true,
     showLabels = true,
@@ -44,6 +48,17 @@ export const FormPartBasic = (props: FormPartBasicProps) => {
         />
       )}
       {showLabels && <FormItemLabels name={np('labels')} control={control} />}
+      {showStatus && (
+        <FormItemSelect
+          control={control}
+          name="status"
+          label={t('form.basic.status')}
+          defaultValue={APISIXCommon.Status.options[1].value.toString()}
+          data={APISIXCommon.Status.options.map((v) => v.value.toString())}
+          from={String}
+          to={Number}
+        />
+      )}
       {children}
     </FormSection>
   );

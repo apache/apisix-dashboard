@@ -1,7 +1,7 @@
 import { req } from '@/config/req';
 import { queryClient } from '@/config/global';
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import type { APISIXType } from '@/types/schema/apisix';
 import { API_UPSTREAMS } from '@/config/constant';
@@ -9,8 +9,7 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
-import { RouteLinkBtn } from '@/components/Btn';
-import ToAddPageBtn from '@/components/page/ToAddPageBtn';
+import { ToDetailPageBtn, ToAddPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import {
@@ -32,27 +31,6 @@ const genUpstreamsQueryOptions = (props: PageSearchType) => {
         })
         .then((v) => v.data),
   });
-};
-
-type DetailPageBtnProps = {
-  record: APISIXType['RespUpstreamItem'];
-};
-const DetailPageBtn = (props: DetailPageBtnProps) => {
-  const { record } = props;
-  const { t } = useTranslation();
-  const router = useRouter();
-  return (
-    <>
-      <RouteLinkBtn
-        size="xs"
-        variant="transparent"
-        to={router.routesById['/upstreams/detail/$id'].to}
-        params={{ id: record.value.id }}
-      >
-        {t('view')}
-      </RouteLinkBtn>
-    </>
-  );
 };
 
 function RouteComponent() {
@@ -116,7 +94,13 @@ function RouteComponent() {
         valueType: 'option',
         key: 'option',
         width: 120,
-        render: (_, record) => [<DetailPageBtn key="detail" record={record} />],
+        render: (_, record) => [
+          <ToDetailPageBtn
+            key="detail"
+            to="/upstreams/detail/$id"
+            id={record.value.id}
+          />,
+        ],
       },
     ];
   }, [t]);

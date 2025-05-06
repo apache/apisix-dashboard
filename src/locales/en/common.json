@@ -14,6 +14,7 @@
         "value": "Value"
       },
       "name": "Name",
+      "status": "Status",
       "title": "Basic Infomation"
     },
     "btn": {
@@ -58,7 +59,6 @@
       "remoteAddr": "Remote Address",
       "remoteAddrs": "Remote Addresses",
       "service": "Service",
-      "status": "Status",
       "uri": "URI",
       "uris": "URIs",
       "vars": "Vars"
@@ -87,6 +87,20 @@
       "type": "Certificate Type",
       "validity_end": "Valid Until",
       "validity_start": "Valid From"
+    },
+    "streamRoute": {
+      "protocol": {
+        "conf": "Conf",
+        "logger": "Logger",
+        "name": "Protocol Name",
+        "superiorId": "Superior ID",
+        "title": "Protocol Information"
+      },
+      "remoteAddr": "Remote Address",
+      "server": "Server",
+      "serverAddr": "Server Address",
+      "serverPort": "Server Port",
+      "sni": "SNI"
     },
     "tagsInput": {
       "placeholder": "Input text, then enter or blur"
@@ -223,8 +237,8 @@
       "title": "Global Rule Detail"
     },
     "edit": {
-      "success": "Edit Plugin Global Rule Successfully",
-      "title": "Edit Plugin Global Rule"
+      "success": "Edit Global Rule Successfully",
+      "title": "Edit Global Rule"
     },
     "plugins": "Plugins",
     "title": "Global Rules"
@@ -238,6 +252,7 @@
     "secrets": "Secrets",
     "services": "Services",
     "ssls": "SSLs",
+    "streamRoutes": "Stream Routes",
     "upstreams": "Upstreams"
   },
   "noData": "No Data",
@@ -260,6 +275,10 @@
     "detail": {
       "title": "Proto Detail"
     },
+    "edit": {
+      "success": "Edit Proto Successfully",
+      "title": "Edit Proto"
+    },
     "form": {
       "content": "Content",
       "contentPlaceholder": "Paste or upload .proto, .pb file"
@@ -268,21 +287,43 @@
   },
   "route": {
     "add": {
-      "submit": "Add Route Successfully",
+      "success": "Add Route Successfully",
       "title": "Add Route"
-    }
+    },
+    "detail": {
+      "title": "Route Detail"
+    },
+    "edit": {
+      "success": "Edit Route Successfully",
+      "title": "Edit Route"
+    },
+    "title": "Routes"
   },
   "seconds": "Seconds",
   "setting": {
     "adminKey": "Admin Key",
     "title": "Setting"
   },
-  "ssl": {
+  "ssls": {
     "add": {
       "success": "Add SSL Certificate Successfully",
       "title": "Add SSL Certificate"
     },
     "title": "SSL Certificates"
+  },
+  "streamRoutes": {
+    "add": {
+      "success": "Add Stream Route Successfully",
+      "title": "Add Stream Route"
+    },
+    "detail": {
+      "title": "Stream Route Detail"
+    },
+    "edit": {
+      "success": "Edit Stream Route Successfully",
+      "title": "Edit Stream Route"
+    },
+    "title": "Stream Routes"
   },
   "upstreams": {
     "add": {

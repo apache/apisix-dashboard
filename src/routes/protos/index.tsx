@@ -1,38 +1,18 @@
-import { req } from '@/config/req';
 import { queryClient } from '@/config/global';
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import type { APISIXType } from '@/types/schema/apisix';
-import { API_PROTOS } from '@/config/constant';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
 import { RouteLinkBtn } from '@/components/Btn';
-import ToAddPageBtn from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
-import {
-  pageSearchSchema,
-  type PageSearchType,
-} from '@/types/schema/pageSearch';
-
-const genProtosQueryOptions = (props: PageSearchType) => {
-  const { page, pageSize } = props;
-  return queryOptions({
-    queryKey: ['protos', page, pageSize],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespProtoList']>(API_PROTOS, {
-          params: {
-            page,
-            page_size: pageSize,
-          },
-        })
-        .then((v) => v.data),
-  });
-};
+import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { getProtoListQueryOptions } from '@/apis/protos';
 
 type DetailPageBtnProps = {
   record: APISIXType['RespProtoItem'];
@@ -61,7 +41,7 @@ function RouteComponent() {
     queryKey: 'protos',
   });
 
-  const protosQuery = useSuspenseQuery(genProtosQueryOptions(pagination));
+  const protosQuery = useSuspenseQuery(getProtoListQueryOptions(pagination));
   const { data, isLoading } = protosQuery;
 
   useEffect(() => {
@@ -137,5 +117,5 @@ export const Route = createFileRoute('/protos/')({
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) =>
-    queryClient.ensureQueryData(genProtosQueryOptions(deps)),
+    queryClient.ensureQueryData(getProtoListQueryOptions(deps)),
 });

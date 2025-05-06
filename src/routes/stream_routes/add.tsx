@@ -8,27 +8,27 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { notifications } from '@mantine/notifications';
 import { pipeProduce } from '@/utils/producer';
-import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
-import { RoutePostSchema } from '@/components/form-slice/FormPartRoute/schema';
-import { postRouteReq } from '@/apis/routes';
+import { postStreamRouteReq } from '@/apis/stream_routes';
+import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
+import { StreamRoutePostSchema } from '@/components/form-slice/FormPartStreamRoute/schema';
 
-const RouteAddForm = () => {
+const StreamRouteAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const postRoute = useMutation({
-    mutationFn: postRouteReq,
+  const postStreamRoute = useMutation({
+    mutationFn: postStreamRouteReq,
     async onSuccess() {
       notifications.show({
-        message: t('route.add.success'),
+        message: t('streamRoutes.add.success'),
         color: 'green',
       });
-      await router.navigate({ to: '/routes' });
+      await router.navigate({ to: '/stream_routes' });
     },
   });
 
   const form = useForm({
-    resolver: zodResolver(RoutePostSchema),
+    resolver: zodResolver(StreamRoutePostSchema),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -38,10 +38,10 @@ const RouteAddForm = () => {
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit((d) =>
-          postRoute.mutateAsync(pipeProduce()(d))
+          postStreamRoute.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormPartRoute />
+        <FormPartStreamRoute />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
     </FormProvider>
@@ -52,14 +52,14 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('route.add.title')} />
+      <PageHeader title={t('streamRoutes.add.title')} />
       <FormTOCBox>
-        <RouteAddForm />
+        <StreamRouteAddForm />
       </FormTOCBox>
     </>
   );
 }
 
-export const Route = createFileRoute('/routes/add')({
+export const Route = createFileRoute('/stream_routes/add')({
   component: RouteComponent,
 });

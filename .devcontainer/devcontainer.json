@@ -11,6 +11,8 @@
   "forwardPorts": [
     9080,
     9180,
+    9100,
+    9200,
     5173,
     5174,
     4173
@@ -27,6 +29,14 @@
     "9180": {
       "label": "APISIX Admin API Port",
       "onAutoForward": "notify"
+    },
+    "9100": {
+      "label": "APISIX Stream Proxy TCP Port",
+      "onAutoForward": "silent"
+    },
+    "9200": {
+      "label": "APISIX Stream Proxy UDP Port",
+      "onAutoForward": "silent"
     }
   },
   "customizations": {

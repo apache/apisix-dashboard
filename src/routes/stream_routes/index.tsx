@@ -8,17 +8,17 @@ import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import { ToDetailPageBtn, ToAddPageBtn } from '@/components/page/ToAddPageBtn';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-import { getRouteListQueryOptions } from '@/apis/routes';
+import { getStreamRouteListQueryOptions } from '@/apis/stream_routes';
 import { usePagination } from '@/utils/usePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import PageHeader from '@/components/page/PageHeader';
 
-const RouteList = () => {
+const StreamRouteList = () => {
   const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'routes',
+    queryKey: 'stream_routes',
   });
 
-  const query = useSuspenseQuery(getRouteListQueryOptions(pagination));
+  const query = useSuspenseQuery(getStreamRouteListQueryOptions(pagination));
   const { data, isLoading } = query;
   const { t } = useTranslation();
 
@@ -28,7 +28,9 @@ const RouteList = () => {
     }
   }, [data?.total, updateTotal]);
 
-  const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
+  const columns = useMemo<
+    ProColumns<APISIXType['RespStreamRouteItem']>[]
+  >(() => {
     return [
       {
         dataIndex: ['value', 'id'],
@@ -49,12 +51,6 @@ const RouteList = () => {
         valueType: 'text',
       },
       {
-        dataIndex: ['value', 'uri'],
-        title: 'URI',
-        key: 'uri',
-        valueType: 'text',
-      },
-      {
         title: t('actions'),
         valueType: 'option',
         key: 'option',
@@ -62,7 +58,7 @@ const RouteList = () => {
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
-            to="/routes/detail/$id"
+            to="/stream_routes/detail/$id"
             id={record.value.id}
           />,
         ],
@@ -96,8 +92,8 @@ const RouteList = () => {
                 label: (
                   <ToAddPageBtn
                     key="add"
-                    label={t('route.add.title')}
-                    to="/routes/add"
+                    label={t('streamRoutes.add.title')}
+                    to="/stream_routes/add"
                   />
                 ),
               },
@@ -109,21 +105,23 @@ const RouteList = () => {
   );
 };
 
-function RouteComponent() {
+function StreamRouteComponent() {
+  const { t } = useTranslation();
+
   return (
     <>
-      <PageHeader title="Routes" />
+      <PageHeader title={t('streamRoutes.title')} />
       <AntdConfigProvider>
-        <RouteList />
+        <StreamRouteList />
       </AntdConfigProvider>
     </>
   );
 }
 
-export const Route = createFileRoute('/routes/')({
-  component: RouteComponent,
+export const Route = createFileRoute('/stream_routes/')({
+  component: StreamRouteComponent,
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) =>
-    queryClient.ensureQueryData(getRouteListQueryOptions(deps)),
+    queryClient.ensureQueryData(getStreamRouteListQueryOptions(deps)),
 });

@@ -26,7 +26,6 @@ export const FormSectionDiscovery = () => {
         name={np('discovery_args')}
         label={t('form.upstream.discoveryArgs.title')}
         control={control}
-        resize="vertical"
         toObject
       />
     </FormSection>
