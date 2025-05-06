@@ -25,7 +25,7 @@ type Props = {
 const ConsumerDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { username } = useParams({ from: '/consumers/detail/$username' });
+  const { username } = useParams({ from: '/consumers/detail/$username/' });
 
   const consumerQuery = useSuspenseQuery(getConsumerQueryOptions(username));
   const { data: consumerData, isLoading, refetch } = consumerQuery;
@@ -122,7 +122,7 @@ function RouteComponent() {
       {
         value: 'credentials',
         label: t('consumers.credentials.title'),
-        content: <div>dsdasasda</div>,
+        content: <div>credentials</div>,
       },
     ],
     [t]
@@ -130,6 +130,6 @@ function RouteComponent() {
   return <Tabs items={items} variant="outline" />;
 }
 
-export const Route = createFileRoute('/consumers/detail/$username')({
+export const Route = createFileRoute('/consumers/detail/$username/')({
   component: RouteComponent,
 });

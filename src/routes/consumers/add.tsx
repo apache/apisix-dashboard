@@ -23,7 +23,10 @@ const ConsumerAddForm = () => {
         message: t('consumers.add.success'),
         color: 'green',
       });
-      await router.navigate({ to: '/consumers/detail/$username', params: { username: res.username } });
+      await router.navigate({
+        to: '/consumers/detail/$username',
+        params: { username: res.username },
+      });
     },
   });
 
