@@ -6,26 +6,10 @@ import { FormItemPlugins } from '../FormItemPlugins';
 import { FormItemTextInput } from '@/components/form/TextInput';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
-import { Divider, InputWrapper } from '@mantine/core';
-import { NamePrefixProvider } from '@/utils/useNamePrefix';
-import { FormPartUpstream } from '../FormPartUpstream';
+import { InputWrapper } from '@mantine/core';
 import type { ServicePostType } from './schema';
+import { FormSectionUpstream } from '../FormPartRoute';
 
-const FormSectionUpstream = () => {
-  const { t } = useTranslation();
-  const { control } = useFormContext<ServicePostType>();
-  return (
-    <FormSection legend={t('form.upstream.title')}>
-      <FormSection legend={t('form.upstream.upstreamId')}>
-        <FormItemTextInput control={control} name="upstream_id" />
-      </FormSection>
-      <Divider my="xs" label={t('or')} />
-      <NamePrefixProvider value="upstream">
-        <FormPartUpstream />
-      </NamePrefixProvider>
-    </FormSection>
-  );
-};
 
 const FormSectionPlugins = () => {
   const { t } = useTranslation();
