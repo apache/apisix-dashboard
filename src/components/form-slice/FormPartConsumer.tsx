@@ -21,17 +21,22 @@ export const FormPartConsumer = () => {
 
   return (
     <>
-      <FormPartBasic showName={false} before={ <FormItemTextInput
-          control={control}
-          name="username"
-          label={t('consumers.username')}
-          required
-        />} />
-        <FormItemTextInput
-          control={control}
-          name="group_id"
-          label={t('form.consumer.groupId')}
-        />
+      <FormPartBasic
+        showName={false}
+        before={
+          <FormItemTextInput
+            control={control}
+            name="username"
+            label={t('consumers.username')}
+            required
+          />
+        }
+      />
+      <FormItemTextInput
+        control={control}
+        name="group_id"
+        label={t('form.consumer.groupId')}
+      />
       <FormSectionPlugins />
     </>
   );
