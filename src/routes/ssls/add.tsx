@@ -25,7 +25,7 @@ const SSLAddForm = () => {
       req.post<unknown, APISIXType['RespSSLDetail']>(API_SSLS, data),
     async onSuccess() {
       notifications.show({
-        message: t('ssl.add.success'),
+        message: t('ssls.add.success'),
         color: 'green',
       });
       await router.navigate({
@@ -58,7 +58,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('ssl.add.title')} />
+      <PageHeader title={t('ssls.add.title')} />
       <FormTOCBox>
         <SSLAddForm />
       </FormTOCBox>

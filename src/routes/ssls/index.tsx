@@ -99,7 +99,7 @@ function RouteComponent() {
                     <ToAddPageBtn
                       key="add"
                       to="/ssls/add"
-                      label={t('ssl.add.title')}
+                      label={t('ssls.add.title')}
                     />
                   ),
                 },
