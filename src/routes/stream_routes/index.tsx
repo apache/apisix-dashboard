@@ -6,24 +6,21 @@ import type { APISIXType } from '@/types/schema/apisix';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import { ToDetailPageBtn, ToAddPageBtn } from '@/components/page/ToAddPageBtn';
+import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { getStreamRouteListQueryOptions } from '@/apis/stream_routes';
 import { usePagination } from '@/utils/usePagination';
-import {
-  pageSearchSchema,
-} from '@/types/schema/pageSearch';
-import { getConsumerListQueryOptions } from '@/apis/consumers';
+import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import PageHeader from '@/components/page/PageHeader';
 
-function ConsumersList() {
-  const { t } = useTranslation();
-
+const StreamRouteList = () => {
   const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'consumers',
+    queryKey: 'stream_routes',
   });
 
-  const consumersQuery = useSuspenseQuery(getConsumerListQueryOptions(pagination));
-  const { data, isLoading } = consumersQuery;
+  const query = useSuspenseQuery(getStreamRouteListQueryOptions(pagination));
+  const { data, isLoading } = query;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (data?.total) {
@@ -32,13 +29,19 @@ function ConsumersList() {
   }, [data?.total, updateTotal]);
 
   const columns = useMemo<
-    ProColumns<APISIXType['RespConsumerItem']>[]
+    ProColumns<APISIXType['RespStreamRouteItem']>[]
   >(() => {
     return [
       {
-        dataIndex: ['value', 'username'],
-        title: t('consumers.username'),
-        key: 'username',
+        dataIndex: ['value', 'id'],
+        title: 'ID',
+        key: 'id',
+        valueType: 'text',
+      },
+      {
+        dataIndex: ['value', 'name'],
+        title: t('form.basic.name'),
+        key: 'name',
         valueType: 'text',
       },
       {
@@ -48,27 +51,16 @@ function ConsumersList() {
         valueType: 'text',
       },
       {
-        dataIndex: ['value', 'update_time'],
-        title: t('form.info.update_time'),
-        key: 'update_time',
-        valueType: 'dateTime',
-        sorter: true,
-        renderText: (text) => {
-          if (!text) return '-';
-          return new Date(Number(text) * 1000).toISOString();
-        },
-      },
-      {
         title: t('actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
         render: (_, record) => [
-          <ToDetailPageBtn 
-            key="detail" 
-            to="/consumers/detail/$username"
-            params={{ username: record.value.username }}
-          />
+          <ToDetailPageBtn
+            key="detail"
+            to="/stream_routes/detail/$id"
+            params={{ id: record.value.id }}
+          />,
         ],
       },
     ];
@@ -79,7 +71,7 @@ function ConsumersList() {
       <ProTable
         columns={columns}
         dataSource={data.list}
-        rowKey="username"
+        rowKey="id"
         loading={isLoading}
         search={false}
         options={false}
@@ -100,8 +92,8 @@ function ConsumersList() {
                 label: (
                   <ToAddPageBtn
                     key="add"
-                    to="/consumers/add"
-                    label={t('consumers.add.title')}
+                    label={t('streamRoutes.add.title')}
+                    to="/stream_routes/add"
                   />
                 ),
               },
@@ -111,22 +103,25 @@ function ConsumersList() {
       />
     </AntdConfigProvider>
   );
-}
+};
 
-function RouteComponent() {
+function StreamRouteComponent() {
   const { t } = useTranslation();
+
   return (
     <>
-      <PageHeader title={t('consumers.title')} />
-      <ConsumersList />
+      <PageHeader title={t('streamRoutes.title')} />
+      <AntdConfigProvider>
+        <StreamRouteList />
+      </AntdConfigProvider>
     </>
   );
 }
 
-export const Route = createFileRoute('/consumers/')({
-  component: RouteComponent,
+export const Route = createFileRoute('/stream_routes/')({
+  component: StreamRouteComponent,
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) =>
-    queryClient.ensureQueryData(getConsumerListQueryOptions(deps)),
+    queryClient.ensureQueryData(getStreamRouteListQueryOptions(deps)),
 });

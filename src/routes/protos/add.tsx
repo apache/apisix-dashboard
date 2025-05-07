@@ -1,8 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { req } from '@/config/req';
 import { useMutation } from '@tanstack/react-query';
-import { API_PROTOS } from '@/config/constant';
 import PageHeader from '@/components/page/PageHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +11,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
 import { notifications } from '@mantine/notifications';
+import { postProtoReq } from '@/apis/protos';
 
 const defaultValues: APISIXType['ProtoPost'] = {
   content: '',
@@ -23,11 +22,7 @@ const ProtoAddForm = () => {
   const router = useReactRouter();
 
   const postProto = useMutation({
-    mutationFn: (data: object) =>
-      req.post<APISIXType['ProtoPost'], APISIXType['RespProtoList']>(
-        API_PROTOS,
-        data
-      ),
+    mutationFn: postProtoReq,
   });
 
   const form = useForm({

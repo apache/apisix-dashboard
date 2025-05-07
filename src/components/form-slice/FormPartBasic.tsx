@@ -6,10 +6,14 @@ import { FormItemTextarea } from '../form/Textarea';
 import { useFormContext } from 'react-hook-form';
 import type { APISIXType } from '@/types/schema/apisix';
 import { useNamePrefix } from '@/utils/useNamePrefix';
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
+import { FormItemSelect } from '../form/Select';
+import { APISIXCommon } from '@/types/schema/apisix/common';
 
 export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
   PropsWithChildren & {
+    before?: ReactNode;
+    showStatus?: boolean;
     showName?: boolean;
     showDesc?: boolean;
     showLabels?: boolean;
@@ -17,7 +21,9 @@ export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
 
 export const FormPartBasic = (props: FormPartBasicProps) => {
   const {
+    before,
     children,
+    showStatus = false,
     showName = true,
     showDesc = true,
     showLabels = true,
@@ -29,6 +35,7 @@ export const FormPartBasic = (props: FormPartBasicProps) => {
 
   return (
     <FormSection legend={t('form.basic.title')} {...restProps}>
+      {before}
       {showName && (
         <FormItemTextInput
           name={np('name')}
@@ -44,6 +51,17 @@ export const FormPartBasic = (props: FormPartBasicProps) => {
         />
       )}
       {showLabels && <FormItemLabels name={np('labels')} control={control} />}
+      {showStatus && (
+        <FormItemSelect
+          control={control}
+          name="status"
+          label={t('form.basic.status')}
+          defaultValue={APISIXCommon.Status.options[1].value.toString()}
+          data={APISIXCommon.Status.options.map((v) => v.value.toString())}
+          from={String}
+          to={Number}
+        />
+      )}
       {children}
     </FormSection>
   );

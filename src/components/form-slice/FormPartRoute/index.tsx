@@ -12,7 +12,6 @@ import { FormPartUpstream, FormSectionTimeout } from '../FormPartUpstream';
 import { FormSection } from '../FormSection';
 import { Divider, InputWrapper } from '@mantine/core';
 import type { RoutePostType } from './schema';
-import { FormItemSelect } from '@/components/form/Select';
 import { APISIX } from '@/types/schema/apisix';
 import { zGetDefault } from '@/utils/zod';
 
@@ -20,21 +19,12 @@ const FormPartBasicWithPriority = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
-    <FormPartBasic>
+    <FormPartBasic showStatus>
       <FormItemNumberInput
         control={control}
         name="priority"
         label={t('form.route.priority')}
         defaultValue={zGetDefault(APISIX.Route).priority!}
-      />
-      <FormItemSelect
-        control={control}
-        name="status"
-        label={t('form.route.status')}
-        data={APISIX.RouteStatus.options.map((v) => v.value.toString())}
-        defaultValue={APISIX.RouteStatus.options[1].value.toString()}
-        from={String}
-        to={Number}
       />
     </FormPartBasic>
   );
@@ -99,7 +89,7 @@ const FormSectionMatchRules = () => {
   );
 };
 
-const FormSectionUpstream = () => {
+export const FormSectionUpstream = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
@@ -115,7 +105,7 @@ const FormSectionUpstream = () => {
   );
 };
 
-const FormSectionPlugins = () => {
+export const FormSectionPlugins = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
@@ -131,7 +121,7 @@ const FormSectionPlugins = () => {
   );
 };
 
-const FormSectionService = () => {
+export const FormSectionService = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (

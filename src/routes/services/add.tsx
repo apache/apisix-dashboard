@@ -8,27 +8,27 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { notifications } from '@mantine/notifications';
 import { pipeProduce } from '@/utils/producer';
-import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
-import { RoutePostSchema } from '@/components/form-slice/FormPartRoute/schema';
-import { postRouteReq } from '@/apis/routes';
+import { FormPartService } from '@/components/form-slice/FormPartService';
+import { ServicePostSchema } from '@/components/form-slice/FormPartService/schema';
+import { postServiceReq } from '@/apis/services';
 
-const RouteAddForm = () => {
+const ServiceAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const postRoute = useMutation({
-    mutationFn: postRouteReq,
+  const postService = useMutation({
+    mutationFn: postServiceReq,
     async onSuccess() {
       notifications.show({
-        message: t('route.add.success'),
+        message: t('services.add.success'),
         color: 'green',
       });
-      await router.navigate({ to: '/routes' });
+      await router.navigate({ to: '/services' });
     },
   });
 
   const form = useForm({
-    resolver: zodResolver(RoutePostSchema),
+    resolver: zodResolver(ServicePostSchema),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -38,10 +38,10 @@ const RouteAddForm = () => {
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit((d) =>
-          postRoute.mutateAsync(pipeProduce()(d))
+          postService.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormPartRoute />
+        <FormPartService />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
     </FormProvider>
@@ -52,14 +52,14 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('route.add.title')} />
+      <PageHeader title={t('services.add.title')} />
       <FormTOCBox>
-        <RouteAddForm />
+        <ServiceAddForm />
       </FormTOCBox>
     </>
   );
 }
 
-export const Route = createFileRoute('/routes/add')({
+export const Route = createFileRoute('/services/add')({
   component: RouteComponent,
 });

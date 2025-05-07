@@ -3,7 +3,6 @@ import { APISIXCommon } from './common';
 import { APISIXUpstreams } from './upstreams';
 import { APISIXPlugins } from './plugins';
 
-// Using the common Status type
 const Route = z
   .object({
     uri: z.string(),
@@ -33,6 +32,5 @@ const Route = z
 
 export const APISIXRoutes = {
   Route,
-  // Export RouteStatus as an alias to APISIXCommon.Status for backward compatibility
   RouteStatus: APISIXCommon.Status,
 };

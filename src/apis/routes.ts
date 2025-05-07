@@ -18,5 +18,22 @@ export const getRouteListQueryOptions = (props: PageSearchType) => {
   });
 };
 
+export const getRouteQueryOptions = (id: string) =>
+  queryOptions({
+    queryKey: ['route', id],
+    queryFn: () =>
+      req
+        .get<unknown, APISIXType['RespRouteDetail']>(`${API_ROUTES}/${id}`)
+        .then((v) => v.data),
+  });
+
+export const putRouteReq = (data: APISIXType['Route']) => {
+  const { id, ...rest } = data;
+  return req.put<APISIXType['Route'], APISIXType['RespRouteDetail']>(
+    `${API_ROUTES}/${id}`,
+    rest
+  );
+};
+
 export const postRouteReq = (data: RoutePostType) =>
   req.post<unknown, APISIXType['RespRouteDetail']>(API_ROUTES, data);

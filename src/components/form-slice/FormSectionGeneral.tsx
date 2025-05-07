@@ -5,7 +5,6 @@ import { FormSection } from './FormSection';
 import { useTranslation } from 'react-i18next';
 import { FormDisplayDate } from './FormDisplayDate';
 import { Divider } from '@mantine/core';
-import type { PropsWithChildren } from 'react';
 
 const DisplayDate = () => {
   const { control } = useFormContext<APISIXType['Info']>();
@@ -14,7 +13,6 @@ const DisplayDate = () => {
   const updateTime = useWatch({ control, name: 'update_time' });
   return (
     <>
-      <Divider my="lg" />
       <FormDisplayDate date={createTime} label={t('form.info.create_time')} />
       <FormDisplayDate date={updateTime} label={t('form.info.update_time')} />
     </>
@@ -32,17 +30,17 @@ const FormItemID = () => {
 
 type FormSectionInfoProps = {
   showDate?: boolean;
-  disableID?: boolean;
-} & PropsWithChildren;
+  showID?: boolean;
+};
 
 export const FormSectionGeneral = (props: FormSectionInfoProps) => {
-  const { showDate = true, disableID = false, children } = props;
+  const { showDate = true, showID = false } = props;
   const { t } = useTranslation();
   return (
-    <FormSection legend={t('form.general.title')} disabled={disableID}>
-      <FormItemID />
+    <FormSection legend={t('form.general.title')}>
+      {showID && <FormItemID />}
+      {showID && showDate && <Divider my="lg" />}
       {showDate && <DisplayDate />}
-      {children}
     </FormSection>
   );
 };

@@ -21,11 +21,21 @@ export type APISIXType = RawAPISIXType & {
   RespRouteList: AxiosResponse<APISIXListResponse<APISIXType['Route']>>;
   RespRouteItem: APISIXType['RespRouteList']['data']['list'][number];
   RespRouteDetail: AxiosResponse<APISIXDetailResponse<APISIXType['Route']>>;
+  RespStreamRouteList: AxiosResponse<
+    APISIXListResponse<APISIXType['StreamRoute']>
+  >;
+  RespStreamRouteItem: APISIXType['RespRouteList']['data']['list'][number];
+  RespStreamRouteDetail: AxiosResponse<
+    APISIXDetailResponse<APISIXType['StreamRoute']>
+  >;
   RespUpstreamList: AxiosResponse<APISIXListResponse<APISIXType['Upstream']>>;
   RespUpstreamItem: APISIXType['RespUpstreamList']['data']['list'][number];
   RespUpstreamDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['Upstream']>
   >;
+  RespServiceList: AxiosResponse<APISIXListResponse<APISIXType['Service']>>;
+  RespServiceItem: APISIXType['RespServiceList']['data']['list'][number];
+  RespServiceDetail: AxiosResponse<APISIXDetailResponse<APISIXType['Service']>>;
   RespProtoList: AxiosResponse<APISIXListResponse<APISIXType['Proto']>>;
   RespProtoItem: APISIXType['RespProtoList']['data']['list'][number];
   RespProtoDetail: AxiosResponse<APISIXDetailResponse<APISIXType['Proto']>>;
@@ -35,6 +45,11 @@ export type APISIXType = RawAPISIXType & {
   RespGlobalRuleItem: APISIXType['RespGlobalRuleList']['data']['list'][number];
   RespGlobalRuleDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['GlobalRule']>
+  >;
+  RespConsumerList: AxiosResponse<APISIXListResponse<APISIXType['Consumer']>>;
+  RespConsumerItem: APISIXType['RespConsumerList']['data']['list'][number];
+  RespConsumerDetail: AxiosResponse<
+    APISIXDetailResponse<APISIXType['Consumer']>
   >;
   RespPluginList: AxiosResponse<string[]>;
   RespPluginSchema: AxiosResponse<APISIXType['PluginSchema']>;

@@ -8,27 +8,30 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { notifications } from '@mantine/notifications';
 import { pipeProduce } from '@/utils/producer';
-import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
-import { RoutePostSchema } from '@/components/form-slice/FormPartRoute/schema';
-import { postRouteReq } from '@/apis/routes';
+import { FormPartConsumer } from '@/components/form-slice/FormPartConsumer';
+import { putConsumerReq } from '@/apis/consumers';
+import { APISIX } from '@/types/schema/apisix';
 
-const RouteAddForm = () => {
+const ConsumerAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const postRoute = useMutation({
-    mutationFn: postRouteReq,
-    async onSuccess() {
+  const putConsumer = useMutation({
+    mutationFn: putConsumerReq,
+    async onSuccess(_, res) {
       notifications.show({
-        message: t('route.add.success'),
+        message: t('consumers.add.success'),
         color: 'green',
       });
-      await router.navigate({ to: '/routes' });
+      await router.navigate({
+        to: '/consumers/detail/$username',
+        params: { username: res.username },
+      });
     },
   });
 
   const form = useForm({
-    resolver: zodResolver(RoutePostSchema),
+    resolver: zodResolver(APISIX.ConsumerPut),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -38,10 +41,10 @@ const RouteAddForm = () => {
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit((d) =>
-          postRoute.mutateAsync(pipeProduce()(d))
+          putConsumer.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormPartRoute />
+        <FormPartConsumer />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
     </FormProvider>
@@ -52,14 +55,14 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('route.add.title')} />
+      <PageHeader title={t('consumers.add.title')} />
       <FormTOCBox>
-        <RouteAddForm />
+        <ConsumerAddForm />
       </FormTOCBox>
     </>
   );
 }
 
-export const Route = createFileRoute('/routes/add')({
+export const Route = createFileRoute('/consumers/add')({
   component: RouteComponent,
 });

@@ -1,18 +1,17 @@
 import { queryClient } from '@/config/global';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import type { APISIXType } from '@/types/schema/apisix';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
-import ToAddPageBtn from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { getSSLListQueryOptions } from '@/apis/ssls';
-import { Button } from '@mantine/core';
 
 function RouteComponent() {
   const { t } = useTranslation();
@@ -54,7 +53,7 @@ function RouteComponent() {
       },
       {
         dataIndex: ['value', 'status'],
-        title: t('form.route.status'),
+        title: t('form.basic.status'),
         key: 'status',
         valueEnum: {
           1: { text: t('enabled'), status: 'Success' },
@@ -67,16 +66,7 @@ function RouteComponent() {
         key: 'option',
         width: 120,
         render: (_, record) => [
-          <Link
-            key="detail"
-            to="/ssls/detail/$id"
-            params={{ id: record.value.id }}
-            style={{ textDecoration: 'none' }}
-          >
-            <Button size="xs" variant="light">
-              {t('form.btn.view')}
-            </Button>
-          </Link>,
+          <ToDetailPageBtn key="detail" to="/ssls/detail/$id" params={{ id: record.value.id }} />,
         ],
       },
     ];

@@ -56,17 +56,7 @@ export const FormPartSSL = () => {
   const { control } = useFormContext<SSLPostType>();
   return (
     <>
-      <FormPartBasic showName={false} showDesc={false}>
-        <FormItemSelect
-          control={control}
-          name="status"
-          label={t('form.route.status')}
-          data={APISIX.RouteStatus.options.map((v) => v.value.toString())}
-          defaultValue={APISIX.RouteStatus.options[1].value.toString()}
-          from={String}
-          to={Number}
-        />
-      </FormPartBasic>
+      <FormPartBasic showName={false} showDesc={false} showStatus />
       <FormItemSelect
         control={control}
         name="type"

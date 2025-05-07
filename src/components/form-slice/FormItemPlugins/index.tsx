@@ -1,5 +1,10 @@
 import { genControllerProps } from '@/components/form/util';
-import { Group, InputWrapper, type InputWrapperProps } from '@mantine/core';
+import {
+  Drawer,
+  Group,
+  InputWrapper,
+  type InputWrapperProps,
+} from '@mantine/core';
 import {
   useController,
   type FieldValues,
@@ -108,38 +113,39 @@ const FormItemPluginsCore = <T extends FieldValues>(
   return (
     <InputWrapper error={fieldState.error?.message} {...restProps}>
       <input name={fName} type="hidden" />
-      <Group>
-        <PluginCardListSearch
-          search={pluginsOb.search}
-          setSearch={pluginsOb.setSearch}
-        />
-        {!restField.disabled && (
+      <Drawer.Stack>
+        <Group>
+          <PluginCardListSearch
+            search={pluginsOb.search}
+            setSearch={pluginsOb.setSearch}
+          />
           <SelectPluginsDrawer
             plugins={pluginsOb.unSelected}
             opened={pluginsOb.selectPluginsOpened}
             onAdd={(name) => pluginsOb.on('add', name)}
             setOpened={pluginsOb.setSelectPluginsOpened}
+            disabled={restField.disabled}
           />
-        )}
-      </Group>
-      <PluginCardList
-        mode={isView ? 'view' : 'edit'}
-        placeholder={t('form.plugins.searchForSelectedPlugins')}
-        mah="60vh"
-        search={pluginsOb.search}
-        plugins={pluginsOb.selected}
-        onDelete={pluginsOb.delete}
-        onView={(name) => pluginsOb.on('view', name)}
-        onEdit={(name) => pluginsOb.on('edit', name)}
-      />
-      <PluginEditorDrawer
-        mode={isView ? 'view' : 'edit'}
-        schema={getSchemaReq.data}
-        opened={pluginsOb.editorOpened}
-        onClose={pluginsOb.closeEditor}
-        plugin={pluginsOb.curPlugin}
-        onSave={pluginsOb.update}
-      />
+        </Group>
+        <PluginCardList
+          mode={isView ? 'view' : 'edit'}
+          placeholder={t('form.plugins.searchForSelectedPlugins')}
+          mah="60vh"
+          search={pluginsOb.search}
+          plugins={pluginsOb.selected}
+          onDelete={pluginsOb.delete}
+          onView={(name) => pluginsOb.on('view', name)}
+          onEdit={(name) => pluginsOb.on('edit', name)}
+        />
+        <PluginEditorDrawer
+          mode={isView ? 'view' : 'edit'}
+          schema={getSchemaReq.data}
+          opened={pluginsOb.editorOpened}
+          onClose={pluginsOb.closeEditor}
+          plugin={pluginsOb.curPlugin}
+          onSave={pluginsOb.update}
+        />
+      </Drawer.Stack>
     </InputWrapper>
   );
 };
