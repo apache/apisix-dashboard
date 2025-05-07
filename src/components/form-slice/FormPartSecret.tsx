@@ -133,19 +133,21 @@ const FormSectionManager = () => {
   const { control } = useFormContext<APISIXType['Secret']>();
   const manager = useWatch({ control, name: 'manager' });
   return (
-    <FormSection legend={t('form.secrets.manager')}>
-      <FormItemSelect
-        control={control}
-        name="manager"
-        defaultValue={APISIX.Secret.options[0].shape.manager.value}
-        data={APISIX.Secret.options.map((v) => v.shape.manager.value)}
-      />
+    <>
+      <FormSection legend={t('form.secrets.manager')}>
+        <FormItemSelect
+          control={control}
+          name="manager"
+          defaultValue={APISIX.Secret.options[0].shape.manager.value}
+          data={APISIX.Secret.options.map((v) => v.shape.manager.value)}
+        />
+      </FormSection>
       <FormSection legend={t('form.secrets.managerConfig')}>
         {manager === 'vault' && <VaultSecretForm />}
         {manager === 'aws' && <AWSSecretForm />}
         {manager === 'gcp' && <GCPSecretForm />}
       </FormSection>
-    </FormSection>
+    </>
   );
 };
 
