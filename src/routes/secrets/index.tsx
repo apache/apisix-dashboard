@@ -55,8 +55,11 @@ function SecretList() {
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
-            to="/secrets/detail/$id"
-            id={record.value.id}
+            to="/secrets/detail/$manager/$id"
+            params={{
+              manager: record.value.manager,
+              id: record.value.id,
+            }}
           />,
         ],
       },
