@@ -37,7 +37,7 @@ export const FormSectionGeneral = (props: FormSectionInfoProps) => {
   const { showDate = true, showID = false } = props;
   const { t } = useTranslation();
   return (
-    <FormSection legend={t('form.general.title')} >
+    <FormSection legend={t('form.general.title')}>
       {showID && <FormItemID />}
       {showID && showDate && <Divider my="lg" />}
       {showDate && <DisplayDate />}

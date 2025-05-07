@@ -57,4 +57,7 @@ export type APISIXType = RawAPISIXType & {
   RespPluginMetadataDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['PluginMetadata']>
   >;
+  RespSSLList: AxiosResponse<APISIXListResponse<APISIXType['SSL']>>;
+  RespSSLItem: APISIXType['RespSSLList']['data']['list'][number];
+  RespSSLDetail: AxiosResponse<APISIXDetailResponse<APISIXType['SSL']>>;
 };

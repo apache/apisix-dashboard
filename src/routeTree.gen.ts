@@ -24,6 +24,7 @@ import { Route as GlobalrulesIndexImport } from './routes/global_rules/index'
 import { Route as ConsumersIndexImport } from './routes/consumers/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as StreamroutesAddImport } from './routes/stream_routes/add'
+import { Route as SslsAddImport } from './routes/ssls/add'
 import { Route as ServicesAddImport } from './routes/services/add'
 import { Route as RoutesAddImport } from './routes/routes/add'
 import { Route as ProtosAddImport } from './routes/protos/add'
@@ -115,6 +116,12 @@ const UpstreamsAddRoute = UpstreamsAddImport.update({
 const StreamroutesAddRoute = StreamroutesAddImport.update({
   id: '/stream_routes/add',
   path: '/stream_routes/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SslsAddRoute = SslsAddImport.update({
+  id: '/ssls/add',
+  path: '/ssls/add',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -242,6 +249,13 @@ declare module '@tanstack/react-router' {
       path: '/services/add'
       fullPath: '/services/add'
       preLoaderRoute: typeof ServicesAddImport
+      parentRoute: typeof rootRoute
+    }
+    '/ssls/add': {
+      id: '/ssls/add'
+      path: '/ssls/add'
+      fullPath: '/ssls/add'
+      preLoaderRoute: typeof SslsAddImport
       parentRoute: typeof rootRoute
     }
     '/stream_routes/add': {
@@ -396,6 +410,7 @@ export interface FileRoutesByFullPath {
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
   '/services/add': typeof ServicesAddRoute
+  '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumers': typeof ConsumersIndexRoute
@@ -425,6 +440,7 @@ export interface FileRoutesByTo {
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
   '/services/add': typeof ServicesAddRoute
+  '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumers': typeof ConsumersIndexRoute
@@ -455,6 +471,7 @@ export interface FileRoutesById {
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
   '/services/add': typeof ServicesAddRoute
+  '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
   '/consumers/': typeof ConsumersIndexRoute
@@ -486,6 +503,7 @@ export interface FileRouteTypes {
     | '/protos/add'
     | '/routes/add'
     | '/services/add'
+    | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
     | '/consumers'
@@ -514,6 +532,7 @@ export interface FileRouteTypes {
     | '/protos/add'
     | '/routes/add'
     | '/services/add'
+    | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
     | '/consumers'
@@ -542,6 +561,7 @@ export interface FileRouteTypes {
     | '/protos/add'
     | '/routes/add'
     | '/services/add'
+    | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
     | '/consumers/'
@@ -572,6 +592,7 @@ export interface RootRouteChildren {
   ProtosAddRoute: typeof ProtosAddRoute
   RoutesAddRoute: typeof RoutesAddRoute
   ServicesAddRoute: typeof ServicesAddRoute
+  SslsAddRoute: typeof SslsAddRoute
   StreamroutesAddRoute: typeof StreamroutesAddRoute
   UpstreamsAddRoute: typeof UpstreamsAddRoute
   ConsumersIndexRoute: typeof ConsumersIndexRoute
@@ -601,6 +622,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProtosAddRoute: ProtosAddRoute,
   RoutesAddRoute: RoutesAddRoute,
   ServicesAddRoute: ServicesAddRoute,
+  SslsAddRoute: SslsAddRoute,
   StreamroutesAddRoute: StreamroutesAddRoute,
   UpstreamsAddRoute: UpstreamsAddRoute,
   ConsumersIndexRoute: ConsumersIndexRoute,
@@ -640,6 +662,7 @@ export const routeTree = rootRoute
         "/protos/add",
         "/routes/add",
         "/services/add",
+        "/ssls/add",
         "/stream_routes/add",
         "/upstreams/add",
         "/consumers/",
@@ -679,6 +702,9 @@ export const routeTree = rootRoute
     },
     "/services/add": {
       "filePath": "services/add.tsx"
+    },
+    "/ssls/add": {
+      "filePath": "ssls/add.tsx"
     },
     "/stream_routes/add": {
       "filePath": "stream_routes/add.tsx"

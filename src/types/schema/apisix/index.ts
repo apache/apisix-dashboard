@@ -8,6 +8,7 @@ import { APISIXStreamRoutes } from './stream_routes';
 import { APISIXUpstreams } from './upstreams';
 import { APISIXPluginMetadata } from './plugin_metadata';
 import { APISIXConsumers } from './consumers';
+import { APISIXSSLs } from './ssls';
 export type { APISIXType } from './type';
 export const APISIX = {
   ...APISIXCommon,
@@ -19,5 +20,6 @@ export const APISIX = {
   ...APISIXGlobalRules,
   ...APISIXPlugins,
   ...APISIXPluginMetadata,
+  ...APISIXSSLs,
   ...APISIXServices,
 };
