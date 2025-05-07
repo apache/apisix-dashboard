@@ -28,6 +28,7 @@
     "fast-clean": "^1.4.0",
     "i18next": "^25.0.1",
     "immer": "^10.1.1",
+    "just-diff": "^6.0.2",
     "mobx": "^6.13.7",
     "mobx-react-lite": "^4.1.0",
     "monaco-editor": "^0.52.2",
