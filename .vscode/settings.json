@@ -3,9 +3,9 @@
     "typescriptreact",
     "typescript",
   ],
-  // "files.readonlyInclude": {
-  //   "**/routeTree.gen.ts": true
-  // },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true
   },
