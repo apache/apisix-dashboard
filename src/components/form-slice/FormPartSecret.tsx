@@ -1,4 +1,4 @@
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { FormSectionGeneral } from './FormSectionGeneral';
 import { FormItemSwitch } from '@/components/form/Switch';
@@ -148,8 +148,9 @@ const FormSectionManager = (props: FormSectionManagerProps) => {
 
 const FormSectionManagerConfig = () => {
   const { t } = useTranslation();
-  const { control } = useFormContext<APISIXType['Secret']>();
-  const manager = useWatch({ control, name: 'manager' });
+  const { watch } = useFormContext<APISIXType['Secret']>();
+  // useWatch not working here
+  const manager = watch('manager');
   return (
     <FormSection legend={t('form.secrets.managerConfig')}>
       {manager === 'vault' && <VaultSecretForm />}
