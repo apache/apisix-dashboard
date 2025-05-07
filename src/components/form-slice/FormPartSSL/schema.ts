@@ -14,6 +14,7 @@ export const SSLPostSchema = APISIX.SSL.omit({
 }).merge(SSLForm);
 
 export type SSLPostType = z.infer<typeof SSLPostSchema>;
+
 export const SSLPutSchema = APISIX.SSL.merge(SSLForm);
 
 export type SSLPutType = z.infer<typeof SSLPutSchema>;

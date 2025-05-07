@@ -343,17 +343,16 @@
   },
   "ssls": {
     "add": {
-      "success": "Add SSL Certificate Successfully",
-      "title": "Add SSL Certificate"
+      "success": "Add SSL Successfully",
+      "title": "Add SSL"
     },
     "detail": {
-      "title": "SSL Certificate Detail"
+      "title": "SSL Detail"
     },
     "edit": {
-      "success": "Edit SSL Certificate Successfully",
-      "title": "Edit SSL Certificate"
-    },
-    "title": "SSL Certificates"
+      "success": "Edit SSL Successfully",
+      "title": "Edit SSL"
+    }
   },
   "streamRoutes": {
     "add": {
