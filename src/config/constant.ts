@@ -13,6 +13,8 @@ export const API_PLUGINS = '/plugins';
 export const API_PLUGINS_LIST = '/plugins/list';
 export const API_PLUGIN_METADATA = '/plugin_metadata';
 export const API_SECRETS = '/secrets';
+export const API_CONSUMERS = '/consumers';
+export const API_SSLS = '/ssls';
 
 export const SKIP_INTERCEPTOR_HEADER = '__dashboard__skipInterceptor';
 export const APPSHELL_HEADER_HEIGHT = 60;

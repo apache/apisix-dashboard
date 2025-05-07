@@ -49,10 +49,18 @@ export type APISIXType = RawAPISIXType & {
   RespSecretList: AxiosResponse<APISIXListResponse<APISIXType['Secret']>>;
   RespSecretItem: APISIXType['RespSecretList']['data']['list'][number];
   RespSecretDetail: AxiosResponse<APISIXDetailResponse<APISIXType['Secret']>>;
+  RespConsumerList: AxiosResponse<APISIXListResponse<APISIXType['Consumer']>>;
+  RespConsumerItem: APISIXType['RespConsumerList']['data']['list'][number];
+  RespConsumerDetail: AxiosResponse<
+    APISIXDetailResponse<APISIXType['Consumer']>
+  >;
   RespPluginList: AxiosResponse<string[]>;
   RespPluginSchema: AxiosResponse<APISIXType['PluginSchema']>;
   RespPlugins: AxiosResponse<APISIXType['Plugins']>;
   RespPluginMetadataDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['PluginMetadata']>
   >;
+  RespSSLList: AxiosResponse<APISIXListResponse<APISIXType['SSL']>>;
+  RespSSLItem: APISIXType['RespSSLList']['data']['list'][number];
+  RespSSLDetail: AxiosResponse<APISIXDetailResponse<APISIXType['SSL']>>;
 };

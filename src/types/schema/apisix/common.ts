@@ -39,7 +39,6 @@ const HttpMethod = z.union([
   z.literal('PURGE'),
 ]);
 
-
 export const APISIXCommon = {
   Basic,
   Labels,

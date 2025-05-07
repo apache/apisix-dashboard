@@ -1,6 +1,26 @@
 {
   "APISIX Dashboard": "APISIX Dashboard",
   "actions": "Actions",
+  "consumers": {
+    "add": {
+      "success": "Add Consumer Successfully",
+      "title": "Add Consumer"
+    },
+    "credentials": {
+      "title": "Credentials"
+    },
+    "detail": {
+      "title": "Consumer Detail"
+    },
+    "edit": {
+      "success": "Edit Consumer Successfully",
+      "title": "Edit Consumer"
+    },
+    "title": "Consumers",
+    "username": "Username"
+  },
+  "disabled": "Disabled",
+  "enabled": "Enabled",
   "form": {
     "basic": {
       "desc": "Description",
@@ -17,12 +37,17 @@
     },
     "btn": {
       "add": "Add",
+      "addARow": "Add a row",
       "cancel": "Cancel",
       "delete": "Delete",
       "edit": "Edit",
       "save": "Save",
       "upload": "Upload",
       "view": "View"
+    },
+    "consumer": {
+      "details": "Consumer Details",
+      "groupId": "Group ID"
     },
     "disabled": "Disabled, click switch to enable",
     "general": {
@@ -90,6 +115,25 @@
         "token": "Token",
         "uri": "URI"
       }
+    },
+    "ssls": {
+      "cert": "Certificate",
+      "cert_key_list": {
+        "add": "Add a pair",
+        "delete": "Delete the pair",
+        "title": "Certificate and Key Pairs"
+      },
+      "client": {
+        "ca": "Client CA Certificate",
+        "depth": "Verification Depth",
+        "skipMtlsUriRegex": "Skip mTLS URI Regex",
+        "title": "Client"
+      },
+      "key": "Private Key",
+      "sni": "SNI",
+      "snis": "SNIs",
+      "ssl_protocols": "SSL Protocols",
+      "type": "Certificate Type"
     },
     "services": {
       "enableWebsocket": "Enable WebSocket",
@@ -340,6 +384,12 @@
   "setting": {
     "adminKey": "Admin Key",
     "title": "Setting"
+  },
+  "ssls": {
+    "add": {
+      "success": "Add SSL Successfully",
+      "title": "Add SSL"
+    }
   },
   "streamRoutes": {
     "add": {

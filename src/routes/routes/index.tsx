@@ -63,7 +63,7 @@ const RouteList = () => {
           <ToDetailPageBtn
             key="detail"
             to="/routes/detail/$id"
-            id={record.value.id}
+            params={{ id: record.value.id }}
           />,
         ],
       },
