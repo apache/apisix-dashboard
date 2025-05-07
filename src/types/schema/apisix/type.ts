@@ -51,6 +51,13 @@ export type APISIXType = RawAPISIXType & {
   RespConsumerDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['Consumer']>
   >;
+  RespConsumerGroupList: AxiosResponse<
+    APISIXListResponse<APISIXType['ConsumerGroup']>
+  >;
+  RespConsumerGroupItem: APISIXType['RespConsumerGroupList']['data']['list'][number];
+  RespConsumerGroupDetail: AxiosResponse<
+    APISIXDetailResponse<APISIXType['ConsumerGroup']>
+  >;
   RespCredentialList: AxiosResponse<
     APISIXListResponse<APISIXType['Credential']>
   >;
