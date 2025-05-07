@@ -133,13 +133,12 @@ const FormSectionManager = (props: FormSectionManagerProps) => {
   const { t } = useTranslation();
   const { control } = useFormContext<APISIXType['Secret']>();
   return (
-    <FormSection legend={t('form.secrets.manager')}>
+    <FormSection legend={t('form.secrets.manager')} disabled={readOnlyManager}>
       <FormItemSelect
         control={control}
         name="manager"
         defaultValue={APISIX.Secret.options[0].shape.manager.value}
         data={APISIX.Secret.options.map((v) => v.shape.manager.value)}
-        readOnly={readOnlyManager}
       />
     </FormSection>
   );

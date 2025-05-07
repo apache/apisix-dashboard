@@ -72,7 +72,7 @@ const SecretDetailForm = (props: Props) => {
           putSecret.mutateAsync(pipeProduce()(d));
         })}
       >
-        <FormSectionGeneral readOnlyID />
+        <FormSectionGeneral readOnly />
         <FormPartSecret readOnlyManager />
         {!readOnly && (
           <Group>

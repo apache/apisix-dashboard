@@ -1,9 +1,6 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { APISIXType } from '@/types/schema/apisix';
-import {
-  FormItemTextInput,
-  type FormItemTextInputProps,
-} from '../form/TextInput';
+import { FormItemTextInput } from '../form/TextInput';
 import { FormSection } from './FormSection';
 import { useTranslation } from 'react-i18next';
 import { FormDisplayDate } from './FormDisplayDate';
@@ -22,36 +19,30 @@ const DisplayDate = () => {
   );
 };
 
-const FormItemID = (
-  props: Omit<
-    FormItemTextInputProps<APISIXType['Info']>,
-    'name' | 'label' | 'control'
-  >
-) => {
+const FormItemID = () => {
   const { control } = useFormContext<APISIXType['Info']>();
   const { t } = useTranslation();
   return (
-    <FormItemTextInput
-      control={control}
-      name="id"
-      label={t('form.info.id')}
-      {...props}
-    />
+    <FormItemTextInput control={control} name="id" label={t('form.info.id')} />
   );
 };
 
 export type FormSectionGeneralProps = {
   showDate?: boolean;
   showID?: boolean;
-  readOnlyID?: boolean;
+  readOnly?: boolean;
 };
 
 export const FormSectionGeneral = (props: FormSectionGeneralProps) => {
-  const { showDate = true, showID = true, readOnlyID = false } = props;
+  const { showDate = true, showID = true, readOnly = false } = props;
   const { t } = useTranslation();
+  // we use fieldset disabled to show readonly state
+  // because mantine readOnly style looks like we can edit
+  // this is also the way rhf recommends,
+  // Using disable directly on the component will cause rhf to ignore the value
   return (
-    <FormSection legend={t('form.general.title')}>
-      {showID && <FormItemID readOnly={readOnlyID} />}
+    <FormSection legend={t('form.general.title')} disabled={readOnly}>
+      {showID && <FormItemID />}
       {showID && showDate && <Divider my="lg" />}
       {showDate && <DisplayDate />}
     </FormSection>
