@@ -2,6 +2,7 @@ import { RouteLinkBtn } from '@/components/Btn';
 import IconPlus from '~icons/material-symbols/add';
 import { useTranslation } from 'react-i18next';
 import type { FileRoutesByTo } from '@/routeTree.gen';
+import type { LinkProps } from '@tanstack/react-router';
 
 type FilterKeys<T, R extends string> = {
   [K in keyof T as K extends `${string}${R}` ? K : never]: T[K];
@@ -25,15 +26,14 @@ export const ToAddPageBtn = ({ to, label }: ToAddPageBtnProps) => {
 };
 
 type ToDetailPageBtnProps = {
-  id: string;
-  to: keyof FilterKeys<FileRoutesByTo, '$id'>;
-};
+  to: keyof FilterKeys<FileRoutesByTo, '$id'> | keyof FilterKeys<FileRoutesByTo, '$username'>;
+} & Pick<LinkProps, 'params'>;
 export const ToDetailPageBtn = (props: ToDetailPageBtnProps) => {
-  const { id, to } = props;
+  const { params, to } = props;
   const { t } = useTranslation();
   return (
     <>
-      <RouteLinkBtn size="xs" variant="transparent" to={to} params={{ id }}>
+      <RouteLinkBtn size="xs" variant="transparent" to={to} params={params}>
         {t('view')}
       </RouteLinkBtn>
     </>

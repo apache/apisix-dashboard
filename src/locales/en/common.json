@@ -1,6 +1,24 @@
 {
   "APISIX Dashboard": "APISIX Dashboard",
   "actions": "Actions",
+  "consumers": {
+    "add": {
+      "success": "Add Consumer Successfully",
+      "title": "Add Consumer"
+    },
+    "credentials": {
+      "title": "Credentials"
+    },
+    "detail": {
+      "title": "Consumer Detail"
+    },
+    "edit": {
+      "success": "Edit Consumer Successfully",
+      "title": "Edit Consumer"
+    },
+    "title": "Consumers",
+    "username": "Username"
+  },
   "disabled": "Disabled",
   "enabled": "Enabled",
   "form": {
@@ -26,6 +44,10 @@
       "save": "Save",
       "upload": "Upload",
       "view": "View"
+    },
+    "consumer": {
+      "details": "Consumer Details",
+      "groupId": "Group ID"
     },
     "disabled": "Disabled, click switch to enable",
     "general": {

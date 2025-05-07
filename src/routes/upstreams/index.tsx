@@ -98,7 +98,7 @@ function RouteComponent() {
           <ToDetailPageBtn
             key="detail"
             to="/upstreams/detail/$id"
-            id={record.value.id}
+            params={{ id: record.value.id }}
           />,
         ],
       },
