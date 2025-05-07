@@ -12,11 +12,6 @@ const PluginConfig = z
 
 export const APISIXPluginConfigs = {
   PluginConfig,
-  PluginConfigPost: PluginConfig.omit({
-    id: true,
-    create_time: true,
-    update_time: true,
-  }),
   PluginConfigPut: PluginConfig.omit({
     create_time: true,
     update_time: true,

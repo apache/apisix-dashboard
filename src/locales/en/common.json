@@ -280,6 +280,7 @@
   "navbar": {
     "consumers": "Consumers",
     "globalRules": "Global Rules",
+    "pluginConfigs": "Plugin Configs",
     "pluginMetadata": "Plugin Metadata",
     "protos": "Protos",
     "routes": "Routes",
@@ -291,6 +292,19 @@
   },
   "noData": "No Data",
   "or": "OR",
+  "pluginConfigs": {
+    "add": {
+      "success": "Add Plugin Config Successfully",
+      "title": "Add Plugin Config"
+    },
+    "detail": {
+      "title": "Plugin Config Detail"
+    },
+    "edit": {
+      "success": "Edit Plugin Config Successfully",
+      "title": "Edit Plugin Config"
+    }
+  },
   "pluginMetadata": {
     "delete": {
       "success": "Delete Plugin Metadata of {{name}} Successfully"

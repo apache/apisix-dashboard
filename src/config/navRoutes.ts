@@ -39,6 +39,10 @@ export const navRoutes: NavRoute[] = [
     label: 'pluginMetadata',
   },
   {
+    to: '/plugin_configs',
+    label: 'pluginConfigs',
+  },
+  {
     to: '/secrets',
     label: 'secrets',
   },

@@ -6,7 +6,7 @@ import { FormSection } from './FormSection';
 import { FormItemPlugins } from './FormItemPlugins';
 import type { APISIXType } from '@/types/schema/apisix';
 
-const FormSectionPlugins = () => {
+export const FormSectionPluginsOnly = () => {
   const { t } = useTranslation();
   return (
     <FormSection legend={t('form.plugins.label')}>
@@ -37,7 +37,7 @@ export const FormPartConsumer = () => {
         name="group_id"
         label={t('form.consumer.groupId')}
       />
-      <FormSectionPlugins />
+      <FormSectionPluginsOnly />
     </>
   );
 };
