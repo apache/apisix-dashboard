@@ -6,7 +6,7 @@ import { isEmpty } from 'rambdax';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import type { PluginCardListProps } from './PluginCardList';
 import { observer } from 'mobx-react-lite';
-import { useDeepCompareEffect } from 'react-use';
+import { useEffect } from 'react';
 
 export type PluginConfig = { name: string; config: object };
 export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
@@ -34,9 +34,9 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
     methods.reset();
   };
 
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     methods.setValue('config', toConfigStr(config));
-  }, [config]);
+  }, [config, methods]);
 
   return (
     <Drawer

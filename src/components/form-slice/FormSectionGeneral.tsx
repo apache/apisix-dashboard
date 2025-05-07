@@ -28,13 +28,13 @@ const FormItemID = () => {
   );
 };
 
-type FormSectionInfoProps = {
+export type FormSectionGeneralProps = {
   showDate?: boolean;
   showID?: boolean;
 };
 
-export const FormSectionGeneral = (props: FormSectionInfoProps) => {
-  const { showDate = true, showID = false } = props;
+export const FormSectionGeneral = (props: FormSectionGeneralProps) => {
+  const { showDate = true, showID = true } = props;
   const { t } = useTranslation();
   return (
     <FormSection legend={t('form.general.title')}>

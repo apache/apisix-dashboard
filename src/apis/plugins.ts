@@ -38,13 +38,13 @@ export const getPluginsListQueryOptions = () => {
     queryKey: ['plugins-list'],
     queryFn: () =>
       req
-        .get<unknown, APISIXType['RespPluginsList']>(API_PLUGINS_LIST)
+        .get<unknown, APISIXType['RespPluginList']>(API_PLUGINS_LIST)
         .then((v) => v.data),
   });
 };
 
 export const getPluginsListWithSchemaQueryOptions = (
-  props: APISIXType['PluginsQuery'] & NeedPluginSchema = { schema: 'normal' }
+  props: APISIXType['PluginsQuery'] & NeedPluginSchema = { schema: 'schema' }
 ) => {
   const { subsystem, schema } = props;
   return queryOptions({

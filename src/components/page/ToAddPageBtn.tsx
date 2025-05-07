@@ -10,15 +10,16 @@ type FilterKeys<T, R extends string> = {
 type ToAddPageBtnProps = {
   to: keyof FilterKeys<FileRoutesByTo, 'add'>;
   label: string;
-};
+} & Pick<LinkProps, 'params'>;
 
-export const ToAddPageBtn = ({ to, label }: ToAddPageBtnProps) => {
+export const ToAddPageBtn = ({ to, params, label }: ToAddPageBtnProps) => {
   return (
     <RouteLinkBtn
       leftSection={<IconPlus />}
       size="compact-sm"
       variant="gradient"
       to={to}
+      params={params}
     >
       {label}
     </RouteLinkBtn>
