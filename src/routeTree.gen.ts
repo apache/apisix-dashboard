@@ -821,6 +821,7 @@ export const routeTree = rootRoute
     },
     "/consumers/detail/$username/credentials/detail/$id": {
       "filePath": "consumers/detail.$username/credentials/detail.$id.tsx"
+    }
   }
 }
 ROUTE_MANIFEST_END */
