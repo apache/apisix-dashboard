@@ -12,14 +12,13 @@ const PluginConsumerSchema = z.object({});
 const PluginMetadataSchema = z.object({});
 
 const PluginSchema = z.object({
-  _meta: z.object({}).optional(),
   consumer_schema: PluginConsumerSchema.optional(),
   metadata_schema: PluginMetadataSchema.optional(),
+  schema: z.object({}).optional(),
 });
 
 const PluginSchemaKeys = z.union([
-  // `normal` as a placeholder for the general case.
-  z.literal('normal'),
+  z.literal('schema'),
   z.literal('consumer_schema'),
   z.literal('metadata_schema'),
 ]);

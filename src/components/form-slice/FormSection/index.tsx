@@ -7,6 +7,7 @@ import {
 import {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   type FC,
@@ -15,7 +16,6 @@ import {
 } from 'react';
 import classes from './style.module.css';
 import { APPSHELL_HEADER_HEIGHT } from '@/config/constant';
-import { useDeepCompareEffect } from 'react-use';
 
 const SectionDepthCtx = createContext<number>(0);
 
@@ -66,7 +66,7 @@ export const FormTOCBox = (props: FormTOCBoxProps) => {
   const { children, deps } = props;
   const reinitializeRef = useRef(() => {});
 
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     reinitializeRef.current();
   }, [deps]);
 

@@ -40,6 +40,8 @@ import { Route as GlobalrulesDetailIdImport } from './routes/global_rules/detail
 import { Route as ConsumersDetailUsernameIndexImport } from './routes/consumers/detail.$username/index'
 import { Route as SecretsDetailManagerIdImport } from './routes/secrets/detail.$manager.$id'
 import { Route as ConsumersDetailUsernameCredentialsIndexImport } from './routes/consumers/detail.$username/credentials/index'
+import { Route as ConsumersDetailUsernameCredentialsAddImport } from './routes/consumers/detail.$username/credentials/add'
+import { Route as ConsumersDetailUsernameCredentialsDetailIdImport } from './routes/consumers/detail.$username/credentials/detail.$id'
 
 // Create/Update Routes
 
@@ -216,6 +218,20 @@ const ConsumersDetailUsernameCredentialsIndexRoute =
   ConsumersDetailUsernameCredentialsIndexImport.update({
     id: '/consumers/detail/$username/credentials/',
     path: '/consumers/detail/$username/credentials/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ConsumersDetailUsernameCredentialsAddRoute =
+  ConsumersDetailUsernameCredentialsAddImport.update({
+    id: '/consumers/detail/$username/credentials/add',
+    path: '/consumers/detail/$username/credentials/add',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ConsumersDetailUsernameCredentialsDetailIdRoute =
+  ConsumersDetailUsernameCredentialsDetailIdImport.update({
+    id: '/consumers/detail/$username/credentials/detail/$id',
+    path: '/consumers/detail/$username/credentials/detail/$id',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -419,11 +435,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumersDetailUsernameIndexImport
       parentRoute: typeof rootRoute
     }
+    '/consumers/detail/$username/credentials/add': {
+      id: '/consumers/detail/$username/credentials/add'
+      path: '/consumers/detail/$username/credentials/add'
+      fullPath: '/consumers/detail/$username/credentials/add'
+      preLoaderRoute: typeof ConsumersDetailUsernameCredentialsAddImport
+      parentRoute: typeof rootRoute
+    }
     '/consumers/detail/$username/credentials/': {
       id: '/consumers/detail/$username/credentials/'
       path: '/consumers/detail/$username/credentials'
       fullPath: '/consumers/detail/$username/credentials'
       preLoaderRoute: typeof ConsumersDetailUsernameCredentialsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/consumers/detail/$username/credentials/detail/$id': {
+      id: '/consumers/detail/$username/credentials/detail/$id'
+      path: '/consumers/detail/$username/credentials/detail/$id'
+      fullPath: '/consumers/detail/$username/credentials/detail/$id'
+      preLoaderRoute: typeof ConsumersDetailUsernameCredentialsDetailIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -460,7 +490,9 @@ export interface FileRoutesByFullPath {
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
   '/secrets/detail/$manager/$id': typeof SecretsDetailManagerIdRoute
   '/consumers/detail/$username': typeof ConsumersDetailUsernameIndexRoute
+  '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -492,7 +524,9 @@ export interface FileRoutesByTo {
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
   '/secrets/detail/$manager/$id': typeof SecretsDetailManagerIdRoute
   '/consumers/detail/$username': typeof ConsumersDetailUsernameIndexRoute
+  '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
 export interface FileRoutesById {
@@ -525,7 +559,9 @@ export interface FileRoutesById {
   '/upstreams/detail/$id': typeof UpstreamsDetailIdRoute
   '/secrets/detail/$manager/$id': typeof SecretsDetailManagerIdRoute
   '/consumers/detail/$username/': typeof ConsumersDetailUsernameIndexRoute
+  '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials/': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
 export interface FileRouteTypes {
@@ -559,7 +595,9 @@ export interface FileRouteTypes {
     | '/upstreams/detail/$id'
     | '/secrets/detail/$manager/$id'
     | '/consumers/detail/$username'
+    | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials'
+    | '/consumers/detail/$username/credentials/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -590,7 +628,9 @@ export interface FileRouteTypes {
     | '/upstreams/detail/$id'
     | '/secrets/detail/$manager/$id'
     | '/consumers/detail/$username'
+    | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials'
+    | '/consumers/detail/$username/credentials/detail/$id'
   id:
     | '__root__'
     | '/'
@@ -621,7 +661,9 @@ export interface FileRouteTypes {
     | '/upstreams/detail/$id'
     | '/secrets/detail/$manager/$id'
     | '/consumers/detail/$username/'
+    | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials/'
+    | '/consumers/detail/$username/credentials/detail/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -654,7 +696,9 @@ export interface RootRouteChildren {
   UpstreamsDetailIdRoute: typeof UpstreamsDetailIdRoute
   SecretsDetailManagerIdRoute: typeof SecretsDetailManagerIdRoute
   ConsumersDetailUsernameIndexRoute: typeof ConsumersDetailUsernameIndexRoute
+  ConsumersDetailUsernameCredentialsAddRoute: typeof ConsumersDetailUsernameCredentialsAddRoute
   ConsumersDetailUsernameCredentialsIndexRoute: typeof ConsumersDetailUsernameCredentialsIndexRoute
+  ConsumersDetailUsernameCredentialsDetailIdRoute: typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -686,8 +730,12 @@ const rootRouteChildren: RootRouteChildren = {
   UpstreamsDetailIdRoute: UpstreamsDetailIdRoute,
   SecretsDetailManagerIdRoute: SecretsDetailManagerIdRoute,
   ConsumersDetailUsernameIndexRoute: ConsumersDetailUsernameIndexRoute,
+  ConsumersDetailUsernameCredentialsAddRoute:
+    ConsumersDetailUsernameCredentialsAddRoute,
   ConsumersDetailUsernameCredentialsIndexRoute:
     ConsumersDetailUsernameCredentialsIndexRoute,
+  ConsumersDetailUsernameCredentialsDetailIdRoute:
+    ConsumersDetailUsernameCredentialsDetailIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -728,7 +776,9 @@ export const routeTree = rootRoute
         "/upstreams/detail/$id",
         "/secrets/detail/$manager/$id",
         "/consumers/detail/$username/",
-        "/consumers/detail/$username/credentials/"
+        "/consumers/detail/$username/credentials/add",
+        "/consumers/detail/$username/credentials/",
+        "/consumers/detail/$username/credentials/detail/$id"
       ]
     },
     "/": {
@@ -815,8 +865,14 @@ export const routeTree = rootRoute
     "/consumers/detail/$username/": {
       "filePath": "consumers/detail.$username/index.tsx"
     },
+    "/consumers/detail/$username/credentials/add": {
+      "filePath": "consumers/detail.$username/credentials/add.tsx"
+    },
     "/consumers/detail/$username/credentials/": {
       "filePath": "consumers/detail.$username/credentials/index.tsx"
+    },
+    "/consumers/detail/$username/credentials/detail/$id": {
+      "filePath": "consumers/detail.$username/credentials/detail.$id.tsx"
     }
   }
 }
