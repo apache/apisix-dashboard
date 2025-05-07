@@ -7,8 +7,8 @@ import { useFormContext } from 'react-hook-form';
 import type { APISIXType } from '@/types/schema/apisix';
 import { useNamePrefix } from '@/utils/useNamePrefix';
 import type { PropsWithChildren } from 'react';
-import { FormItemSelect } from '../form/Select';
 import { APISIXCommon } from '@/types/schema/apisix/common';
+import { FormItemSelect } from '../form/Select';
 
 export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
   PropsWithChildren & {
