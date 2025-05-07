@@ -61,6 +61,10 @@
       "vars": "Vars"
     },
     "search": "Search",
+    "secrets": {
+      "manager": "Secret Manager Type",
+      "title": "Secret Configuration"
+    },
     "services": {
       "enableWebsocket": "Enable WebSocket",
       "hosts": "Hosts",
@@ -279,6 +283,20 @@
     "title": "Routes"
   },
   "seconds": "Seconds",
+  "secrets": {
+    "add": {
+      "success": "Add Secret Successfully",
+      "title": "Add Secret"
+    },
+    "detail": {
+      "title": "Secret Detail"
+    },
+    "edit": {
+      "success": "Edit Secret Successfully",
+      "title": "Edit Secret"
+    },
+    "title": "Secrets"
+  },
   "services": {
     "add": {
       "success": "Add Service Successfully",
