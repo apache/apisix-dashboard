@@ -58,6 +58,13 @@ export type APISIXType = RawAPISIXType & {
   RespCredentialDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['Credential']>
   >;
+  RespPluginConfigList: AxiosResponse<
+    APISIXListResponse<APISIXType['PluginConfig']>
+  >;
+  RespPluginConfigItem: APISIXType['RespPluginConfigList']['data']['list'][number];
+  RespPluginConfigDetail: AxiosResponse<
+    APISIXDetailResponse<APISIXType['PluginConfig']>
+  >;
   RespPluginList: AxiosResponse<string[]>;
   RespPluginSchema: AxiosResponse<APISIXType['PluginSchema']>;
   RespPlugins: AxiosResponse<APISIXType['Plugins']>;

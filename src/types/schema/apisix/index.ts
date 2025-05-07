@@ -10,6 +10,7 @@ import { APISIXPluginMetadata } from './plugin_metadata';
 import { APISIXConsumers } from './consumers';
 import { APISIXCredentials } from './credentials';
 import { APISIXSSLs } from './ssls';
+import { APISIXPluginConfigs } from './plugin_configs';
 export type { APISIXType } from './type';
 export const APISIX = {
   ...APISIXCommon,
@@ -24,4 +25,5 @@ export const APISIX = {
   ...APISIXSSLs,
   ...APISIXServices,
   ...APISIXCredentials,
+  ...APISIXPluginConfigs,
 };
