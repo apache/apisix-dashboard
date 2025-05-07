@@ -46,7 +46,8 @@ const SecretDetailForm = (props: Props) => {
     if (secretData?.value && !isLoading) {
       form.reset(secretData.value);
     }
-  }, [secretData, form, isLoading]);
+    // readonly is used as a dep to ensure that it can be reset correctly when switching states.
+  }, [secretData, form, isLoading, readOnly]);
 
   const putSecret = useMutation({
     mutationFn: putSecretReq,
