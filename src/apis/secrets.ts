@@ -5,8 +5,8 @@ import type { PageSearchType } from '@/types/schema/pageSearch';
 import { queryOptions } from '@tanstack/react-query';
 
 /**
- * `manager` does not exist in apisix secret, we need to parse it from `id`
- * `id` (origin) is `manager/id`
+ * `manager` does not exist in apisix secret, we parse it from `id`
+ * `id` (origin) is `manager/id`, we convert it to `id` and `manager`
  */
 export const preParseSecretItem = <T extends APISIXType['RespSecretItem']>(
   data: T
