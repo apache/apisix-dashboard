@@ -128,34 +128,47 @@ const GCPSecretForm = () => {
   );
 };
 
-const FormSectionManager = () => {
+type FormSectionManagerProps = { disableManager?: boolean };
+const FormSectionManager = (props: FormSectionManagerProps) => {
+  const { disableManager } = props;
+  const { t } = useTranslation();
+  const { control } = useFormContext<APISIXType['Secret']>();
+  return (
+    <FormSection legend={t('form.secrets.manager')}>
+      <FormItemSelect
+        control={control}
+        name="manager"
+        defaultValue={APISIX.Secret.options[0].shape.manager.value}
+        data={APISIX.Secret.options.map((v) => v.shape.manager.value)}
+        disabled={disableManager}
+      />
+    </FormSection>
+  );
+};
+
+const FormSectionManagerConfig = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<APISIXType['Secret']>();
   const manager = useWatch({ control, name: 'manager' });
   return (
-    <>
-      <FormSection legend={t('form.secrets.manager')}>
-        <FormItemSelect
-          control={control}
-          name="manager"
-          defaultValue={APISIX.Secret.options[0].shape.manager.value}
-          data={APISIX.Secret.options.map((v) => v.shape.manager.value)}
-        />
-      </FormSection>
-      <FormSection legend={t('form.secrets.managerConfig')}>
-        {manager === 'vault' && <VaultSecretForm />}
-        {manager === 'aws' && <AWSSecretForm />}
-        {manager === 'gcp' && <GCPSecretForm />}
-      </FormSection>
-    </>
+    <FormSection legend={t('form.secrets.managerConfig')}>
+      {manager === 'vault' && <VaultSecretForm />}
+      {manager === 'aws' && <AWSSecretForm />}
+      {manager === 'gcp' && <GCPSecretForm />}
+    </FormSection>
   );
 };
 
-export const FormPartSecret = () => {
+/**
+ * id and manager cannot be changed when editing
+ */
+export const FormPartSecret = (props: FormSectionManagerProps) => {
+  const { disableManager } = props;
   return (
     <>
-      <FormSectionGeneral showDate={false} />
-      <FormSectionManager />
+      <FormSectionGeneral showDate={false} disableID={disableManager} />
+      <FormSectionManager disableManager={disableManager} />
+      <FormSectionManagerConfig />
     </>
   );
 };

@@ -1,6 +1,9 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { APISIXType } from '@/types/schema/apisix';
-import { FormItemTextInput } from '../form/TextInput';
+import {
+  FormItemTextInput,
+  type FormItemTextInputProps,
+} from '../form/TextInput';
 import { FormSection } from './FormSection';
 import { useTranslation } from 'react-i18next';
 import { FormDisplayDate } from './FormDisplayDate';
@@ -19,26 +22,36 @@ const DisplayDate = () => {
   );
 };
 
-const FormItemID = () => {
+const FormItemID = (
+  props: Omit<
+    FormItemTextInputProps<APISIXType['Info']>,
+    'name' | 'label' | 'control'
+  >
+) => {
   const { control } = useFormContext<APISIXType['Info']>();
   const { t } = useTranslation();
-
   return (
-    <FormItemTextInput control={control} name="id" label={t('form.info.id')} />
+    <FormItemTextInput
+      control={control}
+      name="id"
+      label={t('form.info.id')}
+      {...props}
+    />
   );
 };
 
 export type FormSectionGeneralProps = {
   showDate?: boolean;
   showID?: boolean;
+  disableID?: boolean;
 };
 
 export const FormSectionGeneral = (props: FormSectionGeneralProps) => {
-  const { showDate = true, showID = true } = props;
+  const { showDate = true, showID = true, disableID = false } = props;
   const { t } = useTranslation();
   return (
     <FormSection legend={t('form.general.title')}>
-      {showID && <FormItemID />}
+      {showID && <FormItemID disabled={disableID} />}
       {showID && showDate && <Divider my="lg" />}
       {showDate && <DisplayDate />}
     </FormSection>

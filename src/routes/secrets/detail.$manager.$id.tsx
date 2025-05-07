@@ -70,7 +70,7 @@ const SecretDetailForm = (props: Props) => {
           putSecret.mutateAsync(pipeProduce()(d));
         })}
       >
-        <FormPartSecret />
+        <FormPartSecret disableManager />
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
