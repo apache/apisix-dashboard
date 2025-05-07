@@ -43,15 +43,15 @@ const FormItemID = (
 export type FormSectionGeneralProps = {
   showDate?: boolean;
   showID?: boolean;
-  disableID?: boolean;
+  readOnlyID?: boolean;
 };
 
 export const FormSectionGeneral = (props: FormSectionGeneralProps) => {
-  const { showDate = true, showID = true, disableID = false } = props;
+  const { showDate = true, showID = true, readOnlyID = false } = props;
   const { t } = useTranslation();
   return (
     <FormSection legend={t('form.general.title')}>
-      {showID && <FormItemID disabled={disableID} />}
+      {showID && <FormItemID readOnly={readOnlyID} />}
       {showID && showDate && <Divider my="lg" />}
       {showDate && <DisplayDate />}
     </FormSection>

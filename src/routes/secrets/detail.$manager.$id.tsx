@@ -14,6 +14,7 @@ import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { getSecretQueryOptions, putSecretReq } from '@/apis/secrets';
 import { FormPartSecret } from '@/components/form-slice/FormPartSecret';
 import { pipeProduce } from '@/utils/producer';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 
 type Props = {
   readOnly: boolean;
@@ -70,7 +71,8 @@ const SecretDetailForm = (props: Props) => {
           putSecret.mutateAsync(pipeProduce()(d));
         })}
       >
-        <FormPartSecret disableManager />
+        <FormSectionGeneral readOnlyID />
+        <FormPartSecret readOnlyManager />
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>

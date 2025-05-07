@@ -1,6 +1,5 @@
 import { useFormContext } from 'react-hook-form';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { FormSectionGeneral } from './FormSectionGeneral';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTextInput } from '@/components/form/TextInput';
 import { useTranslation } from 'react-i18next';
@@ -128,9 +127,9 @@ const GCPSecretForm = () => {
   );
 };
 
-type FormSectionManagerProps = { disableManager?: boolean };
+type FormSectionManagerProps = { readOnlyManager?: boolean };
 const FormSectionManager = (props: FormSectionManagerProps) => {
-  const { disableManager } = props;
+  const { readOnlyManager } = props;
   const { t } = useTranslation();
   const { control } = useFormContext<APISIXType['Secret']>();
   return (
@@ -140,7 +139,7 @@ const FormSectionManager = (props: FormSectionManagerProps) => {
         name="manager"
         defaultValue={APISIX.Secret.options[0].shape.manager.value}
         data={APISIX.Secret.options.map((v) => v.shape.manager.value)}
-        disabled={disableManager}
+        readOnly={readOnlyManager}
       />
     </FormSection>
   );
@@ -164,11 +163,10 @@ const FormSectionManagerConfig = () => {
  * id and manager cannot be changed when editing
  */
 export const FormPartSecret = (props: FormSectionManagerProps) => {
-  const { disableManager } = props;
+  const { readOnlyManager } = props;
   return (
     <>
-      <FormSectionGeneral showDate={false} disableID={disableManager} />
-      <FormSectionManager disableManager={disableManager} />
+      <FormSectionManager readOnlyManager={readOnlyManager} />
       <FormSectionManagerConfig />
     </>
   );

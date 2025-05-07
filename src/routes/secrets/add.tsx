@@ -12,6 +12,7 @@ import { putSecretReq } from '@/apis/secrets';
 import { nanoid } from 'nanoid';
 import { APISIX } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 
 const SecretAddForm = () => {
   const { t } = useTranslation();
@@ -48,6 +49,7 @@ const SecretAddForm = () => {
           putSecret.mutateAsync(pipeProduce()(d))
         )}
       >
+        <FormSectionGeneral showDate={false} />
         <FormPartSecret />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
