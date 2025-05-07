@@ -11,7 +11,6 @@ function RouteComponent() {
   return (
     <>
       <DetailCredentialsTabs />
-      <div>Hello "/consumers/detail/$username/credentials/"!</div>
     </>
   );
 }
