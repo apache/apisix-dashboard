@@ -30,6 +30,8 @@
     "title": "Consumers",
     "username": "Username"
   },
+  "disabled": "Disabled",
+  "enabled": "Enabled",
   "form": {
     "basic": {
       "desc": "Description",
@@ -46,6 +48,7 @@
     },
     "btn": {
       "add": "Add",
+      "addARow": "Add a row",
       "cancel": "Cancel",
       "delete": "Delete",
       "edit": "Edit",
@@ -94,6 +97,25 @@
       "vars": "Vars"
     },
     "search": "Search",
+    "ssls": {
+      "cert": "Certificate",
+      "cert_key_list": {
+        "add": "Add a pair",
+        "delete": "Delete the pair",
+        "title": "Certificate and Key Pairs"
+      },
+      "client": {
+        "ca": "Client CA Certificate",
+        "depth": "Verification Depth",
+        "skipMtlsUriRegex": "Skip mTLS URI Regex",
+        "title": "Client"
+      },
+      "key": "Private Key",
+      "sni": "SNI",
+      "snis": "SNIs",
+      "ssl_protocols": "SSL Protocols",
+      "type": "Certificate Type"
+    },
     "services": {
       "enableWebsocket": "Enable WebSocket",
       "hosts": "Hosts",
@@ -329,6 +351,12 @@
   "setting": {
     "adminKey": "Admin Key",
     "title": "Setting"
+  },
+  "ssls": {
+    "add": {
+      "success": "Add SSL Successfully",
+      "title": "Add SSL"
+    }
   },
   "streamRoutes": {
     "add": {
