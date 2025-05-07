@@ -107,7 +107,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('secrets.title')} />
+      <PageHeader title={t('navbar.secrets')} />
       <SecretList />
     </>
   );
