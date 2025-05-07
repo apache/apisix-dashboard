@@ -40,14 +40,12 @@ export const getSecretListQueryOptions = (props: PageSearchType) => {
   });
 };
 
-export const getSecretQueryOptions = (manager: string, id: string) =>
+export const getSecretQueryOptions = (id: string) =>
   queryOptions({
-    queryKey: ['secret', manager, id],
+    queryKey: ['secret', id],
     queryFn: () =>
       req
-        .get<unknown, APISIXType['RespSecretDetail']>(
-          `${API_SECRETS}/${manager}/${id}`
-        )
+        .get<unknown, APISIXType['RespSecretDetail']>(`${API_SECRETS}/${id}`)
         .then((v) => preParseSecretItem(v.data)),
   });
 

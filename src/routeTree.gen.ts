@@ -25,6 +25,7 @@ import { Route as ConsumersIndexImport } from './routes/consumers/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as StreamroutesAddImport } from './routes/stream_routes/add'
 import { Route as ServicesAddImport } from './routes/services/add'
+import { Route as SecretsAddImport } from './routes/secrets/add'
 import { Route as RoutesAddImport } from './routes/routes/add'
 import { Route as ProtosAddImport } from './routes/protos/add'
 import { Route as GlobalrulesAddImport } from './routes/global_rules/add'
@@ -121,6 +122,12 @@ const ServicesAddRoute = ServicesAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const SecretsAddRoute = SecretsAddImport.update({
+  id: '/secrets/add',
+  path: '/secrets/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RoutesAddRoute = RoutesAddImport.update({
   id: '/routes/add',
   path: '/routes/add',
@@ -205,6 +212,13 @@ declare module '@tanstack/react-router' {
       path: '/routes/add'
       fullPath: '/routes/add'
       preLoaderRoute: typeof RoutesAddImport
+      parentRoute: typeof rootRoute
+    }
+    '/secrets/add': {
+      id: '/secrets/add'
+      path: '/secrets/add'
+      fullPath: '/secrets/add'
+      preLoaderRoute: typeof SecretsAddImport
       parentRoute: typeof rootRoute
     }
     '/services/add': {
@@ -350,6 +364,7 @@ export interface FileRoutesByFullPath {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/secrets/add': typeof SecretsAddRoute
   '/services/add': typeof ServicesAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -376,6 +391,7 @@ export interface FileRoutesByTo {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/secrets/add': typeof SecretsAddRoute
   '/services/add': typeof ServicesAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -403,6 +419,7 @@ export interface FileRoutesById {
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/protos/add': typeof ProtosAddRoute
   '/routes/add': typeof RoutesAddRoute
+  '/secrets/add': typeof SecretsAddRoute
   '/services/add': typeof ServicesAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
@@ -431,6 +448,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/secrets/add'
     | '/services/add'
     | '/stream_routes/add'
     | '/upstreams/add'
@@ -456,6 +474,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/secrets/add'
     | '/services/add'
     | '/stream_routes/add'
     | '/upstreams/add'
@@ -481,6 +500,7 @@ export interface FileRouteTypes {
     | '/global_rules/add'
     | '/protos/add'
     | '/routes/add'
+    | '/secrets/add'
     | '/services/add'
     | '/stream_routes/add'
     | '/upstreams/add'
@@ -508,6 +528,7 @@ export interface RootRouteChildren {
   GlobalrulesAddRoute: typeof GlobalrulesAddRoute
   ProtosAddRoute: typeof ProtosAddRoute
   RoutesAddRoute: typeof RoutesAddRoute
+  SecretsAddRoute: typeof SecretsAddRoute
   ServicesAddRoute: typeof ServicesAddRoute
   StreamroutesAddRoute: typeof StreamroutesAddRoute
   UpstreamsAddRoute: typeof UpstreamsAddRoute
@@ -534,6 +555,7 @@ const rootRouteChildren: RootRouteChildren = {
   GlobalrulesAddRoute: GlobalrulesAddRoute,
   ProtosAddRoute: ProtosAddRoute,
   RoutesAddRoute: RoutesAddRoute,
+  SecretsAddRoute: SecretsAddRoute,
   ServicesAddRoute: ServicesAddRoute,
   StreamroutesAddRoute: StreamroutesAddRoute,
   UpstreamsAddRoute: UpstreamsAddRoute,
@@ -569,6 +591,7 @@ export const routeTree = rootRoute
         "/global_rules/add",
         "/protos/add",
         "/routes/add",
+        "/secrets/add",
         "/services/add",
         "/stream_routes/add",
         "/upstreams/add",
@@ -601,6 +624,9 @@ export const routeTree = rootRoute
     },
     "/routes/add": {
       "filePath": "routes/add.tsx"
+    },
+    "/secrets/add": {
+      "filePath": "secrets/add.tsx"
     },
     "/services/add": {
       "filePath": "services/add.tsx"
