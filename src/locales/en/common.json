@@ -1,6 +1,19 @@
 {
   "APISIX Dashboard": "APISIX Dashboard",
   "actions": "Actions",
+  "consumerGroups": {
+    "add": {
+      "success": "Add Consumer Group Successfully",
+      "title": "Add Consumer Group"
+    },
+    "detail": {
+      "title": "Consumer Group Detail"
+    },
+    "edit": {
+      "success": "Edit Consumer Group Successfully",
+      "title": "Edit Consumer Group"
+    }
+  },
   "consumers": {
     "add": {
       "success": "Add Consumer Successfully",
@@ -278,6 +291,7 @@
     "title": "Global Rules"
   },
   "navbar": {
+    "consumerGroups": "Consumer Groups",
     "consumers": "Consumers",
     "globalRules": "Global Rules",
     "pluginConfigs": "Plugin Configs",

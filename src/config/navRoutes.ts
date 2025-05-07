@@ -27,6 +27,10 @@ export const navRoutes: NavRoute[] = [
     label: 'consumers',
   },
   {
+    to: '/consumer_groups',
+    label: 'consumerGroups',
+  },
+  {
     to: '/ssls',
     label: 'ssls',
   },
