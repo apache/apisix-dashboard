@@ -1,4 +1,4 @@
-import { RouteLinkBtn } from '@/components/Btn';
+import { RouteLinkBtn } from '@/components/page/Btn';
 import IconPlus from '~icons/material-symbols/add';
 import { useTranslation } from 'react-i18next';
 import type { FileRoutesByTo } from '@/routeTree.gen';
@@ -27,7 +27,9 @@ export const ToAddPageBtn = ({ to, params, label }: ToAddPageBtnProps) => {
 };
 
 type ToDetailPageBtnProps = {
-  to: keyof FilterKeys<FileRoutesByTo, '$id'> | keyof FilterKeys<FileRoutesByTo, '$username'>;
+  to:
+    | keyof FilterKeys<FileRoutesByTo, '$id'>
+    | keyof FilterKeys<FileRoutesByTo, '$username'>;
 } & Pick<LinkProps, 'params'>;
 export const ToDetailPageBtn = (props: ToDetailPageBtnProps) => {
   const { params, to } = props;
