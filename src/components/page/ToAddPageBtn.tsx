@@ -1,4 +1,4 @@
-import { RouteLinkBtn } from '@/components/page/Btn';
+import { RouteLinkBtn } from '@/components/Btn';
 import IconPlus from '~icons/material-symbols/add';
 import { useTranslation } from 'react-i18next';
 import type { FileRoutesByTo } from '@/routeTree.gen';
