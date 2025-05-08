@@ -11,6 +11,8 @@ import type { APISIXType } from '@/types/schema/apisix';
 import { queryClient } from '@/config/global';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { getCredentialListQueryOptions } from '@/apis/credentials';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_CREDENTIALS } from '@/config/constant';
 
 function CredentialsList() {
   const { t } = useTranslation();
@@ -21,7 +23,7 @@ function CredentialsList() {
   const credentialsQuery = useSuspenseQuery(
     getCredentialListQueryOptions({ username })
   );
-  const { data, isLoading } = credentialsQuery;
+  const { data, isLoading, refetch } = credentialsQuery;
 
   const columns = useMemo<
     ProColumns<APISIXType['RespCredentialItem']>[]
@@ -64,10 +66,17 @@ function CredentialsList() {
               id: record.value.id,
             }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            resource={t('consumers.credentials.singular')}
+            target={record.value.id}
+            api={`${API_CREDENTIALS(username)}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t, username]);
+  }, [refetch, t, username]);
 
   return (
     <AntdConfigProvider>

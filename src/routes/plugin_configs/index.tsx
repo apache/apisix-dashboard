@@ -12,6 +12,8 @@ import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { getPluginConfigListQueryOptions } from '@/apis/plugin_configs';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_PLUGIN_CONFIGS } from '@/config/constant';
 
 function PluginConfigsList() {
   const { t } = useTranslation();
@@ -23,7 +25,7 @@ function PluginConfigsList() {
   const pluginConfigsQuery = useSuspenseQuery(
     getPluginConfigListQueryOptions(pagination)
   );
-  const { data, isLoading } = pluginConfigsQuery;
+  const { data, isLoading, refetch } = pluginConfigsQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -75,10 +77,17 @@ function PluginConfigsList() {
             to="/plugin_configs/detail/$id"
             params={{ id: record.value.id }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            resource={t('pluginConfigs.singular')}
+            target={record.value.id}
+            api={`${API_PLUGIN_CONFIGS}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [refetch, t]);
 
   return (
     <AntdConfigProvider>

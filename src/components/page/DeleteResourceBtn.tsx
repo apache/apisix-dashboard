@@ -12,9 +12,18 @@ type DeleteResourceProps = {
   target?: string;
   onSuccess?: ((res: AxiosResponse<unknown, unknown>) => void) | (() => void);
   DeleteBtn?: typeof Button;
+  mode?: 'detail' | 'list';
 } & ButtonProps;
 export const DeleteResourceBtn = (props: DeleteResourceProps) => {
-  const { resource, target, api, onSuccess, DeleteBtn, ...btnProps } = props;
+  const {
+    resource,
+    target,
+    api,
+    onSuccess,
+    DeleteBtn,
+    mode = 'list',
+    ...btnProps
+  } = props;
   const { t } = useTranslation();
   const openModal = useCallbackRef(() =>
     modals.openConfirmModal({
@@ -52,6 +61,10 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
       onClick={openModal}
       size="compact-xs"
       variant="light"
+      {...(mode === 'detail' && {
+        size: 'compact-sm',
+        variant: 'filled',
+      })}
       color="red"
       {...btnProps}
     >

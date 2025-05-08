@@ -2,7 +2,6 @@
   "APISIX Dashboard": "APISIX Dashboard",
   "actions": "Actions",
   "consumerGroups": {
-    "singular": "Consumer Group",
     "add": {
       "success": "Add Consumer Group Successfully",
       "title": "Add Consumer Group"
@@ -13,7 +12,8 @@
     "edit": {
       "success": "Edit Consumer Group Successfully",
       "title": "Edit Consumer Group"
-    }
+    },
+    "singular": "Consumer Group"
   },
   "consumers": {
     "add": {
@@ -32,6 +32,7 @@
         "success": "Edit Credential Successfully",
         "title": "Edit Credential"
       },
+      "singular": "Credential",
       "title": "Credentials"
     },
     "detail": {
@@ -41,6 +42,7 @@
       "success": "Edit Consumer Successfully",
       "title": "Edit Consumer"
     },
+    "singular": "Consumer",
     "title": "Consumers",
     "username": "Username"
   },
@@ -328,7 +330,8 @@
     "edit": {
       "success": "Edit Plugin Config Successfully",
       "title": "Edit Plugin Config"
-    }
+    },
+    "singular": "Plugin Config"
   },
   "pluginMetadata": {
     "delete": {

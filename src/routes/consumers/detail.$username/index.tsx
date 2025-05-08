@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -16,6 +20,8 @@ import { FormPartConsumer } from '@/components/form-slice/FormPartConsumer';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { pipeProduce } from '@/utils/producer';
 import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_CONSUMERS } from '@/config/constant';
 
 type Props = {
   readOnly: boolean;
@@ -85,6 +91,8 @@ const ConsumerDetailForm = (props: Props) => {
 const ConsumerDetailTab = () => {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const { username } = useParams({ from: '/consumers/detail/$username/' });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -93,13 +101,22 @@ const ConsumerDetailTab = () => {
         {...(readOnly && {
           title: t('consumers.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                resource={t('consumers.singular')}
+                target={username}
+                api={`${API_CONSUMERS}/${username}`}
+                onSuccess={() => navigate({ to: '/consumer_groups' })}
+              />
+            </Group>
           ),
         })}
       />

@@ -22,10 +22,10 @@ function ConsumerGroupsList() {
     queryKey: 'consumer_groups',
   });
 
-  const consumerGroupsReq = useSuspenseQuery(
+  const consumerGroupsQuery = useSuspenseQuery(
     getConsumerGroupListQueryOptions(pagination)
   );
-  const { data, isLoading, refetch } = consumerGroupsReq;
+  const { data, isLoading, refetch } = consumerGroupsQuery;
 
   useEffect(() => {
     if (data?.total) {

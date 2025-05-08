@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -17,6 +21,8 @@ import {
 } from '@/apis/plugin_configs';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { pipeProduce } from '@/utils/producer';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_PLUGIN_CONFIGS } from '@/config/constant';
 
 type Props = {
   id: string;
@@ -84,6 +90,7 @@ function RouteComponent() {
   const { id } = useParams({ from: '/plugin_configs/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -92,13 +99,22 @@ function RouteComponent() {
         {...(readOnly && {
           title: t('pluginConfigs.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                resource={t('consumerGroups.singular')}
+                target={id}
+                api={`${API_PLUGIN_CONFIGS}/${id}`}
+                onSuccess={() => navigate({ to: '/consumer_groups' })}
+              />
+            </Group>
           ),
         })}
       />

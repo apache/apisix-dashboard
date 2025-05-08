@@ -109,8 +109,7 @@ function RouteComponent() {
                 {t('form.btn.edit')}
               </Button>
               <DeleteResourceBtn
-                size="compact-sm"
-                variant="filled"
+                mode="detail"
                 resource={t('consumerGroups.singular')}
                 target={id}
                 api={`${API_CONSUMER_GROUPS}/${id}`}
