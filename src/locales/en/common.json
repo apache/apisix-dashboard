@@ -2,6 +2,7 @@
   "APISIX Dashboard": "APISIX Dashboard",
   "actions": "Actions",
   "consumerGroups": {
+    "singular": "Consumer Group",
     "add": {
       "success": "Add Consumer Group Successfully",
       "title": "Add Consumer Group"
@@ -20,7 +21,6 @@
       "title": "Add Consumer"
     },
     "credentials": {
-      "title": "Credentials",
       "add": {
         "success": "Add Credential Successfully",
         "title": "Add Credential"
@@ -31,7 +31,8 @@
       "edit": {
         "success": "Edit Credential Successfully",
         "title": "Edit Credential"
-      }
+      },
+      "title": "Credentials"
     },
     "detail": {
       "title": "Consumer Detail"
@@ -110,6 +111,12 @@
       "vars": "Vars"
     },
     "search": "Search",
+    "services": {
+      "enableWebsocket": "Enable WebSocket",
+      "hosts": "Hosts",
+      "script": "Script",
+      "settings": "Service Settings"
+    },
     "ssls": {
       "cert": "Certificate",
       "cert_key_list": {
@@ -128,12 +135,6 @@
       "snis": "SNIs",
       "ssl_protocols": "SSL Protocols",
       "type": "Certificate Type"
-    },
-    "services": {
-      "enableWebsocket": "Enable WebSocket",
-      "hosts": "Hosts",
-      "script": "Script",
-      "settings": "Service Settings"
     },
     "streamRoute": {
       "protocol": {
@@ -289,6 +290,16 @@
     },
     "plugins": "Plugins",
     "title": "Global Rules"
+  },
+  "mark": {
+    "question": "?"
+  },
+  "msg": {
+    "delete": {
+      "content": "Do you want to delete the {{name}}",
+      "success": "Delete {{name}} Successfully",
+      "title": "Delete {{name}}"
+    }
   },
   "navbar": {
     "consumerGroups": "Consumer Groups",

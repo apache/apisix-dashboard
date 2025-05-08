@@ -33,10 +33,8 @@ export const ToDetailPageBtn = (props: ToDetailPageBtnProps) => {
   const { params, to } = props;
   const { t } = useTranslation();
   return (
-    <>
-      <RouteLinkBtn size="xs" variant="transparent" to={to} params={params}>
-        {t('view')}
-      </RouteLinkBtn>
-    </>
+    <RouteLinkBtn size="compact-xs" variant="light" to={to} params={params}>
+      {t('view')}
+    </RouteLinkBtn>
   );
 };
