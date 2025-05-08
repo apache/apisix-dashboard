@@ -12,6 +12,8 @@ import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { getSecretListQueryOptions } from '@/apis/secrets';
 import { queryClient } from '@/config/global';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_SECRETS } from '@/config/constant';
 
 function SecretList() {
   const { t } = useTranslation();
@@ -21,7 +23,7 @@ function SecretList() {
   });
 
   const secretsQuery = useSuspenseQuery(getSecretListQueryOptions(pagination));
-  const { data, isLoading } = secretsQuery;
+  const { data, isLoading, refetch } = secretsQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -61,10 +63,17 @@ function SecretList() {
               id: record.value.id,
             }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            name={t('secrets.singular')}
+            target={record.value.id}
+            api={`${API_SECRETS}/${record.value.manager}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <AntdConfigProvider>

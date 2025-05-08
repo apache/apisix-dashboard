@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -17,6 +21,8 @@ import {
 } from '@/apis/consumer_groups';
 import { pipeProduce } from '@/utils/producer';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_CONSUMER_GROUPS } from '@/config/constant';
 
 type Props = {
   id: string;
@@ -30,7 +36,6 @@ const ConsumerGroupDetailForm = (props: Props) => {
 
   const consumerGroupQuery = useSuspenseQuery(getConsumerGroupQueryOptions(id));
   const { data } = consumerGroupQuery;
-  const initialValue = data.value;
 
   const putConsumerGroup = useMutation({
     mutationFn: putConsumerGroupReq,
@@ -52,10 +57,9 @@ const ConsumerGroupDetailForm = (props: Props) => {
     disabled: readOnly,
   });
 
-  // Reset form when initialValue changes
   useEffect(() => {
-    form.reset(initialValue);
-  }, [form, initialValue]);
+    form.reset(data.value);
+  }, [form, data.value]);
 
   if (!data) return <Skeleton height={200} />;
 
@@ -87,6 +91,7 @@ function RouteComponent() {
   const { id } = useParams({ from: '/consumer_groups/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -95,13 +100,22 @@ function RouteComponent() {
         {...(readOnly && {
           title: t('consumerGroups.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                name={t('consumerGroups.singular')}
+                target={id}
+                api={`${API_CONSUMER_GROUPS}/${id}`}
+                onSuccess={() => navigate({ to: '/consumer_groups' })}
+              />
+            </Group>
           ),
         })}
       />

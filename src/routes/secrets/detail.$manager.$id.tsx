@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useParams,
+  useNavigate,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -15,6 +19,8 @@ import { getSecretQueryOptions, putSecretReq } from '@/apis/secrets';
 import { FormPartSecret } from '@/components/form-slice/FormPartSecret';
 import { pipeProduce } from '@/utils/producer';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_SECRETS } from '@/config/constant';
 
 type Props = {
   readOnly: boolean;
@@ -90,6 +96,8 @@ const SecretDetailForm = (props: Props) => {
 function RouteComponent() {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const { manager, id } = useParams({ from: '/secrets/detail/$manager/$id' });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -97,13 +105,22 @@ function RouteComponent() {
         title={readOnly ? t('secrets.detail.title') : t('secrets.edit.title')}
         {...(readOnly && {
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                name={t('secrets.singular')}
+                target={id}
+                api={`${API_SECRETS}/${manager}/${id}`}
+                onSuccess={() => navigate({ to: '/secrets' })}
+              />
+            </Group>
           ),
         })}
       />

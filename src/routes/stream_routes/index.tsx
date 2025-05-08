@@ -12,6 +12,8 @@ import { getStreamRouteListQueryOptions } from '@/apis/stream_routes';
 import { usePagination } from '@/utils/usePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import PageHeader from '@/components/page/PageHeader';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_STREAM_ROUTES } from '@/config/constant';
 
 const StreamRouteList = () => {
   const { pagination, handlePageChange, updateTotal } = usePagination({
@@ -19,7 +21,7 @@ const StreamRouteList = () => {
   });
 
   const query = useSuspenseQuery(getStreamRouteListQueryOptions(pagination));
-  const { data, isLoading } = query;
+  const { data, isLoading, refetch } = query;
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -61,10 +63,17 @@ const StreamRouteList = () => {
             to="/stream_routes/detail/$id"
             params={{ id: record.value.id }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            name={t('streamRoutes.singular')}
+            target={record.value.id}
+            api={`${API_STREAM_ROUTES}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <AntdConfigProvider>

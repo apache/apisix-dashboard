@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -18,6 +22,8 @@ import {
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
 import { pipeProduce } from '@/utils/producer';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_STREAM_ROUTES } from '@/config/constant';
 
 type Props = {
   readOnly: boolean;
@@ -87,6 +93,8 @@ const StreamRouteDetailForm = (props: Props) => {
 function RouteComponent() {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const { id } = useParams({ from: '/stream_routes/detail/$id' });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -95,13 +103,22 @@ function RouteComponent() {
         {...(readOnly && {
           title: t('streamRoutes.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                name={t('streamRoutes.singular')}
+                target={id}
+                api={`${API_STREAM_ROUTES}/${id}`}
+                onSuccess={() => navigate({ to: '/stream_routes' })}
+              />
+            </Group>
           ),
         })}
       />

@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -15,6 +19,8 @@ import { getRouteQueryOptions, putRouteReq } from '@/apis/routes';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
 import { pipeProduce } from '@/utils/producer';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_ROUTES } from '@/config/constant';
 
 type Props = {
   readOnly: boolean;
@@ -84,6 +90,8 @@ const RouteDetailForm = (props: Props) => {
 function RouteComponent() {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const { id } = useParams({ from: '/routes/detail/$id' });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -92,13 +100,22 @@ function RouteComponent() {
         {...(readOnly && {
           title: t('route.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                name={t('route.singular')}
+                target={id}
+                api={`${API_ROUTES}/${id}`}
+                onSuccess={() => navigate({ to: '/routes' })}
+              />
+            </Group>
           ),
         })}
       />

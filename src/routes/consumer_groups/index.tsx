@@ -12,6 +12,8 @@ import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { getConsumerGroupListQueryOptions } from '@/apis/consumer_groups';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_CONSUMER_GROUPS } from '@/config/constant';
 
 function ConsumerGroupsList() {
   const { t } = useTranslation();
@@ -23,7 +25,7 @@ function ConsumerGroupsList() {
   const consumerGroupsQuery = useSuspenseQuery(
     getConsumerGroupListQueryOptions(pagination)
   );
-  const { data, isLoading } = consumerGroupsQuery;
+  const { data, isLoading, refetch } = consumerGroupsQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -75,10 +77,17 @@ function ConsumerGroupsList() {
             to="/consumer_groups/detail/$id"
             params={{ id: record.value.id }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            name={t('consumerGroups.singular')}
+            target={record.value.id}
+            api={`${API_CONSUMER_GROUPS}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [refetch, t]);
 
   return (
     <AntdConfigProvider>

@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -16,6 +20,8 @@ import { notifications } from '@mantine/notifications';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { getProtoQueryOptions, putProtoReq } from '@/apis/protos';
 import { pipeProduce } from '@/utils/producer';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_PROTOS } from '@/config/constant';
 
 type ProtoFormProps = {
   id: string;
@@ -63,51 +69,66 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
 
   return (
     <FormProvider {...form}>
-      <FormTOCBox>
-        <form
-          onSubmit={form.handleSubmit((d) =>
-            putProto.mutateAsync(pipeProduce()(d))
-          )}
-        >
-          <FormSectionGeneral />
-          <FormPartProto allowUpload={!readOnly} />
-          {!readOnly && (
-            <Group>
-              <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-              <Button variant="outline" onClick={() => setReadOnly(true)}>
-                {t('form.btn.cancel')}
-              </Button>
-            </Group>
-          )}
-          <DevTool control={form.control} />
-        </form>
-      </FormTOCBox>
+      <form
+        onSubmit={form.handleSubmit((d) =>
+          putProto.mutateAsync(pipeProduce()(d))
+        )}
+      >
+        <FormSectionGeneral />
+        <FormPartProto allowUpload={!readOnly} />
+        {!readOnly && (
+          <Group>
+            <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
+            <Button variant="outline" onClick={() => setReadOnly(true)}>
+              {t('form.btn.cancel')}
+            </Button>
+          </Group>
+        )}
+        <DevTool control={form.control} />
+      </form>
     </FormProvider>
   );
 };
 
 function RouteComponent() {
-  const { t } = useTranslation();
   const { id } = useParams({ from: '/protos/detail/$id' });
+  const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const navigate = useNavigate();
 
   return (
     <>
       <PageHeader
-        title={readOnly ? t('protos.detail.title') : t('protos.edit.title')}
+        title={t('protos.edit.title')}
         {...(readOnly && {
+          title: t('protos.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                name={t('protos.singular')}
+                target={id}
+                api={`${API_PROTOS}/${id}`}
+                onSuccess={() => navigate({ to: '/protos' })}
+              />
+            </Group>
           ),
         })}
       />
-      <ProtoDetailForm id={id} readOnly={readOnly} setReadOnly={setReadOnly} />
+      <FormTOCBox>
+        <ProtoDetailForm
+          id={id}
+          readOnly={readOnly}
+          setReadOnly={setReadOnly}
+        />
+      </FormTOCBox>
     </>
   );
 }

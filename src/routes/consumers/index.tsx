@@ -14,6 +14,8 @@ import {
   pageSearchSchema,
 } from '@/types/schema/pageSearch';
 import { getConsumerListQueryOptions } from '@/apis/consumers';
+import { API_CONSUMERS } from '@/config/constant';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 
 function ConsumersList() {
   const { t } = useTranslation();
@@ -22,8 +24,10 @@ function ConsumersList() {
     queryKey: 'consumers',
   });
 
-  const consumersQuery = useSuspenseQuery(getConsumerListQueryOptions(pagination));
-  const { data, isLoading } = consumersQuery;
+  const consumersQuery = useSuspenseQuery(
+    getConsumerListQueryOptions(pagination)
+  );
+  const { data, isLoading, refetch } = consumersQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -31,9 +35,7 @@ function ConsumersList() {
     }
   }, [data?.total, updateTotal]);
 
-  const columns = useMemo<
-    ProColumns<APISIXType['RespConsumerItem']>[]
-  >(() => {
+  const columns = useMemo<ProColumns<APISIXType['RespConsumerItem']>[]>(() => {
     return [
       {
         dataIndex: ['value', 'username'],
@@ -64,15 +66,22 @@ function ConsumersList() {
         key: 'option',
         width: 120,
         render: (_, record) => [
-          <ToDetailPageBtn 
-            key="detail" 
+          <ToDetailPageBtn
+            key="detail"
             to="/consumers/detail/$username"
             params={{ username: record.value.username }}
-          />
+          />,
+          <DeleteResourceBtn
+            key="delete"
+            name={t('consumers.singular')}
+            target={record.value.username}
+            api={`${API_CONSUMERS}/${record.value.username}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [refetch, t]);
 
   return (
     <AntdConfigProvider>

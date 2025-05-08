@@ -12,6 +12,8 @@ import { getRouteListQueryOptions } from '@/apis/routes';
 import { usePagination } from '@/utils/usePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import PageHeader from '@/components/page/PageHeader';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_ROUTES } from '@/config/constant';
 
 const RouteList = () => {
   const { pagination, handlePageChange, updateTotal } = usePagination({
@@ -19,7 +21,7 @@ const RouteList = () => {
   });
 
   const query = useSuspenseQuery(getRouteListQueryOptions(pagination));
-  const { data, isLoading } = query;
+  const { data, isLoading, refetch } = query;
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -65,10 +67,17 @@ const RouteList = () => {
             to="/routes/detail/$id"
             params={{ id: record.value.id }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            name={t('route.singular')}
+            target={record.value.id}
+            api={`${API_ROUTES}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <AntdConfigProvider>

@@ -12,7 +12,8 @@
     "edit": {
       "success": "Edit Consumer Group Successfully",
       "title": "Edit Consumer Group"
-    }
+    },
+    "singular": "Consumer Group"
   },
   "consumers": {
     "add": {
@@ -20,7 +21,6 @@
       "title": "Add Consumer"
     },
     "credentials": {
-      "title": "Credentials",
       "add": {
         "success": "Add Credential Successfully",
         "title": "Add Credential"
@@ -31,7 +31,9 @@
       "edit": {
         "success": "Edit Credential Successfully",
         "title": "Edit Credential"
-      }
+      },
+      "singular": "Credential",
+      "title": "Credentials"
     },
     "detail": {
       "title": "Consumer Detail"
@@ -40,6 +42,7 @@
       "success": "Edit Consumer Successfully",
       "title": "Edit Consumer"
     },
+    "singular": "Consumer",
     "title": "Consumers",
     "username": "Username"
   },
@@ -123,12 +126,12 @@
         "auth_config": "Auth Configuration",
         "auth_file": "Auth File",
         "client_email": "Client Email",
+        "entries_uri": "Entries URI",
         "private_key": "Private Key",
         "project_id": "Project ID",
-        "token_uri": "Token URI",
         "scope": "Scope",
-        "entries_uri": "Entries URI",
-        "ssl_verify": "SSL Verify"
+        "ssl_verify": "SSL Verify",
+        "token_uri": "Token URI"
       },
       "manager": "Secret Manager",
       "managerConfig": "Manager Configuration",
@@ -139,6 +142,12 @@
         "token": "Token",
         "uri": "URI"
       }
+    },
+    "services": {
+      "enableWebsocket": "Enable WebSocket",
+      "hosts": "Hosts",
+      "script": "Script",
+      "settings": "Service Settings"
     },
     "ssls": {
       "cert": "Certificate",
@@ -158,12 +167,6 @@
       "snis": "SNIs",
       "ssl_protocols": "SSL Protocols",
       "type": "Certificate Type"
-    },
-    "services": {
-      "enableWebsocket": "Enable WebSocket",
-      "hosts": "Hosts",
-      "script": "Script",
-      "settings": "Service Settings"
     },
     "streamRoute": {
       "protocol": {
@@ -318,7 +321,18 @@
       "title": "Edit Global Rule"
     },
     "plugins": "Plugins",
+    "singular": "Global Rule",
     "title": "Global Rules"
+  },
+  "mark": {
+    "question": "?"
+  },
+  "msg": {
+    "delete": {
+      "content": "Do you want to delete the {{name}}",
+      "success": "Delete {{name}} Successfully",
+      "title": "Delete {{name}}"
+    }
   },
   "navbar": {
     "consumerGroups": "Consumer Groups",
@@ -347,13 +361,15 @@
     "edit": {
       "success": "Edit Plugin Config Successfully",
       "title": "Edit Plugin Config"
-    }
+    },
+    "singular": "Plugin Config"
   },
   "pluginMetadata": {
     "delete": {
       "success": "Delete Plugin Metadata of {{name}} Successfully"
     },
     "search": "Search Plugin Metadata",
+    "singular": "Plugin Metadata",
     "title": "Plugin Metadata",
     "update": {
       "success": "Update Plugin Metadata of {{name}} Successfully"
@@ -375,6 +391,7 @@
       "content": "Content",
       "contentPlaceholder": "Paste or upload .proto, .pb file"
     },
+    "singular": "Proto",
     "title": "Protos"
   },
   "route": {
@@ -389,6 +406,7 @@
       "success": "Edit Route Successfully",
       "title": "Edit Route"
     },
+    "singular": "Route",
     "title": "Routes"
   },
   "seconds": "Seconds",
@@ -403,7 +421,8 @@
     "edit": {
       "success": "Edit Secret Successfully",
       "title": "Edit Secret"
-    }
+    },
+    "singular": "Secret"
   },
   "services": {
     "add": {
@@ -417,6 +436,7 @@
       "success": "Edit Service Successfully",
       "title": "Edit Service"
     },
+    "singular": "Service",
     "title": "Services"
   },
   "setting": {
@@ -434,7 +454,8 @@
     "edit": {
       "success": "Edit SSL Successfully",
       "title": "Edit SSL"
-    }
+    },
+    "singular": "SSL"
   },
   "streamRoutes": {
     "add": {
@@ -448,6 +469,7 @@
       "success": "Edit Stream Route Successfully",
       "title": "Edit Stream Route"
     },
+    "singular": "Stream Route",
     "title": "Stream Routes"
   },
   "upstreams": {
@@ -462,6 +484,7 @@
       "success": "Edit Upstream Successfully",
       "title": "Edit Upstream"
     },
+    "singular": "Upstream",
     "title": "Upstreams"
   },
   "view": "View"

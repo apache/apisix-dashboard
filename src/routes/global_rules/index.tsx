@@ -9,10 +9,10 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
-import { RouteLinkBtn } from '@/components/Btn';
-import { ToAddPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import {
   pageSearchSchema,
   type PageSearchType,
@@ -34,24 +34,6 @@ const genGlobalRulesQueryOptions = (props: PageSearchType) => {
   });
 };
 
-type DetailPageBtnProps = {
-  record: APISIXType['RespGlobalRuleItem'];
-};
-const DetailPageBtn = (props: DetailPageBtnProps) => {
-  const { record } = props;
-  const { t } = useTranslation();
-  return (
-    <RouteLinkBtn
-      size="xs"
-      variant="transparent"
-      to="/global_rules/detail/$id"
-      params={{ id: record.value.id }}
-    >
-      {t('view')}
-    </RouteLinkBtn>
-  );
-};
-
 function RouteComponent() {
   const { t } = useTranslation();
 
@@ -63,7 +45,7 @@ function RouteComponent() {
   const globalRulesQuery = useSuspenseQuery(
     genGlobalRulesQueryOptions(pagination)
   );
-  const { data, isLoading } = globalRulesQuery;
+  const { data, isLoading, refetch } = globalRulesQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -72,7 +54,7 @@ function RouteComponent() {
   }, [data?.total, updateTotal]);
 
   const columns = useMemo<
-    ProColumns<APISIXType['RespGlobalRuleList']['data']['list'][number]>[]
+    ProColumns<APISIXType['RespConsumerGroupItem']>[]
   >(() => {
     return [
       {
@@ -86,10 +68,23 @@ function RouteComponent() {
         valueType: 'option',
         key: 'option',
         width: 120,
-        render: (_, record) => [<DetailPageBtn key="detail" record={record} />],
+        render: (_, record) => [
+          <ToDetailPageBtn
+            key="detail"
+            to="/global_rules/detail/$id"
+            params={{ id: record.value.id }}
+          />,
+          <DeleteResourceBtn
+            key="delete"
+            name={t('globalRules.singular')}
+            target={record.value.id}
+            api={`${API_GLOBAL_RULES}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
+        ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <>

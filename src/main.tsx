@@ -4,6 +4,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { createTheme, MantineProvider } from '@mantine/core';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Notifications } from '@mantine/notifications';
+import { ModalsProvider } from '@mantine/modals';
 
 import { queryClient, router } from './config/global';
 
@@ -22,7 +23,9 @@ if (!rootElement.innerHTML) {
       <MantineProvider theme={theme}>
         <Notifications position="top-right" autoClose={5000} limit={5} />
         <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
+          <ModalsProvider>
+            <RouterProvider router={router} />
+          </ModalsProvider>
         </QueryClientProvider>
       </MantineProvider>
     </StrictMode>

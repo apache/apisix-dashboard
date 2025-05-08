@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -18,6 +22,8 @@ import {
 import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
 import { pipeProduce } from '@/utils/producer';
 import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_CREDENTIALS } from '@/config/constant';
 
 type CredentialFormProps = {
   readOnly: boolean;
@@ -94,6 +100,10 @@ const CredentialDetailForm = (props: CredentialFormProps) => {
 function RouteComponent() {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const { username, id } = useParams({
+    from: '/consumers/detail/$username/credentials/detail/$id',
+  });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -103,13 +113,24 @@ function RouteComponent() {
         {...(readOnly && {
           title: t('consumers.credentials.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                key="delete"
+                name={t('consumers.credentials.singular')}
+                target={id}
+                api={`${API_CREDENTIALS(username)}/${id}`}
+                onSuccess={() =>
+                  navigate({ to: `/consumers/detail/${username}/credentials` })
+                }
+              />
+            </Group>
           ),
         })}
       />

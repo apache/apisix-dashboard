@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useParams,
+  useNavigate,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -18,6 +22,8 @@ import {
   produceToSSLForm,
 } from '@/components/form-slice/FormPartSSL/schema';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_SSLS } from '@/config/constant';
 
 type Props = {
   readOnly: boolean;
@@ -90,6 +96,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   const { id } = useParams({ from: '/ssls/detail/$id' });
   const [readOnly, setReadOnly] = useBoolean(true);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -98,13 +105,22 @@ function RouteComponent() {
         {...(readOnly && {
           title: t('ssls.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                name={t('ssls.singular')}
+                target={id}
+                api={`${API_SSLS}/${id}`}
+                onSuccess={() => navigate({ to: '/ssls' })}
+              />
+            </Group>
           ),
         })}
       />

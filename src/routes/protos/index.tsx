@@ -1,37 +1,19 @@
 import { queryClient } from '@/config/global';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import type { APISIXType } from '@/types/schema/apisix';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
-import { RouteLinkBtn } from '@/components/Btn';
-import { ToAddPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { getProtoListQueryOptions } from '@/apis/protos';
-
-type DetailPageBtnProps = {
-  record: APISIXType['RespProtoItem'];
-};
-const DetailPageBtn = (props: DetailPageBtnProps) => {
-  const { record } = props;
-  const { t } = useTranslation();
-  const router = useRouter();
-  return (
-    <RouteLinkBtn
-      size="xs"
-      variant="transparent"
-      to={router.routesById['/protos/detail/$id'].to}
-      params={{ id: record.value.id }}
-    >
-      {t('view')}
-    </RouteLinkBtn>
-  );
-};
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_PROTOS } from '@/config/constant';
 
 function RouteComponent() {
   const { t } = useTranslation();
@@ -42,7 +24,7 @@ function RouteComponent() {
   });
 
   const protosQuery = useSuspenseQuery(getProtoListQueryOptions(pagination));
-  const { data, isLoading } = protosQuery;
+  const { data, isLoading, refetch } = protosQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -65,10 +47,23 @@ function RouteComponent() {
         valueType: 'option',
         key: 'option',
         width: 120,
-        render: (_, record) => [<DetailPageBtn key="detail" record={record} />],
+        render: (_, record) => [
+          <ToDetailPageBtn
+            key="detail"
+            to="/protos/detail/$id"
+            params={{ id: record.value.id }}
+          />,
+          <DeleteResourceBtn
+            key="delete"
+            name={t('protos.singular')}
+            target={record.value.id}
+            api={`${API_PROTOS}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
+        ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <>
