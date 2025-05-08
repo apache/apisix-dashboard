@@ -7,6 +7,7 @@ import { I18nextProvider } from 'react-i18next';
 
 import { Header } from '@/components/Header';
 import { Navbar } from '@/components/Navbar';
+import { SettingsModal } from '@/components/page/SettingsModal';
 import {
   APPSHELL_HEADER_HEIGHT,
   APPSHELL_NAVBAR_WIDTH,
@@ -37,6 +38,7 @@ const Root = () => {
       </AppShell>
       <TanStackRouterDevtools />
       <ReactQueryDevtools initialIsOpen={false} />
+      <SettingsModal />
     </I18nextProvider>
   );
 };

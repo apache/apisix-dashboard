@@ -1,4 +1,3 @@
-import { DevTool } from '@hookform/devtools';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -74,7 +73,6 @@ const GlobalRuleDetailForm = (props: Props) => {
           </Group>
         )}
       </form>
-      <DevTool control={form.control} />
     </FormProvider>
   );
 };

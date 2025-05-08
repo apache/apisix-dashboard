@@ -1,4 +1,3 @@
-import { readLocalStorageValue } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import axios, { AxiosError } from 'axios';
 import { stringify } from 'qs';
@@ -6,9 +5,9 @@ import { stringify } from 'qs';
 import {
   API_HEADER_KEY,
   API_PREFIX,
-  LOCAL_STORAGE_ADMIN_KEY,
   SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
+import { globalStore } from '@/stores/global';
 
 export const req = axios.create();
 
@@ -18,10 +17,7 @@ req.interceptors.request.use((conf) => {
       arrayFormat: 'repeat',
     });
   conf.baseURL = API_PREFIX;
-  conf.headers.set(
-    API_HEADER_KEY,
-    readLocalStorageValue({ key: LOCAL_STORAGE_ADMIN_KEY })
-  );
+  conf.headers.set(API_HEADER_KEY, globalStore.settings.adminKey);
   return conf;
 });
 
@@ -61,6 +57,11 @@ req.interceptors.response.use(
         message: d.error_msg,
         color: 'red',
       });
+      // Requires to enter admin key at 401
+      if (err.response.status === 401) {
+        globalStore.settings.set('isOpen', true);
+        return Promise.resolve({ data: {} });
+      }
     }
     return Promise.reject(err);
   }

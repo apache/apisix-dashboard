@@ -439,9 +439,9 @@
     "singular": "Service",
     "title": "Services"
   },
-  "setting": {
+  "settings": {
     "adminKey": "Admin Key",
-    "title": "Setting"
+    "title": "Settings"
   },
   "ssls": {
     "add": {

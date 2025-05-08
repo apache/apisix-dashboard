@@ -1,5 +1,6 @@
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react-swc';
+import observerPlugin from 'mobx-react-observer/swc-plugin';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
 import UnpluginIcons from 'unplugin-icons/vite';
@@ -43,8 +44,14 @@ export default defineConfig({
       compiler: 'jsx',
       jsx: 'react',
     }),
-    TanStackRouterVite({ target: 'react', autoCodeSplitting: true, semicolons: false }),
-    react(),
+    TanStackRouterVite({
+      target: 'react',
+      autoCodeSplitting: true,
+      semicolons: false,
+    }),
+    react({
+      plugins: [observerPlugin() as never],
+    }),
   ],
   css: {
     postcss: {

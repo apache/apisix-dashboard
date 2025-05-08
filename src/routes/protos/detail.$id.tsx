@@ -1,6 +1,5 @@
-import { DevTool } from '@hookform/devtools';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Group,Skeleton } from '@mantine/core';
+import { Button, Group, Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
@@ -85,7 +84,6 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
             </Button>
           </Group>
         )}
-        <DevTool control={form.control} />
       </form>
     </FormProvider>
   );

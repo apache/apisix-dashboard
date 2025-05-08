@@ -1,8 +1,10 @@
-import { DevTool } from '@hookform/devtools';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
-import { createFileRoute , useRouter as useReactRouter } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useRouter as useReactRouter,
+} from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -53,7 +55,6 @@ const GlobalRuleAddForm = () => {
         <FormPartGlobalRules />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
-      <DevTool control={form.control} />
     </FormProvider>
   );
 };
