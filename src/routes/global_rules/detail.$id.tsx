@@ -9,7 +9,6 @@ import PageHeader from '@/components/page/PageHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormSubmitBtn } from '@/components/form/Btn';
-import { DevTool } from '@hookform/devtools';
 import type { APISIXType } from '@/types/schema/apisix';
 import { notifications } from '@mantine/notifications';
 import { APISIX } from '@/types/schema/apisix';
@@ -73,7 +72,6 @@ const GlobalRuleDetailForm = (props: Props) => {
           </Group>
         )}
       </form>
-      <DevTool control={form.control} />
     </FormProvider>
   );
 };

@@ -11,7 +11,6 @@ import PageHeader from '@/components/page/PageHeader';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DevTool } from '@hookform/devtools';
 import { Skeleton, Button, Group } from '@mantine/core';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
@@ -84,7 +83,6 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
             </Button>
           </Group>
         )}
-        <DevTool control={form.control} />
       </form>
     </FormProvider>
   );

@@ -5,7 +5,6 @@ import PageHeader from '@/components/page/PageHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormSubmitBtn } from '@/components/form/Btn';
-import { DevTool } from '@hookform/devtools';
 import { APISIXProtos } from '@/types/schema/apisix/protos';
 import type { APISIXType } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
@@ -49,7 +48,6 @@ const ProtoAddForm = () => {
         <FormPartProto />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
-      <DevTool control={form.control} />
     </FormProvider>
   );
 };
