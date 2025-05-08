@@ -5,7 +5,6 @@ import PageHeader from '@/components/page/PageHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormSubmitBtn } from '@/components/form/Btn';
-import { DevTool } from '@hookform/devtools';
 import type { APISIXType } from '@/types/schema/apisix';
 import { useRouter as useReactRouter } from '@tanstack/react-router';
 import { notifications } from '@mantine/notifications';
@@ -53,7 +52,6 @@ const GlobalRuleAddForm = () => {
         <FormPartGlobalRules />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
-      <DevTool control={form.control} />
     </FormProvider>
   );
 };
