@@ -1,7 +1,8 @@
+import { queryOptions } from '@tanstack/react-query';
+
 import { API_UPSTREAMS } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { queryOptions } from '@tanstack/react-query';
 
 export const getUpstreamReq = (id: string) =>
   queryOptions({

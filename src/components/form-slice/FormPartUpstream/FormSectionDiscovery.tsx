@@ -1,10 +1,12 @@
-import { useTranslation } from 'react-i18next';
-import { FormSection } from '../FormSection';
 import { useFormContext } from 'react-hook-form';
-import { FormItemTextInput } from '../../form/TextInput';
-import type { FormPartUpstreamType } from './schema';
+import { useTranslation } from 'react-i18next';
+
 import { FormItemJsonInput } from '@/components/form/JsonInput';
 import { useNamePrefix } from '@/utils/useNamePrefix';
+
+import { FormItemTextInput } from '../../form/TextInput';
+import { FormSection } from '../FormSection';
+import type { FormPartUpstreamType } from './schema';
 
 export const FormSectionDiscovery = () => {
   const { t } = useTranslation();

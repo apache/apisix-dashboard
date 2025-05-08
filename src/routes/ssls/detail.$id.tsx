@@ -1,29 +1,30 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Group,Skeleton } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
-  useParams,
   useNavigate,
+  useParams,
 } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormPartSSL } from '@/components/form-slice/FormPartSSL';
-import { Skeleton, Button, Group } from '@mantine/core';
-import { getSSLDetailQueryOptions, putSSLReq } from '@/apis/ssls';
-import { useBoolean } from 'react-use';
-import { notifications } from '@mantine/notifications';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { pipeProduce } from '@/utils/producer';
 import { useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useBoolean } from 'react-use';
+
+import { getSSLDetailQueryOptions, putSSLReq } from '@/apis/ssls';
+import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormPartSSL } from '@/components/form-slice/FormPartSSL';
 import {
-  SSLPutSchema,
   produceToSSLForm,
+  SSLPutSchema,
 } from '@/components/form-slice/FormPartSSL/schema';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import PageHeader from '@/components/page/PageHeader';
 import { API_SSLS } from '@/config/constant';
+import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   readOnly: boolean;

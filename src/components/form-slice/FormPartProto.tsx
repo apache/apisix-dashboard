@@ -1,6 +1,8 @@
-import type { APISIXType } from '@/types/schema/apisix';
-import { useFormContext, type FieldValues } from 'react-hook-form';
+import { type FieldValues,useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+
+import type { APISIXType } from '@/types/schema/apisix';
+
 import {
   FormItemTextareaWithUpload,
   type FormItemTextareaWithUploadProps,

@@ -1,8 +1,9 @@
+import { queryOptions } from '@tanstack/react-query';
+
 import { API_SECRETS } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
-import { queryOptions } from '@tanstack/react-query';
 
 /**
  * `manager` does not exist in apisix secret, we parse it from `id`

@@ -1,26 +1,27 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Group,Skeleton } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
-  useParams,
   useNavigate,
+  useParams,
 } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { notifications } from '@mantine/notifications';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { Skeleton, Button, Group } from '@mantine/core';
-import { useBoolean } from 'react-use';
 import { useEffect } from 'react';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useBoolean } from 'react-use';
+
 import { getSecretQueryOptions, putSecretReq } from '@/apis/secrets';
+import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartSecret } from '@/components/form-slice/FormPartSecret';
-import { pipeProduce } from '@/utils/producer';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import PageHeader from '@/components/page/PageHeader';
 import { API_SECRETS } from '@/config/constant';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   readOnly: boolean;

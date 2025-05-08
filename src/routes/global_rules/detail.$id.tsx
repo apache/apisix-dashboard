@@ -1,26 +1,27 @@
+import { DevTool } from '@hookform/devtools';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Group } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { DevTool } from '@hookform/devtools';
-import type { APISIXType } from '@/types/schema/apisix';
-import { notifications } from '@mantine/notifications';
-import { APISIX } from '@/types/schema/apisix';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { getGlobalRuleQueryOptions, putGlobalRuleReq } from '@/apis/plugins';
 import { useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
-import { Button, Group } from '@mantine/core';
+
+import { getGlobalRuleQueryOptions, putGlobalRuleReq } from '@/apis/plugins';
+import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import PageHeader from '@/components/page/PageHeader';
 import { API_GLOBAL_RULES } from '@/config/constant';
+import type { APISIXType } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 
 type Props = {
   readOnly: boolean;

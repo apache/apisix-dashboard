@@ -1,14 +1,16 @@
-import { useCallback, useState } from 'react';
-import type { APISIXType } from '@/types/schema/apisix';
-import { useTranslation } from 'react-i18next';
-import { useListState } from '@mantine/hooks';
 import { TagsInput, type TagsInputProps } from '@mantine/core';
-import { useMount } from 'react-use';
+import { useListState } from '@mantine/hooks';
+import { useCallback, useState } from 'react';
 import {
-  useController,
   type FieldValues,
+  useController,
   type UseControllerProps,
 } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useMount } from 'react-use';
+
+import type { APISIXType } from '@/types/schema/apisix';
+
 import { genControllerProps } from './util';
 
 export type FormItemLabels<T extends FieldValues> = UseControllerProps<T> &

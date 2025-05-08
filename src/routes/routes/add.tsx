@@ -1,16 +1,17 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useMutation } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { notifications } from '@mantine/notifications';
-import { pipeProduce } from '@/utils/producer';
+import { useMutation } from '@tanstack/react-query';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+
+import { postRouteReq } from '@/apis/routes';
+import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
 import { RoutePostSchema } from '@/components/form-slice/FormPartRoute/schema';
-import { postRouteReq } from '@/apis/routes';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
+import PageHeader from '@/components/page/PageHeader';
+import { pipeProduce } from '@/utils/producer';
 
 const RouteAddForm = () => {
   const { t } = useTranslation();

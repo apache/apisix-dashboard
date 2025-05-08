@@ -1,14 +1,16 @@
-import { useTranslation } from 'react-i18next';
-import { FormItemLabels } from '../form/Labels';
-import { FormSection, type FormSectionProps } from './FormSection';
-import { FormItemTextInput } from '../form/TextInput';
-import { FormItemTextarea } from '../form/Textarea';
-import { useFormContext } from 'react-hook-form';
-import type { APISIXType } from '@/types/schema/apisix';
-import { useNamePrefix } from '@/utils/useNamePrefix';
 import type { PropsWithChildren, ReactNode } from 'react';
-import { FormItemSelect } from '../form/Select';
+import { useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+
+import type { APISIXType } from '@/types/schema/apisix';
 import { APISIXCommon } from '@/types/schema/apisix/common';
+import { useNamePrefix } from '@/utils/useNamePrefix';
+
+import { FormItemLabels } from '../form/Labels';
+import { FormItemSelect } from '../form/Select';
+import { FormItemTextarea } from '../form/Textarea';
+import { FormItemTextInput } from '../form/TextInput';
+import { FormSection, type FormSectionProps } from './FormSection';
 
 export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
   PropsWithChildren & {

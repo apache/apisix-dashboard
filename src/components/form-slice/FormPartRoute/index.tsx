@@ -1,19 +1,21 @@
+import { Divider, InputWrapper } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+
 import { FormItemNumberInput } from '@/components/form/NumberInput';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
 import { FormItemTextarea } from '@/components/form/Textarea';
 import { FormItemTextInput } from '@/components/form/TextInput';
+import { APISIX } from '@/types/schema/apisix';
 import { NamePrefixProvider } from '@/utils/useNamePrefix';
+import { zGetDefault } from '@/utils/zod';
+
 import { FormItemPlugins } from '../FormItemPlugins';
 import { FormPartBasic } from '../FormPartBasic';
 import { FormPartUpstream, FormSectionTimeout } from '../FormPartUpstream';
 import { FormSection } from '../FormSection';
-import { Divider, InputWrapper } from '@mantine/core';
 import type { RoutePostType } from './schema';
-import { APISIX } from '@/types/schema/apisix';
-import { zGetDefault } from '@/utils/zod';
 
 const FormPartBasicWithPriority = () => {
   const { t } = useTranslation();

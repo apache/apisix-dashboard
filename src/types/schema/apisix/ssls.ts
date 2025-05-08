@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { APISIXCommon } from './common';
 
 const SSLType = z.union([z.literal('server'), z.literal('client')]);

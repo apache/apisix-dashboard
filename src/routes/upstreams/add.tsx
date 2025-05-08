@@ -1,20 +1,21 @@
-import { type APISIXType } from '@/types/schema/apisix';
-import { createFileRoute, useRouter } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import {} from 'axios';
-import { req } from '@/config/req';
-import { useMutation } from '@tanstack/react-query';
-import { API_UPSTREAMS } from '@/config/constant';
-import PageHeader from '@/components/page/PageHeader';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { notifications } from '@mantine/notifications';
+import { useMutation } from '@tanstack/react-query';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
+import {} from 'axios';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import type { z } from 'zod';
+
 import { FormSubmitBtn } from '@/components/form/Btn';
-import { pipeProduce } from '@/utils/producer';
 import { FormPartUpstream } from '@/components/form-slice/FormPartUpstream';
 import { FormPartUpstreamSchema } from '@/components/form-slice/FormPartUpstream/schema';
-import type { z } from 'zod';
-import { notifications } from '@mantine/notifications';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
+import PageHeader from '@/components/page/PageHeader';
+import { API_UPSTREAMS } from '@/config/constant';
+import { req } from '@/config/req';
+import { type APISIXType } from '@/types/schema/apisix';
+import { pipeProduce } from '@/utils/producer';
 
 const PostUpstreamSchema = FormPartUpstreamSchema.omit({
   id: true,

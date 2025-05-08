@@ -3,10 +3,11 @@ import {
   type TextareaProps as MTextareaProps,
 } from '@mantine/core';
 import {
-  useController,
   type FieldValues,
+  useController,
   type UseControllerProps,
 } from 'react-hook-form';
+
 import { genControllerProps } from './util';
 
 export type FormItemTextareaProps<T extends FieldValues> =

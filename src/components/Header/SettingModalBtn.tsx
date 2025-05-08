@@ -1,8 +1,9 @@
-import { LOCAL_STORAGE_ADMIN_KEY } from '@/config/constant';
 import { ActionIcon, Modal, TextInput } from '@mantine/core';
 import { useDisclosure, useLocalStorage } from '@mantine/hooks';
-import IconSettings from '~icons/material-symbols/settings';
 import { useTranslation } from 'react-i18next';
+
+import { LOCAL_STORAGE_ADMIN_KEY } from '@/config/constant';
+import IconSettings from '~icons/material-symbols/settings';
 
 export const SettingModalBtn = () => {
   const [opened, { open, close }] = useDisclosure(false);

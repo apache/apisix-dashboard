@@ -1,10 +1,11 @@
-import { req } from '@/config/req';
-import { Button, Text, type ButtonProps } from '@mantine/core';
+import { Button, type ButtonProps,Text } from '@mantine/core';
 import { useCallbackRef } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import type { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
+
+import { req } from '@/config/req';
 
 type DeleteResourceProps = {
   name: string;

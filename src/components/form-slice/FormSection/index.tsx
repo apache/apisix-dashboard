@@ -1,21 +1,23 @@
 import {
   Fieldset,
+  type FieldsetProps,
   Group,
   TableOfContents,
-  type FieldsetProps,
 } from '@mantine/core';
 import {
   createContext,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
   useContext,
   useEffect,
   useMemo,
   useRef,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
 } from 'react';
-import classes from './style.module.css';
+
 import { APPSHELL_HEADER_HEIGHT } from '@/config/constant';
+
+import classes from './style.module.css';
 
 const SectionDepthCtx = createContext<number>(0);
 

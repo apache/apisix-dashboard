@@ -1,9 +1,10 @@
+import { queryOptions } from '@tanstack/react-query';
+
 import type { StreamRoutePostType } from '@/components/form-slice/FormPartStreamRoute/schema';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
-import { queryOptions } from '@tanstack/react-query';
 
 export const getStreamRouteListQueryOptions = (props: PageSearchType) => {
   const { page, pageSize } = props;

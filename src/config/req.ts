@@ -1,13 +1,14 @@
+import { readLocalStorageValue } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
+import axios, { AxiosError } from 'axios';
+import { stringify } from 'qs';
+
 import {
   API_HEADER_KEY,
   API_PREFIX,
   LOCAL_STORAGE_ADMIN_KEY,
   SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
-import { readLocalStorageValue } from '@mantine/hooks';
-import { notifications } from '@mantine/notifications';
-import axios, { AxiosError } from 'axios';
-import { stringify } from 'qs';
 
 export const req = axios.create();
 

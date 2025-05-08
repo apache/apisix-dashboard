@@ -1,6 +1,6 @@
+import { xor } from 'rambdax';
 import { type RefinementCtx, z } from 'zod';
 import { init } from 'zod-empty';
-import { xor } from 'rambdax';
 
 // ref: https://github.com/colinhacks/zod/issues/61#issuecomment-1741983149
 export const zOneOf =

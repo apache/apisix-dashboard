@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { APISIXCommon } from './common';
 
 const Proto = z

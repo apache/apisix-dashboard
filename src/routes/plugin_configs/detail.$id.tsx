@@ -1,28 +1,29 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Group,Skeleton } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { notifications } from '@mantine/notifications';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { Skeleton, Button, Group } from '@mantine/core';
-import { useBoolean } from 'react-use';
 import { useEffect } from 'react';
-import { APISIX } from '@/types/schema/apisix';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useBoolean } from 'react-use';
+
 import {
   getPluginConfigQueryOptions,
   putPluginConfigReq,
 } from '@/apis/plugin_configs';
+import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
-import { pipeProduce } from '@/utils/producer';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import PageHeader from '@/components/page/PageHeader';
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
+import { APISIX } from '@/types/schema/apisix';
+import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   id: string;

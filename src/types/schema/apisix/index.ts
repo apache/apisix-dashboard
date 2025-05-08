@@ -1,18 +1,19 @@
 import { APISIXCommon } from './common';
-import { APISIXPlugins } from './plugins';
-import { APISIXGlobalRules } from './global_rules';
-import { APISIXProtos } from './protos';
-import { APISIXRoutes } from './routes';
-import { APISIXServices } from './services';
-import { APISIXStreamRoutes } from './stream_routes';
-import { APISIXUpstreams } from './upstreams';
-import { APISIXPluginMetadata } from './plugin_metadata';
-import { APISIXSecrets } from './secrets';
+import { APISIXConsumerGroups } from './consumer_groups';
 import { APISIXConsumers } from './consumers';
 import { APISIXCredentials } from './credentials';
-import { APISIXSSLs } from './ssls';
+import { APISIXGlobalRules } from './global_rules';
 import { APISIXPluginConfigs } from './plugin_configs';
-import { APISIXConsumerGroups } from './consumer_groups';
+import { APISIXPluginMetadata } from './plugin_metadata';
+import { APISIXPlugins } from './plugins';
+import { APISIXProtos } from './protos';
+import { APISIXRoutes } from './routes';
+import { APISIXSecrets } from './secrets';
+import { APISIXServices } from './services';
+import { APISIXSSLs } from './ssls';
+import { APISIXStreamRoutes } from './stream_routes';
+import { APISIXUpstreams } from './upstreams';
+
 export type { APISIXType } from './type';
 export const APISIX = {
   ...APISIXCommon,

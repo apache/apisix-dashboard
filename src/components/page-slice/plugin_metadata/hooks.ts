@@ -1,13 +1,13 @@
+import { useListState, useMap } from '@mantine/hooks';
+import { useQueries, useSuspenseQuery } from '@tanstack/react-query';
+import { useDeepCompareEffect } from 'react-use';
+
 import {
   getPluginMetadataQueryOptions,
   getPluginsListWithSchemaQueryOptions,
 } from '@/apis/plugins';
 import type { PluginConfig } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
 import { SKIP_INTERCEPTOR_HEADER } from '@/config/constant';
-
-import { useListState, useMap } from '@mantine/hooks';
-import { useQueries, useSuspenseQuery } from '@tanstack/react-query';
-import { useDeepCompareEffect } from 'react-use';
 
 export type PluginInfo = PluginConfig & { schema: object };
 

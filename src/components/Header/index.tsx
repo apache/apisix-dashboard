@@ -1,8 +1,9 @@
-import { AppShell, Group, Burger, Image } from '@mantine/core';
+import { AppShell, Burger, Group, Image } from '@mantine/core';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import apisixLogo from '@/assets/apisix-logo.svg';
+
 import { LanguageMenu } from './LanguageMenu';
 import { SettingModalBtn } from './SettingModalBtn';
 

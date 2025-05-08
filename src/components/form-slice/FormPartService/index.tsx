@@ -1,14 +1,16 @@
-import { useTranslation } from 'react-i18next';
+import { InputWrapper } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
-import { FormSection } from '../FormSection';
-import { FormPartBasic } from '../FormPartBasic';
-import { FormItemPlugins } from '../FormItemPlugins';
-import { FormItemTextInput } from '@/components/form/TextInput';
+import { useTranslation } from 'react-i18next';
+
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
-import { InputWrapper } from '@mantine/core';
-import type { ServicePostType } from './schema';
+import { FormItemTextInput } from '@/components/form/TextInput';
+
+import { FormItemPlugins } from '../FormItemPlugins';
+import { FormPartBasic } from '../FormPartBasic';
 import { FormSectionUpstream } from '../FormPartRoute';
+import { FormSection } from '../FormSection';
+import type { ServicePostType } from './schema';
 
 
 const FormSectionPlugins = () => {

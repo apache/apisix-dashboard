@@ -1,9 +1,10 @@
 import { TextInput, type TextInputProps } from '@mantine/core';
 import {
-  useController,
   type FieldValues,
+  useController,
   type UseControllerProps,
 } from 'react-hook-form';
+
 import { genControllerProps } from './util';
 
 export type FormItemTextInputProps<T extends FieldValues> =

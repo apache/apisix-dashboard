@@ -1,10 +1,12 @@
-import { useFormContext, useWatch } from 'react-hook-form';
-import type { APISIXType } from '@/types/schema/apisix';
-import { FormItemTextInput } from '../form/TextInput';
-import { FormSection } from './FormSection';
-import { useTranslation } from 'react-i18next';
-import { FormDisplayDate } from './FormDisplayDate';
 import { Divider } from '@mantine/core';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+
+import type { APISIXType } from '@/types/schema/apisix';
+
+import { FormItemTextInput } from '../form/TextInput';
+import { FormDisplayDate } from './FormDisplayDate';
+import { FormSection } from './FormSection';
 
 const DisplayDate = () => {
   const { control } = useFormContext<APISIXType['Info']>();

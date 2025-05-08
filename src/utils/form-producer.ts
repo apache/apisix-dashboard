@@ -1,6 +1,7 @@
-import type { APISIXType } from '@/types/schema/apisix';
 import { produce } from 'immer';
 import { all, map, values } from 'rambdax';
+
+import type { APISIXType } from '@/types/schema/apisix';
 
 const allFalsy = (obj: object) =>
   all(

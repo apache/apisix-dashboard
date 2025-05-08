@@ -1,7 +1,8 @@
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { produce } from 'immer';
 import { isNotEmpty } from 'rambdax';
 import { z } from 'zod';
+
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 
 const SSLForm = z.object({
   __clientEnabled: z.boolean().optional(),

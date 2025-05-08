@@ -1,11 +1,3 @@
-import { putCredentialReq } from '@/apis/credentials';
-import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
-import { FormSubmitBtn } from '@/components/form/Btn';
-import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
-import PageHeader from '@/components/page/PageHeader';
-import { APISIX } from '@/types/schema/apisix';
-import { pipeProduce } from '@/utils/producer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
@@ -13,6 +5,15 @@ import { createFileRoute, useParams, useRouter } from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+
+import { putCredentialReq } from '@/apis/credentials';
+import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
+import PageHeader from '@/components/page/PageHeader';
+import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
+import { APISIX } from '@/types/schema/apisix';
+import { pipeProduce } from '@/utils/producer';
 
 const CredentialAddForm = () => {
   const { t } = useTranslation();

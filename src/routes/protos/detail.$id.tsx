@@ -1,27 +1,28 @@
-import { useEffect } from 'react';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { DevTool } from '@hookform/devtools';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Group,Skeleton } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { DevTool } from '@hookform/devtools';
-import { Skeleton, Button, Group } from '@mantine/core';
-import { FormPartProto } from '@/components/form-slice/FormPartProto';
-import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
-import { notifications } from '@mantine/notifications';
-import { FormSubmitBtn } from '@/components/form/Btn';
+
 import { getProtoQueryOptions, putProtoReq } from '@/apis/protos';
-import { pipeProduce } from '@/utils/producer';
+import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormPartProto } from '@/components/form-slice/FormPartProto';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import PageHeader from '@/components/page/PageHeader';
 import { API_PROTOS } from '@/config/constant';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { pipeProduce } from '@/utils/producer';
 
 type ProtoFormProps = {
   id: string;

@@ -1,5 +1,6 @@
-import { APISIXServices } from '@/types/schema/apisix/services';
 import type { z } from 'zod';
+
+import { APISIXServices } from '@/types/schema/apisix/services';
 
 export const ServicePostSchema = APISIXServices.ServicePost;
 

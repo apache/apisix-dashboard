@@ -1,16 +1,16 @@
-import { StrictMode } from 'react';
-import ReactDOM from 'react-dom/client';
-import { RouterProvider } from '@tanstack/react-router';
-import { createTheme, MantineProvider } from '@mantine/core';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { Notifications } from '@mantine/notifications';
-import { ModalsProvider } from '@mantine/modals';
-
-import { queryClient, router } from './config/global';
-
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import './styles/global.css';
+
+import { createTheme, MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { RouterProvider } from '@tanstack/react-router';
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+
+import { queryClient, router } from './config/global';
 
 const theme = createTheme({});
 

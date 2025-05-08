@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { APISIXCommon } from './common';
 import { APISIXPlugins } from './plugins';
 import { APISIXUpstreams } from './upstreams';

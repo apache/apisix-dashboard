@@ -1,12 +1,14 @@
+import { Divider, InputWrapper } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { useTranslation } from 'react-i18next';
+
+import { FormItemSelect } from '@/components/form/Select';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTextInput } from '@/components/form/TextInput';
-import { useTranslation } from 'react-i18next';
-import { FormSection } from './FormSection';
-import { FormItemSelect } from '@/components/form/Select';
-import { Divider, InputWrapper } from '@mantine/core';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
+
 import { FormItemTagsInput } from '../form/TagInput';
+import { FormSection } from './FormSection';
 
 const VaultSecretForm = () => {
   const { t } = useTranslation();

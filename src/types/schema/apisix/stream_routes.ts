@@ -1,7 +1,8 @@
 import { z } from 'zod';
+
 import { APISIXCommon } from './common';
-import { APISIXUpstreams } from './upstreams';
 import { APISIXPlugins } from './plugins';
+import { APISIXUpstreams } from './upstreams';
 
 const StreamRouteProtocolLoggerItem = z.object({
   name: z.string(),

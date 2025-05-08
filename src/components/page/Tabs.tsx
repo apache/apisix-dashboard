@@ -1,7 +1,7 @@
 import {
   Tabs as MTabs,
-  type TabsProps as MTabsProps,
   type TabsListProps,
+  type TabsProps as MTabsProps,
 } from '@mantine/core';
 
 export type TabsItem = {

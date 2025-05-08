@@ -1,4 +1,4 @@
-import { InputWrapper, Text, type InputWrapperProps } from '@mantine/core';
+import { InputWrapper, type InputWrapperProps,Text } from '@mantine/core';
 import dayjs from 'dayjs';
 
 type FormDisplayDateProps = InputWrapperProps & {

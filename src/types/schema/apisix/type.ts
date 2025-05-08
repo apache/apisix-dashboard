@@ -1,6 +1,7 @@
-import { z } from 'zod';
-import type { APISIX } from '.';
 import type { AxiosResponse } from 'axios';
+import { z } from 'zod';
+
+import type { APISIX } from '.';
 
 export type APISIXDetailResponse<T> = {
   key: string;

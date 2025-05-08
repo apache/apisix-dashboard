@@ -1,9 +1,9 @@
 import { FormPartBasic, type FormPartBasicProps } from './FormPartBasic';
+import { FormSectionPluginsOnly } from './FormPartConsumer';
 import {
   FormSectionGeneral,
   type FormSectionGeneralProps,
 } from './FormSectionGeneral';
-import { FormSectionPluginsOnly } from './FormPartConsumer';
 
 export const FormPartPluginConfig = (
   props: {

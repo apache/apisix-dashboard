@@ -1,5 +1,6 @@
-import { APISIX } from '@/types/schema/apisix';
 import type { z } from 'zod';
+
+import { APISIX } from '@/types/schema/apisix';
 
 export const RoutePostSchema = APISIX.Route.omit({
   id: true,

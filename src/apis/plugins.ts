@@ -1,14 +1,15 @@
+import { queryOptions, skipToken } from '@tanstack/react-query';
+import type { AxiosRequestConfig } from 'axios';
+
 import type { PluginConfig } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
 import {
   API_GLOBAL_RULES,
+  API_PLUGIN_METADATA,
   API_PLUGINS,
   API_PLUGINS_LIST,
-  API_PLUGIN_METADATA,
 } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { queryOptions, skipToken } from '@tanstack/react-query';
-import type { AxiosRequestConfig } from 'axios';
 
 export const putGlobalRuleReq = (data: APISIXType['GlobalRulePut']) => {
   const { id, ...rest } = data;

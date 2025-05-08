@@ -1,4 +1,4 @@
-import { Text, Group, Button, Card } from '@mantine/core';
+import { Button, Card,Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 export type PluginCardProps = {

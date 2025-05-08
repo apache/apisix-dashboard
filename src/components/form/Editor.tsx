@@ -1,18 +1,18 @@
-import { InputWrapper, Skeleton, type InputWrapperProps } from '@mantine/core';
-import { Editor, loader, useMonaco, type Monaco } from '@monaco-editor/react';
-
+import { InputWrapper, type InputWrapperProps,Skeleton } from '@mantine/core';
+import { Editor, loader, type Monaco,useMonaco } from '@monaco-editor/react';
+import type { editor } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import { useEffect } from 'react';
 import {
+  type FieldValues,
   useController,
+  type UseControllerProps,
   useFormContext,
   useFormState,
-  type FieldValues,
-  type UseControllerProps,
 } from 'react-hook-form';
+
 import { genControllerProps } from './util';
-import type { editor } from 'monaco-editor';
-import { useEffect } from 'react';
 
 type SetupMonacoProps = {
   monaco: Monaco;

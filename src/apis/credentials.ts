@@ -1,8 +1,9 @@
+import { queryOptions } from '@tanstack/react-query';
+
 import { API_CREDENTIALS, SKIP_INTERCEPTOR_HEADER } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { APISIXListResponse } from '@/types/schema/apisix/type';
-import { queryOptions } from '@tanstack/react-query';
 
 type WithUsername = Pick<APISIXType['Consumer'], 'username'>;
 export const getCredentialListQueryOptions = (props: WithUsername) => {

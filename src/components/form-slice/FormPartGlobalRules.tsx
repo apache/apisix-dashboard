@@ -1,4 +1,5 @@
 import { t } from 'i18next';
+
 import { FormItemPlugins } from './FormItemPlugins';
 import { FormSection } from './FormSection';
 import { FormSectionGeneral } from './FormSectionGeneral';

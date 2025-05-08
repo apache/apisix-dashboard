@@ -1,8 +1,9 @@
-import { RouteLinkBtn } from '@/components/Btn';
-import IconPlus from '~icons/material-symbols/add';
-import { useTranslation } from 'react-i18next';
-import type { FileRoutesByTo } from '@/routeTree.gen';
 import type { LinkProps } from '@tanstack/react-router';
+import { useTranslation } from 'react-i18next';
+
+import { RouteLinkBtn } from '@/components/Btn';
+import type { FileRoutesByTo } from '@/routeTree.gen';
+import IconPlus from '~icons/material-symbols/add';
 
 type FilterKeys<T, R extends string> = {
   [K in keyof T as K extends `${string}${R}` ? K : never]: T[K];

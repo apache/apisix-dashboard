@@ -1,11 +1,12 @@
-import { API_PREFIX, BASE_PATH } from './src/config/constant';
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import react from '@vitejs/plugin-react-swc';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
 import UnpluginIcons from 'unplugin-icons/vite';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
+
+import { API_PREFIX, BASE_PATH } from './src/config/constant';
 
 const inDevContainer = process.env.REMOTE_CONTAINERS === 'true';
 

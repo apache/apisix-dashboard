@@ -1,18 +1,19 @@
-import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
-import { createFileRoute, useParams } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useMemo } from 'react';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
-import type { APISIXType } from '@/types/schema/apisix';
-import { queryClient } from '@/config/global';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { useTranslation } from 'react-i18next';
+
 import { getCredentialListQueryOptions } from '@/apis/credentials';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import PageHeader from '@/components/page/PageHeader';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
+import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_CREDENTIALS } from '@/config/constant';
+import { queryClient } from '@/config/global';
+import type { APISIXType } from '@/types/schema/apisix';
 
 function CredentialsList() {
   const { t } = useTranslation();

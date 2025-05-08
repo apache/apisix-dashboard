@@ -1,7 +1,8 @@
-import { Tabs, type TabsItem } from '@/components/page/Tabs';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
 export const DetailCredentialsTabs = () => {
   const { t } = useTranslation();

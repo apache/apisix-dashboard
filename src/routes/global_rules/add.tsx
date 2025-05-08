@@ -1,19 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useMutation } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormSubmitBtn } from '@/components/form/Btn';
 import { DevTool } from '@hookform/devtools';
-import type { APISIXType } from '@/types/schema/apisix';
-import { useRouter as useReactRouter } from '@tanstack/react-router';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
-import { APISIX } from '@/types/schema/apisix';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { useMutation } from '@tanstack/react-query';
+import { createFileRoute , useRouter as useReactRouter } from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
-import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+
 import { putGlobalRuleReq } from '@/apis/plugins';
+import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
+import PageHeader from '@/components/page/PageHeader';
+import type { APISIXType } from '@/types/schema/apisix';
+import { APISIX } from '@/types/schema/apisix';
 
 const GlobalRuleAddForm = () => {
   const { t } = useTranslation();

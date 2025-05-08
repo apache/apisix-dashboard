@@ -1,5 +1,5 @@
+import { Box, Group, Stack,Text, Title } from '@mantine/core';
 import { type FC } from 'react';
-import { Title, Text, Box, Group, Stack } from '@mantine/core';
 
 type PageHeaderProps = {
   title: string;

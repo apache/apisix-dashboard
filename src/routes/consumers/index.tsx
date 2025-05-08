@@ -1,21 +1,22 @@
-import { queryClient } from '@/config/global';
+import type { ProColumns } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import type { APISIXType } from '@/types/schema/apisix';
-import { ProTable } from '@ant-design/pro-components';
-import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { getConsumerListQueryOptions } from '@/apis/consumers';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
-import { usePagination } from '@/utils/usePagination';
+import { API_CONSUMERS } from '@/config/constant';
+import { queryClient } from '@/config/global';
+import type { APISIXType } from '@/types/schema/apisix';
 import {
   pageSearchSchema,
 } from '@/types/schema/pageSearch';
-import { getConsumerListQueryOptions } from '@/apis/consumers';
-import { API_CONSUMERS } from '@/config/constant';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { usePagination } from '@/utils/usePagination';
 
 function ConsumersList() {
   const { t } = useTranslation();

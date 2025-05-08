@@ -1,6 +1,7 @@
-import { type ICleanerOptions, clean } from 'fast-clean';
+import { clean,type ICleanerOptions } from 'fast-clean';
 import { produce } from 'immer';
 import { pipe } from 'rambdax';
+
 import { produceTime } from './form-producer';
 
 export const deepCleanEmptyKeys = <T extends object>(

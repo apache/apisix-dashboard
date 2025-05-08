@@ -1,7 +1,8 @@
+import { queryOptions } from '@tanstack/react-query';
+
 import { API_PROTOS } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { queryOptions } from '@tanstack/react-query';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
 export const getProtoListQueryOptions = (props: PageSearchType) => {

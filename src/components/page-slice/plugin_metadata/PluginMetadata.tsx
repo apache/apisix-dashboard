@@ -1,23 +1,25 @@
 import { Drawer, Group } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useMutation } from '@tanstack/react-query';
+import { toJS } from 'mobx';
+import { observer, useLocalObservable } from 'mobx-react-lite';
+import { difference } from 'rambdax';
 import { useTranslation } from 'react-i18next';
-import { usePluginMetadataList, type PluginInfo } from './hooks';
+import { useDeepCompareEffect } from 'react-use';
+
+import { deletePluginMetadataReq, putPluginMetadataReq } from '@/apis/plugins';
+import type { PluginCardProps } from '@/components/form-slice/FormItemPlugins/PluginCard';
 import {
   PluginCardList,
   PluginCardListSearch,
 } from '@/components/form-slice/FormItemPlugins/PluginCardList';
-import { SelectPluginsDrawer } from '@/components/form-slice/FormItemPlugins/SelectPluginsDrawer';
-import { difference } from 'rambdax';
 import {
-  PluginEditorDrawer,
   type PluginConfig,
+  PluginEditorDrawer,
 } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
-import { observer, useLocalObservable } from 'mobx-react-lite';
-import { toJS } from 'mobx';
-import { useDeepCompareEffect } from 'react-use';
-import type { PluginCardProps } from '@/components/form-slice/FormItemPlugins/PluginCard';
-import { useMutation } from '@tanstack/react-query';
-import { deletePluginMetadataReq, putPluginMetadataReq } from '@/apis/plugins';
-import { notifications } from '@mantine/notifications';
+import { SelectPluginsDrawer } from '@/components/form-slice/FormItemPlugins/SelectPluginsDrawer';
+
+import { type PluginInfo,usePluginMetadataList } from './hooks';
 
 export const PluginMetadata = observer(() => {
   const { t } = useTranslation();

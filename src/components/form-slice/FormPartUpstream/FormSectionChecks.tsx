@@ -1,16 +1,18 @@
-import { useTranslation } from 'react-i18next';
-import { FormSection } from '../FormSection';
-import { FormItemSelect } from '@/components/form/Select';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { APISIX } from '@/types/schema/apisix';
-import { FormItemSwitch } from '@/components/form/Switch';
-import type { FormPartUpstreamType } from './schema';
 import { Text } from '@mantine/core';
-import { FormItemNumberInput } from '@/components/form/NumberInput';
-import { FormItemTextInput } from '@/components/form/TextInput';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+
 import { FormItemLabels } from '@/components/form/Labels';
+import { FormItemNumberInput } from '@/components/form/NumberInput';
+import { FormItemSelect } from '@/components/form/Select';
+import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
+import { FormItemTextInput } from '@/components/form/TextInput';
+import { APISIX } from '@/types/schema/apisix';
 import { useNamePrefix } from '@/utils/useNamePrefix';
+
+import { FormSection } from '../FormSection';
+import type { FormPartUpstreamType } from './schema';
 
 const FormSectionChecksActive = () => {
   const { t } = useTranslation();

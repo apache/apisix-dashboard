@@ -1,20 +1,21 @@
-import { APISIX } from '@/types/schema/apisix';
+import { Divider } from '@mantine/core';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { FormItemNumberInput } from '@/components/form/NumberInput';
 import { FormItemSelect } from '@/components/form/Select';
+import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTextarea } from '@/components/form/Textarea';
 import { FormItemTextInput } from '@/components/form/TextInput';
-import { FormItemNodes } from './FormItemNodes';
+import { APISIX } from '@/types/schema/apisix';
+import { useNamePrefix } from '@/utils/useNamePrefix';
+
 import { FormPartBasic } from '../FormPartBasic';
 import { FormSection } from '../FormSection';
+import { FormItemNodes } from './FormItemNodes';
 import { FormSectionChecks } from './FormSectionChecks';
 import { FormSectionDiscovery } from './FormSectionDiscovery';
-import { Divider } from '@mantine/core';
-import { useFormContext } from 'react-hook-form';
 import type { FormPartUpstreamType } from './schema';
-import { FormItemSwitch } from '@/components/form/Switch';
-import { useNamePrefix } from '@/utils/useNamePrefix';
 
 export const FormSectionTLS = () => {
   const { t } = useTranslation();

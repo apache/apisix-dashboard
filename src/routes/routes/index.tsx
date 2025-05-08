@@ -1,19 +1,20 @@
-import { queryClient } from '@/config/global';
+import type { ProColumns } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import type { APISIXType } from '@/types/schema/apisix';
-import { ProTable } from '@ant-design/pro-components';
-import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
-import { ToDetailPageBtn, ToAddPageBtn } from '@/components/page/ToAddPageBtn';
-import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { useTranslation } from 'react-i18next';
+
 import { getRouteListQueryOptions } from '@/apis/routes';
-import { usePagination } from '@/utils/usePagination';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
-import PageHeader from '@/components/page/PageHeader';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import PageHeader from '@/components/page/PageHeader';
+import { ToAddPageBtn,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_ROUTES } from '@/config/constant';
+import { queryClient } from '@/config/global';
+import type { APISIXType } from '@/types/schema/apisix';
+import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { usePagination } from '@/utils/usePagination';
 
 const RouteList = () => {
   const { pagination, handlePageChange, updateTotal } = usePagination({

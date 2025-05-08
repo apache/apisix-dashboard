@@ -1,11 +1,12 @@
 import { JsonInput, type JsonInputProps } from '@mantine/core';
+import { useMemo } from 'react';
 import {
-  useController,
   type FieldValues,
+  useController,
   type UseControllerProps,
 } from 'react-hook-form';
+
 import { genControllerProps } from './util';
-import { useMemo } from 'react';
 
 export type FormItemJsonInputProps<T extends FieldValues> =
   UseControllerProps<T> &

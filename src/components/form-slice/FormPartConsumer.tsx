@@ -1,10 +1,12 @@
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+
 import { FormItemTextInput } from '@/components/form/TextInput';
+import type { APISIXType } from '@/types/schema/apisix';
+
+import { FormItemPlugins } from './FormItemPlugins';
 import { FormPartBasic } from './FormPartBasic';
 import { FormSection } from './FormSection';
-import { FormItemPlugins } from './FormItemPlugins';
-import type { APISIXType } from '@/types/schema/apisix';
 
 export const FormSectionPluginsOnly = () => {
   const { t } = useTranslation();

@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next';
+
+import { FormItemPlugins } from './FormItemPlugins';
 import { FormPartBasic } from './FormPartBasic';
+import { FormSection } from './FormSection';
 import {
   FormSectionGeneral,
   type FormSectionGeneralProps,
 } from './FormSectionGeneral';
-import { FormSection } from './FormSection';
-import { FormItemPlugins } from './FormItemPlugins';
 
 export const FormPartCredential = (props: FormSectionGeneralProps) => {
   const { t } = useTranslation();

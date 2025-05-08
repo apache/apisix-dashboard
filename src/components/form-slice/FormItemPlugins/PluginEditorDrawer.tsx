@@ -1,12 +1,14 @@
-import { FormItemEditor } from '@/components/form/Editor';
 import { Drawer, Group, Title } from '@mantine/core';
+import { observer } from 'mobx-react-lite';
+import { isEmpty } from 'rambdax';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { isEmpty } from 'rambdax';
+
 import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormItemEditor } from '@/components/form/Editor';
+
 import type { PluginCardListProps } from './PluginCardList';
-import { observer } from 'mobx-react-lite';
-import { useEffect } from 'react';
 
 export type PluginConfig = { name: string; config: object };
 export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {

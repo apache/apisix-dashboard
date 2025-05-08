@@ -1,16 +1,18 @@
-import { useTranslation } from 'react-i18next';
-import { FormSection } from '../FormSection';
 import { useFormContext } from 'react-hook-form';
-import { FormItemTextInput } from '@/components/form/TextInput';
+import { useTranslation } from 'react-i18next';
+
+import { FormItemJsonInput } from '@/components/form/JsonInput';
 import { FormItemNumberInput } from '@/components/form/NumberInput';
+import { FormItemTextInput } from '@/components/form/TextInput';
+
 import { FormPartBasic } from '../FormPartBasic';
-import type { StreamRoutePostType } from './schema';
 import {
   FormSectionPlugins,
   FormSectionService,
   FormSectionUpstream,
 } from '../FormPartRoute';
-import { FormItemJsonInput } from '@/components/form/JsonInput';
+import { FormSection } from '../FormSection';
+import type { StreamRoutePostType } from './schema';
 
 const FormSectionStreamRouteBasic = () => {
   const { t } = useTranslation();

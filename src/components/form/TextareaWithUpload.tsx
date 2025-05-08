@@ -1,20 +1,22 @@
 import {
+  Box,
+  Button,
+  Group,
+  Input,
   Textarea as MTextarea,
   type TextareaProps as MTextareaProps,
-  Box,
-  Group,
-  Button,
-  Input,
 } from '@mantine/core';
+import { useRef, useState } from 'react';
 import {
-  useController,
   type FieldValues,
+  useController,
   type UseControllerProps,
 } from 'react-hook-form';
-import { genControllerProps } from './util';
-import IconUpload from '~icons/material-symbols/upload';
-import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import IconUpload from '~icons/material-symbols/upload';
+
+import { genControllerProps } from './util';
 
 export type FormItemTextareaWithUploadProps<T extends FieldValues> =
   UseControllerProps<T> &

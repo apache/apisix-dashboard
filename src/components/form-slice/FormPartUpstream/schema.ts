@@ -1,5 +1,6 @@
-import { APISIX } from '@/types/schema/apisix';
 import { z } from 'zod';
+
+import { APISIX } from '@/types/schema/apisix';
 
 // We don't omit id now, as we need it for detail view
 export const FormPartUpstreamSchema = APISIX.Upstream.extend({

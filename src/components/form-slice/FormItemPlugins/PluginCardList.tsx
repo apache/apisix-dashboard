@@ -4,13 +4,14 @@ import {
   ScrollArea,
   SimpleGrid,
   TextInput,
-  useVirtualizedCombobox,
   type TextInputProps,
+  useVirtualizedCombobox,
 } from '@mantine/core';
-import { PluginCard, type PluginCardProps } from './PluginCard';
-import { useTranslation } from 'react-i18next';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { PluginCard, type PluginCardProps } from './PluginCard';
 
 type PluginCardListSearchProps = Pick<TextInputProps, 'placeholder'> & {
   search: string;

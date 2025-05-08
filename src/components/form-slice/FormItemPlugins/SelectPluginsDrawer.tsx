@@ -1,13 +1,14 @@
 import { Button, Drawer } from '@mantine/core';
+import { observer } from 'mobx-react-lite';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import {
   PluginCardList,
-  PluginCardListSearch,
   type PluginCardListProps,
+  PluginCardListSearch,
 } from './PluginCardList';
-import { useState } from 'react';
 import { type PluginEditorDrawerProps } from './PluginEditorDrawer';
-import { observer } from 'mobx-react-lite';
 
 export type SelectPluginsDrawerProps = Pick<PluginCardListProps, 'plugins'> &
   Pick<PluginEditorDrawerProps, 'schema'> & {
