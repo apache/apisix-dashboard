@@ -7,7 +7,7 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
@@ -65,7 +65,9 @@ function RouteComponent() {
         valueType: 'option',
         key: 'option',
         width: 120,
-        // render: (_, record) => [],
+        render: (_, record) => [
+          <ToDetailPageBtn key="detail" to="/ssls/detail/$id" params={{ id: record.value.id }} />,
+        ],
       },
     ];
   }, [t]);

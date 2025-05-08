@@ -1,6 +1,6 @@
 import { Button, Fieldset, Stack, type FieldsetProps } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useFormState } from 'react-hook-form';
 import { FormSection } from '../FormSection';
 import type { SSLPostType } from './schema';
 import type { PropsWithChildren } from 'react';
@@ -42,6 +42,7 @@ const RequiredCertKey = () => {
 };
 const CertKeyPairList = () => {
   const { t } = useTranslation();
+  const certsState = useFormState<SSLPostType>({ name: 'certs' });
   const certs = useFieldArray({
     name: 'certs',
   });
@@ -54,19 +55,21 @@ const CertKeyPairList = () => {
         <PairWrapper
           key={cert.id}
           legend={
-            <Button
-              leftSection={<IconDelete />}
-              justify="flex-end"
-              size="compact-xs"
-              color="red"
-              variant="outline"
-              onClick={() => {
-                certs.remove(idx);
-                keys.remove(idx);
-              }}
-            >
-              {t('form.ssls.cert_key_list.delete')}
-            </Button>
+            !certsState.disabled && (
+              <Button
+                leftSection={<IconDelete />}
+                justify="flex-end"
+                size="compact-xs"
+                color="red"
+                variant="outline"
+                onClick={() => {
+                  certs.remove(idx);
+                  keys.remove(idx);
+                }}
+              >
+                {t('form.ssls.cert_key_list.delete')}
+              </Button>
+            )
           }
         >
           <FormItemTextareaWithUpload
@@ -81,18 +84,20 @@ const CertKeyPairList = () => {
           />
         </PairWrapper>
       ))}
-      <Button
-        mt={16}
-        fullWidth
-        size="compact-sm"
-        variant="outline"
-        onClick={() => {
-          keys.append('');
-          certs.append('');
-        }}
-      >
-        {t('form.ssls.cert_key_list.add')}
-      </Button>
+      {!certsState.disabled && (
+        <Button
+          mt={16}
+          fullWidth
+          size="compact-sm"
+          variant="outline"
+          onClick={() => {
+            keys.append('');
+            certs.append('');
+          }}
+        >
+          {t('form.ssls.cert_key_list.add')}
+        </Button>
+      )}
     </>
   );
 };
