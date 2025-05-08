@@ -12,6 +12,8 @@ import { getServiceListQueryOptions } from '@/apis/services';
 import { usePagination } from '@/utils/usePagination';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import PageHeader from '@/components/page/PageHeader';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_SERVICES } from '@/config/constant';
 
 const ServiceList = () => {
   const { pagination, handlePageChange, updateTotal } = usePagination({
@@ -19,7 +21,7 @@ const ServiceList = () => {
   });
 
   const query = useSuspenseQuery(getServiceListQueryOptions(pagination));
-  const { data, isLoading } = query;
+  const { data, isLoading, refetch } = query;
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -68,12 +70,19 @@ const ServiceList = () => {
           <ToDetailPageBtn
             key="detail"
             to="/services/detail/$id"
-            id={record.value.id}
+            params={{ id: record.value.id }}
+          />,
+          <DeleteResourceBtn
+            key="delete"
+            resource={t('services.singular')}
+            target={record.value.id}
+            api={`${API_SERVICES}/${record.value.id}`}
+            onSuccess={refetch}
           />,
         ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <AntdConfigProvider>

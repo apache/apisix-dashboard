@@ -12,6 +12,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { ToDetailPageBtn, ToAddPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import {
   pageSearchSchema,
   type PageSearchType,
@@ -42,7 +43,7 @@ function RouteComponent() {
   });
 
   const upstreamQuery = useSuspenseQuery(genUpstreamsQueryOptions(pagination));
-  const { data, isLoading } = upstreamQuery;
+  const { data, isLoading, refetch } = upstreamQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -100,10 +101,17 @@ function RouteComponent() {
             to="/upstreams/detail/$id"
             params={{ id: record.value.id }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            resource={t('upstreams.singular')}
+            target={record.value.id}
+            api={`${API_UPSTREAMS}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <>

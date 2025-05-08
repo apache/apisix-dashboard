@@ -12,6 +12,8 @@ import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { getProtoListQueryOptions } from '@/apis/protos';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_PROTOS } from '@/config/constant';
 
 function RouteComponent() {
   const { t } = useTranslation();
@@ -22,7 +24,7 @@ function RouteComponent() {
   });
 
   const protosQuery = useSuspenseQuery(getProtoListQueryOptions(pagination));
-  const { data, isLoading } = protosQuery;
+  const { data, isLoading, refetch } = protosQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -51,10 +53,17 @@ function RouteComponent() {
             to="/protos/detail/$id"
             params={{ id: record.value.id }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            resource={t('protos.singular')}
+            target={record.value.id}
+            api={`${API_PROTOS}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <>
@@ -105,4 +114,3 @@ export const Route = createFileRoute('/protos/')({
   loader: ({ deps }) =>
     queryClient.ensureQueryData(getProtoListQueryOptions(deps)),
 });
-   

@@ -12,6 +12,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import {
   pageSearchSchema,
   type PageSearchType,
@@ -44,7 +45,7 @@ function RouteComponent() {
   const globalRulesQuery = useSuspenseQuery(
     genGlobalRulesQueryOptions(pagination)
   );
-  const { data, isLoading } = globalRulesQuery;
+  const { data, isLoading, refetch } = globalRulesQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -73,10 +74,17 @@ function RouteComponent() {
             to="/global_rules/detail/$id"
             params={{ id: record.value.id }}
           />,
+          <DeleteResourceBtn
+            key="delete"
+            resource={t('globalRules.singular')}
+            target={record.value.id}
+            api={`${API_GLOBAL_RULES}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
         ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <>

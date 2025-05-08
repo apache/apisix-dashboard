@@ -7,11 +7,13 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useEffect, useMemo } from 'react';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { usePagination } from '@/utils/usePagination';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { getSSLListQueryOptions } from '@/apis/ssls';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_SSLS } from '@/config/constant';
 
 function RouteComponent() {
   const { t } = useTranslation();
@@ -21,7 +23,7 @@ function RouteComponent() {
   });
 
   const sslsQuery = useSuspenseQuery(getSSLListQueryOptions(pagination));
-  const { data, isLoading } = sslsQuery;
+  const { data, isLoading, refetch } = sslsQuery;
 
   useEffect(() => {
     if (data?.total) {
@@ -65,10 +67,23 @@ function RouteComponent() {
         valueType: 'option',
         key: 'option',
         width: 120,
-        // render: (_, record) => [],
+        render: (_, record) => [
+          <ToDetailPageBtn
+            key="detail"
+            to="/ssls/detail/$id"
+            params={{ id: record.value.id }}
+          />,
+          <DeleteResourceBtn
+            key="delete"
+            resource={t('ssls.singular')}
+            target={record.value.id}
+            api={`${API_SSLS}/${record.value.id}`}
+            onSuccess={refetch}
+          />,
+        ],
       },
     ];
-  }, [t]);
+  }, [t, refetch]);
 
   return (
     <>
