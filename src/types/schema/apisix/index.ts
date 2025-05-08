@@ -12,10 +12,12 @@ import { APISIXConsumers } from './consumers';
 import { APISIXCredentials } from './credentials';
 import { APISIXSSLs } from './ssls';
 import { APISIXPluginConfigs } from './plugin_configs';
+import { APISIXConsumerGroups } from './consumer_groups';
 export type { APISIXType } from './type';
 export const APISIX = {
   ...APISIXCommon,
   ...APISIXConsumers,
+  ...APISIXConsumerGroups,
   ...APISIXUpstreams,
   ...APISIXRoutes,
   ...APISIXStreamRoutes,

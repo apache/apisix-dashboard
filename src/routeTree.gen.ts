@@ -23,6 +23,7 @@ import { Route as PluginmetadataIndexImport } from './routes/plugin_metadata/ind
 import { Route as PluginconfigsIndexImport } from './routes/plugin_configs/index'
 import { Route as GlobalrulesIndexImport } from './routes/global_rules/index'
 import { Route as ConsumersIndexImport } from './routes/consumers/index'
+import { Route as ConsumergroupsIndexImport } from './routes/consumer_groups/index'
 import { Route as UpstreamsAddImport } from './routes/upstreams/add'
 import { Route as StreamroutesAddImport } from './routes/stream_routes/add'
 import { Route as SslsAddImport } from './routes/ssls/add'
@@ -33,6 +34,7 @@ import { Route as ProtosAddImport } from './routes/protos/add'
 import { Route as PluginconfigsAddImport } from './routes/plugin_configs/add'
 import { Route as GlobalrulesAddImport } from './routes/global_rules/add'
 import { Route as ConsumersAddImport } from './routes/consumers/add'
+import { Route as ConsumergroupsAddImport } from './routes/consumer_groups/add'
 import { Route as UpstreamsDetailIdImport } from './routes/upstreams/detail.$id'
 import { Route as StreamroutesDetailIdImport } from './routes/stream_routes/detail.$id'
 import { Route as SslsDetailIdImport } from './routes/ssls/detail.$id'
@@ -41,6 +43,7 @@ import { Route as RoutesDetailIdImport } from './routes/routes/detail.$id'
 import { Route as ProtosDetailIdImport } from './routes/protos/detail.$id'
 import { Route as PluginconfigsDetailIdImport } from './routes/plugin_configs/detail.$id'
 import { Route as GlobalrulesDetailIdImport } from './routes/global_rules/detail.$id'
+import { Route as ConsumergroupsDetailIdImport } from './routes/consumer_groups/detail.$id'
 import { Route as ConsumersDetailUsernameIndexImport } from './routes/consumers/detail.$username/index'
 import { Route as SecretsDetailManagerIdImport } from './routes/secrets/detail.$manager.$id'
 import { Route as ConsumersDetailUsernameCredentialsIndexImport } from './routes/consumers/detail.$username/credentials/index'
@@ -121,6 +124,12 @@ const ConsumersIndexRoute = ConsumersIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ConsumergroupsIndexRoute = ConsumergroupsIndexImport.update({
+  id: '/consumer_groups/',
+  path: '/consumer_groups/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const UpstreamsAddRoute = UpstreamsAddImport.update({
   id: '/upstreams/add',
   path: '/upstreams/add',
@@ -181,6 +190,12 @@ const ConsumersAddRoute = ConsumersAddImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ConsumergroupsAddRoute = ConsumergroupsAddImport.update({
+  id: '/consumer_groups/add',
+  path: '/consumer_groups/add',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const UpstreamsDetailIdRoute = UpstreamsDetailIdImport.update({
   id: '/upstreams/detail/$id',
   path: '/upstreams/detail/$id',
@@ -229,6 +244,12 @@ const GlobalrulesDetailIdRoute = GlobalrulesDetailIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ConsumergroupsDetailIdRoute = ConsumergroupsDetailIdImport.update({
+  id: '/consumer_groups/detail/$id',
+  path: '/consumer_groups/detail/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ConsumersDetailUsernameIndexRoute =
   ConsumersDetailUsernameIndexImport.update({
     id: '/consumers/detail/$username/',
@@ -272,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/consumer_groups/add': {
+      id: '/consumer_groups/add'
+      path: '/consumer_groups/add'
+      fullPath: '/consumer_groups/add'
+      preLoaderRoute: typeof ConsumergroupsAddImport
       parentRoute: typeof rootRoute
     }
     '/consumers/add': {
@@ -342,6 +370,13 @@ declare module '@tanstack/react-router' {
       path: '/upstreams/add'
       fullPath: '/upstreams/add'
       preLoaderRoute: typeof UpstreamsAddImport
+      parentRoute: typeof rootRoute
+    }
+    '/consumer_groups/': {
+      id: '/consumer_groups/'
+      path: '/consumer_groups'
+      fullPath: '/consumer_groups'
+      preLoaderRoute: typeof ConsumergroupsIndexImport
       parentRoute: typeof rootRoute
     }
     '/consumers/': {
@@ -419,6 +454,13 @@ declare module '@tanstack/react-router' {
       path: '/upstreams'
       fullPath: '/upstreams'
       preLoaderRoute: typeof UpstreamsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/consumer_groups/detail/$id': {
+      id: '/consumer_groups/detail/$id'
+      path: '/consumer_groups/detail/$id'
+      fullPath: '/consumer_groups/detail/$id'
+      preLoaderRoute: typeof ConsumergroupsDetailIdImport
       parentRoute: typeof rootRoute
     }
     '/global_rules/detail/$id': {
@@ -519,6 +561,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/consumer_groups/add': typeof ConsumergroupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/plugin_configs/add': typeof PluginconfigsAddRoute
@@ -529,6 +572,7 @@ export interface FileRoutesByFullPath {
   '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
+  '/consumer_groups': typeof ConsumergroupsIndexRoute
   '/consumers': typeof ConsumersIndexRoute
   '/global_rules': typeof GlobalrulesIndexRoute
   '/plugin_configs': typeof PluginconfigsIndexRoute
@@ -540,6 +584,7 @@ export interface FileRoutesByFullPath {
   '/ssls': typeof SslsIndexRoute
   '/stream_routes': typeof StreamroutesIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/consumer_groups/detail/$id': typeof ConsumergroupsDetailIdRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/plugin_configs/detail/$id': typeof PluginconfigsDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
@@ -557,6 +602,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/consumer_groups/add': typeof ConsumergroupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/plugin_configs/add': typeof PluginconfigsAddRoute
@@ -567,6 +613,7 @@ export interface FileRoutesByTo {
   '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
+  '/consumer_groups': typeof ConsumergroupsIndexRoute
   '/consumers': typeof ConsumersIndexRoute
   '/global_rules': typeof GlobalrulesIndexRoute
   '/plugin_configs': typeof PluginconfigsIndexRoute
@@ -578,6 +625,7 @@ export interface FileRoutesByTo {
   '/ssls': typeof SslsIndexRoute
   '/stream_routes': typeof StreamroutesIndexRoute
   '/upstreams': typeof UpstreamsIndexRoute
+  '/consumer_groups/detail/$id': typeof ConsumergroupsDetailIdRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/plugin_configs/detail/$id': typeof PluginconfigsDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
@@ -596,6 +644,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/consumer_groups/add': typeof ConsumergroupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof GlobalrulesAddRoute
   '/plugin_configs/add': typeof PluginconfigsAddRoute
@@ -606,6 +655,7 @@ export interface FileRoutesById {
   '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof StreamroutesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
+  '/consumer_groups/': typeof ConsumergroupsIndexRoute
   '/consumers/': typeof ConsumersIndexRoute
   '/global_rules/': typeof GlobalrulesIndexRoute
   '/plugin_configs/': typeof PluginconfigsIndexRoute
@@ -617,6 +667,7 @@ export interface FileRoutesById {
   '/ssls/': typeof SslsIndexRoute
   '/stream_routes/': typeof StreamroutesIndexRoute
   '/upstreams/': typeof UpstreamsIndexRoute
+  '/consumer_groups/detail/$id': typeof ConsumergroupsDetailIdRoute
   '/global_rules/detail/$id': typeof GlobalrulesDetailIdRoute
   '/plugin_configs/detail/$id': typeof PluginconfigsDetailIdRoute
   '/protos/detail/$id': typeof ProtosDetailIdRoute
@@ -636,6 +687,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
     | '/plugin_configs/add'
@@ -646,6 +698,7 @@ export interface FileRouteTypes {
     | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
+    | '/consumer_groups'
     | '/consumers'
     | '/global_rules'
     | '/plugin_configs'
@@ -657,6 +710,7 @@ export interface FileRouteTypes {
     | '/ssls'
     | '/stream_routes'
     | '/upstreams'
+    | '/consumer_groups/detail/$id'
     | '/global_rules/detail/$id'
     | '/plugin_configs/detail/$id'
     | '/protos/detail/$id'
@@ -673,6 +727,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
     | '/plugin_configs/add'
@@ -683,6 +738,7 @@ export interface FileRouteTypes {
     | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
+    | '/consumer_groups'
     | '/consumers'
     | '/global_rules'
     | '/plugin_configs'
@@ -694,6 +750,7 @@ export interface FileRouteTypes {
     | '/ssls'
     | '/stream_routes'
     | '/upstreams'
+    | '/consumer_groups/detail/$id'
     | '/global_rules/detail/$id'
     | '/plugin_configs/detail/$id'
     | '/protos/detail/$id'
@@ -710,6 +767,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
     | '/plugin_configs/add'
@@ -720,6 +778,7 @@ export interface FileRouteTypes {
     | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
+    | '/consumer_groups/'
     | '/consumers/'
     | '/global_rules/'
     | '/plugin_configs/'
@@ -731,6 +790,7 @@ export interface FileRouteTypes {
     | '/ssls/'
     | '/stream_routes/'
     | '/upstreams/'
+    | '/consumer_groups/detail/$id'
     | '/global_rules/detail/$id'
     | '/plugin_configs/detail/$id'
     | '/protos/detail/$id'
@@ -749,6 +809,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConsumergroupsAddRoute: typeof ConsumergroupsAddRoute
   ConsumersAddRoute: typeof ConsumersAddRoute
   GlobalrulesAddRoute: typeof GlobalrulesAddRoute
   PluginconfigsAddRoute: typeof PluginconfigsAddRoute
@@ -759,6 +820,7 @@ export interface RootRouteChildren {
   SslsAddRoute: typeof SslsAddRoute
   StreamroutesAddRoute: typeof StreamroutesAddRoute
   UpstreamsAddRoute: typeof UpstreamsAddRoute
+  ConsumergroupsIndexRoute: typeof ConsumergroupsIndexRoute
   ConsumersIndexRoute: typeof ConsumersIndexRoute
   GlobalrulesIndexRoute: typeof GlobalrulesIndexRoute
   PluginconfigsIndexRoute: typeof PluginconfigsIndexRoute
@@ -770,6 +832,7 @@ export interface RootRouteChildren {
   SslsIndexRoute: typeof SslsIndexRoute
   StreamroutesIndexRoute: typeof StreamroutesIndexRoute
   UpstreamsIndexRoute: typeof UpstreamsIndexRoute
+  ConsumergroupsDetailIdRoute: typeof ConsumergroupsDetailIdRoute
   GlobalrulesDetailIdRoute: typeof GlobalrulesDetailIdRoute
   PluginconfigsDetailIdRoute: typeof PluginconfigsDetailIdRoute
   ProtosDetailIdRoute: typeof ProtosDetailIdRoute
@@ -787,6 +850,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConsumergroupsAddRoute: ConsumergroupsAddRoute,
   ConsumersAddRoute: ConsumersAddRoute,
   GlobalrulesAddRoute: GlobalrulesAddRoute,
   PluginconfigsAddRoute: PluginconfigsAddRoute,
@@ -797,6 +861,7 @@ const rootRouteChildren: RootRouteChildren = {
   SslsAddRoute: SslsAddRoute,
   StreamroutesAddRoute: StreamroutesAddRoute,
   UpstreamsAddRoute: UpstreamsAddRoute,
+  ConsumergroupsIndexRoute: ConsumergroupsIndexRoute,
   ConsumersIndexRoute: ConsumersIndexRoute,
   GlobalrulesIndexRoute: GlobalrulesIndexRoute,
   PluginconfigsIndexRoute: PluginconfigsIndexRoute,
@@ -808,6 +873,7 @@ const rootRouteChildren: RootRouteChildren = {
   SslsIndexRoute: SslsIndexRoute,
   StreamroutesIndexRoute: StreamroutesIndexRoute,
   UpstreamsIndexRoute: UpstreamsIndexRoute,
+  ConsumergroupsDetailIdRoute: ConsumergroupsDetailIdRoute,
   GlobalrulesDetailIdRoute: GlobalrulesDetailIdRoute,
   PluginconfigsDetailIdRoute: PluginconfigsDetailIdRoute,
   ProtosDetailIdRoute: ProtosDetailIdRoute,
@@ -837,6 +903,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/consumer_groups/add",
         "/consumers/add",
         "/global_rules/add",
         "/plugin_configs/add",
@@ -847,6 +914,7 @@ export const routeTree = rootRoute
         "/ssls/add",
         "/stream_routes/add",
         "/upstreams/add",
+        "/consumer_groups/",
         "/consumers/",
         "/global_rules/",
         "/plugin_configs/",
@@ -858,6 +926,7 @@ export const routeTree = rootRoute
         "/ssls/",
         "/stream_routes/",
         "/upstreams/",
+        "/consumer_groups/detail/$id",
         "/global_rules/detail/$id",
         "/plugin_configs/detail/$id",
         "/protos/detail/$id",
@@ -875,6 +944,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/consumer_groups/add": {
+      "filePath": "consumer_groups/add.tsx"
     },
     "/consumers/add": {
       "filePath": "consumers/add.tsx"
@@ -905,6 +977,9 @@ export const routeTree = rootRoute
     },
     "/upstreams/add": {
       "filePath": "upstreams/add.tsx"
+    },
+    "/consumer_groups/": {
+      "filePath": "consumer_groups/index.tsx"
     },
     "/consumers/": {
       "filePath": "consumers/index.tsx"
@@ -938,6 +1013,9 @@ export const routeTree = rootRoute
     },
     "/upstreams/": {
       "filePath": "upstreams/index.tsx"
+    },
+    "/consumer_groups/detail/$id": {
+      "filePath": "consumer_groups/detail.$id.tsx"
     },
     "/global_rules/detail/$id": {
       "filePath": "global_rules/detail.$id.tsx"

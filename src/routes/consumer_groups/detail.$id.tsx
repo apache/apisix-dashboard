@@ -12,11 +12,11 @@ import { useBoolean } from 'react-use';
 import { useEffect } from 'react';
 import { APISIX } from '@/types/schema/apisix';
 import {
-  getPluginConfigQueryOptions,
-  putPluginConfigReq,
-} from '@/apis/plugin_configs';
-import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
+  getConsumerGroupQueryOptions,
+  putConsumerGroupReq,
+} from '@/apis/consumer_groups';
 import { pipeProduce } from '@/utils/producer';
+import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 
 type Props = {
   id: string;
@@ -24,28 +24,28 @@ type Props = {
   setReadOnly: (v: boolean) => void;
 };
 
-const PluginConfigDetailForm = (props: Props) => {
+const ConsumerGroupDetailForm = (props: Props) => {
   const { id, readOnly, setReadOnly } = props;
   const { t } = useTranslation();
 
-  const pluginConfigQuery = useSuspenseQuery(getPluginConfigQueryOptions(id));
-  const { data } = pluginConfigQuery;
+  const consumerGroupQuery = useSuspenseQuery(getConsumerGroupQueryOptions(id));
+  const { data } = consumerGroupQuery;
   const initialValue = data.value;
 
-  const putPluginConfig = useMutation({
-    mutationFn: putPluginConfigReq,
+  const putConsumerGroup = useMutation({
+    mutationFn: putConsumerGroupReq,
     async onSuccess() {
       notifications.show({
-        message: t('pluginConfigs.edit.success'),
+        message: t('consumerGroups.edit.success'),
         color: 'green',
       });
-      pluginConfigQuery.refetch();
+      consumerGroupQuery.refetch();
       setReadOnly(true);
     },
   });
 
   const form = useForm({
-    resolver: zodResolver(APISIX.PluginConfigPut),
+    resolver: zodResolver(APISIX.ConsumerGroupPut),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -63,10 +63,13 @@ const PluginConfigDetailForm = (props: Props) => {
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit((d) =>
-          putPluginConfig.mutateAsync(pipeProduce()({ ...d, id }))
+          putConsumerGroup.mutateAsync(pipeProduce()({ ...d, id }))
         )}
       >
-        <FormPartPluginConfig />
+        <FormPartPluginConfig
+          generalProps={{ showDate: true }}
+          basicProps={{ showName: false }}
+        />
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
@@ -81,16 +84,16 @@ const PluginConfigDetailForm = (props: Props) => {
 };
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/plugin_configs/detail/$id' });
+  const { id } = useParams({ from: '/consumer_groups/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
 
   return (
     <>
       <PageHeader
-        title={t('pluginConfigs.edit.title')}
+        title={t('consumerGroups.edit.title')}
         {...(readOnly && {
-          title: t('pluginConfigs.detail.title'),
+          title: t('consumerGroups.detail.title'),
           extra: (
             <Button
               onClick={() => setReadOnly(false)}
@@ -103,7 +106,7 @@ function RouteComponent() {
         })}
       />
       <FormTOCBox>
-        <PluginConfigDetailForm
+        <ConsumerGroupDetailForm
           id={id}
           readOnly={readOnly}
           setReadOnly={setReadOnly}
@@ -113,6 +116,6 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute('/plugin_configs/detail/$id')({
+export const Route = createFileRoute('/consumer_groups/detail/$id')({
   component: RouteComponent,
 });

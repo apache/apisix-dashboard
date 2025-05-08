@@ -1,15 +1,21 @@
-import { FormPartBasic } from './FormPartBasic';
+import { FormPartBasic, type FormPartBasicProps } from './FormPartBasic';
 import {
   FormSectionGeneral,
   type FormSectionGeneralProps,
 } from './FormSectionGeneral';
 import { FormSectionPluginsOnly } from './FormPartConsumer';
 
-export const FormPartPluginConfig = (props: FormSectionGeneralProps) => {
+export const FormPartPluginConfig = (
+  props: {
+    basicProps?: FormPartBasicProps;
+    generalProps?: FormSectionGeneralProps;
+  } = {}
+) => {
+  const { generalProps, basicProps } = props;
   return (
     <>
-      <FormSectionGeneral {...props} />
-      <FormPartBasic />
+      <FormSectionGeneral {...generalProps} />
+      <FormPartBasic {...basicProps} />
       <FormSectionPluginsOnly />
     </>
   );

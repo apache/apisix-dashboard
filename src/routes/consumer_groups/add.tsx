@@ -8,31 +8,31 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { notifications } from '@mantine/notifications';
 import { pipeProduce } from '@/utils/producer';
-import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { APISIX } from '@/types/schema/apisix';
-import { putPluginConfigReq } from '@/apis/plugin_configs';
+import { putConsumerGroupReq } from '@/apis/consumer_groups';
 import { nanoid } from 'nanoid';
+import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 
-const PluginConfigAddForm = () => {
+const ConsumerGroupAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const putPluginConfig = useMutation({
-    mutationFn: putPluginConfigReq,
+  const putConsumerGroup = useMutation({
+    mutationFn: putConsumerGroupReq,
     async onSuccess(response) {
       notifications.show({
-        message: t('pluginConfigs.add.success'),
+        message: t('consumerGroups.add.success'),
         color: 'green',
       });
       await router.navigate({
-        to: '/plugin_configs/detail/$id',
+        to: '/consumer_groups/detail/$id',
         params: { id: response.data.value.id },
       });
     },
   });
 
   const form = useForm({
-    resolver: zodResolver(APISIX.PluginConfigPut),
+    resolver: zodResolver(APISIX.ConsumerGroupPut),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -45,10 +45,13 @@ const PluginConfigAddForm = () => {
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit((d) =>
-          putPluginConfig.mutateAsync(pipeProduce()(d))
+          putConsumerGroup.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormPartPluginConfig generalProps={{ showDate: false }} />
+        <FormPartPluginConfig
+          generalProps={{ showDate: false }}
+          basicProps={{ showName: false }}
+        />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
     </FormProvider>
@@ -59,14 +62,14 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('pluginConfigs.add.title')} />
+      <PageHeader title={t('consumerGroups.add.title')} />
       <FormTOCBox>
-        <PluginConfigAddForm />
+        <ConsumerGroupAddForm />
       </FormTOCBox>
     </>
   );
 }
 
-export const Route = createFileRoute('/plugin_configs/add')({
+export const Route = createFileRoute('/consumer_groups/add')({
   component: RouteComponent,
 });
