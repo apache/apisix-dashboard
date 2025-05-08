@@ -22,7 +22,6 @@ const DisplayDate = () => {
 const FormItemID = () => {
   const { control } = useFormContext<APISIXType['Info']>();
   const { t } = useTranslation();
-
   return (
     <FormItemTextInput control={control} name="id" label={t('form.info.id')} />
   );
@@ -31,13 +30,18 @@ const FormItemID = () => {
 export type FormSectionGeneralProps = {
   showDate?: boolean;
   showID?: boolean;
+  readOnly?: boolean;
 };
 
 export const FormSectionGeneral = (props: FormSectionGeneralProps) => {
-  const { showDate = true, showID = true } = props;
+  const { showDate = true, showID = true, readOnly = false } = props;
   const { t } = useTranslation();
+  // we use fieldset disabled to show readonly state
+  // because mantine readOnly style looks like we can edit
+  // this is also the way rhf recommends,
+  // Using disable directly on the component will cause rhf to ignore the value
   return (
-    <FormSection legend={t('form.general.title')}>
+    <FormSection legend={t('form.general.title')} disabled={readOnly}>
       {showID && <FormItemID />}
       {showID && showDate && <Divider my="lg" />}
       {showDate && <DisplayDate />}
