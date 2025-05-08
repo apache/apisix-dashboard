@@ -31,16 +31,20 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
       confirmProps: { color: 'red' },
       title: t('msg.delete.title', { name: name }),
       children: (
-        <>
+        <Text>
           {t('msg.delete.content', { name: name })}
           {target && (
-            <Text component="span" fw={700}>
-              {' '}
-              {target}{' '}
+            <Text
+              component="span"
+              fw={700}
+              mx="0.25em"
+              style={{ wordBreak: 'break-all' }}
+            >
+              {target}
             </Text>
           )}
           {t('mark.question')}
-        </>
+        </Text>
       ),
       labels: { confirm: t('form.btn.delete'), cancel: t('form.btn.cancel') },
       onConfirm: () =>
