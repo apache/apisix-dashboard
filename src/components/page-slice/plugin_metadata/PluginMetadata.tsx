@@ -1,23 +1,41 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { Drawer, Group } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useMutation } from '@tanstack/react-query';
+import { toJS } from 'mobx';
+import { observer, useLocalObservable } from 'mobx-react-lite';
+import { difference } from 'rambdax';
 import { useTranslation } from 'react-i18next';
-import { usePluginMetadataList, type PluginInfo } from './hooks';
+import { useDeepCompareEffect } from 'react-use';
+
+import { deletePluginMetadataReq, putPluginMetadataReq } from '@/apis/plugins';
+import type { PluginCardProps } from '@/components/form-slice/FormItemPlugins/PluginCard';
 import {
   PluginCardList,
   PluginCardListSearch,
 } from '@/components/form-slice/FormItemPlugins/PluginCardList';
-import { SelectPluginsDrawer } from '@/components/form-slice/FormItemPlugins/SelectPluginsDrawer';
-import { difference } from 'rambdax';
 import {
-  PluginEditorDrawer,
   type PluginConfig,
+  PluginEditorDrawer,
 } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
-import { observer, useLocalObservable } from 'mobx-react-lite';
-import { toJS } from 'mobx';
-import { useDeepCompareEffect } from 'react-use';
-import type { PluginCardProps } from '@/components/form-slice/FormItemPlugins/PluginCard';
-import { useMutation } from '@tanstack/react-query';
-import { deletePluginMetadataReq, putPluginMetadataReq } from '@/apis/plugins';
-import { notifications } from '@mantine/notifications';
+import { SelectPluginsDrawer } from '@/components/form-slice/FormItemPlugins/SelectPluginsDrawer';
+
+import { type PluginInfo,usePluginMetadataList } from './hooks';
 
 export const PluginMetadata = observer(() => {
   const { t } = useTranslation();

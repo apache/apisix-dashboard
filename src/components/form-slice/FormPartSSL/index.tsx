@@ -1,17 +1,35 @@
-import { APISIX } from '@/types/schema/apisix';
-import { FormSection } from '../FormSection';
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { InputWrapper, Text } from '@mantine/core';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+
 import { FormItemNumberInput } from '@/components/form/NumberInput';
 import { FormItemSelect } from '@/components/form/Select';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
 import { FormItemTextarea } from '@/components/form/Textarea';
 import { FormItemTextInput } from '@/components/form/TextInput';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import type { SSLPostType } from './schema';
-import { InputWrapper, Text } from '@mantine/core';
+import { APISIX } from '@/types/schema/apisix';
+
 import { FormPartBasic } from '../FormPartBasic';
+import { FormSection } from '../FormSection';
 import { FormItemCertKeyList } from './FormItemCertKeyList';
+import type { SSLPostType } from './schema';
 
 const FormSectionClient = () => {
   const { t } = useTranslation();

@@ -1,19 +1,37 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { Divider, InputWrapper } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+
 import { FormItemNumberInput } from '@/components/form/NumberInput';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
 import { FormItemTextarea } from '@/components/form/Textarea';
 import { FormItemTextInput } from '@/components/form/TextInput';
+import { APISIX } from '@/types/schema/apisix';
 import { NamePrefixProvider } from '@/utils/useNamePrefix';
+import { zGetDefault } from '@/utils/zod';
+
 import { FormItemPlugins } from '../FormItemPlugins';
 import { FormPartBasic } from '../FormPartBasic';
 import { FormPartUpstream, FormSectionTimeout } from '../FormPartUpstream';
 import { FormSection } from '../FormSection';
-import { Divider, InputWrapper } from '@mantine/core';
 import type { RoutePostType } from './schema';
-import { APISIX } from '@/types/schema/apisix';
-import { zGetDefault } from '@/utils/zod';
 
 const FormPartBasicWithPriority = () => {
   const { t } = useTranslation();

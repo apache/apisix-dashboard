@@ -1,16 +1,34 @@
-import { useTranslation } from 'react-i18next';
-import { FormSection } from '../FormSection';
-import { FormItemSelect } from '@/components/form/Select';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { APISIX } from '@/types/schema/apisix';
-import { FormItemSwitch } from '@/components/form/Switch';
-import type { FormPartUpstreamType } from './schema';
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { Text } from '@mantine/core';
-import { FormItemNumberInput } from '@/components/form/NumberInput';
-import { FormItemTextInput } from '@/components/form/TextInput';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+
 import { FormItemLabels } from '@/components/form/Labels';
+import { FormItemNumberInput } from '@/components/form/NumberInput';
+import { FormItemSelect } from '@/components/form/Select';
+import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
+import { FormItemTextInput } from '@/components/form/TextInput';
+import { APISIX } from '@/types/schema/apisix';
 import { useNamePrefix } from '@/utils/useNamePrefix';
+
+import { FormSection } from '../FormSection';
+import type { FormPartUpstreamType } from './schema';
 
 const FormSectionChecksActive = () => {
   const { t } = useTranslation();

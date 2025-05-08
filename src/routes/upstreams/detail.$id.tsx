@@ -1,28 +1,45 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Group,Skeleton } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import PageHeader from '@/components/page/PageHeader';
-import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'react-i18next';
+import { useBoolean } from 'react-use';
+
+import { getUpstreamReq, putUpstreamReq } from '@/apis/upstreams';
+import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartUpstream } from '@/components/form-slice/FormPartUpstream';
 import { FormPartUpstreamSchema } from '@/components/form-slice/FormPartUpstream/schema';
-import { Skeleton, Button, Group } from '@mantine/core';
-import { getUpstreamReq, putUpstreamReq } from '@/apis/upstreams';
-import type { APISIXType } from '@/types/schema/apisix';
-import { useBoolean } from 'react-use';
-import { notifications } from '@mantine/notifications';
-import { FormSubmitBtn } from '@/components/form/Btn';
 import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
-import { pipeProduce } from '@/utils/producer';
-import { useEffect } from 'react';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import PageHeader from '@/components/page/PageHeader';
 import { API_UPSTREAMS } from '@/config/constant';
+import type { APISIXType } from '@/types/schema/apisix';
+import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   readOnly: boolean;

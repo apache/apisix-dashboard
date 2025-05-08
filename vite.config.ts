@@ -1,12 +1,29 @@
-import { API_PREFIX, BASE_PATH } from './src/config/constant';
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import react from '@vitejs/plugin-react-swc';
+import observerPlugin from 'mobx-react-observer/swc-plugin';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
 import UnpluginIcons from 'unplugin-icons/vite';
-import observerPlugin from 'mobx-react-observer/swc-plugin';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
+
+import { API_PREFIX, BASE_PATH } from './src/config/constant';
 
 const inDevContainer = process.env.REMOTE_CONTAINERS === 'true';
 
