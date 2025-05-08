@@ -16,6 +16,7 @@ export const API_CONSUMERS = '/consumers';
 export const API_CREDENTIALS = (username: string) =>
   `${API_CONSUMERS}/${username}/credentials` as const;
 export const API_SSLS = '/ssls';
+export const API_PLUGIN_CONFIGS = '/plugin_configs';
 
 export const SKIP_INTERCEPTOR_HEADER = '__dashboard__skipInterceptor';
 export const APPSHELL_HEADER_HEIGHT = 60;
