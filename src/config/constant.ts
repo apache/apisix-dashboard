@@ -12,6 +12,7 @@ export const API_GLOBAL_RULES = '/global_rules';
 export const API_PLUGINS = '/plugins';
 export const API_PLUGINS_LIST = '/plugins/list';
 export const API_PLUGIN_METADATA = '/plugin_metadata';
+export const API_SECRETS = '/secrets';
 export const API_CONSUMERS = '/consumers';
 export const API_CREDENTIALS = (username: string) =>
   `${API_CONSUMERS}/${username}/credentials` as const;

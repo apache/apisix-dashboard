@@ -46,6 +46,9 @@ export type APISIXType = RawAPISIXType & {
   RespGlobalRuleDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['GlobalRule']>
   >;
+  RespSecretList: AxiosResponse<APISIXListResponse<APISIXType['Secret']>>;
+  RespSecretItem: APISIXType['RespSecretList']['data']['list'][number];
+  RespSecretDetail: AxiosResponse<APISIXDetailResponse<APISIXType['Secret']>>;
   RespConsumerList: AxiosResponse<APISIXListResponse<APISIXType['Consumer']>>;
   RespConsumerItem: APISIXType['RespConsumerList']['data']['list'][number];
   RespConsumerDetail: AxiosResponse<

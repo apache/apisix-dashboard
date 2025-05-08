@@ -97,6 +97,36 @@
       "vars": "Vars"
     },
     "search": "Search",
+    "secrets": {
+      "aws": {
+        "access_key_id": "Access Key ID",
+        "endpoint_url": "Endpoint URL",
+        "region": "Region",
+        "secret_access_key": "Secret Access Key",
+        "session_token": "Session Token"
+      },
+      "gcp": {
+        "auth": "Auth",
+        "auth_config": "Auth Configuration",
+        "auth_file": "Auth File",
+        "client_email": "Client Email",
+        "private_key": "Private Key",
+        "project_id": "Project ID",
+        "token_uri": "Token URI",
+        "scope": "Scope",
+        "entries_uri": "Entries URI",
+        "ssl_verify": "SSL Verify"
+      },
+      "manager": "Secret Manager",
+      "managerConfig": "Manager Configuration",
+      "title": "Secret Configuration",
+      "vault": {
+        "namespace": "Namespace",
+        "prefix": "Prefix",
+        "token": "Token",
+        "uri": "URI"
+      }
+    },
     "ssls": {
       "cert": "Certificate",
       "cert_key_list": {
@@ -348,6 +378,19 @@
     "title": "Routes"
   },
   "seconds": "Seconds",
+  "secrets": {
+    "add": {
+      "success": "Add Secret Successfully",
+      "title": "Add Secret"
+    },
+    "detail": {
+      "title": "Secret Detail"
+    },
+    "edit": {
+      "success": "Edit Secret Successfully",
+      "title": "Edit Secret"
+    }
+  },
   "services": {
     "add": {
       "success": "Add Service Successfully",
