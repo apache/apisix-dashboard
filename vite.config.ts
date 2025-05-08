@@ -6,6 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
 import UnpluginIcons from 'unplugin-icons/vite';
+import observerPlugin from 'mobx-react-observer/swc-plugin';
 
 const inDevContainer = process.env.REMOTE_CONTAINERS === 'true';
 
@@ -42,8 +43,14 @@ export default defineConfig({
       compiler: 'jsx',
       jsx: 'react',
     }),
-    TanStackRouterVite({ target: 'react', autoCodeSplitting: true, semicolons: false }),
-    react(),
+    TanStackRouterVite({
+      target: 'react',
+      autoCodeSplitting: true,
+      semicolons: false,
+    }),
+    react({
+      plugins: [observerPlugin() as never],
+    }),
   ],
   css: {
     postcss: {
