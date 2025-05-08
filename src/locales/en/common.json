@@ -356,6 +356,13 @@
     "add": {
       "success": "Add SSL Successfully",
       "title": "Add SSL"
+    },
+    "detail": {
+      "title": "SSL Detail"
+    },
+    "edit": {
+      "success": "Edit SSL Successfully",
+      "title": "Edit SSL"
     }
   },
   "streamRoutes": {
