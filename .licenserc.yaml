@@ -20,6 +20,7 @@ header:
     - '.github/**'
     - '.husky/**'
     - '.vscode/**'
+    - '.dockerignore'
     - '.gitignore'
     - '.gitmodules'
     - '.yamllint'
