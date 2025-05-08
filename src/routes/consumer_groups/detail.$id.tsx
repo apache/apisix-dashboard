@@ -110,7 +110,7 @@ function RouteComponent() {
               </Button>
               <DeleteResourceBtn
                 mode="detail"
-                resource={t('consumerGroups.singular')}
+                name={t('consumerGroups.singular')}
                 target={id}
                 api={`${API_CONSUMER_GROUPS}/${id}`}
                 onSuccess={() => navigate({ to: '/consumer_groups' })}

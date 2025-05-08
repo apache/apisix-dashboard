@@ -69,7 +69,7 @@ const RouteList = () => {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('route.singular')}
+            name={t('route.singular')}
             target={record.value.id}
             api={`${API_ROUTES}/${record.value.id}`}
             onSuccess={refetch}

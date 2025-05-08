@@ -65,7 +65,7 @@ const StreamRouteList = () => {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('streamRoutes.singular')}
+            name={t('streamRoutes.singular')}
             target={record.value.id}
             api={`${API_STREAM_ROUTES}/${record.value.id}`}
             onSuccess={refetch}

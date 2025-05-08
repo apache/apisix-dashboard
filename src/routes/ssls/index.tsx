@@ -75,7 +75,7 @@ function RouteComponent() {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('ssls.singular')}
+            name={t('ssls.singular')}
             target={record.value.id}
             api={`${API_SSLS}/${record.value.id}`}
             onSuccess={refetch}

@@ -7,7 +7,7 @@ import type { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 
 type DeleteResourceProps = {
-  resource: string;
+  name: string;
   api: string;
   target?: string;
   onSuccess?: ((res: AxiosResponse<unknown, unknown>) => void) | (() => void);
@@ -16,7 +16,7 @@ type DeleteResourceProps = {
 } & ButtonProps;
 export const DeleteResourceBtn = (props: DeleteResourceProps) => {
   const {
-    resource,
+    name,
     target,
     api,
     onSuccess,
@@ -29,10 +29,10 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
     modals.openConfirmModal({
       centered: true,
       confirmProps: { color: 'red' },
-      title: t('msg.delete.title', { name: resource }),
+      title: t('msg.delete.title', { name: name }),
       children: (
         <>
-          {t('msg.delete.content', { name: resource })}
+          {t('msg.delete.content', { name: name })}
           {target && (
             <Text component="span" fw={700}>
               {' '}
@@ -46,7 +46,7 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
       onConfirm: () =>
         req.delete(api).then((res) => {
           notifications.show({
-            message: t('msg.delete.success', { name: resource }),
+            message: t('msg.delete.success', { name: name }),
             color: 'green',
           });
           onSuccess?.(res);

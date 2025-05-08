@@ -79,7 +79,7 @@ function PluginConfigsList() {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('pluginConfigs.singular')}
+            name={t('pluginConfigs.singular')}
             target={record.value.id}
             api={`${API_PLUGIN_CONFIGS}/${record.value.id}`}
             onSuccess={refetch}

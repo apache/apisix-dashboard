@@ -79,7 +79,7 @@ function ConsumerGroupsList() {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('consumerGroups.singular')}
+            name={t('consumerGroups.singular')}
             target={record.value.id}
             api={`${API_CONSUMER_GROUPS}/${record.value.id}`}
             onSuccess={refetch}

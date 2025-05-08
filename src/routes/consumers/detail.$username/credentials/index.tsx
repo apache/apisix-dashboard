@@ -68,7 +68,7 @@ function CredentialsList() {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('consumers.credentials.singular')}
+            name={t('consumers.credentials.singular')}
             target={record.value.id}
             api={`${API_CREDENTIALS(username)}/${record.value.id}`}
             onSuccess={refetch}

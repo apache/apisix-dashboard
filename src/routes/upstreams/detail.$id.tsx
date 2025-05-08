@@ -116,7 +116,7 @@ function RouteComponent() {
               </Button>
               <DeleteResourceBtn
                 mode="detail"
-                resource={t('upstreams.singular')}
+                name={t('upstreams.singular')}
                 target={id}
                 api={`${API_UPSTREAMS}/${id}`}
                 onSuccess={() => navigate({ to: '/upstreams' })}

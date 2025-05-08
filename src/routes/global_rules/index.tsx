@@ -76,7 +76,7 @@ function RouteComponent() {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('globalRules.singular')}
+            name={t('globalRules.singular')}
             target={record.value.id}
             api={`${API_GLOBAL_RULES}/${record.value.id}`}
             onSuccess={refetch}

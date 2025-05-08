@@ -123,7 +123,7 @@ function RouteComponent() {
               </Button>
               <DeleteResourceBtn
                 key="delete"
-                resource={t('consumers.credentials.singular')}
+                name={t('consumers.credentials.singular')}
                 target={id}
                 api={`${API_CREDENTIALS(username)}/${id}`}
                 onSuccess={() =>

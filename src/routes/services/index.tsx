@@ -74,7 +74,7 @@ const ServiceList = () => {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('services.singular')}
+            name={t('services.singular')}
             target={record.value.id}
             api={`${API_SERVICES}/${record.value.id}`}
             onSuccess={refetch}

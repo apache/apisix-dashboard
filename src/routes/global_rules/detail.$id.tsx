@@ -101,7 +101,7 @@ function RouteComponent() {
               </Button>
               <DeleteResourceBtn
                 mode="detail"
-                resource={t('globalRules.singular')}
+                name={t('globalRules.singular')}
                 target={id}
                 api={`${API_GLOBAL_RULES}/${id}`}
                 onSuccess={() => navigate({ to: '/global_rules' })}

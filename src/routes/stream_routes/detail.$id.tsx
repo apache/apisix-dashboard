@@ -113,7 +113,7 @@ function RouteComponent() {
               </Button>
               <DeleteResourceBtn
                 mode="detail"
-                resource={t('streamRoutes.singular')}
+                name={t('streamRoutes.singular')}
                 target={id}
                 api={`${API_STREAM_ROUTES}/${id}`}
                 onSuccess={() => navigate({ to: '/stream_routes' })}

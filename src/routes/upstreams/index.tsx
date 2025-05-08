@@ -103,7 +103,7 @@ function RouteComponent() {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('upstreams.singular')}
+            name={t('upstreams.singular')}
             target={record.value.id}
             api={`${API_UPSTREAMS}/${record.value.id}`}
             onSuccess={refetch}

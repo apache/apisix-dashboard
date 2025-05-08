@@ -73,7 +73,7 @@ function ConsumersList() {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('consumers.singular')}
+            name={t('consumers.singular')}
             target={record.value.username}
             api={`${API_CONSUMERS}/${record.value.username}`}
             onSuccess={refetch}

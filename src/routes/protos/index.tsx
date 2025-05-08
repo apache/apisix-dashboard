@@ -55,7 +55,7 @@ function RouteComponent() {
           />,
           <DeleteResourceBtn
             key="delete"
-            resource={t('protos.singular')}
+            name={t('protos.singular')}
             target={record.value.id}
             api={`${API_PROTOS}/${record.value.id}`}
             onSuccess={refetch}
