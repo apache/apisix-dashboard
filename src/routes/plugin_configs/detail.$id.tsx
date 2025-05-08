@@ -109,10 +109,10 @@ function RouteComponent() {
               </Button>
               <DeleteResourceBtn
                 mode="detail"
-                resource={t('consumerGroups.singular')}
+                resource={t('pluginConfigs.singular')}
                 target={id}
                 api={`${API_PLUGIN_CONFIGS}/${id}`}
-                onSuccess={() => navigate({ to: '/consumer_groups' })}
+                onSuccess={() => navigate({ to: '/plugin_configs' })}
               />
             </Group>
           ),

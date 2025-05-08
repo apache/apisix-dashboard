@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -17,6 +21,8 @@ import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/
 import { pipeProduce } from '@/utils/producer';
 import { useEffect } from 'react';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_UPSTREAMS } from '@/config/constant';
 
 type Props = {
   readOnly: boolean;
@@ -91,6 +97,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   const { id } = useParams({ from: '/upstreams/detail/$id' });
   const [readOnly, setReadOnly] = useBoolean(true);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -99,13 +106,22 @@ function RouteComponent() {
         {...(readOnly && {
           title: t('upstreams.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                resource={t('upstreams.singular')}
+                target={id}
+                api={`${API_UPSTREAMS}/${id}`}
+                onSuccess={() => navigate({ to: '/upstreams' })}
+              />
+            </Group>
           ),
         })}
       />

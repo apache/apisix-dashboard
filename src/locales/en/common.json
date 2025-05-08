@@ -291,6 +291,7 @@
       "title": "Edit Global Rule"
     },
     "plugins": "Plugins",
+    "singular": "Global Rule",
     "title": "Global Rules"
   },
   "mark": {
@@ -339,6 +340,8 @@
     },
     "search": "Search Plugin Metadata",
     "title": "Plugin Metadata",
+    "singular": "Plugin Metadata",
+
     "update": {
       "success": "Update Plugin Metadata of {{name}} Successfully"
     }
@@ -359,6 +362,7 @@
       "content": "Content",
       "contentPlaceholder": "Paste or upload .proto, .pb file"
     },
+    "singular": "Proto",
     "title": "Protos"
   },
   "route": {
@@ -373,6 +377,7 @@
       "success": "Edit Route Successfully",
       "title": "Edit Route"
     },
+    "singular": "Route",
     "title": "Routes"
   },
   "seconds": "Seconds",
@@ -388,6 +393,7 @@
       "success": "Edit Service Successfully",
       "title": "Edit Service"
     },
+    "singular": "Service",
     "title": "Services"
   },
   "setting": {
@@ -398,7 +404,8 @@
     "add": {
       "success": "Add SSL Successfully",
       "title": "Add SSL"
-    }
+    },
+    "singular": "SSL"
   },
   "streamRoutes": {
     "add": {
@@ -412,6 +419,7 @@
       "success": "Edit Stream Route Successfully",
       "title": "Edit Stream Route"
     },
+    "singular": "Stream Route",
     "title": "Stream Routes"
   },
   "upstreams": {
@@ -426,6 +434,7 @@
       "success": "Edit Upstream Successfully",
       "title": "Edit Upstream"
     },
+    "singular": "Upstream",
     "title": "Upstreams"
   },
   "view": "View"

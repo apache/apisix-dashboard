@@ -1,4 +1,8 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import PageHeader from '@/components/page/PageHeader';
@@ -15,6 +19,8 @@ import { useEffect } from 'react';
 import { useBoolean } from 'react-use';
 import { Button, Group } from '@mantine/core';
 import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
+import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { API_GLOBAL_RULES } from '@/config/constant';
 
 type Props = {
   readOnly: boolean;
@@ -73,8 +79,10 @@ const GlobalRuleDetailForm = (props: Props) => {
 };
 
 function RouteComponent() {
+  const { id } = useParams({ from: '/global_rules/detail/$id' });
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -83,13 +91,22 @@ function RouteComponent() {
         {...(readOnly && {
           title: t('globalRules.detail.title'),
           extra: (
-            <Button
-              onClick={() => setReadOnly(false)}
-              size="compact-sm"
-              variant="gradient"
-            >
-              {t('form.btn.edit')}
-            </Button>
+            <Group>
+              <Button
+                onClick={() => setReadOnly(false)}
+                size="compact-sm"
+                variant="gradient"
+              >
+                {t('form.btn.edit')}
+              </Button>
+              <DeleteResourceBtn
+                mode="detail"
+                resource={t('globalRules.singular')}
+                target={id}
+                api={`${API_GLOBAL_RULES}/${id}`}
+                onSuccess={() => navigate({ to: '/global_rules' })}
+              />
+            </Group>
           ),
         })}
       />
