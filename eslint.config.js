@@ -7,6 +7,7 @@ import tseslint from 'typescript-eslint'
 import unusedImports from 'eslint-plugin-unused-imports'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import importPlugin from 'eslint-plugin-import';
+import headers from "eslint-plugin-headers";
 
 export default tseslint.config(
   { ignores: ['dist', 'src/routeTree.gen.ts'] },
@@ -14,7 +15,7 @@ export default tseslint.config(
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 'latest',
+      ecmaVersion: 2020,
       globals: globals.browser,
       sourceType: 'module'
     },
@@ -25,6 +26,7 @@ export default tseslint.config(
       "unused-imports": unusedImports,
       "simple-import-sort": simpleImportSort,
       "import": importPlugin,
+      "headers": headers,
     },
     settings: {
       react: {
@@ -79,7 +81,14 @@ export default tseslint.config(
       "react/self-closing-comp": ["error", {
         "component": true,
         "html": true
-      }]
+      }],
+      "headers/header-format": [
+        "error",
+        {
+          "source": "file",
+          "path": ".actions/ASFLicenseHeader.txt"
+        }
+      ]
     },
   },
 )
