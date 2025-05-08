@@ -113,12 +113,6 @@
       "vars": "Vars"
     },
     "search": "Search",
-    "services": {
-      "enableWebsocket": "Enable WebSocket",
-      "hosts": "Hosts",
-      "script": "Script",
-      "settings": "Service Settings"
-    },
     "secrets": {
       "aws": {
         "access_key_id": "Access Key ID",
@@ -132,12 +126,12 @@
         "auth_config": "Auth Configuration",
         "auth_file": "Auth File",
         "client_email": "Client Email",
+        "entries_uri": "Entries URI",
         "private_key": "Private Key",
         "project_id": "Project ID",
-        "token_uri": "Token URI",
         "scope": "Scope",
-        "entries_uri": "Entries URI",
-        "ssl_verify": "SSL Verify"
+        "ssl_verify": "SSL Verify",
+        "token_uri": "Token URI"
       },
       "manager": "Secret Manager",
       "managerConfig": "Manager Configuration",
@@ -148,6 +142,12 @@
         "token": "Token",
         "uri": "URI"
       }
+    },
+    "services": {
+      "enableWebsocket": "Enable WebSocket",
+      "hosts": "Hosts",
+      "script": "Script",
+      "settings": "Service Settings"
     },
     "ssls": {
       "cert": "Certificate",
@@ -369,8 +369,8 @@
       "success": "Delete Plugin Metadata of {{name}} Successfully"
     },
     "search": "Search Plugin Metadata",
-    "title": "Plugin Metadata",
     "singular": "Plugin Metadata",
+    "title": "Plugin Metadata",
     "update": {
       "success": "Update Plugin Metadata of {{name}} Successfully"
     }
@@ -421,7 +421,8 @@
     "edit": {
       "success": "Edit Secret Successfully",
       "title": "Edit Secret"
-    }
+    },
+    "singular": "Secret"
   },
   "services": {
     "add": {
@@ -447,14 +448,14 @@
       "success": "Add SSL Successfully",
       "title": "Add SSL"
     },
-    "singular": "SSL",
     "detail": {
       "title": "SSL Detail"
     },
     "edit": {
       "success": "Edit SSL Successfully",
       "title": "Edit SSL"
-    }
+    },
+    "singular": "SSL"
   },
   "streamRoutes": {
     "add": {

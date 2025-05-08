@@ -69,25 +69,23 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
 
   return (
     <FormProvider {...form}>
-      <FormTOCBox>
-        <form
-          onSubmit={form.handleSubmit((d) =>
-            putProto.mutateAsync(pipeProduce()(d))
-          )}
-        >
-          <FormSectionGeneral />
-          <FormPartProto allowUpload={!readOnly} />
-          {!readOnly && (
-            <Group>
-              <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-              <Button variant="outline" onClick={() => setReadOnly(true)}>
-                {t('form.btn.cancel')}
-              </Button>
-            </Group>
-          )}
-          <DevTool control={form.control} />
-        </form>
-      </FormTOCBox>
+      <form
+        onSubmit={form.handleSubmit((d) =>
+          putProto.mutateAsync(pipeProduce()(d))
+        )}
+      >
+        <FormSectionGeneral />
+        <FormPartProto allowUpload={!readOnly} />
+        {!readOnly && (
+          <Group>
+            <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
+            <Button variant="outline" onClick={() => setReadOnly(true)}>
+              {t('form.btn.cancel')}
+            </Button>
+          </Group>
+        )}
+        <DevTool control={form.control} />
+      </form>
     </FormProvider>
   );
 };
