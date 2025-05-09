@@ -19,7 +19,7 @@ The Apache APISIX Dashboard is designed to make it as easy as possible for users
 
 Pull requests are encouraged and always welcome. [Pick an issue](https://github.com/apache/apisix-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) and help us out!
 
-Please refer to the [Development Guide](./docs/en/latest/development.md).
+Please refer to the [Development Guide](./docs/en/development.md).
 
 ## Contributing
 
