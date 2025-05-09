@@ -9,6 +9,23 @@ header:
     - '**/*.md'
     - 'LICENSE'
     - 'NOTICE'
+    - '**/*.css'
+    - '**/*.html'
+    - '**/*.json'
+    - '**/*.toml'
+    - '**/*.yaml'
+    - 'src/assets/**'
+    - '.actions/**'
+    - '.devcontainer/**'
+    - '.github/**'
+    - '.husky/**'
+    - '.vscode/**'
+    - '.dockerignore'
+    - '.gitignore'
+    - '.gitmodules'
+    - '.yamllint'
+    - 'eslint.config.js'
+    - 'src/routeTree.gen.ts'
 
   comment: on-failure
 
