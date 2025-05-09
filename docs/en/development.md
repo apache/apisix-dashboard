@@ -2,7 +2,7 @@
 title: Development
 ---
 
-Currently, APISIX Dashboard is a frontend project that only supports CSR SPA. For easier development, it is recommended to use `VS Code` and the `Dev Containers` extension. This document uses this approach as an example.
+Currently, APISIX Dashboard is a SPA that only supports CSR. For easier development, it is recommended to use `VS Code` and the `Dev Containers` extension. This document uses this approach as an example.
 
 We also welcome contributions to the documentation, including guides for your preferred development workflows.
 
