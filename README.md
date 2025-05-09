@@ -10,6 +10,7 @@
 </p>
 
 - The master version should be used with Apache APISIX master version.
+- The project will not be released independently but will use a fixed git tag for each APISIX release.
 
 ## What's Apache APISIX Dashboard
 
