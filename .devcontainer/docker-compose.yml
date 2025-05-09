@@ -1,0 +1,52 @@
+services:
+  apisix-dashboard:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    command: sleep infinity
+    volumes:
+      - ..:/workspace:cached
+    networks:
+      - apisix
+    ports:
+      - '5173:5173'
+      - '5174:5174'
+
+  apisix:
+    image: 'apache/apisix:3.12.0-debian'
+    restart: always
+    volumes:
+      - ./apisix_conf.yml:/usr/local/apisix/conf/config.yaml:ro
+    depends_on:
+      - etcd
+    ports:
+      - '9180:9180/tcp'
+      - '9080:9080/tcp'
+      - '9091:9091/tcp'
+      - '9443:9443/tcp'
+    networks:
+      - apisix
+
+  etcd:
+    image: bitnami/etcd:3.4.9
+    user: root
+    restart: always
+    volumes:
+      - etcd_data:/etcd_data
+    environment:
+      ETCD_DATA_DIR: /etcd_data
+      ETCD_ENABLE_V2: 'true'
+      ALLOW_NONE_AUTHENTICATION: 'yes'
+      ETCD_ADVERTISE_CLIENT_URLS: 'http://etcd:2379'
+      ETCD_LISTEN_CLIENT_URLS: 'http://0.0.0.0:2379'
+    ports:
+      - '2379:2379/tcp'
+    networks:
+      - apisix
+
+networks:
+  apisix:
+    driver: bridge
+
+volumes:
+  etcd_data:

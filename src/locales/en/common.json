@@ -1,0 +1,491 @@
+{
+  "APISIX Dashboard": "APISIX Dashboard",
+  "actions": "Actions",
+  "consumerGroups": {
+    "add": {
+      "success": "Add Consumer Group Successfully",
+      "title": "Add Consumer Group"
+    },
+    "detail": {
+      "title": "Consumer Group Detail"
+    },
+    "edit": {
+      "success": "Edit Consumer Group Successfully",
+      "title": "Edit Consumer Group"
+    },
+    "singular": "Consumer Group"
+  },
+  "consumers": {
+    "add": {
+      "success": "Add Consumer Successfully",
+      "title": "Add Consumer"
+    },
+    "credentials": {
+      "add": {
+        "success": "Add Credential Successfully",
+        "title": "Add Credential"
+      },
+      "detail": {
+        "title": "Credential Detail"
+      },
+      "edit": {
+        "success": "Edit Credential Successfully",
+        "title": "Edit Credential"
+      },
+      "singular": "Credential",
+      "title": "Credentials"
+    },
+    "detail": {
+      "title": "Consumer Detail"
+    },
+    "edit": {
+      "success": "Edit Consumer Successfully",
+      "title": "Edit Consumer"
+    },
+    "singular": "Consumer",
+    "title": "Consumers",
+    "username": "Username"
+  },
+  "disabled": "Disabled",
+  "enabled": "Enabled",
+  "form": {
+    "basic": {
+      "desc": "Description",
+      "labels": {
+        "errorFormat": "The format of label is wrong, it should be `key:value`",
+        "key": "Key",
+        "placeholder": "Input text like `key:value`, then enter or blur",
+        "title": "Labels",
+        "value": "Value"
+      },
+      "name": "Name",
+      "status": "Status",
+      "title": "Basic Infomation"
+    },
+    "btn": {
+      "add": "Add",
+      "addARow": "Add a row",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "save": "Save",
+      "upload": "Upload",
+      "view": "View"
+    },
+    "consumer": {
+      "details": "Consumer Details",
+      "groupId": "Group ID"
+    },
+    "disabled": "Disabled, click switch to enable",
+    "general": {
+      "title": "General"
+    },
+    "info": {
+      "create_time": "Created At",
+      "id": "ID",
+      "title": "Information",
+      "update_time": "Updated At"
+    },
+    "plugins": {
+      "addPlugin": "Add Plugin",
+      "configId": "Plugin Config ID",
+      "editPlugin": "Edit Plugin",
+      "label": "Plugins",
+      "searchForSelectedPlugins": "Search for Selected Plugins",
+      "selectPlugins": {
+        "title": "Select Plugins"
+      },
+      "viewPlugin": "View Plugin"
+    },
+    "route": {
+      "enableWebsocket": "Enable WebSocket",
+      "filterFunc": "Filter Func",
+      "host": "Host",
+      "hosts": "Hosts",
+      "matchRules": "Match Rules",
+      "methods": "HTTP Methods",
+      "priority": "Priority",
+      "remoteAddr": "Remote Address",
+      "remoteAddrs": "Remote Addresses",
+      "service": "Service",
+      "uri": "URI",
+      "uris": "URIs",
+      "vars": "Vars"
+    },
+    "search": "Search",
+    "secrets": {
+      "aws": {
+        "access_key_id": "Access Key ID",
+        "endpoint_url": "Endpoint URL",
+        "region": "Region",
+        "secret_access_key": "Secret Access Key",
+        "session_token": "Session Token"
+      },
+      "gcp": {
+        "auth": "Auth",
+        "auth_config": "Auth Configuration",
+        "auth_file": "Auth File",
+        "client_email": "Client Email",
+        "entries_uri": "Entries URI",
+        "private_key": "Private Key",
+        "project_id": "Project ID",
+        "scope": "Scope",
+        "ssl_verify": "SSL Verify",
+        "token_uri": "Token URI"
+      },
+      "manager": "Secret Manager",
+      "managerConfig": "Manager Configuration",
+      "title": "Secret Configuration",
+      "vault": {
+        "namespace": "Namespace",
+        "prefix": "Prefix",
+        "token": "Token",
+        "uri": "URI"
+      }
+    },
+    "services": {
+      "enableWebsocket": "Enable WebSocket",
+      "hosts": "Hosts",
+      "script": "Script",
+      "settings": "Service Settings"
+    },
+    "ssls": {
+      "cert": "Certificate",
+      "cert_key_list": {
+        "add": "Add a pair",
+        "delete": "Delete the pair",
+        "title": "Certificate and Key Pairs"
+      },
+      "client": {
+        "ca": "Client CA Certificate",
+        "depth": "Verification Depth",
+        "skipMtlsUriRegex": "Skip mTLS URI Regex",
+        "title": "Client"
+      },
+      "key": "Private Key",
+      "sni": "SNI",
+      "snis": "SNIs",
+      "ssl_protocols": "SSL Protocols",
+      "type": "Certificate Type"
+    },
+    "streamRoute": {
+      "protocol": {
+        "conf": "Conf",
+        "logger": "Logger",
+        "name": "Protocol Name",
+        "superiorId": "Superior ID",
+        "title": "Protocol Information"
+      },
+      "remoteAddr": "Remote Address",
+      "server": "Server",
+      "serverAddr": "Server Address",
+      "serverPort": "Server Port",
+      "sni": "SNI"
+    },
+    "tagsInput": {
+      "placeholder": "Input text, then enter or blur"
+    },
+    "upload": {
+      "fileOverSize": "file size is too large",
+      "readError": "file read error:"
+    },
+    "upstream": {
+      "checks": {
+        "active": {
+          "concurrency": "Concurrency",
+          "healthy": {
+            "http_statuses": "HTTP Statuses",
+            "interval": "Interval",
+            "successes": "Successes",
+            "title": "Healthy"
+          },
+          "host": "Host",
+          "http_path": "HTTP Path",
+          "http_request_headers": "HTTP Request Headers",
+          "https_verify_certificate": "Https Verify Certificate",
+          "port": "Port",
+          "timeout": "Timeout",
+          "title": "Active",
+          "type": "Type",
+          "unhealthy": {
+            "http_failures": "HTTP Failures",
+            "http_statuses": "HTTP Statuses",
+            "interval": "Interval",
+            "tcp_failures": "TCP Failures",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          }
+        },
+        "passive": {
+          "healthy": {
+            "http_statuses": "HTTP Statuses",
+            "successes": "Successes",
+            "title": "Healthy"
+          },
+          "title": "Passive",
+          "type": "Type",
+          "unhealthy": {
+            "http_failures": "HTTP Failures",
+            "http_statuses": "HTTP Statuses",
+            "tcp_failures": "TCP Failures",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          }
+        },
+        "title": "Health Checks"
+      },
+      "connectionConfiguration": "Connection Configuration",
+      "discoveryArgs": {
+        "title": "Discovery Args"
+      },
+      "discoveryType": {
+        "title": "Discovery Type"
+      },
+      "findUpstreamFrom": "Find Upstream From",
+      "hashOn": "Hash On",
+      "hashOnDesc": "This will be valid when `type` is `chash`",
+      "identifier": "Upstream Identifier",
+      "inline": "Inline Upstream Configuration",
+      "keepalivePool": {
+        "idleTimeout": "IDLE Timeout",
+        "requests": "Requests",
+        "size": "Size",
+        "title": "Keepalive Pool"
+      },
+      "key": "Key",
+      "keyDesc": "This will be valid when `type` is `chash`",
+      "loadBalancing": "Load Balancing",
+      "nodes": {
+        "action": {
+          "title": "Action"
+        },
+        "add": "Add a Node",
+        "host": {
+          "title": "Host"
+        },
+        "port": {
+          "title": "Port"
+        },
+        "priority": {
+          "title": "Priority"
+        },
+        "title": "Nodes",
+        "weight": {
+          "title": "Weight"
+        }
+      },
+      "passHost": "Pass Host",
+      "retries": "Retries",
+      "retry": "Retry",
+      "retryTimeout": "Retry timeout",
+      "scheme": "Scheme",
+      "serviceDiscovery": {
+        "serviceName": "Service Name",
+        "title": "Service Discovery"
+      },
+      "serviceId": "Service ID",
+      "serviceName": {
+        "title": "Service Name"
+      },
+      "timeout": {
+        "connect": "Connect",
+        "read": "Read",
+        "send": "Send",
+        "title": "Timeout"
+      },
+      "title": "Upstream",
+      "tls": {
+        "clientCert": "Client Cert",
+        "clientCertId": "Client Cert ID",
+        "clientKey": "Client Key",
+        "title": "TLS",
+        "verify": "Verify"
+      },
+      "type": "Type",
+      "updateTime": "Update Time",
+      "upstreamHost": "Upstream Host",
+      "upstreamHostDesc": "Set this when `pass_host` is `rewrite`",
+      "upstreamId": "Upstream ID"
+    }
+  },
+  "globalRules": {
+    "add": {
+      "success": "Add Global Rule Successfully",
+      "title": "Add Global Rule"
+    },
+    "detail": {
+      "title": "Global Rule Detail"
+    },
+    "edit": {
+      "success": "Edit Global Rule Successfully",
+      "title": "Edit Global Rule"
+    },
+    "plugins": "Plugins",
+    "singular": "Global Rule",
+    "title": "Global Rules"
+  },
+  "mark": {
+    "question": "?"
+  },
+  "msg": {
+    "delete": {
+      "content": "Do you want to delete the {{name}}",
+      "success": "Delete {{name}} Successfully",
+      "title": "Delete {{name}}"
+    }
+  },
+  "navbar": {
+    "consumerGroups": "Consumer Groups",
+    "consumers": "Consumers",
+    "globalRules": "Global Rules",
+    "pluginConfigs": "Plugin Configs",
+    "pluginMetadata": "Plugin Metadata",
+    "protos": "Protos",
+    "routes": "Routes",
+    "secrets": "Secrets",
+    "services": "Services",
+    "ssls": "SSLs",
+    "streamRoutes": "Stream Routes",
+    "upstreams": "Upstreams"
+  },
+  "noData": "No Data",
+  "or": "OR",
+  "pluginConfigs": {
+    "add": {
+      "success": "Add Plugin Config Successfully",
+      "title": "Add Plugin Config"
+    },
+    "detail": {
+      "title": "Plugin Config Detail"
+    },
+    "edit": {
+      "success": "Edit Plugin Config Successfully",
+      "title": "Edit Plugin Config"
+    },
+    "singular": "Plugin Config"
+  },
+  "pluginMetadata": {
+    "delete": {
+      "success": "Delete Plugin Metadata of {{name}} Successfully"
+    },
+    "search": "Search Plugin Metadata",
+    "singular": "Plugin Metadata",
+    "title": "Plugin Metadata",
+    "update": {
+      "success": "Update Plugin Metadata of {{name}} Successfully"
+    }
+  },
+  "protos": {
+    "add": {
+      "success": "Add Proto Successfully",
+      "title": "Add Proto"
+    },
+    "detail": {
+      "title": "Proto Detail"
+    },
+    "edit": {
+      "success": "Edit Proto Successfully",
+      "title": "Edit Proto"
+    },
+    "form": {
+      "content": "Content",
+      "contentPlaceholder": "Paste or upload .proto, .pb file"
+    },
+    "singular": "Proto",
+    "title": "Protos"
+  },
+  "route": {
+    "add": {
+      "success": "Add Route Successfully",
+      "title": "Add Route"
+    },
+    "detail": {
+      "title": "Route Detail"
+    },
+    "edit": {
+      "success": "Edit Route Successfully",
+      "title": "Edit Route"
+    },
+    "singular": "Route",
+    "title": "Routes"
+  },
+  "seconds": "Seconds",
+  "secrets": {
+    "add": {
+      "success": "Add Secret Successfully",
+      "title": "Add Secret"
+    },
+    "detail": {
+      "title": "Secret Detail"
+    },
+    "edit": {
+      "success": "Edit Secret Successfully",
+      "title": "Edit Secret"
+    },
+    "singular": "Secret"
+  },
+  "services": {
+    "add": {
+      "success": "Add Service Successfully",
+      "title": "Add Service"
+    },
+    "detail": {
+      "title": "Service Detail"
+    },
+    "edit": {
+      "success": "Edit Service Successfully",
+      "title": "Edit Service"
+    },
+    "singular": "Service",
+    "title": "Services"
+  },
+  "settings": {
+    "adminKey": "Admin Key",
+    "title": "Settings"
+  },
+  "ssls": {
+    "add": {
+      "success": "Add SSL Successfully",
+      "title": "Add SSL"
+    },
+    "detail": {
+      "title": "SSL Detail"
+    },
+    "edit": {
+      "success": "Edit SSL Successfully",
+      "title": "Edit SSL"
+    },
+    "singular": "SSL"
+  },
+  "streamRoutes": {
+    "add": {
+      "success": "Add Stream Route Successfully",
+      "title": "Add Stream Route"
+    },
+    "detail": {
+      "title": "Stream Route Detail"
+    },
+    "edit": {
+      "success": "Edit Stream Route Successfully",
+      "title": "Edit Stream Route"
+    },
+    "singular": "Stream Route",
+    "title": "Stream Routes"
+  },
+  "upstreams": {
+    "add": {
+      "success": "Add Upstream Successfully",
+      "title": "Add Upstream"
+    },
+    "detail": {
+      "title": "Upstream Detail"
+    },
+    "edit": {
+      "success": "Edit Upstream Successfully",
+      "title": "Edit Upstream"
+    },
+    "singular": "Upstream",
+    "title": "Upstreams"
+  },
+  "view": "View"
+}

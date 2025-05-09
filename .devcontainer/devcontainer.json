@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/refs/heads/main/schemas/devContainer.base.schema.json",
+  "name": "APISIX Dashboard Dev Environment",
+  "dockerComposeFile": [
+    "./docker-compose.yml"
+  ],
+  "service": "apisix-dashboard",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "pnpm i && echo '\nUse `pnpm dev` to continue'",
+  "forwardPorts": [
+    9080,
+    9180,
+    9100,
+    9200,
+    5173,
+    5174,
+    4173
+  ],
+  "portsAttributes": {
+    "5173": {
+      "label": "APISIX Dashboard",
+      "onAutoForward": "ignore"
+    },
+    "5174": {
+      "label": "APISIX Dashboard HMR WS",
+      "onAutoForward": "silent"
+    },
+    "9180": {
+      "label": "APISIX Admin API Port",
+      "onAutoForward": "notify"
+    },
+    "9100": {
+      "label": "APISIX Stream Proxy TCP Port",
+      "onAutoForward": "silent"
+    },
+    "9200": {
+      "label": "APISIX Stream Proxy UDP Port",
+      "onAutoForward": "silent"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vunguyentuan.vscode-css-variables",
+        "dbaeumer.vscode-eslint",
+        "drKnoxy.eslint-disable-snippets",
+        "esbenp.prettier-vscode",
+        "christian-kohler.path-intellisense",
+        "lokalise.i18n-ally",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "github.vscode-pull-request-github"
+      ]
+    }
+  }
+}

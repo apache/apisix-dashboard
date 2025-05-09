@@ -1,73 +1,26 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-**/node_modules
-# roadhog-api-doc ignore
-/src/utils/request-temp.js
-_roadhog-api-doc
-
-# production
-dist
-
-# misc
-.DS_Store
-npm-debug.log*
-yarn-error.log
-
-/coverage
-.idea
-package-lock.json
-*bak
-
-# visual studio code
-.history
+# Logs
+logs
 *.log
-functions/*
-.temp/**
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# umi
-.umi
-.umi-production
+node_modules
+dist
+dist-ssr
+*.local
 
-# screenshot
-screenshot
-.firebase
-.eslintcache
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-build
-
-/compose/**/*.log
-/compose/**/nginx.pid
-/compose/etcd_data
-manager-api
-grpc-server-example/
-api/test/docker/*tar.gz*
-
-output
-apisix_logs
-default.etcd
-api/build-tools/apisix
-/*.zip
-.githash
-.backup.yaml
-Dockerfile-apisix
-
-# backend unit test output
-api/coverage.txt
-api/coverage.html
-api/dag-to-lua/
-
-# frontend e2e test output
-web/.nyc_output
-web/coverage
-web/cypress/screenshots/
-web/cypress/videos/
-web/cypress/downloads/
-web/public/monaco-editor/
-
-# vim
-*.swp
-*.swo
-
-# .env
-.env*
+/.pnpm-store

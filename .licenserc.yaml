@@ -1,0 +1,34 @@
+header:
+  license:
+    spdx-id: Apache-2.0
+    copyright-owner: Apache Software Foundation
+
+  paths-ignore:
+    - 'dist'
+    - 'licenses'
+    - '**/*.md'
+    - 'LICENSE'
+    - 'NOTICE'
+    - '**/*.css'
+    - '**/*.html'
+    - '**/*.json'
+    - '**/*.toml'
+    - '**/*.yaml'
+    - 'src/assets/**'
+    - '.actions/**'
+    - '.devcontainer/**'
+    - '.github/**'
+    - '.husky/**'
+    - '.vscode/**'
+    - '.dockerignore'
+    - '.gitignore'
+    - '.gitmodules'
+    - '.yamllint'
+    - 'eslint.config.js'
+    - 'src/routeTree.gen.ts'
+
+  comment: on-failure
+
+dependency:
+  files:
+    - package.json

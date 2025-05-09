@@ -15,6 +15,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: run license check
-        run: |
-          make license-check
+      - name: Check License Header
+        uses: apache/skywalking-eyes/header@4f4281f13ebf854ebf514c1d5c3ea6797ae7e234
