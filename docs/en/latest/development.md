@@ -10,7 +10,7 @@ We also welcome contributions to the documentation, including guides for your pr
 
 Please install `VS Code` and follow [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers) to set up your environment.
 
-`git`, `node`, `pnpm`, as well as `apisix` and `etcd` are all provided in the [`.devcontainer`](/.devcontainer) configuration.
+`git`, `node`, `pnpm`, as well as `apisix` and `etcd` are all provided in the [`.devcontainer`](../../../.devcontainer) configuration.
 
 ## Clone then open the project
 
