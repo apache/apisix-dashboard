@@ -2,13 +2,15 @@
 title: Development
 ---
 
-目前 APISIX Dashboard 是一个仅支持 CSR SPA 的前端项目，为了便于开发，推荐使用 `VS Code` 和 `Dev Containers` 插件，本文档也以此为例。
+Currently, APISIX Dashboard is a frontend project that only supports CSR SPA. For easier development, it is recommended to use `VS Code` and the `Dev Containers` extension. This document uses this approach as an example.
 
-同时也欢迎贡献文档，提供你喜欢的其他开发方式。
+We also welcome contributions to the documentation, including guides for your preferred development workflows.
 
 ## Prerequisites
 
-请安装 `VS Code`, 并参考 [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers) 准备环境。
+Please install `VS Code` and follow [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers) to set up your environment.
+
+`git`, `node`, `pnpm`, as well as `apisix` and `etcd` are all provided in the [`.devcontainer`](/.devcontainer) configuration.
 
 ## Clone then open the project
 
@@ -20,15 +22,30 @@ $ code .
 
 ## Start developing
 
-一般来说，`VS Code` 会在打开项目后，在 *右下角* 弹出提示框，请点击 `Reopen in Container`
+### 1. Reopen in Container
+
+Generally, after opening the project in `VS Code`, a prompt will appear in the bottom right corner. Please click `Reopen in Container`.
 
 ![Reopen in Container](./assets/development/reopen-in-container.png)
 
-如果没有提示框，请打开 `Command Palette`，并输入 `reopen`，选择 `Dev Containers: Reopen in Container`。
+If there is no prompt, open the `Command Palette`, type `reopen`, and select `Dev Containers: Reopen in Container`.
 
-![Select `Dev Containers: Reopen in Container` in `Command Palette`](./assets/development/command-reopen-in-container.png)
+![Click `Dev Containers: Reopen in Container` in `Command Palette`](./assets/development/command-reopen-in-container.png)
 
+### 2. Wait for the environment to be ready
 
+After clicking, it will take some time for the environment to be built, depending on your network conditions. 
 
+Once the environment is ready, similar information will be displayed in the `TERMINAL` tab.
 
+![Environment is Ready](./assets/development/env-is-ready.png)
 
+### 3. Develop
+
+Open a new Terminal and execute:
+
+```sh
+pnpm dev
+```
+
+You can then modify the code and preview the updated page in the browser in real-time.
