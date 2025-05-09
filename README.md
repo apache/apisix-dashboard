@@ -1,54 +1,30 @@
-# React + TypeScript + Vite
+# Apache APISIX Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
+[![Slack](https://badgen.net/badge/Slack/Join%20Apache%20APISIX?icon=slack)](https://apisix.apache.org/slack)
 
-Currently, two official plugins are available:
+<p align="center">
+  <a href="https://apisix.apache.org/">Website</a> •
+  <a href="https://github.com/apache/apisix/tree/master/docs">Docs</a> •
+  <a href="https://twitter.com/apacheapisix">Twitter</a>
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- The master version should be used with Apache APISIX master version.
 
-## Expanding the ESLint configuration
+## What's Apache APISIX Dashboard
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a frontend interface.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Development
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Pull requests are encouraged and always welcome. [Pick an issue](https://github.com/apache/apisix-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) and help us out!
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Please refer to the [Development Guide](./docs/en/latest/development.md).
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Contributing
+
+Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed information.
+
+## License
+
+[Apache License 2.0](./LICENSE)

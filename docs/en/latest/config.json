@@ -1,0 +1,17 @@
+{
+  "version": "3.0.0",
+  "sidebar": [
+    {
+      "type": "category",
+      "label": "Contributing",
+      "items": [
+        "development"
+      ]
+    },
+    {
+      "type": "link",
+      "label": "CHANGELOG",
+      "href": "https://github.com/apache/apisix-dashboard/blob/master/CHANGELOG.md"
+    }
+  ]
+}
