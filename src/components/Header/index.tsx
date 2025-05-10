@@ -24,7 +24,7 @@ import { LanguageMenu } from './LanguageMenu';
 import { SettingModalBtn } from './SettingModalBtn';
 
 const Logo = () => {
-  return <Image src={apisixLogo} alt="APISIX Logo" width={24} height={24} />;
+  return <Image src={apisixLogo} alt="APISIX Logo" w={24} h={24} fit="fill" />;
 };
 
 type HeaderProps = {

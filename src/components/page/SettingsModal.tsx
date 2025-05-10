@@ -14,11 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Modal, TextInput } from '@mantine/core';
+import { Divider, InputWrapper, Modal, Text, TextInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import { queryClient } from '@/config/global';
 import { globalStore } from '@/stores/global';
+import { sha } from '~build/git';
+
+const AdminKey = () => {
+  const { t } = useTranslation();
+  return (
+    <TextInput
+      label={t('settings.adminKey')}
+      value={globalStore.settings.adminKey}
+      onChange={(e) => {
+        globalStore.settings.set('adminKey', e.currentTarget.value);
+        setTimeout(() => {
+          queryClient.invalidateQueries();
+          queryClient.refetchQueries();
+        });
+      }}
+      required
+    />
+  );
+};
+
+const UICommitSha = () => {
+  const { t } = useTranslation();
+  return (
+    <InputWrapper label={t('settings.ui-commit-sha')}>
+      <Text c="gray.6" size="sm">
+        {sha}
+      </Text>
+    </InputWrapper>
+  );
+};
 
 export const SettingsModal = () => {
   const { t } = useTranslation();
@@ -30,18 +60,9 @@ export const SettingsModal = () => {
       centered
       title={t('settings.title')}
     >
-      <TextInput
-        label={t('settings.adminKey')}
-        value={globalStore.settings.adminKey}
-        onChange={(e) => {
-          globalStore.settings.set('adminKey', e.currentTarget.value);
-          setTimeout(() => {
-            queryClient.invalidateQueries();
-            queryClient.refetchQueries();
-          });
-        }}
-        required
-      />
+      <AdminKey />
+      <Divider my="lg" />
+      <UICommitSha />
     </Modal>
   );
 };

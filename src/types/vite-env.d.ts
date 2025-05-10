@@ -15,3 +15,4 @@
  * limitations under the License.
  */
 /// <reference types="vite/client" />
+/// <reference types="unplugin-info/client" />
