@@ -74,6 +74,7 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.32.0",
     "unplugin-icons": "^22.1.0",
+    "unplugin-info": "^1.2.2",
     "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4"
   },

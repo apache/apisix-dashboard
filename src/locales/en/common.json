@@ -441,7 +441,8 @@
   },
   "settings": {
     "adminKey": "Admin Key",
-    "title": "Settings"
+    "title": "Settings",
+    "ui-commit-sha": "UI Commit SHA"
   },
   "ssls": {
     "add": {
