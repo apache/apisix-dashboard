@@ -14,10 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button, type ButtonProps } from '@mantine/core';
+import {
+  Button,
+  type ButtonProps,
+  type PolymorphicComponentProps,
+} from '@mantine/core';
 import { useFormContext, useFormState } from 'react-hook-form';
 
-export const FormSubmitBtn = (props: ButtonProps) => {
+export const FormSubmitBtn = (
+  props: PolymorphicComponentProps<'button', ButtonProps>
+) => {
   const form = useFormContext();
   const { isSubmitting } = useFormState(form);
   return <Button type="submit" loading={isSubmitting} {...props} />;

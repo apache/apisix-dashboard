@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 import { Drawer, Group, Title } from '@mantine/core';
-import { observer } from 'mobx-react-lite';
 import { isEmpty } from 'rambdax';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -38,7 +37,7 @@ export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
 const toConfigStr = (p: object): string => {
   return !isEmpty(p) ? JSON.stringify(p, null, 2) : '{}';
 };
-const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
+export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
   const { opened, onSave, onClose, plugin, mode, schema } = props;
   const { name, config } = plugin;
   const { t } = useTranslation();
@@ -99,5 +98,3 @@ const PluginEditorDrawerCore = (props: PluginEditorDrawerProps) => {
     </Drawer>
   );
 };
-
-export const PluginEditorDrawer = observer(PluginEditorDrawerCore);

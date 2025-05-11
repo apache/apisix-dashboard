@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 import { Button, Drawer } from '@mantine/core';
-import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -36,7 +35,7 @@ export type SelectPluginsDrawerProps = Pick<PluginCardListProps, 'plugins'> &
 /**
  * because we need keep the drawer order when using the Drawer.Stack, so we pass disabled to the btn
  */
-export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
+export const SelectPluginsDrawer = (props: SelectPluginsDrawerProps) => {
   const { plugins, onAdd, opened, setOpened, disabled = false } = props;
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
@@ -74,5 +73,3 @@ export const SelectPluginsDrawerCore = (props: SelectPluginsDrawerProps) => {
     </>
   );
 };
-
-export const SelectPluginsDrawer = observer(SelectPluginsDrawerCore);

@@ -22,7 +22,7 @@ import {
 } from '@mantine/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { toJS } from 'mobx';
-import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useLocalObservable } from 'mobx-react-lite';
 import { difference } from 'rambdax';
 import { useEffect, useMemo } from 'react';
 import {
@@ -42,7 +42,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 
 import type { PluginCardProps } from './PluginCard';
 import { PluginCardList, PluginCardListSearch } from './PluginCardList';
-import { type PluginConfig,PluginEditorDrawer } from './PluginEditorDrawer';
+import { type PluginConfig, PluginEditorDrawer } from './PluginEditorDrawer';
 import { SelectPluginsDrawer } from './SelectPluginsDrawer';
 
 export type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
@@ -50,7 +50,7 @@ export type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
     onChange?: (value: Record<string, unknown>) => void;
   } & Partial<NeedPluginSchema>;
 
-const FormItemPluginsCore = <T extends FieldValues>(
+export const FormItemPlugins = <T extends FieldValues>(
   props: FormItemPluginsProps<T>
 ) => {
   const {
@@ -187,5 +187,3 @@ const FormItemPluginsCore = <T extends FieldValues>(
     </InputWrapper>
   );
 };
-
-export const FormItemPlugins = observer(FormItemPluginsCore);
