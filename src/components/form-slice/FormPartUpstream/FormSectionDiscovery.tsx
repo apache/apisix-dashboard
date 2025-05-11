@@ -29,20 +29,20 @@ export const FormSectionDiscovery = () => {
   const { control } = useFormContext<FormPartUpstreamType>();
   const np = useNamePrefix();
   return (
-    <FormSection legend={t('form.upstream.serviceDiscovery.title')}>
+    <FormSection legend={t('form.upstreams.serviceDiscovery.title')}>
       <FormItemTextInput
         name={np('service_name')}
-        label={t('form.upstream.serviceName.title')}
+        label={t('form.upstreams.serviceName.title')}
         control={control}
       />
       <FormItemTextInput
         name={np('discovery_type')}
-        label={t('form.upstream.discoveryType.title')}
+        label={t('form.upstreams.discoveryType.title')}
         control={control}
       />
       <FormItemJsonInput
         name={np('discovery_args')}
-        label={t('form.upstream.discoveryArgs.title')}
+        label={t('form.upstreams.discoveryArgs.title')}
         control={control}
         toObject
       />

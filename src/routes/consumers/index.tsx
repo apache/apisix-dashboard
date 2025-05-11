@@ -56,7 +56,7 @@ function ConsumersList() {
     return [
       {
         dataIndex: ['value', 'username'],
-        title: t('consumers.username'),
+        title: t('form.consumers.username'),
         key: 'username',
         valueType: 'text',
       },
@@ -78,7 +78,7 @@ function ConsumersList() {
         },
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -127,7 +127,9 @@ function ConsumersList() {
                   <ToAddPageBtn
                     key="add"
                     to="/consumers/add"
-                    label={t('consumers.add.title')}
+                    label={t('info.add.title', {
+                      name: t('consumers.singular'),
+                    })}
                   />
                 ),
               },
@@ -143,7 +145,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('consumers.title')} />
+      <PageHeader title={t('sources.consumers')} />
       <ConsumersList />
     </>
   );

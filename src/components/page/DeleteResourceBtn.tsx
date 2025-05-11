@@ -46,10 +46,10 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
     modals.openConfirmModal({
       centered: true,
       confirmProps: { color: 'red' },
-      title: t('msg.delete.title', { name: name }),
+      title: t('info.delete.title', { name: name }),
       children: (
         <Text>
-          {t('msg.delete.content', { name: name })}
+          {t('info.delete.content', { name: name })}
           {target && (
             <Text
               component="span"
@@ -67,7 +67,7 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
       onConfirm: () =>
         req.delete(api).then((res) => {
           notifications.show({
-            message: t('msg.delete.success', { name: name }),
+            message: t('info.delete.success', { name: name }),
             color: 'green',
           });
           onSuccess?.(res);

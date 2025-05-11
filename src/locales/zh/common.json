@@ -1,11 +1,1 @@
-{
-  "APISIX Dashboard": "APISIX Dashboard",
-  "navbar": {
-    "consumer": "消费者",
-    "globalRules": "插件全局规则",
-    "route": "路由",
-    "secret": "Secret",
-    "service": "服务",
-    "ssl": "SSL"
-  }
-}
+{}

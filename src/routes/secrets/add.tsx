@@ -39,7 +39,7 @@ const SecretAddForm = () => {
     mutationFn: putSecretReq,
     async onSuccess() {
       notifications.show({
-        message: t('secrets.add.success'),
+        message: t('info.add.success', { name: t('secrets.singular') }),
         color: 'green',
       });
       await router.navigate({
@@ -78,7 +78,9 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('secrets.add.title')} />
+      <PageHeader
+        title={t('info.add.title', { name: t('secrets.singular') })}
+      />
       <FormTOCBox>
         <SecretAddForm />
       </FormTOCBox>

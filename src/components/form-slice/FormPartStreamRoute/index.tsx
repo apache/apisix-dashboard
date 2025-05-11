@@ -35,27 +35,27 @@ const FormSectionStreamRouteBasic = () => {
   const { control } = useFormContext<StreamRoutePostType>();
 
   return (
-    <FormSection legend={t('form.streamRoute.server')}>
+    <FormSection legend={t('form.streamRoutes.server')}>
       <FormItemTextInput
         control={control}
         name="server_addr"
-        label={t('form.streamRoute.serverAddr')}
+        label={t('form.streamRoutes.serverAddr')}
       />
       <FormItemNumberInput
         control={control}
         name="server_port"
-        label={t('form.streamRoute.serverPort')}
+        label={t('form.streamRoutes.serverPort')}
         allowDecimal={false}
       />
       <FormItemTextInput
         control={control}
         name="remote_addr"
-        label={t('form.streamRoute.remoteAddr')}
+        label={t('form.streamRoutes.remoteAddr')}
       />
       <FormItemTextInput
         control={control}
         name="sni"
-        label={t('form.streamRoute.sni')}
+        label={t('form.streamRoutes.sni')}
       />
     </FormSection>
   );
@@ -66,26 +66,26 @@ const FormSectionStreamRouteProtocol = () => {
   const { control } = useFormContext<StreamRoutePostType>();
 
   return (
-    <FormSection legend={t('form.streamRoute.protocol.title')}>
+    <FormSection legend={t('form.streamRoutes.protocol.title')}>
       <FormItemTextInput
         control={control}
         name="protocol.name"
-        label={t('form.streamRoute.protocol.name')}
+        label={t('form.streamRoutes.protocol.name')}
       />
       <FormItemTextInput
         control={control}
         name="protocol.superior_id"
-        label={t('form.streamRoute.protocol.superiorId')}
+        label={t('form.streamRoutes.protocol.superiorId')}
       />
       <FormItemJsonInput
         control={control}
         name="protocol.conf"
-        label={t('form.streamRoute.protocol.conf')}
+        label={t('form.streamRoutes.protocol.conf')}
       />
       <FormItemJsonInput
         control={control}
         name="protocol.logger"
-        label={t('form.streamRoute.protocol.logger')}
+        label={t('form.streamRoutes.protocol.logger')}
         toObject
       />
     </FormSection>

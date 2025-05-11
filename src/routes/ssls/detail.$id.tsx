@@ -67,7 +67,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
     mutationFn: putSSLReq,
     async onSuccess() {
       notifications.show({
-        message: t('ssls.edit.success'),
+        message: t('info.edit.success', { name: t('ssls.singular') }),
         color: 'green',
       });
       await refetch();
@@ -118,9 +118,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('ssls.edit.title')}
+        title={t('info.edit.title', { name: t('ssls.singular') })}
         {...(readOnly && {
-          title: t('ssls.detail.title'),
+          title: t('info.detail.title', { name: t('ssls.singular') }),
           extra: (
             <Group>
               <Button

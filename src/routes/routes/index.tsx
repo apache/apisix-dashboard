@@ -74,7 +74,7 @@ const RouteList = () => {
         valueType: 'text',
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -86,7 +86,7 @@ const RouteList = () => {
           />,
           <DeleteResourceBtn
             key="delete"
-            name={t('route.singular')}
+            name={t('routes.singular')}
             target={record.value.id}
             api={`${API_ROUTES}/${record.value.id}`}
             onSuccess={refetch}
@@ -122,7 +122,7 @@ const RouteList = () => {
                 label: (
                   <ToAddPageBtn
                     key="add"
-                    label={t('route.add.title')}
+                    label={t('info.add.title', { name: t('routes.singular') })}
                     to="/routes/add"
                   />
                 ),
@@ -136,12 +136,11 @@ const RouteList = () => {
 };
 
 function RouteComponent() {
+  const { t } = useTranslation();
   return (
     <>
-      <PageHeader title="Routes" />
-      <AntdConfigProvider>
-        <RouteList />
-      </AntdConfigProvider>
+      <PageHeader title={t('sources.routes')} />
+      <RouteList />
     </>
   );
 }

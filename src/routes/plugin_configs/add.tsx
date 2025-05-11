@@ -38,7 +38,7 @@ const PluginConfigAddForm = () => {
     mutationFn: putPluginConfigReq,
     async onSuccess(response) {
       notifications.show({
-        message: t('pluginConfigs.add.success'),
+        message: t('info.add.success', { name: t('pluginConfigs.singular') }),
         color: 'green',
       });
       await router.navigate({
@@ -76,7 +76,9 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('pluginConfigs.add.title')} />
+      <PageHeader
+        title={t('info.add.title', { name: t('pluginConfigs.singular') })}
+      />
       <FormTOCBox>
         <PluginConfigAddForm />
       </FormTOCBox>

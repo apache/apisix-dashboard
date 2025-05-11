@@ -32,11 +32,13 @@ export const DetailCredentialsTabs = () => {
     (): TabsItem[] => [
       {
         value: 'detail',
-        label: t('consumers.detail.title'),
+        label: t('info.detail.title', { name: t('consumers.singular') }),
       },
       {
         value: 'credentials',
-        label: t('consumers.credentials.title'),
+        label: t('info.detail.title', {
+          name: t('credentials.singular'),
+        }),
       },
     ],
     [t]

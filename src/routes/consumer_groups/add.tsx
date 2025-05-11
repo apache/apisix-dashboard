@@ -38,7 +38,7 @@ const ConsumerGroupAddForm = () => {
     mutationFn: putConsumerGroupReq,
     async onSuccess(response) {
       notifications.show({
-        message: t('consumerGroups.add.success'),
+        message: t('info.add.success', { name: t('consumerGroups.singular') }),
         color: 'green',
       });
       await router.navigate({
@@ -79,7 +79,9 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('consumerGroups.add.title')} />
+      <PageHeader
+        title={t('info.add.title', { name: t('consumerGroups.singular') })}
+      />
       <FormTOCBox>
         <ConsumerGroupAddForm />
       </FormTOCBox>

@@ -41,7 +41,7 @@ const FormPartBasicWithPriority = () => {
       <FormItemNumberInput
         control={control}
         name="priority"
-        label={t('form.route.priority')}
+        label={t('form.routes.priority')}
         defaultValue={zGetDefault(APISIX.Route).priority!}
       />
     </FormPartBasic>
@@ -52,56 +52,56 @@ const FormSectionMatchRules = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
-    <FormSection legend={t('form.route.matchRules')}>
+    <FormSection legend={t('form.routes.matchRules')}>
       <FormItemTagsInput
         control={control}
         name="methods"
-        label={t('form.route.methods')}
+        label={t('form.routes.methods')}
         data={APISIX.HttpMethod.options.map((v) => v.value)}
         searchValue=""
       />
-      <InputWrapper label={t('form.route.enableWebsocket')}>
+      <InputWrapper label={t('form.routes.enableWebsocket')}>
         <FormItemSwitch control={control} name="enable_websocket" />
       </InputWrapper>
       <FormItemTextInput
         control={control}
         name="uri"
-        label={t('form.route.uri')}
+        label={t('form.routes.uri')}
       />
       <FormItemTagsInput
         control={control}
         name="uris"
-        label={t('form.route.uris')}
+        label={t('form.routes.uris')}
       />
       <FormItemTextInput
         control={control}
         name="host"
-        label={t('form.route.host')}
+        label={t('form.routes.host')}
       />
       <FormItemTagsInput
         control={control}
         name="hosts"
-        label={t('form.route.hosts')}
+        label={t('form.routes.hosts')}
       />
       <FormItemTextInput
         control={control}
         name="remote_addr"
-        label={t('form.route.remoteAddr')}
+        label={t('form.routes.remoteAddr')}
       />
       <FormItemTagsInput
         control={control}
         name="remote_addrs"
-        label={t('form.route.remoteAddrs')}
+        label={t('form.routes.remoteAddrs')}
       />
       <FormItemTagsInput
         control={control}
         name="vars"
-        label={t('form.route.vars')}
+        label={t('form.routes.vars')}
       />
       <FormItemTextarea
         control={control}
         name="filter_func"
-        label={t('form.route.filterFunc')}
+        label={t('form.routes.filterFunc')}
       />
     </FormSection>
   );
@@ -111,8 +111,8 @@ export const FormSectionUpstream = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
-    <FormSection legend={t('form.upstream.title')}>
-      <FormSection legend={t('form.upstream.upstreamId')}>
+    <FormSection legend={t('form.upstreams.title')}>
+      <FormSection legend={t('form.upstreams.upstreamId')}>
         <FormItemTextInput control={control} name="upstream_id" />
       </FormSection>
       <Divider my="xs" label={t('or')} />
@@ -143,11 +143,11 @@ export const FormSectionService = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
-    <FormSection legend={t('form.route.service')}>
+    <FormSection legend={t('form.routes.service')}>
       <FormItemTextInput
         control={control}
         name="service_id"
-        label={t('form.upstream.serviceId')}
+        label={t('form.upstreams.serviceId')}
       />
     </FormSection>
   );

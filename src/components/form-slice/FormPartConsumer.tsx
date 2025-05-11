@@ -45,7 +45,7 @@ export const FormPartConsumer = () => {
           <FormItemTextInput
             control={control}
             name="username"
-            label={t('consumers.username')}
+            label={t('form.consumers.username')}
             required
           />
         }
@@ -53,7 +53,7 @@ export const FormPartConsumer = () => {
       <FormItemTextInput
         control={control}
         name="group_id"
-        label={t('form.consumer.groupId')}
+        label={t('form.consumers.groupId')}
       />
       <FormSectionPluginsOnly />
     </>

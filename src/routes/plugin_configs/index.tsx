@@ -84,7 +84,7 @@ function PluginConfigsList() {
         },
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -133,7 +133,9 @@ function PluginConfigsList() {
                   <ToAddPageBtn
                     key="add"
                     to="/plugin_configs/add"
-                    label={t('pluginConfigs.add.title')}
+                    label={t('info.add.title', {
+                      name: t('pluginConfigs.singular'),
+                    })}
                   />
                 ),
               },
@@ -149,7 +151,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('navbar.pluginConfigs')} />
+      <PageHeader title={t('sources.pluginConfigs')} />
       <PluginConfigsList />
     </>
   );

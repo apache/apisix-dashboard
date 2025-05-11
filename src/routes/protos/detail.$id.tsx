@@ -64,7 +64,7 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
     mutationFn: putProtoReq,
     async onSuccess() {
       notifications.show({
-        message: t('protos.edit.success'),
+        message: t('info.edit.success', { name: t('protos.singular') }),
         color: 'green',
       });
       await refetch();
@@ -114,9 +114,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('protos.edit.title')}
+        title={t('info.edit.title', { name: t('protos.singular') })}
         {...(readOnly && {
-          title: t('protos.detail.title'),
+          title: t('info.detail.title', { name: t('protos.singular') }),
           extra: (
             <Group>
               <Button

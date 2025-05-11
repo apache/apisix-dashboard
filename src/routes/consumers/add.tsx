@@ -37,7 +37,7 @@ const ConsumerAddForm = () => {
     mutationFn: putConsumerReq,
     async onSuccess(_, res) {
       notifications.show({
-        message: t('consumers.add.success'),
+        message: t('info.add.success', { name: t('consumers.singular') }),
         color: 'green',
       });
       await router.navigate({
@@ -72,7 +72,9 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('consumers.add.title')} />
+      <PageHeader
+        title={t('info.add.title', { name: t('consumers.singular') })}
+      />
       <FormTOCBox>
         <ConsumerAddForm />
       </FormTOCBox>

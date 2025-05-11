@@ -25,7 +25,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('pluginMetadata.title')} />
+      <PageHeader title={t('sources.pluginMetadata')} />
       <PluginMetadata />
     </>
   );

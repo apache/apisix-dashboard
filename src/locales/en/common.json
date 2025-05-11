@@ -1,53 +1,17 @@
 {
-  "APISIX Dashboard": "APISIX Dashboard",
-  "actions": "Actions",
+  "apisix": {
+    "dashboard": "APISIX Dashboard",
+    "logo": "APISIX Logo"
+  },
   "consumerGroups": {
-    "add": {
-      "success": "Add Consumer Group Successfully",
-      "title": "Add Consumer Group"
-    },
-    "detail": {
-      "title": "Consumer Group Detail"
-    },
-    "edit": {
-      "success": "Edit Consumer Group Successfully",
-      "title": "Edit Consumer Group"
-    },
     "singular": "Consumer Group"
   },
   "consumers": {
-    "add": {
-      "success": "Add Consumer Successfully",
-      "title": "Add Consumer"
-    },
-    "credentials": {
-      "add": {
-        "success": "Add Credential Successfully",
-        "title": "Add Credential"
-      },
-      "detail": {
-        "title": "Credential Detail"
-      },
-      "edit": {
-        "success": "Edit Credential Successfully",
-        "title": "Edit Credential"
-      },
-      "singular": "Credential",
-      "title": "Credentials"
-    },
-    "detail": {
-      "title": "Consumer Detail"
-    },
-    "edit": {
-      "success": "Edit Consumer Successfully",
-      "title": "Edit Consumer"
-    },
-    "singular": "Consumer",
-    "title": "Consumers",
-    "username": "Username"
+    "singular": "Consumer"
   },
-  "disabled": "Disabled",
-  "enabled": "Enabled",
+  "credentials": {
+    "singular": "Credential"
+  },
   "form": {
     "basic": {
       "desc": "Description",
@@ -72,9 +36,9 @@
       "upload": "Upload",
       "view": "View"
     },
-    "consumer": {
-      "details": "Consumer Details",
-      "groupId": "Group ID"
+    "consumers": {
+      "groupId": "Group ID",
+      "username": "Username"
     },
     "disabled": "Disabled, click switch to enable",
     "general": {
@@ -97,7 +61,11 @@
       },
       "viewPlugin": "View Plugin"
     },
-    "route": {
+    "protos": {
+      "content": "Content",
+      "contentPlaceholder": "Paste or upload {{fileTypes}} file"
+    },
+    "routes": {
       "enableWebsocket": "Enable WebSocket",
       "filterFunc": "Filter Func",
       "host": "Host",
@@ -168,7 +136,7 @@
       "ssl_protocols": "SSL Protocols",
       "type": "Certificate Type"
     },
-    "streamRoute": {
+    "streamRoutes": {
       "protocol": {
         "conf": "Conf",
         "logger": "Logger",
@@ -189,7 +157,7 @@
       "fileOverSize": "file size is too large",
       "readError": "file read error:"
     },
-    "upstream": {
+    "upstreams": {
       "checks": {
         "active": {
           "concurrency": "Concurrency",
@@ -309,34 +277,61 @@
     }
   },
   "globalRules": {
+    "singular": "Global Rule"
+  },
+  "help-us-translate": "Help Us Translate!",
+  "info": {
     "add": {
-      "success": "Add Global Rule Successfully",
-      "title": "Add Global Rule"
+      "success": "Add {{name}} Successfully",
+      "title": "Add {{name}}"
     },
-    "detail": {
-      "title": "Global Rule Detail"
-    },
-    "edit": {
-      "success": "Edit Global Rule Successfully",
-      "title": "Edit Global Rule"
-    },
-    "plugins": "Plugins",
-    "singular": "Global Rule",
-    "title": "Global Rules"
-  },
-  "mark": {
-    "question": "?"
-  },
-  "msg": {
     "delete": {
       "content": "Do you want to delete the {{name}}",
       "success": "Delete {{name}} Successfully",
       "title": "Delete {{name}}"
+    },
+    "detail": {
+      "title": "{{name}} Detail"
+    },
+    "edit": {
+      "success": "Edit {{name}} Successfully",
+      "title": "Edit {{name}}"
     }
   },
-  "navbar": {
+  "mark": {
+    "question": "?"
+  },
+  "noData": "No Data",
+  "or": "OR",
+  "pluginConfigs": {
+    "singular": "Plugin Config"
+  },
+  "pluginMetadata": {
+    "search": "Search Plugin Metadata",
+    "singular": "Plugin Metadata"
+  },
+  "protos": {
+    "singular": "Proto"
+  },
+  "routes": {
+    "singular": "Route"
+  },
+  "seconds": "Seconds",
+  "secrets": {
+    "singular": "Secret"
+  },
+  "services": {
+    "singular": "Service"
+  },
+  "settings": {
+    "adminKey": "Admin Key",
+    "title": "Settings",
+    "ui-commit-sha": "UI Commit SHA"
+  },
+  "sources": {
     "consumerGroups": "Consumer Groups",
     "consumers": "Consumers",
+    "credentials": "Credentials",
     "globalRules": "Global Rules",
     "pluginConfigs": "Plugin Configs",
     "pluginMetadata": "Plugin Metadata",
@@ -348,145 +343,18 @@
     "streamRoutes": "Stream Routes",
     "upstreams": "Upstreams"
   },
-  "noData": "No Data",
-  "or": "OR",
-  "pluginConfigs": {
-    "add": {
-      "success": "Add Plugin Config Successfully",
-      "title": "Add Plugin Config"
-    },
-    "detail": {
-      "title": "Plugin Config Detail"
-    },
-    "edit": {
-      "success": "Edit Plugin Config Successfully",
-      "title": "Edit Plugin Config"
-    },
-    "singular": "Plugin Config"
-  },
-  "pluginMetadata": {
-    "delete": {
-      "success": "Delete Plugin Metadata of {{name}} Successfully"
-    },
-    "search": "Search Plugin Metadata",
-    "singular": "Plugin Metadata",
-    "title": "Plugin Metadata",
-    "update": {
-      "success": "Update Plugin Metadata of {{name}} Successfully"
-    }
-  },
-  "protos": {
-    "add": {
-      "success": "Add Proto Successfully",
-      "title": "Add Proto"
-    },
-    "detail": {
-      "title": "Proto Detail"
-    },
-    "edit": {
-      "success": "Edit Proto Successfully",
-      "title": "Edit Proto"
-    },
-    "form": {
-      "content": "Content",
-      "contentPlaceholder": "Paste or upload .proto, .pb file"
-    },
-    "singular": "Proto",
-    "title": "Protos"
-  },
-  "route": {
-    "add": {
-      "success": "Add Route Successfully",
-      "title": "Add Route"
-    },
-    "detail": {
-      "title": "Route Detail"
-    },
-    "edit": {
-      "success": "Edit Route Successfully",
-      "title": "Edit Route"
-    },
-    "singular": "Route",
-    "title": "Routes"
-  },
-  "seconds": "Seconds",
-  "secrets": {
-    "add": {
-      "success": "Add Secret Successfully",
-      "title": "Add Secret"
-    },
-    "detail": {
-      "title": "Secret Detail"
-    },
-    "edit": {
-      "success": "Edit Secret Successfully",
-      "title": "Edit Secret"
-    },
-    "singular": "Secret"
-  },
-  "services": {
-    "add": {
-      "success": "Add Service Successfully",
-      "title": "Add Service"
-    },
-    "detail": {
-      "title": "Service Detail"
-    },
-    "edit": {
-      "success": "Edit Service Successfully",
-      "title": "Edit Service"
-    },
-    "singular": "Service",
-    "title": "Services"
-  },
-  "settings": {
-    "adminKey": "Admin Key",
-    "title": "Settings",
-    "ui-commit-sha": "UI Commit SHA"
-  },
   "ssls": {
-    "add": {
-      "success": "Add SSL Successfully",
-      "title": "Add SSL"
-    },
-    "detail": {
-      "title": "SSL Detail"
-    },
-    "edit": {
-      "success": "Edit SSL Successfully",
-      "title": "Edit SSL"
-    },
     "singular": "SSL"
   },
   "streamRoutes": {
-    "add": {
-      "success": "Add Stream Route Successfully",
-      "title": "Add Stream Route"
-    },
-    "detail": {
-      "title": "Stream Route Detail"
-    },
-    "edit": {
-      "success": "Edit Stream Route Successfully",
-      "title": "Edit Stream Route"
-    },
-    "singular": "Stream Route",
-    "title": "Stream Routes"
+    "singular": "Stream Route"
+  },
+  "table": {
+    "actions": "Actions",
+    "disabled": "Disabled",
+    "enabled": "Enabled"
   },
   "upstreams": {
-    "add": {
-      "success": "Add Upstream Successfully",
-      "title": "Add Upstream"
-    },
-    "detail": {
-      "title": "Upstream Detail"
-    },
-    "edit": {
-      "success": "Edit Upstream Successfully",
-      "title": "Edit Upstream"
-    },
-    "singular": "Upstream",
-    "title": "Upstreams"
-  },
-  "view": "View"
+    "singular": "Upstream"
+  }
 }

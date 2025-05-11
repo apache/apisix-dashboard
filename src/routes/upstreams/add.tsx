@@ -18,7 +18,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
-import {} from 'axios';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { z } from 'zod';
@@ -47,7 +46,7 @@ const UpstreamAddForm = () => {
       req.post<unknown, APISIXType['RespUpstreamDetail']>(API_UPSTREAMS, data),
     async onSuccess(data) {
       notifications.show({
-        message: t('upstreams.add.success'),
+        message: t('info.add.success', { name: t('upstreams.singular') }),
         color: 'green',
       });
       await router.navigate({
@@ -80,7 +79,9 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('upstreams.add.title')} />
+      <PageHeader
+        title={t('info.add.title', { name: t('upstreams.singular') })}
+      />
       <FormTOCBox>
         <UpstreamAddForm />
       </FormTOCBox>
