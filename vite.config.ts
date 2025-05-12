@@ -20,6 +20,7 @@ import observerPlugin from 'mobx-react-observer/swc-plugin';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
 import UnpluginIcons from 'unplugin-icons/vite';
+import UnpluginInfo from 'unplugin-info/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -60,6 +61,7 @@ export default defineConfig({
       compiler: 'jsx',
       jsx: 'react',
     }),
+    UnpluginInfo(),
     TanStackRouterVite({
       target: 'react',
       autoCodeSplitting: true,
