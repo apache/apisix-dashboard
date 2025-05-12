@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --cache --max-warnings=0 --no-warn-ignored",
+    "lint:fix": "pnpm lint --fix",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@ant-design/pro-components": "^2.8.7",
@@ -48,6 +50,7 @@
     "@eslint/js": "^9.22.0",
     "@hookform/devtools": "^4.4.0",
     "@iconify-json/material-symbols": "^1.2.20",
+    "@playwright/test": "^1.52.0",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@tanstack/react-query-devtools": "^5.74.4",
@@ -80,7 +83,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix --max-warnings=0 --no-warn-ignored"
+      "pnpm lint:fix"
     ]
   },
   "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"

@@ -1,0 +1,15 @@
+include:
+  - docker-compose.common.yml
+services:
+  dashboard-e2e:
+    build:
+      context: ../..
+      dockerfile: e2e/server/Dockerfile
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - apisix
+    ports:
+      - '6174:6174'
+    depends_on:
+      - apisix

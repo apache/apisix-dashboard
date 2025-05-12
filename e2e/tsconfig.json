@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2021",
+      "dom"
+    ],
+    "allowJs": true,
+    "outDir": "./dist/out-tsc",
+    "module": "nodenext",
+    "sourceMap": false,
+    "target": "ESNext",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+  },
+  "include": [
+    "playwright.config.ts",
+    "./**/*.ts",
+    "../src/**/*.ts",
+  ]
+}
