@@ -28,13 +28,11 @@ services:
       - apisix
 
   etcd:
-    image: bitnami/etcd:3.4.9
-    user: root
+    image: bitnami/etcd:3.5
     restart: always
     volumes:
-      - etcd_data:/etcd_data
+      - etcd_data:/bitnami/etcd
     environment:
-      ETCD_DATA_DIR: /etcd_data
       ETCD_ENABLE_V2: 'true'
       ALLOW_NONE_AUTHENTICATION: 'yes'
       ETCD_ADVERTISE_CLIENT_URLS: 'http://etcd:2379'
