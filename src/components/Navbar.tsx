@@ -53,8 +53,8 @@ export const Navbar = () => {
       {navRoutes.map((route) => (
         <NavbarLink
           {...route}
-          key={routes.to}
-          label={t(`sources.${routes.label}`)}
+          key={route.to}
+          label={t(`sources.${route.label}`)}
         />
       ))}
     </AppShellNavbar>
