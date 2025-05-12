@@ -18,7 +18,7 @@ import { EditableProTable, type ProColumns } from '@ant-design/pro-components';
 import { Button, InputWrapper, type InputWrapperProps } from '@mantine/core';
 import { useClickOutside } from '@mantine/hooks';
 import { toJS } from 'mobx';
-import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useLocalObservable } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
 import { equals, isNil, range } from 'rambdax';
 import { useEffect, useMemo } from 'react';
@@ -116,9 +116,7 @@ export type FormItemNodesProps<T extends FieldValues> =
     defaultValue?: APISIXType['UpstreamNode'][];
   } & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
 
-const ObEditableProTable = observer(EditableProTable);
-
-const FormItemNodesCore = <T extends FieldValues>(
+export const FormItemNodes = <T extends FieldValues>(
   props: FormItemNodesProps<T>
 ) => {
   const { controllerProps, restProps } = useMemo(
@@ -218,7 +216,7 @@ const FormItemNodesCore = <T extends FieldValues>(
     >
       <input name={fName} type="hidden" />
       <AntdConfigProvider>
-        <ObEditableProTable<DataSource>
+        <EditableProTable<DataSource>
           defaultSize="small"
           rowKey="id"
           bordered
@@ -263,5 +261,3 @@ const FormItemNodesCore = <T extends FieldValues>(
     </InputWrapper>
   );
 };
-
-export const FormItemNodes = observer(FormItemNodesCore);

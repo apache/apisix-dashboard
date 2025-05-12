@@ -18,7 +18,7 @@ import { Drawer, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { toJS } from 'mobx';
-import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useLocalObservable } from 'mobx-react-lite';
 import { difference } from 'rambdax';
 import { useTranslation } from 'react-i18next';
 import { useDeepCompareEffect } from 'react-use';
@@ -35,9 +35,9 @@ import {
 } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
 import { SelectPluginsDrawer } from '@/components/form-slice/FormItemPlugins/SelectPluginsDrawer';
 
-import { type PluginInfo,usePluginMetadataList } from './hooks';
+import { type PluginInfo, usePluginMetadataList } from './hooks';
 
-export const PluginMetadata = observer(() => {
+export const PluginMetadata = () => {
   const { t } = useTranslation();
 
   const getMetadataListReq = usePluginMetadataList();
@@ -162,4 +162,4 @@ export const PluginMetadata = observer(() => {
       />
     </Drawer.Stack>
   );
-});
+};
