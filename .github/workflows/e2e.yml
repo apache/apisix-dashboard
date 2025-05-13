@@ -3,14 +3,11 @@ name: Frontend e2e test
 on:
   push:
     branches:
-      - main
-      - "dev/*"
+      - "**"
   pull_request:
     types: [labeled, synchronize]
     branches:
-      - main
-      - dev/**
-      - "**test/**"
+        - "**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
