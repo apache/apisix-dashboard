@@ -20,7 +20,15 @@ import { expect } from '@playwright/test';
 import { getAPISIXConf } from './utils/common';
 import { test } from '@utils/test';
 
-test('can auth with admin key', async ({ page }) => {
+// use empty storage state to avoid auth
+test.use({ storageState: { cookies: [], origins: [] } });
+
+test('can auth with admin key', { tag: '@auth' }, async ({ page }) => {
+  await page.evaluate(() => {
+    console.log('clear localStorage', localStorage.getItem('settings'));
+    localStorage.removeItem('settings');
+  });
+
   const settingsModal = page.getByRole('dialog', { name: 'Settings' });
   const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
   const failedMsg = page.getByText('failed to check token');

@@ -15,11 +15,56 @@
  * limitations under the License.
  */
 import { test as baseTest } from '@playwright/test';
+import { getAPISIXConf } from './common';
+import path from 'node:path';
+import { existsSync } from 'node:fs';
+import { env } from './env';
 
-export const test = baseTest.extend({
+export const test = baseTest.extend<{}, { workerStorageState: string }>({
+  storageState: ({ workerStorageState }, use) => use(workerStorageState),
+  workerStorageState: [
+    async ({ browser }, use) => {
+      // Use parallelIndex as a unique identifier for each worker.
+      const id = test.info().parallelIndex;
+      const fileName = path.resolve(
+        test.info().project.outputDir,
+        `.auth/${id}.json`
+      );
+
+      if (existsSync(fileName)) {
+        return await use(fileName);
+      }
+
+      const page = await browser.newPage({ storageState: undefined });
+
+      // have to use env here, because the baseURL is not available in worker
+      await page.goto(env.E2E_TARGET_URL);
+
+      // we need to authenticate
+      const settingsModal = page.getByRole('dialog', { name: 'Settings' });
+      if (await settingsModal.isVisible()) {
+        const { adminKey } = await getAPISIXConf();
+
+        const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
+        await adminKeyInput.clear();
+        await adminKeyInput.fill(adminKey);
+        await page
+          .getByRole('dialog', { name: 'Settings' })
+          .getByRole('button')
+          .click();
+
+        await page.reload();
+        await page.waitForLoadState('networkidle');
+      }
+
+      await page.context().storageState({ path: fileName });
+      await page.close();
+      await use(fileName);
+    },
+    { scope: 'worker' },
+  ],
   page: async ({ baseURL, page }, use) => {
-    await page.goto(baseURL!);
-    await page.waitForLoadState('networkidle');
+    await page.goto(baseURL);
     await use(page);
   },
 });
