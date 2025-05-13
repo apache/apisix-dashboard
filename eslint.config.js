@@ -16,7 +16,7 @@
  */
 import js from '@eslint/js'
 import i18n from '@m6web/eslint-plugin-i18n';
-import headers from "eslint-plugin-headers";
+import headers from 'eslint-plugin-headers';
 import i18next from 'eslint-plugin-i18next';
 import importPlugin from 'eslint-plugin-import';
 import playwright from 'eslint-plugin-playwright'
@@ -30,29 +30,29 @@ import tseslint from 'typescript-eslint'
 
 const importRules = tseslint.config({
   plugins: {
-    "unused-imports": unusedImports,
-    "simple-import-sort": simpleImportSort,
-    "import": importPlugin,
+    'unused-imports': unusedImports,
+    'simple-import-sort': simpleImportSort,
+    'import': importPlugin,
   },
   rules: {
-    "no-unused-vars": "off",
-    "unused-imports/no-unused-imports": "error",
-    "unused-imports/no-unused-vars": [
-      "warn",
+    'no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
       {
-        "vars": "all",
-        "varsIgnorePattern": "^_",
-        "args": "after-used",
-        "argsIgnorePattern": "^_",
+        'vars': 'all',
+        'varsIgnorePattern': '^_',
+        'args': 'after-used',
+        'argsIgnorePattern': '^_',
       },
     ],
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error",
-    "import/first": "error",
-    "import/newline-after-import": "error",
-    "import/no-duplicates": "error",
-    "import/no-unresolved": 'off',
-    "import/no-named-as-default-member": 'off',
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'import/no-duplicates': 'error',
+    'import/no-unresolved': 'off',
+    'import/no-named-as-default-member': 'off',
   }
 })
 
@@ -184,6 +184,14 @@ export default tseslint.config(
           source: 'file',
           path: '.actions/ASFLicenseHeader.txt',
         },
+      ],
+      'quotes': [
+        'error',
+        'single',
+        {
+          'avoidEscape': true,
+          'allowTemplateLiterals': false
+        }
       ],
     },
   }
