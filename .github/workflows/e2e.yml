@@ -88,11 +88,6 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-      - name: Show Port Forward Log
-        if: failure()
-        run: |
-          cat /tmp/portforward-*
-
       - name: Print Components Logs
         if: failure()
         run: |
