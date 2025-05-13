@@ -8,9 +8,17 @@ import unusedImports from 'eslint-plugin-unused-imports'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import importPlugin from 'eslint-plugin-import';
 import headers from "eslint-plugin-headers";
+import playwright from 'eslint-plugin-playwright'
 
 export default tseslint.config(
   { ignores: ['dist', 'src/routeTree.gen.ts'] },
+  {
+    ...playwright.configs['flat/recommended'],
+    files: ['e2e/**/*.spec.ts'],
+    rules: {
+      ...playwright.configs['flat/recommended'].rules,
+    },
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
