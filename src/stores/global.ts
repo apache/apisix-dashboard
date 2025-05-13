@@ -20,7 +20,7 @@ import { makePersistable } from 'mobx-persist-store';
 /** allow store use `set(key, value)` */
 const set = action(function <T, K extends keyof T>(
   this: T,
-  key: K extends `set` ? never : K,
+  key: K extends 'set' ? never : K,
   value: T[K]
 ) {
   this[key as K] = value;
