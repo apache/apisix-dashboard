@@ -1,7 +1,7 @@
 include:
   - path:
-    - ../e2e/server/docker-compose.common.yml
-    - docker-compose.override.yml
+      - ../e2e/server/docker-compose.common.yml
+      - docker-compose.override.yml
 services:
   apisix-dashboard:
     build:
