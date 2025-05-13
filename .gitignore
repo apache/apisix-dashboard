@@ -24,3 +24,11 @@ dist-ssr
 *.sw?
 
 /.pnpm-store
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+.eslintcache

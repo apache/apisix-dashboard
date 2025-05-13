@@ -50,7 +50,8 @@
         "lokalise.i18n-ally",
         "formulahendry.auto-close-tag",
         "formulahendry.auto-rename-tag",
-        "github.vscode-pull-request-github"
+        "github.vscode-pull-request-github",
+        "redhat.vscode-yaml"
       ]
     }
   }

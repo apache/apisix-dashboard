@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2021",
+      "dom"
+    ],
+    "allowJs": true,
+    "sourceMap": false,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "paths": {
+      "@utils/*": [
+        "./e2e/utils/*"
+      ]
+    }
+  },
+  "include": [
+    "e2e/**/*.ts",
+  ]
+}

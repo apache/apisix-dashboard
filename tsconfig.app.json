@@ -31,5 +31,8 @@
       "unplugin-icons/types/react",
     ]
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "e2e/utils/env.ts"
+  ]
 }

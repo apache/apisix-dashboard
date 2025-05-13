@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --cache --max-warnings=0 --no-warn-ignored",
+    "lint:fix": "pnpm lint --fix",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@ant-design/pro-components": "^2.8.7",
@@ -25,6 +27,7 @@
     "axios": "^1.8.4",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.5.0",
     "fast-clean": "^1.4.0",
     "i18next": "^25.0.1",
     "immer": "^10.1.1",
@@ -41,13 +44,16 @@
     "react-hook-form": "^7.56.1",
     "react-i18next": "^15.4.1",
     "react-use": "^17.6.0",
+    "znv": "^0.5.0",
     "zod": "^3.24.3",
     "zod-empty": "^1.4.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@estruyf/github-actions-reporter": "^1.10.0",
     "@hookform/devtools": "^4.4.0",
     "@iconify-json/material-symbols": "^1.2.20",
+    "@playwright/test": "^1.52.0",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@tanstack/react-query-devtools": "^5.74.4",
@@ -61,6 +67,7 @@
     "eslint": "^9.22.0",
     "eslint-plugin-headers": "^1.2.1",
     "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-playwright": "^2.2.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
@@ -76,11 +83,12 @@
     "unplugin-icons": "^22.1.0",
     "unplugin-info": "^1.2.2",
     "vite": "^6.3.5",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "yaml": "^2.7.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix --max-warnings=0 --no-warn-ignored"
+      "pnpm lint:fix"
     ]
   },
   "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"

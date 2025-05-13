@@ -14,17 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Button,
-  type ButtonProps,
-  type PolymorphicComponentProps,
-} from '@mantine/core';
-import { useFormContext, useFormState } from 'react-hook-form';
+import { config } from 'dotenv';
+import { parseEnv } from 'znv';
+import { z } from 'zod';
 
-export const FormSubmitBtn = (
-  props: PolymorphicComponentProps<'button', ButtonProps>
-) => {
-  const form = useFormContext();
-  const { isSubmitting } = useFormState(form);
-  return <Button type="submit" loading={isSubmitting} {...props} />;
-};
+import { BASE_PATH } from '../../src/config/constant';
+
+config({
+  path: ['./.env', './.env.local', './.env.development.local'],
+});
+
+export const env = parseEnv(process.env, {
+  E2E_TARGET_URL: z
+    .string()
+    .url()
+    .default(`http://localhost:6174${BASE_PATH}/`)
+    .describe(
+      `If you want to access the test server from dev container playwright to host e2e server, try http://host.docker.internal:6174${BASE_PATH}/`
+    ),
+});
