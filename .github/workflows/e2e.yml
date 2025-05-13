@@ -59,6 +59,7 @@ jobs:
           docker compose up -d
 
       - name: Waiting dashboard service to be healthy
+        working-directory: ./e2e/server
         run: |
           E2E_SERVER="dashboard-e2e"
           TIMEOUT=30
