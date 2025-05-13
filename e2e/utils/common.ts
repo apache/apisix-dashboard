@@ -14,19 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { config } from 'dotenv';
-import { parseEnv } from 'znv';
-import { z } from 'zod';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 
-import { BASE_PATH } from '@/config/constant';
+import { parse } from 'yaml';
 
-config({
-  path: ['./.env', './.env.local', './.env.development.local'],
-});
-
-export const env = parseEnv(process.env, {
-  E2E_TARGET_URL: {
-    schema: z.string().url().default(`http://localhost:6174${BASE_PATH}`),
-    description: `If you want to access the test server from dev container playwright to host e2e server, try http://host.docker.internal:6174/${BASE_PATH}`,
-  },
-});
+type APISIXConf = {
+  deployment: { admin: { admin_key: { key: string }[] } };
+};
+export const getAPISIXConf = async () => {
+  const currentDir = new URL('.', import.meta.url).pathname;
+  const confPath = path.join(currentDir, '../server/apisix_conf.yml');
+  const file = await readFile(confPath, 'utf-8');
+  const res = parse(file) as APISIXConf;
+  return { adminKey: res.deployment.admin.admin_key[0].key };
+};

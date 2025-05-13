@@ -5,18 +5,23 @@
       "dom"
     ],
     "allowJs": true,
-    "outDir": "./dist/out-tsc",
-    "module": "nodenext",
     "sourceMap": false,
     "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
+    "paths": {
+      "@utils/*": [
+        "./e2e/utils/*"
+      ]
+    }
   },
   "include": [
-    "playwright.config.ts",
-    "./**/*.ts",
-    "../src/**/*.ts",
+    "e2e/**/*.ts",
   ]
 }

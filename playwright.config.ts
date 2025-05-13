@@ -16,12 +16,13 @@
  */
 import { defineConfig, devices } from '@playwright/test';
 
-import { env } from './src/utils/env';
+import { env } from './e2e/utils/env';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  tsconfig: './tsconfig.e2e.json',
   testDir: './e2e',
   outputDir: './test-results',
   fullyParallel: true,

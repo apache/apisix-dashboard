@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect, test } from '@playwright/test';
+import { config } from 'dotenv';
+import { parseEnv } from 'znv';
+import { z } from 'zod';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+import { BASE_PATH } from '../../src/config/constant';
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
+config({
+  path: ['./.env', './.env.local', './.env.development.local'],
 });
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(
-    page.getByRole('heading', { name: 'Installation' })
-  ).toBeVisible();
+export const env = parseEnv(process.env, {
+  E2E_TARGET_URL: z
+    .string()
+    .url()
+    .default(`http://localhost:6174${BASE_PATH}/`)
+    .describe(
+      `If you want to access the test server from dev container playwright to host e2e server, try http://host.docker.internal:6174${BASE_PATH}/`
+    ),
 });
