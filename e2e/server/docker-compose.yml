@@ -30,3 +30,17 @@ services:
       - '6174:6174'
     depends_on:
       - apisix
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://127.0.0.1:6174/ui/',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
