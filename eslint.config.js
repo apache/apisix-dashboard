@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 import js from '@eslint/js'
+import i18n from '@m6web/eslint-plugin-i18n';
 import headers from "eslint-plugin-headers";
+import i18next from 'eslint-plugin-i18next';
 import importPlugin from 'eslint-plugin-import';
 import playwright from 'eslint-plugin-playwright'
 import react from 'eslint-plugin-react'
@@ -25,8 +27,6 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
-import i18next from 'eslint-plugin-i18next';
-import i18n from '@m6web/eslint-plugin-i18n';
 
 const importRules = tseslint.config({
   plugins: {
@@ -103,7 +103,7 @@ export default tseslint.config(
   i18nRules,
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended, importRules],
-    files: ['src/**/*.{ts,tsx,js}'],
+    files: ['src/**/*.{ts,tsx}', 'eslint.config.js'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
