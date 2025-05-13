@@ -1,0 +1,94 @@
+name: Frontend e2e test
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    types: [labeled, synchronize]
+    branches:
+        - "**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'e2e-test') }}
+    timeout-minutes: 40
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get PR Labels
+        id: get-labels
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const labels = context.payload.pull_request.labels.map(label => label.name);
+            core.setOutput("labels", labels.join(","));
+      - name: Set image label as environment variable
+        run: |
+          export LABELS=${{ steps.get-labels.outputs.labels }}
+          echo "LABELS=${LABELS}" >> $GITHUB_ENV
+        shell: bash
+
+      # ensure this in https://github.com/apache/infrastructure-actions/blob/main/actions.yml
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: |
+          pnpm exec playwright install --with-deps
+
+      - name: Run e2e server
+        working-directory: ./e2e/server
+        run: |
+          docker compose up -d
+
+      - name: Waiting dashboard service to be healthy
+        working-directory: ./e2e/server
+        run: |
+          E2E_SERVER="dashboard-e2e"
+          TIMEOUT=30
+          timeout $TIMEOUT bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q '$E2E_SERVER'))" = "healthy" ]; do
+              echo "'$E2E_SERVER' is starting..."
+              sleep 5
+            done
+          ' || (echo "$E2E_SERVER not healthy after $TIMEOUT seconds" && exit 1)
+
+      - name: Run e2e tests
+        run: |
+          pnpm e2e
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: test-results
+          path: apps/site-e2e/test-results/
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Print Components Logs
+        if: failure()
+        run: |
+          docker ps --format '{{.Names}}' | xargs -I{} bash -c "echo ================= {} ==================== &&  docker logs {} && echo ================= {} ===================="

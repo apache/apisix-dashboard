@@ -14,17 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  Button,
-  type ButtonProps,
-  type PolymorphicComponentProps,
-} from '@mantine/core';
-import { useFormContext, useFormState } from 'react-hook-form';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 
-export const FormSubmitBtn = (
-  props: PolymorphicComponentProps<'button', ButtonProps>
-) => {
-  const form = useFormContext();
-  const { isSubmitting } = useFormState(form);
-  return <Button type="submit" loading={isSubmitting} {...props} />;
+import { parse } from 'yaml';
+
+type APISIXConf = {
+  deployment: { admin: { admin_key: { key: string }[] } };
+};
+export const getAPISIXConf = async () => {
+  const currentDir = new URL('.', import.meta.url).pathname;
+  const confPath = path.join(currentDir, '../server/apisix_conf.yml');
+  const file = await readFile(confPath, 'utf-8');
+  const res = parse(file) as APISIXConf;
+  return { adminKey: res.deployment.admin.admin_key[0].key };
 };
