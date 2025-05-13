@@ -47,7 +47,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          corepack enable pnpm
           pnpm install --frozen-lockfile
 
       - name: Install Playwright Browsers
@@ -62,9 +61,9 @@ jobs:
       - name: Waiting dashboard service to be healthy
         run: |
           E2E_SERVER="dashboard-e2e"
-          TIMEOUT=60
+          TIMEOUT=30
           timeout $TIMEOUT bash -c '
-            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker-compose ps -q '$E2E_SERVER'))" = "healthy" ]; do
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q '$E2E_SERVER'))" = "healthy" ]; do
               echo "'$E2E_SERVER' is starting..."
               sleep 5
             done
