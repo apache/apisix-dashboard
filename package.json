@@ -29,7 +29,7 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
     "fast-clean": "^1.4.0",
-    "i18next": "^25.0.1",
+    "i18next": "^25.1.2",
     "immer": "^10.1.1",
     "mobx": "^6.13.7",
     "mobx-persist-store": "^1.1.8",
