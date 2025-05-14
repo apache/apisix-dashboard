@@ -22,14 +22,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { z } from 'zod';
 
+import { postUpstreamReq } from '@/apis/upstreams';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartUpstream } from '@/components/form-slice/FormPartUpstream';
 import { FormPartUpstreamSchema } from '@/components/form-slice/FormPartUpstream/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
-import { API_UPSTREAMS } from '@/config/constant';
 import { req } from '@/config/req';
-import { type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const PostUpstreamSchema = FormPartUpstreamSchema.omit({
@@ -42,8 +41,7 @@ const UpstreamAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const postUpstream = useMutation({
-    mutationFn: (data: PostUpstreamType) =>
-      req.post<unknown, APISIXType['RespUpstreamDetail']>(API_UPSTREAMS, data),
+    mutationFn: (data: PostUpstreamType) => postUpstreamReq(req, data),
     async onSuccess(data) {
       notifications.show({
         message: t('info.add.success', { name: t('upstreams.singular') }),

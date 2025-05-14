@@ -3,17 +3,20 @@ import {
   API_HEADER_KEY,
   API_PREFIX,
   API_UPSTREAMS,
+  BASE_PATH,
 } from '@src/config/constant';
 import axios, { type AxiosAdapter, type AxiosInstance } from 'axios';
 import { stringify } from 'qs';
 import { getAPISIXConf } from './common';
 import type { APISIXType } from '@src/types/schema/apisix';
+import { env } from './env';
+import type { PageSearchType } from '@src/types/schema/pageSearch';
 
 export const getPlaywrightRequestAdapter = (
   ctx: APIRequestContext
 ): AxiosAdapter => {
   return async (config) => {
-    const { url, data } = config;
+    const { url, data, baseURL } = config;
     if (typeof url === 'undefined') {
       throw new Error('Need to provide a url');
     }
@@ -25,7 +28,8 @@ export const getPlaywrightRequestAdapter = (
       failOnStatusCode: true,
       data,
     };
-    const res = await ctx.fetch(config.url, payload);
+    const urlWithBase = `${baseURL}${url}`;
+    const res = await ctx.fetch(urlWithBase, payload);
 
     try {
       return {
@@ -44,31 +48,18 @@ export const getPlaywrightRequestAdapter = (
 
 export const getE2eReq = async (ctx: APIRequestContext) => {
   const { adminKey } = await getAPISIXConf();
+  const API_URL = env.E2E_TARGET_URL.slice(0, -BASE_PATH.length - 1);
+
   return axios.create({
     adapter: getPlaywrightRequestAdapter(ctx),
-    baseURL: API_PREFIX,
-    headers: {
-      [API_HEADER_KEY]: adminKey,
-    },
+    baseURL: `${API_URL}${API_PREFIX}`,
     paramsSerializer: (p) =>
       stringify(p, {
         arrayFormat: 'repeat',
       }),
+    headers: { [API_HEADER_KEY]: adminKey },
   });
 };
 
 export const e2eReq = await getE2eReq(await request.newContext());
 
-/**
- * TODO: below methods need to be merged with the one in src
- */
-export const putUpstreamReq = (
-  req: AxiosInstance,
-  data: APISIXType['Upstream']
-) => {
-  const { id, ...rest } = data;
-  return req.put<APISIXType['Upstream'], APISIXType['RespUpstreamDetail']>(
-    `${API_UPSTREAMS}/${id}`,
-    rest
-  );
-};

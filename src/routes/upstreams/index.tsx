@@ -21,6 +21,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getUpstreamListReq } from '@/apis/upstreams';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -39,15 +40,7 @@ const genUpstreamsQueryOptions = (props: PageSearchType) => {
   const { page, pageSize } = props;
   return queryOptions({
     queryKey: ['upstreams', page, pageSize],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespUpstreamList']>(API_UPSTREAMS, {
-          params: {
-            page,
-            page_size: pageSize,
-          },
-        })
-        .then((v) => v.data),
+    queryFn: () => getUpstreamListReq(req, { page, pageSize }),
   });
 };
 
