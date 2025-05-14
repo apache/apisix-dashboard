@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { uiGoto } from '@utils/ui';
 
-export class UpstreamsPOM {
+export class UpstreamsPom {
   readonly upstreamNavBtn: Locator;
   readonly addUpstreamBtn: Locator;
   constructor(private page: Page) {
