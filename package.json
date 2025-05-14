@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "npx --node-options='--experimental-strip-types' eslint --flag unstable_native_nodejs_ts_config . --cache --max-warnings=0 --no-warn-ignored",
+    "lint": "eslint . --cache --max-warnings=0 --no-warn-ignored",
     "lint:fix": "pnpm lint --fix",
     "preview": "vite preview",
     "prepare": "husky",
@@ -78,6 +78,7 @@
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
+    "jiti": "^2.4.2",
     "lint-staged": "^15.5.2",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
