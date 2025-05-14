@@ -103,7 +103,7 @@ export default tseslint.config(
   i18nRules,
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended, importRules],
-    files: ['src/**/*.{ts,tsx}', 'eslint.config.js'],
+    files: ['src/**/*.{ts,tsx}', 'eslint.config.ts'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
