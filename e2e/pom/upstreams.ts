@@ -1,10 +1,14 @@
-import { expect, Locator, Page } from "@playwright/test";
-import { uiGoto } from "@utils/ui";
+import { expect, type Locator, type Page } from '@playwright/test';
+import { uiGoto } from '@utils/ui';
 
 export class UpstreamsPOM {
+  readonly upstreamNavBtn: Locator;
   readonly addUpstreamBtn: Locator;
   constructor(private page: Page) {
-    this.addUpstreamBtn = this.page.getByRole('button', { name: 'Add Upstream' });
+    this.upstreamNavBtn = this.page.getByRole('link', { name: 'Upstreams' });
+    this.addUpstreamBtn = this.page.getByRole('button', {
+      name: 'Add Upstream',
+    });
   }
 
   async goto() {
@@ -12,14 +16,18 @@ export class UpstreamsPOM {
   }
 
   async isListPage() {
-    await expect(this.page).toHaveURL(/upstreams$/);
-    const title = this.page.getByRole('heading', { name: 'Upstreams' })
+    await expect(this.page).toHaveURL((url) =>
+      url.pathname.endsWith('/upstreams')
+    );
+    const title = this.page.getByRole('heading', { name: 'Upstreams' });
     await expect(title).toBeVisible();
   }
 
   async isAddPage() {
-    await expect(this.page).toHaveURL(/upstreams\/add$/);
-    const title = this.page.getByRole('heading', { name: 'Add Upstream' })
+    await expect(this.page).toHaveURL((url) =>
+      url.pathname.endsWith('/upstreams/add')
+    );
+    const title = this.page.getByRole('heading', { name: 'Add Upstream' });
     await expect(title).toBeVisible();
   }
 
@@ -30,7 +38,10 @@ export class UpstreamsPOM {
   }
 
   async deleteUpstream(name: string) {
-    await this.page.getByRole('row', { name }).getByRole('button', { name: 'Delete' }).click();
+    await this.page
+      .getByRole('row', { name })
+      .getByRole('button', { name: 'Delete' })
+      .click();
     await this.page.getByRole('button', { name: 'Delete' }).click();
   }
 }

@@ -41,6 +41,7 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
 
       // have to use env here, because the baseURL is not available in worker
       await page.goto(env.E2E_TARGET_URL);
+      await page.waitForLoadState('networkidle');
 
       // we need to authenticate
       const settingsModal = page.getByRole('dialog', { name: 'Settings' });
