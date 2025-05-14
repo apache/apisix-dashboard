@@ -56,7 +56,7 @@ export const putUpstreamReq = (
   );
 };
 
-export const clearAllUpstream = async (req: AxiosInstance) => {
+export const deleteAllUpstreams = async (req: AxiosInstance) => {
   const res = await getUpstreamListReq(req, {
     page: 1,
     pageSize: 1000,

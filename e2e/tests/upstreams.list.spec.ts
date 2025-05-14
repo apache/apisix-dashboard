@@ -17,31 +17,116 @@
 
 import { expect } from '@playwright/test';
 import { UpstreamsPOM } from '@pom/upstreams';
+import { deleteAllUpstreams, putUpstreamReq } from '@src/apis/upstreams';
+import { API_UPSTREAMS } from '@src/config/constant';
+import type { APISIXType } from '@src/types/schema/apisix';
+import { e2eReq } from '@utils/req';
 import { test } from '@utils/test';
 
-test(
-  'should navigate to upstreams page',
-  { tag: '@upstreams' },
-  async ({ page }) => {
+const upstreams: APISIXType['Upstream'][] = Array.from(
+  { length: 11 },
+  (_, i) => ({
+    id: `upstream_${i + 1}`,
+    name: `upstream_${i + 1}`,
+    nodes: [
+      {
+        host: `node_${i + 1}`,
+        port: 80,
+        weight: 100,
+      },
+    ],
+  })
+);
+
+test('should navigate to upstreams page', async ({ page }) => {
+  const upstreamsPom = new UpstreamsPOM(page);
+  await test.step('navigate to upstreams page', async () => {
+    await upstreamsPom.upstreamNavBtn.click();
+    await upstreamsPom.isListPage();
+  });
+
+  await test.step('verify upstreams page components', async () => {
+    await expect(upstreamsPom.addUpstreamBtn).toBeVisible();
+
+    // list table exists
+    const table = page.getByRole('table');
+    await expect(table).toBeVisible();
+    await expect(table.getByText('ID', { exact: true })).toBeVisible();
+    await expect(table.getByText('Name', { exact: true })).toBeVisible();
+    await expect(table.getByText('Labels', { exact: true })).toBeVisible();
+    await expect(table.getByText('Actions', { exact: true })).toBeVisible();
+  });
+});
+
+test.describe('page and page_size should works correctly', () => {
+  test.beforeAll(async () => {
+    await deleteAllUpstreams(e2eReq);
+    await Promise.all(upstreams.map((d) => putUpstreamReq(e2eReq, d)));
+  });
+
+  test.afterAll(async () => {
+    await Promise.all(
+      upstreams.map((d) => e2eReq.delete(`${API_UPSTREAMS}/${d.id}`))
+    );
+  });
+
+  test('can switch using tables normally.', async ({ page }) => {
+    const upstreamsPom = new UpstreamsPOM(page);
     await test.step('navigate to upstreams page', async () => {
-      const upstreamsPom = new UpstreamsPOM(page);
-      await upstreamsPom.addUpstreamBtn.click();
+      await upstreamsPom.goto();
       await upstreamsPom.isListPage();
     });
 
-    // Check page components
-    await test.step('verify upstreams page components', async () => {
-      // add upstream button exists
-      const createButton = page.getByRole('button', { name: 'Add Upstream' });
-      await expect(createButton).toBeVisible();
+    const defaultPageSize = 10;
+    const defaultPageNum = 1;
+    const pageNum = defaultPageNum;
+    let pageSize = defaultPageSize;
 
-      // list table exists
-      const table = page.getByRole('table');
-      await expect(table).toBeVisible();
-      await expect(page.getByText('ID')).toBeVisible();
-      await expect(page.getByText('Name')).toBeVisible();
-      await expect(page.getByText('Labels')).toBeVisible();
-      await expect(page.getByText('Actions')).toBeVisible();
+    const getPageSizeSelection = (size: number) =>
+      page
+        .locator('.ant-select-selection-item')
+        .filter({ hasText: new RegExp(`${size} / page`) })
+        .first();
+    const getPageSizeOption = (size: number) =>
+      page.getByRole('option', { name: `${size} / page` });
+    const getPageNum = (num: number) =>
+      page.getByRole('listitem', { name: `${num}` });
+
+    await test.step('default page info should exists', async () => {
+      // pageSize should exist in url
+      await expect(page).toHaveURL(
+        (url) => url.searchParams.get('pageSize') === pageSize.toString()
+      );
+      // pageSize should exist in table
+      await expect(getPageSizeSelection(pageSize)).toBeVisible();
+
+      // pageNum should exist in url
+      await expect(page).toHaveURL(
+        (url) => url.searchParams.get('page') === pageNum.toString()
+      );
+      // pageNum should exist in table
+      await expect(getPageNum(pageNum)).toBeVisible();
     });
-  }
-);
+
+    await test.step('can switch page size', async () => {
+      await getPageSizeSelection(pageSize).click();
+      pageSize = 20;
+      await getPageSizeOption(pageSize).click();
+
+      await expect(getPageSizeSelection(pageSize)).toBeVisible();
+      await expect(getPageNum(pageNum)).toBeVisible();
+      // old pageSize should be hidden
+      await expect(getPageSizeSelection(defaultPageSize)).toBeHidden();
+
+      // pageSize should exist in url
+      await expect(page).toHaveURL(
+        (url) => url.searchParams.get('pageSize') === pageSize.toString()
+      );
+      // pageNum should exist in url
+      await expect(page).toHaveURL(
+        (url) => url.searchParams.get('page') === pageNum.toString()
+      );
+    });
+  });
+});
+
