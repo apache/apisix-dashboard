@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { parse } from 'yaml';
+import { nanoid } from 'nanoid';
 
 type APISIXConf = {
   deployment: { admin: { admin_key: { key: string }[] } };
@@ -29,3 +30,14 @@ export const getAPISIXConf = async () => {
   const res = parse(file) as APISIXConf;
   return { adminKey: res.deployment.admin.admin_key[0].key };
 };
+
+export const fileExists = async (filePath: string) => {
+  try {
+    await access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+export const randomId = (info: string) => `${info}_${nanoid()}`;

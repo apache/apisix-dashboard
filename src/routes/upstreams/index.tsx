@@ -101,7 +101,6 @@ function RouteComponent() {
         title: t('form.upstreams.updateTime'),
         key: 'update_time',
         valueType: 'dateTime',
-        sorter: true,
         renderText: (text) => {
           if (!text) return '-';
           return new Date(Number(text) * 1000).toISOString();

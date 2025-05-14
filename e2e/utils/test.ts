@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 import { test as baseTest } from '@playwright/test';
-import { getAPISIXConf } from './common';
+import { fileExists, getAPISIXConf } from './common';
 import path from 'node:path';
-import { existsSync } from 'node:fs';
 import { env } from './env';
+import { readFile } from 'node:fs/promises';
 
 export const test = baseTest.extend<{}, { workerStorageState: string }>({
   storageState: ({ workerStorageState }, use) => use(workerStorageState),
@@ -30,9 +30,11 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
         test.info().project.outputDir,
         `.auth/${id}.json`
       );
+      const { adminKey } = await getAPISIXConf();
 
-      if (existsSync(fileName)) {
-        return await use(fileName);
+      // file exists and contains admin key, use it
+      if (await fileExists(fileName) && (await readFile(fileName)).toString().includes(adminKey)) {
+        return use(fileName);
       }
 
       const page = await browser.newPage({ storageState: undefined });
@@ -43,7 +45,6 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
       // we need to authenticate
       const settingsModal = page.getByRole('dialog', { name: 'Settings' });
       if (await settingsModal.isVisible()) {
-        const { adminKey } = await getAPISIXConf();
 
         const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
         await adminKeyInput.clear();
