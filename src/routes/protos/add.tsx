@@ -55,7 +55,7 @@ const ProtoAddForm = () => {
     await postProto.mutateAsync(data);
     notifications.show({
       id: 'add-proto',
-      message: t('protos.add.success'),
+      message: t('info.add.success', { name: t('protos.singular') }),
       color: 'green',
     });
     await router.navigate({ to: '/protos' });
@@ -75,7 +75,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('protos.add.title')} />
+      <PageHeader title={t('info.add.title', { name: t('protos.singular') })} />
       <ProtoAddForm />
     </>
   );

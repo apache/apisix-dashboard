@@ -70,7 +70,7 @@ const RouteDetailForm = (props: Props) => {
     mutationFn: putRouteReq,
     async onSuccess() {
       notifications.show({
-        message: t('route.edit.success'),
+        message: t('info.edit.success', { name: t('routes.singular') }),
         color: 'green',
       });
       await refetch();
@@ -113,9 +113,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('route.edit.title')}
+        title={t('info.edit.title', { name: t('routes.singular') })}
         {...(readOnly && {
-          title: t('route.detail.title'),
+          title: t('info.detail.title', { name: t('routes.singular') }),
           extra: (
             <Group>
               <Button
@@ -127,7 +127,7 @@ function RouteComponent() {
               </Button>
               <DeleteResourceBtn
                 mode="detail"
-                name={t('route.singular')}
+                name={t('routes.singular')}
                 target={id}
                 api={`${API_ROUTES}/${id}`}
                 onSuccess={() => navigate({ to: '/routes' })}

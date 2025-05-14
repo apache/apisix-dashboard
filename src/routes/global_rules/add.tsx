@@ -56,7 +56,7 @@ const GlobalRuleAddForm = () => {
     const res = await putGlobalRule.mutateAsync(data);
     notifications.show({
       id: 'add-global_rule',
-      message: t('globalRules.add.success'),
+      message: t('info.add.success', { name: t('globalRules.singular') }),
       color: 'green',
     });
     await router.navigate({
@@ -79,7 +79,9 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('globalRules.add.title')} />
+      <PageHeader
+        title={t('info.add.title', { name: t('globalRules.singular') })}
+      />
       <FormTOCBox>
         <GlobalRuleAddForm />
       </FormTOCBox>

@@ -37,7 +37,7 @@ const ServiceAddForm = () => {
     mutationFn: postServiceReq,
     async onSuccess() {
       notifications.show({
-        message: t('services.add.success'),
+        message: t('info.add.success', { name: t('services.singular') }),
         color: 'green',
       });
       await router.navigate({ to: '/services' });
@@ -69,7 +69,9 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('services.add.title')} />
+      <PageHeader
+        title={t('info.add.title', { name: t('services.singular') })}
+      />
       <FormTOCBox>
         <ServiceAddForm />
       </FormTOCBox>

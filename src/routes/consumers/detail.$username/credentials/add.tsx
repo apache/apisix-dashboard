@@ -42,7 +42,9 @@ const CredentialAddForm = () => {
     mutationFn: putCredentialReq,
     async onSuccess(_, res) {
       notifications.show({
-        message: t('consumers.credentials.add.success'),
+        message: t('info.add.success', {
+          name: t('credentials.singular'),
+        }),
         color: 'green',
       });
       await router.navigate({
@@ -80,7 +82,11 @@ function RouteComponent() {
   return (
     <>
       <DetailCredentialsTabs />
-      <PageHeader title={t('consumers.credentials.add.title')} />
+      <PageHeader
+        title={t('info.add.title', {
+          name: t('credentials.singular'),
+        })}
+      />
       <FormTOCBox>
         <CredentialAddForm />
       </FormTOCBox>

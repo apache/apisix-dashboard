@@ -67,7 +67,7 @@ function SecretList() {
         width: 120,
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -119,7 +119,7 @@ function SecretList() {
                   <ToAddPageBtn
                     key="add"
                     to="/secrets/add"
-                    label={t('secrets.add.title')}
+                    label={t('info.add.title', { name: t('secrets.singular') })}
                   />
                 ),
               },
@@ -136,7 +136,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('navbar.secrets')} />
+      <PageHeader title={t('sources.secrets')} />
       <SecretList />
     </>
   );

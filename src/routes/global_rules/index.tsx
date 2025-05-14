@@ -81,7 +81,7 @@ function RouteComponent() {
         valueType: 'text',
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -105,7 +105,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('globalRules.title')} />
+      <PageHeader title={t('sources.globalRules')} />
       <AntdConfigProvider>
         <ProTable
           columns={columns}
@@ -132,7 +132,9 @@ function RouteComponent() {
                     <ToAddPageBtn
                       key="add"
                       to="/global_rules/add"
-                      label={t('globalRules.add.title')}
+                      label={t('info.add.title', {
+                        name: t('globalRules.singular'),
+                      })}
                     />
                   ),
                 },

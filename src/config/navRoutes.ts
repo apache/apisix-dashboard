@@ -19,7 +19,7 @@ import type { FileRouteTypes } from '@/routeTree.gen';
 
 export type NavRoute = {
   to: FileRouteTypes['to'];
-  label: keyof Resources['en']['common']['navbar'];
+  label: keyof Resources['en']['common']['sources'];
 };
 export const navRoutes: NavRoute[] = [
   {

@@ -71,7 +71,7 @@ const ConsumerDetailForm = (props: Props) => {
     mutationFn: putConsumerReq,
     async onSuccess() {
       notifications.show({
-        message: t('consumers.edit.success'),
+        message: t('info.edit.success', { name: t('consumers.singular') }),
         color: 'green',
       });
       await refetch();
@@ -114,9 +114,9 @@ const ConsumerDetailTab = () => {
   return (
     <>
       <PageHeader
-        title={t('consumers.edit.title')}
+        title={t('info.edit.title', { name: t('consumers.singular') })}
         {...(readOnly && {
-          title: t('consumers.detail.title'),
+          title: t('info.detail.title', { name: t('consumers.singular') }),
           extra: (
             <Group>
               <Button

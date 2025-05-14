@@ -60,7 +60,7 @@ function RouteComponent() {
         valueType: 'text',
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -84,7 +84,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('protos.title')} />
+      <PageHeader title={t('sources.protos')} />
       <AntdConfigProvider>
         <ProTable
           columns={columns}
@@ -111,7 +111,9 @@ function RouteComponent() {
                     <ToAddPageBtn
                       key="add"
                       to="/protos/add"
-                      label={t('protos.add.title')}
+                      label={t('info.add.title', {
+                        name: t('protos.singular'),
+                      })}
                     />
                   ),
                 },

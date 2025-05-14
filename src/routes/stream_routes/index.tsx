@@ -70,7 +70,7 @@ const StreamRouteList = () => {
         valueType: 'text',
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -118,7 +118,9 @@ const StreamRouteList = () => {
                 label: (
                   <ToAddPageBtn
                     key="add"
-                    label={t('streamRoutes.add.title')}
+                    label={t('info.add.title', {
+                      name: t('streamRoutes.singular'),
+                    })}
                     to="/stream_routes/add"
                   />
                 ),
@@ -136,10 +138,8 @@ function StreamRouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('streamRoutes.title')} />
-      <AntdConfigProvider>
-        <StreamRouteList />
-      </AntdConfigProvider>
+      <PageHeader title={t('sources.streamRoutes')} />
+      <StreamRouteList />
     </>
   );
 }

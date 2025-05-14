@@ -70,7 +70,7 @@ const ServiceDetailForm = (props: Props) => {
     mutationFn: putServiceReq,
     async onSuccess() {
       notifications.show({
-        message: t('services.edit.success'),
+        message: t('info.edit.success', { name: t('services.singular') }),
         color: 'green',
       });
       await refetch();
@@ -113,9 +113,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('services.edit.title')}
+        title={t('info.edit.title', { name: t('services.singular') })}
         {...(readOnly && {
-          title: t('services.detail.title'),
+          title: t('info.detail.title', { name: t('services.singular') }),
           extra: (
             <Group>
               <Button

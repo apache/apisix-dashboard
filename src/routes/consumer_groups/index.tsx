@@ -84,7 +84,7 @@ function ConsumerGroupsList() {
         },
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -133,7 +133,9 @@ function ConsumerGroupsList() {
                   <ToAddPageBtn
                     key="add"
                     to="/consumer_groups/add"
-                    label={t('consumerGroups.add.title')}
+                    label={t('info.add.title', {
+                      name: t('consumerGroups.singular'),
+                    })}
                   />
                 ),
               },
@@ -149,7 +151,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('navbar.consumerGroups')} />
+      <PageHeader title={t('sources.consumerGroups')} />
       <ConsumerGroupsList />
     </>
   );

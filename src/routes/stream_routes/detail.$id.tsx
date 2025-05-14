@@ -73,7 +73,7 @@ const StreamRouteDetailForm = (props: Props) => {
     mutationFn: putStreamRouteReq,
     async onSuccess() {
       notifications.show({
-        message: t('streamRoutes.edit.success'),
+        message: t('info.edit.success', { name: t('streamRoutes.singular') }),
         color: 'green',
       });
       await refetch();
@@ -116,9 +116,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('streamRoutes.edit.title')}
+        title={t('info.edit.title', { name: t('streamRoutes.singular') })}
         {...(readOnly && {
-          title: t('streamRoutes.detail.title'),
+          title: t('info.detail.title', { name: t('streamRoutes.singular') }),
           extra: (
             <Group>
               <Button

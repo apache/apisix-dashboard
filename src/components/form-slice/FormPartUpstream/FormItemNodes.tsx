@@ -136,32 +136,32 @@ export const FormItemNodes = <T extends FieldValues>(
         hidden: true,
       },
       {
-        title: t('form.upstream.nodes.host.title'),
+        title: t('form.upstreams.nodes.host.title'),
         dataIndex: 'host',
         valueType: 'text',
         formItemProps: genProps('host'),
       },
       {
-        title: t('form.upstream.nodes.port.title'),
+        title: t('form.upstreams.nodes.port.title'),
         dataIndex: 'port',
         valueType: 'digit',
         valueEnum: portValueEnum,
         formItemProps: genProps('port'),
       },
       {
-        title: t('form.upstream.nodes.weight.title'),
+        title: t('form.upstreams.nodes.weight.title'),
         dataIndex: 'weight',
         valueType: 'digit',
         formItemProps: genProps('weight'),
       },
       {
-        title: t('form.upstream.nodes.priority.title'),
+        title: t('form.upstreams.nodes.priority.title'),
         dataIndex: 'priority',
         valueType: 'digit',
         formItemProps: genProps('priority'),
       },
       {
-        title: t('form.upstream.nodes.action.title'),
+        title: t('form.upstreams.nodes.action.title'),
         valueType: 'option',
         width: 100,
         hidden: disabled,
@@ -256,7 +256,7 @@ export const FormItemNodes = <T extends FieldValues>(
         onClick={() => ob.append(genRecord())}
         {...(disabled && { display: 'none' })}
       >
-        {t('form.upstream.nodes.add')}
+        {t('form.upstreams.nodes.add')}
       </Button>
     </InputWrapper>
   );

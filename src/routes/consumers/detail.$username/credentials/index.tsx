@@ -70,7 +70,7 @@ function CredentialsList() {
         },
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -85,7 +85,7 @@ function CredentialsList() {
           />,
           <DeleteResourceBtn
             key="delete"
-            name={t('consumers.credentials.singular')}
+            name={t('credentials.singular')}
             target={record.value.id}
             api={`${API_CREDENTIALS(username)}/${record.value.id}`}
             onSuccess={refetch}
@@ -117,7 +117,9 @@ function CredentialsList() {
                     key="add"
                     to="/consumers/detail/$username/credentials/add"
                     params={{ username }}
-                    label={t('consumers.credentials.add.title')}
+                    label={t('info.add.title', {
+                      name: t('credentials.singular'),
+                    })}
                   />
                 ),
               },
@@ -134,7 +136,7 @@ function RouteComponent() {
   return (
     <>
       <DetailCredentialsTabs />
-      <PageHeader title={t('consumers.credentials.title')} />
+      <PageHeader title={t('sources.credentials')} />
       <CredentialsList />
     </>
   );

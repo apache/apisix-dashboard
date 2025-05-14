@@ -59,7 +59,7 @@ const PluginConfigDetailForm = (props: Props) => {
     mutationFn: putPluginConfigReq,
     async onSuccess() {
       notifications.show({
-        message: t('pluginConfigs.edit.success'),
+        message: t('info.edit.success', { name: t('pluginConfigs.singular') }),
         color: 'green',
       });
       pluginConfigQuery.refetch();
@@ -112,9 +112,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('pluginConfigs.edit.title')}
+        title={t('info.edit.title', { name: t('pluginConfigs.singular') })}
         {...(readOnly && {
-          title: t('pluginConfigs.detail.title'),
+          title: t('info.detail.title', { name: t('pluginConfigs.singular') }),
           extra: (
             <Group>
               <Button

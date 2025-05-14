@@ -36,7 +36,7 @@ export const FormItemJsonInput = <T extends FieldValues>(
   const {
     controllerProps,
     restProps: { toObject, ...restProps },
-  } = genControllerProps(props, '');
+  } = genControllerProps(props, props.toObject ? {} : '');
   const {
     field: { value: rawVal, onChange: fOnChange, ...restField },
     fieldState,
