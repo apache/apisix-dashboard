@@ -78,7 +78,7 @@ const CredentialDetailForm = (props: CredentialFormProps) => {
     mutationFn: putCredentialReq,
     async onSuccess() {
       notifications.show({
-        message: t('consumers.credentials.edit.success'),
+        message: t('info.edit.success', { name: t('credentials.singular') }),
         color: 'green',
       });
       await refetch();
@@ -126,9 +126,9 @@ function RouteComponent() {
     <>
       <DetailCredentialsTabs />
       <PageHeader
-        title={t('consumers.credentials.edit.title')}
+        title={t('info.edit.title', { name: t('credentials.singular') })}
         {...(readOnly && {
-          title: t('consumers.credentials.detail.title'),
+          title: t('info.detail.title', { name: t('credentials.singular') }),
           extra: (
             <Group>
               <Button
@@ -140,7 +140,7 @@ function RouteComponent() {
               </Button>
               <DeleteResourceBtn
                 key="delete"
-                name={t('consumers.credentials.singular')}
+                name={t('credentials.singular')}
                 target={id}
                 api={`${API_CREDENTIALS(username)}/${id}`}
                 onSuccess={() =>

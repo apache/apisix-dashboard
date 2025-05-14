@@ -75,12 +75,12 @@ function RouteComponent() {
         title: t('form.basic.status'),
         key: 'status',
         valueEnum: {
-          1: { text: t('enabled'), status: 'Success' },
-          0: { text: t('disabled'), status: 'Error' },
+          1: { text: t('table.enabled'), status: 'Success' },
+          0: { text: t('table.disabled'), status: 'Error' },
         },
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -104,7 +104,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('navbar.ssls')} />
+      <PageHeader title={t('sources.ssls')} />
       <AntdConfigProvider>
         <ProTable
           columns={columns}
@@ -131,7 +131,7 @@ function RouteComponent() {
                     <ToAddPageBtn
                       key="add"
                       to="/ssls/add"
-                      label={t('ssls.add.title')}
+                      label={t('info.add.title', { name: t('ssls.singular') })}
                     />
                   ),
                 },

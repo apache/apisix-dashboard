@@ -69,7 +69,7 @@ const GlobalRuleDetailForm = (props: Props) => {
   const submit = async (data: APISIXType['GlobalRulePut']) => {
     await putglobalRule.mutateAsync(data);
     notifications.show({
-      message: t('globalRules.edit.success'),
+      message: t('info.edit.success', { name: t('globalRules.singular') }),
       color: 'green',
     });
     await detailReq.refetch();
@@ -102,9 +102,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('globalRules.edit.title')}
+        title={t('info.edit.title', { name: t('globalRules.singular') })}
         {...(readOnly && {
-          title: t('globalRules.detail.title'),
+          title: t('info.detail.title', { name: t('globalRules.singular') }),
           extra: (
             <Group>
               <Button

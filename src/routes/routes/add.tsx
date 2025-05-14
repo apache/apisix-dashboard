@@ -37,7 +37,7 @@ const RouteAddForm = () => {
     mutationFn: postRouteReq,
     async onSuccess() {
       notifications.show({
-        message: t('route.add.success'),
+        message: t('info.add.success', { name: t('routes.singular') }),
         color: 'green',
       });
       await router.navigate({ to: '/routes' });
@@ -69,7 +69,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('route.add.title')} />
+      <PageHeader title={t('info.add.title', { name: t('routes.singular') })} />
       <FormTOCBox>
         <RouteAddForm />
       </FormTOCBox>

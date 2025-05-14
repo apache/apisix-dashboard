@@ -37,7 +37,7 @@ const StreamRouteAddForm = () => {
     mutationFn: postStreamRouteReq,
     async onSuccess() {
       notifications.show({
-        message: t('streamRoutes.add.success'),
+        message: t('info.add.success', { name: t('streamRoutes.singular') }),
         color: 'green',
       });
       await router.navigate({ to: '/stream_routes' });
@@ -69,7 +69,9 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('streamRoutes.add.title')} />
+      <PageHeader
+        title={t('info.add.title', { name: t('streamRoutes.singular') })}
+      />
       <FormTOCBox>
         <StreamRouteAddForm />
       </FormTOCBox>

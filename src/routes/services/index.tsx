@@ -79,7 +79,7 @@ const ServiceList = () => {
         },
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -127,7 +127,9 @@ const ServiceList = () => {
                 label: (
                   <ToAddPageBtn
                     key="add"
-                    label={t('services.add.title')}
+                    label={t('info.add.title', {
+                      name: t('services.singular'),
+                    })}
                     to="/services/add"
                   />
                 ),
@@ -144,7 +146,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('services.title')} />
+      <PageHeader title={t('sources.services')} />
       <AntdConfigProvider>
         <ServiceList />
       </AntdConfigProvider>

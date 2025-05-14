@@ -54,7 +54,7 @@ export const Navbar = () => {
         <NavbarLink
           {...route}
           key={route.to}
-          label={t(`navbar.${route.label}`)}
+          label={t(`sources.${route.label}`)}
         />
       ))}
     </AppShellNavbar>

@@ -92,13 +92,13 @@ function RouteComponent() {
       },
       {
         dataIndex: ['value', 'scheme'],
-        title: t('form.upstream.scheme'),
+        title: t('form.upstreams.scheme'),
         key: 'scheme',
         valueType: 'text',
       },
       {
         dataIndex: ['value', 'update_time'],
-        title: t('form.upstream.updateTime'),
+        title: t('form.upstreams.updateTime'),
         key: 'update_time',
         valueType: 'dateTime',
         sorter: true,
@@ -108,7 +108,7 @@ function RouteComponent() {
         },
       },
       {
-        title: t('actions'),
+        title: t('table.actions'),
         valueType: 'option',
         key: 'option',
         width: 120,
@@ -132,7 +132,7 @@ function RouteComponent() {
 
   return (
     <>
-      <PageHeader title={t('upstreams.title')} />
+      <PageHeader title={t('sources.upstreams')} />
       <AntdConfigProvider>
         <ProTable
           columns={columns}
@@ -159,7 +159,9 @@ function RouteComponent() {
                     <ToAddPageBtn
                       key="add"
                       to="/upstreams/add"
-                      label={t('upstreams.add.title')}
+                      label={t('info.add.title', {
+                        name: t('upstreams.singular'),
+                      })}
                     />
                   ),
                 },

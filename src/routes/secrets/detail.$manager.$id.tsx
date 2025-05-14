@@ -76,7 +76,7 @@ const SecretDetailForm = (props: Props) => {
     mutationFn: putSecretReq,
     async onSuccess() {
       notifications.show({
-        message: t('secrets.edit.success'),
+        message: t('info.edit.success', { name: t('secrets.singular') }),
         color: 'green',
       });
       await refetch();
@@ -119,8 +119,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={readOnly ? t('secrets.detail.title') : t('secrets.edit.title')}
+        title={t('info.edit.title', { name: t('secrets.singular') })}
         {...(readOnly && {
+          title: t('info.detail.title', { name: t('secrets.singular') }),
           extra: (
             <Group>
               <Button

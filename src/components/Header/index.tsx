@@ -24,7 +24,10 @@ import { LanguageMenu } from './LanguageMenu';
 import { SettingModalBtn } from './SettingModalBtn';
 
 const Logo = () => {
-  return <Image src={apisixLogo} alt="APISIX Logo" w={24} h={24} fit="fill" />;
+  const { t } = useTranslation();
+  return (
+    <Image src={apisixLogo} alt={t('apisix.logo')} w={24} h={24} fit="fill" />
+  );
 };
 
 type HeaderProps = {
@@ -40,7 +43,7 @@ export const Header: FC<HeaderProps> = (props) => {
         <Group h="100%" gap="sm">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <Logo />
-          <div>{t('APISIX Dashboard')}</div>
+          <div>{t('apisix.dashboard')}</div>
         </Group>
         <Group h="100%" gap="sm">
           <SettingModalBtn />

@@ -26,7 +26,7 @@ const LangMap: Record<keyof Resources, string> = {
 };
 
 export const LanguageMenu = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
@@ -46,7 +46,7 @@ export const LanguageMenu = () => {
           </Menu.Item>
         ))}
         <Menu.Divider />
-        <Menu.Label>Help Us Translate！</Menu.Label>
+        <Menu.Label>{t('help-us-translate')}</Menu.Label>
       </Menu.Dropdown>
     </Menu>
   );

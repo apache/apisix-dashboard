@@ -24,6 +24,7 @@ import {
   type FormItemTextareaWithUploadProps,
 } from '../form/TextareaWithUpload';
 
+const fileTypes = '.proto,.pb';
 export const FormPartProto = <T extends FieldValues>(
   props: Pick<FormItemTextareaWithUploadProps<T>, 'allowUpload'>
 ) => {
@@ -32,11 +33,11 @@ export const FormPartProto = <T extends FieldValues>(
   return (
     <FormItemTextareaWithUpload
       name="content"
-      label={t('protos.form.content')}
-      placeholder={t('protos.form.contentPlaceholder')}
+      label={t('form.protos.content')}
+      placeholder={t('form.protos.contentPlaceholder', { fileTypes })}
       control={form.control}
       minRows={10}
-      acceptFileTypes=".proto,.pb"
+      acceptFileTypes={fileTypes}
       {...props}
     />
   );

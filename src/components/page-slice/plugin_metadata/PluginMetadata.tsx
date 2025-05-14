@@ -45,7 +45,9 @@ export const PluginMetadata = () => {
     mutationFn: putPluginMetadataReq,
     onSuccess(_, variables) {
       notifications.show({
-        message: t('pluginMetadata.update.success', { name: variables.name }),
+        message: t('info.edit.success', {
+          name: `${t('pluginMetadata.singular')} of ${variables.name}`,
+        }),
         color: 'green',
       });
       getMetadataListReq.refetch();
@@ -55,7 +57,9 @@ export const PluginMetadata = () => {
     mutationFn: (name: string) => deletePluginMetadataReq(name),
     onSuccess(_, name) {
       notifications.show({
-        message: t('pluginMetadata.delete.success', { name }),
+        message: t('info.delete.success', {
+          name: `${t('pluginMetadata.singular')} of ${name}`,
+        }),
         color: 'green',
       });
       getMetadataListReq.refetch();

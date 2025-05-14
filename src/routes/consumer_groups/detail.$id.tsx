@@ -58,7 +58,7 @@ const ConsumerGroupDetailForm = (props: Props) => {
     mutationFn: putConsumerGroupReq,
     async onSuccess() {
       notifications.show({
-        message: t('consumerGroups.edit.success'),
+        message: t('info.edit.success', { name: t('consumerGroups.singular') }),
         color: 'green',
       });
       consumerGroupQuery.refetch();
@@ -113,9 +113,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('consumerGroups.edit.title')}
+        title={t('info.edit.title', { name: t('consumerGroups.singular') })}
         {...(readOnly && {
-          title: t('consumerGroups.detail.title'),
+          title: t('info.detail.title', { name: t('consumerGroups.singular') }),
           extra: (
             <Group>
               <Button

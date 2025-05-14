@@ -68,7 +68,7 @@ const UpstreamDetailForm = (
     mutationFn: putUpstreamReq,
     async onSuccess() {
       notifications.show({
-        message: t('upstreams.edit.success'),
+        message: t('info.edit.success', { name: t('upstreams.singular') }),
         color: 'green',
       });
       await refetch();
@@ -119,9 +119,9 @@ function RouteComponent() {
   return (
     <>
       <PageHeader
-        title={t('upstreams.edit.title')}
+        title={t('info.edit.title', { name: t('upstreams.singular') })}
         {...(readOnly && {
-          title: t('upstreams.detail.title'),
+          title: t('info.detail.title', { name: t('upstreams.singular') }),
           extra: (
             <Group>
               <Button
