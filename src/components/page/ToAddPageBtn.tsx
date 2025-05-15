@@ -21,9 +21,6 @@ import { RouteLinkBtn } from '@/components/Btn';
 import type { FileRoutesByTo } from '@/routeTree.gen';
 import IconPlus from '~icons/material-symbols/add';
 
-type FilterKeys<T, R extends string> = {
-  [K in keyof T as K extends `${string}${R}` ? K : never]: T[K];
-};
 type ToAddPageBtnProps = {
   to: keyof FilterKeys<FileRoutesByTo, 'add'>;
   label: string;

@@ -14,30 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { access, readFile } from 'node:fs/promises';
-import path from 'node:path';
+import type { Page } from '@playwright/test';
 
-import { nanoid } from 'nanoid';
-import { parse } from 'yaml';
+import type { FileRouteTypes } from '@/routeTree.gen';
 
-type APISIXConf = {
-  deployment: { admin: { admin_key: { key: string }[] } };
+import { env } from './env';
+
+export const uiGoto = (page: Page, path: FileRouteTypes['to']) => {
+  return page.goto(`${env.E2E_TARGET_URL}${path.substring(1)}`);
 };
-export const getAPISIXConf = async () => {
-  const currentDir = new URL('.', import.meta.url).pathname;
-  const confPath = path.join(currentDir, '../server/apisix_conf.yml');
-  const file = await readFile(confPath, 'utf-8');
-  const res = parse(file) as APISIXConf;
-  return { adminKey: res.deployment.admin.admin_key[0].key };
-};
-
-export const fileExists = async (filePath: string) => {
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-export const randomId = (info: string) => `${info}_${nanoid()}`;

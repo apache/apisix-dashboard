@@ -17,7 +17,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group,Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useMutation,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
@@ -38,6 +42,7 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_UPSTREAMS } from '@/config/constant';
+import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -45,6 +50,12 @@ type Props = {
   readOnly: boolean;
   setReadOnly: (v: boolean) => void;
 };
+
+const getUpstreamQueryOptions = (id: string) =>
+  queryOptions({
+    queryKey: ['upstream', id],
+    queryFn: () => getUpstreamReq(req, id),
+  });
 
 const UpstreamDetailForm = (
   props: Props & Pick<APISIXType['Upstream'], 'id'>
@@ -55,7 +66,7 @@ const UpstreamDetailForm = (
     data: { value: upstreamData },
     isLoading,
     refetch,
-  } = useSuspenseQuery(getUpstreamReq(id));
+  } = useSuspenseQuery(getUpstreamQueryOptions(id));
 
   const form = useForm({
     resolver: zodResolver(FormPartUpstreamSchema),
@@ -65,7 +76,7 @@ const UpstreamDetailForm = (
   });
 
   const putUpstream = useMutation({
-    mutationFn: putUpstreamReq,
+    mutationFn: (data: APISIXType['Upstream']) => putUpstreamReq(req, data),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('upstreams.singular') }),

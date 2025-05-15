@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import { test as baseTest } from '@playwright/test';
+import { expect, test as baseTest } from '@playwright/test';
 
-import { getAPISIXConf } from './common';
+import { fileExists, getAPISIXConf } from './common';
 import { env } from './env';
 
 export const test = baseTest.extend<object, { workerStorageState: string }>({
@@ -32,9 +32,14 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
         test.info().project.outputDir,
         `.auth/${id}.json`
       );
+      const { adminKey } = await getAPISIXConf();
 
-      if (existsSync(fileName)) {
-        return await use(fileName);
+      // file exists and contains admin key, use it
+      if (
+        (await fileExists(fileName)) &&
+        (await readFile(fileName)).toString().includes(adminKey)
+      ) {
+        return use(fileName);
       }
 
       const page = await browser.newPage({ storageState: undefined });
@@ -44,19 +49,14 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
 
       // we need to authenticate
       const settingsModal = page.getByRole('dialog', { name: 'Settings' });
-      if (await settingsModal.isVisible()) {
-        const { adminKey } = await getAPISIXConf();
-
-        const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
-        await adminKeyInput.clear();
-        await adminKeyInput.fill(adminKey);
-        await page
-          .getByRole('dialog', { name: 'Settings' })
-          .getByRole('button')
-          .click();
-
-        await page.reload();
-      }
+      await expect(settingsModal).toBeVisible();
+      const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
+      await adminKeyInput.clear();
+      await adminKeyInput.fill(adminKey);
+      await page
+        .getByRole('dialog', { name: 'Settings' })
+        .getByRole('button')
+        .click();
 
       await page.context().storageState({ path: fileName });
       await page.close();
