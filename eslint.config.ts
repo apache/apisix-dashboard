@@ -86,14 +86,16 @@ const commonRules = tseslint.config({
   },
 });
 
-const e2eRules = tseslint.config({
-  extends: [commonRules],
-  ...playwright.configs['flat/recommended'],
-  files: ['e2e/**/*.ts'],
-  rules: {
-    ...playwright.configs['flat/recommended'].rules,
+const e2eRules = tseslint.config(
+  {
+    extends: [commonRules],
+    files: ['e2e/**/*.ts'],
   },
-});
+  {
+    files: ['e2e/**/*.spec.ts'],
+    ...playwright.configs['flat/recommended'],
+  }
+);
 
 const i18nRules = tseslint.config({
   files: ['src/**/*.{ts,tsx,js}'],
