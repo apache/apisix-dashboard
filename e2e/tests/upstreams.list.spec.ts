@@ -25,21 +25,6 @@ import { deleteAllUpstreams, putUpstreamReq } from '@/apis/upstreams';
 import { API_UPSTREAMS } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 
-const upstreams: APISIXType['Upstream'][] = Array.from(
-  { length: 11 },
-  (_, i) => ({
-    id: `upstream_id_${i + 1}`,
-    name: `upstream_name_${i + 1}`,
-    nodes: [
-      {
-        host: `node_${i + 1}`,
-        port: 80,
-        weight: 100,
-      },
-    ],
-  })
-);
-
 test('should navigate to upstreams page', async ({ page }) => {
   await test.step('navigate to upstreams page', async () => {
     await upstreamsPom.getUpstreamNavBtn(page).click();
@@ -58,6 +43,21 @@ test('should navigate to upstreams page', async ({ page }) => {
     await expect(table.getByText('Actions', { exact: true })).toBeVisible();
   });
 });
+
+const upstreams: APISIXType['Upstream'][] = Array.from(
+  { length: 11 },
+  (_, i) => ({
+    id: `upstream_id_${i + 1}`,
+    name: `upstream_name_${i + 1}`,
+    nodes: [
+      {
+        host: `node_${i + 1}`,
+        port: 80,
+        weight: 100,
+      },
+    ],
+  })
+);
 
 test.describe('page and page_size should works correctly', () => {
   test.describe.configure({ mode: 'serial' });
