@@ -21,14 +21,9 @@ import { API_UPSTREAMS } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
-export const getUpstreamListReq = (
-  req: AxiosInstance,
-  params: PageSearchType
-) =>
+export const getUpstreamListReq = (req: AxiosInstance, params: PageSearchType) =>
   req
-    .get<undefined, APISIXType['RespUpstreamList']>(API_UPSTREAMS, {
-      params: { ...params, page_size: params.pageSize },
-    })
+    .get<undefined, APISIXType['RespUpstreamList']>(API_UPSTREAMS, { params })
     .then((v) => v.data);
 
 export const getUpstreamReq = (req: AxiosInstance, id: string) =>
@@ -59,6 +54,7 @@ export const putUpstreamReq = (
 export const deleteAllUpstreams = async (req: AxiosInstance) => {
   const res = await getUpstreamListReq(req, {
     page: 1,
+    page_size: 1000,
     pageSize: 1000,
   });
   if (res.total === 0) return;

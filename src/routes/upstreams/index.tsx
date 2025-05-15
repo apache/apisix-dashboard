@@ -16,50 +16,23 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getUpstreamListReq } from '@/apis/upstreams';
+import { getUpstreamListQueryOptions, useUpstreamList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_UPSTREAMS } from '@/config/constant';
 import { queryClient } from '@/config/global';
-import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import {
-  pageSearchSchema,
-  type PageSearchType,
-} from '@/types/schema/pageSearch';
-import { usePagination } from '@/utils/usePagination';
-
-const genUpstreamsQueryOptions = (props: PageSearchType) => {
-  const { page, pageSize } = props;
-  return queryOptions({
-    queryKey: ['upstreams', page, pageSize],
-    queryFn: () => getUpstreamListReq(req, { page, pageSize }),
-  });
-};
+import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function RouteComponent() {
   const { t } = useTranslation();
-
-  // Use the pagination hook
-  const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'upstreams',
-  });
-
-  const upstreamQuery = useSuspenseQuery(genUpstreamsQueryOptions(pagination));
-  const { data, isLoading, refetch } = upstreamQuery;
-
-  useEffect(() => {
-    if (data?.total) {
-      updateTotal(data.total);
-    }
-  }, [data?.total, updateTotal]);
+  const { data, isLoading, refetch, pagination } = useUpstreamList();
 
   const columns = useMemo<
     ProColumns<APISIXType['RespUpstreamList']['data']['list'][number]>[]
@@ -133,13 +106,7 @@ function RouteComponent() {
           loading={isLoading}
           search={false}
           options={false}
-          pagination={{
-            current: pagination.page,
-            pageSize: pagination.pageSize,
-            total: pagination.total,
-            showSizeChanger: true,
-            onChange: handlePageChange,
-          }}
+          pagination={pagination}
           cardProps={{ bodyStyle: { padding: 0 } }}
           toolbar={{
             menu: {
@@ -171,5 +138,5 @@ export const Route = createFileRoute('/upstreams/')({
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) =>
-    queryClient.ensureQueryData(genUpstreamsQueryOptions(deps)),
+    queryClient.ensureQueryData(getUpstreamListQueryOptions(deps)),
 });

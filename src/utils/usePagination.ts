@@ -75,6 +75,7 @@ export function usePagination(
 
   const [pagination, setPagination] = useState<PaginationState>({
     page: urlPage,
+    page_size: urlPageSize,
     pageSize: urlPageSize,
     total: initialTotal,
   });
