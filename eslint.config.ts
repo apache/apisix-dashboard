@@ -32,18 +32,20 @@ const importRules = tseslint.config({
   plugins: {
     'unused-imports': unusedImports,
     'simple-import-sort': simpleImportSort,
-    'import': importPlugin,
+    import: importPlugin,
   },
   rules: {
+    ...importPlugin.flatConfigs?.recommended.rules,
+    ...importPlugin.flatConfigs?.typescript.rules,
     'no-unused-vars': 'off',
     'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [
       'warn',
       {
-        'vars': 'all',
-        'varsIgnorePattern': '^_',
-        'args': 'after-used',
-        'argsIgnorePattern': '^_',
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
       },
     ],
     'simple-import-sort/imports': 'error',
@@ -53,17 +55,47 @@ const importRules = tseslint.config({
     'import/no-duplicates': 'error',
     'import/no-unresolved': 'off',
     'import/no-named-as-default-member': 'off',
-  }
-})
-
-const e2eRules = tseslint.config({
-  extends: [importRules],
-  ...playwright.configs['flat/recommended'],
-  files: ['e2e/**/*.spec.ts'],
-  rules: {
-    ...playwright.configs['flat/recommended'].rules,
   },
 });
+
+const commonRules = tseslint.config({
+  extends: [
+    js.configs.recommended,
+    ...tseslint.configs.recommended,
+    importRules,
+  ],
+  plugins: {
+    headers: headers,
+  },
+  rules: {
+    'headers/header-format': [
+      'error',
+      {
+        source: 'file',
+        path: '.actions/ASFLicenseHeader.txt',
+      },
+    ],
+    quotes: [
+      'error',
+      'single',
+      {
+        avoidEscape: true,
+        allowTemplateLiterals: false,
+      },
+    ],
+  },
+});
+
+const e2eRules = tseslint.config(
+  {
+    extends: [commonRules],
+    files: ['e2e/**/*.ts'],
+  },
+  {
+    files: ['e2e/**/*.spec.ts'],
+    ...playwright.configs['flat/recommended'],
+  }
+);
 
 const i18nRules = tseslint.config({
   files: ['src/**/*.{ts,tsx,js}'],
@@ -74,10 +106,7 @@ const i18nRules = tseslint.config({
   rules: {
     ...i18next.configs['flat/recommended'].rules,
     'i18n/no-unknown-key': 'error',
-    'i18n/no-text-as-children': [
-      'error',
-      { ignorePattern: '^\\s?[/.]\\s?$' },
-    ],
+    'i18n/no-text-as-children': ['error', { ignorePattern: '^\\s?[/.]\\s?$' }],
     'i18n/no-text-as-attribute': ['error', { attributes: ['alt', 'title'] }],
     'i18n/interpolation-data': [
       'error',
@@ -95,104 +124,67 @@ const i18nRules = tseslint.config({
       functionName: 't',
     },
   },
-})
+});
+
+const srcRules = tseslint.config({
+  extends: [commonRules],
+  files: ['src/**/*.{ts,tsx}', 'eslint.config.ts'],
+  languageOptions: {
+    ecmaVersion: 2020,
+    globals: globals.browser,
+    sourceType: 'module',
+  },
+  plugins: {
+    'react-hooks': reactHooks,
+    'react-refresh': reactRefresh,
+    react: react,
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  rules: {
+    ...react.configs.flat.recommended.rules,
+    ...react.configs.flat['jsx-runtime'].rules,
+    ...reactHooks.configs.recommended.rules,
+    'no-console': 'warn',
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
+    'react/jsx-curly-brace-presence': [
+      'error',
+      {
+        props: 'never',
+        children: 'never',
+      },
+    ],
+    'react/no-unescaped-entities': [
+      'error',
+      {
+        forbid: ['>', '}'],
+      },
+    ],
+    'react/no-children-prop': [
+      'error',
+      {
+        allowFunctions: true,
+      },
+    ],
+    'react/self-closing-comp': [
+      'error',
+      {
+        component: true,
+        html: true,
+      },
+    ],
+  },
+});
 
 export default tseslint.config(
   { ignores: ['dist', 'src/routeTree.gen.ts'] },
   e2eRules,
   i18nRules,
-  {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended, importRules],
-    files: ['src/**/*.{ts,tsx}', 'eslint.config.ts'],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      sourceType: 'module',
-    },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      react: react,
-      'unused-imports': unusedImports,
-      'simple-import-sort': simpleImportSort,
-      import: importPlugin,
-      headers: headers,
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-    rules: {
-      ...react.configs.flat.recommended.rules,
-      ...react.configs.flat['jsx-runtime'].rules,
-      ...reactHooks.configs.recommended.rules,
-      ...importPlugin.flatConfigs?.recommended.rules,
-      ...importPlugin.flatConfigs?.typescript.rules,
-      'no-console': 'warn',
-      'no-unused-vars': 'off',
-      'unused-imports/no-unused-imports': 'error',
-      'unused-imports/no-unused-vars': [
-        'warn',
-        {
-          vars: 'all',
-          varsIgnorePattern: '^_',
-          args: 'after-used',
-          argsIgnorePattern: '^_',
-        },
-      ],
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
-      'import/first': 'error',
-      'import/newline-after-import': 'error',
-      'import/no-duplicates': 'error',
-      'import/no-unresolved': 'off',
-      'import/no-named-as-default-member': 'off',
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
-      'react/jsx-curly-brace-presence': [
-        'error',
-        {
-          props: 'never',
-          children: 'never',
-        },
-      ],
-      'react/no-unescaped-entities': [
-        'error',
-        {
-          forbid: ['>', '}'],
-        },
-      ],
-      'react/no-children-prop': [
-        'error',
-        {
-          allowFunctions: true,
-        },
-      ],
-      'react/self-closing-comp': [
-        'error',
-        {
-          component: true,
-          html: true,
-        },
-      ],
-      'headers/header-format': [
-        'error',
-        {
-          source: 'file',
-          path: '.actions/ASFLicenseHeader.txt',
-        },
-      ],
-      'quotes': [
-        'error',
-        'single',
-        {
-          'avoidEscape': true,
-          'allowTemplateLiterals': false
-        }
-      ],
-    },
-  }
+  srcRules
 );
