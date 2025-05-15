@@ -17,8 +17,8 @@
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import { parse } from 'yaml';
 import { nanoid } from 'nanoid';
+import { parse } from 'yaml';
 
 type APISIXConf = {
   deployment: { admin: { admin_key: { key: string }[] } };

@@ -14,13 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { test as baseTest } from '@playwright/test';
-import { fileExists, getAPISIXConf } from './common';
-import path from 'node:path';
-import { env } from './env';
 import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 
-export const test = baseTest.extend<{}, { workerStorageState: string }>({
+import { test as baseTest } from '@playwright/test';
+
+import { fileExists, getAPISIXConf } from './common';
+import { env } from './env';
+
+export const test = baseTest.extend<object, { workerStorageState: string }>({
   storageState: ({ workerStorageState }, use) => use(workerStorageState),
   workerStorageState: [
     async ({ browser }, use) => {
@@ -33,7 +35,10 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
       const { adminKey } = await getAPISIXConf();
 
       // file exists and contains admin key, use it
-      if (await fileExists(fileName) && (await readFile(fileName)).toString().includes(adminKey)) {
+      if (
+        (await fileExists(fileName)) &&
+        (await readFile(fileName)).toString().includes(adminKey)
+      ) {
         return use(fileName);
       }
 
@@ -41,12 +46,10 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
 
       // have to use env here, because the baseURL is not available in worker
       await page.goto(env.E2E_TARGET_URL);
-      await page.waitForLoadState('networkidle');
 
       // we need to authenticate
       const settingsModal = page.getByRole('dialog', { name: 'Settings' });
       if (await settingsModal.isVisible()) {
-
         const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
         await adminKeyInput.clear();
         await adminKeyInput.fill(adminKey);
@@ -56,7 +59,6 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
           .click();
 
         await page.reload();
-        await page.waitForLoadState('networkidle');
       }
 
       await page.context().storageState({ path: fileName });

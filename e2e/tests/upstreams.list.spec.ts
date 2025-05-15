@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
+import { UpstreamsPom } from '@e2e/pom/upstreams';
+import { e2eReq } from '@e2e/utils/req';
+import { test } from '@e2e/utils/test';
 import { expect, type Page } from '@playwright/test';
-import { UpstreamsPom } from '@pom/upstreams';
-import { deleteAllUpstreams, putUpstreamReq } from '@src/apis/upstreams';
-import type { APISIXType } from '@src/types/schema/apisix';
-import { e2eReq } from '@utils/req';
-import { test } from '@utils/test';
+
+import { deleteAllUpstreams, putUpstreamReq } from '@/apis/upstreams';
+import type { APISIXType } from '@/types/schema/apisix';
 
 const upstreams: APISIXType['Upstream'][] = Array.from(
   { length: 11 },
