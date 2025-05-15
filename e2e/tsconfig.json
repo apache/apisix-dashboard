@@ -15,20 +15,17 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
+    "verbatimModuleSyntax": true,
     "paths": {
-      "@utils/*": [
-        "./e2e/utils/*"
+      "@e2e/*": [
+        "./*"
       ],
-      "@pom/*": [
-        "./e2e/pom/*"
-      ],
-      "@src/*": [
+      "@/*": [
         "./src/*"
       ],
     }
   },
   "include": [
-    "e2e/**/*.ts",
-    "src/routeTree.gen.ts"
+    "./**/*.ts",
   ]
 }
