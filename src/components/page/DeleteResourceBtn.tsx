@@ -14,20 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button, type ButtonProps,Text } from '@mantine/core';
+import { Button, type ButtonProps, Text } from '@mantine/core';
 import { useCallbackRef } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import type { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 
+import { queryClient } from '@/config/global';
 import { req } from '@/config/req';
 
 type DeleteResourceProps = {
   name: string;
   api: string;
   target?: string;
-  onSuccess?: ((res: AxiosResponse<unknown, unknown>) => void) | (() => void);
+  onSuccess?:
+    | ((res: AxiosResponse<unknown, unknown>) => void)
+    | ((res: AxiosResponse<unknown, unknown>) => Promise<void>)
+    | (() => void)
+    | (() => Promise<void>);
   DeleteBtn?: typeof Button;
   mode?: 'detail' | 'list';
 } & ButtonProps;
@@ -65,13 +70,22 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
       ),
       labels: { confirm: t('form.btn.delete'), cancel: t('form.btn.cancel') },
       onConfirm: () =>
-        req.delete(api).then((res) => {
-          notifications.show({
-            message: t('info.delete.success', { name: name }),
-            color: 'green',
-          });
-          onSuccess?.(res);
-        }),
+        req
+          .delete(api)
+          .then((res) => Promise.resolve(onSuccess?.(res)))
+          .then(() => {
+            notifications.show({
+              message: t('info.delete.success', { name: name }),
+              color: 'green',
+            });
+            // force invalidate all queries
+            // because in playwright, if without this, the navigated page will not refresh
+            // and the deleted source will not be removed from the list
+            // And in normal use, I haven't reproduced this problem.
+            // So this is a workaround for now
+            // TODO: remove this
+            queryClient.invalidateQueries();
+          }),
     })
   );
   if (DeleteBtn) {

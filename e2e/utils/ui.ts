@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { FileRouteTypes } from '@/routeTree.gen';
 
@@ -22,4 +22,14 @@ import { env } from './env';
 
 export const uiGoto = (page: Page, path: FileRouteTypes['to']) => {
   return page.goto(`${env.E2E_TARGET_URL}${path.substring(1)}`);
+};
+
+export const uiHasToastMsg = async (
+  page: Page,
+  ...filterOpts: Parameters<Locator['filter']>
+) => {
+  const alertMsg = page.getByRole('alert').filter(...filterOpts);
+  await expect(alertMsg).toBeVisible();
+  await alertMsg.getByRole('button').click();
+  await expect(alertMsg).not.toBeVisible();
 };
