@@ -265,6 +265,7 @@
       "tls": {
         "clientCert": "Client Cert",
         "clientCertId": "Client Cert ID",
+        "clientCertKeyPair": "Client Cert Key Pair",
         "clientKey": "Client Key",
         "title": "TLS",
         "verify": "Verify"
