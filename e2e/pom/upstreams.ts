@@ -17,6 +17,26 @@
 import { uiGoto } from '@e2e/utils/ui';
 import { expect, type Locator, type Page } from '@playwright/test';
 
+const locator = {
+  getUpstreamNavBtn: (page: Page) =>
+    page.getByRole('link', { name: 'Upstreams' }),
+  getAddUpstreamBtn: (page: Page) =>
+    page.getByRole('button', { name: 'Add Upstream' }),
+};
+
+const assert = {
+  isListPage: async (page: Page) => {
+    await expect(page).toHaveURL((url) => url.pathname.endsWith('/upstreams'));
+    const title = page.getByRole('heading', { name: 'Upstreams' });
+    await expect(title).toBeVisible();
+  },
+};
+
+export const upstreams = {
+  locator,
+  assert,
+};
+
 export class UpstreamsPom {
   readonly upstreamNavBtn: Locator;
   readonly addUpstreamBtn: Locator;
@@ -29,14 +49,6 @@ export class UpstreamsPom {
 
   async goto() {
     await uiGoto(this.page, '/upstreams');
-  }
-
-  async isListPage() {
-    await expect(this.page).toHaveURL((url) =>
-      url.pathname.endsWith('/upstreams')
-    );
-    const title = this.page.getByRole('heading', { name: 'Upstreams' });
-    await expect(title).toBeVisible();
   }
 
   async isAddPage() {
