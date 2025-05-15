@@ -21,14 +21,13 @@ import { useCallback, useMemo } from 'react';
 import type { FileRoutesByTo } from '@/routeTree.gen';
 import type { APISIXListResponse } from '@/types/schema/apisix/type';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-import type { FilterKeys } from '@/types/utils';
 
 import type { UseSearchParams } from './useSearchParams';
 
 type ListPageKeys = `${keyof FilterKeys<FileRoutesByTo, 's'>}/`;
 type Props<T> = {
   data: APISIXListResponse<T>;
-  /** if params is from useSearchParams, we don't need refetch */
+  /** if params is from useSearchParams, refetch is not needed */
   refetch?: () => void;
 } & Pick<UseSearchParams<ListPageKeys>, 'params' | 'setParams'>;
 
