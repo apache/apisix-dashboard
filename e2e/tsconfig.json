@@ -15,13 +15,14 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
+    "verbatimModuleSyntax": true,
     "paths": {
       "@utils/*": [
-        "./e2e/utils/*"
+        "./utils/*"
       ]
     }
   },
   "include": [
-    "e2e/**/*.ts",
+    "./**/*.ts",
   ]
 }

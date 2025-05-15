@@ -16,9 +16,8 @@
  */
 
 import { expect } from '@playwright/test';
+import { getAPISIXConf } from '@utils/common';
 import { test } from '@utils/test';
-
-import { getAPISIXConf } from './utils/common';
 
 // use empty storage state to avoid auth
 test.use({ storageState: { cookies: [], origins: [] } });
