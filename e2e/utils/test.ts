@@ -14,13 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { test as baseTest } from '@playwright/test';
-import { getAPISIXConf } from './common';
-import path from 'node:path';
 import { existsSync } from 'node:fs';
+import path from 'node:path';
+
+import { test as baseTest } from '@playwright/test';
+
+import { getAPISIXConf } from './common';
 import { env } from './env';
 
-export const test = baseTest.extend<{}, { workerStorageState: string }>({
+export const test = baseTest.extend<object, { workerStorageState: string }>({
   storageState: ({ workerStorageState }, use) => use(workerStorageState),
   workerStorageState: [
     async ({ browser }, use) => {
@@ -54,7 +56,6 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
           .click();
 
         await page.reload();
-        await page.waitForLoadState('networkidle');
       }
 
       await page.context().storageState({ path: fileName });

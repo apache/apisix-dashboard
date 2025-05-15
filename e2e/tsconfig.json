@@ -17,8 +17,11 @@
     "noImplicitAny": false,
     "verbatimModuleSyntax": true,
     "paths": {
-      "@utils/*": [
-        "./utils/*"
+      "@e2e/*": [
+        "./*"
+      ],
+      "@/*": [
+        "../src/*"
       ]
     }
   },
