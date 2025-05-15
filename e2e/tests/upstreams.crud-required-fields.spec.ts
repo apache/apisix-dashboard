@@ -16,10 +16,12 @@
  */
 import { upstreamsPom } from '@e2e/pom/upstreams';
 import { randomId } from '@e2e/utils/common';
+import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { uiHasToastMsg } from '@e2e/utils/ui';
 import { expect } from '@playwright/test';
 
+import { deleteAllUpstreams } from '@/apis/upstreams';
 import type { APISIXType } from '@/types/schema/apisix';
 
 const upstreamName = randomId('test-upstream');
@@ -27,6 +29,10 @@ const nodes: APISIXType['UpstreamNode'][] = [
   { host: 'test.com' },
   { host: 'test2.com', port: 80 },
 ];
+
+test.beforeAll(async () => {
+  await deleteAllUpstreams(e2eReq);
+});
 
 test('should CRUD upstream with required fields', async ({ page }) => {
   await upstreamsPom.toIndex(page);
@@ -129,12 +135,26 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     const descriptionField = page.getByLabel('Description');
     await descriptionField.fill('Updated description for testing');
 
+    // Add a simple label (key:value format)
+    const labelsField = page.getByRole('textbox', { name: 'Labels' });
+    await expect(labelsField).toBeEnabled();
+
+    // Add a single label in key:value format
+    await labelsField.click();
+    await labelsField.fill('version:v1');
+    await labelsField.press('Enter');
+
+    // Verify the label was added by checking if the input is cleared
+    // This indicates the tag was successfully created
+    await expect(labelsField).toHaveValue('');
+
     // Update a node - change the host of the first node
     const nodesSection = page.getByRole('group', { name: 'Nodes' });
     const rows = nodesSection.locator('tr.ant-table-row');
     const firstRowHost = rows.nth(0).getByRole('textbox').first();
     await firstRowHost.fill('updated-test.com');
     await expect(firstRowHost).toHaveValue('updated-test.com');
+    await nodesSection.click();
 
     // Click the Save button to save changes
     const saveBtn = page.getByRole('button', { name: 'Save' });
@@ -147,16 +167,26 @@ test('should CRUD upstream with required fields', async ({ page }) => {
 
     // Verify we're back in detail view mode
     await upstreamsPom.isDetailPage(page);
-    
+
     // Verify the updated fields
-    await expect(page.getByLabel('Description')).toHaveValue('Updated description for testing');
-    
-    // Verify the node has been updated - using a more reliable approach
-    // Wait for the nodes section to be visible first
-    await expect(nodesSection).toBeVisible();
-    
+    await expect(page.getByLabel('Description')).toHaveValue(
+      'Updated description for testing'
+    );
+
     // Check if the updated node host text is visible somewhere in the nodes section
+    await expect(nodesSection).toBeVisible();
     await expect(nodesSection.getByText('updated-test.com')).toBeVisible();
+
+    // check labels
+    await expect(page.getByText('version:v1')).toBeVisible();
+
+    // Return to list page and verify the upstream exists
+    await upstreamsPom.getUpstreamNavBtn(page).click();
+    await upstreamsPom.isIndexPage(page);
+
+    // Find the row with our upstream
+    const row = page.getByRole('row', { name: upstreamName });
+    await expect(row).toBeVisible();
   });
 
   await test.step('delete upstream in detail page', async () => {
