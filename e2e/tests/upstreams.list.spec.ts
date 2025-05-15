@@ -59,7 +59,7 @@ const upstreams: APISIXType['Upstream'][] = Array.from(
   })
 );
 
-test.describe('page and page_size should works correctly', () => {
+test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
   test.beforeAll(async () => {
     await deleteAllUpstreams(e2eReq);
@@ -91,4 +91,3 @@ test.describe('page and page_size should works correctly', () => {
       page.getByRole('cell', { name: item.name }).first(),
   });
 });
-
