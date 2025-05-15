@@ -19,7 +19,6 @@ import { useTranslation } from 'react-i18next';
 
 import { RouteLinkBtn } from '@/components/Btn';
 import type { FileRoutesByTo } from '@/routeTree.gen';
-import type { FilterKeys } from '@/types/utils';
 import IconPlus from '~icons/material-symbols/add';
 
 type ToAddPageBtnProps = {
