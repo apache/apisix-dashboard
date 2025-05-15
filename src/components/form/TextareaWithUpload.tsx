@@ -107,14 +107,13 @@ export const FormItemTextareaWithUpload = <T extends FieldValues>(
         {...restField}
         {...textareaProps}
       />
-      {allowUpload && (
+      {allowUpload && !restField.disabled && (
         <Group mb="xs" mt={4}>
           <Button
             leftSection={<IconUpload />}
             size="compact-xs"
             variant="outline"
             onClick={() => fileInputRef.current?.click()}
-            disabled={restField.disabled}
           >
             {uploadButtonText || t('form.btn.upload')}
           </Button>

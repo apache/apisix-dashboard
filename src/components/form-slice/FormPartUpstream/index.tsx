@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { FormItemNumberInput } from '@/components/form/NumberInput';
 import { FormItemSelect } from '@/components/form/Select';
 import { FormItemSwitch } from '@/components/form/Switch';
-import { FormItemTextarea } from '@/components/form/Textarea';
+import { FormItemTextareaWithUpload } from '@/components/form/TextareaWithUpload';
 import { FormItemTextInput } from '@/components/form/TextInput';
 import { APISIX } from '@/types/schema/apisix';
 import { useNamePrefix } from '@/utils/useNamePrefix';
@@ -45,13 +45,13 @@ export const FormSectionTLS = () => {
         name={np('tls.verify')}
         label={t('form.upstreams.tls.verify')}
       />
-      <FormSection legend={t('form.upstreams.tls.clientCert')}>
-        <FormItemTextarea
+      <FormSection legend={t('form.upstreams.tls.clientCertKeyPair')}>
+        <FormItemTextareaWithUpload
           control={control}
           name={np('tls.client_cert')}
           label={t('form.upstreams.tls.clientCert')}
         />
-        <FormItemTextarea
+        <FormItemTextareaWithUpload
           control={control}
           name={np('tls.client_key')}
           label={t('form.upstreams.tls.clientKey')}

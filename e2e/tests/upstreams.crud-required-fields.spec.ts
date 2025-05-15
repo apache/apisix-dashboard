@@ -64,7 +64,6 @@ test('should add upstream with required fields, and delete in detail page', asyn
     await nodesSection.click();
 
     // add a new node then remove it
-    // have to use force to click the delete button
     await addNodeBtn.click();
     await expect(rows.nth(1)).toBeVisible();
     const secondRowHost = rows.nth(1).getByRole('textbox').first();
