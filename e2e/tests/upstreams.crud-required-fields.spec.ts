@@ -28,9 +28,7 @@ const nodes: APISIXType['UpstreamNode'][] = [
   { host: 'test2.com', port: 80 },
 ];
 
-test('should add upstream with required fields, and delete in detail page', async ({
-  page,
-}) => {
+test('should CRUD upstream with required fields', async ({ page }) => {
   await upstreamsPom.toIndex(page);
   await upstreamsPom.isIndexPage(page);
 
@@ -117,6 +115,48 @@ test('should add upstream with required fields, and delete in detail page', asyn
     await upstreamsPom.isDetailPage(page);
     const name = page.getByLabel('Name', { exact: true });
     await expect(name).toHaveValue(upstreamName);
+  });
+
+  await test.step('edit and update upstream in detail page', async () => {
+    // Click the Edit button in the detail page
+    await page.getByRole('button', { name: 'Edit' }).click();
+
+    // Verify we're in edit mode - fields should be editable now
+    const nameField = page.getByLabel('Name', { exact: true });
+    await expect(nameField).toBeEnabled();
+
+    // Update the description field
+    const descriptionField = page.getByLabel('Description');
+    await descriptionField.fill('Updated description for testing');
+
+    // Update a node - change the host of the first node
+    const nodesSection = page.getByRole('group', { name: 'Nodes' });
+    const rows = nodesSection.locator('tr.ant-table-row');
+    const firstRowHost = rows.nth(0).getByRole('textbox').first();
+    await firstRowHost.fill('updated-test.com');
+    await expect(firstRowHost).toHaveValue('updated-test.com');
+
+    // Click the Save button to save changes
+    const saveBtn = page.getByRole('button', { name: 'Save' });
+    await saveBtn.click();
+
+    // Verify the update was successful
+    await uiHasToastMsg(page, {
+      hasText: 'success',
+    });
+
+    // Verify we're back in detail view mode
+    await upstreamsPom.isDetailPage(page);
+    
+    // Verify the updated fields
+    await expect(page.getByLabel('Description')).toHaveValue('Updated description for testing');
+    
+    // Verify the node has been updated - using a more reliable approach
+    // Wait for the nodes section to be visible first
+    await expect(nodesSection).toBeVisible();
+    
+    // Check if the updated node host text is visible somewhere in the nodes section
+    await expect(nodesSection.getByText('updated-test.com')).toBeVisible();
   });
 
   await test.step('delete upstream in detail page', async () => {

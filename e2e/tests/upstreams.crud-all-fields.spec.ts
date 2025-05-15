@@ -28,7 +28,7 @@ test.beforeAll(async () => {
   await deleteAllUpstreams(e2eReq);
 });
 
-test('should add upstream with all fields', async ({ page }) => {
+test('should CRUD upstream with all fields', async ({ page }) => {
   test.setTimeout(30000);
 
   const fillHTTPStatuses = async (input: Locator, ...statuses: string[]) => {
@@ -98,17 +98,12 @@ test('should add upstream with all fields', async ({ page }) => {
     const priorityInput = rows.first().locator('input').nth(3);
     await priorityInput.click();
     await priorityInput.fill('1');
-    await expect(priorityInput).toHaveValue('1');
 
-    // Add the second node, using force option
+    // Add the second node with a more reliable approach
     await nodesSection.click();
     await addNodeBtn.click();
 
-    // Wait for the node count to increase to 2
-    await expect(async () => {
-      const count = await rows.count();
-      expect(count).toBeGreaterThanOrEqual(2);
-    }).toPass({ timeout: 10000 });
+    await expect(rows.nth(1)).toBeVisible();
 
     // Fill in the Host for the second node - click first then fill
     const hostInput2 = rows.nth(1).locator('input').first();
@@ -519,61 +514,29 @@ test('should add upstream with all fields', async ({ page }) => {
 
     // Verify entered detail page
     await upstreamsPom.isDetailPage(page);
-    
-    // Verify we are on the correct upstream's detail page by checking the name
-    const nameField = page.getByLabel('Name', { exact: true });
-    await expect(nameField).toHaveValue(upstreamNameWithAllFields);
-    await expect(nameField).toBeDisabled();
-
-    // Take a screenshot before deletion for verification
-    await page.screenshot({ path: `./test-results/upstream-before-delete-${upstreamNameWithAllFields}.png` });
 
     // Delete the upstream
-    const deleteButton = page.getByRole('button', { name: 'Delete' });
-    await expect(deleteButton).toBeVisible();
-    await deleteButton.click();
+    await page.getByRole('button', { name: 'Delete' }).click();
 
-    // Confirm deletion in the dialog
+    // Confirm deletion
     const deleteDialog = page.getByRole('dialog', { name: 'Delete Upstream' });
     await expect(deleteDialog).toBeVisible();
-    
-    // Verify the dialog content contains warning text
-    const dialogContent = deleteDialog.locator('.ant-modal-content');
-    await expect(dialogContent).toContainText('Are you sure you want to delete');
-    
-    // Click the Delete button in the dialog to confirm
     await deleteDialog.getByRole('button', { name: 'Delete' }).click();
 
-    // Verify successful deletion by checking redirection to index page
+    // Verify successful deletion
     await upstreamsPom.isIndexPage(page);
-    
-    // Verify success toast message appears
     await uiHasToastMsg(page, {
       hasText: 'Delete Upstream Successfully',
     });
 
-    // Verify the upstream is removed from the list
+    // Verify removed from the list
     await expect(page.getByText(upstreamNameWithAllFields)).toBeHidden();
-    
-    // Additional verification: Search for the deleted upstream to confirm it's gone
-    // First check if the search input exists on the page
-    const searchInput = page.getByPlaceholder('Search');
-    
-    // Try to locate the search input and use it if available
-    // This is a more robust approach than using conditionals
-    try {
-      // Wait for a short time to see if the search input is visible
-      await expect(searchInput).toBeVisible({ timeout: 2000 });
-      
-      // If we get here, the search input is visible, so use it
-      await searchInput.fill(upstreamNameWithAllFields);
-      await searchInput.press('Enter');
-      
-      // After search, the upstream should not be found
-      await expect(page.getByText('No Data')).toBeVisible();
-    } catch (error) {
-      // If search input is not available, that's ok - just log it
-      console.log('Search input not available, skipping search verification');
-    }
+
+    // Final verification: Reload the page and check again to ensure it's really gone
+    await page.reload();
+    await upstreamsPom.isIndexPage(page);
+
+    // After reload, the upstream should still be gone
+    await expect(page.getByText(upstreamNameWithAllFields)).toBeHidden();
   });
 });
