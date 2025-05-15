@@ -89,7 +89,7 @@ const commonRules = tseslint.config({
 const e2eRules = tseslint.config({
   extends: [commonRules],
   ...playwright.configs['flat/recommended'],
-  files: ['e2e/**/*.spec.ts'],
+  files: ['e2e/**/*.ts'],
   rules: {
     ...playwright.configs['flat/recommended'].rules,
   },
