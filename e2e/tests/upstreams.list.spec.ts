@@ -28,7 +28,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 test('should navigate to upstreams page', async ({ page }) => {
   await test.step('navigate to upstreams page', async () => {
     await upstreamsPom.getUpstreamNavBtn(page).click();
-    await upstreamsPom.isListPage(page);
+    await upstreamsPom.isIndexPage(page);
   });
 
   await test.step('verify upstreams page components', async () => {

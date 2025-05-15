@@ -25,7 +25,7 @@ const locator = {
 };
 
 const assert = {
-  isListPage: async (page: Page) => {
+  isIndexPage: async (page: Page) => {
     await expect(page).toHaveURL((url) => url.pathname.endsWith('/upstreams'));
     const title = page.getByRole('heading', { name: 'Upstreams' });
     await expect(title).toBeVisible();
@@ -40,7 +40,7 @@ const assert = {
 };
 
 const goto = {
-  toRoot: (page: Page) => uiGoto(page, '/upstreams'),
+  toIndex: (page: Page) => uiGoto(page, '/upstreams'),
   toAdd: (page: Page) => uiGoto(page, '/upstreams/add'),
 };
 

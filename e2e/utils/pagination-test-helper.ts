@@ -21,8 +21,8 @@ import { test as realTest } from './test';
 
 export interface PaginationTestConfig<T> {
   pom: {
-    toRoot: (page: Page) => Promise<unknown>;
-    isListPage: (page: Page) => Promise<void>;
+    toIndex: (page: Page) => Promise<unknown>;
+    isIndexPage: (page: Page) => Promise<void>;
   };
   items: T[];
   filterItemsNotInPage: (page: Page) => Promise<T[]>;
@@ -65,8 +65,8 @@ export function setupPaginationTests<T>(
 
   test('can use the pagination of the table to switch', async ({ page }) => {
     await test.step('navigate to list page', async () => {
-      await pom.toRoot(page);
-      await pom.isListPage(page);
+      await pom.toIndex(page);
+      await pom.isIndexPage(page);
     });
 
     await test.step('default page info should exists', async () => {
@@ -136,7 +136,7 @@ export function setupPaginationTests<T>(
       await expect(page).toHaveURL(
         (url) => url.searchParams.get('page') === newPageNum.toString()
       );
-      await pom.isListPage(page);
+      await pom.isIndexPage(page);
 
       // items not in page should be visible
       for (const item of itemsNotInPage) {
@@ -147,8 +147,8 @@ export function setupPaginationTests<T>(
 
   test('can use the search params in the URL to switch', async ({ page }) => {
     await test.step('navigate to list page', async () => {
-      await pom.toRoot(page);
-      await pom.isListPage(page);
+      await pom.toIndex(page);
+      await pom.isIndexPage(page);
     });
 
     await test.step('default page info should exists', async () => {
@@ -219,7 +219,7 @@ export function setupPaginationTests<T>(
       await expect(page).toHaveURL(
         (url) => url.searchParams.get('page') === newPageNum.toString()
       );
-      await pom.isListPage(page);
+      await pom.isIndexPage(page);
 
       // items not in page should be visible
       for (const item of itemsNotInPage) {
