@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { uiGoto } from '@e2e/utils/ui';
-import { expect, type Locator, type Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 const locator = {
   getUpstreamNavBtn: (page: Page) =>
@@ -30,46 +30,22 @@ const assert = {
     const title = page.getByRole('heading', { name: 'Upstreams' });
     await expect(title).toBeVisible();
   },
-};
-
-export const upstreams = {
-  locator,
-  assert,
-};
-
-export class UpstreamsPom {
-  readonly upstreamNavBtn: Locator;
-  readonly addUpstreamBtn: Locator;
-  constructor(private page: Page) {
-    this.upstreamNavBtn = this.page.getByRole('link', { name: 'Upstreams' });
-    this.addUpstreamBtn = this.page.getByRole('button', {
-      name: 'Add Upstream',
-    });
-  }
-
-  async goto() {
-    await uiGoto(this.page, '/upstreams');
-  }
-
-  async isAddPage() {
-    await expect(this.page).toHaveURL((url) =>
+  isAddPage: async (page: Page) => {
+    await expect(page).toHaveURL((url) =>
       url.pathname.endsWith('/upstreams/add')
     );
-    const title = this.page.getByRole('heading', { name: 'Add Upstream' });
+    const title = page.getByRole('heading', { name: 'Add Upstream' });
     await expect(title).toBeVisible();
-  }
+  },
+};
 
-  async createUpstream(name: string) {
-    await this.page.getByRole('button', { name: 'Create Upstream' }).click();
-    await this.page.getByLabel('Name').fill(name);
-    await this.page.getByRole('button', { name: 'Create' }).click();
-  }
+const goto = {
+  toRoot: (page: Page) => uiGoto(page, '/upstreams'),
+  toAdd: (page: Page) => uiGoto(page, '/upstreams/add'),
+};
 
-  async deleteUpstream(name: string) {
-    await this.page
-      .getByRole('row', { name })
-      .getByRole('button', { name: 'Delete' })
-      .click();
-    await this.page.getByRole('button', { name: 'Delete' }).click();
-  }
-}
+export const upstreamsPom = {
+  ...locator,
+  ...assert,
+  ...goto,
+};
