@@ -140,11 +140,11 @@ test('should CRUD upstream with all fields', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Type', exact: true }).click();
     await page.getByRole('option', { name: 'chash' }).click();
 
-    // 2. Hash On field (只有在 chash 类型下才会显示) - 使用 force 选项
+    // 2. Hash On field (only useful when type is chash) - using force option
     await page.getByRole('textbox', { name: 'Hash On' }).click();
     await page.getByRole('option', { name: 'header' }).click();
 
-    // 3. Key field (只有在 chash 类型下才会显示)
+    // 3. Key field (only useful when type is chash)
     await page
       .getByRole('textbox', { name: 'Key', exact: true })
       .fill('X-Custom-Header');
