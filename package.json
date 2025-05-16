@@ -59,7 +59,7 @@
     "@svgr/plugin-jsx": "^8.1.0",
     "@tanstack/react-query-devtools": "^5.74.4",
     "@tanstack/react-router-devtools": "^1.116.0",
-    "@tanstack/router-plugin": "^1.116.1",
+    "@tanstack/router-plugin": "^1.120.3",
     "@types/node": "^22.14.1",
     "@types/qs": "^6.9.18",
     "@types/react": "^19.1.3",
