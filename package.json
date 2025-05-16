@@ -45,7 +45,7 @@
     "react-i18next": "^15.4.1",
     "react-use": "^17.6.0",
     "znv": "^0.5.0",
-    "zod": "^3.24.3",
+    "zod": "^3.24.4",
     "zod-empty": "^1.4.4"
   },
   "devDependencies": {
