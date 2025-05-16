@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { tls } from '@e2e/fixtures/tls';
 import { upstreamsPom } from '@e2e/pom/upstreams';
-import { randomId } from '@e2e/utils/common';
+import { genTLS, randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { uiHasToastMsg } from '@e2e/utils/ui';
@@ -182,6 +181,7 @@ test('should CRUD upstream with all fields', async ({ page }) => {
 
     // 11. TLS client verification settings
     const tlsSection = page.getByRole('group', { name: 'TLS' });
+    const tls = genTLS();
     await tlsSection
       .getByRole('textbox', { name: 'Client Cert', exact: true })
       .fill(tls.cert);
