@@ -54,6 +54,7 @@ export const FormItemSelect = <T extends FieldValues, R>(
         restProps?.onChange?.(value, option);
       }}
       comboboxProps={{ shadow: 'md' }}
+      allowDeselect={false}
       {...restField}
       {...restProps}
     />

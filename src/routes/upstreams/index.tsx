@@ -51,12 +51,6 @@ function RouteComponent() {
         valueType: 'text',
       },
       {
-        dataIndex: ['value', 'labels'],
-        title: t('form.basic.labels.title'),
-        key: 'labels',
-        valueType: 'text',
-      },
-      {
         dataIndex: ['value', 'scheme'],
         title: t('form.upstreams.scheme'),
         key: 'scheme',

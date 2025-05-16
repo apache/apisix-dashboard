@@ -141,17 +141,25 @@ const FormSectionChecksActive = () => {
 
 const FormItemChecksPassiveEnabled = () => {
   const { control } = useFormContext<FormPartUpstreamType>();
-  return <FormItemSwitch control={control} name="__checksPassiveEnabled" />;
+  return (
+    <FormItemSwitch
+      control={control}
+      name="__checksPassiveEnabled"
+      data-testid="checksPassiveEnabled"
+      shouldUnregister={false}
+    />
+  );
 };
 const FormSectionChecksPassiveCore = () => {
   const { t } = useTranslation();
-  const { control } = useFormContext<FormPartUpstreamType>();
+  const { control, formState } = useFormContext<FormPartUpstreamType>();
   const np = useNamePrefix();
   const passiveEnabled = useWatch({
     control,
     name: '__checksPassiveEnabled',
-    defaultValue: false,
+    defaultValue: formState.defaultValues?.__checksPassiveEnabled,
   });
+
   if (passiveEnabled) {
     return (
       <>
@@ -234,13 +242,24 @@ const FormSectionChecksPassive = () => {
 
 const FormItemChecksEnabled = () => {
   const { control } = useFormContext<FormPartUpstreamType>();
-  return <FormItemSwitch control={control} name="__checksEnabled" />;
+  return (
+    <FormItemSwitch
+      control={control}
+      name="__checksEnabled"
+      data-testid="checksEnabled"
+      shouldUnregister={false}
+    />
+  );
 };
 
 const FormSectionChecksCore = () => {
   const { t } = useTranslation();
-  const { control } = useFormContext<FormPartUpstreamType>();
-  const enabled = useWatch({ control, name: '__checksEnabled' });
+  const { control, formState } = useFormContext<FormPartUpstreamType>();
+  const enabled = useWatch({
+    control,
+    name: '__checksEnabled',
+    defaultValue: formState.defaultValues?.__checksEnabled,
+  });
 
   if (enabled) {
     return (

@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { notifications } from '@mantine/notifications';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, type AxiosResponse, HttpStatusCode } from 'axios';
 import { stringify } from 'qs';
 
 import {
@@ -38,7 +39,8 @@ req.interceptors.request.use((conf) => {
 });
 
 type APISIXRespErr = {
-  error_msg: string;
+  error_msg?: string;
+  message?: string;
 };
 
 /**
@@ -67,14 +69,15 @@ req.interceptors.response.use(
   (err) => {
     if (err.response) {
       if (matchSkipInterceptor(err)) return Promise.reject(err);
-      const d = err.response.data as APISIXRespErr;
+      const res = err.response as AxiosResponse<APISIXRespErr>;
+      const d = res.data;
       notifications.show({
-        id: d.error_msg,
-        message: d.error_msg,
+        id: d?.error_msg || d?.message,
+        message: d?.error_msg || d?.message,
         color: 'red',
       });
       // Requires to enter admin key at 401
-      if (err.response.status === 401) {
+      if (res.status === HttpStatusCode.Unauthorized) {
         globalStore.settings.set('isOpen', true);
         return Promise.resolve({ data: {} });
       }

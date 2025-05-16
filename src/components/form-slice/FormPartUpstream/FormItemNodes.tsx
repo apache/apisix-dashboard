@@ -20,7 +20,7 @@ import { useClickOutside } from '@mantine/hooks';
 import { toJS } from 'mobx';
 import { useLocalObservable } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
-import { equals, isNil, range } from 'rambdax';
+import { equals, isNil } from 'rambdax';
 import { useEffect, useMemo } from 'react';
 import {
   type FieldValues,
@@ -37,11 +37,6 @@ import { zGetDefault } from '@/utils/zod';
 import { genControllerProps } from '../../form/util';
 
 type DataSource = APISIXType['UpstreamNode'] & APISIXType['ID'];
-
-const portValueEnum = range(1, 65535).reduce((acc, val) => {
-  acc[val] = { text: String(val) };
-  return acc;
-}, {} as Record<number, { text: string }>);
 
 const zValidateField = <T extends ZodRawShape, R extends keyof T>(
   zObj: ZodObject<T>,
@@ -145,20 +140,28 @@ export const FormItemNodes = <T extends FieldValues>(
         title: t('form.upstreams.nodes.port.title'),
         dataIndex: 'port',
         valueType: 'digit',
-        valueEnum: portValueEnum,
         formItemProps: genProps('port'),
+        render: (_, entity) => {
+          return entity.port.toString();
+        },
       },
       {
         title: t('form.upstreams.nodes.weight.title'),
         dataIndex: 'weight',
         valueType: 'digit',
         formItemProps: genProps('weight'),
+        render: (_, entity) => {
+          return entity.weight.toString();
+        },
       },
       {
         title: t('form.upstreams.nodes.priority.title'),
         dataIndex: 'priority',
         valueType: 'digit',
         formItemProps: genProps('priority'),
+        render: (_, entity) => {
+          return entity.priority?.toString() || '-';
+        },
       },
       {
         title: t('form.upstreams.nodes.action.title'),

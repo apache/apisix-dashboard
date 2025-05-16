@@ -39,7 +39,6 @@ test('should navigate to upstreams page', async ({ page }) => {
     await expect(table).toBeVisible();
     await expect(table.getByText('ID', { exact: true })).toBeVisible();
     await expect(table.getByText('Name', { exact: true })).toBeVisible();
-    await expect(table.getByText('Labels', { exact: true })).toBeVisible();
     await expect(table.getByText('Actions', { exact: true })).toBeVisible();
   });
 });
@@ -91,4 +90,3 @@ test.describe('page and page_size should work correctly', () => {
       page.getByRole('cell', { name: item.name }).first(),
   });
 });
-

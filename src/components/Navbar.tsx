@@ -36,14 +36,7 @@ interface NavbarLinkProps extends NavLinkProps {
 }
 
 export const NavbarLink: FC<NavbarLinkProps> = (props) => {
-  return (
-    <CreatedLinkComponent
-      key={props.to}
-      preload="intent"
-      href={props.to}
-      {...props}
-    />
-  );
+  return <CreatedLinkComponent key={props.to} href={props.to} {...props} />;
 };
 
 export const Navbar = () => {

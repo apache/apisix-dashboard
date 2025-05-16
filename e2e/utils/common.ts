@@ -18,6 +18,7 @@ import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { nanoid } from 'nanoid';
+import selfsigned from 'selfsigned';
 import { parse } from 'yaml';
 
 type APISIXConf = {
@@ -41,3 +42,8 @@ export const fileExists = async (filePath: string) => {
 };
 
 export const randomId = (info: string) => `${info}_${nanoid()}`;
+
+export const genTLS = () => {
+  const { cert, private: key } = selfsigned.generate();
+  return { cert, key };
+};
