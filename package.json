@@ -79,7 +79,7 @@
     "globals": "^16.0.0",
     "husky": "^9.1.7",
     "jiti": "^2.4.2",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^16.0.0",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
     "selfsigned": "^2.4.1",
