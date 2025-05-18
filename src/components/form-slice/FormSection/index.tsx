@@ -44,6 +44,12 @@ const tocSelector = 'form-section';
 const tocValue = 'data-label';
 const tocDepth = 'data-depth';
 
+const FormTOCCtx = createContext<{
+  refreshTOC: () => void;
+}>({
+  refreshTOC: () => {},
+});
+
 export type FormSectionProps = Omit<FieldsetProps, 'form'> & {
   extra?: ReactNode;
 };
@@ -54,6 +60,12 @@ export const FormSection: FC<FormSectionProps> = (props) => {
   const depth = useMemo(() => parentDepth + 1, [parentDepth]);
 
   const newClass = `${tocSelector} ${classes.root} ${className || ''}`;
+  const { refreshTOC } = useContext(FormTOCCtx);
+
+  useEffect(() => {
+    refreshTOC();
+  }, [refreshTOC]);
+
   return (
     <SectionDepthProvider value={depth}>
       <Fieldset
@@ -76,17 +88,12 @@ export const FormSection: FC<FormSectionProps> = (props) => {
   );
 };
 
-export type FormTOCBoxProps = PropsWithChildren & {
-  deps?: unknown[];
-};
+export type FormTOCBoxProps = PropsWithChildren;
 
 export const FormTOCBox = (props: FormTOCBoxProps) => {
-  const { children, deps } = props;
+  const { children } = props;
   const reinitializeRef = useRef(() => {});
-
-  useEffect(() => {
-    reinitializeRef.current();
-  }, [deps]);
+  const refreshTOC = () => reinitializeRef.current();
 
   return (
     <Group
@@ -127,7 +134,11 @@ export const FormTOCBox = (props: FormTOCBoxProps) => {
           children: data.value,
         })}
       />
-      <div style={{ width: '80%' }}>{children}</div>
+      <div style={{ width: '80%' }}>
+        <FormTOCCtx.Provider value={{ refreshTOC }}>
+          {children}
+        </FormTOCCtx.Provider>
+      </div>
     </Group>
   );
 };
