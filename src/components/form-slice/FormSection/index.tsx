@@ -28,6 +28,7 @@ import {
   createContext,
   type PropsWithChildren,
   type ReactNode,
+  useCallback,
   useContext,
   useMemo,
   useRef,
@@ -145,7 +146,10 @@ export type FormTOCBoxProps = PropsWithChildren;
 export const FormTOCBox = (props: FormTOCBoxProps) => {
   const { children } = props;
   const reinitializeRef = useRef(() => {});
-  const refreshTOC = debounce(reinitializeRef.current, 200) as () => void;
+  const refreshTOC = useCallback(
+    () => debounce(reinitializeRef.current, 200),
+    []
+  );
 
   return (
     <Group
