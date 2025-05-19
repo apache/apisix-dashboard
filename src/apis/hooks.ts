@@ -22,6 +22,8 @@ import { type PageSearchType } from '@/types/schema/pageSearch';
 import { useSearchParams } from '@/utils/useSearchParams';
 import { useTablePagination } from '@/utils/useTablePagination';
 
+import { getRouteListReq, getRouteReq } from './routes';
+
 export const getUpstreamListQueryOptions = (props: PageSearchType) => {
   return queryOptions({
     queryKey: ['upstreams', props.page, props.page_size],
@@ -36,3 +38,24 @@ export const useUpstreamList = () => {
   const pagination = useTablePagination({ data, setParams, params });
   return { data, isLoading, refetch, pagination };
 };
+
+export const getRouteListQueryOptions = (props: PageSearchType) => {
+  return queryOptions({
+    queryKey: ['routes', props.page, props.page_size],
+    queryFn: () => getRouteListReq(req, props),
+  });
+};
+
+export const useRouteList = () => {
+  const { params, setParams } = useSearchParams('/routes/');
+  const routeQuery = useSuspenseQuery(getRouteListQueryOptions(params));
+  const { data, isLoading, refetch } = routeQuery;
+  const pagination = useTablePagination({ data, setParams, params });
+  return { data, isLoading, refetch, pagination };
+};
+
+export const getRouteQueryOptions = (id: string) =>
+  queryOptions({
+    queryKey: ['route', id],
+    queryFn: () => getRouteReq(req, id),
+  });
