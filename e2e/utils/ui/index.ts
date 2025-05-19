@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { CommonPOM } from '@e2e/pom/common';
+import type { CommonPOM } from '@e2e/pom/type';
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { FileRouteTypes } from '@/routeTree.gen';
