@@ -19,14 +19,17 @@ import {
   type FieldsetProps,
   Group,
   TableOfContents,
+  type TableOfContentsProps,
 } from '@mantine/core';
+import { useShallowEffect } from '@mantine/hooks';
+import clsx from 'clsx';
+import { debounce } from 'rambdax';
 import {
   createContext,
-  type FC,
   type PropsWithChildren,
   type ReactNode,
+  useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
 } from 'react';
@@ -44,49 +47,109 @@ const tocSelector = 'form-section';
 const tocValue = 'data-label';
 const tocDepth = 'data-depth';
 
+const FormTOCCtx = createContext<{
+  refreshTOC: () => void;
+}>({
+  refreshTOC: () => {},
+});
+
 export type FormSectionProps = Omit<FieldsetProps, 'form'> & {
   extra?: ReactNode;
 };
 
-export const FormSection: FC<FormSectionProps> = (props) => {
-  const { className, legend, extra, ...restProps } = props;
-  const parentDepth = useContext(SectionDepthCtx);
-  const depth = useMemo(() => parentDepth + 1, [parentDepth]);
+const LegendGroup = ({
+  legend,
+  extra,
+}: {
+  legend: ReactNode;
+  extra?: ReactNode;
+}) => {
+  if (!legend && !extra) {
+    return null;
+  }
+  return (
+    <Group>
+      {legend}
+      {extra}
+    </Group>
+  );
+};
 
-  const newClass = `${tocSelector} ${classes.root} ${className || ''}`;
+export const FormSection = (props: FormSectionProps) => {
+  const { className, legend, extra, children, ...restProps } = props;
+  const parentDepth = useContext(SectionDepthCtx);
+  const { refreshTOC } = useContext(FormTOCCtx);
+  const depth = useMemo(() => parentDepth + 1, [parentDepth]);
+  const dataAttrs = useMemo(
+    () => ({
+      [tocValue]: legend,
+      [tocDepth]: depth,
+    }),
+    [legend, depth]
+  );
+
+  // refresh TOC when children changes
+  useShallowEffect(refreshTOC, [children]);
+
   return (
     <SectionDepthProvider value={depth}>
       <Fieldset
-        className={newClass}
-        {...((legend || extra) && {
-          legend: (
-            <Group>
-              {legend}
-              {extra}
-            </Group>
-          ),
-        })}
+        className={clsx(tocSelector, classes.root, className)}
+        legend={<LegendGroup legend={legend} extra={extra} />}
         {...restProps}
-        {...{
-          [tocValue]: legend,
-          [tocDepth]: depth,
-        }}
-      />
+        {...dataAttrs}
+      >
+        {children}
+      </Fieldset>
     </SectionDepthProvider>
   );
 };
 
-export type FormTOCBoxProps = PropsWithChildren & {
-  deps?: unknown[];
+const TOC = (props: Pick<TableOfContentsProps, 'reinitializeRef'>) => {
+  return (
+    <TableOfContents
+      variant="light"
+      color="blue"
+      size="sm"
+      radius="sm"
+      style={{
+        flexShrink: 0,
+        position: 'sticky',
+        top: APPSHELL_HEADER_HEIGHT + 20,
+      }}
+      w={200}
+      mt={10}
+      minDepthToOffset={0}
+      depthOffset={20}
+      scrollSpyOptions={{
+        selector: `.${tocSelector}`,
+        getDepth: (el) => Number(el.getAttribute(tocDepth)),
+        getValue: (el) => el.getAttribute(tocValue) || '',
+      }}
+      getControlProps={({ data }) => ({
+        onClick: () => {
+          return data.getNode().scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+            inline: 'end',
+          });
+        },
+        children: data.value,
+      })}
+      {...props}
+    />
+  );
 };
 
-export const FormTOCBox = (props: FormTOCBoxProps) => {
-  const { children, deps } = props;
-  const reinitializeRef = useRef(() => {});
+export type FormTOCBoxProps = PropsWithChildren;
 
-  useEffect(() => {
-    reinitializeRef.current();
-  }, [deps]);
+export const FormTOCBox = (props: FormTOCBoxProps) => {
+  const { children } = props;
+  const reinitializeRef = useRef(() => {});
+  const refreshTOC = useCallback(
+    () => debounce(reinitializeRef.current, 200),
+    []
+  );
 
   return (
     <Group
@@ -96,38 +159,12 @@ export const FormTOCBox = (props: FormTOCBoxProps) => {
       gap={30}
       style={{ paddingInlineEnd: '10%', position: 'relative' }}
     >
-      <TableOfContents
-        reinitializeRef={reinitializeRef}
-        variant="light"
-        color="blue"
-        size="sm"
-        radius="sm"
-        style={{
-          flexShrink: 0,
-          position: 'sticky',
-          top: APPSHELL_HEADER_HEIGHT + 20,
-        }}
-        w={200}
-        mt={10}
-        minDepthToOffset={0}
-        depthOffset={20}
-        scrollSpyOptions={{
-          selector: `.${tocSelector}`,
-          getDepth: (el) => Number(el.getAttribute(tocDepth)),
-          getValue: (el) => el.getAttribute(tocValue) || '',
-        }}
-        getControlProps={({ data }) => ({
-          onClick: () => {
-            return data.getNode().scrollIntoView({
-              behavior: 'smooth',
-              block: 'end',
-              inline: 'end',
-            });
-          },
-          children: data.value,
-        })}
-      />
-      <div style={{ width: '80%' }}>{children}</div>
+      <TOC reinitializeRef={reinitializeRef} />
+      <div style={{ width: '80%' }}>
+        <FormTOCCtx.Provider value={{ refreshTOC }}>
+          {children}
+        </FormTOCCtx.Provider>
+      </div>
     </Group>
   );
 };
