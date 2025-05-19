@@ -24,10 +24,6 @@
       },
       "name": "Name",
       "status": "Status",
-      "statusOption": {
-        "0": "Disabled",
-        "1": "Enabled"
-      },
       "title": "Basic Infomation"
     },
     "btn": {
