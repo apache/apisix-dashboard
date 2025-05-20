@@ -18,18 +18,22 @@ import { config } from 'dotenv';
 import { parseEnv } from 'znv';
 import { z } from 'zod';
 
-import { BASE_PATH } from '../../src/config/constant';
-
 config({
   path: ['./.env', './.env.local', './.env.development.local'],
 });
 
-export const env = parseEnv(process.env, {
-  E2E_TARGET_URL: z
+const _env = parseEnv(process.env, {
+  BASE_PATH: z.string().default('/ui'),
+  E2E_SERVER: z
     .string()
     .url()
-    .default(`http://localhost:6174${BASE_PATH}/`)
+    .default('http://localhost:6174')
     .describe(
-      `If you want to access the test server from dev container playwright to host e2e server, try http://host.docker.internal:6174${BASE_PATH}/`
+      'If you want to access the test server from dev container playwright to host e2e server, try http://host.docker.internal:6174'
     ),
 });
+
+export const env = {
+  ..._env,
+  E2E_TARGET_URL: `${_env.E2E_SERVER}${_env.BASE_PATH}/`,
+};

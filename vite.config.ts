@@ -24,7 +24,8 @@ import UnpluginInfo from 'unplugin-info/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-import { API_PREFIX, BASE_PATH } from './src/config/constant';
+import { API_PREFIX } from './src/config/constant';
+import { env } from './env';
 
 const inDevContainer = process.env.REMOTE_CONTAINERS === 'true';
 
@@ -35,8 +36,15 @@ if (inDevContainer) {
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: BASE_PATH,
+  base: env.BASE_PATH,
   server: {
+    // as an example, if you want to use the e2e server as the api server,
+    proxy: {
+      [API_PREFIX]: {
+        target: 'http://localhost:6174',
+        changeOrigin: true,
+      },
+    },
     ...(inDevContainer && {
       host: '0.0.0.0',
       port: 5173,

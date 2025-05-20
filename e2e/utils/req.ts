@@ -16,12 +16,12 @@
  */
 import { type APIRequestContext, request } from '@playwright/test';
 import axios, { type AxiosAdapter } from 'axios';
+import { env } from 'env';
 import { stringify } from 'qs';
 
-import { API_HEADER_KEY, API_PREFIX, BASE_PATH } from '@/config/constant';
+import { API_HEADER_KEY, API_PREFIX } from '@/config/constant';
 
 import { getAPISIXConf } from './common';
-import { env } from './env';
 
 export const getPlaywrightRequestAdapter = (
   ctx: APIRequestContext
@@ -59,11 +59,10 @@ export const getPlaywrightRequestAdapter = (
 
 export const getE2eReq = async (ctx: APIRequestContext) => {
   const { adminKey } = await getAPISIXConf();
-  const API_URL = env.E2E_TARGET_URL.slice(0, -BASE_PATH.length - 1);
 
   return axios.create({
     adapter: getPlaywrightRequestAdapter(ctx),
-    baseURL: `${API_URL}${API_PREFIX}`,
+    baseURL: `${env.E2E_SERVER}${API_PREFIX}`,
     paramsSerializer: (p) =>
       stringify(p, {
         arrayFormat: 'repeat',

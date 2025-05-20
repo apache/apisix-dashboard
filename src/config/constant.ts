@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const BASE_PATH = '/ui';
+
 export const API_HEADER_KEY = 'X-API-KEY';
 export const API_PREFIX = '/apisix/admin';
 export const API_ROUTES = '/routes';
