@@ -16,10 +16,10 @@
  */
 import { InputWrapper, type InputWrapperProps,Skeleton } from '@mantine/core';
 import { Editor, loader, type Monaco,useMonaco } from '@monaco-editor/react';
-import type { editor } from 'monaco-editor';
+import { editor, Uri } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   type FieldValues,
   useController,
@@ -27,16 +27,17 @@ import {
   useFormContext,
   useFormState,
 } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { genControllerProps } from './util';
 
 type SetupMonacoProps = {
   monaco: Monaco;
-  setError?: (err: string | null) => void;
+  cb: () => void;
 };
 
 const setupMonaco = (props: SetupMonacoProps) => {
-  const { setError, monaco } = props;
+  const { monaco, cb } = props;
 
   window.MonacoEnvironment = {
     getWorker(_, label) {
@@ -46,19 +47,9 @@ const setupMonaco = (props: SetupMonacoProps) => {
       return new editorWorker();
     },
   };
-
-  monaco.editor.onDidChangeMarkers(([uri]) => {
-    const markers = monaco.editor.getModelMarkers({ resource: uri });
-    if (markers.length === 0) {
-      return setError?.(null);
-    }
-    const marker = markers[0];
-    setError?.(marker.message);
-  });
-
+  cb();
   loader.config({ monaco });
-
-  loader.init();
+  return loader.init();
 };
 
 const options: editor.IStandaloneEditorConstructionOptions = {
@@ -83,6 +74,7 @@ type FormItemEditorProps<T extends FieldValues> = InputWrapperProps &
 export const FormItemEditor = <T extends FieldValues>(
   props: FormItemEditorProps<T>
 ) => {
+  const { t } = useTranslation();
   const { controllerProps, restProps } = genControllerProps(props, '');
   const { customSchema, language, isLoading, ...wrapperProps } = restProps;
   const { setError, clearErrors } = useFormContext<{
@@ -112,6 +104,21 @@ export const FormItemEditor = <T extends FieldValues>(
       enableSchemaRequest: false,
     });
   }, [customSchema, monaco, isLoading]);
+
+  const showErrOnMarkers = useCallback(
+    (resource: Uri) => {
+      const markers = monaco?.editor.getModelMarkers({ resource });
+      const marker = markers?.[0];
+      if (!marker) return false;
+      setError(customErrorField, {
+        type: 'custom',
+        message: marker.message,
+      });
+      return true;
+    },
+    [customErrorField, monaco?.editor, setError]
+  );
+
   return (
     <InputWrapper
       error={
@@ -129,25 +136,36 @@ export const FormItemEditor = <T extends FieldValues>(
       {isLoading && <Skeleton visible height="100%" width="100%" />}
       {!isLoading && (
         <Editor
-          beforeMount={(monaco) =>
+          beforeMount={(monaco) => {
             setupMonaco({
               monaco,
-              setError: (err: string | null) => {
-                if (!err) {
-                  return clearErrors(customErrorField);
-                }
-                setError(customErrorField, {
-                  type: 'custom',
-                  message: err,
-                });
-              },
-            })
-          }
+              cb: () =>
+                monaco?.editor.onDidChangeMarkers(([uri]) =>
+                  showErrOnMarkers(uri)
+                ),
+            });
+          }}
           defaultValue={controllerProps.defaultValue}
           value={value}
           onChange={fOnChange}
           loading={<Skeleton visible height="100%" width="100%" />}
           options={{ ...options, readOnly: restField.disabled }}
+          onMount={(editor) => {
+            editor.onDidChangeModelContent(() => {
+              try {
+                JSON.parse(editor.getValue());
+              } catch {
+                return setError(customErrorField, {
+                  type: 'custom',
+                  message: t('form.json.parseError'),
+                });
+              }
+              const uri = editor.getModel()?.uri;
+              if (uri && showErrOnMarkers(uri)) return;
+
+              clearErrors(customErrorField);
+            });
+          }}
           defaultLanguage="json"
           {...(language && { language })}
         />

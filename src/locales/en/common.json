@@ -54,6 +54,9 @@
       "title": "Information",
       "update_time": "Updated At"
     },
+    "json": {
+      "parseError": "JSON format is not valid"
+    },
     "plugins": {
       "addPlugin": "Add Plugin",
       "configId": "Plugin Config ID",
