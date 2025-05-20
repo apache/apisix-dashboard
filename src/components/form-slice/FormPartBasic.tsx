@@ -46,7 +46,7 @@ const FormItemStatus = () => {
       control={control}
       name={np('status')}
       label={t('form.basic.status')}
-      defaultValue={String(APISIXCommon.Status.options[1].value)}
+      defaultValue={APISIXCommon.Status.options[1].value}
       data={options}
       from={String}
       to={Number}
