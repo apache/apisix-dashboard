@@ -16,12 +16,11 @@
  */
 import { QueryClient } from '@tanstack/react-query';
 import { createRouter } from '@tanstack/react-router';
+import { env } from 'env';
 
 import { routeTree } from '@/routeTree.gen';
 
-import { BASE_PATH } from './constant';
-
-export const router = createRouter({ routeTree, basepath: BASE_PATH });
+export const router = createRouter({ routeTree, basepath: env.BASE_PATH });
 
 export type Router = typeof router;
 

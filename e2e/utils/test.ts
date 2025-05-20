@@ -18,9 +18,9 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { expect, test as baseTest } from '@playwright/test';
+import { env } from 'env';
 
 import { fileExists, getAPISIXConf } from './common';
-import { env } from './env';
 
 export const test = baseTest.extend<object, { workerStorageState: string }>({
   storageState: ({ workerStorageState }, use) => use(workerStorageState),
