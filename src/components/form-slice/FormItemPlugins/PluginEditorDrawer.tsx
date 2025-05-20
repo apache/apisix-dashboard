@@ -78,6 +78,7 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
             name="config"
             h={500}
             customSchema={schema}
+            isLoading={!schema}
             required
           />
         </form>

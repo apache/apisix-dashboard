@@ -19,7 +19,7 @@ import { Editor, loader, type Monaco,useMonaco } from '@monaco-editor/react';
 import { editor, Uri } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   type FieldValues,
   useController,
@@ -33,12 +33,9 @@ import { genControllerProps } from './util';
 
 type SetupMonacoProps = {
   monaco: Monaco;
-  cb: () => void;
 };
 
-const setupMonaco = (props: SetupMonacoProps) => {
-  const { monaco, cb } = props;
-
+const setupMonaco = ({ monaco }: SetupMonacoProps) => {
   window.MonacoEnvironment = {
     getWorker(_, label) {
       if (label === 'json') {
@@ -47,7 +44,6 @@ const setupMonaco = (props: SetupMonacoProps) => {
       return new editorWorker();
     },
   };
-  cb();
   loader.config({ monaco });
   return loader.init();
 };
@@ -88,22 +84,7 @@ export const FormItemEditor = <T extends FieldValues>(
   } = useController<T>(controllerProps);
 
   const monaco = useMonaco();
-  useEffect(() => {
-    if (!monaco || isLoading || !customSchema) return;
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      ...monaco.languages.json.jsonDefaults.diagnosticsOptions,
-      validate: true,
-      schemas: [
-        {
-          uri: 'https://apisix.apache.org',
-          fileMatch: ['*'],
-          schema: customSchema,
-        },
-      ],
-      trailingCommas: 'error',
-      enableSchemaRequest: false,
-    });
-  }, [customSchema, monaco, isLoading]);
+  const [internalLoading, setLoading] = useState(false);
 
   const showErrOnMarkers = useCallback(
     (resource: Uri) => {
@@ -119,6 +100,29 @@ export const FormItemEditor = <T extends FieldValues>(
     [customErrorField, monaco?.editor, setError]
   );
 
+  useEffect(() => {
+    if (!monaco || !customSchema) return;
+    setLoading(true);
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: true,
+      schemas: [
+        {
+          uri: 'https://apisix.apache.org',
+          fileMatch: ['*'],
+          schema: customSchema,
+        },
+      ],
+      trailingCommas: 'error',
+      enableSchemaRequest: false,
+    });
+    // when markers change, show error
+    monaco.editor.onDidChangeMarkers(([uri]) => {
+      showErrOnMarkers(uri);
+    });
+
+    setLoading(false);
+  }, [customSchema, monaco, showErrOnMarkers]);
+
   return (
     <InputWrapper
       error={
@@ -128,48 +132,62 @@ export const FormItemEditor = <T extends FieldValues>(
       style={{
         border: '1px solid var(--mantine-color-gray-2)',
         borderRadius: 'var(--mantine-radius-sm)',
+        position: 'relative',
       }}
       id="#editor-wrapper"
       {...wrapperProps}
     >
       <input name={restField.name} type="hidden" />
-      {isLoading && <Skeleton visible height="100%" width="100%" />}
-      {!isLoading && (
-        <Editor
-          beforeMount={(monaco) => {
-            setupMonaco({
-              monaco,
-              cb: () =>
-                monaco?.editor.onDidChangeMarkers(([uri]) =>
-                  showErrOnMarkers(uri)
-                ),
-            });
+      {(isLoading || internalLoading) && (
+        <Skeleton
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            top: 0,
+            left: 0,
           }}
-          defaultValue={controllerProps.defaultValue}
-          value={value}
-          onChange={fOnChange}
-          loading={<Skeleton visible height="100%" width="100%" />}
-          options={{ ...options, readOnly: restField.disabled }}
-          onMount={(editor) => {
-            editor.onDidChangeModelContent(() => {
-              try {
-                JSON.parse(editor.getValue());
-              } catch {
-                return setError(customErrorField, {
-                  type: 'custom',
-                  message: t('form.json.parseError'),
-                });
-              }
-              const uri = editor.getModel()?.uri;
-              if (uri && showErrOnMarkers(uri)) return;
-
-              clearErrors(customErrorField);
-            });
-          }}
-          defaultLanguage="json"
-          {...(language && { language })}
+          data-testid="editor-loading"
+          visible
+          height="100%"
+          width="100%"
         />
       )}
+      <Editor
+        beforeMount={(monaco) => {
+          setupMonaco({
+            monaco,
+          });
+        }}
+        defaultValue={controllerProps.defaultValue}
+        value={value}
+        onChange={fOnChange}
+        loading={
+          <Skeleton
+            data-testid="editor-loading"
+            visible
+            height="100%"
+            width="100%"
+          />
+        }
+        options={{ ...options, readOnly: restField.disabled }}
+        onMount={(editor) => {
+          // this only check json validity, will clear error when json is valid and no markers
+          editor.onDidChangeModelContent(() => {
+            try {
+              const model = editor.getModel()!;
+              JSON.parse(model.getValue());
+              clearErrors(customErrorField);
+            } catch {
+              return setError(customErrorField, {
+                type: 'custom',
+                message: t('form.json.parseError'),
+              });
+            }
+          });
+        }}
+        defaultLanguage="json"
+        {...(language && { language })}
+      />
     </InputWrapper>
   );
 };
