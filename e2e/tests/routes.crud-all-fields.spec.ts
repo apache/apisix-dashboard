@@ -79,7 +79,7 @@ test('should CRUD route with all fields', async ({ page }) => {
     await page.getByLabel('Priority', { exact: true }).first().fill('100');
 
     // Toggle Status
-    const status = page.getByRole('textbox', { name: 'Status' });
+    const status = page.getByRole('textbox', { name: 'Status', exact: true });
     await status.click();
     // Ensure it's checked after the click
     await page.getByRole('option', { name: 'Disabled' }).click();
@@ -268,7 +268,7 @@ test('should CRUD route with all fields', async ({ page }) => {
     ).toHaveValue('100');
 
     // Verify Status
-    const status = page.getByRole('textbox', { name: 'Status' });
+    const status = page.getByRole('textbox', { name: 'Status', exact: true });
     await expect(status).toHaveValue('Disabled');
 
     // Verify Plugins

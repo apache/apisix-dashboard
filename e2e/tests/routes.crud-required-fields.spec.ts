@@ -68,6 +68,8 @@ test('should CRUD route with required fields', async ({ page }) => {
     });
     await uiFillUpstreamRequiredFields(upstreamSection, {
       nodes,
+      name: 'test-upstream',
+      desc: 'test',
     });
     // Submit the form
     await routesPom.getAddBtn(page).click();
