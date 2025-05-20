@@ -14,37 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { queryOptions } from '@tanstack/react-query';
+import type { AxiosInstance } from 'axios';
 
 import type { RoutePostType } from '@/components/form-slice/FormPartRoute/schema';
 import { API_ROUTES } from '@/config/constant';
-import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
-export const getRouteListQueryOptions = (props: PageSearchType) => {
-  const { page, pageSize } = props;
-  return queryOptions({
-    queryKey: ['routes', page, pageSize],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespRouteList']>(API_ROUTES, {
-          params: { page, page_size: pageSize },
-        })
-        .then((v) => v.data),
-  });
-};
+export const getRouteListReq = (req: AxiosInstance, params: PageSearchType) =>
+  req
+    .get<undefined, APISIXType['RespRouteList']>(API_ROUTES, { params })
+    .then((v) => v.data);
 
-export const getRouteQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ['route', id],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespRouteDetail']>(`${API_ROUTES}/${id}`)
-        .then((v) => v.data),
-  });
+export const getRouteReq = (req: AxiosInstance, id: string) =>
+  req
+    .get<unknown, APISIXType['RespRouteDetail']>(`${API_ROUTES}/${id}`)
+    .then((v) => v.data);
 
-export const putRouteReq = (data: APISIXType['Route']) => {
+export const putRouteReq = (req: AxiosInstance, data: APISIXType['Route']) => {
   const { id, ...rest } = data;
   return req.put<APISIXType['Route'], APISIXType['RespRouteDetail']>(
     `${API_ROUTES}/${id}`,
@@ -52,5 +39,17 @@ export const putRouteReq = (data: APISIXType['Route']) => {
   );
 };
 
-export const postRouteReq = (data: RoutePostType) =>
+export const postRouteReq = (req: AxiosInstance, data: RoutePostType) =>
   req.post<unknown, APISIXType['RespRouteDetail']>(API_ROUTES, data);
+
+export const deleteAllRoutes = async (req: AxiosInstance) => {
+  const res = await getRouteListReq(req, {
+    page: 1,
+    page_size: 1000,
+    pageSize: 1000,
+  });
+  if (res.total === 0) return;
+  return await Promise.all(
+    res.list.map((d) => req.delete(`${API_ROUTES}/${d.value.id}`))
+  );
+};

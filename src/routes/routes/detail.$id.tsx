@@ -28,7 +28,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import { getRouteQueryOptions, putRouteReq } from '@/apis/routes';
+import { getRouteQueryOptions } from '@/apis/hooks';
+import { putRouteReq } from '@/apis/routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
@@ -36,7 +37,8 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_ROUTES } from '@/config/constant';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -67,7 +69,7 @@ const RouteDetailForm = (props: Props) => {
   }, [routeData, form, isLoading]);
 
   const putRoute = useMutation({
-    mutationFn: putRouteReq,
+    mutationFn: (d: APISIXType['Route']) => putRouteReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('routes.singular') }),
@@ -84,11 +86,7 @@ const RouteDetailForm = (props: Props) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) => {
-          putRoute.mutateAsync(pipeProduce()(d));
-        })}
-      >
+      <form onSubmit={form.handleSubmit((d) => putRoute.mutateAsync(d))}>
         <FormSectionGeneral />
         <FormPartRoute />
         {!readOnly && (
