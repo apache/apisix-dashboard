@@ -42,3 +42,13 @@ export async function uiCannotSubmitEmptyForm(page: Page, pom: CommonPOM) {
     hasText: 'invalid configuration',
   });
 }
+
+export async function uiFillHTTPStatuses(
+  input: Locator,
+  ...statuses: string[]
+) {
+  for (const status of statuses) {
+    await input.fill(status);
+    await input.press('Enter');
+  }
+}

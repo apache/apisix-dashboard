@@ -19,7 +19,10 @@ import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { uiCannotSubmitEmptyForm, uiHasToastMsg } from '@e2e/utils/ui';
-import { uiFillUpstreamRequiredFields } from '@e2e/utils/ui/upstreams';
+import {
+  uiCheckUpstreamRequiredFields,
+  uiFillUpstreamRequiredFields,
+} from '@e2e/utils/ui/upstreams';
 import { expect } from '@playwright/test';
 
 import { deleteAllUpstreams } from '@/apis/upstreams';
@@ -47,7 +50,10 @@ test('should CRUD upstream with required fields', async ({ page }) => {
   });
 
   await test.step('submit with required fields', async () => {
-    await uiFillUpstreamRequiredFields(page, nodes, upstreamName);
+    await uiFillUpstreamRequiredFields(page, {
+      name: upstreamName,
+      nodes,
+    });
     await upstreamsPom.getAddBtn(page).click();
     await uiHasToastMsg(page, {
       hasText: 'Add Upstream Successfully',
@@ -60,19 +66,10 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     const ID = page.getByRole('textbox', { name: 'ID', exact: true });
     await expect(ID).toBeVisible();
     await expect(ID).toBeDisabled();
-    // Verify the upstream name
-    const name = page.getByLabel('Name', { exact: true });
-    await expect(name).toHaveValue(upstreamName);
-    await expect(name).toBeDisabled();
-    // Verify the upstream nodes
-    const nodesSection = page.getByRole('group', { name: 'Nodes' });
-
-    await expect(
-      nodesSection.getByRole('cell', { name: nodes[1].host })
-    ).toBeVisible();
-    await expect(
-      nodesSection.getByRole('cell', { name: nodes[0].host })
-    ).toBeVisible();
+    await uiCheckUpstreamRequiredFields(page, {
+      name: upstreamName,
+      nodes,
+    });
   });
 
   await test.step('can see upstream in list page', async () => {
