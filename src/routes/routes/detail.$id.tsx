@@ -32,6 +32,7 @@ import { getRouteQueryOptions } from '@/apis/hooks';
 import { putRouteReq } from '@/apis/routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
+import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
@@ -64,7 +65,9 @@ const RouteDetailForm = (props: Props) => {
 
   useEffect(() => {
     if (routeData?.value && !isLoading) {
-      form.reset(routeData.value);
+      form.reset(
+        produceToUpstreamForm(routeData.value.upstream || {}, routeData.value)
+      );
     }
   }, [routeData, form, isLoading]);
 

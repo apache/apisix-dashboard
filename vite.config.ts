@@ -37,6 +37,13 @@ if (inDevContainer) {
 export default defineConfig({
   base: BASE_PATH,
   server: {
+    // as an example, if you want to use the e2e server as the api server,
+    proxy: {
+      [API_PREFIX]: {
+        target: 'http://localhost:6174',
+        changeOrigin: true,
+      },
+    },
     ...(inDevContainer && {
       host: '0.0.0.0',
       port: 5173,

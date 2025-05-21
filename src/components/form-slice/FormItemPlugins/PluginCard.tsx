@@ -31,7 +31,7 @@ export const PluginCard = (props: PluginCardProps) => {
   const { name, desc, mode, onAdd, onEdit, onView, onDelete } = props;
   const { t } = useTranslation();
   return (
-    <Card withBorder radius="md" p="md">
+    <Card withBorder radius="md" p="md" data-testid={`plugin-${name}`}>
       <Card.Section withBorder inheritPadding py="xs">
         <Group justify="space-between">
           <Group>
@@ -47,7 +47,7 @@ export const PluginCard = (props: PluginCardProps) => {
       <Group mt="md" justify="flex-end">
         {mode === 'add' && (
           <Button
-            size="xs"
+            size="compact-xs"
             variant="light"
             color="blue"
             onClick={() => onAdd?.(name)}
@@ -56,14 +56,18 @@ export const PluginCard = (props: PluginCardProps) => {
           </Button>
         )}
         {mode === 'view' && (
-          <Button size="xs" variant="light" onClick={() => onView?.(name)}>
+          <Button
+            size="compact-xs"
+            variant="light"
+            onClick={() => onView?.(name)}
+          >
             {t('form.btn.view')}
           </Button>
         )}
         {mode === 'edit' && (
           <>
             <Button
-              size="xs"
+              size="compact-xs"
               variant="light"
               color="blue"
               onClick={() => onEdit?.(name)}
@@ -71,7 +75,7 @@ export const PluginCard = (props: PluginCardProps) => {
               {t('form.btn.edit')}
             </Button>
             <Button
-              size="xs"
+              size="compact-xs"
               variant="light"
               color="red"
               onClick={() => onDelete?.(name)}

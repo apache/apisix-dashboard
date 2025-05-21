@@ -22,6 +22,7 @@ import { expect, test as baseTest } from '@playwright/test';
 import { fileExists, getAPISIXConf } from './common';
 import { env } from './env';
 
+export type Test = typeof test;
 export const test = baseTest.extend<object, { workerStorageState: string }>({
   storageState: ({ workerStorageState }, use) => use(workerStorageState),
   workerStorageState: [
