@@ -16,12 +16,14 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getCredentialListQueryOptions } from '@/apis/credentials';
+import {
+  getCredentialListQueryOptions,
+  useCredentialsList,
+} from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -36,11 +38,7 @@ function CredentialsList() {
   const { username } = useParams({
     from: '/consumers/detail/$username/credentials/',
   });
-
-  const credentialsQuery = useSuspenseQuery(
-    getCredentialListQueryOptions({ username })
-  );
-  const { data, isLoading, refetch } = credentialsQuery;
+  const { data, isLoading, refetch } = useCredentialsList(username);
 
   const columns = useMemo<
     ProColumns<APISIXType['RespCredentialItem']>[]

@@ -30,6 +30,7 @@ import {
 
 import { getConsumerGroupListReq } from './consumer_groups';
 import { getConsumerListReq } from './consumers';
+import { getCredentialListReq } from './credentials';
 import { getGlobalRuleListReq } from './global_rules';
 import { getPluginConfigListReq } from './plugin_configs';
 import { getProtoListReq } from './protos';
@@ -43,32 +44,29 @@ import { getStreamRouteListReq } from './stream_routes';
  * currently only support page and page_size
  */
 const genListQueryOptions =
-  <T>(
+  <T, P extends PageSearchType>(
     key: string,
-    listReq: (
-      req: AxiosInstance,
-      props: PageSearchType
-    ) => Promise<APISIXListResponse<T>>
+    listReq: (req: AxiosInstance, props: P) => Promise<APISIXListResponse<T>>
   ) =>
-  (props: PageSearchType) => {
+  (props: P) => {
     return queryOptions({
-      queryKey: [key, props.page, props.page_size],
+      queryKey: [key, ...Object.values(props)],
       queryFn: () => listReq(req, props),
     });
   };
 
 /** simple hook factory func for list hooks which support PageSearchType */
-export const genUseList = <T extends ListPageKeys, U>(
+export const genUseList = <T extends ListPageKeys, U, P extends PageSearchType>(
   routeId: T,
-  listQueryOptions: ReturnType<typeof genListQueryOptions<U>>
+  listQueryOptions: ReturnType<typeof genListQueryOptions<U, P>>
 ) => {
   return () => {
-    const { params, setParams } = useSearchParams(routeId);
+    const { params, setParams } = useSearchParams<T, P>(routeId);
     const listQuery = useSuspenseQuery(listQueryOptions(params));
     const { data, isLoading, refetch } = listQuery;
     const pagination = useTablePagination({
       data,
-      setParams: setParams as (props: Partial<PageSearchType>) => Promise<void>,
+      setParams,
       params,
     });
     return { data, isLoading, refetch, pagination };
@@ -167,6 +165,21 @@ export const useConsumerList = genUseList(
   '/consumers/',
   getConsumerListQueryOptions
 );
+
+export const getCredentialListQueryOptions = (username: string) => {
+  return queryOptions({
+    queryKey: ['credentials', username],
+    queryFn: () => getCredentialListReq(req, { username }),
+  });
+};
+
+export const useCredentialsList = (username: string) => {
+  const credentialQuery = useSuspenseQuery(
+    getCredentialListQueryOptions(username)
+  );
+  const { data, isLoading, refetch } = credentialQuery;
+  return { data, isLoading, refetch };
+};
 
 export const getProtoListQueryOptions = genListQueryOptions(
   'protos',
