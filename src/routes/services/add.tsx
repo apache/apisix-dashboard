@@ -36,12 +36,15 @@ const ServiceAddForm = () => {
 
   const postService = useMutation({
     mutationFn: (d: ServicePostType) => postServiceReq(req, pipeProduce()(d)),
-    async onSuccess() {
+    async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('services.singular') }),
         color: 'green',
       });
-      await router.navigate({ to: '/services' });
+      await router.navigate({
+        to: '/services/detail/$id',
+        params: { id: res.data.value.id },
+      });
     },
   });
 

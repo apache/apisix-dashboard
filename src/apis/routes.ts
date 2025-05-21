@@ -43,12 +43,14 @@ export const postRouteReq = (req: AxiosInstance, data: RoutePostType) =>
   req.post<unknown, APISIXType['RespRouteDetail']>(API_ROUTES, data);
 
 export const deleteAllRoutes = async (req: AxiosInstance) => {
-  const res = await getRouteListReq(req, {
-    page: 1,
-    page_size: 1000,
-  });
-  if (res.total === 0) return;
-  return await Promise.all(
-    res.list.map((d) => req.delete(`${API_ROUTES}/${d.value.id}`))
-  );
+  while (true) {
+    const res = await getRouteListReq(req, {
+      page: 1,
+      page_size: 500,
+    });
+    if (res.total === 0) return;
+    await Promise.all(
+      res.list.map((d) => req.delete(`${API_ROUTES}/${d.value.id}`))
+    );
+  }
 };

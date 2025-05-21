@@ -52,12 +52,14 @@ export const putUpstreamReq = (
 };
 
 export const deleteAllUpstreams = async (req: AxiosInstance) => {
-  const res = await getUpstreamListReq(req, {
-    page: 1,
-    page_size: 1000,
-  });
-  if (res.total === 0) return;
-  return await Promise.all(
-    res.list.map((d) => req.delete(`${API_UPSTREAMS}/${d.value.id}`))
-  );
+  while (true) {
+    const res = await getUpstreamListReq(req, {
+      page: 1,
+      page_size: 500,
+    });
+    if (res.total === 0) return;
+    await Promise.all(
+      res.list.map((d) => req.delete(`${API_UPSTREAMS}/${d.value.id}`))
+    );
+  }
 };

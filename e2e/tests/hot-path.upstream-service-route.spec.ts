@@ -17,23 +17,21 @@
 import { routesPom } from '@e2e/pom/routes';
 import { servicesPom } from '@e2e/pom/services';
 import { upstreamsPom } from '@e2e/pom/upstreams';
+import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { uiClearEditor, uiHasToastMsg } from '@e2e/utils/ui';
 import { expect } from '@playwright/test';
 
 import { deleteAllRoutes } from '@/apis/routes';
+import { deleteAllServices } from '@/apis/services';
 import { deleteAllUpstreams } from '@/apis/upstreams';
 import { API_SERVICES, API_UPSTREAMS } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 
-test.beforeAll(async () => {
-  await deleteAllUpstreams(e2eReq);
-  await deleteAllRoutes(e2eReq);
-});
-
 test.afterAll(async () => {
   await deleteAllRoutes(e2eReq);
+  await deleteAllServices(e2eReq);
   await deleteAllUpstreams(e2eReq);
 });
 
@@ -54,8 +52,8 @@ test('can create upstream, service, route', async ({ page }) => {
    */
   const upstream: Partial<APISIXType['Upstream']> = {
     // will be set in test
-    id: '',
-    name: 'HTTPBIN Server',
+    id: undefined,
+    name: randomId('HTTPBIN Server'),
     scheme: 'https',
     nodes: [{ host: 'httpbin.org', port: 443 }],
   };
@@ -143,8 +141,8 @@ test('can create upstream, service, route', async ({ page }) => {
   const servicePluginName = 'limit-count';
   const service: Partial<APISIXType['Service']> = {
     // will be set in test
-    id: '',
-    name: 'HTTPBIN Service',
+    id: undefined,
+    name: randomId('HTTPBIN Service'),
     upstream_id: upstream.id,
     plugins: {
       [servicePluginName]: {
@@ -156,6 +154,9 @@ test('can create upstream, service, route', async ({ page }) => {
     },
   };
   await test.step('create service', async () => {
+    // upstream id should be set
+    expect(service.upstream_id).not.toBeUndefined();
+
     // Navigate to the services list page
     await servicesPom.toIndex(page);
     await servicesPom.isIndexPage(page);
@@ -260,19 +261,20 @@ test('can create upstream, service, route', async ({ page }) => {
    */
   const routePluginName = 'cors';
   const route: Partial<APISIXType['Route']> = {
-    // will be set in test
-    id: '',
-    name: 'Generate UUID',
+    name: randomId('Generate UUID'),
     uri: '/uuid',
     methods: ['GET'],
     service_id: service.id,
     plugins: {
       [routePluginName]: {
-        allow_origins: ['httpbin.local'],
+        allow_origins: 'https://httpbin.local:80',
       },
     },
   };
   await test.step('create route', async () => {
+    // service id should be set
+    expect(route.service_id).not.toBeUndefined();
+
     // Navigate to the route list page
     await routesPom.toIndex(page);
     await routesPom.isIndexPage(page);
@@ -386,14 +388,48 @@ test('can create upstream, service, route', async ({ page }) => {
     // Verify CORS plugin is present
     await expect(page.getByText('cors')).toBeVisible();
 
+    // Verify service id is present
+    await expect(page.locator('input[name="service_id"]')).toHaveValue(
+      service.id
+    );
+
     // Navigate to service detail to verify upstream and plugin
-    await page.goto('/services');
+    await servicesPom.toIndex(page);
+    await servicesPom.isIndexPage(page);
     await page
       .getByRole('row', { name: service.name })
       .getByRole('button', { name: 'View' })
       .click();
 
     // Verify limit-count plugin is present
-    await expect(page.getByText(routePluginName)).toBeVisible();
+    await expect(page.getByText(servicePluginName)).toBeVisible();
+
+    // Verify upstream id is present
+    await expect(page.locator('input[name="upstream_id"]').first()).toHaveValue(
+      upstream.id
+    );
+
+    // Verify service name is present
+    await expect(
+      page.getByRole('textbox', { name: 'Name', exact: true }).first()
+    ).toHaveValue(service.name);
+
+    // Navigate to upstream detail to verify nodes
+    await upstreamsPom.toIndex(page);
+    await upstreamsPom.isIndexPage(page);
+    await page
+      .getByRole('row', { name: upstream.name })
+      .getByRole('button', { name: 'View' })
+      .click();
+
+    // Verify nodes are present
+    await expect(
+      page.getByRole('cell', { name: upstream.nodes[0].host })
+    ).toBeVisible();
+
+    // Verify upstream name is present
+    await expect(
+      page.getByRole('textbox', { name: 'Name', exact: true })
+    ).toHaveValue(upstream.name);
   });
 });

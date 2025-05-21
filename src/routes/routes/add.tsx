@@ -39,12 +39,15 @@ const RouteAddForm = () => {
 
   const postRoute = useMutation({
     mutationFn: (d: RoutePostType) => postRouteReq(req, pipeProduce()(d)),
-    async onSuccess() {
+    async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('routes.singular') }),
         color: 'green',
       });
-      await router.navigate({ to: '/routes' });
+      await router.navigate({
+        to: '/routes/detail/$id',
+        params: { id: res.data.value.id },
+      });
     },
   });
 

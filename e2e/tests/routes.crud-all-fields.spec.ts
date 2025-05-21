@@ -196,22 +196,8 @@ test('should CRUD route with all fields', async ({ page }) => {
     });
   });
 
-  await test.step('verify route in list page after creation', async () => {
-    // After creation, we should be redirected to the routes list page
-    await routesPom.isIndexPage(page);
-
-    // Verify our newly created route appears in the list
-    await expect(
-      page.getByRole('cell', { name: routeNameWithAllFields })
-    ).toBeVisible();
-  });
-
-  await test.step('navigate to route detail page and verify all fields', async () => {
-    // Click on the route name to go to the detail page
-    await page
-      .getByRole('row', { name: routeNameWithAllFields })
-      .getByRole('button', { name: 'View' })
-      .click();
+  await test.step('auto navigate to route detail page and verify all fields', async () => {
+    // After creation, we should be redirected to the routes detail page
     await routesPom.isDetailPage(page);
 
     // Verify the route details

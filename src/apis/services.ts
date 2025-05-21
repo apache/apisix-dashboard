@@ -50,3 +50,16 @@ export const postServiceReq = (req: AxiosInstance, data: ServicePostType) =>
     API_SERVICES,
     data
   );
+
+export const deleteAllServices = async (req: AxiosInstance) => {
+  while (true) {
+    const res = await getServiceListReq(req, {
+      page: 1,
+      page_size: 500,
+    });
+    if (res.total === 0) return;
+    await Promise.all(
+      res.list.map((d) => req.delete(`${API_SERVICES}/${d.value.id}`))
+    );
+  }
+};
