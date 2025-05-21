@@ -32,6 +32,11 @@ test.beforeAll(async () => {
   await deleteAllRoutes(e2eReq);
 });
 
+test.afterAll(async () => {
+  await deleteAllRoutes(e2eReq);
+  await deleteAllUpstreams(e2eReq);
+});
+
 test('can create upstream, service, route', async ({ page }) => {
   const selectPluginsBtn = page.getByRole('button', {
     name: 'Select Plugins',
@@ -88,16 +93,16 @@ test('can create upstream, service, route', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Scheme' }).click();
     await page.getByRole('option', { name: upstream.scheme }).click();
 
+    const postReq = page.waitForResponse(
+      (r) => r.url().includes(API_UPSTREAMS) && r.request().method() === 'POST'
+    );
     // Submit the form
     await upstreamsPom.getAddBtn(page).click();
 
     // Intercept the response, get id from response
-    const response = await page.waitForResponse(
-      (r) => r.url().includes(API_UPSTREAMS) && r.request().method() === 'POST'
-    );
-    const resData =
-      (await response.json()) as APISIXType['RespUpstreamDetail']['data'];
-    expect(resData).toHaveProperty('value.id');
+    const res = await postReq;
+    const data = (await res.json()) as APISIXType['RespUpstreamDetail']['data'];
+    expect(data).toHaveProperty('value.id');
 
     // Wait for success message
     await uiHasToastMsg(page, {
@@ -110,7 +115,7 @@ test('can create upstream, service, route', async ({ page }) => {
     const url = page.url();
     const id = url.split('/').pop();
     expect(id).toBeDefined();
-    expect(resData.value.id).toBe(id);
+    expect(data.value.id).toBe(id);
 
     // Set id to upstream
     upstream.id = id;
@@ -211,16 +216,17 @@ test('can create upstream, service, route', async ({ page }) => {
       pluginsSection.getByTestId(`plugin-${servicePluginName}`)
     ).toBeVisible();
 
+    const postReq = page.waitForResponse(
+      (r) => r.url().includes(API_SERVICES) && r.request().method() === 'POST'
+    );
     // Submit the form
     await servicesPom.getAddBtn(page).click();
 
     // intercept the response, get id from response
-    const response = await page.waitForResponse(
-      (r) => r.url().includes(API_SERVICES) && r.request().method() === 'POST'
-    );
-    const resData =
+    const response = await postReq;
+    const data =
       (await response.json()) as APISIXType['RespServiceDetail']['data'];
-    expect(resData).toHaveProperty('value.id');
+    expect(data).toHaveProperty('value.id');
 
     // Wait for success message
     await uiHasToastMsg(page, {
@@ -233,7 +239,7 @@ test('can create upstream, service, route', async ({ page }) => {
     const url = page.url();
     const id = url.split('/').pop();
     expect(id).toBeDefined();
-    expect(resData.value.id).toBe(id);
+    expect(data.value.id).toBe(id);
 
     // Set id to service
     service.id = id;
