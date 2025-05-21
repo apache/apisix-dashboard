@@ -140,10 +140,8 @@ function RouteComponent() {
   );
 }
 
-export const Route = createFileRoute(
-  '/consumers/detail/$username/credentials/'
-)({
+export const Route = createFileRoute('/consumers/detail/$username/credentials/')({
   component: RouteComponent,
   loader: ({ params }) =>
-    queryClient.ensureQueryData(getCredentialListQueryOptions(params)),
+    queryClient.ensureQueryData(getCredentialListQueryOptions(params.username)),
 });
