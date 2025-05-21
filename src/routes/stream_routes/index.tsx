@@ -16,12 +16,11 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getStreamRouteListQueryOptions } from '@/apis/stream_routes';
+import { getStreamRouteListQueryOptions, useStreamRouteList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -30,22 +29,10 @@ import { API_STREAM_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-import { usePagination } from '@/utils/usePagination';
 
 const StreamRouteList = () => {
-  const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'stream_routes',
-  });
-
-  const query = useSuspenseQuery(getStreamRouteListQueryOptions(pagination));
-  const { data, isLoading, refetch } = query;
+  const { data, isLoading, refetch, pagination } = useStreamRouteList();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (data?.total) {
-      updateTotal(data.total);
-    }
-  }, [data?.total, updateTotal]);
 
   const columns = useMemo<
     ProColumns<APISIXType['RespStreamRouteItem']>[]
@@ -101,13 +88,7 @@ const StreamRouteList = () => {
         loading={isLoading}
         search={false}
         options={false}
-        pagination={{
-          current: pagination.page,
-          pageSize: pagination.pageSize,
-          total: pagination.total,
-          showSizeChanger: true,
-          onChange: handlePageChange,
-        }}
+        pagination={pagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
           menu: {
