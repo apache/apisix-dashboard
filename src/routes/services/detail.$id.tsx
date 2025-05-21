@@ -17,7 +17,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group,Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
@@ -28,7 +28,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import { getServiceQueryOptions, putServiceReq } from '@/apis/services';
+import { getServiceQueryOptions } from '@/apis/hooks';
+import { putServiceReq } from '@/apis/services';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartService } from '@/components/form-slice/FormPartService';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
@@ -36,7 +37,8 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SERVICES } from '@/config/constant';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -49,7 +51,7 @@ const ServiceDetailForm = (props: Props) => {
   const { t } = useTranslation();
   const { id } = useParams({ from: '/services/detail/$id' });
 
-  const serviceQuery = useQuery(getServiceQueryOptions(id));
+  const serviceQuery = useSuspenseQuery(getServiceQueryOptions(id));
   const { data: serviceData, isLoading, refetch } = serviceQuery;
 
   const form = useForm({
@@ -67,7 +69,8 @@ const ServiceDetailForm = (props: Props) => {
   }, [serviceData, form, isLoading]);
 
   const putService = useMutation({
-    mutationFn: putServiceReq,
+    mutationFn: (d: APISIXType['Service']) =>
+      putServiceReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('services.singular') }),
@@ -84,11 +87,7 @@ const ServiceDetailForm = (props: Props) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) => {
-          putService.mutateAsync(pipeProduce()(d));
-        })}
-      >
+      <form onSubmit={form.handleSubmit((d) => putService.mutateAsync(d))}>
         <FormSectionGeneral />
         <FormPartService />
         {!readOnly && (

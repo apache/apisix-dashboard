@@ -17,41 +17,28 @@
 
 import type { AxiosInstance } from 'axios';
 
-import type { StreamRoutePostType } from '@/components/form-slice/FormPartStreamRoute/schema';
-import { API_STREAM_ROUTES } from '@/config/constant';
+import { API_GLOBAL_RULES } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
-import type { PageSearchType } from '@/types/schema/pageSearch';
 
-export const getStreamRouteListReq = (req: AxiosInstance, params: PageSearchType) =>
+export const getGlobalRuleListReq = (req: AxiosInstance) =>
   req
-    .get<unknown, APISIXType['RespStreamRouteList']>(API_STREAM_ROUTES, {
-      params,
-    })
+    .get<unknown, APISIXType['RespGlobalRuleList']>(API_GLOBAL_RULES)
     .then((v) => v.data);
 
-export const getStreamRouteReq = (req: AxiosInstance, id: string) =>
+export const getGlobalRuleReq = (req: AxiosInstance, id: string) =>
   req
-    .get<unknown, APISIXType['RespStreamRouteDetail']>(
-      `${API_STREAM_ROUTES}/${id}`
+    .get<unknown, APISIXType['RespGlobalRuleDetail']>(
+      `${API_GLOBAL_RULES}/${id}`
     )
     .then((v) => v.data);
 
-export const putStreamRouteReq = (
+export const putGlobalRuleReq = (
   req: AxiosInstance,
-  data: APISIXType['StreamRoute']
+  data: APISIXType['GlobalRulePut']
 ) => {
   const { id, ...rest } = data;
   return req.put<
-    APISIXType['StreamRoute'],
-    APISIXType['RespStreamRouteDetail']
-  >(`${API_STREAM_ROUTES}/${id}`, rest);
+    APISIXType['GlobalRulePut'],
+    APISIXType['RespGlobalRuleDetail']
+  >(`${API_GLOBAL_RULES}/${id}`, rest);
 };
-
-export const postStreamRouteReq = (
-  req: AxiosInstance,
-  data: StreamRoutePostType
-) =>
-  req.post<unknown, APISIXType['RespStreamRouteDetail']>(
-    API_STREAM_ROUTES,
-    data
-  );

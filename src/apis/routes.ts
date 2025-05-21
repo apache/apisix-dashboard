@@ -46,7 +46,6 @@ export const deleteAllRoutes = async (req: AxiosInstance) => {
   const res = await getRouteListReq(req, {
     page: 1,
     page_size: 1000,
-    pageSize: 1000,
   });
   if (res.total === 0) return;
   return await Promise.all(

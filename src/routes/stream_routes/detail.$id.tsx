@@ -28,10 +28,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import {
-  getStreamRouteQueryOptions,
-  putStreamRouteReq,
-} from '@/apis/stream_routes';
+import { getStreamRouteQueryOptions } from '@/apis/hooks';
+import { putStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
@@ -39,7 +37,8 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_STREAM_ROUTES } from '@/config/constant';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -70,7 +69,8 @@ const StreamRouteDetailForm = (props: Props) => {
   }, [streamRouteData, form, isLoading]);
 
   const putStreamRoute = useMutation({
-    mutationFn: putStreamRouteReq,
+    mutationFn: (d: APISIXType['StreamRoute']) =>
+      putStreamRouteReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('streamRoutes.singular') }),
@@ -87,11 +87,7 @@ const StreamRouteDetailForm = (props: Props) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) => {
-          putStreamRoute.mutateAsync(pipeProduce()(d));
-        })}
-      >
+      <form onSubmit={form.handleSubmit((d) => putStreamRoute.mutateAsync(d))}>
         <FormSectionGeneral />
         <FormPartStreamRoute />
         {!readOnly && (

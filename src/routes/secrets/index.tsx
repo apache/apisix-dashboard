@@ -16,12 +16,11 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getSecretListQueryOptions } from '@/apis/secrets';
+import { getSecretListQueryOptions, useSecretList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -30,23 +29,10 @@ import { API_SECRETS } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-import { usePagination } from '@/utils/usePagination';
 
 function SecretList() {
   const { t } = useTranslation();
-
-  const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'secrets',
-  });
-
-  const secretsQuery = useSuspenseQuery(getSecretListQueryOptions(pagination));
-  const { data, isLoading, refetch } = secretsQuery;
-
-  useEffect(() => {
-    if (data?.total) {
-      updateTotal(data.total);
-    }
-  }, [data?.total, updateTotal]);
+  const { data, isLoading, refetch, pagination } = useSecretList();
 
   const columns = useMemo<
     ProColumns<APISIXType['RespSecretList']['data']['list'][number]>[]
@@ -101,13 +87,7 @@ function SecretList() {
         loading={isLoading}
         search={false}
         options={false}
-        pagination={{
-          current: pagination.page,
-          pageSize: pagination.pageSize,
-          total: pagination.total,
-          showSizeChanger: true,
-          onChange: handlePageChange,
-        }}
+        pagination={pagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
           menu: {

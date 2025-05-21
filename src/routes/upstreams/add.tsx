@@ -41,7 +41,7 @@ const UpstreamAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const postUpstream = useMutation({
-    mutationFn: (data: PostUpstreamType) => postUpstreamReq(req, data),
+    mutationFn: (d: PostUpstreamType) => postUpstreamReq(req, d),
     async onSuccess(data) {
       notifications.show({
         message: t('info.add.success', { name: t('upstreams.singular') }),

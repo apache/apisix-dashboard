@@ -28,7 +28,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import { getConsumerQueryOptions, putConsumerReq } from '@/apis/consumers';
+import { putConsumerReq } from '@/apis/consumers';
+import { getConsumerQueryOptions } from '@/apis/hooks';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartConsumer } from '@/components/form-slice/FormPartConsumer';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
@@ -37,7 +38,8 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
 import { API_CONSUMERS } from '@/config/constant';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -68,7 +70,7 @@ const ConsumerDetailForm = (props: Props) => {
   }, [consumerData, form, isLoading]);
 
   const putConsumer = useMutation({
-    mutationFn: putConsumerReq,
+    mutationFn: (d: APISIXType['ConsumerPut']) => putConsumerReq(req, d),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('consumers.singular') }),

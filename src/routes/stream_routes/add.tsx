@@ -24,9 +24,13 @@ import { useTranslation } from 'react-i18next';
 import { postStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
-import { StreamRoutePostSchema } from '@/components/form-slice/FormPartStreamRoute/schema';
+import {
+  StreamRoutePostSchema,
+  type StreamRoutePostType,
+} from '@/components/form-slice/FormPartStreamRoute/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { req } from '@/config/req';
 import { pipeProduce } from '@/utils/producer';
 
 const StreamRouteAddForm = () => {
@@ -34,7 +38,8 @@ const StreamRouteAddForm = () => {
   const router = useRouter();
 
   const postStreamRoute = useMutation({
-    mutationFn: postStreamRouteReq,
+    mutationFn: (d: StreamRoutePostType) =>
+      postStreamRouteReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.add.success', { name: t('streamRoutes.singular') }),
@@ -53,11 +58,7 @@ const StreamRouteAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          postStreamRoute.mutateAsync(pipeProduce()(d))
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => postStreamRoute.mutateAsync(d))}>
         <FormPartStreamRoute />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

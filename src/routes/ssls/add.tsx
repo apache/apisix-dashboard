@@ -21,6 +21,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { postSSLReq } from '@/apis/ssls';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartSSL } from '@/components/form-slice/FormPartSSL';
 import {
@@ -29,17 +30,14 @@ import {
 } from '@/components/form-slice/FormPartSSL/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
-import { API_SSLS } from '@/config/constant';
 import { req } from '@/config/req';
-import { type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const SSLAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const postSSL = useMutation({
-    mutationFn: (data: SSLPostType) =>
-      req.post<unknown, APISIXType['RespSSLDetail']>(API_SSLS, data),
+    mutationFn: (d: SSLPostType) => postSSLReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.add.success', { name: t('ssls.singular') }),
@@ -59,11 +57,7 @@ const SSLAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          postSSL.mutateAsync(pipeProduce()(d))
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => postSSL.mutateAsync(d))}>
         <FormPartSSL />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

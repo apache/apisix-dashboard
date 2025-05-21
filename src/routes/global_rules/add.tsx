@@ -25,11 +25,12 @@ import { nanoid } from 'nanoid';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { putGlobalRuleReq } from '@/apis/plugins';
+import { putGlobalRuleReq } from '@/apis/global_rules';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { APISIX } from '@/types/schema/apisix';
 
@@ -38,7 +39,18 @@ const GlobalRuleAddForm = () => {
   const router = useReactRouter();
 
   const putGlobalRule = useMutation({
-    mutationFn: putGlobalRuleReq,
+    mutationFn: (d: APISIXType['GlobalRulePut']) => putGlobalRuleReq(req, d),
+    async onSuccess(res) {
+      notifications.show({
+        id: 'add-global_rule',
+        message: t('info.add.success', { name: t('globalRules.singular') }),
+        color: 'green',
+      });
+      await router.navigate({
+        to: '/global_rules/detail/$id',
+        params: { id: res.data.value.id },
+      });
+    },
   });
 
   const form = useForm({
@@ -52,22 +64,9 @@ const GlobalRuleAddForm = () => {
     mode: 'onChange',
   });
 
-  const submit = async (data: APISIXType['GlobalRulePut']) => {
-    const res = await putGlobalRule.mutateAsync(data);
-    notifications.show({
-      id: 'add-global_rule',
-      message: t('info.add.success', { name: t('globalRules.singular') }),
-      color: 'green',
-    });
-    await router.navigate({
-      to: '/global_rules/detail/$id',
-      params: { id: res.data.value.id },
-    });
-  };
-
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(submit)}>
+      <form onSubmit={form.handleSubmit((d) => putGlobalRule.mutateAsync(d))}>
         <FormPartGlobalRules />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

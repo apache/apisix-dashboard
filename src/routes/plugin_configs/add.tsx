@@ -27,7 +27,8 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const PluginConfigAddForm = () => {
@@ -35,7 +36,8 @@ const PluginConfigAddForm = () => {
   const router = useRouter();
 
   const putPluginConfig = useMutation({
-    mutationFn: putPluginConfigReq,
+    mutationFn: (d: APISIXType['PluginConfigPut']) =>
+      putPluginConfigReq(req, d),
     async onSuccess(response) {
       notifications.show({
         message: t('info.add.success', { name: t('pluginConfigs.singular') }),
