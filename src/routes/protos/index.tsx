@@ -16,12 +16,11 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getProtoListQueryOptions } from '@/apis/protos';
+import { getProtoListQueryOptions, useProtoList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -30,24 +29,11 @@ import { API_PROTOS } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-import { usePagination } from '@/utils/usePagination';
 
 function RouteComponent() {
   const { t } = useTranslation();
 
-  // Use the pagination hook
-  const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'protos',
-  });
-
-  const protosQuery = useSuspenseQuery(getProtoListQueryOptions(pagination));
-  const { data, isLoading, refetch } = protosQuery;
-
-  useEffect(() => {
-    if (data?.total) {
-      updateTotal(data.total);
-    }
-  }, [data?.total, updateTotal]);
+  const { data, isLoading, refetch, pagination } = useProtoList();
 
   const columns = useMemo<
     ProColumns<APISIXType['RespProtoList']['data']['list'][number]>[]
@@ -93,13 +79,7 @@ function RouteComponent() {
           loading={isLoading}
           search={false}
           options={false}
-          pagination={{
-            current: pagination.page,
-            pageSize: pagination.pageSize,
-            total: pagination.total,
-            showSizeChanger: true,
-            onChange: handlePageChange,
-          }}
+          pagination={pagination}
           cardProps={{ bodyStyle: { padding: 0 } }}
           toolbar={{
             menu: {

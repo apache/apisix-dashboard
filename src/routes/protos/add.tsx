@@ -28,6 +28,7 @@ import { postProtoReq } from '@/apis/protos';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
 import PageHeader from '@/components/page/PageHeader';
+import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { APISIXProtos } from '@/types/schema/apisix/protos';
 
@@ -40,7 +41,14 @@ const ProtoAddForm = () => {
   const router = useReactRouter();
 
   const postProto = useMutation({
-    mutationFn: postProtoReq,
+    mutationFn: (d: APISIXType['ProtoPost']) => postProtoReq(req, d),
+    async onSuccess() {
+      notifications.show({
+        message: t('info.add.success', { name: t('protos.singular') }),
+        color: 'green',
+      });
+      await router.navigate({ to: '/protos' });
+    },
   });
 
   const form = useForm({
@@ -51,19 +59,9 @@ const ProtoAddForm = () => {
     mode: 'onChange',
   });
 
-  const submit = async (data: APISIXType['ProtoPost']) => {
-    await postProto.mutateAsync(data);
-    notifications.show({
-      id: 'add-proto',
-      message: t('info.add.success', { name: t('protos.singular') }),
-      color: 'green',
-    });
-    await router.navigate({ to: '/protos' });
-  };
-
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(submit)}>
+      <form onSubmit={form.handleSubmit((d) => postProto.mutateAsync(d))}>
         <FormPartProto />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

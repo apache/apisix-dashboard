@@ -22,21 +22,22 @@ import {
 } from '@tanstack/react-router';
 import { useCallback } from 'react';
 
-import type { PageSearchType } from '@/types/schema/pageSearch';
 
-type RouteTreeIds = RouteIds<RegisteredRouter['routeTree']>;
 
-export const useSearchParams = <T extends RouteTreeIds>(routeId: T) => {
+export type RouteTreeIds = RouteIds<RegisteredRouter['routeTree']>;
+
+export const useSearchParams = <T extends RouteTreeIds, P extends object>(
+  routeId: T
+) => {
   const { useSearch } = getRouteApi<T>(routeId);
   const navigate = useNavigate();
-  const params = useSearch();
-  type Params = typeof params;
+  const params = useSearch() as P;
 
   const setParams = useCallback(
-    (props: Partial<Params>) => {
+    (props: Partial<P>) => {
       return navigate({
         to: '.',
-        search: (prev: object) => ({ ...prev, ...props }),
+        search: (prev) => ({ ...prev, ...props }),
       });
     },
     [navigate]
@@ -46,9 +47,10 @@ export const useSearchParams = <T extends RouteTreeIds>(routeId: T) => {
     [navigate]
   );
 
-  return { params: params as PageSearchType, setParams, resetParams } as const;
+  return { params, setParams, resetParams } as const;
 };
 
-export type UseSearchParams<T extends RouteTreeIds> = ReturnType<
-  typeof useSearchParams<T>
->;
+export type UseSearchParams<
+  T extends RouteTreeIds,
+  P extends object
+> = ReturnType<typeof useSearchParams<T, P>>;

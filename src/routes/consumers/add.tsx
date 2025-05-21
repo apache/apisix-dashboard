@@ -26,7 +26,8 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartConsumer } from '@/components/form-slice/FormPartConsumer';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const ConsumerAddForm = () => {
@@ -34,7 +35,7 @@ const ConsumerAddForm = () => {
   const router = useRouter();
 
   const putConsumer = useMutation({
-    mutationFn: putConsumerReq,
+    mutationFn: (d: APISIXType['ConsumerPut']) => putConsumerReq(req, d),
     async onSuccess(_, res) {
       notifications.show({
         message: t('info.add.success', { name: t('consumers.singular') }),

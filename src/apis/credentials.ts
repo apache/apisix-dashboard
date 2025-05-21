@@ -14,55 +14,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { queryOptions } from '@tanstack/react-query';
+
+import type { AxiosInstance } from 'axios';
 
 import { API_CREDENTIALS, SKIP_INTERCEPTOR_HEADER } from '@/config/constant';
-import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { APISIXListResponse } from '@/types/schema/apisix/type';
 
-type WithUsername = Pick<APISIXType['Consumer'], 'username'>;
-export const getCredentialListQueryOptions = (props: WithUsername) => {
-  const { username } = props;
-  return queryOptions({
-    queryKey: ['credentials', username],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespCredentialList']>(
-          API_CREDENTIALS(username),
-          {
-            headers: {
-              [SKIP_INTERCEPTOR_HEADER]: ['404'],
-            },
-          }
-        )
-        .then((v) => v.data)
-        .catch((e) => {
-          // 404 means credentials is empty
-          if (e.response.status === 404) {
-            const res: APISIXListResponse<APISIXType['Credential']> = {
-              total: 0,
-              list: [],
-            };
-            return res;
-          }
-          throw e;
-        }),
-  });
-};
+export type WithUsername = Pick<APISIXType['Consumer'], 'username'>;
 
-export const getCredentialQueryOptions = (username: string, id: string) =>
-  queryOptions({
-    queryKey: ['credential', username, id],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespCredentialDetail']>(
-          `${API_CREDENTIALS(username)}/${id}`
-        )
-        .then((v) => v.data),
-  });
+export const getCredentialListReq = (req: AxiosInstance, params: WithUsername) =>
+  req
+    .get<unknown, APISIXType['RespCredentialList']>(
+      API_CREDENTIALS(params.username),
+      {
+        headers: {
+          [SKIP_INTERCEPTOR_HEADER]: ['404'],
+        },
+        params,
+      }
+    )
+    .then((v) => v.data)
+    .catch((e) => {
+      // 404 means credentials is empty
+      if (e.response.status === 404) {
+        const res: APISIXListResponse<APISIXType['Credential']> = {
+          total: 0,
+          list: [],
+        };
+        return res;
+      }
+      throw e;
+    });
+
+export const getCredentialReq = (req: AxiosInstance, username: string, id: string) =>
+  req
+    .get<unknown, APISIXType['RespCredentialDetail']>(
+      `${API_CREDENTIALS(username)}/${id}`
+    )
+    .then((v) => v.data);
 
 export const putCredentialReq = (
+  req: AxiosInstance,
   data: APISIXType['CredentialPut'] & WithUsername
 ) => {
   const { username, id, ...rest } = data;

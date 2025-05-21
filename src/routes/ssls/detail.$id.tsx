@@ -28,18 +28,21 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import { getSSLDetailQueryOptions, putSSLReq } from '@/apis/ssls';
+import { getSSLQueryOptions } from '@/apis/hooks';
+import { putSSLReq } from '@/apis/ssls';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartSSL } from '@/components/form-slice/FormPartSSL';
 import {
   produceToSSLForm,
   SSLPutSchema,
+  type SSLPutType,
 } from '@/components/form-slice/FormPartSSL/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SSLS } from '@/config/constant';
+import { req } from '@/config/req';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -54,7 +57,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
     data: { value: sslData },
     isLoading,
     refetch,
-  } = useSuspenseQuery(getSSLDetailQueryOptions(id));
+  } = useSuspenseQuery(getSSLQueryOptions(id));
 
   const form = useForm({
     resolver: zodResolver(SSLPutSchema),
@@ -64,7 +67,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
   });
 
   const putSSL = useMutation({
-    mutationFn: putSSLReq,
+    mutationFn: (d: SSLPutType) => putSSLReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('ssls.singular') }),

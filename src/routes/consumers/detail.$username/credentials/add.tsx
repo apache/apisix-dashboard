@@ -28,7 +28,8 @@ import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const CredentialAddForm = () => {
@@ -39,7 +40,8 @@ const CredentialAddForm = () => {
   });
 
   const putCredential = useMutation({
-    mutationFn: putCredentialReq,
+    mutationFn: (d: APISIXType['CredentialPut']) =>
+      putCredentialReq(req, pipeProduce()({ ...d, username })),
     async onSuccess(_, res) {
       notifications.show({
         message: t('info.add.success', {
@@ -66,11 +68,7 @@ const CredentialAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          putCredential.mutateAsync({ username, ...pipeProduce()(d) })
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => putCredential.mutateAsync(d))}>
         <FormPartCredential />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

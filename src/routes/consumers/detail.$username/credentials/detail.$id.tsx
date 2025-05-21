@@ -28,10 +28,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import {
-  getCredentialQueryOptions,
-  putCredentialReq,
-} from '@/apis/credentials';
+import { putCredentialReq } from '@/apis/credentials';
+import { getCredentialQueryOptions } from '@/apis/hooks';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
@@ -39,7 +37,8 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
 import { API_CREDENTIALS } from '@/config/constant';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 type CredentialFormProps = {
@@ -75,7 +74,8 @@ const CredentialDetailForm = (props: CredentialFormProps) => {
   }, [credentialData, form, isLoading]);
 
   const putCredential = useMutation({
-    mutationFn: putCredentialReq,
+    mutationFn: (d: APISIXType['CredentialPut']) =>
+      putCredentialReq(req, pipeProduce()({ ...d, username })),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('credentials.singular') }),
@@ -92,14 +92,7 @@ const CredentialDetailForm = (props: CredentialFormProps) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) => {
-          putCredential.mutateAsync({
-            username,
-            ...pipeProduce()(d),
-          });
-        })}
-      >
+      <form onSubmit={form.handleSubmit((d) => putCredential.mutateAsync(d))}>
         <FormPartCredential showDate />
         {!readOnly && (
           <Group>

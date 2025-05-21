@@ -19,7 +19,6 @@ import type { AxiosRequestConfig } from 'axios';
 
 import type { PluginConfig } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
 import {
-  API_GLOBAL_RULES,
   API_PLUGIN_METADATA,
   API_PLUGINS,
   API_PLUGINS_LIST,
@@ -27,24 +26,6 @@ import {
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 
-export const putGlobalRuleReq = (data: APISIXType['GlobalRulePut']) => {
-  const { id, ...rest } = data;
-  return req.put<
-    APISIXType['GlobalRulePut'],
-    APISIXType['RespGlobalRuleDetail']
-  >(`${API_GLOBAL_RULES}/${id}`, rest);
-};
-
-export const getGlobalRuleQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ['global_rule', id],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespGlobalRuleDetail']>(
-          `${API_GLOBAL_RULES}/${id}`
-        )
-        .then((v) => v.data),
-  });
 
 export type NeedPluginSchema = {
   schema: APISIXType['PluginSchemaKeys'];
