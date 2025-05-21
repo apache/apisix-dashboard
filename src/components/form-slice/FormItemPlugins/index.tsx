@@ -98,6 +98,7 @@ export const FormItemPlugins = <T extends FieldValues>(
       const { name, config: pluginConfig } = config;
       this.__map.set(name, pluginConfig);
       this.save();
+      this.setSelectPluginsOpened(false);
     },
     curPlugin: {} as PluginConfig,
     setCurPlugin(name: string) {
@@ -118,7 +119,6 @@ export const FormItemPlugins = <T extends FieldValues>(
     },
     closeEditor() {
       this.setEditorOpened(false);
-      this.setSelectPluginsOpened(false);
       this.curPlugin = {} as PluginConfig;
     },
     search: '',
@@ -176,7 +176,7 @@ export const FormItemPlugins = <T extends FieldValues>(
           onEdit={(name) => pluginsOb.on('edit', name)}
         />
         <PluginEditorDrawer
-          mode={isView ? 'view' : 'edit'}
+          mode={isView ? 'view' : pluginsOb.mode}
           schema={toJS(pluginsOb.curPluginSchema)}
           opened={pluginsOb.editorOpened}
           onClose={pluginsOb.closeEditor}

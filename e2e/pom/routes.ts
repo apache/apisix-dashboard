@@ -22,6 +22,8 @@ const locator = {
     page.getByRole('link', { name: 'Routes', exact: true }),
   getAddRouteBtn: (page: Page) =>
     page.getByRole('button', { name: 'Add Route', exact: true }),
+  getAddBtn: (page: Page) =>
+    page.getByRole('button', { name: 'Add', exact: true }),
 };
 
 const assert = {

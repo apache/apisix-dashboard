@@ -64,17 +64,21 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
       closeOnEscape={false}
       opened={opened}
       onClose={handleClose}
+      styles={{ body: { paddingTop: '18px' } }}
       {...(mode === 'add' && { title: t('form.plugins.addPlugin') })}
       {...(mode === 'edit' && { title: t('form.plugins.editPlugin') })}
       {...(mode === 'view' && { title: t('form.plugins.viewPlugin') })}
     >
-      <Title order={3}>{name}</Title>
+      <Title order={3} mb={10}>
+        {name}
+      </Title>
       <FormProvider {...methods}>
         <form>
           <FormItemEditor
             name="config"
             h={500}
             customSchema={schema}
+            isLoading={!schema}
             required
           />
         </form>
