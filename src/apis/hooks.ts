@@ -67,7 +67,7 @@ const genListQueryOptions =
   ) =>
   (props: P) => {
     return queryOptions({
-      queryKey: [key, ...Object.values(props)],
+      queryKey: [key, props],
       queryFn: () => listReq(req, props),
     });
   };
