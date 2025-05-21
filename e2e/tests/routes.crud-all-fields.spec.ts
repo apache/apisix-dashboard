@@ -18,7 +18,7 @@ import { routesPom } from '@e2e/pom/routes';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
-import { uiHasToastMsg } from '@e2e/utils/ui';
+import { uiClearEditor, uiHasToastMsg } from '@e2e/utils/ui';
 import { uiFillUpstreamAllFields } from '@e2e/utils/ui/upstreams';
 import { expect } from '@playwright/test';
 
@@ -119,18 +119,11 @@ test('should CRUD route with all fields', async ({ page }) => {
       .getByRole('button', { name: 'Add' })
       .click();
 
-    const clearEditor = async () => {
-      await page.evaluate(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).monaco.editor.getEditors()[0]?.setValue('');
-      });
-    };
-
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
     const editorLoading = addPluginDialog.getByTestId('editor-loading');
     await expect(editorLoading).toBeHidden();
     const editor = addPluginDialog.getByRole('code').getByRole('textbox');
-    await clearEditor();
+    await uiClearEditor(page);
     await editor.fill('{"hide_credentials": true}');
     // add plugin
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
@@ -170,8 +163,7 @@ test('should CRUD route with all fields', async ({ page }) => {
     ).toBeVisible();
 
     // clear the editor, will show JSON format is not valid
-    await clearEditor();
-    await editor.fill('');
+    await uiClearEditor(page);
     await expect(
       addPluginDialog.getByText('JSON format is not valid')
     ).toBeVisible();
