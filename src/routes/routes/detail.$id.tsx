@@ -40,6 +40,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -72,7 +73,8 @@ const RouteDetailForm = (props: Props) => {
   }, [routeData, form, isLoading]);
 
   const putRoute = useMutation({
-    mutationFn: (d: APISIXType['Route']) => putRouteReq(req, pipeProduce()(d)),
+    mutationFn: (d: APISIXType['Route']) =>
+      putRouteReq(req, pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('routes.singular') }),

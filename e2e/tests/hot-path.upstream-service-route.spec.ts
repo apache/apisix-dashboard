@@ -35,7 +35,7 @@ test.afterAll(async () => {
   await deleteAllUpstreams(e2eReq);
 });
 
-test('can create upstream, service, route', async ({ page }) => {
+test('can create upstream -> service -> route', async ({ page }) => {
   const selectPluginsBtn = page.getByRole('button', {
     name: 'Select Plugins',
   });

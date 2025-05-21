@@ -56,8 +56,8 @@ export async function uiFillHTTPStatuses(
 
 export async function uiClearEditor(page: Page) {
   await page.evaluate(() => {
-    (window as unknown as { monaco: Monaco }).monaco.editor
-      .getEditors()[0]
+    (window as unknown as { monaco?: Monaco })?.monaco?.editor
+      ?.getEditors()[0]
       ?.setValue('');
   });
 };

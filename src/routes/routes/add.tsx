@@ -31,6 +31,7 @@ import {
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 const RouteAddForm = () => {
@@ -38,7 +39,8 @@ const RouteAddForm = () => {
   const router = useRouter();
 
   const postRoute = useMutation({
-    mutationFn: (d: RoutePostType) => postRouteReq(req, pipeProduce()(d)),
+    mutationFn: (d: RoutePostType) =>
+      postRouteReq(req, pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)),
     async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('routes.singular') }),

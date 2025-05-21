@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { produce } from 'immer';
-import { all, map, values } from 'rambdax';
+import { all, isNotEmpty, map, values } from 'rambdax';
 
 import type { APISIXType } from '@/types/schema/apisix';
 
@@ -35,3 +35,8 @@ export const produceTime = produce<Partial<APISIXType['Info']>>((draft) => {
   if (draft.create_time) delete draft.create_time;
   if (draft.update_time) delete draft.update_time;
 });
+
+export const produceRmUpstreamWhenHas = (idKey: 'upstream_id' | 'service_id') =>
+  produce((draft) => {
+    if (draft[idKey] && isNotEmpty(draft.upstream)) delete draft.upstream;
+  });
