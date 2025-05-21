@@ -24,7 +24,7 @@ import { useCallback } from 'react';
 
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
-type RouteTreeIds = RouteIds<RegisteredRouter['routeTree']>;
+export type RouteTreeIds = RouteIds<RegisteredRouter['routeTree']>;
 
 export const useSearchParams = <T extends RouteTreeIds>(routeId: T) => {
   const { useSearch } = getRouteApi<T>(routeId);

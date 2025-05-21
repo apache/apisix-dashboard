@@ -15,13 +15,18 @@
  * limitations under the License.
  */
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import type { AxiosInstance } from 'axios';
 
 import { getRouteListReq, getRouteReq } from '@/apis/routes';
 import { getUpstreamListReq } from '@/apis/upstreams';
 import { req } from '@/config/req';
+import type { APISIXListResponse } from '@/types/schema/apisix/type';
 import { type PageSearchType } from '@/types/schema/pageSearch';
 import { useSearchParams } from '@/utils/useSearchParams';
-import { useTablePagination } from '@/utils/useTablePagination';
+import {
+  type ListPageKeys,
+  useTablePagination,
+} from '@/utils/useTablePagination';
 
 import { getConsumerGroupListReq } from './consumer_groups';
 import { getConsumerListReq } from './consumers';
@@ -33,35 +38,59 @@ import { getServiceListReq } from './services';
 import { getSSLListReq } from './ssls';
 import { getStreamRouteListReq } from './stream_routes';
 
-export const getUpstreamListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['upstreams', props.page, props.page_size],
-    queryFn: () => getUpstreamListReq(req, props),
-  });
+/**
+ * simple factory func for list query options which support PageSearchType
+ * currently only support page and page_size
+ */
+const genListQueryOptions =
+  <T>(
+    key: string,
+    listReq: (
+      req: AxiosInstance,
+      props: PageSearchType
+    ) => Promise<APISIXListResponse<T>>
+  ) =>
+  (props: PageSearchType) => {
+    return queryOptions({
+      queryKey: [key, props.page, props.page_size],
+      queryFn: () => listReq(req, props),
+    });
+  };
+
+/** simple hook factory func for list hooks which support PageSearchType */
+export const genUseList = <T extends ListPageKeys, U>(
+  routeId: T,
+  listQueryOptions: ReturnType<typeof genListQueryOptions<U>>
+) => {
+  return () => {
+    const { params, setParams } = useSearchParams(routeId);
+    const listQuery = useSuspenseQuery(listQueryOptions(params));
+    const { data, isLoading, refetch } = listQuery;
+    const pagination = useTablePagination({
+      data,
+      setParams: setParams as (props: Partial<PageSearchType>) => Promise<void>,
+      params,
+    });
+    return { data, isLoading, refetch, pagination };
+  };
 };
 
-export const useUpstreamList = () => {
-  const { params, setParams } = useSearchParams('/upstreams/');
-  const upstreamQuery = useSuspenseQuery(getUpstreamListQueryOptions(params));
-  const { data, isLoading, refetch } = upstreamQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const getUpstreamListQueryOptions = genListQueryOptions(
+  'upstreams',
+  getUpstreamListReq
+);
 
-export const getRouteListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['routes', props.page, props.page_size],
-    queryFn: () => getRouteListReq(req, props),
-  });
-};
+export const useUpstreamList = genUseList(
+  '/upstreams/',
+  getUpstreamListQueryOptions
+);
 
-export const useRouteList = () => {
-  const { params, setParams } = useSearchParams('/routes/');
-  const routeQuery = useSuspenseQuery(getRouteListQueryOptions(params));
-  const { data, isLoading, refetch } = routeQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const getRouteListQueryOptions = genListQueryOptions(
+  'routes',
+  getRouteListReq
+);
+
+export const useRouteList = genUseList('/routes/', getRouteListQueryOptions);
 
 export const getRouteQueryOptions = (id: string) =>
   queryOptions({
@@ -69,54 +98,35 @@ export const getRouteQueryOptions = (id: string) =>
     queryFn: () => getRouteReq(req, id),
   });
 
-export const getConsumerGroupListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['consumer_groups', props.page, props.page_size],
-    queryFn: () => getConsumerGroupListReq(req, props),
-  });
-};
+export const getConsumerGroupListQueryOptions = genListQueryOptions(
+  'consumer_groups',
+  getConsumerGroupListReq
+);
 
-export const useConsumerGroupList = () => {
-  const { params, setParams } = useSearchParams('/consumer_groups/');
-  const consumerGroupQuery = useSuspenseQuery(
-    getConsumerGroupListQueryOptions(params)
-  );
-  const { data, isLoading, refetch } = consumerGroupQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const useConsumerGroupList = genUseList(
+  '/consumer_groups/',
+  getConsumerGroupListQueryOptions
+);
 
-export const getStreamRouteListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['stream_routes', props.page, props.page_size],
-    queryFn: () => getStreamRouteListReq(req, props),
-  });
-};
+export const getStreamRouteListQueryOptions = genListQueryOptions(
+  'stream_routes',
+  getStreamRouteListReq
+);
 
-export const useStreamRouteList = () => {
-  const { params, setParams } = useSearchParams('/stream_routes/');
-  const streamRouteQuery = useSuspenseQuery(
-    getStreamRouteListQueryOptions(params)
-  );
-  const { data, isLoading, refetch } = streamRouteQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const useStreamRouteList = genUseList(
+  '/stream_routes/',
+  getStreamRouteListQueryOptions
+);
 
-export const getServiceListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['services', props.page, props.page_size],
-    queryFn: () => getServiceListReq(req, props),
-  });
-};
+export const getServiceListQueryOptions = genListQueryOptions(
+  'services',
+  getServiceListReq
+);
 
-export const useServiceList = () => {
-  const { params, setParams } = useSearchParams('/services/');
-  const serviceQuery = useSuspenseQuery(getServiceListQueryOptions(params));
-  const { data, isLoading, refetch } = serviceQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const useServiceList = genUseList(
+  '/services/',
+  getServiceListQueryOptions
+);
 
 export const getGlobalRuleListQueryOptions = () => {
   return queryOptions({
@@ -131,79 +141,43 @@ export const useGlobalRuleList = () => {
   return { data, isLoading, refetch };
 };
 
-export const getPluginConfigListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['plugin_configs', props.page, props.page_size],
-    queryFn: () => getPluginConfigListReq(req, props),
-  });
-};
+export const getPluginConfigListQueryOptions = genListQueryOptions(
+  'plugin_configs',
+  getPluginConfigListReq
+);
 
-export const usePluginConfigList = () => {
-  const { params, setParams } = useSearchParams('/plugin_configs/');
-  const pluginConfigQuery = useSuspenseQuery(
-    getPluginConfigListQueryOptions(params)
-  );
-  const { data, isLoading, refetch } = pluginConfigQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const usePluginConfigList = genUseList(
+  '/plugin_configs/',
+  getPluginConfigListQueryOptions
+);
 
-export const getSSLListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['ssls', props.page, props.page_size],
-    queryFn: () => getSSLListReq(req, props),
-  });
-};
+export const getSSLListQueryOptions = genListQueryOptions(
+  'ssls',
+  getSSLListReq
+);
 
-export const useSSLList = () => {
-  const { params, setParams } = useSearchParams('/ssls/');
-  const sslQuery = useSuspenseQuery(getSSLListQueryOptions(params));
-  const { data, isLoading, refetch } = sslQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const useSSLList = genUseList('/ssls/', getSSLListQueryOptions);
 
-export const getConsumerListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['consumers', props.page, props.page_size],
-    queryFn: () => getConsumerListReq(req, props),
-  });
-};
+export const getConsumerListQueryOptions = genListQueryOptions(
+  'consumers',
+  getConsumerListReq
+);
 
-export const useConsumerList = () => {
-  const { params, setParams } = useSearchParams('/consumers/');
-  const consumerQuery = useSuspenseQuery(getConsumerListQueryOptions(params));
-  const { data, isLoading, refetch } = consumerQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const useConsumerList = genUseList(
+  '/consumers/',
+  getConsumerListQueryOptions
+);
 
-export const getProtoListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['protos', props.page, props.page_size],
-    queryFn: () => getProtoListReq(req, props),
-  });
-};
+export const getProtoListQueryOptions = genListQueryOptions(
+  'protos',
+  getProtoListReq
+);
 
-export const useProtoList = () => {
-  const { params, setParams } = useSearchParams('/protos/');
-  const protoQuery = useSuspenseQuery(getProtoListQueryOptions(params));
-  const { data, isLoading, refetch } = protoQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const useProtoList = genUseList('/protos/', getProtoListQueryOptions);
 
-export const getSecretListQueryOptions = (props: PageSearchType) => {
-  return queryOptions({
-    queryKey: ['secrets', props.page, props.page_size],
-    queryFn: () => getSecretListReq(req, props),
-  });
-};
+export const getSecretListQueryOptions = genListQueryOptions(
+  'secrets',
+  getSecretListReq
+);
 
-export const useSecretList = () => {
-  const { params, setParams } = useSearchParams('/secrets/');
-  const secretQuery = useSuspenseQuery(getSecretListQueryOptions(params));
-  const { data, isLoading, refetch } = secretQuery;
-  const pagination = useTablePagination({ data, setParams, params });
-  return { data, isLoading, refetch, pagination };
-};
+export const useSecretList = genUseList('/secrets/', getSecretListQueryOptions);
