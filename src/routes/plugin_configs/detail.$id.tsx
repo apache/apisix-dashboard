@@ -28,17 +28,16 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import {
-  getPluginConfigQueryOptions,
-  putPluginConfigReq,
-} from '@/apis/plugin_configs';
+import { getPluginConfigQueryOptions } from '@/apis/hooks';
+import { putPluginConfigReq } from '@/apis/plugin_configs';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -56,7 +55,8 @@ const PluginConfigDetailForm = (props: Props) => {
   const initialValue = data.value;
 
   const putPluginConfig = useMutation({
-    mutationFn: putPluginConfigReq,
+    mutationFn: (d: APISIXType['PluginConfigPut']) =>
+      putPluginConfigReq(req, pipeProduce()({ ...d, id })),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('pluginConfigs.singular') }),
@@ -84,11 +84,7 @@ const PluginConfigDetailForm = (props: Props) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          putPluginConfig.mutateAsync(pipeProduce()({ ...d, id }))
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => putPluginConfig.mutateAsync(d))}>
         <FormPartPluginConfig />
         {!readOnly && (
           <Group>

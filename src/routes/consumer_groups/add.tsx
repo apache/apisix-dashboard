@@ -27,7 +27,8 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const ConsumerGroupAddForm = () => {
@@ -35,7 +36,8 @@ const ConsumerGroupAddForm = () => {
   const router = useRouter();
 
   const putConsumerGroup = useMutation({
-    mutationFn: putConsumerGroupReq,
+    mutationFn: (d: APISIXType['ConsumerGroupPut']) =>
+      putConsumerGroupReq(req, d),
     async onSuccess(response) {
       notifications.show({
         message: t('info.add.success', { name: t('consumerGroups.singular') }),

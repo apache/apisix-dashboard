@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { queryOptions } from '@tanstack/react-query';
 import type { AxiosInstance } from 'axios';
 
 import { API_CONSUMERS } from '@/config/constant';
@@ -27,17 +26,6 @@ export const getConsumerListReq = (req: AxiosInstance, params: PageSearchType) =
       params,
     })
     .then((v) => v.data);
-
-export const getConsumerQueryOptions = (req: AxiosInstance, username: string) =>
-  queryOptions({
-    queryKey: ['consumer', username],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespConsumerDetail']>(
-          `${API_CONSUMERS}/${username}`
-        )
-        .then((v) => v.data),
-  });
 
 export const getConsumerReq = (req: AxiosInstance, username: string) =>
   req

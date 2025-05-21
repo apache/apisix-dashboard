@@ -28,17 +28,16 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import {
-  getConsumerGroupQueryOptions,
-  putConsumerGroupReq,
-} from '@/apis/consumer_groups';
+import { putConsumerGroupReq } from '@/apis/consumer_groups';
+import { getConsumerGroupQueryOptions } from '@/apis/hooks';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_CONSUMER_GROUPS } from '@/config/constant';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -55,7 +54,8 @@ const ConsumerGroupDetailForm = (props: Props) => {
   const { data } = consumerGroupQuery;
 
   const putConsumerGroup = useMutation({
-    mutationFn: putConsumerGroupReq,
+    mutationFn: (d: APISIXType['ConsumerGroupPut']) =>
+      putConsumerGroupReq(req, d),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('consumerGroups.singular') }),

@@ -21,12 +21,13 @@ import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { postServiceReq } from '@/apis/services';
+import { postServiceReq, type ServicePostType } from '@/apis/services';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartService } from '@/components/form-slice/FormPartService';
 import { ServicePostSchema } from '@/components/form-slice/FormPartService/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { req } from '@/config/req';
 import { pipeProduce } from '@/utils/producer';
 
 const ServiceAddForm = () => {
@@ -34,7 +35,7 @@ const ServiceAddForm = () => {
   const router = useRouter();
 
   const postService = useMutation({
-    mutationFn: postServiceReq,
+    mutationFn: (d: ServicePostType) => postServiceReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.add.success', { name: t('services.singular') }),
@@ -53,11 +54,7 @@ const ServiceAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          postService.mutateAsync(pipeProduce()(d))
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => postService.mutateAsync(d))}>
         <FormPartService />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

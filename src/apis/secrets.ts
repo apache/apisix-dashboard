@@ -49,10 +49,17 @@ export const getSecretListReq = (req: AxiosInstance, params: PageSearchType) =>
       };
     });
 
-export const getSecretReq = (req: AxiosInstance, id: string) =>
-  req
-    .get<unknown, APISIXType['RespSecretDetail']>(`${API_SECRETS}/${id}`)
+export const getSecretReq = (
+  req: AxiosInstance,
+  props: Pick<APISIXType['Secret'], 'id' | 'manager'>
+) => {
+  const { id, manager } = props;
+  return req
+    .get<unknown, APISIXType['RespSecretDetail']>(
+      `${API_SECRETS}/${manager}/${id}`
+    )
     .then((v) => preParseSecretItem(v.data));
+};
 
 export const putSecretReq = (
   req: AxiosInstance,

@@ -21,7 +21,7 @@ import { API_CREDENTIALS, SKIP_INTERCEPTOR_HEADER } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { APISIXListResponse } from '@/types/schema/apisix/type';
 
-type WithUsername = Pick<APISIXType['Consumer'], 'username'>;
+export type WithUsername = Pick<APISIXType['Consumer'], 'username'>;
 
 export const getCredentialListReq = (req: AxiosInstance, params: WithUsername) =>
   req

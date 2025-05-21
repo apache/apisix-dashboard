@@ -17,7 +17,6 @@
 import type { AxiosInstance } from 'axios';
 
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
-import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
@@ -35,7 +34,10 @@ export const getPluginConfigReq = (req: AxiosInstance, id: string) =>
     )
     .then((v) => v.data);
 
-export const putPluginConfigReq = (data: APISIXType['PluginConfigPut']) => {
+export const putPluginConfigReq = (
+  req: AxiosInstance,
+  data: APISIXType['PluginConfigPut']
+) => {
   const { id, ...rest } = data;
   return req.put<
     APISIXType['PluginConfigPut'],
