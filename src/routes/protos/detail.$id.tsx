@@ -28,7 +28,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import { getProtoQueryOptions, putProtoReq } from '@/apis/protos';
+import { getProtoQueryOptions } from '@/apis/hooks';
+import { putProtoReq } from '@/apis/protos';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
@@ -36,6 +37,7 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_PROTOS } from '@/config/constant';
+import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -61,7 +63,7 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
   });
 
   const putProto = useMutation({
-    mutationFn: putProtoReq,
+    mutationFn: (d: APISIXType['Proto']) => putProtoReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('protos.singular') }),
@@ -85,11 +87,7 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          putProto.mutateAsync(pipeProduce()(d))
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => putProto.mutateAsync(d))}>
         <FormSectionGeneral />
         <FormPartProto allowUpload={!readOnly} />
         {!readOnly && (
