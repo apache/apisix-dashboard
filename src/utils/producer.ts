@@ -50,16 +50,21 @@ export const produceRmDoubleUnderscoreKeys = produce((draft) => {
   rmDoubleUnderscoreKeys(draft);
 });
 
-type PipeParams = Parameters<typeof pipe>;
-type R = PipeParams extends [PipeParams[0], ...infer R] ? R : never;
-export const pipeProduce = (...funcs: R) => {
+/**
+ * FIXME: type error
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const pipeProduce = (...funcs: ((a: any) => unknown)[]) => {
   return <T>(val: T) =>
-    produce(val, (draft) =>
-      pipe(
-        ...funcs,
+    produce(val, (draft) => {
+      const fs = funcs;
+      return pipe(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        ...fs,
         produceRmDoubleUnderscoreKeys,
         produceTime,
         produceDeepCleanEmptyKeys()
-      )(draft)
-    ) as T;
+      )(draft) as never;
+    }) as T;
 };

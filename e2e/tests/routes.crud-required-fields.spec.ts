@@ -78,35 +78,20 @@ test('should CRUD route with required fields', async ({ page }) => {
     });
   });
 
-  await test.step('redirects to routes list page after creation', async () => {
-    // After creation, we should be redirected to the routes list page
-    await routesPom.isIndexPage(page);
-    
-    // Verify our newly created route appears in the list
-    await expect(page.getByRole('cell', { name: routeName })).toBeVisible();
-  });
-
-  // We've already verified the route is in the list page in the previous step
-
-  await test.step('navigate to route detail page', async () => {
-    // Click on the route name to go to the detail page
-    await page
-      .getByRole('row', { name: routeName })
-      .getByRole('button', { name: 'View' })
-      .click();
+  await test.step('auto navigate to route detail page', async () => {
     await routesPom.isDetailPage(page);
-    
+
     // Verify the route details
     // Verify ID exists
     const ID = page.getByRole('textbox', { name: 'ID', exact: true });
     await expect(ID).toBeVisible();
     await expect(ID).toBeDisabled();
-    
+
     // Verify the route name
     const name = page.getByLabel('Name', { exact: true }).first();
     await expect(name).toHaveValue(routeName);
     await expect(name).toBeDisabled();
-    
+
     // Verify the route URI
     const uri = page.getByLabel('URI', { exact: true });
     await expect(uri).toHaveValue(routeUri);
@@ -159,6 +144,19 @@ test('should CRUD route with required fields', async ({ page }) => {
     // Find the row with our route
     const row = page.getByRole('row', { name: routeName });
     await expect(row).toBeVisible();
+  });
+
+  await test.step('route should exist in list page', async () => {
+    await routesPom.getRouteNavBtn(page).click();
+    await routesPom.isIndexPage(page);
+    await expect(page.getByRole('cell', { name: routeName })).toBeVisible();
+
+    // Click on the route name to go to the detail page
+    await page
+      .getByRole('row', { name: routeName })
+      .getByRole('button', { name: 'View' })
+      .click();
+    await routesPom.isDetailPage(page);
   });
 
   await test.step('delete route in detail page', async () => {

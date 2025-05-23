@@ -17,11 +17,14 @@
 
 import type { AxiosInstance } from 'axios';
 
-import { API_UPSTREAMS } from '@/config/constant';
+import { API_UPSTREAMS, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
-export const getUpstreamListReq = (req: AxiosInstance, params: PageSearchType) =>
+export const getUpstreamListReq = (
+  req: AxiosInstance,
+  params: PageSearchType
+) =>
   req
     .get<undefined, APISIXType['RespUpstreamList']>(API_UPSTREAMS, { params })
     .then((v) => v.data);
@@ -52,12 +55,19 @@ export const putUpstreamReq = (
 };
 
 export const deleteAllUpstreams = async (req: AxiosInstance) => {
-  const res = await getUpstreamListReq(req, {
+  const totalRes = await getUpstreamListReq(req, {
     page: 1,
-    page_size: 1000,
+    page_size: PAGE_SIZE_MIN,
   });
-  if (res.total === 0) return;
-  return await Promise.all(
-    res.list.map((d) => req.delete(`${API_UPSTREAMS}/${d.value.id}`))
-  );
+  const total = totalRes.total;
+  if (total === 0) return;
+  for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
+    const res = await getUpstreamListReq(req, {
+      page: 1,
+      page_size: PAGE_SIZE_MAX,
+    });
+    await Promise.all(
+      res.list.map((d) => req.delete(`${API_UPSTREAMS}/${d.value.id}`))
+    );
+  }
 };

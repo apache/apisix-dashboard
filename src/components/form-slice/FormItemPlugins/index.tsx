@@ -91,7 +91,7 @@ export const FormItemPlugins = <T extends FieldValues>(
       return difference(this.allPluginNames, this.selected);
     },
     save() {
-      const obj = Object.fromEntries(this.__map);
+      const obj = Object.fromEntries(toJS(this.__map));
       fOnChange(obj);
     },
     update(config: PluginConfig) {

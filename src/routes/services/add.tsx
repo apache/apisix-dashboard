@@ -28,6 +28,7 @@ import { ServicePostSchema } from '@/components/form-slice/FormPartService/schem
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 const ServiceAddForm = () => {
@@ -35,13 +36,20 @@ const ServiceAddForm = () => {
   const router = useRouter();
 
   const postService = useMutation({
-    mutationFn: (d: ServicePostType) => postServiceReq(req, pipeProduce()(d)),
-    async onSuccess() {
+    mutationFn: (d: ServicePostType) =>
+      postServiceReq(
+        req,
+        pipeProduce(produceRmUpstreamWhenHas('upstream_id'))(d)
+      ),
+    async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('services.singular') }),
         color: 'green',
       });
-      await router.navigate({ to: '/services' });
+      await router.navigate({
+        to: '/services/detail/$id',
+        params: { id: res.data.value.id },
+      });
     },
   });
 

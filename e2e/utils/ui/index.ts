@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import type { CommonPOM } from '@e2e/pom/type';
+import { type Monaco } from '@monaco-editor/react';
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { FileRouteTypes } from '@/routeTree.gen';
@@ -52,3 +53,11 @@ export async function uiFillHTTPStatuses(
     await input.press('Enter');
   }
 }
+
+export async function uiClearEditor(page: Page) {
+  await page.evaluate(() => {
+    (window as unknown as { monaco?: Monaco })?.monaco?.editor
+      ?.getEditors()[0]
+      ?.setValue('');
+  });
+};

@@ -39,6 +39,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_SERVICES } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -70,7 +71,10 @@ const ServiceDetailForm = (props: Props) => {
 
   const putService = useMutation({
     mutationFn: (d: APISIXType['Service']) =>
-      putServiceReq(req, pipeProduce()(d)),
+      putServiceReq(
+        req,
+        pipeProduce(produceRmUpstreamWhenHas('upstream_id'))(d)
+      ),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('services.singular') }),
