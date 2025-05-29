@@ -1,1 +1,15 @@
-{}
+{
+  "apisix": {
+    "dashboard": "APISIX Dashboard",
+    "logo": "APISIX Logo"
+  },
+  "consumerGroups": {
+    "singular": "Consumer Group"
+  },
+  "consumers": {
+    "singular": "Consumer"
+  },
+  "credentials": {
+    "singular": "Credential"
+  }
+}
