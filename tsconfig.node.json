@@ -23,5 +23,5 @@
       "node"
     ],
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "vite-plugin-i18n-progress.ts"]
 }
