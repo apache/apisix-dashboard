@@ -21,12 +21,14 @@ import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { postServiceReq } from '@/apis/services';
+import { postServiceReq, type ServicePostType } from '@/apis/services';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartService } from '@/components/form-slice/FormPartService';
 import { ServicePostSchema } from '@/components/form-slice/FormPartService/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { req } from '@/config/req';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 const ServiceAddForm = () => {
@@ -34,13 +36,20 @@ const ServiceAddForm = () => {
   const router = useRouter();
 
   const postService = useMutation({
-    mutationFn: postServiceReq,
-    async onSuccess() {
+    mutationFn: (d: ServicePostType) =>
+      postServiceReq(
+        req,
+        pipeProduce(produceRmUpstreamWhenHas('upstream_id'))(d)
+      ),
+    async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('services.singular') }),
         color: 'green',
       });
-      await router.navigate({ to: '/services' });
+      await router.navigate({
+        to: '/services/detail/$id',
+        params: { id: res.data.value.id },
+      });
     },
   });
 
@@ -53,11 +62,7 @@ const ServiceAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          postService.mutateAsync(pipeProduce()(d))
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => postService.mutateAsync(d))}>
         <FormPartService />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

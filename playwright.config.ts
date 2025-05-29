@@ -22,7 +22,7 @@ import { env } from './e2e/utils/env';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './e2e/tests',
   outputDir: './test-results',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

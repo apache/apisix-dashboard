@@ -23,11 +23,8 @@ import {
 
 import { genControllerProps } from './util';
 
-export type FormItemSelectProps<
-  T extends FieldValues,
-  R
-> = UseControllerProps<T> &
-  SelectProps & {
+export type FormItemSelectProps<T extends FieldValues, R> = UseControllerProps<T> &
+  Omit<SelectProps, 'value' | 'defaultValue'> & {
     from?: (v: R) => string;
     to?: (v: string) => R;
   };

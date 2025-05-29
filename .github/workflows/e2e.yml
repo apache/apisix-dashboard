@@ -8,6 +8,11 @@ on:
     types: [labeled, synchronize]
     branches:
         - "**"
+  schedule:
+    # Run at 2:00 AM UTC every day
+    # This should be later than the update time of `apache/apisix:dev`
+    # Ref: https://github.com/apache/apisix-docker/blob/master/.github/workflows/apisix_dev_push_docker_hub.yaml#L7C15-L7C16
+    - cron: '0 2 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -15,13 +20,15 @@ concurrency:
 
 jobs:
   test:
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'e2e-test') }}
+    # only run when e2e-test label is added or scheduled
+    if: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e-test')) || github.event_name == 'schedule' }}
     timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Get PR Labels
+        if: ${{ github.event_name == 'pull_request' }}
         id: get-labels
         uses: actions/github-script@v6
         with:
@@ -29,6 +36,7 @@ jobs:
             const labels = context.payload.pull_request.labels.map(label => label.name);
             core.setOutput("labels", labels.join(","));
       - name: Set image label as environment variable
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
           export LABELS=${{ steps.get-labels.outputs.labels }}
           echo "LABELS=${LABELS}" >> $GITHUB_ENV

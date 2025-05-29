@@ -17,7 +17,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
@@ -28,15 +28,16 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import { getGlobalRuleQueryOptions, putGlobalRuleReq } from '@/apis/plugins';
+import { putGlobalRuleReq } from '@/apis/global_rules';
+import { getGlobalRuleQueryOptions } from '@/apis/hooks';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_GLOBAL_RULES } from '@/config/constant';
-import type { APISIXType } from '@/types/schema/apisix';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 
 type Props = {
   readOnly: boolean;
@@ -46,7 +47,7 @@ const GlobalRuleDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
   const { id } = useParams({ from: '/global_rules/detail/$id' });
-  const detailReq = useQuery(getGlobalRuleQueryOptions(id));
+  const detailReq = useSuspenseQuery(getGlobalRuleQueryOptions(id));
 
   const form = useForm({
     resolver: zodResolver(APISIX.GlobalRulePut),
@@ -63,22 +64,21 @@ const GlobalRuleDetailForm = (props: Props) => {
     }
   }, [detailReq.data, form]);
 
-  const putglobalRule = useMutation({
-    mutationFn: putGlobalRuleReq,
+  const putGlobalRule = useMutation({
+    mutationFn: (d: APISIXType['GlobalRulePut']) => putGlobalRuleReq(req, d),
+    async onSuccess() {
+      notifications.show({
+        message: t('info.edit.success', { name: t('globalRules.singular') }),
+        color: 'green',
+      });
+      await detailReq.refetch();
+      setReadOnly(true);
+    },
   });
-  const submit = async (data: APISIXType['GlobalRulePut']) => {
-    await putglobalRule.mutateAsync(data);
-    notifications.show({
-      message: t('info.edit.success', { name: t('globalRules.singular') }),
-      color: 'green',
-    });
-    await detailReq.refetch();
-    setReadOnly(true);
-  };
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(submit)}>
+      <form onSubmit={form.handleSubmit((d) => putGlobalRule.mutateAsync(d))}>
         <FormPartGlobalRules />
         {!readOnly && (
           <Group>

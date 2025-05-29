@@ -24,6 +24,10 @@
       },
       "name": "Name",
       "status": "Status",
+      "statusOption": {
+        "0": "Disabled",
+        "1": "Enabled"
+      },
       "title": "Basic Infomation"
     },
     "btn": {
@@ -49,6 +53,9 @@
       "id": "ID",
       "title": "Information",
       "update_time": "Updated At"
+    },
+    "json": {
+      "parseError": "JSON format is not valid"
     },
     "plugins": {
       "addPlugin": "Add Plugin",

@@ -18,7 +18,11 @@ import { upstreamsPom } from '@e2e/pom/upstreams';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
-import { uiHasToastMsg } from '@e2e/utils/ui';
+import { uiCannotSubmitEmptyForm, uiHasToastMsg } from '@e2e/utils/ui';
+import {
+  uiCheckUpstreamRequiredFields,
+  uiFillUpstreamRequiredFields,
+} from '@e2e/utils/ui/upstreams';
 import { expect } from '@playwright/test';
 
 import { deleteAllUpstreams } from '@/apis/upstreams';
@@ -41,46 +45,16 @@ test('should CRUD upstream with required fields', async ({ page }) => {
   await upstreamsPom.getAddUpstreamBtn(page).click();
   await upstreamsPom.isAddPage(page);
 
-  const addBtn = page.getByRole('button', { name: 'Add', exact: true });
   await test.step('cannot submit without required fields', async () => {
-    await addBtn.click();
-    await upstreamsPom.isAddPage(page);
-    await uiHasToastMsg(page, {
-      hasText: 'invalid configuration: value ',
-    });
+    await uiCannotSubmitEmptyForm(page, upstreamsPom);
   });
 
   await test.step('submit with required fields', async () => {
-    await page.getByLabel('Name', { exact: true }).fill(upstreamName);
-
-    const nodesSection = page.getByRole('group', { name: 'Nodes' });
-    const noData = nodesSection.getByText('No Data');
-    const addNodeBtn = page.getByRole('button', { name: 'Add a Node' });
-
-    await expect(noData).toBeVisible();
-
-    await addNodeBtn.click();
-    await expect(noData).toBeHidden();
-    const rows = nodesSection.locator('tr.ant-table-row');
-    const firstRowHost = rows.nth(0).getByRole('textbox').first();
-    await firstRowHost.fill(nodes[1].host);
-    await expect(firstRowHost).toHaveValue(nodes[1].host);
-    await nodesSection.click();
-
-    // add a new node then remove it
-    await addNodeBtn.click();
-    await expect(rows.nth(1)).toBeVisible();
-    const secondRowHost = rows.nth(1).getByRole('textbox').first();
-    await secondRowHost.fill(nodes[0].host);
-    await expect(secondRowHost).toHaveValue(nodes[0].host);
-    await nodesSection.click();
-
-    // we need to replace the antd component to help fix this issue
-    await addNodeBtn.click();
-    rows.nth(2).getByRole('button', { name: 'Delete' }).click();
-    await expect(rows).toHaveCount(2);
-
-    await addBtn.click();
+    await uiFillUpstreamRequiredFields(page, {
+      name: upstreamName,
+      nodes,
+    });
+    await upstreamsPom.getAddBtn(page).click();
     await uiHasToastMsg(page, {
       hasText: 'Add Upstream Successfully',
     });
@@ -92,19 +66,10 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     const ID = page.getByRole('textbox', { name: 'ID', exact: true });
     await expect(ID).toBeVisible();
     await expect(ID).toBeDisabled();
-    // Verify the upstream name
-    const name = page.getByLabel('Name', { exact: true });
-    await expect(name).toHaveValue(upstreamName);
-    await expect(name).toBeDisabled();
-    // Verify the upstream nodes
-    const nodesSection = page.getByRole('group', { name: 'Nodes' });
-
-    await expect(
-      nodesSection.getByRole('cell', { name: nodes[1].host })
-    ).toBeVisible();
-    await expect(
-      nodesSection.getByRole('cell', { name: nodes[0].host })
-    ).toBeVisible();
+    await uiCheckUpstreamRequiredFields(page, {
+      name: upstreamName,
+      nodes,
+    });
   });
 
   await test.step('can see upstream in list page', async () => {

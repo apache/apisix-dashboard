@@ -14,22 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect, type Locator, type Page } from '@playwright/test';
 
-import type { FileRouteTypes } from '@/routeTree.gen';
+import { type Locator, type Page } from '@playwright/test';
 
-import { env } from './env';
-
-export const uiGoto = (page: Page, path: FileRouteTypes['to']) => {
-  return page.goto(`${env.E2E_TARGET_URL}${path.substring(1)}`);
+export type POMLocator = {
+  getAddBtn: (page: Page) => Locator;
 };
 
-export const uiHasToastMsg = async (
-  page: Page,
-  ...filterOpts: Parameters<Locator['filter']>
-) => {
-  const alertMsg = page.getByRole('alert').filter(...filterOpts);
-  await expect(alertMsg).toBeVisible();
-  await alertMsg.getByRole('button').click();
-  await expect(alertMsg).not.toBeVisible();
+export type POMAssert = {
+  isIndexPage: (page: Page) => Promise<void>;
+  isAddPage: (page: Page) => Promise<void>;
+  isDetailPage: (page: Page) => Promise<void>;
 };
+
+export type POMGoto = {
+  toIndex: (page: Page) => void;
+  toAdd: (page: Page) => void;
+};
+
+export type CommonPOM = POMLocator & POMAssert & POMGoto;
