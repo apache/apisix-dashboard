@@ -21,13 +21,14 @@ concurrency:
 jobs:
   test:
     # only run when e2e-test label is added or scheduled
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'e2e-test') || github.event_name == 'schedule' }}
+    if: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e-test')) || github.event_name == 'schedule' }}
     timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Get PR Labels
+        if: ${{ github.event_name == 'pull_request' }}
         id: get-labels
         uses: actions/github-script@v6
         with:
@@ -35,6 +36,7 @@ jobs:
             const labels = context.payload.pull_request.labels.map(label => label.name);
             core.setOutput("labels", labels.join(","));
       - name: Set image label as environment variable
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
           export LABELS=${{ steps.get-labels.outputs.labels }}
           echo "LABELS=${LABELS}" >> $GITHUB_ENV
