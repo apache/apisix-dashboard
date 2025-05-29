@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionIcon, Menu } from '@mantine/core';
+import { ActionIcon, Anchor, Menu } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import i18nProgress from 'virtual:i18n-progress';
 
@@ -32,7 +32,7 @@ const TranslationProgress = ({ lang }: { lang: string }) => {
     return (
       <span
         style={{
-          color: 'var(--mantine-color---mantine-color-gray-6)',
+          color: 'var(--mantine-color-gray-6)',
         }}
       >
         ({percent}%)
@@ -64,7 +64,15 @@ export const LanguageMenu = () => {
           </Menu.Item>
         ))}
         <Menu.Divider />
-        <Menu.Label>{t('help-us-translate')}</Menu.Label>
+        <Menu.Label>
+          <Anchor
+            href="https://github.com/apache/apisix-dashboard/issues/1407"
+            target="_blank"
+            size="xs"
+          >
+            {t('help-us-translate')}
+          </Anchor>
+        </Menu.Label>
       </Menu.Dropdown>
     </Menu>
   );
