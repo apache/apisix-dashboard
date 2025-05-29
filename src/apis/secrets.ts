@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { queryOptions } from '@tanstack/react-query';
+import type { AxiosInstance } from 'axios';
 
 import { API_SECRETS } from '@/config/constant';
-import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
@@ -37,41 +36,35 @@ export const preParseSecretItem = <T extends APISIXType['RespSecretItem']>(
   return { ...data, value: { ...data.value, manager, id: realId } };
 };
 
-export const getSecretListQueryOptions = (props: PageSearchType) => {
-  const { page, pageSize } = props;
-  return queryOptions({
-    queryKey: ['secrets', page, pageSize],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespSecretList']>(API_SECRETS, {
-          params: { page, page_size: pageSize },
-        })
-        .then((v) => {
-          const { list, ...rest } = v.data;
-          return {
-            ...rest,
-            list: list.map(preParseSecretItem),
-          };
-        }),
-  });
-};
+export const getSecretListReq = (req: AxiosInstance, params: PageSearchType) =>
+  req
+    .get<unknown, APISIXType['RespSecretList']>(API_SECRETS, {
+      params,
+    })
+    .then((v) => {
+      const { list, ...rest } = v.data;
+      return {
+        ...rest,
+        list: list.map(preParseSecretItem),
+      };
+    });
 
-export const getSecretQueryOptions = (
+export const getSecretReq = (
+  req: AxiosInstance,
   props: Pick<APISIXType['Secret'], 'id' | 'manager'>
 ) => {
   const { id, manager } = props;
-  return queryOptions({
-    queryKey: ['secret', manager, id],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespSecretDetail']>(
-          `${API_SECRETS}/${manager}/${id}`
-        )
-        .then((v) => preParseSecretItem(v.data)),
-  });
+  return req
+    .get<unknown, APISIXType['RespSecretDetail']>(
+      `${API_SECRETS}/${manager}/${id}`
+    )
+    .then((v) => preParseSecretItem(v.data));
 };
 
-export const putSecretReq = (data: APISIXType['Secret']) => {
+export const putSecretReq = (
+  req: AxiosInstance,
+  data: APISIXType['Secret']
+) => {
   const { manager, id, ...rest } = data;
   return req.put<APISIXType['Secret'], APISIXType['RespSecretDetail']>(
     `${API_SECRETS}/${manager}/${id}`,

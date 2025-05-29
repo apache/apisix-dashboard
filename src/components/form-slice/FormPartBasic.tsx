@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { PropsWithChildren, ReactNode } from 'react';
+import type { ComboboxItem } from '@mantine/core';
+import { type PropsWithChildren, type ReactNode, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +28,31 @@ import { FormItemSelect } from '../form/Select';
 import { FormItemTextarea } from '../form/Textarea';
 import { FormItemTextInput } from '../form/TextInput';
 import { FormSection, type FormSectionProps } from './FormSection';
+
+const FormItemStatus = () => {
+  const { control } = useFormContext<APISIXType['Basic']>();
+  const { t } = useTranslation();
+  const np = useNamePrefix();
+  const options = useMemo(
+    (): ComboboxItem[] =>
+      APISIXCommon.Status.options.map((v) => ({
+        value: String(v.value),
+        label: t(`form.basic.statusOption.${v.value}`),
+      })),
+    [t]
+  );
+  return (
+    <FormItemSelect
+      control={control}
+      name={np('status')}
+      label={t('form.basic.status')}
+      defaultValue={APISIXCommon.Status.options[1].value}
+      data={options}
+      from={String}
+      to={Number}
+    />
+  );
+};
 
 export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
   PropsWithChildren & {
@@ -69,17 +95,7 @@ export const FormPartBasic = (props: FormPartBasicProps) => {
         />
       )}
       {showLabels && <FormItemLabels name={np('labels')} control={control} />}
-      {showStatus && (
-        <FormItemSelect
-          control={control}
-          name="status"
-          label={t('form.basic.status')}
-          defaultValue={APISIXCommon.Status.options[1].value.toString()}
-          data={APISIXCommon.Status.options.map((v) => v.value.toString())}
-          from={String}
-          to={Number}
-        />
-      )}
+      {showStatus && <FormItemStatus />}
       {children}
     </FormSection>
   );

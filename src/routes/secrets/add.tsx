@@ -28,7 +28,8 @@ import { FormPartSecret } from '@/components/form-slice/FormPartSecret';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
-import { APISIX } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const SecretAddForm = () => {
@@ -36,7 +37,8 @@ const SecretAddForm = () => {
   const router = useRouter();
 
   const putSecret = useMutation({
-    mutationFn: putSecretReq,
+    mutationFn: (d: APISIXType['Secret']) =>
+      putSecretReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.add.success', { name: t('secrets.singular') }),
@@ -61,11 +63,7 @@ const SecretAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          putSecret.mutateAsync(pipeProduce()(d))
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => putSecret.mutateAsync(d))}>
         <FormSectionGeneral showDate={false} />
         <FormPartSecret />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>

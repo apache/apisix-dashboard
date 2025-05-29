@@ -18,42 +18,42 @@ import { uiGoto } from '@e2e/utils/ui';
 import { expect, type Page } from '@playwright/test';
 
 const locator = {
-  getUpstreamNavBtn: (page: Page) =>
-    page.getByRole('link', { name: 'Upstreams' }),
-  getAddUpstreamBtn: (page: Page) =>
-    page.getByRole('button', { name: 'Add Upstream' }),
+  getServiceNavBtn: (page: Page) =>
+    page.getByRole('link', { name: 'Services', exact: true }),
+  getAddServiceBtn: (page: Page) =>
+    page.getByRole('button', { name: 'Add Service', exact: true }),
   getAddBtn: (page: Page) =>
     page.getByRole('button', { name: 'Add', exact: true }),
 };
 
 const assert = {
   isIndexPage: async (page: Page) => {
-    await expect(page).toHaveURL((url) => url.pathname.endsWith('/upstreams'));
-    const title = page.getByRole('heading', { name: 'Upstreams' });
+    await expect(page).toHaveURL((url) => url.pathname.endsWith('/services'));
+    const title = page.getByRole('heading', { name: 'Services' });
     await expect(title).toBeVisible();
   },
   isAddPage: async (page: Page) => {
     await expect(page).toHaveURL((url) =>
-      url.pathname.endsWith('/upstreams/add')
+      url.pathname.endsWith('/services/add')
     );
-    const title = page.getByRole('heading', { name: 'Add Upstream' });
+    const title = page.getByRole('heading', { name: 'Add Service' });
     await expect(title).toBeVisible();
   },
   isDetailPage: async (page: Page) => {
     await expect(page).toHaveURL((url) =>
-      url.pathname.includes('/upstreams/detail')
+      url.pathname.includes('/services/detail')
     );
-    const title = page.getByRole('heading', { name: 'Upstream Detail' });
+    const title = page.getByRole('heading', { name: 'Service Detail' });
     await expect(title).toBeVisible();
   },
 };
 
 const goto = {
-  toIndex: (page: Page) => uiGoto(page, '/upstreams'),
-  toAdd: (page: Page) => uiGoto(page, '/upstreams/add'),
+  toIndex: (page: Page) => uiGoto(page, '/services'),
+  toAdd: (page: Page) => uiGoto(page, '/services/add'),
 };
 
-export const upstreamsPom = {
+export const servicesPom = {
   ...locator,
   ...assert,
   ...goto,

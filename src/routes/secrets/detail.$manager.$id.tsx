@@ -28,7 +28,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
 
-import { getSecretQueryOptions, putSecretReq } from '@/apis/secrets';
+import { getSecretQueryOptions } from '@/apis/hooks';
+import { putSecretReq } from '@/apis/secrets';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartSecret } from '@/components/form-slice/FormPartSecret';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
@@ -36,6 +37,7 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SECRETS } from '@/config/constant';
+import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -73,7 +75,8 @@ const SecretDetailForm = (props: Props) => {
   }, [secretData, form, isLoading, readOnly]);
 
   const putSecret = useMutation({
-    mutationFn: putSecretReq,
+    mutationFn: (d: APISIXType['Secret']) =>
+      putSecretReq(req, pipeProduce()(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('secrets.singular') }),
@@ -90,11 +93,7 @@ const SecretDetailForm = (props: Props) => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) => {
-          putSecret.mutateAsync(pipeProduce()(d));
-        })}
-      >
+      <form onSubmit={form.handleSubmit((d) => putSecret.mutateAsync(d))}>
         <FormSectionGeneral readOnly />
         <FormPartSecret readOnlyManager />
         {!readOnly && (

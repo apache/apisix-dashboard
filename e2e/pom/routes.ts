@@ -18,42 +18,40 @@ import { uiGoto } from '@e2e/utils/ui';
 import { expect, type Page } from '@playwright/test';
 
 const locator = {
-  getUpstreamNavBtn: (page: Page) =>
-    page.getByRole('link', { name: 'Upstreams' }),
-  getAddUpstreamBtn: (page: Page) =>
-    page.getByRole('button', { name: 'Add Upstream' }),
+  getRouteNavBtn: (page: Page) =>
+    page.getByRole('link', { name: 'Routes', exact: true }),
+  getAddRouteBtn: (page: Page) =>
+    page.getByRole('button', { name: 'Add Route', exact: true }),
   getAddBtn: (page: Page) =>
     page.getByRole('button', { name: 'Add', exact: true }),
 };
 
 const assert = {
   isIndexPage: async (page: Page) => {
-    await expect(page).toHaveURL((url) => url.pathname.endsWith('/upstreams'));
-    const title = page.getByRole('heading', { name: 'Upstreams' });
+    await expect(page).toHaveURL((url) => url.pathname.endsWith('/routes'));
+    const title = page.getByRole('heading', { name: 'Routes' });
     await expect(title).toBeVisible();
   },
   isAddPage: async (page: Page) => {
-    await expect(page).toHaveURL((url) =>
-      url.pathname.endsWith('/upstreams/add')
-    );
-    const title = page.getByRole('heading', { name: 'Add Upstream' });
+    await expect(page).toHaveURL((url) => url.pathname.endsWith('/routes/add'));
+    const title = page.getByRole('heading', { name: 'Add Route' });
     await expect(title).toBeVisible();
   },
   isDetailPage: async (page: Page) => {
     await expect(page).toHaveURL((url) =>
-      url.pathname.includes('/upstreams/detail')
+      url.pathname.includes('/routes/detail')
     );
-    const title = page.getByRole('heading', { name: 'Upstream Detail' });
+    const title = page.getByRole('heading', { name: 'Route Detail' });
     await expect(title).toBeVisible();
   },
 };
 
 const goto = {
-  toIndex: (page: Page) => uiGoto(page, '/upstreams'),
-  toAdd: (page: Page) => uiGoto(page, '/upstreams/add'),
+  toIndex: (page: Page) => uiGoto(page, '/routes'),
+  toAdd: (page: Page) => uiGoto(page, '/routes/add'),
 };
 
-export const upstreamsPom = {
+export const routesPom = {
   ...locator,
   ...assert,
   ...goto,

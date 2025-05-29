@@ -16,36 +16,23 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getRouteListQueryOptions } from '@/apis/routes';
+import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-import { usePagination } from '@/utils/usePagination';
 
 const RouteList = () => {
-  const { pagination, handlePageChange, updateTotal } = usePagination({
-    queryKey: 'routes',
-  });
-
-  const query = useSuspenseQuery(getRouteListQueryOptions(pagination));
-  const { data, isLoading, refetch } = query;
+  const { data, isLoading, refetch, pagination } = useRouteList();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (data?.total) {
-      updateTotal(data.total);
-    }
-  }, [data?.total, updateTotal]);
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
@@ -105,13 +92,7 @@ const RouteList = () => {
         loading={isLoading}
         search={false}
         options={false}
-        pagination={{
-          current: pagination.page,
-          pageSize: pagination.pageSize,
-          total: pagination.total,
-          showSizeChanger: true,
-          onChange: handlePageChange,
-        }}
+        pagination={pagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
           menu: {

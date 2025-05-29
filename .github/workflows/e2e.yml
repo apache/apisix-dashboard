@@ -8,6 +8,11 @@ on:
     types: [labeled, synchronize]
     branches:
         - "**"
+  schedule:
+    # Run at 2:00 AM UTC every day
+    # This should be later than the update time of `apache/apisix:dev`
+    # Ref: https://github.com/apache/apisix-docker/blob/master/.github/workflows/apisix_dev_push_docker_hub.yaml#L7C15-L7C16
+    - cron: '0 2 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

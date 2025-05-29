@@ -14,38 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { queryOptions } from '@tanstack/react-query';
+import type { AxiosInstance } from 'axios';
 
-import { API_SERVICES } from '@/config/constant';
-import { req } from '@/config/req';
+import { API_SERVICES, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
 export type ServicePostType = APISIXType['ServicePost'];
 
-export const getServiceListQueryOptions = (props: PageSearchType) => {
-  const { page, pageSize } = props;
-  return queryOptions({
-    queryKey: ['services', page, pageSize],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespServiceList']>(API_SERVICES, {
-          params: { page, page_size: pageSize },
-        })
-        .then((v) => v.data),
-  });
-};
+export const getServiceListReq = (req: AxiosInstance, params: PageSearchType) =>
+  req
+    .get<unknown, APISIXType['RespServiceList']>(API_SERVICES, {
+      params,
+    })
+    .then((v) => v.data);
 
-export const getServiceQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ['service', id],
-    queryFn: () =>
-      req
-        .get<unknown, APISIXType['RespServiceDetail']>(`${API_SERVICES}/${id}`)
-        .then((v) => v.data),
-  });
+export const getServiceReq = (req: AxiosInstance, id: string) =>
+  req
+    .get<unknown, APISIXType['RespServiceDetail']>(`${API_SERVICES}/${id}`)
+    .then((v) => v.data);
 
-export const putServiceReq = (data: APISIXType['Service']) => {
+export const putServiceReq = (
+  req: AxiosInstance,
+  data: APISIXType['Service']
+) => {
   const { id, ...rest } = data;
   return req.put<APISIXType['Service'], APISIXType['RespServiceDetail']>(
     `${API_SERVICES}/${id}`,
@@ -53,8 +45,26 @@ export const putServiceReq = (data: APISIXType['Service']) => {
   );
 };
 
-export const postServiceReq = (data: ServicePostType) =>
+export const postServiceReq = (req: AxiosInstance, data: ServicePostType) =>
   req.post<ServicePostType, APISIXType['RespServiceDetail']>(
     API_SERVICES,
     data
   );
+
+export const deleteAllServices = async (req: AxiosInstance) => {
+  const totalRes = await getServiceListReq(req, {
+    page: 1,
+    page_size: PAGE_SIZE_MIN,
+  });
+  const total = totalRes.total;
+  if (total === 0) return;
+  for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
+    const res = await getServiceListReq(req, {
+      page: 1,
+      page_size: PAGE_SIZE_MAX,
+    });
+    await Promise.all(
+      res.list.map((d) => req.delete(`${API_SERVICES}/${d.value.id}`))
+    );
+  }
+};

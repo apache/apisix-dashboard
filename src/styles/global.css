@@ -8,3 +8,7 @@
   width: 200px !important;
   left: 60px !important;
 }
+
+.monaco-editor {
+  padding-bottom: 200px;
+}

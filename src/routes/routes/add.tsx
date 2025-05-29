@@ -24,9 +24,14 @@ import { useTranslation } from 'react-i18next';
 import { postRouteReq } from '@/apis/routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
-import { RoutePostSchema } from '@/components/form-slice/FormPartRoute/schema';
+import {
+  RoutePostSchema,
+  type RoutePostType,
+} from '@/components/form-slice/FormPartRoute/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { req } from '@/config/req';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 const RouteAddForm = () => {
@@ -34,13 +39,17 @@ const RouteAddForm = () => {
   const router = useRouter();
 
   const postRoute = useMutation({
-    mutationFn: postRouteReq,
-    async onSuccess() {
+    mutationFn: (d: RoutePostType) =>
+      postRouteReq(req, pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)),
+    async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('routes.singular') }),
         color: 'green',
       });
-      await router.navigate({ to: '/routes' });
+      await router.navigate({
+        to: '/routes/detail/$id',
+        params: { id: res.data.value.id },
+      });
     },
   });
 
@@ -53,11 +62,7 @@ const RouteAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((d) =>
-          postRoute.mutateAsync(pipeProduce()(d))
-        )}
-      >
+      <form onSubmit={form.handleSubmit((d) => postRoute.mutateAsync(d))}>
         <FormPartRoute />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

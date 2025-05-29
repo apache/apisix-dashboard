@@ -76,7 +76,7 @@ const UpstreamDetailForm = (
   });
 
   const putUpstream = useMutation({
-    mutationFn: (data: APISIXType['Upstream']) => putUpstreamReq(req, data),
+    mutationFn: (d: APISIXType['Upstream']) => putUpstreamReq(req, d),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('upstreams.singular') }),

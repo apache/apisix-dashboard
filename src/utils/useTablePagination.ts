@@ -20,18 +20,23 @@ import { useCallback, useMemo } from 'react';
 
 import type { FileRoutesByTo } from '@/routeTree.gen';
 import type { APISIXListResponse } from '@/types/schema/apisix/type';
-import { pageSearchSchema } from '@/types/schema/pageSearch';
+import {
+  pageSearchSchema,
+  type PageSearchType,
+} from '@/types/schema/pageSearch';
 
 import type { UseSearchParams } from './useSearchParams';
 
-type ListPageKeys = `${keyof FilterKeys<FileRoutesByTo, 's'>}/`;
-type Props<T> = {
+export type ListPageKeys = `${keyof FilterKeys<FileRoutesByTo, 's'>}/`;
+type Props<T, P extends PageSearchType> = {
   data: APISIXListResponse<T>;
   /** if params is from useSearchParams, refetch is not needed */
   refetch?: () => void;
-} & Pick<UseSearchParams<ListPageKeys>, 'params' | 'setParams'>;
+} & Pick<UseSearchParams<ListPageKeys, P>, 'params' | 'setParams'>;
 
-export const useTablePagination = <T>(props: Props<T>) => {
+export const useTablePagination = <T, P extends PageSearchType>(
+  props: Props<T, P>
+) => {
   const { data, refetch, setParams } = props;
   const params = useMemo(
     () => pageSearchSchema.parse(props.params),
@@ -40,8 +45,8 @@ export const useTablePagination = <T>(props: Props<T>) => {
   const { page, page_size } = params;
 
   const onChange: TablePaginationConfig['onChange'] = useCallback(
-    (page: number, pageSize: number) => {
-      setParams({ page, page_size: pageSize });
+    (page: number, page_size: number) => {
+      setParams({ page, page_size } as P);
       refetch?.();
     },
     [refetch, setParams]
