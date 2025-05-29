@@ -21,7 +21,7 @@ concurrency:
 jobs:
   test:
     # only run when e2e-test label is added or scheduled
-    if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e-test') || github.event_name == 'schedule' }}
+    if: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e-test')) || github.event_name == 'schedule' }}
     timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
