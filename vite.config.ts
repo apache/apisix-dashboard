@@ -77,7 +77,7 @@ export default defineConfig({
       semicolons: false,
     }),
     i18nProgress({
-      langs: Object.keys(resources) as (keyof Resources)[],
+      langs: ['en', 'zh'],
       baseLang: 'en',
       getTranslationDir: (lang) => `./src/locales/${lang}`,
     }),

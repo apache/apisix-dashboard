@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { readdir, readFile } from 'fs/promises';
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 
 type Options<T extends string> = {
   langs: T[];
