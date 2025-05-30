@@ -17,6 +17,11 @@
 /// <reference types="vite/client" />
 /// <reference types="unplugin-info/client" />
 
+declare module 'virtual:i18n-progress' {
+  const progress: import('./../../vite-plugin-i18n-progress').LangProgress<string>;
+  export default progress;
+}
+
 type FilterKeys<T, R extends string> = {
   [K in keyof T as K extends `${string}${R}` ? K : never]: T[K];
 };
