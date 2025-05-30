@@ -26,7 +26,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { API_PREFIX, BASE_PATH } from './src/config/constant';
 import i18nProgress from './vite-plugin-i18n-progress';
-import { Resources, resources } from './src/config/i18n';
 
 const inDevContainer = process.env.REMOTE_CONTAINERS === 'true';
 
