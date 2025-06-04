@@ -68,7 +68,7 @@ const ConsumerGroupAddForm = () => {
           putConsumerGroup.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormSectionGeneral showDate={false} />
+        <FormSectionGeneral />
         <FormPartPluginConfig basicProps={{ showName: false }} />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

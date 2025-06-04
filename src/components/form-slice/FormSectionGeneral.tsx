@@ -53,7 +53,7 @@ export type FormSectionGeneralProps = {
 };
 
 export const FormSectionGeneral = (props: FormSectionGeneralProps) => {
-  const { showDate = !props.readOnly, showID = true, readOnly = false } = props;
+  const { showDate = props.readOnly, showID = true, readOnly = false } = props;
   const { t } = useTranslation();
   // we use fieldset disabled to show readonly state
   // because mantine readOnly style looks like we can edit
