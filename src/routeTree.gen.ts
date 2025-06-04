@@ -47,6 +47,7 @@ import { Route as ConsumergroupsDetailIdImport } from './routes/consumer_groups/
 import { Route as ServicesDetailIdIndexImport } from './routes/services/detail.$id/index'
 import { Route as ConsumersDetailUsernameIndexImport } from './routes/consumers/detail.$username/index'
 import { Route as SecretsDetailManagerIdImport } from './routes/secrets/detail.$manager.$id'
+import { Route as ServicesDetailIdRoutesIndexImport } from './routes/services/detail.$id/routes/index'
 import { Route as ConsumersDetailUsernameCredentialsIndexImport } from './routes/consumers/detail.$username/credentials/index'
 import { Route as ConsumersDetailUsernameCredentialsAddImport } from './routes/consumers/detail.$username/credentials/add'
 import { Route as ConsumersDetailUsernameCredentialsDetailIdImport } from './routes/consumers/detail.$username/credentials/detail.$id'
@@ -269,6 +270,13 @@ const SecretsDetailManagerIdRoute = SecretsDetailManagerIdImport.update({
   path: '/secrets/detail/$manager/$id',
   getParentRoute: () => rootRoute,
 } as any)
+
+const ServicesDetailIdRoutesIndexRoute =
+  ServicesDetailIdRoutesIndexImport.update({
+    id: '/routes/',
+    path: '/routes/',
+    getParentRoute: () => ServicesDetailIdRoute,
+  } as any)
 
 const ConsumersDetailUsernameCredentialsIndexRoute =
   ConsumersDetailUsernameCredentialsIndexImport.update({
@@ -561,6 +569,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumersDetailUsernameCredentialsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/services/detail/$id/routes/': {
+      id: '/services/detail/$id/routes/'
+      path: '/routes'
+      fullPath: '/services/detail/$id/routes'
+      preLoaderRoute: typeof ServicesDetailIdRoutesIndexImport
+      parentRoute: typeof ServicesDetailIdImport
+    }
     '/consumers/detail/$username/credentials/detail/$id': {
       id: '/consumers/detail/$username/credentials/detail/$id'
       path: '/consumers/detail/$username/credentials/detail/$id'
@@ -575,10 +590,12 @@ declare module '@tanstack/react-router' {
 
 interface ServicesDetailIdRouteChildren {
   ServicesDetailIdIndexRoute: typeof ServicesDetailIdIndexRoute
+  ServicesDetailIdRoutesIndexRoute: typeof ServicesDetailIdRoutesIndexRoute
 }
 
 const ServicesDetailIdRouteChildren: ServicesDetailIdRouteChildren = {
   ServicesDetailIdIndexRoute: ServicesDetailIdIndexRoute,
+  ServicesDetailIdRoutesIndexRoute: ServicesDetailIdRoutesIndexRoute,
 }
 
 const ServicesDetailIdRouteWithChildren =
@@ -623,6 +640,7 @@ export interface FileRoutesByFullPath {
   '/services/detail/$id/': typeof ServicesDetailIdIndexRoute
   '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/services/detail/$id/routes': typeof ServicesDetailIdRoutesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
@@ -664,6 +682,7 @@ export interface FileRoutesByTo {
   '/services/detail/$id': typeof ServicesDetailIdIndexRoute
   '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/services/detail/$id/routes': typeof ServicesDetailIdRoutesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
@@ -707,6 +726,7 @@ export interface FileRoutesById {
   '/services/detail/$id/': typeof ServicesDetailIdIndexRoute
   '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/consumers/detail/$username/credentials/': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/services/detail/$id/routes/': typeof ServicesDetailIdRoutesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
 }
 
@@ -751,6 +771,7 @@ export interface FileRouteTypes {
     | '/services/detail/$id/'
     | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials'
+    | '/services/detail/$id/routes'
     | '/consumers/detail/$username/credentials/detail/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -791,6 +812,7 @@ export interface FileRouteTypes {
     | '/services/detail/$id'
     | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials'
+    | '/services/detail/$id/routes'
     | '/consumers/detail/$username/credentials/detail/$id'
   id:
     | '__root__'
@@ -832,6 +854,7 @@ export interface FileRouteTypes {
     | '/services/detail/$id/'
     | '/consumers/detail/$username/credentials/add'
     | '/consumers/detail/$username/credentials/'
+    | '/services/detail/$id/routes/'
     | '/consumers/detail/$username/credentials/detail/$id'
   fileRoutesById: FileRoutesById
 }
@@ -1061,7 +1084,8 @@ export const routeTree = rootRoute
     "/services/detail/$id": {
       "filePath": "services/detail.$id.tsx",
       "children": [
-        "/services/detail/$id/"
+        "/services/detail/$id/",
+        "/services/detail/$id/routes/"
       ]
     },
     "/ssls/detail/$id": {
@@ -1088,6 +1112,10 @@ export const routeTree = rootRoute
     },
     "/consumers/detail/$username/credentials/": {
       "filePath": "consumers/detail.$username/credentials/index.tsx"
+    },
+    "/services/detail/$id/routes/": {
+      "filePath": "services/detail.$id/routes/index.tsx",
+      "parent": "/services/detail/$id"
     },
     "/consumers/detail/$username/credentials/detail/$id": {
       "filePath": "consumers/detail.$username/credentials/detail.$id.tsx"
