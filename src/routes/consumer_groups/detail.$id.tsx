@@ -33,6 +33,7 @@ import { getConsumerGroupQueryOptions } from '@/apis/hooks';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_CONSUMER_GROUPS } from '@/config/constant';
@@ -87,10 +88,8 @@ const ConsumerGroupDetailForm = (props: Props) => {
           putConsumerGroup.mutateAsync(pipeProduce()({ ...d, id }))
         )}
       >
-        <FormPartPluginConfig
-          generalProps={{ showDate: true }}
-          basicProps={{ showName: false }}
-        />
+        <FormSectionGeneral readOnly />
+        <FormPartPluginConfig basicProps={{ showName: false }} />
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>

@@ -26,6 +26,7 @@ import { putCredentialReq } from '@/apis/credentials';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
 import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
 import { req } from '@/config/req';
@@ -69,6 +70,7 @@ const CredentialAddForm = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putCredential.mutateAsync(d))}>
+        <FormSectionGeneral />
         <FormPartCredential />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

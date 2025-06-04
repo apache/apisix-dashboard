@@ -88,7 +88,7 @@ const StreamRouteDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putStreamRoute.mutateAsync(d))}>
-        <FormSectionGeneral />
+        <FormSectionGeneral readOnly />
         <FormPartStreamRoute />
         {!readOnly && (
           <Group>

@@ -92,7 +92,7 @@ const ServiceDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putService.mutateAsync(d))}>
-        <FormSectionGeneral />
+        <FormSectionGeneral readOnly />
         <FormPartService />
         {!readOnly && (
           <Group>
