@@ -46,7 +46,7 @@ const FormItemID = () => {
 };
 
 export type FormSectionGeneralProps = {
-  /** will be default to `!readOnly` */
+  /** will be default to `readOnly` */
   showDate?: boolean;
   showID?: boolean;
   readOnly?: boolean;
