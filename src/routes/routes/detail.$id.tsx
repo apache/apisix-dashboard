@@ -92,7 +92,7 @@ const RouteDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putRoute.mutateAsync(d))}>
-        <FormSectionGeneral />
+        <FormSectionGeneral readOnly />
         <FormPartRoute />
         {!readOnly && (
           <Group>

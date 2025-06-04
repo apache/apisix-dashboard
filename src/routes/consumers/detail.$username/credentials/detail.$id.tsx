@@ -33,6 +33,7 @@ import { getCredentialQueryOptions } from '@/apis/hooks';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
@@ -93,7 +94,8 @@ const CredentialDetailForm = (props: CredentialFormProps) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putCredential.mutateAsync(d))}>
-        <FormPartCredential showDate />
+        <FormSectionGeneral readOnly />
+        <FormPartCredential />
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>

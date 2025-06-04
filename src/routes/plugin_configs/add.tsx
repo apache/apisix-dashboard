@@ -26,6 +26,7 @@ import { putPluginConfigReq } from '@/apis/plugin_configs';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
@@ -67,7 +68,8 @@ const PluginConfigAddForm = () => {
           putPluginConfig.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormPartPluginConfig generalProps={{ showDate: false }} />
+        <FormSectionGeneral />
+        <FormPartPluginConfig />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
     </FormProvider>

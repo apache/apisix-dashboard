@@ -26,6 +26,7 @@ import { putConsumerGroupReq } from '@/apis/consumer_groups';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
@@ -67,10 +68,8 @@ const ConsumerGroupAddForm = () => {
           putConsumerGroup.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormPartPluginConfig
-          generalProps={{ showDate: false }}
-          basicProps={{ showName: false }}
-        />
+        <FormSectionGeneral />
+        <FormPartPluginConfig basicProps={{ showName: false }} />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
     </FormProvider>

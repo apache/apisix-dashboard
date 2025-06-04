@@ -88,7 +88,7 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putProto.mutateAsync(d))}>
-        <FormSectionGeneral />
+        <FormSectionGeneral readOnly />
         <FormPartProto allowUpload={!readOnly} />
         {!readOnly && (
           <Group>

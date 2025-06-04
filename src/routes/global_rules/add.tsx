@@ -29,6 +29,7 @@ import { putGlobalRuleReq } from '@/apis/global_rules';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
@@ -67,6 +68,7 @@ const GlobalRuleAddForm = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putGlobalRule.mutateAsync(d))}>
+        <FormSectionGeneral />
         <FormPartGlobalRules />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

@@ -64,7 +64,7 @@ const SecretAddForm = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putSecret.mutateAsync(d))}>
-        <FormSectionGeneral showDate={false} />
+        <FormSectionGeneral />
         <FormPartSecret />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
