@@ -68,7 +68,7 @@ const GlobalRuleAddForm = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putGlobalRule.mutateAsync(d))}>
-        <FormSectionGeneral />
+        <FormSectionGeneral showDate={false} />
         <FormPartGlobalRules />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

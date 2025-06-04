@@ -70,7 +70,7 @@ const CredentialAddForm = () => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putCredential.mutateAsync(d))}>
-        <FormSectionGeneral />
+        <FormSectionGeneral showDate={false} />
         <FormPartCredential />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

@@ -68,7 +68,7 @@ const PluginConfigAddForm = () => {
           putPluginConfig.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormSectionGeneral />
+        <FormSectionGeneral showDate={false} />
         <FormPartPluginConfig />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
