@@ -105,7 +105,7 @@ const UpstreamDetailForm = (
             putUpstream.mutateAsync(pipeProduce()(d));
           })}
         >
-          <FormSectionGeneral />
+          <FormSectionGeneral readOnly />
           <FormPartUpstream />
           {!readOnly && (
             <Group>

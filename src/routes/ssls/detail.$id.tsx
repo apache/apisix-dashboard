@@ -96,7 +96,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
             putSSL.mutateAsync(pipeProduce()(d))
           )}
         >
-          <FormSectionGeneral />
+          <FormSectionGeneral readOnly />
           <FormPartSSL />
           {!readOnly && (
             <Group>

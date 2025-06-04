@@ -92,7 +92,7 @@ const ConsumerDetailForm = (props: Props) => {
           putConsumer.mutateAsync(pipeProduce()(d));
         })}
       >
-        <FormSectionGeneral showID={false} />
+        <FormSectionGeneral showID={false} readOnly />
         <FormPartConsumer />
         {!readOnly && (
           <Group>

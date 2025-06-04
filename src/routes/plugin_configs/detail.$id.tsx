@@ -33,6 +33,7 @@ import { putPluginConfigReq } from '@/apis/plugin_configs';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
@@ -85,6 +86,7 @@ const PluginConfigDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putPluginConfig.mutateAsync(d))}>
+        <FormSectionGeneral readOnly />
         <FormPartPluginConfig />
         {!readOnly && (
           <Group>

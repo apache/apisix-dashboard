@@ -33,6 +33,7 @@ import { getGlobalRuleQueryOptions } from '@/apis/hooks';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_GLOBAL_RULES } from '@/config/constant';
@@ -79,6 +80,7 @@ const GlobalRuleDetailForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putGlobalRule.mutateAsync(d))}>
+        <FormSectionGeneral readOnly />
         <FormPartGlobalRules />
         {!readOnly && (
           <Group>
