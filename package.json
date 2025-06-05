@@ -21,7 +21,7 @@
     "@mantine/modals": "^8.0.0",
     "@mantine/notifications": "^8.0.0",
     "@monaco-editor/react": "^4.7.0",
-    "@tanstack/react-query": "^5.74.4",
+    "@tanstack/react-query": "^5.80.5",
     "@tanstack/react-router": "^1.116.0",
     "antd": "^5.24.8",
     "axios": "^1.8.4",
