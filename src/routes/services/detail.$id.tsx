@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
+const defaultTab = 'detail';
 export const DetailTabs = () => {
   const { t } = useTranslation();
   const { id } = useParams({ strict: false });
@@ -48,7 +49,6 @@ export const DetailTabs = () => {
     ],
     [t]
   );
-
   return (
     <Tabs
       items={items}
@@ -57,12 +57,12 @@ export const DetailTabs = () => {
         items
           .slice()
           .reverse()
-          .find((v) => pathname.includes(v.value))?.value
+          .find((v) => pathname.includes(v.value))?.value || defaultTab
       }
       onChange={(v) => {
         navigate({
           to:
-            v === 'detail'
+            v === defaultTab
               ? '/services/detail/$id/'
               : `/services/detail/$id/${v}`,
           params: { id: id as string },
