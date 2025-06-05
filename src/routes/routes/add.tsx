@@ -37,10 +37,11 @@ import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   navigate: (res: APISIXType['RespRouteDetail']) => Promise<void>;
+  defaultValues?: Partial<RoutePostType>;
 };
 
 export const RouteAddForm = (props: Props) => {
-  const { navigate } = props;
+  const { navigate, defaultValues } = props;
   const { t } = useTranslation();
 
   const postRoute = useMutation({
@@ -60,6 +61,7 @@ export const RouteAddForm = (props: Props) => {
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
+    defaultValues,
   });
 
   return (
