@@ -21,7 +21,7 @@ import { RouteLinkBtn } from '@/components/Btn';
 import type { FileRoutesByTo } from '@/routeTree.gen';
 import IconPlus from '~icons/material-symbols/add';
 
-type ToAddPageBtnProps = {
+export type ToAddPageBtnProps = {
   to: keyof FilterKeys<FileRoutesByTo, 'add'>;
   label: string;
 } & Pick<LinkProps, 'params'>;
@@ -40,9 +40,10 @@ export const ToAddPageBtn = ({ to, params, label }: ToAddPageBtnProps) => {
   );
 };
 
-type ToDetailPageBtnProps = {
+export type ToDetailPageBtnProps = {
   to:
     | keyof FilterKeys<FileRoutesByTo, '$id'>
+    | keyof FilterKeys<FileRoutesByTo, '$routeId'>
     | keyof FilterKeys<FileRoutesByTo, '$username'>;
 } & Pick<LinkProps, 'params'>;
 export const ToDetailPageBtn = (props: ToDetailPageBtnProps) => {

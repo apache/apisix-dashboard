@@ -14,32 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
+import { createFileRoute, useParams } from '@tanstack/react-router';
 
-import { getRouteListQueryOptions } from '@/apis/hooks';
-import PageHeader from '@/components/page/PageHeader';
-import { queryClient } from '@/config/global';
-import { RouteList } from '@/routes/routes';
-import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { RouteDetail } from '@/routes/routes/detail.$id';
 
 function RouteComponent() {
-  const { t } = useTranslation();
-  return (
-    <>
-      <PageHeader title={t('sources.routes')} />
-      <RouteList
-        detailTo="/services/detail/$id/routes/detail/$id"
-        addTo="/services/detail/$id/routes/add"
-      />
-    </>
-  );
+  const { id } = useParams({ from: '/services/detail/$id/routes/detail/$id' });
+  return <RouteDetail id={id} />;
 }
 
-export const Route = createFileRoute('/services/detail/$id/routes/')({
+export const Route = createFileRoute('/services/detail/$id/routes/detail/$id')({
   component: RouteComponent,
-  validateSearch: pageSearchSchema,
-  loaderDeps: ({ search }) => search,
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(getRouteListQueryOptions(deps)),
 });

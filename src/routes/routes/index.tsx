@@ -15,22 +15,32 @@
  * limitations under the License.
  */
 import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
+import { PageHeader, ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import {
+  ToAddPageBtn,
+  type ToAddPageBtnProps,
+  ToDetailPageBtn,
+  type ToDetailPageBtnProps,
+} from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
-const RouteList = () => {
+type RouteListProps = {
+  detailTo: ToDetailPageBtnProps['to'];
+  addTo: ToAddPageBtnProps['to'];
+};
+
+export const RouteList = (props: RouteListProps) => {
+  const { detailTo, addTo } = props;
   const { data, isLoading, refetch, pagination } = useRouteList();
   const { t } = useTranslation();
 
@@ -68,7 +78,7 @@ const RouteList = () => {
         render: (_, record) => [
           <ToDetailPageBtn
             key="detail"
-            to="/routes/detail/$id"
+            to={detailTo}
             params={{ id: record.value.id }}
           />,
           <DeleteResourceBtn
@@ -81,7 +91,7 @@ const RouteList = () => {
         ],
       },
     ];
-  }, [t, refetch]);
+  }, [t, refetch, detailTo]);
 
   return (
     <AntdConfigProvider>
@@ -103,8 +113,10 @@ const RouteList = () => {
                 label: (
                   <ToAddPageBtn
                     key="add"
-                    label={t('info.add.title', { name: t('routes.singular') })}
-                    to="/routes/add"
+                    label={t('info.add.title', {
+                      name: t('routes.singular'),
+                    })}
+                    to={addTo}
                   />
                 ),
               },
@@ -121,7 +133,7 @@ function RouteComponent() {
   return (
     <>
       <PageHeader title={t('sources.routes')} />
-      <RouteList />
+      <RouteList detailTo="/routes/detail/$id" addTo="/routes/add" />
     </>
   );
 }

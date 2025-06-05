@@ -14,32 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { PageHeader } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { getRouteListQueryOptions } from '@/apis/hooks';
-import PageHeader from '@/components/page/PageHeader';
-import { queryClient } from '@/config/global';
-import { RouteList } from '@/routes/routes';
-import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
+import { RouteAddForm } from '@/routes/routes/add';
 
 function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('sources.routes')} />
-      <RouteList
-        detailTo="/services/detail/$id/routes/detail/$id"
-        addTo="/services/detail/$id/routes/add"
-      />
+      <PageHeader title={t('info.add.title', { name: t('routes.singular') })} />
+      <FormTOCBox>
+        <RouteAddForm to="/services/detail/$id/routes/detail/$id" />
+      </FormTOCBox>
     </>
   );
 }
 
-export const Route = createFileRoute('/services/detail/$id/routes/')({
+export const Route = createFileRoute('/services/detail/$id/routes/add')({
   component: RouteComponent,
-  validateSearch: pageSearchSchema,
-  loaderDeps: ({ search }) => search,
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(getRouteListQueryOptions(deps)),
 });

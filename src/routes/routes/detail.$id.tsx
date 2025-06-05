@@ -46,12 +46,12 @@ import { pipeProduce } from '@/utils/producer';
 type Props = {
   readOnly: boolean;
   setReadOnly: (v: boolean) => void;
+  id: string;
 };
 
 const RouteDetailForm = (props: Props) => {
-  const { readOnly, setReadOnly } = props;
+  const { readOnly, setReadOnly, id } = props;
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/routes/detail/$id' });
 
   const routeQuery = useQuery(getRouteQueryOptions(id));
   const { data: routeData, isLoading, refetch } = routeQuery;
@@ -107,10 +107,10 @@ const RouteDetailForm = (props: Props) => {
   );
 };
 
-function RouteComponent() {
+export const RouteDetail = (props: Pick<Props, 'id'>) => {
+  const { id } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const { id } = useParams({ from: '/routes/detail/$id' });
   const navigate = useNavigate();
 
   return (
@@ -140,10 +140,19 @@ function RouteComponent() {
         })}
       />
       <FormTOCBox>
-        <RouteDetailForm readOnly={readOnly} setReadOnly={setReadOnly} />
+        <RouteDetailForm
+          readOnly={readOnly}
+          setReadOnly={setReadOnly}
+          id={id}
+        />
       </FormTOCBox>
     </>
   );
+};
+
+function RouteComponent() {
+  const { id } = useParams({ from: '/routes/detail/$id' });
+  return <RouteDetail id={id} />;
 }
 
 export const Route = createFileRoute('/routes/detail/$id')({

@@ -30,11 +30,17 @@ import {
 } from '@/components/form-slice/FormPartRoute/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import type { ToDetailPageBtnProps } from '@/components/page/ToAddPageBtn';
 import { req } from '@/config/req';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
-const RouteAddForm = () => {
+type Props = {
+  to: ToDetailPageBtnProps['to'];
+};
+
+export const RouteAddForm = (props: Props) => {
+  const { to } = props;
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -47,7 +53,7 @@ const RouteAddForm = () => {
         color: 'green',
       });
       await router.navigate({
-        to: '/routes/detail/$id',
+        to,
         params: { id: res.data.value.id },
       });
     },
@@ -76,7 +82,7 @@ function RouteComponent() {
     <>
       <PageHeader title={t('info.add.title', { name: t('routes.singular') })} />
       <FormTOCBox>
-        <RouteAddForm />
+        <RouteAddForm to="/routes/detail/$id" />
       </FormTOCBox>
     </>
   );
