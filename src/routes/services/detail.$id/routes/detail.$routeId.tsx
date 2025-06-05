@@ -19,10 +19,14 @@ import { createFileRoute, useParams } from '@tanstack/react-router';
 import { RouteDetail } from '@/routes/routes/detail.$id';
 
 function RouteComponent() {
-  const { id } = useParams({ from: '/services/detail/$id/routes/detail/$id' });
-  return <RouteDetail id={id} />;
+  const { routeId } = useParams({
+    from: '/services/detail/$id/routes/detail/$routeId',
+  });
+  return <RouteDetail id={routeId} />;
 }
 
-export const Route = createFileRoute('/services/detail/$id/routes/detail/$id')({
+export const Route = createFileRoute(
+  '/services/detail/$id/routes/detail/$routeId'
+)({
   component: RouteComponent,
 });

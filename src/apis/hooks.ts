@@ -87,6 +87,12 @@ export const genUseList = <T extends ListPageKeys, P extends PageSearchType, R>(
   };
 };
 
+export type UseListReturn<
+  T extends ListPageKeys,
+  P extends PageSearchType,
+  R
+> = ReturnType<ReturnType<typeof genUseList<T, P, R>>>;
+
 export const getUpstreamQueryOptions = genDetailQueryOptions(
   'upstream',
   getUpstreamReq
@@ -106,6 +112,10 @@ export const getRouteListQueryOptions = genListQueryOptions(
   getRouteListReq
 );
 export const useRouteList = genUseList('/routes/', getRouteListQueryOptions);
+export const useServiceRouteList = genUseList(
+  '/services/detail/$id/routes/',
+  getRouteListQueryOptions
+);
 
 export const getConsumerGroupQueryOptions = genDetailQueryOptions(
   'consumer_group',

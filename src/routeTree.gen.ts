@@ -51,7 +51,7 @@ import { Route as ServicesDetailIdRoutesIndexImport } from './routes/services/de
 import { Route as ConsumersDetailUsernameCredentialsIndexImport } from './routes/consumers/detail.$username/credentials/index'
 import { Route as ServicesDetailIdRoutesAddImport } from './routes/services/detail.$id/routes/add'
 import { Route as ConsumersDetailUsernameCredentialsAddImport } from './routes/consumers/detail.$username/credentials/add'
-import { Route as ServicesDetailIdRoutesDetailIdImport } from './routes/services/detail.$id/routes/detail.$id'
+import { Route as ServicesDetailIdRoutesDetailRouteIdImport } from './routes/services/detail.$id/routes/detail.$routeId'
 import { Route as ConsumersDetailUsernameCredentialsDetailIdImport } from './routes/consumers/detail.$username/credentials/detail.$id'
 
 // Create/Update Routes
@@ -300,10 +300,10 @@ const ConsumersDetailUsernameCredentialsAddRoute =
     getParentRoute: () => rootRoute,
   } as any)
 
-const ServicesDetailIdRoutesDetailIdRoute =
-  ServicesDetailIdRoutesDetailIdImport.update({
-    id: '/routes/detail/$id',
-    path: '/routes/detail/$id',
+const ServicesDetailIdRoutesDetailRouteIdRoute =
+  ServicesDetailIdRoutesDetailRouteIdImport.update({
+    id: '/routes/detail/$routeId',
+    path: '/routes/detail/$routeId',
     getParentRoute: () => ServicesDetailIdRoute,
   } as any)
 
@@ -605,11 +605,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumersDetailUsernameCredentialsDetailIdImport
       parentRoute: typeof rootRoute
     }
-    '/services/detail/$id/routes/detail/$id': {
-      id: '/services/detail/$id/routes/detail/$id'
-      path: '/routes/detail/$id'
-      fullPath: '/services/detail/$id/routes/detail/$id'
-      preLoaderRoute: typeof ServicesDetailIdRoutesDetailIdImport
+    '/services/detail/$id/routes/detail/$routeId': {
+      id: '/services/detail/$id/routes/detail/$routeId'
+      path: '/routes/detail/$routeId'
+      fullPath: '/services/detail/$id/routes/detail/$routeId'
+      preLoaderRoute: typeof ServicesDetailIdRoutesDetailRouteIdImport
       parentRoute: typeof ServicesDetailIdImport
     }
   }
@@ -621,14 +621,15 @@ interface ServicesDetailIdRouteChildren {
   ServicesDetailIdIndexRoute: typeof ServicesDetailIdIndexRoute
   ServicesDetailIdRoutesAddRoute: typeof ServicesDetailIdRoutesAddRoute
   ServicesDetailIdRoutesIndexRoute: typeof ServicesDetailIdRoutesIndexRoute
-  ServicesDetailIdRoutesDetailIdRoute: typeof ServicesDetailIdRoutesDetailIdRoute
+  ServicesDetailIdRoutesDetailRouteIdRoute: typeof ServicesDetailIdRoutesDetailRouteIdRoute
 }
 
 const ServicesDetailIdRouteChildren: ServicesDetailIdRouteChildren = {
   ServicesDetailIdIndexRoute: ServicesDetailIdIndexRoute,
   ServicesDetailIdRoutesAddRoute: ServicesDetailIdRoutesAddRoute,
   ServicesDetailIdRoutesIndexRoute: ServicesDetailIdRoutesIndexRoute,
-  ServicesDetailIdRoutesDetailIdRoute: ServicesDetailIdRoutesDetailIdRoute,
+  ServicesDetailIdRoutesDetailRouteIdRoute:
+    ServicesDetailIdRoutesDetailRouteIdRoute,
 }
 
 const ServicesDetailIdRouteWithChildren =
@@ -676,7 +677,7 @@ export interface FileRoutesByFullPath {
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
   '/services/detail/$id/routes': typeof ServicesDetailIdRoutesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
-  '/services/detail/$id/routes/detail/$id': typeof ServicesDetailIdRoutesDetailIdRoute
+  '/services/detail/$id/routes/detail/$routeId': typeof ServicesDetailIdRoutesDetailRouteIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -720,7 +721,7 @@ export interface FileRoutesByTo {
   '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
   '/services/detail/$id/routes': typeof ServicesDetailIdRoutesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
-  '/services/detail/$id/routes/detail/$id': typeof ServicesDetailIdRoutesDetailIdRoute
+  '/services/detail/$id/routes/detail/$routeId': typeof ServicesDetailIdRoutesDetailRouteIdRoute
 }
 
 export interface FileRoutesById {
@@ -766,7 +767,7 @@ export interface FileRoutesById {
   '/consumers/detail/$username/credentials/': typeof ConsumersDetailUsernameCredentialsIndexRoute
   '/services/detail/$id/routes/': typeof ServicesDetailIdRoutesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
-  '/services/detail/$id/routes/detail/$id': typeof ServicesDetailIdRoutesDetailIdRoute
+  '/services/detail/$id/routes/detail/$routeId': typeof ServicesDetailIdRoutesDetailRouteIdRoute
 }
 
 export interface FileRouteTypes {
@@ -813,7 +814,7 @@ export interface FileRouteTypes {
     | '/consumers/detail/$username/credentials'
     | '/services/detail/$id/routes'
     | '/consumers/detail/$username/credentials/detail/$id'
-    | '/services/detail/$id/routes/detail/$id'
+    | '/services/detail/$id/routes/detail/$routeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -856,7 +857,7 @@ export interface FileRouteTypes {
     | '/consumers/detail/$username/credentials'
     | '/services/detail/$id/routes'
     | '/consumers/detail/$username/credentials/detail/$id'
-    | '/services/detail/$id/routes/detail/$id'
+    | '/services/detail/$id/routes/detail/$routeId'
   id:
     | '__root__'
     | '/'
@@ -900,7 +901,7 @@ export interface FileRouteTypes {
     | '/consumers/detail/$username/credentials/'
     | '/services/detail/$id/routes/'
     | '/consumers/detail/$username/credentials/detail/$id'
-    | '/services/detail/$id/routes/detail/$id'
+    | '/services/detail/$id/routes/detail/$routeId'
   fileRoutesById: FileRoutesById
 }
 
@@ -1132,7 +1133,7 @@ export const routeTree = rootRoute
         "/services/detail/$id/",
         "/services/detail/$id/routes/add",
         "/services/detail/$id/routes/",
-        "/services/detail/$id/routes/detail/$id"
+        "/services/detail/$id/routes/detail/$routeId"
       ]
     },
     "/ssls/detail/$id": {
@@ -1171,8 +1172,8 @@ export const routeTree = rootRoute
     "/consumers/detail/$username/credentials/detail/$id": {
       "filePath": "consumers/detail.$username/credentials/detail.$id.tsx"
     },
-    "/services/detail/$id/routes/detail/$id": {
-      "filePath": "services/detail.$id/routes/detail.$id.tsx",
+    "/services/detail/$id/routes/detail/$routeId": {
+      "filePath": "services/detail.$id/routes/detail.$routeId.tsx",
       "parent": "/services/detail/$id"
     }
   }

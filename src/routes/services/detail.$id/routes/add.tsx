@@ -27,7 +27,7 @@ function RouteComponent() {
     <>
       <PageHeader title={t('info.add.title', { name: t('routes.singular') })} />
       <FormTOCBox>
-        <RouteAddForm to="/services/detail/$id/routes/detail/$id" />
+        <RouteAddForm to="/services/detail/$id/routes/detail/$routeId" />
       </FormTOCBox>
     </>
   );

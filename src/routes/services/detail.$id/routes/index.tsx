@@ -17,20 +17,22 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { getRouteListQueryOptions } from '@/apis/hooks';
+import { getRouteListQueryOptions, useServiceRouteList } from '@/apis/hooks';
 import PageHeader from '@/components/page/PageHeader';
+import { RouteList } from '@/components/page-slice/routes/list';
 import { queryClient } from '@/config/global';
-import { RouteList } from '@/routes/routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function RouteComponent() {
   const { t } = useTranslation();
+  const req = useServiceRouteList();
   return (
     <>
       <PageHeader title={t('sources.routes')} />
       <RouteList
-        detailTo="/services/detail/$id/routes/detail/$id"
+        detailTo="/services/detail/$id/routes/detail/$routeId"
         addTo="/services/detail/$id/routes/add"
+        req={req}
       />
     </>
   );

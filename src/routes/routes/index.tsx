@@ -14,126 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ProColumns } from '@ant-design/pro-components';
-import { PageHeader, ProTable } from '@ant-design/pro-components';
+import { PageHeader } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import {
-  ToAddPageBtn,
-  type ToAddPageBtnProps,
-  ToDetailPageBtn,
-  type ToDetailPageBtnProps,
-} from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
-import { API_ROUTES } from '@/config/constant';
+import { RouteList } from '@/components/page-slice/routes/list';
 import { queryClient } from '@/config/global';
-import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-
-type RouteListProps = {
-  detailTo: ToDetailPageBtnProps['to'];
-  addTo: ToAddPageBtnProps['to'];
-};
-
-export const RouteList = (props: RouteListProps) => {
-  const { detailTo, addTo } = props;
-  const { data, isLoading, refetch, pagination } = useRouteList();
-  const { t } = useTranslation();
-
-  const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
-    return [
-      {
-        dataIndex: ['value', 'id'],
-        title: 'ID',
-        key: 'id',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'name'],
-        title: t('form.basic.name'),
-        key: 'name',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'desc'],
-        title: t('form.basic.desc'),
-        key: 'desc',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'uri'],
-        title: 'URI',
-        key: 'uri',
-        valueType: 'text',
-      },
-      {
-        title: t('table.actions'),
-        valueType: 'option',
-        key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to={detailTo}
-            params={{ id: record.value.id }}
-          />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('routes.singular')}
-            target={record.value.id}
-            api={`${API_ROUTES}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
-      },
-    ];
-  }, [t, refetch, detailTo]);
-
-  return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    label={t('info.add.title', {
-                      name: t('routes.singular'),
-                    })}
-                    to={addTo}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
-  );
-};
 
 function RouteComponent() {
   const { t } = useTranslation();
+  const req = useRouteList();
   return (
     <>
       <PageHeader title={t('sources.routes')} />
-      <RouteList detailTo="/routes/detail/$id" addTo="/routes/add" />
+      <RouteList detailTo="/routes/detail/$id" addTo="/routes/add" req={req} />
     </>
   );
 }
