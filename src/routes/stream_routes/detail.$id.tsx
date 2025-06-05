@@ -39,7 +39,6 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { CommonFormContext } from '@/utils/form-context';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -154,12 +153,10 @@ function RouteComponent() {
   const { id } = useParams({ from: '/stream_routes/detail/$id' });
   const navigate = useNavigate();
   return (
-    <CommonFormContext.Provider value={{ readOnlyFields: ['service_id'] }}>
-      <StreamRouteDetail
-        id={id}
-        onDeleteSuccess={() => navigate({ to: '/stream_routes' })}
-      />
-    </CommonFormContext.Provider>
+    <StreamRouteDetail
+      id={id}
+      onDeleteSuccess={() => navigate({ to: '/stream_routes' })}
+    />
   );
 }
 

@@ -21,22 +21,25 @@ import {
 } from '@tanstack/react-router';
 
 import { StreamRouteDetail } from '@/routes/stream_routes/detail.$id';
+import { CommonFormContext } from '@/utils/form-context';
 
 function RouteComponent() {
-  const { id } = useParams({
+  const { id, routeId } = useParams({
     from: '/services/detail/$id/stream_routes/detail/$routeId',
   });
   const navigate = useNavigate();
   return (
-    <StreamRouteDetail
-      id={id}
-      onDeleteSuccess={() =>
-        navigate({
-          to: '/services/detail/$id/stream_routes',
-          params: { id },
-        })
-      }
-    />
+    <CommonFormContext.Provider value={{ readOnlyFields: ['service_id'] }}>
+      <StreamRouteDetail
+        id={routeId}
+        onDeleteSuccess={() =>
+          navigate({
+            to: '/services/detail/$id/stream_routes',
+            params: { id },
+          })
+        }
+      />
+    </CommonFormContext.Provider>
   );
 }
 

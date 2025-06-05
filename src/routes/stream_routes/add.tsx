@@ -32,7 +32,6 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { CommonFormContext } from '@/utils/form-context';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -78,7 +77,7 @@ function RouteComponent() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <CommonFormContext.Provider value={{ readOnlyFields: ['service_id'] }}>
+    <>
       <PageHeader
         title={t('info.add.title', { name: t('streamRoutes.singular') })}
       />
@@ -92,7 +91,7 @@ function RouteComponent() {
           }
         />
       </FormTOCBox>
-    </CommonFormContext.Provider>
+    </>
   );
 }
 

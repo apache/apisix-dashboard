@@ -46,6 +46,10 @@ export const DetailTabs = () => {
         value: 'routes',
         label: t('sources.routes'),
       },
+      {
+        value: 'stream_routes',
+        label: t('sources.streamRoutes'),
+      },
     ],
     [t]
   );
