@@ -27,6 +27,7 @@ import { APISIX } from '@/types/schema/apisix';
 import { NamePrefixProvider } from '@/utils/useNamePrefix';
 import { zGetDefault } from '@/utils/zod';
 
+import { useFormReadOnlyFields } from '../../../utils/form-context';
 import { FormItemPlugins } from '../FormItemPlugins';
 import { FormPartBasic } from '../FormPartBasic';
 import { FormPartUpstream, FormSectionTimeout } from '../FormPartUpstream';
@@ -142,8 +143,12 @@ export const FormSectionPlugins = () => {
 export const FormSectionService = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
+  const readOnlyFields = useFormReadOnlyFields();
   return (
-    <FormSection legend={t('form.routes.service')}>
+    <FormSection
+      legend={t('form.routes.service')}
+      disabled={readOnlyFields.includes('service_id')}
+    >
       <FormItemTextInput
         control={control}
         name="service_id"

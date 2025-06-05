@@ -21,6 +21,7 @@ import {
 } from '@tanstack/react-router';
 
 import { RouteDetail } from '@/routes/routes/detail.$id';
+import { CommonFormContext } from '@/utils/form-context';
 
 function RouteComponent() {
   const { id, routeId } = useParams({
@@ -28,15 +29,17 @@ function RouteComponent() {
   });
   const navigate = useNavigate();
   return (
-    <RouteDetail
-      id={routeId}
-      onDeleteSuccess={() =>
-        navigate({
-          to: '/services/detail/$id/routes',
-          params: { id },
-        })
-      }
-    />
+    <CommonFormContext.Provider value={{ readOnlyFields: ['service_id'] }}>
+      <RouteDetail
+        id={routeId}
+        onDeleteSuccess={() =>
+          navigate({
+            to: '/services/detail/$id/routes',
+            params: { id },
+          })
+        }
+      />
+    </CommonFormContext.Provider>
   );
 }
 
