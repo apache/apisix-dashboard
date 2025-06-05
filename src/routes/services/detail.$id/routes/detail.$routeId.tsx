@@ -14,15 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 
 import { RouteDetail } from '@/routes/routes/detail.$id';
 
 function RouteComponent() {
-  const { routeId } = useParams({
+  const { id, routeId } = useParams({
     from: '/services/detail/$id/routes/detail/$routeId',
   });
-  return <RouteDetail id={routeId} />;
+  const navigate = useNavigate();
+  return (
+    <RouteDetail
+      id={routeId}
+      onDeleteSuccess={() =>
+        navigate({
+          to: '/services/detail/$id/routes',
+          params: { id },
+        })
+      }
+    />
+  );
 }
 
 export const Route = createFileRoute(

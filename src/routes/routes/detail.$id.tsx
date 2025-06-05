@@ -107,11 +107,13 @@ const RouteDetailForm = (props: Props) => {
   );
 };
 
-export const RouteDetail = (props: Pick<Props, 'id'>) => {
-  const { id } = props;
+type RouteDetailProps = Pick<Props, 'id'> & {
+  onDeleteSuccess: () => void;
+};
+export const RouteDetail = (props: RouteDetailProps) => {
+  const { id, onDeleteSuccess } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const navigate = useNavigate();
 
   return (
     <>
@@ -133,7 +135,7 @@ export const RouteDetail = (props: Pick<Props, 'id'>) => {
                 name={t('routes.singular')}
                 target={id}
                 api={`${API_ROUTES}/${id}`}
-                onSuccess={() => navigate({ to: '/routes' })}
+                onSuccess={onDeleteSuccess}
               />
             </Group>
           ),
@@ -152,7 +154,10 @@ export const RouteDetail = (props: Pick<Props, 'id'>) => {
 
 function RouteComponent() {
   const { id } = useParams({ from: '/routes/detail/$id' });
-  return <RouteDetail id={id} />;
+  const navigate = useNavigate();
+  return (
+    <RouteDetail id={id} onDeleteSuccess={() => navigate({ to: '/routes' })} />
+  );
 }
 
 export const Route = createFileRoute('/routes/detail/$id')({
