@@ -39,17 +39,18 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { CommonFormContext } from '@/utils/form-context';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   readOnly: boolean;
   setReadOnly: (v: boolean) => void;
+  id: string;
 };
 
 const StreamRouteDetailForm = (props: Props) => {
-  const { readOnly, setReadOnly } = props;
+  const { readOnly, setReadOnly, id } = props;
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/stream_routes/detail/$id' });
 
   const streamRouteQuery = useQuery(getStreamRouteQueryOptions(id));
   const { data: streamRouteData, isLoading, refetch } = streamRouteQuery;
@@ -103,11 +104,14 @@ const StreamRouteDetailForm = (props: Props) => {
   );
 };
 
-function RouteComponent() {
+type StreamRouteDetailProps = Pick<Props, 'id'> & {
+  onDeleteSuccess: () => void;
+};
+
+export const StreamRouteDetail = (props: StreamRouteDetailProps) => {
+  const { id, onDeleteSuccess } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const { id } = useParams({ from: '/stream_routes/detail/$id' });
-  const navigate = useNavigate();
 
   return (
     <>
@@ -129,16 +133,33 @@ function RouteComponent() {
                 name={t('streamRoutes.singular')}
                 target={id}
                 api={`${API_STREAM_ROUTES}/${id}`}
-                onSuccess={() => navigate({ to: '/stream_routes' })}
+                onSuccess={onDeleteSuccess}
               />
             </Group>
           ),
         })}
       />
       <FormTOCBox>
-        <StreamRouteDetailForm readOnly={readOnly} setReadOnly={setReadOnly} />
+        <StreamRouteDetailForm
+          readOnly={readOnly}
+          setReadOnly={setReadOnly}
+          id={id}
+        />
       </FormTOCBox>
     </>
+  );
+};
+
+function RouteComponent() {
+  const { id } = useParams({ from: '/stream_routes/detail/$id' });
+  const navigate = useNavigate();
+  return (
+    <CommonFormContext.Provider value={{ readOnlyFields: ['service_id'] }}>
+      <StreamRouteDetail
+        id={id}
+        onDeleteSuccess={() => navigate({ to: '/stream_routes' })}
+      />
+    </CommonFormContext.Provider>
   );
 }
 

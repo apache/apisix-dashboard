@@ -23,15 +23,27 @@ import { useTranslation } from 'react-i18next';
 import { getStreamRouteListQueryOptions, useStreamRouteList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import type { ListPageKeys } from '@/utils/useTablePagination';
 
-const StreamRouteList = () => {
-  const { data, isLoading, refetch, pagination } = useStreamRouteList();
+export type StreamRouteListProps = {
+  routeKey: Extract<
+    ListPageKeys,
+    '/stream_routes/' | '/services/detail/$id/stream_routes/'
+  >;
+  ToDetailBtn: (props: {
+    record: APISIXType['RespStreamRouteItem'];
+  }) => React.ReactNode;
+};
+
+export const StreamRouteList = (props: StreamRouteListProps) => {
+  const { routeKey, ToDetailBtn } = props;
+  const { data, isLoading, refetch, pagination } = useStreamRouteList(routeKey);
   const { t } = useTranslation();
 
   const columns = useMemo<
@@ -62,11 +74,7 @@ const StreamRouteList = () => {
         key: 'option',
         width: 120,
         render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/stream_routes/detail/$id"
-            params={{ id: record.value.id }}
-          />,
+          <ToDetailBtn key="detail" record={record} />,
           <DeleteResourceBtn
             key="delete"
             name={t('streamRoutes.singular')}
@@ -77,7 +85,7 @@ const StreamRouteList = () => {
         ],
       },
     ];
-  }, [t, refetch]);
+  }, [t, ToDetailBtn, refetch]);
 
   return (
     <AntdConfigProvider>
@@ -102,7 +110,7 @@ const StreamRouteList = () => {
                     label={t('info.add.title', {
                       name: t('streamRoutes.singular'),
                     })}
-                    to="/stream_routes/add"
+                    to={`${routeKey}add`}
                   />
                 ),
               },
@@ -120,7 +128,16 @@ function StreamRouteComponent() {
   return (
     <>
       <PageHeader title={t('sources.streamRoutes')} />
-      <StreamRouteList />
+      <StreamRouteList
+        routeKey="/stream_routes/"
+        ToDetailBtn={({ record }) => (
+          <ToDetailPageBtn
+            key="detail"
+            to="/stream_routes/detail/$id"
+            params={{ id: record.value.id }}
+          />
+        )}
+      />
     </>
   );
 }
