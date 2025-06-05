@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PageHeader } from '@ant-design/pro-components';
 import {
   createFileRoute,
   useNavigate,
@@ -23,6 +22,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { FormTOCBox } from '@/components/form-slice/FormSection';
+import PageHeader from '@/components/page/PageHeader';
 import { RouteAddForm } from '@/routes/routes/add';
 
 function RouteComponent() {
@@ -40,6 +40,9 @@ function RouteComponent() {
               params: { id, routeId: res.data.value.id },
             })
           }
+          defaultValues={{
+            service_id: id,
+          }}
         />
       </FormTOCBox>
     </>
