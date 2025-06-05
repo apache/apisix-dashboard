@@ -17,7 +17,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
-import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -30,19 +30,18 @@ import {
 } from '@/components/form-slice/FormPartRoute/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
-import type { ToDetailPageBtnProps } from '@/components/page/ToAddPageBtn';
 import { req } from '@/config/req';
+import type { APISIXType } from '@/types/schema/apisix';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
-  to: ToDetailPageBtnProps['to'];
+  navigate: (res: APISIXType['RespRouteDetail']) => Promise<void>;
 };
 
 export const RouteAddForm = (props: Props) => {
-  const { to } = props;
+  const { navigate } = props;
   const { t } = useTranslation();
-  const router = useRouter();
 
   const postRoute = useMutation({
     mutationFn: (d: RoutePostType) =>
@@ -52,10 +51,7 @@ export const RouteAddForm = (props: Props) => {
         message: t('info.add.success', { name: t('routes.singular') }),
         color: 'green',
       });
-      await router.navigate({
-        to,
-        params: { id: res.data.value.id },
-      });
+      await navigate(res);
     },
   });
 
@@ -78,11 +74,19 @@ export const RouteAddForm = (props: Props) => {
 
 function RouteComponent() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <>
       <PageHeader title={t('info.add.title', { name: t('routes.singular') })} />
       <FormTOCBox>
-        <RouteAddForm to="/routes/detail/$id" />
+        <RouteAddForm
+          navigate={(res) =>
+            navigate({
+              to: '/routes/detail/$id',
+              params: { id: res.data.value.id },
+            })
+          }
+        />
       </FormTOCBox>
     </>
   );

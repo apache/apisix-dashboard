@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 import { PageHeader } from '@ant-design/pro-components';
-import { createFileRoute } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { FormTOCBox } from '@/components/form-slice/FormSection';
@@ -23,11 +27,20 @@ import { RouteAddForm } from '@/routes/routes/add';
 
 function RouteComponent() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { id } = useParams({ from: '/services/detail/$id/routes/add' });
   return (
     <>
       <PageHeader title={t('info.add.title', { name: t('routes.singular') })} />
       <FormTOCBox>
-        <RouteAddForm to="/services/detail/$id/routes/detail/$routeId" />
+        <RouteAddForm
+          navigate={(res) =>
+            navigate({
+              to: '/services/detail/$id/routes/detail/$routeId',
+              params: { id, routeId: res.data.value.id },
+            })
+          }
+        />
       </FormTOCBox>
     </>
   );

@@ -14,25 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { getRouteListQueryOptions, useServiceRouteList } from '@/apis/hooks';
+import { getRouteListQueryOptions } from '@/apis/hooks';
 import PageHeader from '@/components/page/PageHeader';
-import { RouteList } from '@/components/page-slice/routes/list';
+import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { queryClient } from '@/config/global';
+import { RouteList } from '@/routes/routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const req = useServiceRouteList();
+  const { id } = useParams({ from: '/services/detail/$id/routes/' });
   return (
     <>
       <PageHeader title={t('sources.routes')} />
       <RouteList
-        detailTo="/services/detail/$id/routes/detail/$routeId"
-        addTo="/services/detail/$id/routes/add"
-        req={req}
+        routeKey="/services/detail/$id/routes/"
+        ToDetailBtn={({ record }) => (
+          <ToDetailPageBtn
+            key="detail"
+            to="/services/detail/$id/routes/detail/$routeId"
+            params={{ id, routeId: record.value.id }}
+          />
+        )}
       />
     </>
   );

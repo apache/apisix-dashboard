@@ -27,19 +27,18 @@ import { useTranslation } from 'react-i18next';
 
 import { Tabs, type TabsItem } from '@/components/page/Tabs';
 
-const defaultTab = 'detail';
 export const DetailTabs = () => {
   const { t } = useTranslation();
   const { id } = useParams({ strict: false });
   const navigate = useNavigate();
-  const lastPath = useLocation({
-    select: (location) => location.pathname.split('/').pop() || '',
+  const pathname = useLocation({
+    select: (location) => location.pathname,
   });
 
   const items = useMemo(
     (): TabsItem[] => [
       {
-        value: defaultTab,
+        value: 'detail',
         label: t('info.detail.title', { name: t('services.singular') }),
       },
       {
@@ -49,15 +48,21 @@ export const DetailTabs = () => {
     ],
     [t]
   );
+
   return (
     <Tabs
       items={items}
       variant="outline"
-      value={items.find((v) => lastPath === v.value)?.value || defaultTab}
+      value={
+        items
+          .slice()
+          .reverse()
+          .find((v) => pathname.includes(v.value))?.value
+      }
       onChange={(v) => {
         navigate({
           to:
-            v === defaultTab
+            v === 'detail'
               ? '/services/detail/$id/'
               : `/services/detail/$id/${v}`,
           params: { id: id as string },
