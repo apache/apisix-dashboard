@@ -43,10 +43,9 @@ const StreamRoute = z
     upstream_id: z.string().optional(),
     service_id: z.string().optional(),
     protocol: StreamRouteProtocol.partial().optional(),
-    status: APISIXCommon.Status.optional(),
   })
   .partial()
-  .merge(APISIXCommon.Basic.omit({ name: true }))
+  .merge(APISIXCommon.Basic.omit({ name: true, status: true }))
   .merge(APISIXCommon.Info);
 
 export const APISIXStreamRoutes = {

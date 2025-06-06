@@ -17,7 +17,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
-import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -31,21 +31,27 @@ import {
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import type { APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
-const StreamRouteAddForm = () => {
+type Props = {
+  navigate: (res: APISIXType['RespStreamRouteDetail']) => Promise<void>;
+  defaultValues?: Partial<StreamRoutePostType>;
+};
+
+export const StreamRouteAddForm = (props: Props) => {
+  const { navigate, defaultValues } = props;
   const { t } = useTranslation();
-  const router = useRouter();
 
   const postStreamRoute = useMutation({
     mutationFn: (d: StreamRoutePostType) =>
       postStreamRouteReq(req, pipeProduce()(d)),
-    async onSuccess() {
+    async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('streamRoutes.singular') }),
         color: 'green',
       });
-      await router.navigate({ to: '/stream_routes' });
+      await navigate(res);
     },
   });
 
@@ -54,6 +60,7 @@ const StreamRouteAddForm = () => {
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
+    defaultValues,
   });
 
   return (
@@ -68,13 +75,21 @@ const StreamRouteAddForm = () => {
 
 function RouteComponent() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <>
       <PageHeader
         title={t('info.add.title', { name: t('streamRoutes.singular') })}
       />
       <FormTOCBox>
-        <StreamRouteAddForm />
+        <StreamRouteAddForm
+          navigate={(res) =>
+            navigate({
+              to: '/stream_routes/detail/$id',
+              params: { id: res.data.value.id },
+            })
+          }
+        />
       </FormTOCBox>
     </>
   );
