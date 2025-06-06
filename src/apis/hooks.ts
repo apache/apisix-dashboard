@@ -73,12 +73,18 @@ const genListQueryOptions =
   };
 
 /** simple hook factory func for list hooks which support extends PageSearchType */
-export const genUseList = <T extends ListPageKeys, P extends PageSearchType, R>(
-  routeId: T,
+export const genUseList = <
+  T extends ListPageKeys,
+  U extends ListPageKeys,
+  P extends PageSearchType,
+  R
+>(
+  routeKey: T,
   listQueryOptions: ReturnType<typeof genListQueryOptions<P, R>>
 ) => {
-  return () => {
-    const { params, setParams } = useSearchParams<T, P>(routeId);
+  return (replaceKey?: U) => {
+    const key = replaceKey || routeKey;
+    const { params, setParams } = useSearchParams<T | U, P>(key);
     const listQuery = useSuspenseQuery(listQueryOptions(params));
     const { data, isLoading, refetch } = listQuery;
     const opts = { data, setParams, params };
@@ -86,6 +92,13 @@ export const genUseList = <T extends ListPageKeys, P extends PageSearchType, R>(
     return { data, isLoading, refetch, pagination };
   };
 };
+
+export type UseListReturn<
+  T extends ListPageKeys,
+  U extends ListPageKeys,
+  P extends PageSearchType,
+  R
+> = ReturnType<ReturnType<typeof genUseList<T, U, P, R>>>;
 
 export const getUpstreamQueryOptions = genDetailQueryOptions(
   'upstream',

@@ -14,40 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { getRouteListQueryOptions } from '@/apis/hooks';
+import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
-import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { queryClient } from '@/config/global';
-import { RouteList } from '@/routes/routes';
-import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { RouteAddForm } from '@/routes/routes/add';
+import { CommonFormContext } from '@/utils/form-context';
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/services/detail/$id/routes/' });
+  const navigate = useNavigate();
+  const { id } = useParams({ from: '/services/detail/$id/routes/add' });
   return (
-    <>
-      <PageHeader title={t('sources.routes')} />
-      <RouteList
-        routeKey="/services/detail/$id/routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/services/detail/$id/routes/detail/$routeId"
-            params={{ id, routeId: record.value.id }}
-          />
-        )}
-      />
-    </>
+    <CommonFormContext.Provider value={{ readOnlyFields: ['service_id'] }}>
+      <PageHeader title={t('info.add.title', { name: t('routes.singular') })} />
+      <FormTOCBox>
+        <RouteAddForm
+          navigate={(res) =>
+            navigate({
+              to: '/services/detail/$id/routes/detail/$routeId',
+              params: { id, routeId: res.data.value.id },
+            })
+          }
+          defaultValues={{
+            service_id: id,
+          }}
+        />
+      </FormTOCBox>
+    </CommonFormContext.Provider>
   );
 }
 
-export const Route = createFileRoute('/services/detail/$id/routes/')({
+export const Route = createFileRoute('/services/detail/$id/routes/add')({
   component: RouteComponent,
-  validateSearch: pageSearchSchema,
-  loaderDeps: ({ search }) => search,
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(getRouteListQueryOptions(deps)),
 });

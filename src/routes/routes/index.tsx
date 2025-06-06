@@ -29,9 +29,18 @@ import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import type { ListPageKeys } from '@/utils/useTablePagination';
 
-const RouteList = () => {
-  const { data, isLoading, refetch, pagination } = useRouteList();
+export type RouteListProps = {
+  routeKey: Extract<ListPageKeys, '/routes/' | '/services/detail/$id/routes/'>;
+  ToDetailBtn: (props: {
+    record: APISIXType['RespRouteItem'];
+  }) => React.ReactNode;
+};
+
+export const RouteList = (props: RouteListProps) => {
+  const { routeKey, ToDetailBtn } = props;
+  const { data, isLoading, refetch, pagination } = useRouteList(routeKey);
   const { t } = useTranslation();
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
@@ -66,11 +75,7 @@ const RouteList = () => {
         key: 'option',
         width: 120,
         render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/routes/detail/$id"
-            params={{ id: record.value.id }}
-          />,
+          <ToDetailBtn key="detail" record={record} />,
           <DeleteResourceBtn
             key="delete"
             name={t('routes.singular')}
@@ -81,7 +86,7 @@ const RouteList = () => {
         ],
       },
     ];
-  }, [t, refetch]);
+  }, [t, ToDetailBtn, refetch]);
 
   return (
     <AntdConfigProvider>
@@ -103,8 +108,10 @@ const RouteList = () => {
                 label: (
                   <ToAddPageBtn
                     key="add"
-                    label={t('info.add.title', { name: t('routes.singular') })}
-                    to="/routes/add"
+                    label={t('info.add.title', {
+                      name: t('routes.singular'),
+                    })}
+                    to={`${routeKey}add`}
                   />
                 ),
               },
@@ -121,7 +128,16 @@ function RouteComponent() {
   return (
     <>
       <PageHeader title={t('sources.routes')} />
-      <RouteList />
+      <RouteList
+        routeKey="/routes/"
+        ToDetailBtn={({ record }) => (
+          <ToDetailPageBtn
+            key="detail"
+            to="/routes/detail/$id"
+            params={{ id: record.value.id }}
+          />
+        )}
+      />
     </>
   );
 }

@@ -46,12 +46,12 @@ import { pipeProduce } from '@/utils/producer';
 type Props = {
   readOnly: boolean;
   setReadOnly: (v: boolean) => void;
+  id: string;
 };
 
 const RouteDetailForm = (props: Props) => {
-  const { readOnly, setReadOnly } = props;
+  const { readOnly, setReadOnly, id } = props;
   const { t } = useTranslation();
-  const { id } = useParams({ from: '/routes/detail/$id' });
 
   const routeQuery = useQuery(getRouteQueryOptions(id));
   const { data: routeData, isLoading, refetch } = routeQuery;
@@ -107,11 +107,13 @@ const RouteDetailForm = (props: Props) => {
   );
 };
 
-function RouteComponent() {
+type RouteDetailProps = Pick<Props, 'id'> & {
+  onDeleteSuccess: () => void;
+};
+export const RouteDetail = (props: RouteDetailProps) => {
+  const { id, onDeleteSuccess } = props;
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const { id } = useParams({ from: '/routes/detail/$id' });
-  const navigate = useNavigate();
 
   return (
     <>
@@ -133,16 +135,28 @@ function RouteComponent() {
                 name={t('routes.singular')}
                 target={id}
                 api={`${API_ROUTES}/${id}`}
-                onSuccess={() => navigate({ to: '/routes' })}
+                onSuccess={onDeleteSuccess}
               />
             </Group>
           ),
         })}
       />
       <FormTOCBox>
-        <RouteDetailForm readOnly={readOnly} setReadOnly={setReadOnly} />
+        <RouteDetailForm
+          readOnly={readOnly}
+          setReadOnly={setReadOnly}
+          id={id}
+        />
       </FormTOCBox>
     </>
+  );
+};
+
+function RouteComponent() {
+  const { id } = useParams({ from: '/routes/detail/$id' });
+  const navigate = useNavigate();
+  return (
+    <RouteDetail id={id} onDeleteSuccess={() => navigate({ to: '/routes' })} />
   );
 }
 

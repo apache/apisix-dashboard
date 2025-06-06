@@ -32,14 +32,14 @@ export const DetailTabs = () => {
   const { t } = useTranslation();
   const { id } = useParams({ strict: false });
   const navigate = useNavigate();
-  const lastPath = useLocation({
-    select: (location) => location.pathname.split('/').pop() || '',
+  const pathname = useLocation({
+    select: (location) => location.pathname,
   });
 
   const items = useMemo(
     (): TabsItem[] => [
       {
-        value: defaultTab,
+        value: 'detail',
         label: t('info.detail.title', { name: t('services.singular') }),
       },
       {
@@ -53,7 +53,12 @@ export const DetailTabs = () => {
     <Tabs
       items={items}
       variant="outline"
-      value={items.find((v) => lastPath === v.value)?.value || defaultTab}
+      value={
+        items
+          .slice()
+          .reverse()
+          .find((v) => pathname.includes(v.value))?.value || defaultTab
+      }
       onChange={(v) => {
         navigate({
           to:
