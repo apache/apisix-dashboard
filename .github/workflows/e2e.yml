@@ -13,6 +13,8 @@ on:
     # This should be later than the update time of `apache/apisix:dev`
     # Ref: https://github.com/apache/apisix-docker/blob/master/.github/workflows/apisix_dev_push_docker_hub.yaml#L7C15-L7C16
     - cron: '0 2 * * *'
+  repository_dispatch:
+    types: [e2e-test]
   workflow_dispatch:
 
 concurrency:
@@ -21,8 +23,8 @@ concurrency:
 
 jobs:
   test:
-    # only run when e2e-test label is added, scheduled, workflow_dispatch
-    if: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e-test')) || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    # only run when e2e-test label is added, scheduled, workflow_dispatch, repository_dispatch
+    if: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e-test')) || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' }}
     timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
