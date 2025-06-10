@@ -62,15 +62,9 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
         valueType: 'text',
       },
       {
-        dataIndex: ['value', 'server_addr'],
-        title: t('form.streamRoutes.serverAddr'),
-        key: 'server_addr',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'server_port'],
-        title: t('form.streamRoutes.serverPort'),
-        key: 'server_port',
+        dataIndex: ['value', 'name'],
+        title: t('form.basic.name'),
+        key: 'name',
         valueType: 'text',
       },
       {

@@ -32,7 +32,6 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -46,10 +45,7 @@ export const StreamRouteAddForm = (props: Props) => {
 
   const postStreamRoute = useMutation({
     mutationFn: (d: StreamRoutePostType) =>
-      postStreamRouteReq(
-        req,
-        pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)
-      ),
+      postStreamRouteReq(req, pipeProduce()(d)),
     async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('streamRoutes.singular') }),
