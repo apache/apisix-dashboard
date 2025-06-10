@@ -20,9 +20,13 @@ import type { AxiosInstance } from 'axios';
 import type { StreamRoutePostType } from '@/components/form-slice/FormPartStreamRoute/schema';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
-import type { PageSearchType } from '@/types/schema/pageSearch';
 
-export const getStreamRouteListReq = (req: AxiosInstance, params: PageSearchType) =>
+import type { WithServiceIdFilter } from './routes';
+
+export const getStreamRouteListReq = (
+  req: AxiosInstance,
+  params: WithServiceIdFilter
+) =>
   req
     .get<unknown, APISIXType['RespStreamRouteList']>(API_STREAM_ROUTES, {
       params,

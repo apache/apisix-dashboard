@@ -21,6 +21,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getStreamRouteListQueryOptions, useStreamRouteList } from '@/apis/hooks';
+import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -39,11 +40,15 @@ export type StreamRouteListProps = {
   ToDetailBtn: (props: {
     record: APISIXType['RespStreamRouteItem'];
   }) => React.ReactNode;
+  defaultParams?: Partial<WithServiceIdFilter>;
 };
 
 export const StreamRouteList = (props: StreamRouteListProps) => {
-  const { routeKey, ToDetailBtn } = props;
-  const { data, isLoading, refetch, pagination } = useStreamRouteList(routeKey);
+  const { routeKey, ToDetailBtn, defaultParams } = props;
+  const { data, isLoading, refetch, pagination } = useStreamRouteList(
+    routeKey,
+    defaultParams
+  );
   const { t } = useTranslation();
 
   const columns = useMemo<
