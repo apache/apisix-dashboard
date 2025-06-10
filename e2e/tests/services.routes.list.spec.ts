@@ -1,0 +1,162 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { servicesPom } from '@e2e/pom/services';
+import type { HttpMethod } from '@e2e/type';
+import { randomId } from '@e2e/utils/common';
+import { e2eReq } from '@e2e/utils/req';
+import { test } from '@e2e/utils/test';
+import { expect } from '@playwright/test';
+
+import { deleteAllRoutes, postRouteReq } from '@/apis/routes';
+import { deleteAllServices, postServiceReq } from '@/apis/services';
+
+const serviceName = randomId('test-service');
+const routes = [
+  {
+    name: randomId('route1'),
+    uri: '/api/v1/test1',
+    methods: ['GET'],
+  },
+  {
+    name: randomId('route2'),
+    uri: '/api/v1/test2',
+    methods: ['POST'],
+  },
+  {
+    name: randomId('route3'),
+    uri: '/api/v1/test3',
+    methods: ['PUT'],
+  },
+] as Array<{
+  name: string;
+  uri: string;
+  methods: HttpMethod[];
+}>;
+
+let testServiceId: string;
+const createdRoutes: string[] = [];
+
+test.beforeAll(async () => {
+  await deleteAllRoutes(e2eReq);
+  await deleteAllServices(e2eReq);
+
+  // Create a test service for testing service routes
+  const serviceResponse = await postServiceReq(e2eReq, {
+    name: serviceName,
+    desc: 'Test service for route listing',
+  });
+
+  testServiceId = serviceResponse.data.value.id;
+
+  // Create test routes under the service
+  for (const route of routes) {
+    const routeResponse = await postRouteReq(e2eReq, {
+      name: route.name,
+      uri: route.uri,
+      methods: route.methods,
+      service_id: testServiceId,
+    });
+    createdRoutes.push(routeResponse.data.value.id);
+  }
+});
+
+test.afterAll(async () => {
+  await deleteAllRoutes(e2eReq);
+  await deleteAllServices(e2eReq);
+});
+
+test('should display routes list under service', async ({ page }) => {
+  // Navigate to service detail page
+  await servicesPom.toIndex(page);
+  await servicesPom.isIndexPage(page);
+
+  // Click on the service to go to detail page
+  await page
+    .getByRole('row', { name: serviceName })
+    .getByRole('button', { name: 'View' })
+    .click();
+  await servicesPom.isDetailPage(page);
+
+  // Navigate to Routes tab
+  await servicesPom.getServiceRoutesTab(page).click();
+  await servicesPom.isServiceRoutesPage(page);
+
+  await test.step('should display all routes under service', async () => {
+    // Verify all created routes are displayed
+    for (const route of routes) {
+      await expect(page.getByRole('cell', { name: route.name })).toBeVisible();
+      await expect(page.getByRole('cell', { name: route.uri })).toBeVisible();
+    }
+  });
+
+  await test.step('should have correct table headers', async () => {
+    await expect(page.getByRole('columnheader', { name: 'ID' })).toBeVisible();
+    await expect(
+      page.getByRole('columnheader', { name: 'Name' })
+    ).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'URI' })).toBeVisible();
+    await expect(
+      page.getByRole('columnheader', { name: 'Actions' })
+    ).toBeVisible();
+  });
+
+  await test.step('should be able to navigate to route detail', async () => {
+    // Click on the first route's View button
+    await page
+      .getByRole('row', { name: routes[0].name })
+      .getByRole('button', { name: 'View' })
+      .click();
+
+    await servicesPom.isServiceRouteDetailPage(page);
+
+    // Verify we're on the correct route detail page
+    const nameField = page.getByLabel('Name', { exact: true }).first();
+    await expect(nameField).toHaveValue(routes[0].name);
+
+    // Verify service_id is correct
+    const serviceIdField = page.getByLabel('Service ID', { exact: true });
+    await expect(serviceIdField).toHaveValue(testServiceId);
+  });
+
+  await test.step('should have Add Route button', async () => {
+    // Navigate back to service routes list
+    await servicesPom.toServiceRoutes(page, testServiceId);
+    await servicesPom.isServiceRoutesPage(page);
+
+    // Verify Add Route button exists and is clickable
+    const addRouteBtn = servicesPom.getAddRouteBtn(page);
+    await expect(addRouteBtn).toBeVisible();
+
+    await addRouteBtn.click();
+    await servicesPom.isServiceRouteAddPage(page);
+
+    // Verify service_id is pre-filled
+    const serviceIdField = page.getByLabel('Service ID', { exact: true });
+    await expect(serviceIdField).toHaveValue(testServiceId);
+    await expect(serviceIdField).toBeDisabled();
+  });
+
+  await test.step('should show correct route count', async () => {
+    // Navigate back to service routes list
+    await servicesPom.toServiceRoutes(page, testServiceId);
+    await servicesPom.isServiceRoutesPage(page);
+
+    // Check that all 3 routes are displayed in the table
+    const tableRows = page.locator('tbody tr');
+    await expect(tableRows).toHaveCount(routes.length);
+  });
+});

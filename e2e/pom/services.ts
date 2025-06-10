@@ -24,6 +24,16 @@ const locator = {
     page.getByRole('button', { name: 'Add Service', exact: true }),
   getAddBtn: (page: Page) =>
     page.getByRole('button', { name: 'Add', exact: true }),
+  // Service routes locators
+  getServiceRoutesTab: (page: Page) =>
+    page.getByRole('tab', { name: 'Routes', exact: true }),
+  getAddRouteBtn: (page: Page) =>
+    page.getByRole('button', { name: 'Add Route', exact: true }),
+  // Service stream routes locators
+  getServiceStreamRoutesTab: (page: Page) =>
+    page.getByRole('tab', { name: 'Stream Routes', exact: true }),
+  getAddStreamRouteBtn: (page: Page) =>
+    page.getByRole('button', { name: 'Add Stream Route', exact: true }),
 };
 
 const assert = {
@@ -46,11 +56,83 @@ const assert = {
     const title = page.getByRole('heading', { name: 'Service Detail' });
     await expect(title).toBeVisible();
   },
+  // Service routes assertions
+  isServiceRoutesPage: async (page: Page) => {
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname.includes('/services/detail') &&
+        url.pathname.includes('/routes')
+    );
+    // Wait for page to load completely
+    await page.waitForLoadState('networkidle');
+    const title = page.getByRole('heading', { name: 'Routes' });
+    await expect(title).toBeVisible();
+  },
+  isServiceRouteAddPage: async (page: Page) => {
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname.includes('/services/detail') &&
+        url.pathname.includes('/routes/add')
+    );
+    const title = page.getByRole('heading', { name: 'Add Route' });
+    await expect(title).toBeVisible();
+  },
+  isServiceRouteDetailPage: async (page: Page) => {
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname.includes('/services/detail') &&
+        url.pathname.includes('/routes/detail')
+    );
+    const title = page.getByRole('heading', { name: 'Route Detail' });
+    await expect(title).toBeVisible();
+  },
+  // Service stream routes assertions
+  isServiceStreamRoutesPage: async (page: Page) => {
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname.includes('/services/detail') &&
+        url.pathname.includes('/stream_routes')
+    );
+    // Wait for page to load completely
+    await page.waitForLoadState('networkidle');
+    const title = page.getByRole('heading', { name: 'Stream Routes' });
+    await expect(title).toBeVisible();
+  },
+  isServiceStreamRouteAddPage: async (page: Page) => {
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname.includes('/services/detail') &&
+        url.pathname.includes('/stream_routes/add')
+    );
+    const title = page.getByRole('heading', { name: 'Add Stream Route' });
+    await expect(title).toBeVisible();
+  },
+  isServiceStreamRouteDetailPage: async (page: Page) => {
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname.includes('/services/detail') &&
+        url.pathname.includes('/stream_routes/detail')
+    );
+    const title = page.getByRole('heading', { name: 'Stream Route Detail' });
+    await expect(title).toBeVisible();
+  },
 };
 
 const goto = {
   toIndex: (page: Page) => uiGoto(page, '/services'),
   toAdd: (page: Page) => uiGoto(page, '/services/add'),
+  toServiceRoutes: (page: Page, serviceId: string) =>
+    uiGoto(page, '/services/detail/$id/routes', { id: serviceId }),
+  toServiceRouteAdd: (page: Page, serviceId: string) =>
+    uiGoto(page, '/services/detail/$id/routes/add', {
+      id: serviceId,
+    }),
+  toServiceStreamRoutes: (page: Page, serviceId: string) =>
+    uiGoto(page, '/services/detail/$id/stream_routes', { id: serviceId }),
+  toServiceStreamRouteAdd: (page: Page, serviceId: string) =>
+    uiGoto(page, '/services/detail/$id/stream_routes/add', {
+      id: serviceId,
+    }),
 };
 
 export const servicesPom = {
