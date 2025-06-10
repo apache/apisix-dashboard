@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { JsonInput, type JsonInputProps } from '@mantine/core';
+import { omit } from 'rambdax';
 import { useMemo } from 'react';
 import {
   type FieldValues,
@@ -28,15 +29,17 @@ export type FormItemJsonInputProps<T extends FieldValues> =
   UseControllerProps<T> &
     JsonInputProps & {
       toObject?: boolean;
+      objValue?: unknown;
     };
 
 export const FormItemJsonInput = <T extends FieldValues>(
   props: FormItemJsonInputProps<T>
 ) => {
+  const { objValue = {} } = props;
   const {
     controllerProps,
     restProps: { toObject, ...restProps },
-  } = genControllerProps(props, props.toObject ? {} : '');
+  } = genControllerProps(props, props.toObject ? objValue : '');
   const {
     field: { value: rawVal, onChange: fOnChange, ...restField },
     fieldState,
@@ -45,9 +48,9 @@ export const FormItemJsonInput = <T extends FieldValues>(
     if (!toObject) return rawVal;
     if (typeof rawVal === 'string') return rawVal;
     const val = JSON.stringify(rawVal, null, 2);
-    if (val === '{}') return '';
+    if (val === JSON.stringify(objValue)) return '';
     return val;
-  }, [rawVal, toObject]);
+  }, [rawVal, toObject, objValue]);
 
   return (
     <JsonInput
@@ -59,7 +62,7 @@ export const FormItemJsonInput = <T extends FieldValues>(
           try {
             res = JSON.parse(val);
           } catch {
-            res = val.length === 0 ? {} : val;
+            res = val.length === 0 ? objValue : val;
           }
         }
         fOnChange(res);
@@ -69,7 +72,7 @@ export const FormItemJsonInput = <T extends FieldValues>(
       autosize
       resize="vertical"
       {...restField}
-      {...restProps}
+      {...omit(['objValue'], restProps)}
     />
   );
 };
