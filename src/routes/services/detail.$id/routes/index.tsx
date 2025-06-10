@@ -32,6 +32,11 @@ function RouteComponent() {
       <PageHeader title={t('sources.routes')} />
       <RouteList
         routeKey="/services/detail/$id/routes/"
+        defaultParams={{
+          filter: {
+            service_id: id,
+          },
+        }}
         ToDetailBtn={({ record }) => (
           <ToDetailPageBtn
             key="detail"

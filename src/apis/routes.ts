@@ -21,7 +21,15 @@ import { API_ROUTES, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
-export const getRouteListReq = (req: AxiosInstance, params: PageSearchType) =>
+export type GetRouteListReqParams = PageSearchType & {
+  filter?: {
+    service_id?: string;
+  };
+};
+export const getRouteListReq = (
+  req: AxiosInstance,
+  params: GetRouteListReqParams
+) =>
   req
     .get<undefined, APISIXType['RespRouteList']>(API_ROUTES, { params })
     .then((v) => v.data);

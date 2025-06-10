@@ -29,10 +29,16 @@ import { globalStore } from '@/stores/global';
 export const req = axios.create();
 
 req.interceptors.request.use((conf) => {
-  conf.paramsSerializer = (p) =>
-    stringify(p, {
+  conf.paramsSerializer = (p) => {
+    // from { filter: { service_id: 1 } }
+    // to `filter=service_id%3D1`
+    if (p.filter) {
+      p.filter = stringify(p.filter);
+    }
+    return stringify(p, {
       arrayFormat: 'repeat',
     });
+  };
   conf.baseURL = API_PREFIX;
   conf.headers.set(API_HEADER_KEY, globalStore.settings.adminKey);
   return conf;
