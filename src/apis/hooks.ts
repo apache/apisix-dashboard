@@ -82,14 +82,16 @@ export const genUseList = <
   routeKey: T,
   listQueryOptions: ReturnType<typeof genListQueryOptions<P, R>>
 ) => {
-  return (replaceKey?: U) => {
+  return (replaceKey?: U, defaultParams?: Partial<P>) => {
     const key = replaceKey || routeKey;
     const { params, setParams } = useSearchParams<T | U, P>(key);
-    const listQuery = useSuspenseQuery(listQueryOptions(params));
+    const listQuery = useSuspenseQuery(
+      listQueryOptions({ ...defaultParams, ...params })
+    );
     const { data, isLoading, refetch } = listQuery;
     const opts = { data, setParams, params };
     const pagination = useTablePagination(opts);
-    return { data, isLoading, refetch, pagination };
+    return { data, isLoading, refetch, pagination, setParams };
   };
 };
 

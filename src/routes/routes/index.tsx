@@ -21,6 +21,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
+import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -33,14 +34,18 @@ import type { ListPageKeys } from '@/utils/useTablePagination';
 
 export type RouteListProps = {
   routeKey: Extract<ListPageKeys, '/routes/' | '/services/detail/$id/routes/'>;
+  defaultParams?: Partial<WithServiceIdFilter>;
   ToDetailBtn: (props: {
     record: APISIXType['RespRouteItem'];
   }) => React.ReactNode;
 };
 
 export const RouteList = (props: RouteListProps) => {
-  const { routeKey, ToDetailBtn } = props;
-  const { data, isLoading, refetch, pagination } = useRouteList(routeKey);
+  const { routeKey, ToDetailBtn, defaultParams } = props;
+  const { data, isLoading, refetch, pagination } = useRouteList(
+    routeKey,
+    defaultParams
+  );
   const { t } = useTranslation();
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {

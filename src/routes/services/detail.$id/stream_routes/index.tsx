@@ -39,6 +39,11 @@ function StreamRouteComponent() {
             params={{ id, routeId: record.value.id }}
           />
         )}
+        defaultParams={{
+          filter: {
+            service_id: id,
+          },
+        }}
       />
     </>
   );
