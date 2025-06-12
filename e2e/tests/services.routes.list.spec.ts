@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { routesPom } from '@e2e/pom/routes';
 import { servicesPom } from '@e2e/pom/services';
-import type { HttpMethod } from '@e2e/type';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
@@ -23,9 +23,10 @@ import { expect } from '@playwright/test';
 
 import { deleteAllRoutes, postRouteReq } from '@/apis/routes';
 import { deleteAllServices, postServiceReq } from '@/apis/services';
+import type { APISIXType } from '@/types/schema/apisix';
 
 const serviceName = randomId('test-service');
-const routes = [
+const routes: APISIXType['Route'][] = [
   {
     name: randomId('route1'),
     uri: '/api/v1/test1',
@@ -41,11 +42,17 @@ const routes = [
     uri: '/api/v1/test3',
     methods: ['PUT'],
   },
-] as Array<{
-  name: string;
-  uri: string;
-  methods: HttpMethod[];
-}>;
+];
+
+// Route that uses upstream directly instead of service_id
+const upstreamRoute: APISIXType['Route'] = {
+  name: randomId('upstream-route'),
+  uri: '/api/v1/upstream-test',
+  methods: ['GET'],
+  upstream: {
+    nodes: [{ host: 'example.com', port: 80, weight: 100 }],
+  },
+};
 
 let testServiceId: string;
 const createdRoutes: string[] = [];
@@ -65,18 +72,57 @@ test.beforeAll(async () => {
   // Create test routes under the service
   for (const route of routes) {
     const routeResponse = await postRouteReq(e2eReq, {
-      name: route.name,
-      uri: route.uri,
-      methods: route.methods,
+      ...route,
       service_id: testServiceId,
     });
     createdRoutes.push(routeResponse.data.value.id);
   }
+
+  // Create a route that uses upstream directly instead of service_id
+  await postRouteReq(e2eReq, upstreamRoute);
 });
 
 test.afterAll(async () => {
   await deleteAllRoutes(e2eReq);
   await deleteAllServices(e2eReq);
+});
+
+test('should only show routes with service_id', async ({ page }) => {
+  await test.step('routes in services detail page should only show routes with service_id', async () => {
+    await servicesPom.toIndex(page);
+    await servicesPom.isIndexPage(page);
+
+    await page
+      .getByRole('row', { name: serviceName })
+      .getByRole('button', { name: 'View' })
+      .click();
+    await servicesPom.isDetailPage(page);
+
+    await servicesPom.getServiceRoutesTab(page).click();
+    await servicesPom.isServiceRoutesPage(page);
+
+    await expect(
+      page.getByRole('cell', { name: upstreamRoute.name })
+    ).toBeHidden();
+    for (const route of routes) {
+      await expect(page.getByRole('cell', { name: route.name })).toBeVisible();
+    }
+    await expect(
+      page.getByRole('cell', { name: upstreamRoute.name })
+    ).toBeHidden();
+  });
+
+  await test.step('without service_id routes should still exist in the routes list', async () => {
+    await routesPom.toIndex(page);
+    await routesPom.isIndexPage(page);
+
+    await expect(
+      page.getByRole('cell', { name: upstreamRoute.name })
+    ).toBeVisible();
+    for (const route of routes) {
+      await expect(page.getByRole('cell', { name: route.name })).toBeVisible();
+    }
+  });
 });
 
 test('should display routes list under service', async ({ page }) => {
