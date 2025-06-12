@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { routesPom } from '@e2e/pom/routes';
 import { servicesPom } from '@e2e/pom/services';
-import type { HttpMethod } from '@e2e/type';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
@@ -23,9 +23,11 @@ import { expect } from '@playwright/test';
 
 import { deleteAllRoutes, postRouteReq } from '@/apis/routes';
 import { deleteAllServices, postServiceReq } from '@/apis/services';
+import type { APISIXType } from '@/types/schema/apisix';
 
 const serviceName = randomId('test-service');
-const routes = [
+const anotherServiceName = randomId('another-service');
+const routes: APISIXType['Route'][] = [
   {
     name: randomId('route1'),
     uri: '/api/v1/test1',
@@ -41,13 +43,27 @@ const routes = [
     uri: '/api/v1/test3',
     methods: ['PUT'],
   },
-] as Array<{
-  name: string;
-  uri: string;
-  methods: HttpMethod[];
-}>;
+];
+
+// Route that uses upstream directly instead of service_id
+const upstreamRoute: APISIXType['Route'] = {
+  name: randomId('upstream-route'),
+  uri: '/api/v1/upstream-test',
+  methods: ['GET'],
+  upstream: {
+    nodes: [{ host: 'example.com', port: 80, weight: 100 }],
+  },
+};
+
+// Route that belongs to another service
+const anotherServiceRoute: APISIXType['Route'] = {
+  name: randomId('another-service-route'),
+  uri: '/api/v1/another-test',
+  methods: ['GET'],
+};
 
 let testServiceId: string;
+let anotherServiceId: string;
 const createdRoutes: string[] = [];
 
 test.beforeAll(async () => {
@@ -62,21 +78,81 @@ test.beforeAll(async () => {
 
   testServiceId = serviceResponse.data.value.id;
 
+  // Create another service
+  const anotherServiceResponse = await postServiceReq(e2eReq, {
+    name: anotherServiceName,
+    desc: 'Another test service for route isolation testing',
+  });
+
+  anotherServiceId = anotherServiceResponse.data.value.id;
+
   // Create test routes under the service
   for (const route of routes) {
     const routeResponse = await postRouteReq(e2eReq, {
-      name: route.name,
-      uri: route.uri,
-      methods: route.methods,
+      ...route,
       service_id: testServiceId,
     });
     createdRoutes.push(routeResponse.data.value.id);
   }
+
+  // Create a route that uses upstream directly instead of service_id
+  await postRouteReq(e2eReq, upstreamRoute);
+
+  // Create a route under another service
+  await postRouteReq(e2eReq, {
+    ...anotherServiceRoute,
+    service_id: anotherServiceId,
+  });
 });
 
 test.afterAll(async () => {
   await deleteAllRoutes(e2eReq);
   await deleteAllServices(e2eReq);
+});
+
+test('should only show routes with current service_id', async ({ page }) => {
+  await test.step('should only show routes with current service_id', async () => {
+    await servicesPom.toIndex(page);
+    await servicesPom.isIndexPage(page);
+
+    await page
+      .getByRole('row', { name: serviceName })
+      .getByRole('button', { name: 'View' })
+      .click();
+    await servicesPom.isDetailPage(page);
+
+    await servicesPom.getServiceRoutesTab(page).click();
+    await servicesPom.isServiceRoutesPage(page);
+
+    // Routes from another service should not be visible
+    await expect(
+      page.getByRole('cell', { name: anotherServiceRoute.name })
+    ).toBeHidden();
+    // Upstream route (without service_id) should not be visible
+    await expect(
+      page.getByRole('cell', { name: upstreamRoute.name })
+    ).toBeHidden();
+    // Only routes belonging to current service should be visible
+    for (const route of routes) {
+      await expect(page.getByRole('cell', { name: route.name })).toBeVisible();
+    }
+  });
+
+  await test.step('without service_id routes should still exist in the routes list', async () => {
+    await routesPom.toIndex(page);
+    await routesPom.isIndexPage(page);
+
+    // All routes should be visible in the global routes list
+    await expect(
+      page.getByRole('cell', { name: upstreamRoute.name })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('cell', { name: anotherServiceRoute.name })
+    ).toBeVisible();
+    for (const route of routes) {
+      await expect(page.getByRole('cell', { name: route.name })).toBeVisible();
+    }
+  });
 });
 
 test('should display routes list under service', async ({ page }) => {
@@ -160,3 +236,4 @@ test('should display routes list under service', async ({ page }) => {
     await expect(tableRows).toHaveCount(routes.length);
   });
 });
+
