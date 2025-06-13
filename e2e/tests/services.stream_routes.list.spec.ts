@@ -46,7 +46,7 @@ const streamRoutes = [
 
 // Stream route that uses upstream directly instead of service_id
 const upstreamStreamRoute = {
-  server_addr: '127.0.0.10',
+  server_addr: '127.0.0.40',
   server_port: 9090,
   upstream: {
     nodes: [{ host: 'example.com', port: 80, weight: 100 }],
@@ -157,7 +157,7 @@ test('should only show stream routes with current service_id', async ({
     ).toBeVisible();
     for (const streamRoute of streamRoutes) {
       await expect(
-        page.getByRole('cell', { name: streamRoute.server_addr })
+        page.getByRole('cell', { name: streamRoute.server_addr, exact: true })
       ).toBeVisible();
     }
   });
