@@ -22,8 +22,18 @@ import type { FileRouteTypes } from '@/routeTree.gen';
 
 import { env } from '../env';
 
-export const uiGoto = (page: Page, path: FileRouteTypes['to']) => {
-  return page.goto(`${env.E2E_TARGET_URL}${path.substring(1)}`);
+export const uiGoto = <T extends FileRouteTypes['to']>(
+  page: Page,
+  path: T,
+  params?: T extends `${string}$${string}` ? Record<string, string> : never
+) => {
+  let finalPath = path as string;
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      finalPath = finalPath.replace(`$${key}`, value);
+    });
+  }
+  return page.goto(`${env.E2E_TARGET_URL}${finalPath.substring(1)}`);
 };
 
 export const uiHasToastMsg = async (
