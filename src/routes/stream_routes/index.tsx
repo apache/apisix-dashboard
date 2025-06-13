@@ -20,10 +20,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  getStreamRouteListQueryOptions,
-  useStreamRouteList,
-} from '@/apis/hooks';
+import { getStreamRouteListQueryOptions, useStreamRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
@@ -65,15 +62,9 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
         valueType: 'text',
       },
       {
-        dataIndex: ['value', 'server_addr'],
-        title: t('form.streamRoutes.serverAddr'),
-        key: 'server_addr',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'server_port'],
-        title: t('form.streamRoutes.serverPort'),
-        key: 'server_port',
+        dataIndex: ['value', 'name'],
+        title: t('form.basic.name'),
+        key: 'name',
         valueType: 'text',
       },
       {
