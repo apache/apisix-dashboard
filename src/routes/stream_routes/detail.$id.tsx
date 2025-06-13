@@ -39,6 +39,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -70,7 +71,10 @@ const StreamRouteDetailForm = (props: Props) => {
 
   const putStreamRoute = useMutation({
     mutationFn: (d: APISIXType['StreamRoute']) =>
-      putStreamRouteReq(req, pipeProduce()(d)),
+      putStreamRouteReq(
+        req,
+        pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)
+      ),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('streamRoutes.singular') }),

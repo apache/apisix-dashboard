@@ -28,8 +28,8 @@ const StreamRouteProtocolLoggerItem = z.object({
 const StreamRouteProtocol = z.object({
   name: z.string(),
   superior_id: z.string(),
-  conf: z.object({}),
-  logger: z.array(StreamRouteProtocolLoggerItem),
+  conf: z.object({}).optional(),
+  logger: z.array(StreamRouteProtocolLoggerItem).optional(),
 });
 
 const StreamRoute = z
