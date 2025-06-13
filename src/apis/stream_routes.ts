@@ -18,7 +18,11 @@
 import type { AxiosInstance } from 'axios';
 
 import type { StreamRoutePostType } from '@/components/form-slice/FormPartStreamRoute/schema';
-import { API_STREAM_ROUTES } from '@/config/constant';
+import {
+  API_STREAM_ROUTES,
+  PAGE_SIZE_MAX,
+  PAGE_SIZE_MIN,
+} from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 
 import type { WithServiceIdFilter } from './routes';
@@ -59,3 +63,21 @@ export const postStreamRouteReq = (
     API_STREAM_ROUTES,
     data
   );
+
+export const deleteAllStreamRoutes = async (req: AxiosInstance) => {
+  const totalRes = await getStreamRouteListReq(req, {
+    page: 1,
+    page_size: PAGE_SIZE_MIN,
+  });
+  const total = totalRes.total;
+  if (total === 0) return;
+  for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
+    const res = await getStreamRouteListReq(req, {
+      page: 1,
+      page_size: PAGE_SIZE_MAX,
+    });
+    await Promise.all(
+      res.list.map((d) => req.delete(`${API_STREAM_ROUTES}/${d.value.id}`))
+    );
+  }
+};
