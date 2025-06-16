@@ -25,12 +25,11 @@ import {
 
 import { genControllerProps } from './util';
 
-export type FormItemJsonInputProps<T extends FieldValues> =
-  UseControllerProps<T> &
-    JsonInputProps & {
-      toObject?: boolean;
-      objValue?: unknown;
-    };
+export type FormItemJsonInputProps<T extends FieldValues> = UseControllerProps<T> &
+  JsonInputProps & {
+    toObject?: boolean;
+    objValue?: unknown;
+  };
 
 export const FormItemJsonInput = <T extends FieldValues>(
   props: FormItemJsonInputProps<T>
