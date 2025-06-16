@@ -81,12 +81,14 @@ const FormSectionStreamRouteProtocol = () => {
         control={control}
         name="protocol.conf"
         label={t('form.streamRoutes.protocol.conf')}
+        toObject
       />
       <FormItemJsonInput
         control={control}
         name="protocol.logger"
         label={t('form.streamRoutes.protocol.logger')}
         toObject
+        objValue={[]}
       />
     </FormSection>
   );
