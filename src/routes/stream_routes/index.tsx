@@ -25,6 +25,7 @@ import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
@@ -155,6 +156,7 @@ function StreamRouteComponent() {
 
 export const Route = createFileRoute('/stream_routes/')({
   component: StreamRouteComponent,
+  errorComponent: StreamRoutesErrorComponent,
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) =>

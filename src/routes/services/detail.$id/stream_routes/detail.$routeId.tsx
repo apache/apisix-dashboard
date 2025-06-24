@@ -20,6 +20,7 @@ import {
   useParams,
 } from '@tanstack/react-router';
 
+import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { StreamRouteDetail } from '@/routes/stream_routes/detail.$id';
 import { CommonFormContext } from '@/utils/form-context';
 
@@ -47,4 +48,5 @@ export const Route = createFileRoute(
   '/services/detail/$id/stream_routes/detail/$routeId'
 )({
   component: RouteComponent,
+  errorComponent: StreamRoutesErrorComponent,
 });

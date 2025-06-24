@@ -44,7 +44,7 @@ req.interceptors.request.use((conf) => {
   return conf;
 });
 
-type APISIXRespErr = {
+export type APISIXRespErr = {
   error_msg?: string;
   message?: string;
 };
