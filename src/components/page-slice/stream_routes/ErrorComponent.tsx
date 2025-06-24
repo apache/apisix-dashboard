@@ -28,6 +28,6 @@ export const StreamRoutesErrorComponent = (props: ErrorComponentProps) => {
     if (err.response?.status === 400) {
       return <span>{err.response?.data.error_msg}</span>;
     }
-    return <ErrorComponent {...props} />;
   }
+  return <ErrorComponent {...props} />;
 };
