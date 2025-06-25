@@ -36,6 +36,7 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
+import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
@@ -166,4 +167,5 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/stream_routes/detail/$id')({
   component: RouteComponent,
+  errorComponent: StreamRoutesErrorComponent,
 });

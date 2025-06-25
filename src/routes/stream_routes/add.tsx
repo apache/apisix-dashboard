@@ -30,6 +30,7 @@ import {
 } from '@/components/form-slice/FormPartStreamRoute/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
@@ -101,4 +102,5 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/stream_routes/add')({
   component: RouteComponent,
+  errorComponent: StreamRoutesErrorComponent,
 });
