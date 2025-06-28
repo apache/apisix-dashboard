@@ -36,7 +36,6 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
-import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
 import { API_CONSUMERS } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
@@ -50,7 +49,7 @@ type Props = {
 const ConsumerDetailForm = (props: Props) => {
   const { readOnly, setReadOnly } = props;
   const { t } = useTranslation();
-  const { username } = useParams({ from: '/consumers/detail/$username/' });
+  const { username } = useParams({ from: '/consumers/detail/$username' });
 
   const consumerQuery = useSuspenseQuery(getConsumerQueryOptions(username));
   const { data: consumerData, isLoading, refetch } = consumerQuery;
@@ -110,7 +109,7 @@ const ConsumerDetailForm = (props: Props) => {
 const ConsumerDetailTab = () => {
   const { t } = useTranslation();
   const [readOnly, setReadOnly] = useBoolean(true);
-  const { username } = useParams({ from: '/consumers/detail/$username/' });
+  const { username } = useParams({ from: '/consumers/detail/$username' });
   const navigate = useNavigate();
 
   return (
@@ -146,15 +145,7 @@ const ConsumerDetailTab = () => {
   );
 };
 
-function RouteComponent() {
-  return (
-    <>
-      <DetailCredentialsTabs />
-      <ConsumerDetailTab />
-    </>
-  );
-}
 
 export const Route = createFileRoute('/consumers/detail/$username/')({
-  component: RouteComponent,
+  component: ConsumerDetailTab,
 });
