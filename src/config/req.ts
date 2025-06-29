@@ -17,6 +17,7 @@
 
 import { notifications } from '@mantine/notifications';
 import axios, { AxiosError, type AxiosResponse, HttpStatusCode } from 'axios';
+import { getDefaultStore } from 'jotai';
 import { stringify } from 'qs';
 
 import {
@@ -24,7 +25,7 @@ import {
   API_PREFIX,
   SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
-import { globalStore } from '@/stores/global';
+import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
 
 export const req = axios.create();
 
@@ -40,7 +41,8 @@ req.interceptors.request.use((conf) => {
     });
   };
   conf.baseURL = API_PREFIX;
-  conf.headers.set(API_HEADER_KEY, globalStore.settings.adminKey);
+  const adminKey = getDefaultStore().get(adminKeyAtom);
+  conf.headers.set(API_HEADER_KEY, adminKey);
   return conf;
 });
 
@@ -84,7 +86,7 @@ req.interceptors.response.use(
       });
       // Requires to enter admin key at 401
       if (res.status === HttpStatusCode.Unauthorized) {
-        globalStore.settings.set('isOpen', true);
+        getDefaultStore().set(isSettingsOpenAtom, true);
         return Promise.resolve({ data: {} });
       }
     }

@@ -15,20 +15,23 @@
  * limitations under the License.
  */
 import { Divider, InputWrapper, Modal, Text, TextInput } from '@mantine/core';
+import { useAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
 import { queryClient } from '@/config/global';
-import { globalStore } from '@/stores/global';
+import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
 import { sha } from '~build/git';
 
 const AdminKey = () => {
   const { t } = useTranslation();
+  const [adminKey, setAdminKey] = useAtom(adminKeyAtom);
+
   return (
     <TextInput
       label={t('settings.adminKey')}
-      value={globalStore.settings.adminKey}
+      value={adminKey}
       onChange={(e) => {
-        globalStore.settings.set('adminKey', e.currentTarget.value);
+        setAdminKey(e.currentTarget.value);
         setTimeout(() => {
           queryClient.invalidateQueries();
           queryClient.refetchQueries();
@@ -52,11 +55,12 @@ const UICommitSha = () => {
 
 export const SettingsModal = () => {
   const { t } = useTranslation();
+  const [isSettingsOpen, setIsSettingsOpen] = useAtom(isSettingsOpenAtom);
 
   return (
     <Modal
-      opened={globalStore.settings.isOpen}
-      onClose={() => globalStore.settings.set('isOpen', false)}
+      opened={isSettingsOpen}
+      onClose={() => setIsSettingsOpen(false)}
       centered
       title={t('settings.title')}
     >

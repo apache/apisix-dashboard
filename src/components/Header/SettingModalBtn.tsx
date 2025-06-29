@@ -15,14 +15,17 @@
  * limitations under the License.
  */
 import { ActionIcon } from '@mantine/core';
+import { useSetAtom } from 'jotai';
 
-import { globalStore } from '@/stores/global';
+import { isSettingsOpenAtom } from '@/stores/global';
 import IconSettings from '~icons/material-symbols/settings';
 
 export const SettingModalBtn = () => {
+  const setIsSettingsOpen = useSetAtom(isSettingsOpenAtom);
+
   return (
     <ActionIcon
-      onClick={() => globalStore.settings.set('isOpen', true)}
+      onClick={() => setIsSettingsOpen(true)}
       variant="light"
       size="sm"
     >

@@ -31,6 +31,7 @@
     "fast-clean": "^1.4.0",
     "i18next": "^25.0.1",
     "immer": "^10.1.1",
+    "jotai": "^2.12.5",
     "mobx": "^6.13.7",
     "mobx-persist-store": "^1.1.8",
     "mobx-react-lite": "^4.1.0",
