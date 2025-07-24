@@ -24,7 +24,8 @@ const Consumer = z
     username: z
       .string()
       .min(1)
-      .regex(/^[a-zA-Z0-9_]+$/),
+      // ref: https://github.com/apache/apisix/blob/a2482df74d712228a1a6644662d74d2f51a3f5e6/apisix/schema_def.lua#L713
+      .regex(/^[a-zA-Z0-9_-]+$/),
     plugins: APISIXPlugins.Plugins.optional(),
     group_id: z.string().optional(),
   })
