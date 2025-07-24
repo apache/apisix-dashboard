@@ -32,6 +32,7 @@ import { getRouteQueryOptions } from '@/apis/hooks';
 import { putRouteReq } from '@/apis/routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
+import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
@@ -40,8 +41,6 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
-import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   readOnly: boolean;
@@ -73,8 +72,7 @@ const RouteDetailForm = (props: Props) => {
   }, [routeData, form, isLoading]);
 
   const putRoute = useMutation({
-    mutationFn: (d: APISIXType['Route']) =>
-      putRouteReq(req, pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)),
+    mutationFn: (d: APISIXType['Route']) => putRouteReq(req, produceRoute(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('routes.singular') }),
