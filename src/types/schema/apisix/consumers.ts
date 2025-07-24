@@ -23,8 +23,7 @@ const Consumer = z
   .object({
     username: z
       .string()
-      .min(1)
-      .regex(/^[a-zA-Z0-9_]+$/),
+      .min(1),
     plugins: APISIXPlugins.Plugins.optional(),
     group_id: z.string().optional(),
   })
