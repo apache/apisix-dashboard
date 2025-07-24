@@ -36,11 +36,7 @@ export const produceTime = produce<Partial<APISIXType['Info']>>((draft) => {
   if (draft.update_time) delete draft.update_time;
 });
 
-export const produceRmUpstreamWhenHas = (
-  ...idKeys: ('upstream_id' | 'service_id')[]
-) =>
+export const produceRmUpstreamWhenHas = (idKey: 'upstream_id' | 'service_id') =>
   produce((draft) => {
-    if (idKeys.some((idKey) => draft[idKey]) && isNotEmpty(draft.upstream)) {
-      delete draft.upstream;
-    }
+    if (draft[idKey] && isNotEmpty(draft.upstream)) delete draft.upstream;
   });

@@ -23,7 +23,6 @@ import { useTranslation } from 'react-i18next';
 
 import { postStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
-import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
 import {
   StreamRoutePostSchema,
@@ -34,6 +33,8 @@ import PageHeader from '@/components/page/PageHeader';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
+import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   navigate: (res: APISIXType['RespStreamRouteDetail']) => Promise<void>;
@@ -46,7 +47,10 @@ export const StreamRouteAddForm = (props: Props) => {
 
   const postStreamRoute = useMutation({
     mutationFn: (d: StreamRoutePostType) =>
-      postStreamRouteReq(req, produceRoute(d)),
+      postStreamRouteReq(
+        req,
+        pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)
+      ),
     async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('streamRoutes.singular') }),
