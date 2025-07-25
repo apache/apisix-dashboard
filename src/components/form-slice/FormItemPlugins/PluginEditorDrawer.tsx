@@ -16,9 +16,9 @@
  */
 import { Drawer, Group, Title } from '@mantine/core';
 import { isEmpty } from 'rambdax';
-import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useDeepCompareEffect } from 'react-use';
 
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormItemEditor } from '@/components/form/Editor';
@@ -44,14 +44,14 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
   const methods = useForm<{ config: string }>({
     criteriaMode: 'all',
     disabled: mode === 'view',
-    defaultValues: { config: toConfigStr(plugin) },
+    defaultValues: { config: toConfigStr(config) },
   });
   const handleClose = () => {
     onClose();
     methods.reset();
   };
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     methods.setValue('config', toConfigStr(config));
   }, [config, methods]);
 

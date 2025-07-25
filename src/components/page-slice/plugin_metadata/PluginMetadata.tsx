@@ -161,7 +161,7 @@ export const PluginMetadata = () => {
         schema={toJS(pluginsOb.curPluginSchema)}
         opened={pluginsOb.editorOpened}
         onClose={pluginsOb.closeEditor}
-        plugin={pluginsOb.curPlugin}
+        plugin={toJS(pluginsOb.curPlugin)}
         onSave={pluginsOb.update}
       />
     </Drawer.Stack>
