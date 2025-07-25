@@ -14,18 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { InputWrapper, type InputWrapperProps,Skeleton } from '@mantine/core';
-import { Editor, loader, type Monaco,useMonaco } from '@monaco-editor/react';
+import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
+import { Editor, loader, type Monaco, useMonaco } from '@monaco-editor/react';
 import { editor, Uri } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   type FieldValues,
   useController,
   type UseControllerProps,
   useFormContext,
-  useFormState,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -67,7 +66,8 @@ type FormItemEditorProps<T extends FieldValues> = InputWrapperProps &
     isLoading?: boolean;
     customSchema?: object;
   };
-export const FormItemEditor = <T extends FieldValues>(
+
+const FormItemEditorComponent = <T extends FieldValues>(
   props: FormItemEditorProps<T>
 ) => {
   const { t } = useTranslation();
@@ -76,8 +76,7 @@ export const FormItemEditor = <T extends FieldValues>(
   const { setError, clearErrors } = useFormContext<{
     [name: string]: object;
   }>();
-  const customErrorField = `${props.name}-editor`;
-  const { errors } = useFormState({ name: customErrorField });
+
   const {
     field: { value, onChange: fOnChange, ...restField },
     fieldState,
@@ -91,13 +90,13 @@ export const FormItemEditor = <T extends FieldValues>(
       const markers = monaco?.editor.getModelMarkers({ resource });
       const marker = markers?.[0];
       if (!marker) return false;
-      setError(customErrorField, {
+      setError(props.name, {
         type: 'custom',
         message: marker.message,
       });
       return true;
     },
-    [customErrorField, monaco?.editor, setError]
+    [props.name, monaco?.editor, setError]
   );
 
   useEffect(() => {
@@ -125,15 +124,7 @@ export const FormItemEditor = <T extends FieldValues>(
 
   return (
     <InputWrapper
-      error={
-        fieldState.error?.message ||
-        (errors[customErrorField]?.message as string)
-      }
-      style={{
-        border: '1px solid var(--mantine-color-gray-2)',
-        borderRadius: 'var(--mantine-radius-sm)',
-        position: 'relative',
-      }}
+      error={fieldState.error?.message}
       id="#editor-wrapper"
       {...wrapperProps}
     >
@@ -153,11 +144,8 @@ export const FormItemEditor = <T extends FieldValues>(
         />
       )}
       <Editor
-        beforeMount={(monaco) => {
-          setupMonaco({
-            monaco,
-          });
-        }}
+        wrapperProps={{ className: 'editor-wrapper' }}
+        beforeMount={(monaco) => setupMonaco({ monaco })}
         defaultValue={controllerProps.defaultValue}
         value={value}
         onChange={fOnChange}
@@ -176,9 +164,9 @@ export const FormItemEditor = <T extends FieldValues>(
             try {
               const model = editor.getModel()!;
               JSON.parse(model.getValue());
-              clearErrors(customErrorField);
+              clearErrors(props.name);
             } catch {
-              return setError(customErrorField, {
+              return setError(props.name, {
                 type: 'custom',
                 message: t('form.json.parseError'),
               });
@@ -191,3 +179,5 @@ export const FormItemEditor = <T extends FieldValues>(
     </InputWrapper>
   );
 };
+
+export const FormItemEditor = React.memo(FormItemEditorComponent);
