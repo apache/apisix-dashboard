@@ -36,6 +36,7 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
+import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
 import { API_CREDENTIALS } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
@@ -118,6 +119,7 @@ function RouteComponent() {
 
   return (
     <>
+      <DetailCredentialsTabs />
       <PageHeader
         title={t('info.edit.title', { name: t('credentials.singular') })}
         {...(readOnly && {

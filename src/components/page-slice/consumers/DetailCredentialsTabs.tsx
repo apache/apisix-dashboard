@@ -36,7 +36,9 @@ export const DetailCredentialsTabs = () => {
       },
       {
         value: 'credentials',
-        label: t('sources.credentials'),
+        label: t('info.detail.title', {
+          name: t('credentials.singular'),
+        }),
       },
     ],
     [t]
