@@ -27,7 +27,6 @@ import {
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_CREDENTIALS } from '@/config/constant';
 import { queryClient } from '@/config/global';
@@ -133,7 +132,6 @@ function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <DetailCredentialsTabs />
       <PageHeader title={t('sources.credentials')} />
       <CredentialsList />
     </>

@@ -28,7 +28,6 @@ import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
-import { DetailCredentialsTabs } from '@/components/page-slice/consumers/DetailCredentialsTabs';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
@@ -77,11 +76,11 @@ const CredentialAddForm = () => {
     </FormProvider>
   );
 };
+
 function RouteComponent() {
   const { t } = useTranslation();
   return (
     <>
-      <DetailCredentialsTabs />
       <PageHeader
         title={t('info.add.title', {
           name: t('credentials.singular'),
