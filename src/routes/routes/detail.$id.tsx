@@ -33,6 +33,10 @@ import { putRouteReq } from '@/apis/routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
 import {
+  RoutePutSchema,
+  type RoutePutType,
+} from '@/components/form-slice/FormPartRoute/schema';
+import {
   produceRoute,
   produceVarsToForm,
 } from '@/components/form-slice/FormPartRoute/util';
@@ -43,7 +47,7 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { type APISIXType } from '@/types/schema/apisix';
 
 type Props = {
   readOnly: boolean;
@@ -59,7 +63,7 @@ const RouteDetailForm = (props: Props) => {
   const { data: routeData, isLoading, refetch } = routeQuery;
 
   const form = useForm({
-    resolver: zodResolver(APISIX.Route),
+    resolver: zodResolver(RoutePutSchema),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -77,7 +81,8 @@ const RouteDetailForm = (props: Props) => {
   }, [routeData, form, isLoading]);
 
   const putRoute = useMutation({
-    mutationFn: (d: APISIXType['Route']) => putRouteReq(req, produceRoute(d)),
+    mutationFn: (d: RoutePutType) =>
+      putRouteReq(req, produceRoute(d) as APISIXType['Route']),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('routes.singular') }),

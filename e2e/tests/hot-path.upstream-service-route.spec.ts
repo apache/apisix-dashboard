@@ -22,6 +22,7 @@ import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import {
   uiClearMonacoEditor,
+  uiFillMonacoEditor,
   uiGetMonacoEditor,
   uiHasToastMsg,
 } from '@e2e/utils/ui';
@@ -201,10 +202,10 @@ test('can create upstream -> service -> route', async ({ page }) => {
 
     // Configure the plugin
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const pluginEditor = await uiGetMonacoEditor(page, addPluginDialog);
+    const pluginEditor = await uiGetMonacoEditor(addPluginDialog);
 
     // Clear the editor and add custom configuration
-    await uiClearMonacoEditor(pluginEditor);
+    await uiClearMonacoEditor(page, pluginEditor);
 
     // Add plugin configuration
     await pluginEditor.fill(
@@ -315,11 +316,15 @@ test('can create upstream -> service -> route', async ({ page }) => {
 
     // Configure the plugin
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const pluginEditor = await uiGetMonacoEditor(page, addPluginDialog);
+    const pluginEditor = await uiGetMonacoEditor(addPluginDialog);
 
     // Add plugin configuration
-    await uiClearMonacoEditor(pluginEditor);
-    await pluginEditor.fill(JSON.stringify(route.plugins?.[routePluginName]));
+    await uiClearMonacoEditor(page, pluginEditor);
+    await uiFillMonacoEditor(
+      page,
+      pluginEditor,
+      JSON.stringify(route.plugins?.[routePluginName])
+    );
 
     // Add the plugin
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();

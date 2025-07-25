@@ -16,17 +16,16 @@
  */
 import { produce } from 'immer';
 
-import type { APISIXType } from '@/types/schema/apisix';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
-import type { RoutePostType } from './schema';
+import type { RoutePostType, RoutePutType } from './schema';
 
 export const produceVarsToForm = produce((draft: RoutePostType) => {
   if (draft.vars && Array.isArray(draft.vars)) {
     draft.vars = JSON.stringify(draft.vars);
   }
-}) as (draft: RoutePostType) => APISIXType['Route'];
+}) as (draft: RoutePostType) => RoutePutType;
 
 export const produceVarsToAPI = produce((draft: RoutePostType) => {
   if (draft.vars && typeof draft.vars === 'string') {

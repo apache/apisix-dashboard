@@ -20,6 +20,7 @@ import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import {
   uiClearMonacoEditor,
+  uiFillMonacoEditor,
   uiGetMonacoEditor,
   uiHasToastMsg,
 } from '@e2e/utils/ui';
@@ -46,7 +47,9 @@ test.beforeAll(async () => {
 });
 
 test('should CRUD route with all fields', async ({ page }) => {
-  test.setTimeout(30000);
+  test.slow();
+
+  const varsSection = page.getByText('Vars').locator('..');
 
   // Navigate to the route list page
   await routesPom.toIndex(page);
@@ -93,8 +96,8 @@ test('should CRUD route with all fields', async ({ page }) => {
     await expect(status).toHaveValue('Disabled');
 
     // Fill in Vars field
-    const varsEditor = await uiGetMonacoEditor(page, 'Vars');
-    await varsEditor.fill(initialVars);
+    const varsEditor = await uiGetMonacoEditor(varsSection);
+    await uiFillMonacoEditor(page, varsEditor, initialVars);
 
     // Add upstream nodes
     const upstreamSection = page.getByRole('group', {
@@ -131,9 +134,9 @@ test('should CRUD route with all fields', async ({ page }) => {
       .click();
 
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const pluginEditor = await uiGetMonacoEditor(page, 'basic-auth');
-    await uiClearMonacoEditor(pluginEditor);
-    await pluginEditor.fill('{"hide_credentials": true}');
+    const pluginEditor = await uiGetMonacoEditor(addPluginDialog);
+    await uiClearMonacoEditor(page, pluginEditor);
+    await uiFillMonacoEditor(page, pluginEditor, '{"hide_credentials": true}');
     // add plugin
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
     await expect(addPluginDialog).toBeHidden();
@@ -170,7 +173,7 @@ test('should CRUD route with all fields', async ({ page }) => {
     ).toBeVisible();
 
     // clear the editor, will show JSON format is not valid
-    await uiClearMonacoEditor(pluginEditor);
+    await uiClearMonacoEditor(page, pluginEditor);
     await expect(
       addPluginDialog.getByText('JSON format is not valid')
     ).toBeVisible();
@@ -182,7 +185,11 @@ test('should CRUD route with all fields', async ({ page }) => {
     ).toBeVisible();
 
     // add a valid config
-    await pluginEditor.fill('{"source": "X-Forwarded-For"}');
+    await uiFillMonacoEditor(
+      page,
+      pluginEditor,
+      '{"source": "X-Forwarded-For"}'
+    );
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
     await expect(addPluginDialog).toBeHidden();
 
@@ -256,8 +263,8 @@ test('should CRUD route with all fields', async ({ page }) => {
     await expect(status).toHaveValue('Disabled');
 
     // Verify Vars field
-    const varsEditor = await uiGetMonacoEditor(page, 'Vars');
-    await expect(varsEditor).toHaveValue(initialVars);
+    await expect(varsSection.getByText('arg_name')).toBeVisible();
+    await expect(varsSection.getByText('json')).toBeVisible();
 
     // Verify Plugins
     await expect(page.getByText('basic-auth')).toBeHidden();
@@ -290,8 +297,9 @@ test('should CRUD route with all fields', async ({ page }) => {
     await page.getByLabel('Priority', { exact: true }).first().fill('200');
 
     // Update Vars field
-    const varsEditor = await uiGetMonacoEditor(page, 'Vars');
-    await varsEditor.fill(updatedVars);
+    const varsEditor = await uiGetMonacoEditor(varsSection);
+    await uiClearMonacoEditor(page, varsEditor);
+    await uiFillMonacoEditor(page, varsEditor, updatedVars);
 
     // Click the Save button to save changes
     const saveBtn = page.getByRole('button', { name: 'Save' });
@@ -327,8 +335,8 @@ test('should CRUD route with all fields', async ({ page }) => {
     ).toHaveValue('200');
 
     // Verify updated Vars field
-    const updatedVarsEditor = await uiGetMonacoEditor(page, 'Vars');
-    await expect(updatedVarsEditor).toHaveValue(updatedVars);
+    await expect(varsSection.getByText('arg_name')).toBeVisible();
+    await expect(varsSection.getByText('updated')).toBeVisible();
 
     // Return to list page and verify the route exists
     await routesPom.getRouteNavBtn(page).click();

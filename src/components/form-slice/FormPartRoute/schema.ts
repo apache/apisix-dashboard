@@ -28,3 +28,9 @@ export const RoutePostSchema = APISIX.Route.omit({
 });
 
 export type RoutePostType = z.infer<typeof RoutePostSchema>;
+
+export const RoutePutSchema = APISIX.Route.extend({
+  vars: z.string().optional(),
+});
+
+export type RoutePutType = z.infer<typeof RoutePutSchema>;

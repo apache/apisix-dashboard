@@ -67,26 +67,26 @@ export async function uiFillHTTPStatuses(
  * Helper function to interact with Monaco editor
  * Waits for the editor to load and returns both field and editor elements
  */
-export const uiGetMonacoEditor = async (
-  page: Page,
-  target?: string | Locator
-) => {
-  let block: Locator;
-  if (typeof target === 'string') {
-    const field = page.getByText(target, { exact: true });
-    block = field.locator('..');
-  } else {
-    block = target;
-  }
+export const uiGetMonacoEditor = async (parent: Locator) => {
   // Wait for Monaco editor to load
-  const editorLoading = block.getByTestId('editor-loading');
+  const editorLoading = parent.getByTestId('editor-loading');
   await expect(editorLoading).toBeHidden();
-  const editor = block.getByRole('code').getByRole('textbox');
-  await expect(editor).toBeVisible();
+  const editor = parent.locator('.monaco-editor').first();
+  await expect(editor).toBeVisible({ timeout: 10000 });
   return editor;
 };
 
-export const uiClearMonacoEditor = async (editor: Locator) => {
-  await editor.clear();
-  await editor.fill('');
+export const uiClearMonacoEditor = async (page: Page, editor: Locator) => {
+  await editor.click();
+  await editor.getByRole('textbox').clear();
+};
+
+export const uiFillMonacoEditor = async (
+  page: Page,
+  editor: Locator,
+  value: string
+) => {
+  await editor.click();
+  await editor.pressSequentially(value, { timeout: 10000 });
+  await page.waitForTimeout(300);
 };
