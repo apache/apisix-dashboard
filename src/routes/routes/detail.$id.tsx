@@ -32,7 +32,10 @@ import { getRouteQueryOptions } from '@/apis/hooks';
 import { putRouteReq } from '@/apis/routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
-import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
+import {
+  produceRoute,
+  produceVarsToForm,
+} from '@/components/form-slice/FormPartRoute/util';
 import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
@@ -65,9 +68,11 @@ const RouteDetailForm = (props: Props) => {
 
   useEffect(() => {
     if (routeData?.value && !isLoading) {
-      form.reset(
-        produceToUpstreamForm(routeData.value.upstream || {}, routeData.value)
+      const upstreamProduced = produceToUpstreamForm(
+        routeData.value.upstream || {},
+        routeData.value
       );
+      form.reset(produceVarsToForm(upstreamProduced));
     }
   }, [routeData, form, isLoading]);
 

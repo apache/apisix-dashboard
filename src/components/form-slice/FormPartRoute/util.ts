@@ -14,9 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { produce } from 'immer';
+
+import type { APISIXType } from '@/types/schema/apisix';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
+import type { RoutePostType } from './schema';
+
+export const produceVarsToForm = produce((draft: RoutePostType) => {
+  if (draft.vars && Array.isArray(draft.vars)) {
+    draft.vars = JSON.stringify(draft.vars);
+  }
+}) as (draft: RoutePostType) => APISIXType['Route'];
+
+export const produceVarsToAPI = produce((draft: RoutePostType) => {
+  if (draft.vars && typeof draft.vars === 'string') {
+    draft.vars = JSON.parse(draft.vars);
+  }
+});
+
 export const produceRoute = pipeProduce(
-  produceRmUpstreamWhenHas('service_id', 'upstream_id')
+  produceRmUpstreamWhenHas('service_id', 'upstream_id'),
+  produceVarsToAPI
 );

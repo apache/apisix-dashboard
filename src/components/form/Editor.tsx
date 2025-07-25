@@ -67,7 +67,7 @@ type FormItemEditorProps<T extends FieldValues> = InputWrapperProps &
     customSchema?: object;
   };
 
-const FormItemEditorComponent = <T extends FieldValues>(
+export const FormItemEditor = <T extends FieldValues>(
   props: FormItemEditorProps<T>
 ) => {
   const { t } = useTranslation();
@@ -100,8 +100,15 @@ const FormItemEditorComponent = <T extends FieldValues>(
   );
 
   useEffect(() => {
-    if (!monaco || !customSchema) return;
+    if (!monaco) return;
     setLoading(true);
+
+    // when markers change, show error
+    monaco.editor.onDidChangeMarkers(([uri]) => {
+      showErrOnMarkers(uri);
+    });
+
+    if (!customSchema) return setLoading(false);
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       schemas: [
@@ -113,10 +120,6 @@ const FormItemEditorComponent = <T extends FieldValues>(
       ],
       trailingCommas: 'error',
       enableSchemaRequest: false,
-    });
-    // when markers change, show error
-    monaco.editor.onDidChangeMarkers(([uri]) => {
-      showErrOnMarkers(uri);
     });
 
     setLoading(false);
@@ -144,7 +147,11 @@ const FormItemEditorComponent = <T extends FieldValues>(
         />
       )}
       <Editor
-        wrapperProps={{ className: 'editor-wrapper' }}
+        wrapperProps={{
+          className: `editor-wrapper ${
+            restField.disabled ? 'editor-wrapper--disabled' : ''
+          }`.trim(),
+        }}
         beforeMount={(monaco) => setupMonaco({ monaco })}
         defaultValue={controllerProps.defaultValue}
         value={value}
@@ -179,5 +186,3 @@ const FormItemEditorComponent = <T extends FieldValues>(
     </InputWrapper>
   );
 };
-
-export const FormItemEditor = React.memo(FormItemEditorComponent);
