@@ -31,6 +31,7 @@ import { useBoolean } from 'react-use';
 import { getStreamRouteQueryOptions } from '@/apis/hooks';
 import { putStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
+import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
@@ -40,8 +41,6 @@ import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_route
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
-import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   readOnly: boolean;
@@ -72,10 +71,7 @@ const StreamRouteDetailForm = (props: Props) => {
 
   const putStreamRoute = useMutation({
     mutationFn: (d: APISIXType['StreamRoute']) =>
-      putStreamRouteReq(
-        req,
-        pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)
-      ),
+      putStreamRouteReq(req, produceRoute(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('streamRoutes.singular') }),
