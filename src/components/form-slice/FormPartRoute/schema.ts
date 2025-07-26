@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { z } from 'zod';
+
+import { z } from 'zod';
 
 import { APISIX } from '@/types/schema/apisix';
 
@@ -22,6 +23,14 @@ export const RoutePostSchema = APISIX.Route.omit({
   id: true,
   create_time: true,
   update_time: true,
+}).extend({
+  vars: z.string().optional(),
 });
 
 export type RoutePostType = z.infer<typeof RoutePostSchema>;
+
+export const RoutePutSchema = APISIX.Route.extend({
+  vars: z.string().optional(),
+});
+
+export type RoutePutType = z.infer<typeof RoutePutSchema>;

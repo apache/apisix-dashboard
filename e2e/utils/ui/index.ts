@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 import type { CommonPOM } from '@e2e/pom/type';
-import { type Monaco } from '@monaco-editor/react';
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { FileRouteTypes } from '@/routeTree.gen';
@@ -64,10 +63,30 @@ export async function uiFillHTTPStatuses(
   }
 }
 
-export async function uiClearEditor(page: Page) {
-  await page.evaluate(() => {
-    (window as unknown as { monaco?: Monaco })?.monaco?.editor
-      ?.getEditors()[0]
-      ?.setValue('');
-  });
+/**
+ * Helper function to interact with Monaco editor
+ * Waits for the editor to load and returns both field and editor elements
+ */
+export const uiGetMonacoEditor = async (parent: Locator) => {
+  // Wait for Monaco editor to load
+  const editorLoading = parent.getByTestId('editor-loading');
+  await expect(editorLoading).toBeHidden();
+  const editor = parent.locator('.monaco-editor').first();
+  await expect(editor).toBeVisible({ timeout: 10000 });
+  return editor;
+};
+
+export const uiClearMonacoEditor = async (page: Page, editor: Locator) => {
+  await editor.click();
+  await editor.getByRole('textbox').clear();
+};
+
+export const uiFillMonacoEditor = async (
+  page: Page,
+  editor: Locator,
+  value: string
+) => {
+  await editor.click();
+  await editor.pressSequentially(value, { timeout: 10000 });
+  await page.waitForTimeout(300);
 };

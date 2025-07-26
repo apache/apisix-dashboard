@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Group,Skeleton } from '@mantine/core';
+import { Button, Group, Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -32,7 +32,14 @@ import { getRouteQueryOptions } from '@/apis/hooks';
 import { putRouteReq } from '@/apis/routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
-import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
+import {
+  RoutePutSchema,
+  type RoutePutType,
+} from '@/components/form-slice/FormPartRoute/schema';
+import {
+  produceRoute,
+  produceVarsToForm,
+} from '@/components/form-slice/FormPartRoute/util';
 import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
@@ -40,7 +47,7 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
-import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { type APISIXType } from '@/types/schema/apisix';
 
 type Props = {
   readOnly: boolean;
@@ -56,7 +63,7 @@ const RouteDetailForm = (props: Props) => {
   const { data: routeData, isLoading, refetch } = routeQuery;
 
   const form = useForm({
-    resolver: zodResolver(APISIX.Route),
+    resolver: zodResolver(RoutePutSchema),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
@@ -65,14 +72,17 @@ const RouteDetailForm = (props: Props) => {
 
   useEffect(() => {
     if (routeData?.value && !isLoading) {
-      form.reset(
-        produceToUpstreamForm(routeData.value.upstream || {}, routeData.value)
+      const upstreamProduced = produceToUpstreamForm(
+        routeData.value.upstream || {},
+        routeData.value
       );
+      form.reset(produceVarsToForm(upstreamProduced));
     }
   }, [routeData, form, isLoading]);
 
   const putRoute = useMutation({
-    mutationFn: (d: APISIXType['Route']) => putRouteReq(req, produceRoute(d)),
+    mutationFn: (d: RoutePutType) =>
+      putRouteReq(req, produceRoute(d) as APISIXType['Route']),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('routes.singular') }),

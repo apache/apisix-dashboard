@@ -20,7 +20,12 @@ import { upstreamsPom } from '@e2e/pom/upstreams';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
-import { uiClearEditor, uiHasToastMsg } from '@e2e/utils/ui';
+import {
+  uiClearMonacoEditor,
+  uiFillMonacoEditor,
+  uiGetMonacoEditor,
+  uiHasToastMsg,
+} from '@e2e/utils/ui';
 import { expect } from '@playwright/test';
 
 import { deleteAllRoutes } from '@/apis/routes';
@@ -197,15 +202,15 @@ test('can create upstream -> service -> route', async ({ page }) => {
 
     // Configure the plugin
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const editorLoading = addPluginDialog.getByTestId('editor-loading');
-    await expect(editorLoading).toBeHidden();
+    const pluginEditor = await uiGetMonacoEditor(addPluginDialog);
 
     // Clear the editor and add custom configuration
-    const editor = addPluginDialog.getByRole('code').getByRole('textbox');
-    await uiClearEditor(page);
+    await uiClearMonacoEditor(page, pluginEditor);
 
     // Add plugin configuration
-    await editor.fill(JSON.stringify(service.plugins?.[servicePluginName]));
+    await pluginEditor.fill(
+      JSON.stringify(service.plugins?.[servicePluginName])
+    );
 
     // Add the plugin
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
@@ -311,15 +316,15 @@ test('can create upstream -> service -> route', async ({ page }) => {
 
     // Configure the plugin
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const editorLoading = addPluginDialog.getByTestId('editor-loading');
-    await expect(editorLoading).toBeHidden();
-
-    // Clear the editor and add custom configuration
-    const editor = addPluginDialog.getByRole('code').getByRole('textbox');
-    await uiClearEditor(page);
+    const pluginEditor = await uiGetMonacoEditor(addPluginDialog);
 
     // Add plugin configuration
-    await editor.fill(JSON.stringify(route.plugins?.[routePluginName]));
+    await uiClearMonacoEditor(page, pluginEditor);
+    await uiFillMonacoEditor(
+      page,
+      pluginEditor,
+      JSON.stringify(route.plugins?.[routePluginName])
+    );
 
     // Add the plugin
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
