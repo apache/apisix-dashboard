@@ -14,30 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { action, observable } from 'mobx';
-import { makePersistable } from 'mobx-persist-store';
+import { atom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 
-/** allow store use `set(key, value)` */
-const set = action(function <T, K extends keyof T>(
-  this: T,
-  key: K extends 'set' ? never : K,
-  value: T[K]
-) {
-  this[key as K] = value;
-});
+// Admin key with persistent storage
+export const adminKeyAtom = atomWithStorage<string>(
+  'settings:adminKey',
+  '',
+  undefined,
+  {
+    getOnInit: true,
+  }
+);
 
-const settingsStore = observable({
-  set,
-  isOpen: false,
-  adminKey: '',
-});
-
-export const globalStore = observable({
-  settings: settingsStore,
-});
-
-makePersistable(settingsStore, {
-  name: 'settings',
-  properties: ['adminKey'],
-  storage: window.localStorage,
-});
+// Settings modal visibility state
+export const isSettingsOpenAtom = atom<boolean>(false);
