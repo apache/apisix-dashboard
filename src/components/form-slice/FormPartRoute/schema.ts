@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { z } from 'zod';
 
 import { APISIX } from '@/types/schema/apisix';
@@ -24,6 +23,9 @@ export const RoutePostSchema = APISIX.Route.omit({
   create_time: true,
   update_time: true,
 }).extend({
+  // the FormItemEditor (monaco) is for editing text,
+  // and passing the original schema of `vars` for validation
+  // is not in line with this usage.
   vars: z.string().optional(),
 });
 

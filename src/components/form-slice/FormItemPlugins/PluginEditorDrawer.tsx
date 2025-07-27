@@ -44,9 +44,7 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
   const methods = useForm<{ config: string }>({
     criteriaMode: 'all',
     disabled: mode === 'view',
-    defaultValues: {
-      config: toConfigStr(config),
-    },
+    defaultValues: { config: toConfigStr(config) },
   });
   const handleClose = () => {
     onClose();
