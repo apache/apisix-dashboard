@@ -28,7 +28,6 @@
   background-color: var(--mantine-color-gray-0);
   border-color: var(--mantine-color-gray-3);
   cursor: not-allowed !important;
-  
 
   &:focus-within {
     border-color: var(--mantine-color-gray-3);
