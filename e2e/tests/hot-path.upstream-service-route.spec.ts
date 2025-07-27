@@ -21,7 +21,6 @@ import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import {
-  uiClearMonacoEditor,
   uiFillMonacoEditor,
   uiGetMonacoEditor,
   uiHasToastMsg,
@@ -144,7 +143,7 @@ test('can create upstream -> service -> route', async ({ page }) => {
    * Plugins: Enable limit-count with custom configuration
    */
   const servicePluginName = 'limit-count';
-  const service: Partial<APISIXType['Service']> = {
+  const service = {
     // will be set in test
     id: undefined,
     name: randomId('HTTPBIN Service'),
@@ -155,9 +154,10 @@ test('can create upstream -> service -> route', async ({ page }) => {
         time_window: 60,
         rejected_code: 429,
         key: 'remote_addr',
+        policy: 'local',
       },
     },
-  };
+  } satisfies Partial<APISIXType['Service']>;
   await test.step('create service', async () => {
     // upstream id should be set
     expect(service.upstream_id).not.toBeUndefined();
@@ -202,13 +202,12 @@ test('can create upstream -> service -> route', async ({ page }) => {
 
     // Configure the plugin
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const pluginEditor = await uiGetMonacoEditor(addPluginDialog);
-
-    // Clear the editor and add custom configuration
-    await uiClearMonacoEditor(page, pluginEditor);
+    const pluginEditor = await uiGetMonacoEditor(page, addPluginDialog);
 
     // Add plugin configuration
-    await pluginEditor.fill(
+    await uiFillMonacoEditor(
+      page,
+      pluginEditor,
       JSON.stringify(service.plugins?.[servicePluginName])
     );
 
@@ -316,10 +315,9 @@ test('can create upstream -> service -> route', async ({ page }) => {
 
     // Configure the plugin
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const pluginEditor = await uiGetMonacoEditor(addPluginDialog);
+    const pluginEditor = await uiGetMonacoEditor(page, addPluginDialog);
 
     // Add plugin configuration
-    await uiClearMonacoEditor(page, pluginEditor);
     await uiFillMonacoEditor(
       page,
       pluginEditor,

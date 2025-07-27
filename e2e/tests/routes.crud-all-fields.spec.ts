@@ -96,7 +96,7 @@ test('should CRUD route with all fields', async ({ page }) => {
     await expect(status).toHaveValue('Disabled');
 
     // Fill in Vars field
-    const varsEditor = await uiGetMonacoEditor(varsSection);
+    const varsEditor = await uiGetMonacoEditor(page, varsSection);
     await uiFillMonacoEditor(page, varsEditor, initialVars);
 
     // Add upstream nodes
@@ -134,8 +134,7 @@ test('should CRUD route with all fields', async ({ page }) => {
       .click();
 
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const pluginEditor = await uiGetMonacoEditor(addPluginDialog);
-    await uiClearMonacoEditor(page, pluginEditor);
+    const pluginEditor = await uiGetMonacoEditor(page, addPluginDialog);
     await uiFillMonacoEditor(page, pluginEditor, '{"hide_credentials": true}');
     // add plugin
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
@@ -297,8 +296,7 @@ test('should CRUD route with all fields', async ({ page }) => {
     await page.getByLabel('Priority', { exact: true }).first().fill('200');
 
     // Update Vars field
-    const varsEditor = await uiGetMonacoEditor(varsSection);
-    await uiClearMonacoEditor(page, varsEditor);
+    const varsEditor = await uiGetMonacoEditor(page, varsSection);
     await uiFillMonacoEditor(page, varsEditor, updatedVars);
 
     // Click the Save button to save changes
