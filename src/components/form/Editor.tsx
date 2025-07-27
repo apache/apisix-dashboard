@@ -125,7 +125,7 @@ export const FormItemEditor = <T extends FieldValues>(
     });
 
     setLoading(false);
-  }, [monaco, customSchema, trigger, props.name]);
+  }, [monaco, customSchema]);
 
   return (
     <InputWrapper
