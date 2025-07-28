@@ -18,6 +18,7 @@ import { Divider, InputWrapper } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { FormItemEditor } from '@/components/form/Editor';
 import { FormItemNumberInput } from '@/components/form/NumberInput';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
@@ -94,7 +95,7 @@ const FormSectionMatchRules = () => {
         name="remote_addrs"
         label={t('form.routes.remoteAddrs')}
       />
-      <FormItemTagsInput
+      <FormItemEditor
         control={control}
         name="vars"
         label={t('form.routes.vars')}

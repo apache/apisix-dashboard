@@ -18,7 +18,12 @@ import { routesPom } from '@e2e/pom/routes';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
-import { uiClearEditor, uiHasToastMsg } from '@e2e/utils/ui';
+import {
+  uiClearMonacoEditor,
+  uiFillMonacoEditor,
+  uiGetMonacoEditor,
+  uiHasToastMsg,
+} from '@e2e/utils/ui';
 import { uiFillUpstreamAllFields } from '@e2e/utils/ui/upstreams';
 import { expect } from '@playwright/test';
 
@@ -33,13 +38,18 @@ const nodes: APISIXType['UpstreamNode'][] = [
   { host: 'test.com', port: 80, weight: 100 },
   { host: 'test2.com', port: 80, weight: 100 },
 ];
+// Define vars values for testing
+const initialVars = '[["arg_name", "==", "json"], ["arg_age", ">", 18]]';
+const updatedVars = '[["arg_name", "==", "updated"], ["arg_age", ">", 21]]';
 
 test.beforeAll(async () => {
   await deleteAllRoutes(e2eReq);
 });
 
 test('should CRUD route with all fields', async ({ page }) => {
-  test.setTimeout(30000);
+  test.slow();
+
+  const varsSection = page.getByText('Vars').locator('..');
 
   // Navigate to the route list page
   await routesPom.toIndex(page);
@@ -85,6 +95,10 @@ test('should CRUD route with all fields', async ({ page }) => {
     await page.getByRole('option', { name: 'Disabled' }).click();
     await expect(status).toHaveValue('Disabled');
 
+    // Fill in Vars field
+    const varsEditor = await uiGetMonacoEditor(page, varsSection);
+    await uiFillMonacoEditor(page, varsEditor, initialVars);
+
     // Add upstream nodes
     const upstreamSection = page.getByRole('group', {
       name: 'Upstream',
@@ -120,11 +134,8 @@ test('should CRUD route with all fields', async ({ page }) => {
       .click();
 
     const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
-    const editorLoading = addPluginDialog.getByTestId('editor-loading');
-    await expect(editorLoading).toBeHidden();
-    const editor = addPluginDialog.getByRole('code').getByRole('textbox');
-    await uiClearEditor(page);
-    await editor.fill('{"hide_credentials": true}');
+    const pluginEditor = await uiGetMonacoEditor(page, addPluginDialog);
+    await uiFillMonacoEditor(page, pluginEditor, '{"hide_credentials": true}');
     // add plugin
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
     await expect(addPluginDialog).toBeHidden();
@@ -135,7 +146,6 @@ test('should CRUD route with all fields', async ({ page }) => {
 
     // should show edit plugin dialog
     const editPluginDialog = page.getByRole('dialog', { name: 'Edit Plugin' });
-    await expect(editorLoading).toBeHidden();
 
     await expect(editPluginDialog.getByText('hide_credentials')).toBeVisible();
     // save edit plugin dialog
@@ -157,13 +167,12 @@ test('should CRUD route with all fields', async ({ page }) => {
     // real-ip need config, otherwise it will show an error
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
     await expect(addPluginDialog).toBeVisible();
-    await expect(editorLoading).toBeHidden();
     await expect(
       addPluginDialog.getByText('Missing property "source"')
     ).toBeVisible();
 
     // clear the editor, will show JSON format is not valid
-    await uiClearEditor(page);
+    await uiClearMonacoEditor(page, pluginEditor);
     await expect(
       addPluginDialog.getByText('JSON format is not valid')
     ).toBeVisible();
@@ -175,7 +184,11 @@ test('should CRUD route with all fields', async ({ page }) => {
     ).toBeVisible();
 
     // add a valid config
-    await editor.fill('{"source": "X-Forwarded-For"}');
+    await uiFillMonacoEditor(
+      page,
+      pluginEditor,
+      '{"source": "X-Forwarded-For"}'
+    );
     await addPluginDialog.getByRole('button', { name: 'Add' }).click();
     await expect(addPluginDialog).toBeHidden();
 
@@ -183,7 +196,6 @@ test('should CRUD route with all fields', async ({ page }) => {
     const realIpPlugin = page.getByTestId('plugin-real-ip');
     await realIpPlugin.getByRole('button', { name: 'Edit' }).click();
     await expect(editPluginDialog).toBeVisible();
-    await expect(editorLoading).toBeHidden();
     await expect(editPluginDialog.getByText('X-Forwarded-For')).toBeVisible();
     // close
     await editPluginDialog.getByRole('button', { name: 'Save' }).click();
@@ -249,6 +261,10 @@ test('should CRUD route with all fields', async ({ page }) => {
     const status = page.getByRole('textbox', { name: 'Status', exact: true });
     await expect(status).toHaveValue('Disabled');
 
+    // Verify Vars field
+    await expect(varsSection.getByText('arg_name')).toBeVisible();
+    await expect(varsSection.getByText('json')).toBeVisible();
+
     // Verify Plugins
     await expect(page.getByText('basic-auth')).toBeHidden();
     await expect(page.getByText('real-ip')).toBeVisible();
@@ -278,6 +294,10 @@ test('should CRUD route with all fields', async ({ page }) => {
 
     // Update Priority
     await page.getByLabel('Priority', { exact: true }).first().fill('200');
+
+    // Update Vars field
+    const varsEditor = await uiGetMonacoEditor(page, varsSection);
+    await uiFillMonacoEditor(page, varsEditor, updatedVars);
 
     // Click the Save button to save changes
     const saveBtn = page.getByRole('button', { name: 'Save' });
@@ -311,6 +331,10 @@ test('should CRUD route with all fields', async ({ page }) => {
     await expect(
       page.getByLabel('Priority', { exact: true }).first()
     ).toHaveValue('200');
+
+    // Verify updated Vars field
+    await expect(varsSection.getByText('arg_name')).toBeVisible();
+    await expect(varsSection.getByText('updated')).toBeVisible();
 
     // Return to list page and verify the route exists
     await routesPom.getRouteNavBtn(page).click();
