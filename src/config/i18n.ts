@@ -37,6 +37,7 @@ i18n.use(initReactI18next).init({
   ns: ['common'],
   defaultNS,
   resources,
+  fallbackLng: 'en',
 });
 
 export default i18n;
