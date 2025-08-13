@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
-import { Editor, loader, type Monaco, useMonaco } from '@monaco-editor/react';
+import { Editor, loader,useMonaco } from '@monaco-editor/react';
 import clsx from 'clsx';
-import { editor } from 'monaco-editor';
+import * as monaco from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -31,12 +31,9 @@ import { useTranslation } from 'react-i18next';
 
 import { genControllerProps } from './util';
 
-type SetupMonacoProps = {
-  monaco: Monaco;
-};
-
-const setupMonaco = ({ monaco }: SetupMonacoProps) => {
-  window.MonacoEnvironment = {
+// #region Monaco Editor Setup
+const initializeMonacoEditor = () => {
+  self.MonacoEnvironment = {
     getWorker(_, label) {
       if (label === 'json') {
         return new jsonWorker();
@@ -45,10 +42,13 @@ const setupMonaco = ({ monaco }: SetupMonacoProps) => {
     },
   };
   loader.config({ monaco });
-  return loader.init();
+  loader.init();
 };
 
-const options: editor.IStandaloneEditorConstructionOptions = {
+initializeMonacoEditor();
+// #endregion
+
+const options: monaco.editor.IStandaloneEditorConstructionOptions = {
   minimap: { enabled: false },
   contextmenu: false,
   lineNumbersMinChars: 3,
@@ -106,8 +106,8 @@ export const FormItemEditor = <T extends FieldValues>(
   const [internalLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!monaco) return;
     setLoading(true);
+    if (!monaco) return;
 
     const schemas = [];
     if (customSchema) {
@@ -155,7 +155,6 @@ export const FormItemEditor = <T extends FieldValues>(
             restField.disabled && 'editor-wrapper--disabled'
           ),
         }}
-        beforeMount={(monaco) => setupMonaco({ monaco })}
         defaultValue={controllerProps.defaultValue}
         value={value}
         onChange={fOnChange}
