@@ -15,11 +15,8 @@
  * limitations under the License.
  */
 import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
-import { Editor, loader, useMonaco } from '@monaco-editor/react';
+import { Editor } from '@monaco-editor/react';
 import clsx from 'clsx';
-import * as monaco from 'monaco-editor';
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   type FieldValues,
@@ -29,24 +26,11 @@ import {
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { monaco, setupMonacoEditor } from '@/utils/monaco';
+
 import { genControllerProps } from './util';
 
-// #region Monaco Editor Setup
-const initializeMonacoEditor = () => {
-  self.MonacoEnvironment = {
-    getWorker(_, label) {
-      if (label === 'json') {
-        return new jsonWorker();
-      }
-      return new editorWorker();
-    },
-  };
-  loader.config({ monaco });
-  loader.init();
-};
-
-initializeMonacoEditor();
-// #endregion
+setupMonacoEditor();
 
 const options: monaco.editor.IStandaloneEditorConstructionOptions = {
   minimap: { enabled: false },
@@ -102,12 +86,10 @@ export const FormItemEditor = <T extends FieldValues>(
     fieldState,
   } = useController<T>(enhancedControllerProps);
 
-  const monaco = useMonaco();
   const [internalLoading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    if (!monaco) return;
 
     const schemas = [];
     if (customSchema) {
@@ -125,7 +107,7 @@ export const FormItemEditor = <T extends FieldValues>(
     });
 
     setLoading(false);
-  }, [monaco, customSchema]);
+  }, [customSchema]);
 
   return (
     <InputWrapper
