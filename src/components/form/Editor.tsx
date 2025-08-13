@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
-import { Editor, loader,useMonaco } from '@monaco-editor/react';
+import { Editor, loader, useMonaco } from '@monaco-editor/react';
 import clsx from 'clsx';
 import * as monaco from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
