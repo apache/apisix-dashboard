@@ -16,7 +16,7 @@
  */
 import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
 import { Editor, loader, type Monaco, useMonaco } from '@monaco-editor/react';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { editor } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
