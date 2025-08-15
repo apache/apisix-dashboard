@@ -1,0 +1,368 @@
+{
+  "apisix": {
+    "dashboard": "APISIX Dashboard",
+    "logo": "APISIX Logo"
+  },
+  "consumerGroups": {
+    "singular": "Konsumenten-Gruppe"
+  },
+  "consumers": {
+    "singular": "Konsument"
+  },
+  "credentials": {
+    "singular": "Anmeldeinformation"
+  },
+  "form": {
+    "basic": {
+      "desc": "Beschreibung",
+      "labels": {
+        "errorFormat": "Das Format des Labels ist falsch, es sollte `key:value` sein",
+        "key": "Key",
+        "placeholder": "Text wie `key:value` eingeben, dann mit Enter oder Fokus verlassen",
+        "title": "Labels",
+        "value": "Wert"
+      },
+      "name": "Name",
+      "status": "Status",
+      "statusOption": {
+        "0": "Deaktiviert",
+        "1": "Aktiviert"
+      },
+      "title": "Basisinformation"
+    },
+    "btn": {
+      "add": "Hinzufügen",
+      "addARow": "Zeile hinzufügen",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "edit": "Bearbeiten",
+      "save": "Speichern",
+      "upload": "Hochladen",
+      "view": "Anzeigen"
+    },
+    "consumers": {
+      "groupId": "Gruppen ID",
+      "username": "Benutzername"
+    },
+    "disabled": "Deaktiviert, zum Aktivieren Schalter klicken",
+    "general": {
+      "title": "Allgemein"
+    },
+    "info": {
+      "create_time": "Erstellt am",
+      "id": "ID",
+      "title": "Information",
+      "update_time": "Geändert am"
+    },
+    "json": {
+      "parseError": "JSON Format ist ungültig"
+    },
+    "plugins": {
+      "addPlugin": "Plugin hinzufügen",
+      "configId": "Plugin-Konfigurations-ID",
+      "editPlugin": "Plugin bearbeiten",
+      "label": "Plugins",
+      "searchForSelectedPlugins": "Nach ausgewählten Plugins suchen",
+      "selectPlugins": {
+        "title": "Plugins auswählen"
+      },
+      "viewPlugin": "Plugin anzeigen"
+    },
+    "protos": {
+      "content": "Inhalt",
+      "contentPlaceholder": "Datei {{fileTypes}} einfügen oder hochladen"
+    },
+    "routes": {
+      "enableWebsocket": "WebSocket aktivieren",
+      "filterFunc": "Filterfunktion",
+      "host": "Host",
+      "hosts": "Hosts",
+      "matchRules": "Übereinstimmungsregeln",
+      "methods": "HTTP Methoden",
+      "priority": "Priorität",
+      "remoteAddr": "Remote Adresse",
+      "remoteAddrs": "Remote Adressen",
+      "service": "Service",
+      "uri": "URI",
+      "uris": "URIs",
+      "vars": "Variablen"
+    },
+    "search": "Suche",
+    "secrets": {
+      "aws": {
+        "access_key_id": "Access Key ID",
+        "endpoint_url": "Endpoint URL",
+        "region": "Region",
+        "secret_access_key": "Secret Access Key",
+        "session_token": "Session Token"
+      },
+      "gcp": {
+        "auth": "Auth",
+        "auth_config": "Auth Konfiguration",
+        "auth_file": "Auth Datei",
+        "client_email": "Client E-Mail",
+        "entries_uri": "Einträge URI",
+        "private_key": "Private Key",
+        "project_id": "Projekt ID",
+        "scope": "Scope",
+        "ssl_verify": "SSL Überprüfung",
+        "token_uri": "Token URI"
+      },
+      "manager": "Secret Manager",
+      "managerConfig": "Manager Konfiguration",
+      "title": "Secret Konfiguration",
+      "vault": {
+        "namespace": "Namespace",
+        "prefix": "Präfix",
+        "token": "Token",
+        "uri": "URI"
+      }
+    },
+    "services": {
+      "enableWebsocket": "WebSocket aktivieren",
+      "hosts": "Hosts",
+      "script": "Skript",
+      "settings": "Service Einstellungen"
+    },
+    "ssls": {
+      "cert": "Zertifikat",
+      "cert_key_list": {
+        "add": "Paar hinzufügen",
+        "delete": "Paar löschen",
+        "title": "Zertifikate und Schlüsselpaare"
+      },
+      "client": {
+        "ca": "Client CA Zertifikate",
+        "depth": "Verifikationstiefe",
+        "skipMtlsUriRegex": "mTLS URI-Regex überspringen",
+        "title": "Client"
+      },
+      "key": "Private Key",
+      "sni": "SNI",
+      "snis": "SNIs",
+      "ssl_protocols": "SSL Protokolle",
+      "type": "Zertifikatstyp"
+    },
+    "streamRoutes": {
+      "protocol": {
+        "conf": "Konfiguration",
+        "logger": "Logger",
+        "name": "Protokollname",
+        "superiorId": "Übergeordnete ID",
+        "title": "Protokollinformation"
+      },
+      "remoteAddr": "Remote Adresse",
+      "server": "Server",
+      "serverAddr": "Server Adresse",
+      "serverPort": "Server Port",
+      "sni": "SNI"
+    },
+    "tagsInput": {
+      "placeholder": "Text eingeben, dann mit Enter oder Fokus verlassen"
+    },
+    "upload": {
+      "fileOverSize": "Dateigrösse ist zu gross",
+      "readError": "Dateilesefehler:"
+    },
+    "upstreams": {
+      "checks": {
+        "active": {
+          "concurrency": "Concurrency",
+          "healthy": {
+            "http_statuses": "HTTP Status",
+            "interval": "Intervall",
+            "successes": "Erfolgreiche",
+            "title": "Healthy"
+          },
+          "host": "Host",
+          "http_path": "HTTP Pfad",
+          "http_request_headers": "HTTP Request Headers",
+          "https_verify_certificate": "HTTPS Zertifikat überprüfen",
+          "port": "Port",
+          "timeout": "Timeout",
+          "title": "Aktiv",
+          "type": "Typ",
+          "unhealthy": {
+            "http_failures": "HTTP Fehler",
+            "http_statuses": "HTTP Status",
+            "interval": "Intervall",
+            "tcp_failures": "TCP Fehler",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          }
+        },
+        "passive": {
+          "healthy": {
+            "http_statuses": "HTTP Status",
+            "successes": "Erfolgreiche",
+            "title": "Healthy"
+          },
+          "title": "Passiv",
+          "type": "Typ",
+          "unhealthy": {
+            "http_failures": "HTTP Fehler",
+            "http_statuses": "HTTP Status",
+            "tcp_failures": "TCP Fehler",
+            "timeouts": "Timeouts",
+            "title": "Unhealthy"
+          }
+        },
+        "title": "Health Checks"
+      },
+      "connectionConfiguration": "Verbindungskonfiguration",
+      "discoveryArgs": {
+        "title": "Discovery Argumente"
+      },
+      "discoveryType": {
+        "title": "Discovery Typ"
+      },
+      "findUpstreamFrom": "Upstream finden von",
+      "hashOn": "Hash auf",
+      "hashOnDesc": "Gültig, wenn Typ den Wert `chash` hat",
+      "identifier": "Upstream Identifikator",
+      "inline": "Inline Upstream Konfiguration",
+      "keepalivePool": {
+        "idleTimeout": "IDLE Timeout",
+        "requests": "Requests",
+        "size": "Grösse",
+        "title": "Keepalive Pool"
+      },
+      "key": "Key",
+      "keyDesc": "Gültig, wenn Typ den Wert `chash` hat",
+      "loadBalancing": "Load Balancing",
+      "nodes": {
+        "action": {
+          "title": "Aktion"
+        },
+        "add": "Node hinzufügen",
+        "host": {
+          "title": "Host"
+        },
+        "port": {
+          "title": "Port"
+        },
+        "priority": {
+          "title": "Priorität"
+        },
+        "title": "Nodes",
+        "weight": {
+          "title": "Gewicht"
+        }
+      },
+      "passHost": "Host übergeben",
+      "retries": "Wiederholungen",
+      "retry": "Wiederholen",
+      "retryTimeout": "Retry Timeout",
+      "scheme": "Schema",
+      "serviceDiscovery": {
+        "serviceName": "Service Name",
+        "title": "Service Discovery"
+      },
+      "serviceId": "Service ID",
+      "serviceName": {
+        "title": "Service Name"
+      },
+      "timeout": {
+        "connect": "Verbinden",
+        "read": "Lesen",
+        "send": "Senden",
+        "title": "Timeout"
+      },
+      "title": "Upstream",
+      "tls": {
+        "clientCert": "Client Zertifikat",
+        "clientCertId": "Client Zertifikat ID",
+        "clientCertKeyPair": "Client-Zertifikatschlüsselpaar",
+        "clientKey": "Client Key",
+        "title": "TLS",
+        "verify": "Überprüfen"
+      },
+      "type": "Typ",
+      "updateTime": "Aktualisierungszeit",
+      "upstreamHost": "Upstream Host",
+      "upstreamHostDesc": "Setzen Sie dies, wenn `pass_host` den Wert `rewrite` hat",
+      "upstreamId": "Upstream ID"
+    }
+  },
+  "globalRules": {
+    "singular": "Globale Regel"
+  },
+  "help-us-translate": "Helfen Sie uns übersetzen!",
+  "info": {
+    "add": {
+      "success": "{{name}} erfolgreich hinzugefügt",
+      "title": "{{name}} hinzufügen"
+    },
+    "delete": {
+      "content": "Möchten Sie {{name}} löschen?",
+      "success": "{{name}} erfolgreich gelöscht",
+      "title": "{{name}} löschen"
+    },
+    "detail": {
+      "title": "{{name}} Detail"
+    },
+    "edit": {
+      "success": "{{name}} erfolgreich bearbeitet",
+      "title": "{{name}} bearbeiten"
+    }
+  },
+  "mark": {
+    "question": "?"
+  },
+  "noData": "Keine Daten",
+  "or": "ODER",
+  "pluginConfigs": {
+    "singular": "Plugin Konfiguration"
+  },
+  "pluginMetadata": {
+    "search": "Plugin Metadaten durchsuchen",
+    "singular": "Plugin Metadaten"
+  },
+  "protos": {
+    "singular": "Proto"
+  },
+  "routes": {
+    "singular": "Route"
+  },
+  "seconds": "Sekunden",
+  "secrets": {
+    "singular": "Secret"
+  },
+  "services": {
+    "singular": "Service"
+  },
+  "settings": {
+    "adminKey": "Admin Key",
+    "title": "Einstellungen",
+    "ui-commit-sha": "UI Commit SHA"
+  },
+  "sources": {
+    "consumerGroups": "Konsumenten-Gruppen",
+    "consumers": "Konsumenten",
+    "credentials": "Anmeldeinformationen",
+    "globalRules": "Globale Regeln",
+    "pluginConfigs": "Plugin Konfigurationen",
+    "pluginMetadata": "Plugin Metadaten",
+    "protos": "Protos",
+    "routes": "Routen",
+    "secrets": "Secrets",
+    "services": "Services",
+    "ssls": "SSLs",
+    "streamRoutes": "Stream Routen",
+    "upstreams": "Upstreams"
+  },
+  "ssls": {
+    "singular": "SSL"
+  },
+  "streamRoutes": {
+    "singular": "Stream Route"
+  },
+  "table": {
+    "actions": "Aktionen",
+    "disabled": "Deaktiviert",
+    "enabled": "Aktiviert"
+  },
+  "upstreams": {
+    "singular": "Upstream"
+  }
+}
