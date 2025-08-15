@@ -59,10 +59,12 @@ export const LanguageMenu = () => {
           return (
             <Menu.Item
               key={lang}
-              disabled={isCurrentLanguage}
-              style={isCurrentLanguage ? {
-                backgroundColor: 'var(--menu-item-hover, var(--mantine-color-gray-1))',
-              } : undefined}
+              {...(isCurrentLanguage && { disabled: true })}
+              {...(isCurrentLanguage && { 
+                style: { 
+                  backgroundColor: 'var(--menu-item-hover, var(--mantine-color-gray-1))' 
+                } 
+              })}
               onClick={async () => {
                 if (!isCurrentLanguage) {
                   await i18n.changeLanguage(lang);
