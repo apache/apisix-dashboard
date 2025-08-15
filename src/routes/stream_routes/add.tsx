@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 
 import { postStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
+import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
 import {
   StreamRoutePostSchema,
@@ -30,10 +31,9 @@ import {
 } from '@/components/form-slice/FormPartStreamRoute/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
-import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   navigate: (res: APISIXType['RespStreamRouteDetail']) => Promise<void>;
@@ -46,10 +46,7 @@ export const StreamRouteAddForm = (props: Props) => {
 
   const postStreamRoute = useMutation({
     mutationFn: (d: StreamRoutePostType) =>
-      postStreamRouteReq(
-        req,
-        pipeProduce(produceRmUpstreamWhenHas('service_id'))(d)
-      ),
+      postStreamRouteReq(req, produceRoute(d)),
     async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('streamRoutes.singular') }),
@@ -101,4 +98,5 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/stream_routes/add')({
   component: RouteComponent,
+  errorComponent: StreamRoutesErrorComponent,
 });

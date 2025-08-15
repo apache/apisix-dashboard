@@ -12,3 +12,41 @@
 .monaco-editor {
   padding-bottom: 200px;
 }
+
+.editor-wrapper {
+  border: 1px solid var(--mantine-color-gray-4);
+  border-radius: var(--mantine-radius-sm);
+  position: relative;
+  height: 100%;
+
+  &:focus-within {
+    border-color: var(--mantine-color-blue-6);
+  }
+}
+
+.editor-wrapper--disabled {
+  background-color: var(--mantine-color-gray-0);
+  border-color: var(--mantine-color-gray-3);
+  cursor: not-allowed !important;
+
+  &:focus-within {
+    border-color: var(--mantine-color-gray-3);
+  }
+
+  & * {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+  }
+
+  .monaco-editor,
+  .monaco-editor .monaco-editor-background,
+  .monaco-editor .overflow-guard,
+  .monaco-editor .margin-view-overlays {
+    background-color: var(--mantine-color-gray-0) !important;
+  }
+
+  .monaco-editor .view-lines,
+  .monaco-editor .view-line * {
+    color: var(--mantine-color-gray-5) !important;
+  }
+}

@@ -132,6 +132,7 @@ function RouteComponent() {
                 {t('form.btn.edit')}
               </Button>
               <DeleteResourceBtn
+                mode="detail"
                 key="delete"
                 name={t('credentials.singular')}
                 target={id}

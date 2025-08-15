@@ -14,18 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { atom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
+import { uiGoto } from '@e2e/utils/ui';
+import type { Page } from '@playwright/test';
 
-// Admin key with persistent storage
-export const adminKeyAtom = atomWithStorage<string>(
-  'settings:adminKey',
-  '',
-  undefined,
-  {
-    getOnInit: true,
-  }
-);
+const goto = {
+  toIndex: (page: Page) => uiGoto(page, '/stream_routes'),
+};
 
-// Settings modal visibility state
-export const isSettingsOpenAtom = atom<boolean>(false);
+export const streamRoutesPom = {
+  ...goto,
+};

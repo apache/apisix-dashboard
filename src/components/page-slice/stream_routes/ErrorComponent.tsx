@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { atom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
+import {
+  ErrorComponent,
+  type ErrorComponentProps,
+} from '@tanstack/react-router';
+import { AxiosError } from 'axios';
 
-// Admin key with persistent storage
-export const adminKeyAtom = atomWithStorage<string>(
-  'settings:adminKey',
-  '',
-  undefined,
-  {
-    getOnInit: true,
+import type { APISIXRespErr } from '@/config/req';
+
+export const StreamRoutesErrorComponent = (props: ErrorComponentProps) => {
+  if (props.error instanceof AxiosError) {
+    const err = props.error as AxiosError<APISIXRespErr>;
+    if (err.response?.status === 400) {
+      return <span>{err.response?.data.error_msg}</span>;
+    }
   }
-);
-
-// Settings modal visibility state
-export const isSettingsOpenAtom = atom<boolean>(false);
+  return <ErrorComponent {...props} />;
+};

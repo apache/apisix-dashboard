@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { Drawer, Group, Title } from '@mantine/core';
-import { isEmpty } from 'rambdax';
+import { isEmpty, isNil } from 'rambdax';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +35,7 @@ export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
 };
 
 const toConfigStr = (p: object): string => {
-  return !isEmpty(p) ? JSON.stringify(p, null, 2) : '{}';
+  return !isEmpty(p) && !isNil(p) ? JSON.stringify(p, null, 2) : '{}';
 };
 export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
   const { opened, onSave, onClose, plugin, mode, schema } = props;
@@ -44,7 +44,7 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
   const methods = useForm<{ config: string }>({
     criteriaMode: 'all',
     disabled: mode === 'view',
-    defaultValues: { config: toConfigStr(plugin) },
+    defaultValues: { config: toConfigStr(config) },
   });
   const handleClose = () => {
     onClose();

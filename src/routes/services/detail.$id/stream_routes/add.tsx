@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { StreamRouteAddForm } from '@/routes/stream_routes/add';
 import { CommonFormContext } from '@/utils/form-context';
 
@@ -54,4 +55,5 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/services/detail/$id/stream_routes/add')({
   component: RouteComponent,
+  errorComponent: StreamRoutesErrorComponent,
 });

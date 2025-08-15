@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { atom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
+import { routesPom } from '@e2e/pom/routes';
+import type { Page } from '@playwright/test';
 
-// Admin key with persistent storage
-export const adminKeyAtom = atomWithStorage<string>(
-  'settings:adminKey',
-  '',
-  undefined,
-  {
-    getOnInit: true,
-  }
-);
+import { uiHasToastMsg } from '.';
 
-// Settings modal visibility state
-export const isSettingsOpenAtom = atom<boolean>(false);
+export async function uiDeleteRoute(page: Page) {
+  // Delete the route for cleanup
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await page
+    .getByRole('dialog', { name: 'Delete Route' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
+  await uiHasToastMsg(page, {
+    hasText: 'Delete Route Successfully',
+  });
+  await routesPom.isIndexPage(page);
+}

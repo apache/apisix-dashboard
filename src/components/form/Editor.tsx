@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { InputWrapper, type InputWrapperProps,Skeleton } from '@mantine/core';
-import { Editor, loader, type Monaco,useMonaco } from '@monaco-editor/react';
-import { editor, Uri } from 'monaco-editor';
+import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
+import { Editor, loader, type Monaco, useMonaco } from '@monaco-editor/react';
+import clsx from 'clsx';
+import { editor } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   type FieldValues,
   useController,
   type UseControllerProps,
   useFormContext,
-  useFormState,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -73,67 +73,63 @@ export const FormItemEditor = <T extends FieldValues>(
   const { t } = useTranslation();
   const { controllerProps, restProps } = genControllerProps(props, '');
   const { customSchema, language, isLoading, ...wrapperProps } = restProps;
-  const { setError, clearErrors } = useFormContext<{
-    [name: string]: object;
-  }>();
-  const customErrorField = `${props.name}-editor`;
-  const { errors } = useFormState({ name: customErrorField });
+  const { trigger } = useFormContext();
+  const monacoErrorRef = useRef<string | null>(null);
+  const enhancedControllerProps = useMemo(() => {
+    return {
+      ...controllerProps,
+      rules: {
+        ...controllerProps.rules,
+        validate: (value: string) => {
+          // Check JSON syntax
+          try {
+            JSON.parse(value);
+          } catch {
+            return t('form.json.parseError');
+          }
+          // Check Monaco markers
+          if (monacoErrorRef.current) {
+            return monacoErrorRef.current;
+          }
+          return true;
+        },
+      },
+    };
+  }, [controllerProps, t, monacoErrorRef]);
+
   const {
     field: { value, onChange: fOnChange, ...restField },
     fieldState,
-  } = useController<T>(controllerProps);
+  } = useController<T>(enhancedControllerProps);
 
   const monaco = useMonaco();
   const [internalLoading, setLoading] = useState(false);
 
-  const showErrOnMarkers = useCallback(
-    (resource: Uri) => {
-      const markers = monaco?.editor.getModelMarkers({ resource });
-      const marker = markers?.[0];
-      if (!marker) return false;
-      setError(customErrorField, {
-        type: 'custom',
-        message: marker.message,
-      });
-      return true;
-    },
-    [customErrorField, monaco?.editor, setError]
-  );
-
   useEffect(() => {
-    if (!monaco || !customSchema) return;
+    if (!monaco) return;
     setLoading(true);
+
+    const schemas = [];
+    if (customSchema) {
+      schemas.push({
+        uri: 'https://apisix.apache.org',
+        fileMatch: ['*'],
+        schema: customSchema,
+      });
+    }
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
-      schemas: [
-        {
-          uri: 'https://apisix.apache.org',
-          fileMatch: ['*'],
-          schema: customSchema,
-        },
-      ],
+      schemas,
       trailingCommas: 'error',
       enableSchemaRequest: false,
     });
-    // when markers change, show error
-    monaco.editor.onDidChangeMarkers(([uri]) => {
-      showErrOnMarkers(uri);
-    });
 
     setLoading(false);
-  }, [customSchema, monaco, showErrOnMarkers]);
+  }, [monaco, customSchema]);
 
   return (
     <InputWrapper
-      error={
-        fieldState.error?.message ||
-        (errors[customErrorField]?.message as string)
-      }
-      style={{
-        border: '1px solid var(--mantine-color-gray-2)',
-        borderRadius: 'var(--mantine-radius-sm)',
-        position: 'relative',
-      }}
+      error={fieldState.error?.message}
       id="#editor-wrapper"
       {...wrapperProps}
     >
@@ -153,14 +149,20 @@ export const FormItemEditor = <T extends FieldValues>(
         />
       )}
       <Editor
-        beforeMount={(monaco) => {
-          setupMonaco({
-            monaco,
-          });
+        wrapperProps={{
+          className: clsx(
+            'editor-wrapper',
+            restField.disabled && 'editor-wrapper--disabled'
+          ),
         }}
+        beforeMount={(monaco) => setupMonaco({ monaco })}
         defaultValue={controllerProps.defaultValue}
         value={value}
         onChange={fOnChange}
+        onValidate={(markers) => {
+          monacoErrorRef.current = markers?.[0]?.message || null;
+          trigger(props.name);
+        }}
         loading={
           <Skeleton
             data-testid="editor-loading"
@@ -170,21 +172,6 @@ export const FormItemEditor = <T extends FieldValues>(
           />
         }
         options={{ ...options, readOnly: restField.disabled }}
-        onMount={(editor) => {
-          // this only check json validity, will clear error when json is valid and no markers
-          editor.onDidChangeModelContent(() => {
-            try {
-              const model = editor.getModel()!;
-              JSON.parse(model.getValue());
-              clearErrors(customErrorField);
-            } catch {
-              return setError(customErrorField, {
-                type: 'custom',
-                message: t('form.json.parseError'),
-              });
-            }
-          });
-        }}
         defaultLanguage="json"
         {...(language && { language })}
       />
