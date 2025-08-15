@@ -59,8 +59,8 @@ export const LanguageMenu = () => {
           return (
             <Menu.Item
               key={lang}
-              {...(isCurrentLanguage && { disabled: true })}
               {...(isCurrentLanguage && { 
+                disabled: true,
                 style: { 
                   backgroundColor: 'var(--menu-item-hover, var(--mantine-color-gray-1))' 
                 } 

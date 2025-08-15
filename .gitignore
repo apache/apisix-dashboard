@@ -33,9 +33,5 @@ dist-ssr
 
 .eslintcache
 
-# Package managers lock files (we use pnpm)
+# npm lock file (project uses pnpm)
 package-lock.json
-yarn.lock
-
-# Generated route tree
-src/routeTree.gen.ts
