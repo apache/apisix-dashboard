@@ -44,6 +44,8 @@ const TranslationProgress = ({ lang }: { lang: string }) => {
 
 export const LanguageMenu = () => {
   const { i18n, t } = useTranslation();
+  const currentLanguage = i18n.language;
+
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
@@ -52,17 +54,26 @@ export const LanguageMenu = () => {
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown>
-        {Object.keys(LangMap).map((lang) => (
-          <Menu.Item
-            key={lang}
-            onClick={async () => {
-              await i18n.changeLanguage(lang);
-            }}
-          >
-            {LangMap[lang as keyof Resources]}
-            <TranslationProgress lang={lang} />
-          </Menu.Item>
-        ))}
+        {Object.keys(LangMap).map((lang) => {
+          const isCurrentLanguage = lang === currentLanguage;
+          return (
+            <Menu.Item
+              key={lang}
+              disabled={isCurrentLanguage}
+              style={isCurrentLanguage ? {
+                backgroundColor: 'var(--menu-item-hover, var(--mantine-color-gray-1))',
+              } : undefined}
+              onClick={async () => {
+                if (!isCurrentLanguage) {
+                  await i18n.changeLanguage(lang);
+                }
+              }}
+            >
+              {LangMap[lang as keyof Resources]}
+              <TranslationProgress lang={lang} />
+            </Menu.Item>
+          );
+        })}
         <Menu.Divider />
         <Menu.Label>
           <Anchor
