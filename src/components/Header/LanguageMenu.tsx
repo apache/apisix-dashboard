@@ -55,18 +55,17 @@ export const LanguageMenu = () => {
       </Menu.Target>
       <Menu.Dropdown>
         {Object.keys(LangMap).map((lang) => {
-          const isCurrentLanguage = lang === currentLanguage;
           return (
             <Menu.Item
               key={lang}
-              {...(isCurrentLanguage && { 
+              {...(lang === currentLanguage && { 
                 disabled: true,
                 style: { 
                   backgroundColor: 'var(--menu-item-hover, var(--mantine-color-gray-1))' 
                 } 
               })}
               onClick={async () => {
-                if (!isCurrentLanguage) {
+                if (!(lang === currentLanguage)) {
                   await i18n.changeLanguage(lang);
                 }
               }}
