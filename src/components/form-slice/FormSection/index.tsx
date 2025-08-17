@@ -22,7 +22,7 @@ import {
   type TableOfContentsProps,
 } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { debounce } from 'rambdax';
 import {
   createContext,
