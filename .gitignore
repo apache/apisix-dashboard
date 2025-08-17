@@ -32,3 +32,6 @@ dist-ssr
 /playwright/.cache/
 
 .eslintcache
+
+# npm lock file (project uses pnpm)
+package-lock.json
