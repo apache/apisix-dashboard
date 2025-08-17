@@ -85,7 +85,8 @@ export default defineConfig({
       plugins: [observerPlugin() as never],
     }),
     compression({
-      algorithms: ['gzip', 'brotliCompress'],
+      algorithms: ['gzip'],
+      deleteOriginalAssets: true,
     }),
   ],
   css: {
