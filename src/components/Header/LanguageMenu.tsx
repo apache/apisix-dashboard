@@ -44,7 +44,6 @@ const TranslationProgress = ({ lang }: { lang: string }) => {
 
 export const LanguageMenu = () => {
   const { i18n, t } = useTranslation();
-
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
