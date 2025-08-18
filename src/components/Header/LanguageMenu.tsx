@@ -23,6 +23,7 @@ import IconLanguage from '~icons/material-symbols/language-chinese-array';
 
 const LangMap: Record<keyof Resources, string> = {
   en: 'English',
+  de: 'Deutsch',
   zh: '中文',
 };
 
