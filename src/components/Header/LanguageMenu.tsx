@@ -56,6 +56,13 @@ export const LanguageMenu = () => {
         {Object.keys(LangMap).map((lang) => (
           <Menu.Item
             key={lang}
+            {...(lang === i18n.language && {
+              disabled: true,
+              style: {
+                backgroundColor:
+                  'var(--menu-item-hover, var(--mantine-color-gray-1))',
+              },
+            })}
             onClick={async () => {
               await i18n.changeLanguage(lang);
             }}
