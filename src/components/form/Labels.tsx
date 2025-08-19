@@ -15,15 +15,13 @@
  * limitations under the License.
  */
 import { TagsInput, type TagsInputProps } from '@mantine/core';
-import { useListState } from '@mantine/hooks';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   type FieldValues,
   useController,
   type UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMount } from 'react-use';
 
 import type { APISIXType } from '@/types/schema/apisix';
 
@@ -44,14 +42,12 @@ export const FormItemLabels = <T extends FieldValues>(
     fieldState,
   } = useController<T>(controllerProps);
   const { t } = useTranslation();
-  const [values, handle] = useListState<string>();
   const [internalError, setInternalError] = useState<string | null>();
 
-  useMount(() => {
-    Object.entries(value || {}).forEach(([key, value]) => {
-      handle.append(`${key}:${value}`);
-    });
-  });
+  const values = useMemo(() => {
+    if (!value) return [];
+    return Object.entries(value).map(([key, val]) => `${key}:${val}`);
+  }, [value]);
 
   const handleSearchChange = useCallback(
     (val: string) => {
@@ -78,11 +74,10 @@ export const FormItemLabels = <T extends FieldValues>(
         obj[tuple[0]] = tuple[1];
       }
       setInternalError(null);
-      handle.setState(vals);
       fOnChange(obj);
       restProps.onChange?.(obj);
     },
-    [handle, fOnChange, restProps, t]
+    [fOnChange, restProps, t]
   );
 
   return (
