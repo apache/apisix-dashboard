@@ -76,7 +76,7 @@ export default defineConfig({
       semicolons: false,
     }),
     i18nProgress({
-      langs: ['en','es', 'de', 'zh'],
+      langs: ['en', 'es', 'de', 'zh'],
       baseLang: 'en',
       getTranslationDir: (lang) => `./src/locales/${lang}`,
     }),
