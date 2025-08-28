@@ -28,7 +28,6 @@ const LangMap: Record<keyof Resources, string> = {
   es: 'Español',
 };
 
-
 const TranslationProgress = ({ lang }: { lang: string }) => {
   const percent = i18nProgress[lang].percent;
   if (typeof percent === 'number' && percent < 100) {
