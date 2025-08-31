@@ -91,7 +91,7 @@
     "vite": "^6.3.5",
     "vite-plugin-compression2": "^2.2.0",
     "vite-tsconfig-paths": "^5.1.4",
-    "yaml": "^2.7.1"
+    "yaml": "^2.8.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
