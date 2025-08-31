@@ -89,6 +89,7 @@
     "unplugin-icons": "^22.1.0",
     "unplugin-info": "^1.2.2",
     "vite": "^6.3.5",
+    "vite-plugin-compression2": "^2.2.0",
     "vite-tsconfig-paths": "^5.1.4",
     "yaml": "^2.7.1"
   },
