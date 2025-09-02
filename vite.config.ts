@@ -63,6 +63,21 @@ export default defineConfig({
       },
     }),
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'monaco-editor-vendor': ['monaco-editor', '@monaco-editor/react'],
+          'antd-vendor': [
+            'antd',
+            '@ant-design/pro-components',
+            '@ant-design/v5-patch-for-react-19',
+          ],
+        },
+      },
+    },
+  },
   plugins: [
     tsconfigPaths(),
     UnpluginIcons({

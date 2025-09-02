@@ -15,11 +15,8 @@
  * limitations under the License.
  */
 import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
-import { Editor, loader, type Monaco, useMonaco } from '@monaco-editor/react';
-import { clsx } from 'clsx';
-import { editor } from 'monaco-editor';
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import { Editor } from '@monaco-editor/react';
+import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   type FieldValues,
@@ -29,26 +26,13 @@ import {
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { monaco, setupMonacoEditor } from '@/utils/monaco';
+
 import { genControllerProps } from './util';
 
-type SetupMonacoProps = {
-  monaco: Monaco;
-};
+setupMonacoEditor();
 
-const setupMonaco = ({ monaco }: SetupMonacoProps) => {
-  window.MonacoEnvironment = {
-    getWorker(_, label) {
-      if (label === 'json') {
-        return new jsonWorker();
-      }
-      return new editorWorker();
-    },
-  };
-  loader.config({ monaco });
-  return loader.init();
-};
-
-const options: editor.IStandaloneEditorConstructionOptions = {
+const options: monaco.editor.IStandaloneEditorConstructionOptions = {
   minimap: { enabled: false },
   contextmenu: false,
   lineNumbersMinChars: 3,
@@ -102,11 +86,9 @@ export const FormItemEditor = <T extends FieldValues>(
     fieldState,
   } = useController<T>(enhancedControllerProps);
 
-  const monaco = useMonaco();
   const [internalLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!monaco) return;
     setLoading(true);
 
     const schemas = [];
@@ -125,7 +107,7 @@ export const FormItemEditor = <T extends FieldValues>(
     });
 
     setLoading(false);
-  }, [monaco, customSchema]);
+  }, [customSchema]);
 
   return (
     <InputWrapper
@@ -155,7 +137,6 @@ export const FormItemEditor = <T extends FieldValues>(
             restField.disabled && 'editor-wrapper--disabled'
           ),
         }}
-        beforeMount={(monaco) => setupMonaco({ monaco })}
         defaultValue={controllerProps.defaultValue}
         value={value}
         onChange={fOnChange}
