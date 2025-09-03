@@ -58,7 +58,7 @@
     "@playwright/test": "^1.52.0",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
-    "@tanstack/react-query-devtools": "^5.74.4",
+    "@tanstack/react-query-devtools": "^5.85.9",
     "@tanstack/react-router-devtools": "^1.116.0",
     "@tanstack/router-plugin": "^1.116.1",
     "@types/node": "^22.14.1",
