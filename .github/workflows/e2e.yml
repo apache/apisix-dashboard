@@ -33,7 +33,7 @@ jobs:
       - name: Get PR Labels
         if: ${{ github.event_name == 'pull_request' }}
         id: get-labels
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           script: |
             const labels = context.payload.pull_request.labels.map(label => label.name);
