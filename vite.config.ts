@@ -22,7 +22,6 @@ import postcssSimpleVars from 'postcss-simple-vars';
 import UnpluginIcons from 'unplugin-icons/vite';
 import UnpluginInfo from 'unplugin-info/vite';
 import { defineConfig } from 'vite';
-import { compression } from 'vite-plugin-compression2';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { API_PREFIX, BASE_PATH } from './src/config/constant';
@@ -98,10 +97,6 @@ export default defineConfig({
     }),
     react({
       plugins: [observerPlugin() as never],
-    }),
-    compression({
-      algorithms: ['gzip'],
-      deleteOriginalAssets: true,
     }),
   ],
   css: {
