@@ -14,21 +14,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Divider, InputWrapper } from '@mantine/core';
-import { useFormContext } from 'react-hook-form';
+import { ActionIcon, Divider, InputWrapper } from '@mantine/core';
+import { useState } from 'react';
+import { type Control, type FieldPath, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { FormItemSelect } from '@/components/form/Select';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTextInput } from '@/components/form/TextInput';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import IconEye from '~icons/material-symbols/visibility';
+import IconEyeOff from '~icons/material-symbols/visibility-off';
 
 import { FormItemTagsInput } from '../form/TagInput';
 import { FormSection } from './FormSection';
 
+const SensitiveInput = ({
+  name,
+  label,
+  control,
+  disabled
+}: {
+  name: FieldPath<APISIXType['Secret']>;
+  label: string;
+  control: Control<APISIXType['Secret']>;
+  disabled?: boolean;
+}) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <FormItemTextInput
+      control={control}
+      name={name}
+      label={label}
+      type={!disabled && showPassword ? 'text' : 'password'}
+      rightSection={!disabled && (
+        <ActionIcon
+          onClick={() => setShowPassword((v) => !v)}
+          variant="subtle"
+          color="gray"
+        >
+          {showPassword ? <IconEyeOff /> : <IconEye />}
+        </ActionIcon>)
+      }
+    />
+  );
+};
+
 const VaultSecretForm = () => {
   const { t } = useTranslation();
-  const { control } = useFormContext<APISIXType['Secret']>();
+  const { control, formState } = useFormContext<APISIXType['Secret']>();
 
   return (
     <>
@@ -42,10 +77,11 @@ const VaultSecretForm = () => {
         name="prefix"
         label={t('form.secrets.vault.prefix')}
       />
-      <FormItemTextInput
+      <SensitiveInput
         control={control}
         name="token"
         label={t('form.secrets.vault.token')}
+        disabled={formState.disabled}
       />
       <FormItemTextInput
         control={control}
@@ -58,7 +94,7 @@ const VaultSecretForm = () => {
 
 const AWSSecretForm = () => {
   const { t } = useTranslation();
-  const { control } = useFormContext<APISIXType['Secret']>();
+  const { control, formState } = useFormContext<APISIXType['Secret']>();
 
   return (
     <>
@@ -67,15 +103,17 @@ const AWSSecretForm = () => {
         name="access_key_id"
         label={t('form.secrets.aws.access_key_id')}
       />
-      <FormItemTextInput
+      <SensitiveInput
         control={control}
         name="secret_access_key"
         label={t('form.secrets.aws.secret_access_key')}
+        disabled={formState.disabled}
       />
-      <FormItemTextInput
+      <SensitiveInput
         control={control}
         name="session_token"
         label={t('form.secrets.aws.session_token')}
+        disabled={formState.disabled}
       />
 
       <FormItemTextInput
@@ -94,7 +132,7 @@ const AWSSecretForm = () => {
 
 const GCPSecretForm = () => {
   const { t } = useTranslation();
-  const { control } = useFormContext<APISIXType['Secret']>();
+  const { control, formState } = useFormContext<APISIXType['Secret']>();
 
   return (
     <>
@@ -114,10 +152,11 @@ const GCPSecretForm = () => {
             name="auth_config.client_email"
             label={t('form.secrets.gcp.client_email')}
           />
-          <FormItemTextInput
+          <SensitiveInput
             control={control}
             name="auth_config.private_key"
             label={t('form.secrets.gcp.private_key')}
+            disabled={formState.disabled}
           />
           <FormItemTextInput
             control={control}

@@ -14,21 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Divider, InputWrapper, Modal, Text, TextInput } from '@mantine/core';
+import { ActionIcon, Divider, InputWrapper, Modal, Text, TextInput } from '@mantine/core';
 import { useAtom } from 'jotai';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { queryClient } from '@/config/global';
 import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
 import { sha } from '~build/git';
+import IconEye from '~icons/material-symbols/visibility';
+import IconEyeOff from '~icons/material-symbols/visibility-off';
 
 const AdminKey = () => {
   const { t } = useTranslation();
   const [adminKey, setAdminKey] = useAtom(adminKeyAtom);
+  const [visible, setVisible] = useState(false);
 
   return (
     <TextInput
       label={t('settings.adminKey')}
+      type={visible ? 'text' : 'password'}
       value={adminKey}
       onChange={(e) => {
         setAdminKey(e.currentTarget.value);
@@ -38,6 +43,15 @@ const AdminKey = () => {
         });
       }}
       required
+      rightSection={
+        <ActionIcon
+          onClick={() => setVisible((v) => !v)}
+          variant="subtle"
+          color='gray'
+        >
+          {visible ? <IconEyeOff /> : <IconEye />}
+        </ActionIcon>
+      }
     />
   );
 };
