@@ -16,7 +16,7 @@
  */
 import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
 import { Editor } from '@monaco-editor/react';
-import clsx from 'clsx';
+import classNames from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   type FieldValues,
@@ -132,7 +132,7 @@ export const FormItemEditor = <T extends FieldValues>(
       )}
       <Editor
         wrapperProps={{
-          className: clsx(
+          className: classNames(
             'editor-wrapper',
             restField.disabled && 'editor-wrapper--disabled'
           ),

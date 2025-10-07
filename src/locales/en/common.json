@@ -88,6 +88,39 @@
       "vars": "Vars"
     },
     "search": "Search",
+    "searchForm": {
+      "fields": {
+        "name": "Name",
+        "id": "ID",
+        "host": "Host",
+        "path": "Path",
+        "description": "Description",
+        "plugin": "Plugin",
+        "labels": "Labels",
+        "version": "Version",
+        "status": "Status"
+      },
+      "placeholders": {
+        "name": "Name",
+        "id": "ID",
+        "host": "Host",
+        "path": "Path",
+        "description": "Description",
+        "plugin": "Plugin",
+        "labels": "Select labels",
+        "version": "Select version",
+        "status": "Select status"
+      },
+      "status": {
+        "all": "UnPublished/Published",
+        "published": "Published",
+        "unpublished": "UnPublished"
+      },
+      "actions": {
+        "reset": "Reset",
+        "search": "Search"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "Access Key ID",
