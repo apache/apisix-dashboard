@@ -42,10 +42,14 @@ export const getSecretListReq = (req: AxiosInstance, params: PageSearchType) =>
       params,
     })
     .then((v) => {
-      const { list, ...rest } = v.data;
+      const data = v.data;
+      const rawList = data?.list;
+      const parsedList = Array.isArray(rawList)
+        ? rawList.map(preParseSecretItem)
+        : [];
       return {
-        ...rest,
-        list: list.map(preParseSecretItem),
+        total: typeof data?.total === 'number' ? data.total : 0,
+        list: parsedList,
       };
     });
 

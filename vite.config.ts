@@ -41,7 +41,8 @@ export default defineConfig({
     // as an example, if you want to use the e2e server as the api server,
     proxy: {
       [API_PREFIX]: {
-        target: 'http://localhost:6174',
+        target:
+          process.env.APISIX_ADMIN_URL || 'http://localhost:9180',
         changeOrigin: true,
       },
     },
