@@ -67,7 +67,7 @@ const updateAPISIXConf = async (
 
 const restartDockerServices = async () => {
   await execAsync('docker compose restart apisix', { cwd: getE2EServerDir() });
-  const url = 'http://127.0.0.1:6174/ui/';
+  const url = 'http://127.0.0.1:9180/ui/';
   const maxRetries = 20;
   const interval = 1000;
   for (let i = 0; i < maxRetries; i++) {

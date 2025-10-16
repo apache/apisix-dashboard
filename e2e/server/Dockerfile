@@ -35,6 +35,6 @@ COPY . .
 RUN apk add --no-cache git
 RUN corepack enable pnpm && pnpm build
 
-# serve ui
-FROM nginx:1.28.0-alpine-slim AS runner
-COPY --from=builder /app/dist /usr/share/nginx/html
+# embed dashboard ui into apisix
+FROM apache/apisix:dev
+COPY --from=builder /app/dist /usr/local/apisix/ui/
