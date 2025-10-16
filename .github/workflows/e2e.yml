@@ -72,7 +72,7 @@ jobs:
       - name: Waiting dashboard service to be healthy
         working-directory: ./e2e/server
         run: |
-          E2E_SERVER="dashboard-e2e"
+          E2E_SERVER="apisix"
           TIMEOUT=30
           timeout $TIMEOUT bash -c '
             until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q '$E2E_SERVER'))" = "healthy" ]; do
