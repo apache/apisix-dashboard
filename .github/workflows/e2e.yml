@@ -72,14 +72,13 @@ jobs:
       - name: Waiting dashboard service to be healthy
         working-directory: ./e2e/server
         run: |
-          E2E_SERVER="dashboard-e2e"
           TIMEOUT=30
           timeout $TIMEOUT bash -c '
-            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q '$E2E_SERVER'))" = "healthy" ]; do
-              echo "'$E2E_SERVER' is starting..."
+            until curl -f http://127.0.0.1:9180/ui > /dev/null 2>&1; do
+              echo "Waiting for APISIX dashboard to be ready..."
               sleep 5
             done
-          ' || (echo "$E2E_SERVER not healthy after $TIMEOUT seconds" && exit 1)
+          ' || (echo "APISIX dashboard not ready after $TIMEOUT seconds" && exit 1)
 
       - name: Run e2e tests
         run: |

@@ -36,6 +36,7 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 
 import { streamRoutesPom } from '@e2e/pom/stream_routes';
+import { env } from '@e2e/utils/env';
 import { test } from '@e2e/utils/test';
 import { expect } from '@playwright/test';
 import { produce, type WritableDraft } from 'immer';
@@ -67,11 +68,11 @@ const updateAPISIXConf = async (
 
 const restartDockerServices = async () => {
   await execAsync('docker compose restart apisix', { cwd: getE2EServerDir() });
-  const url = 'http://127.0.0.1:6174/ui/';
+  const url = env.E2E_TARGET_URL;
   const maxRetries = 20;
   const interval = 1000;
   for (let i = 0; i < maxRetries; i++) {
-    const res = await fetch(url);
+    const res = await fetch(url).catch(() => ({ ok: false }));
     if (res.ok) return;
     await new Promise((resolve) => setTimeout(resolve, interval));
   }

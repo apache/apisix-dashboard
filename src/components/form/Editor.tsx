@@ -16,7 +16,7 @@
  */
 import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
 import { Editor } from '@monaco-editor/react';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   type FieldValues,
