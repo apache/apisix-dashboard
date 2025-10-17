@@ -19,8 +19,8 @@ import { initReactI18next } from 'react-i18next';
 
 import de_common from '@/locales/de/common.json';
 import en_common from '@/locales/en/common.json';
-import zh_common from '@/locales/zh/common.json';
 import es_common from '@/locales/es/common.json'; 
+import zh_common from '@/locales/zh/common.json';
 
 export const resources = {
   en: {

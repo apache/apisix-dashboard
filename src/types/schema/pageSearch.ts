@@ -31,6 +31,10 @@ export const pageSearchSchema = z
       .transform((val) => (val ? Number(val) : 10)),
     name: z.string().optional(),
     label: z.string().optional(),
+    id: z.string().optional(),
+    host: z.string().optional(),
+    path: z.string().optional(),
+    description: z.string().optional(),
   })
   .passthrough();
 

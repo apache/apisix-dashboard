@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
+import { SearchForm, type SearchFormValues } from '@/components/form/SearchForm';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -30,6 +31,11 @@ import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import {
+  filterRoutes,
+  needsClientSideFiltering,
+} from '@/utils/clientSideFilter';
+import { useSearchParams } from '@/utils/useSearchParams';
 import type { ListPageKeys } from '@/utils/useTablePagination';
 
 export type RouteListProps = {
@@ -42,11 +48,56 @@ export type RouteListProps = {
 
 export const RouteList = (props: RouteListProps) => {
   const { routeKey, ToDetailBtn, defaultParams } = props;
-  const { data, isLoading, refetch, pagination } = useRouteList(
+  const { data, isLoading, refetch, pagination, setParams } = useRouteList(
     routeKey,
     defaultParams
   );
+  const { params } = useSearchParams(routeKey);
   const { t } = useTranslation();
+
+  const handleSearch = (values: SearchFormValues) => {
+    // Send name filter to backend, keep others for client-side filtering
+    setParams({
+      page: 1,
+      name: values.name,
+      id: values.id,
+      host: values.host,
+      path: values.path,
+      description: values.description,
+      plugin: values.plugin,
+      labels: values.labels,
+      version: values.version,
+      status: values.status,
+    });
+  };
+
+  const handleReset = () => {
+    setParams({
+      page: 1,
+      name: undefined,
+      id: undefined,
+      host: undefined,
+      path: undefined,
+      description: undefined,
+      plugin: undefined,
+      labels: undefined,
+      version: undefined,
+      status: undefined,
+    });
+  };
+
+  // Apply client-side filtering for parameters not supported by APISIX backend
+  const filteredData = useMemo(() => {
+    if (!data?.list) return [];
+    
+    // Check if we need client-side filtering (for host, path, description, etc.)
+    if (needsClientSideFiltering(params)) {
+      return filterRoutes(data.list, params);
+    }
+    
+    // If only backend-supported filters (name) are used, return data as-is
+    return data.list;
+  }, [data?.list, params]);
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
@@ -95,9 +146,12 @@ export const RouteList = (props: RouteListProps) => {
 
   return (
     <AntdConfigProvider>
+      <div style={{ marginBottom: 24 }}>
+        <SearchForm onSearch={handleSearch} onReset={handleReset} />
+      </div>
       <ProTable
         columns={columns}
-        dataSource={data.list}
+        dataSource={filteredData}
         rowKey="id"
         loading={isLoading}
         search={false}

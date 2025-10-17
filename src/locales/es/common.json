@@ -88,6 +88,39 @@
       "vars": "Variables"
     },
     "search": "Buscar",
+    "searchForm": {
+      "fields": {
+        "name": "Nombre",
+        "id": "ID",
+        "host": "Host",
+        "path": "Ruta",
+        "description": "Descripción",
+        "plugin": "Plugin",
+        "labels": "Etiquetas",
+        "version": "Versión",
+        "status": "Estado"
+      },
+      "placeholders": {
+        "name": "Nombre",
+        "id": "ID",
+        "host": "Host",
+        "path": "Ruta",
+        "description": "Descripción",
+        "plugin": "Plugin",
+        "labels": "Selecciona etiquetas",
+        "version": "Selecciona versión",
+        "status": "Selecciona estado"
+      },
+      "status": {
+        "all": "Sin publicar/Publicado",
+        "published": "Publicado",
+        "unpublished": "Sin publicar"
+      },
+      "actions": {
+        "reset": "Restablecer",
+        "search": "Buscar"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "ID de Clave de Acceso",
