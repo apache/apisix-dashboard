@@ -76,14 +76,14 @@ export const filterRoutes = (
       if (!descMatch) return false;
     }
 
-    // Filter by plugin
+    // Filter by plugin: treat the filter text as a substring across all plugin names
     if (filters.plugin && routeData.plugins) {
       const pluginNames = Object.keys(routeData.plugins).join(',').toLowerCase();
       const pluginMatch = pluginNames.includes(filters.plugin.toLowerCase());
       if (!pluginMatch) return false;
     }
 
-    // Filter by labels
+    // Filter by labels: match provided label key:value tokens against route label pairs
     if (filters.labels && filters.labels.length > 0 && routeData.labels) {
       const routeLabels = Object.keys(routeData.labels).map((key) =>
         `${key}:${routeData.labels![key]}`.toLowerCase()

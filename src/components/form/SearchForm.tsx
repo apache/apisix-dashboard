@@ -124,20 +124,14 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.name')}
             style={{ marginBottom: '16px' }}
           >
-            <Input
-              placeholder={t('form.searchForm.placeholders.name')}
-              allowClear
-            />
+            <Input allowClear />
           </Form.Item>
           <Form.Item<SearchFormValues>
             name="id"
             label={t('form.searchForm.fields.id')}
             style={{ marginBottom: '16px' }}
           >
-            <Input
-              placeholder={t('form.searchForm.placeholders.id')}
-              allowClear
-            />
+            <Input allowClear />
           </Form.Item>
         </Col>
 
@@ -148,10 +142,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.host')}
             style={{ marginBottom: '16px' }}
           >
-            <Input
-              placeholder={t('form.searchForm.placeholders.host')}
-              allowClear
-            />
+            <Input allowClear />
           </Form.Item>
           {/* Second column - second row */}
           <Form.Item<SearchFormValues>
@@ -159,10 +150,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.plugin')}
             style={{ marginBottom: '16px' }}
           >
-            <Input
-              placeholder={t('form.searchForm.placeholders.plugin')}
-              allowClear
-            />
+            <Input allowClear />
           </Form.Item>
         </Col>
 
@@ -173,10 +161,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.path')}
             style={{ marginBottom: '16px' }}
           >
-            <Input
-              placeholder={t('form.searchForm.placeholders.path')}
-              allowClear
-            />
+            <Input allowClear />
           </Form.Item>
           {/* Third column - second row */}
           <Form.Item<SearchFormValues>
@@ -200,10 +185,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.description')}
             style={{ marginBottom: '16px' }}
           >
-            <Input
-              placeholder={t('form.searchForm.placeholders.description')}
-              allowClear
-            />
+            <Input allowClear />
           </Form.Item>
           {/* Fourth column - second row */}
           <Form.Item<SearchFormValues>

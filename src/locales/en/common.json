@@ -101,12 +101,6 @@
         "status": "Status"
       },
       "placeholders": {
-        "name": "Name",
-        "id": "ID",
-        "host": "Host",
-        "path": "Path",
-        "description": "Description",
-        "plugin": "Plugin",
         "labels": "Select labels",
         "version": "Select version",
         "status": "Select status"

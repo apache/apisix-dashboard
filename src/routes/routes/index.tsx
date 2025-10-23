@@ -46,6 +46,33 @@ export type RouteListProps = {
   }) => React.ReactNode;
 };
 
+const RouteDetailButton = ({
+  record,
+}: {
+  record: APISIXType['RespRouteItem'];
+}) => (
+  <ToDetailPageBtn
+    key="detail"
+    to="/routes/detail/$id"
+    params={{ id: record.value.id }}
+  />
+);
+
+const SEARCH_PARAM_KEYS: (keyof SearchFormValues)[] = [
+  'name',
+  'id',
+  'host',
+  'path',
+  'description',
+  'plugin',
+  'labels',
+  'version',
+  'status',
+];
+
+const mapSearchParams = (values: Partial<SearchFormValues>) =>
+  Object.fromEntries(SEARCH_PARAM_KEYS.map((key) => [key, values[key]])) as Partial<SearchFormValues>;
+
 export const RouteList = (props: RouteListProps) => {
   const { routeKey, ToDetailBtn, defaultParams } = props;
   const { data, isLoading, refetch, pagination, setParams } = useRouteList(
@@ -59,30 +86,14 @@ export const RouteList = (props: RouteListProps) => {
     // Send name filter to backend, keep others for client-side filtering
     setParams({
       page: 1,
-      name: values.name,
-      id: values.id,
-      host: values.host,
-      path: values.path,
-      description: values.description,
-      plugin: values.plugin,
-      labels: values.labels,
-      version: values.version,
-      status: values.status,
+      ...mapSearchParams(values),
     });
   };
 
   const handleReset = () => {
     setParams({
       page: 1,
-      name: undefined,
-      id: undefined,
-      host: undefined,
-      path: undefined,
-      description: undefined,
-      plugin: undefined,
-      labels: undefined,
-      version: undefined,
-      status: undefined,
+      ...mapSearchParams({}),
     });
   };
 
@@ -187,16 +198,7 @@ function RouteComponent() {
   return (
     <>
       <PageHeader title={t('sources.routes')} />
-      <RouteList
-        routeKey="/routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/routes/detail/$id"
-            params={{ id: record.value.id }}
-          />
-        )}
-      />
+      <RouteList routeKey="/routes/" ToDetailBtn={RouteDetailButton} />
     </>
   );
 }
