@@ -24,7 +24,7 @@
     "@tanstack/react-query": "^5.74.4",
     "@tanstack/react-router": "^1.116.0",
     "antd": "^5.24.8",
-    "axios": "^1.11.0",
+    "axios": "^1.13.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
