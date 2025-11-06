@@ -16,7 +16,7 @@
  */
 import type { AxiosInstance } from 'axios';
 
-import { API_CONSUMERS } from '@/config/constant';
+import { API_CONSUMERS, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
@@ -42,4 +42,22 @@ export const putConsumerReq = (
     API_CONSUMERS,
     data
   );
+};
+
+export const deleteAllConsumers = async (req: AxiosInstance) => {
+  const totalRes = await getConsumerListReq(req, {
+    page: 1,
+    page_size: PAGE_SIZE_MIN,
+  });
+  const total = totalRes.total;
+  if (total === 0) return;
+  for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
+    const res = await getConsumerListReq(req, {
+      page: 1,
+      page_size: PAGE_SIZE_MAX,
+    });
+    await Promise.all(
+      res.list.map((d) => req.delete(`${API_CONSUMERS}/${d.value.username}`))
+    );
+  }
 };
