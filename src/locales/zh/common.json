@@ -83,8 +83,8 @@
       "remoteAddr": "远程地址",
       "remoteAddrs": "远程地址列表",
       "service": "服务",
-      "uri": "统一资源标识符（URI）",
-      "uris": "统一资源标识符列表（URI）",
+      "uri": "URI",
+      "uris": "URI 列表",
       "vars": "变量条件"
     },
     "search": "搜索",
