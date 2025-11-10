@@ -16,7 +16,7 @@
 #
 
 apisix:
-  node_listen: 9080
+  node_listen: 9080 # APISIX listening port
   enable_ipv6: false
   proxy_mode: http&stream
   stream_proxy:
@@ -24,16 +24,19 @@ apisix:
       - 9100
     udp:
       - 9200
+
 deployment:
   admin:
-    allow_admin:
-      - 0.0.0.0/0
+    allow_admin: # https://nginx.org/en/docs/http/ngx_http_access_module.html#allow
+      - 0.0.0.0/0 # We need to restrict ip access rules for security. 0.0.0.0/0 is for test.
+
     admin_key:
-      - name: admin
+      - name: "admin"
         key: edd1c9f034335f136f87ad84b625c8f1
-        role: admin
+        role: admin # admin: manage all configuration data
+
   etcd:
-    host:
-      - http://etcd:2379
-    prefix: /apisix
-    timeout: 30
+    host: # it's possible to define multiple etcd hosts addresses of the same etcd cluster.
+      - "http://etcd:2379" # multiple etcd address
+    prefix: "/apisix" # apisix configurations prefix
+    timeout: 30 # 30 seconds
