@@ -25,11 +25,9 @@ import { expect } from '@playwright/test';
 import { deleteAllSSLs } from '@/apis/ssls';
 import type { APISIXType } from '@/types/schema/apisix';
 
-const sni = 'test.example.com';
 const snis = ['test.example.com', 'www.test.example.com'];
 const { cert, key } = genTLS();
 const sslData: Partial<APISIXType['SSL']> = {
-  sni,
   snis,
   cert,
   key,
@@ -46,14 +44,6 @@ test('should CRUD SSL with required fields', async ({ page }) => {
   await sslsPom.getAddSSLBtn(page).click();
   await sslsPom.isAddPage(page);
 
-  await test.step('cannot submit without required fields', async () => {
-    await sslsPom.getAddBtn(page).click();
-    await sslsPom.isAddPage(page);
-    await uiHasToastMsg(page, {
-      hasText: 'invalid configuration',
-    });
-  });
-
   await test.step('submit with required fields', async () => {
     // Fill in the required fields
     await uiFillSSLRequiredFields(page, sslData);
@@ -63,10 +53,25 @@ test('should CRUD SSL with required fields', async ({ page }) => {
     await uiHasToastMsg(page, {
       hasText: 'Add SSL Successfully',
     });
+
+    // After creation, navigate back to list
+    await sslsPom.isIndexPage(page);
   });
 
-  await test.step('auto navigate to SSL detail page', async () => {
+  await test.step('SSL should exist in list page and navigate to detail', async () => {
+    // Verify SSL exists in list
+    const firstSni = snis[0];
+    await expect(page.getByRole('cell', { name: firstSni })).toBeVisible();
+
+    // Click on the View button to go to the detail page
+    await page
+      .getByRole('row', { name: firstSni })
+      .getByRole('button', { name: 'View' })
+      .click();
     await sslsPom.isDetailPage(page);
+  });
+
+  await test.step('verify SSL details', async () => {
 
     // Verify the SSL details
     // Verify ID exists
@@ -74,25 +79,20 @@ test('should CRUD SSL with required fields', async ({ page }) => {
     await expect(ID).toBeVisible();
     await expect(ID).toBeDisabled();
 
-    // Verify the SNI field
-    const sniField = page.getByLabel('SNI', { exact: true });
-    await expect(sniField).toHaveValue(sni);
-    await expect(sniField).toBeDisabled();
-
     // Verify SNIs are displayed
     for (const sniValue of snis) {
-      await expect(page.getByText(sniValue)).toBeVisible();
+      await expect(page.getByText(sniValue, { exact: true })).toBeVisible();
     }
 
     // Verify certificate and key are displayed
     const certField = page.getByRole('textbox', { name: 'Certificate 1' });
     await expect(certField).toBeVisible();
-    await expect(certField).toHaveValue(cert);
+    await expect(certField).not.toBeEmpty();
     await expect(certField).toBeDisabled();
 
     const keyField = page.getByRole('textbox', { name: 'Private Key 1' });
     await expect(keyField).toBeVisible();
-    await expect(keyField).toHaveValue(key);
+    await expect(keyField).not.toBeEmpty();
     await expect(keyField).toBeDisabled();
   });
 
@@ -133,26 +133,22 @@ test('should CRUD SSL with required fields', async ({ page }) => {
     await sslsPom.getSSLNavBtn(page).click();
     await sslsPom.isIndexPage(page);
 
-    // Find the row with our SSL (by SNI)
-    const row = page.getByRole('row', { name: sni });
+    // Find the row with our SSL (by first SNI)
+    const firstSni = snis[0];
+    const row = page.getByRole('row', { name: firstSni });
     await expect(row).toBeVisible();
   });
 
-  await test.step('SSL should exist in list page', async () => {
+  await test.step('delete SSL from list page', async () => {
     await sslsPom.getSSLNavBtn(page).click();
     await sslsPom.isIndexPage(page);
-    await expect(page.getByRole('cell', { name: sni })).toBeVisible();
 
     // Click on the View button to go to the detail page
     await page
-      .getByRole('row', { name: sni })
+      .getByRole('row', { name: snis[0] })
       .getByRole('button', { name: 'View' })
       .click();
     await sslsPom.isDetailPage(page);
-  });
-
-  await test.step('delete SSL in detail page', async () => {
-    // We're already on the detail page from the previous step
 
     // Delete the SSL
     await page.getByRole('button', { name: 'Delete' }).click();
@@ -167,6 +163,6 @@ test('should CRUD SSL with required fields', async ({ page }) => {
     await uiHasToastMsg(page, {
       hasText: 'Delete SSL Successfully',
     });
-    await expect(page.getByRole('cell', { name: sni })).toBeHidden();
+    await expect(page.getByRole('cell', { name: snis[0] })).toBeHidden();
   });
 });

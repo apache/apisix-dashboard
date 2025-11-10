@@ -40,8 +40,7 @@ test('should navigate to SSLs page', async ({ page }) => {
     await expect(table).toBeVisible();
     await expect(table.getByText('ID', { exact: true })).toBeVisible();
     await expect(table.getByText('SNI', { exact: true })).toBeVisible();
-    await expect(table.getByText('SNIs', { exact: true })).toBeVisible();
-    await expect(table.getByText('Expire Time', { exact: true })).toBeVisible();
+    await expect(table.getByText('Status', { exact: true })).toBeVisible();
     await expect(table.getByText('Actions', { exact: true })).toBeVisible();
   });
 });
@@ -50,16 +49,14 @@ const { cert, key } = genTLS();
 
 const ssls: APISIXType['SSL'][] = Array.from({ length: 11 }, (_, i) => ({
   id: randomId('ssl_id'),
-  sni: `ssl-${i + 1}.example.com`,
   snis: [`ssl-${i + 1}.example.com`, `www.ssl-${i + 1}.example.com`],
   cert,
   key,
-  certs: [cert],
-  keys: [key],
   labels: {
     env: 'test',
     version: `v${i + 1}`,
   },
+  status: 1,
 }));
 
 test.describe('page and page_size should work correctly', () => {
@@ -80,14 +77,20 @@ test.describe('page and page_size should work correctly', () => {
     const itemsInPage = await page
       .getByRole('cell', { name: /ssl-\d+\.example\.com/ })
       .all();
-    const snis = await Promise.all(itemsInPage.map((v) => v.textContent()));
-    return ssls.filter((d) => !snis.includes(d.sni));
+    const sniTexts = await Promise.all(itemsInPage.map((v) => v.textContent()));
+    return ssls.filter((d) => {
+      const firstSni = d.snis?.[0] || d.sni;
+      return !sniTexts.some((text) => text?.includes(firstSni || ''));
+    });
   };
 
   setupPaginationTests(test, {
     pom: sslsPom,
     items: ssls,
     filterItemsNotInPage,
-    getCell: (page, item) => page.getByRole('cell', { name: item.sni }).first(),
+    getCell: (page, item) =>
+      page
+        .getByRole('cell', { name: item.snis?.[0] || item.sni || '' })
+        .first(),
   });
 });
