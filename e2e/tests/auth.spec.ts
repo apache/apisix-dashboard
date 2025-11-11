@@ -24,7 +24,8 @@ test.use({ storageState: { cookies: [], origins: [] } });
 
 test('can auth with admin key', { tag: '@auth' }, async ({ page }) => {
   const settingsModal = page.getByRole('dialog', { name: 'Settings' });
-  const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
+  // PasswordInput renders as a textbox with type="password"
+  const adminKeyInput = page.getByLabel('Admin Key');
   const failedMsg = page.getByText('failed to check token');
 
   const checkSettingsModal = async () => {
