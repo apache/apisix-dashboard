@@ -15,12 +15,46 @@
  * limitations under the License.
  */
 import { uiGoto } from '@e2e/utils/ui';
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
+
+const locator = {
+  getAddBtn: (page: Page) =>
+    page.getByRole('link', { name: 'Add Stream Route' }),
+};
+
+const assert = {
+  isIndexPage: async (page: Page) => {
+    await expect(page).toHaveURL((url) =>
+      url.pathname.endsWith('/stream_routes')
+    );
+    const title = page.getByRole('heading', { name: 'Stream Routes' });
+    await expect(title).toBeVisible();
+  },
+  isAddPage: async (page: Page) => {
+    await expect(page).toHaveURL((url) =>
+      url.pathname.endsWith('/stream_routes/add')
+    );
+    const title = page.getByRole('heading', { name: 'Add Stream Route' });
+    await expect(title).toBeVisible();
+  },
+  isDetailPage: async (page: Page) => {
+    await expect(page).toHaveURL((url) =>
+      url.pathname.includes('/stream_routes/detail')
+    );
+    const title = page.getByRole('heading', {
+      name: 'Stream Route Detail',
+    });
+    await expect(title).toBeVisible();
+  },
+};
 
 const goto = {
   toIndex: (page: Page) => uiGoto(page, '/stream_routes'),
+  toAdd: (page: Page) => uiGoto(page, '/stream_routes/add'),
 };
 
 export const streamRoutesPom = {
+  ...locator,
+  ...assert,
   ...goto,
 };
