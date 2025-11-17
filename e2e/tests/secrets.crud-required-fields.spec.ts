@@ -41,16 +41,29 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
     }
   });
 
-  test('should create a secret with required fields', async () => {
-    await test.step('create secret via API', async () => {
-      await e2eReq.put(`${API_SECRETS}/${manager}/${createdSecretId}`, {
-        uri: 'http://vault.example.com:8200',
-        prefix: '/secret/test',
-        token: 'test-vault-token-123',
-      });
+  test('should create a secret with required fields', async ({ page }) => {
+    await test.step('create secret via UI', async () => {
+      await secretsPom.toIndex(page);
+      await secretsPom.isIndexPage(page);
+
+      await secretsPom.getAddSecretBtn(page).click();
+      await secretsPom.isAddPage(page);
+
+      // Fill ID field
+      await page.getByLabel('ID', { exact: true }).fill(createdSecretId);
+
+      // Vault should be selected by default, so just fill the required Vault fields
+      await page.getByLabel('URI').fill('http://vault.example.com:8200');
+      await page.getByLabel('Prefix').fill('/secret/test');
+      await page.getByLabel('Token').fill('test-vault-token-123');
+
+      // Submit the form
+      await secretsPom.getAddBtn(page).click();
+      await secretsPom.isIndexPage(page);
     });
 
-    await test.step('verify secret was created via API', async () => {
+    await test.step('verify secret was created', async () => {
+      // Verify via API
       const secret = await e2eReq
         .get<unknown, APISIXType['RespSecretDetail']>(
           `${API_SECRETS}/${manager}/${createdSecretId}`
@@ -67,21 +80,6 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
   });
 
   test('should read/view the secret details', async ({ page }) => {
-    await test.step('verify secret can be retrieved via API', async () => {
-      const secret = await e2eReq
-        .get<unknown, APISIXType['RespSecretDetail']>(
-          `${API_SECRETS}/${manager}/${createdSecretId}`
-        )
-        .then((v) => v.data);
-
-      expect(secret.value?.id).toContain(createdSecretId);
-      // Note: manager is not in the response, it's part of the ID
-      const vaultSecret = secret.value as APISIXType['VaultSecret'];
-      expect(vaultSecret.uri).toBe('http://vault.example.com:8200');
-      expect(vaultSecret.prefix).toBe('/secret/test');
-      expect(vaultSecret.token).toBe('test-vault-token-123');
-    });
-
     await test.step('navigate to secret details page and verify UI', async () => {
       await secretsPom.toIndex(page);
       await secretsPom.isIndexPage(page);
