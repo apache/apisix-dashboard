@@ -138,6 +138,9 @@ test.describe('Routes version filter', () => {
       // Verify routes are visible in list
       await expect(page.getByText('route_v1_1')).toBeVisible();
       await expect(page.getByText('route_v2_1')).toBeVisible();
+      
+      // Verify version filter field exists
+      await expect(page.locator('#version')).toBeAttached();
     });
   });
 });

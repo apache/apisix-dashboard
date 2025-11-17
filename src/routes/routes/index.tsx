@@ -147,6 +147,26 @@ export const RouteList = (props: RouteListProps) => {
     };
   }, [pagination, totalCount]);
 
+  // Extract unique version values from route labels
+  const versionOptions = useMemo(() => {
+    const dataSource = needsAllData && allData?.list ? allData.list : data?.list || [];
+    const versions = new Set<string>();
+    
+    dataSource.forEach((route) => {
+      const versionLabel = route.value.labels?.version;
+      if (versionLabel) {
+        versions.add(versionLabel);
+      }
+    });
+    
+    return Array.from(versions)
+      .sort()
+      .map((version) => ({
+        label: version,
+        value: version,
+      }));
+  }, [needsAllData, allData, data]);
+
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
       {
@@ -195,7 +215,12 @@ export const RouteList = (props: RouteListProps) => {
   return (
     <AntdConfigProvider>
       <div style={{ marginBottom: 24 }}>
-        <SearchForm onSearch={handleSearch} onReset={handleReset} />
+        <SearchForm
+          onSearch={handleSearch}
+          onReset={handleReset}
+          versionOptions={versionOptions}
+          initialValues={mapSearchParams(params)}
+        />
       </div>
       <ProTable
         columns={columns}
