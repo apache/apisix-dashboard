@@ -16,24 +16,28 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
+import { getRouteListReq } from '@/apis/routes';
 import { SearchForm, type SearchFormValues } from '@/components/form/SearchForm';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
-import { API_ROUTES } from '@/config/constant';
+import { API_ROUTES, PAGE_SIZE_MAX } from '@/config/constant';
 import { queryClient } from '@/config/global';
+import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import {
   filterRoutes,
   needsClientSideFiltering,
+  paginateResults,
 } from '@/utils/clientSideFilter';
 import { useSearchParams } from '@/utils/useSearchParams';
 import type { ListPageKeys } from '@/utils/useTablePagination';
@@ -82,6 +86,19 @@ export const RouteList = (props: RouteListProps) => {
   const { params } = useSearchParams(routeKey);
   const { t } = useTranslation();
 
+  // Fetch all data when client-side filtering is active
+  const needsAllData = needsClientSideFiltering(params);
+  const { data: allData, isLoading: isLoadingAllData } = useQuery({
+    queryKey: ['routes-all', defaultParams, needsAllData],
+    queryFn: () =>
+      getRouteListReq(req, {
+        page: 1,
+        page_size: PAGE_SIZE_MAX,
+        ...defaultParams,
+      }),
+    enabled: needsAllData,
+  });
+
   const handleSearch = (values: SearchFormValues) => {
     // Send name filter to backend, keep others for client-side filtering
     setParams({
@@ -97,18 +114,38 @@ export const RouteList = (props: RouteListProps) => {
     });
   };
 
-  // Apply client-side filtering for parameters not supported by APISIX backend
-  const filteredData = useMemo(() => {
-    if (!data?.list) return [];
-    
-    // Check if we need client-side filtering (for host, path, description, etc.)
-    if (needsClientSideFiltering(params)) {
-      return filterRoutes(data.list, params);
+  // Apply client-side filtering and pagination
+  const { filteredData, totalCount } = useMemo(() => {
+    // If client-side filtering is needed, use all data
+    if (needsAllData && allData?.list) {
+      const filtered = filterRoutes(allData.list, params);
+      const paginated = paginateResults(
+        filtered,
+        params.page || 1,
+        params.page_size || 10
+      );
+      return {
+        filteredData: paginated.list,
+        totalCount: paginated.total,
+      };
     }
     
-    // If only backend-supported filters (name) are used, return data as-is
-    return data.list;
-  }, [data?.list, params]);
+    // Otherwise, use paginated data from backend
+    return {
+      filteredData: data?.list || [],
+      totalCount: data?.total || 0,
+    };
+  }, [needsAllData, allData, data, params]);
+
+  const actualLoading = needsAllData ? isLoadingAllData : isLoading;
+
+  // Update pagination to use filtered total
+  const customPagination = useMemo(() => {
+    return {
+      ...pagination,
+      total: totalCount,
+    };
+  }, [pagination, totalCount]);
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
@@ -164,10 +201,10 @@ export const RouteList = (props: RouteListProps) => {
         columns={columns}
         dataSource={filteredData}
         rowKey="id"
-        loading={isLoading}
+        loading={actualLoading}
         search={false}
         options={false}
-        pagination={pagination}
+        pagination={customPagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
           menu: {

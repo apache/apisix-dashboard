@@ -96,6 +96,12 @@ export const filterRoutes = (
       if (!hasMatchingLabel) return false;
     }
 
+    // Filter by version
+    if (filters.version && routeData.labels?.version) {
+      const versionMatch = routeData.labels.version === filters.version;
+      if (!versionMatch) return false;
+    }
+
     // Filter by status
     if (filters.status && filters.status !== 'UnPublished/Published') {
       const isPublished = routeData.status === 1;
@@ -122,6 +128,7 @@ export const needsClientSideFiltering = (
       filters.description ||
       filters.plugin ||
       (filters.labels && filters.labels.length > 0) ||
+      filters.version ||
       (filters.status && filters.status !== 'UnPublished/Published')
   );
 };
