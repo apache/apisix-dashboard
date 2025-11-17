@@ -84,7 +84,7 @@ test.describe('CRUD proto with all fields', () => {
     });
   });
 
-  test('should read/view the proto details', async () => {
+  test('should read/view the proto details', async ({ page }) => {
     await test.step('verify proto can be retrieved via API', async () => {
       const proto = await e2eReq
         .get<unknown, APISIXType['RespProtoDetail']>(
@@ -96,6 +96,24 @@ test.describe('CRUD proto with all fields', () => {
       expect(proto.value?.content).toBe(protoContent);
       expect(proto.value?.create_time).toBeDefined();
       expect(proto.value?.update_time).toBeDefined();
+    });
+
+    await test.step('navigate to proto details page and verify UI', async () => {
+      // Navigate to protos list page first
+      await protosPom.toIndex(page);
+      await protosPom.isIndexPage(page);
+
+      // Find and click the View button for the created proto
+      const row = page.locator('tr').filter({ hasText: createdProtoId });
+      await row.getByRole('button', { name: 'View' }).click();
+      
+      // Verify we're on the detail page
+      await protosPom.isDetailPage(page);
+
+      // Verify the content is displayed correctly on the details page
+      const pageContent = await page.textContent('body');
+      expect(pageContent).toContain('package test;');
+      expect(pageContent).toContain('TestMessage');
     });
   });
 
