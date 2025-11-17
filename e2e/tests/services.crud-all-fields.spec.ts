@@ -32,8 +32,6 @@ test.beforeAll(async () => {
 });
 
 test('should CRUD service with all fields', async ({ page }) => {
-  test.setTimeout(30000);
-
   const serviceNameWithAllFields = randomId('test-service-full');
   const description =
     'This is a test description for the service with all fields';
