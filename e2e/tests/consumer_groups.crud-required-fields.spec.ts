@@ -17,13 +17,14 @@
 import { consumerGroupsPom } from '@e2e/pom/consumer_groups';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
+import {
+  uiFillMonacoEditor,
+  uiGetMonacoEditor,
+  uiHasToastMsg,
+} from '@e2e/utils/ui';
 import { expect } from '@playwright/test';
 
-import {
-  deleteAllConsumerGroups,
-  putConsumerGroupReq,
-} from '@/apis/consumer_groups';
-import type { APISIXType } from '@/types/schema/apisix';
+import { deleteAllConsumerGroups } from '@/apis/consumer_groups';
 
 test.beforeAll(async () => {
   await deleteAllConsumerGroups(e2eReq);
@@ -31,18 +32,64 @@ test.beforeAll(async () => {
 
 test('should CRUD Consumer Group with required fields', async ({ page }) => {
   const testId = 'test-consumer-group-required';
-  const consumerGroupData: APISIXType['ConsumerGroupPut'] = {
-    id: testId,
-    plugins: {}, // plugins is required but can be empty object
-  };
 
-  await test.step('create consumer group via API', async () => {
-    // Create via API since UI requires manual plugin selection
-    await putConsumerGroupReq(e2eReq, consumerGroupData);
+  await consumerGroupsPom.toIndex(page);
+  await consumerGroupsPom.isIndexPage(page);
+
+  await test.step('create consumer group with required fields', async () => {
+    // Navigate to add page
+    await consumerGroupsPom.getAddConsumerGroupBtn(page).click();
+    await consumerGroupsPom.isAddPage(page);
+
+    // Fill in the ID
+    const idField = page.getByRole('textbox', { name: 'ID', exact: true });
+    await idField.clear();
+    await idField.fill(testId);
+
+    // Add a minimal plugin (UI requires at least one plugin)
+    const selectPluginsBtn = page.getByRole('button', {
+      name: 'Select Plugins',
+    });
+    await selectPluginsBtn.click();
+
+    const selectPluginsDialog = page.getByRole('dialog', {
+      name: 'Select Plugins',
+    });
+    const searchInput = selectPluginsDialog.getByPlaceholder('Search');
+    await searchInput.fill('basic-auth');
+
+    await selectPluginsDialog
+      .getByTestId('plugin-basic-auth')
+      .getByRole('button', { name: 'Add' })
+      .click();
+
+    const addPluginDialog = page.getByRole('dialog', { name: 'Add Plugin' });
+    const pluginEditor = await uiGetMonacoEditor(page, addPluginDialog);
+    await uiFillMonacoEditor(page, pluginEditor, '{"hide_credentials": true}');
+
+    await addPluginDialog.getByRole('button', { name: 'Add' }).click();
+    await expect(addPluginDialog).toBeHidden();
+
+    // Submit the form
+    await consumerGroupsPom.getAddBtn(page).click();
+    await uiHasToastMsg(page, {
+      hasText: 'Add Consumer Group Successfully',
+    });
+
+    // Should navigate to detail page
+    await consumerGroupsPom.isDetailPage(page);
   });
 
-  await test.step('consumer group should exist in list page', async () => {
-    await consumerGroupsPom.toIndex(page);
+  await test.step('verify consumer group in detail page', async () => {
+    // Verify the ID
+    const idField = page.getByRole('textbox', { name: 'ID', exact: true });
+    await expect(idField).toHaveValue(testId);
+    await expect(idField).toBeDisabled();
+  });
+
+  await test.step('verify consumer group exists in list', async () => {
+    // Navigate to list page
+    await consumerGroupsPom.getConsumerGroupNavBtn(page).click();
     await consumerGroupsPom.isIndexPage(page);
 
     // Verify consumer group exists in list
@@ -51,7 +98,7 @@ test('should CRUD Consumer Group with required fields', async ({ page }) => {
     ).toBeVisible();
   });
 
-  await test.step('navigate to detail and verify', async () => {
+  await test.step('navigate to detail and verify can edit', async () => {
     // Click View button to go to detail page
     await page
       .getByRole('row', { name: new RegExp(testId) })
@@ -59,13 +106,6 @@ test('should CRUD Consumer Group with required fields', async ({ page }) => {
       .click();
     await consumerGroupsPom.isDetailPage(page);
 
-    // Verify the ID
-    const idField = page.getByRole('textbox', { name: 'ID', exact: true });
-    await expect(idField).toHaveValue(testId);
-    await expect(idField).toBeDisabled();
-  });
-
-  await test.step('verify can edit consumer group', async () => {
     // Click Edit button
     await page.getByRole('button', { name: 'Edit' }).click();
 
