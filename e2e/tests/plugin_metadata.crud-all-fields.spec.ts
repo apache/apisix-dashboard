@@ -151,6 +151,22 @@ test('should CRUD plugin metadata with all fields', async ({ page }) => {
     await expect(editPluginDialog).toBeHidden();
   });
 
+  await test.step('verify configuration changes were saved', async () => {
+    // Verify changes via API
+    const response = await e2eReq.get(`${API_PLUGIN_METADATA}/http-logger`);
+    const metadata = response.data;
+
+    // Check that the configuration contains the updated fields
+    expect(metadata.value).toMatchObject({
+      log_format: {
+        time: '$time_iso8601',
+        user_agent: '$http_user_agent',
+        host: '$host',
+        client_ip: '$remote_addr',
+      },
+    });
+  });
+
   await test.step('delete plugin metadata', async () => {
     // Find the http-logger card
     const httpLoggerCard = page.getByTestId('plugin-http-logger');
