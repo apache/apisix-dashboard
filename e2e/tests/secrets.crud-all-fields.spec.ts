@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { secretsPom } from '@e2e/pom/secrets';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { expect } from '@playwright/test';
@@ -73,7 +74,7 @@ test.describe('CRUD secret with all fields (AWS)', () => {
     });
   });
 
-  test('should read/view the secret details', async () => {
+  test('should read/view the secret details', async ({ page }) => {
     await test.step('verify secret can be retrieved via API', async () => {
       const secret = await e2eReq
         .get<unknown, APISIXType['RespSecretDetail']>(
@@ -90,33 +91,76 @@ test.describe('CRUD secret with all fields (AWS)', () => {
       expect(awsSecret.region).toBe('us-west-2');
       expect(awsSecret.endpoint_url).toBe('https://secretsmanager.us-west-2.amazonaws.com');
     });
+
+    await test.step('navigate to secret details page and verify UI', async () => {
+      await secretsPom.toIndex(page);
+      await secretsPom.isIndexPage(page);
+
+      const row = page.locator('tr').filter({ hasText: createdSecretId });
+      await row.getByRole('button', { name: 'View' }).click();
+      
+      await secretsPom.isDetailPage(page);
+
+      const pageContent = await page.textContent('body');
+      expect(pageContent).toContain('Secret Manager');
+      expect(pageContent).toContain(createdSecretId);
+      // Verify AWS-specific fields are present (labels)
+      expect(pageContent).toContain('Access Key ID');
+      expect(pageContent).toContain('Secret Access Key');
+      expect(pageContent).toContain('Region');
+    });
   });
 
-  test('should update the secret with new values', async () => {
+  test('should update the secret with new values', async ({ page }) => {
     const updatedAccessKeyId = 'AKIAI44QH8DHBEXAMPLE';
     const updatedSecretAccessKey = 'je7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY';
     const updatedSessionToken = 'updated-session-token-456';
     const updatedRegion = 'eu-west-1';
     const updatedEndpointUrl = 'https://secretsmanager.eu-west-1.amazonaws.com';
 
-    await test.step('update secret via API', async () => {
-      await e2eReq.put(`${API_SECRETS}/${manager}/${createdSecretId}`, {
-        access_key_id: updatedAccessKeyId,
-        secret_access_key: updatedSecretAccessKey,
-        session_token: updatedSessionToken,
-        region: updatedRegion,
-        endpoint_url: updatedEndpointUrl,
-      });
+    await test.step('navigate to secret detail page', async () => {
+      await secretsPom.toIndex(page);
+      await secretsPom.isIndexPage(page);
+
+      const row = page.locator('tr').filter({ hasText: createdSecretId });
+      await row.getByRole('button', { name: 'View' }).click();
+      await secretsPom.isDetailPage(page);
     });
 
-    await test.step('verify secret was updated via API', async () => {
+    await test.step('enter edit mode and update fields', async () => {
+      await page.getByRole('button', { name: 'Edit' }).click();
+
+      // Update AWS fields
+      await page.getByLabel('Access Key ID').clear();
+      await page.getByLabel('Access Key ID').fill(updatedAccessKeyId);
+      await page.getByLabel('Secret Access Key').clear();
+      await page.getByLabel('Secret Access Key').fill(updatedSecretAccessKey);
+      await page.getByLabel('Session Token').clear();
+      await page.getByLabel('Session Token').fill(updatedSessionToken);
+      await page.getByLabel('Region').clear();
+      await page.getByLabel('Region').fill(updatedRegion);
+      await page.getByLabel('Endpoint URL').clear();
+      await page.getByLabel('Endpoint URL').fill(updatedEndpointUrl);
+    });
+
+    await test.step('save the changes', async () => {
+      await page.getByRole('button', { name: 'Save' }).click();
+      await secretsPom.isDetailPage(page);
+    });
+
+    await test.step('verify secret was updated', async () => {
+      const pageContent = await page.textContent('body');
+      // Verify we're still on detail page with proper fields
+      expect(pageContent).toContain('Secret Manager');
+      expect(pageContent).toContain(createdSecretId);
+
+      // Verify via API
       const secret = await e2eReq
         .get<unknown, APISIXType['RespSecretDetail']>(
           `${API_SECRETS}/${manager}/${createdSecretId}`
         )
         .then((v) => v.data);
 
-      // Note: manager is not in the response, it's part of the ID
       const awsSecret = secret.value as APISIXType['AWSSecret'];
       expect(awsSecret.access_key_id).toBe(updatedAccessKeyId);
       expect(awsSecret.secret_access_key).toBe(updatedSecretAccessKey);
@@ -126,9 +170,25 @@ test.describe('CRUD secret with all fields (AWS)', () => {
     });
   });
 
-  test('should delete the secret', async () => {
-    await test.step('delete secret via API', async () => {
-      await e2eReq.delete(`${API_SECRETS}/${manager}/${createdSecretId}`);
+  test('should delete the secret', async ({ page }) => {
+    await test.step('navigate to detail page and delete', async () => {
+      await secretsPom.toIndex(page);
+      await secretsPom.isIndexPage(page);
+
+      const row = page.locator('tr').filter({ hasText: createdSecretId });
+      await row.getByRole('button', { name: 'View' }).click();
+      await secretsPom.isDetailPage(page);
+
+      await page.getByRole('button', { name: 'Delete' }).click();
+
+      const deleteDialog = page.getByRole('dialog', { name: 'Delete Secret' });
+      await expect(deleteDialog).toBeVisible();
+      await deleteDialog.getByRole('button', { name: 'Delete' }).click();
+    });
+
+    await test.step('verify deletion and redirect', async () => {
+      await secretsPom.isIndexPage(page);
+      await expect(page.getByRole('cell', { name: createdSecretId })).toBeHidden();
     });
 
     await test.step('verify secret was deleted via API', async () => {

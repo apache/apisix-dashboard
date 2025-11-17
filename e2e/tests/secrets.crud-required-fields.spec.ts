@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { secretsPom } from '@e2e/pom/secrets';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { expect } from '@playwright/test';
@@ -65,7 +66,7 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
     });
   });
 
-  test('should read/view the secret details', async () => {
+  test('should read/view the secret details', async ({ page }) => {
     await test.step('verify secret can be retrieved via API', async () => {
       const secret = await e2eReq
         .get<unknown, APISIXType['RespSecretDetail']>(
@@ -80,29 +81,72 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
       expect(vaultSecret.prefix).toBe('/secret/test');
       expect(vaultSecret.token).toBe('test-vault-token-123');
     });
+
+    await test.step('navigate to secret details page and verify UI', async () => {
+      await secretsPom.toIndex(page);
+      await secretsPom.isIndexPage(page);
+
+      // Find and click the View button for the created secret
+      const row = page.locator('tr').filter({ hasText: createdSecretId });
+      await row.getByRole('button', { name: 'View' }).click();
+      
+      await secretsPom.isDetailPage(page);
+
+      // Verify the page shows Secret Manager and ID
+      const pageContent = await page.textContent('body');
+      expect(pageContent).toContain('Secret Manager');
+      expect(pageContent).toContain(createdSecretId);
+      // Verify Vault-specific fields are present (labels)
+      expect(pageContent).toContain('URI');
+      expect(pageContent).toContain('Prefix');
+      expect(pageContent).toContain('Token');
+    });
   });
 
-  test('should update the secret', async () => {
+  test('should update the secret', async ({ page }) => {
     const updatedUri = 'http://vault-updated.example.com:8200';
     const updatedPrefix = '/secret/updated';
     const updatedToken = 'updated-vault-token-456';
 
-    await test.step('update secret via API', async () => {
-      await e2eReq.put(`${API_SECRETS}/${manager}/${createdSecretId}`, {
-        uri: updatedUri,
-        prefix: updatedPrefix,
-        token: updatedToken,
-      });
+    await test.step('navigate to secret detail page', async () => {
+      await secretsPom.toIndex(page);
+      await secretsPom.isIndexPage(page);
+
+      const row = page.locator('tr').filter({ hasText: createdSecretId });
+      await row.getByRole('button', { name: 'View' }).click();
+      await secretsPom.isDetailPage(page);
     });
 
-    await test.step('verify secret was updated via API', async () => {
+    await test.step('enter edit mode and update fields', async () => {
+      await page.getByRole('button', { name: 'Edit' }).click();
+
+      // Update Vault fields
+      await page.getByLabel('URI').clear();
+      await page.getByLabel('URI').fill(updatedUri);
+      await page.getByLabel('Prefix').clear();
+      await page.getByLabel('Prefix').fill(updatedPrefix);
+      await page.getByLabel('Token').clear();
+      await page.getByLabel('Token').fill(updatedToken);
+    });
+
+    await test.step('save the changes', async () => {
+      await page.getByRole('button', { name: 'Save' }).click();
+      await secretsPom.isDetailPage(page);
+    });
+
+    await test.step('verify secret was updated', async () => {
+      const pageContent = await page.textContent('body');
+      // Verify we're still on detail page with proper fields
+      expect(pageContent).toContain('Secret Manager');
+      expect(pageContent).toContain(createdSecretId);
+
+      // Verify via API
       const secret = await e2eReq
         .get<unknown, APISIXType['RespSecretDetail']>(
           `${API_SECRETS}/${manager}/${createdSecretId}`
         )
         .then((v) => v.data);
 
-      // Note: manager is not in the response, it's part of the ID
       const vaultSecret = secret.value as APISIXType['VaultSecret'];
       expect(vaultSecret.uri).toBe(updatedUri);
       expect(vaultSecret.prefix).toBe(updatedPrefix);
@@ -110,9 +154,25 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
     });
   });
 
-  test('should delete the secret', async () => {
-    await test.step('delete secret via API', async () => {
-      await e2eReq.delete(`${API_SECRETS}/${manager}/${createdSecretId}`);
+  test('should delete the secret', async ({ page }) => {
+    await test.step('navigate to detail page and delete', async () => {
+      await secretsPom.toIndex(page);
+      await secretsPom.isIndexPage(page);
+
+      const row = page.locator('tr').filter({ hasText: createdSecretId });
+      await row.getByRole('button', { name: 'View' }).click();
+      await secretsPom.isDetailPage(page);
+
+      await page.getByRole('button', { name: 'Delete' }).click();
+
+      const deleteDialog = page.getByRole('dialog', { name: 'Delete Secret' });
+      await expect(deleteDialog).toBeVisible();
+      await deleteDialog.getByRole('button', { name: 'Delete' }).click();
+    });
+
+    await test.step('verify deletion and redirect', async () => {
+      await secretsPom.isIndexPage(page);
+      await expect(page.getByRole('cell', { name: createdSecretId })).toBeHidden();
     });
 
     await test.step('verify secret was deleted via API', async () => {
