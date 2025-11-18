@@ -22,6 +22,7 @@ import {
   uiGetMonacoEditor,
   uiHasToastMsg,
 } from '@e2e/utils/ui';
+import type { Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import { API_PLUGIN_METADATA } from '@/config/constant';
@@ -31,6 +32,39 @@ const deletePluginMetadata = async (req: typeof e2eReq, name: string) => {
   await req.delete(`${API_PLUGIN_METADATA}/${name}`).catch(() => {
     // Ignore errors if metadata doesn't exist
   });
+};
+const getMonacoEditorValue = async (editPluginDialog: Locator) => {
+  let editorValue = '';
+  const textarea = editPluginDialog.locator('textarea');
+  if (await textarea.count() > 0) {
+    editorValue = await textarea.inputValue();
+  }
+  if (!editorValue || editorValue.trim() === '{') {
+    const lines = await editPluginDialog.locator('.view-line').allTextContents();
+    editorValue = lines.join('\n').replace(/\s+/g, ' ');
+  }
+  if (!editorValue || editorValue.trim() === '{') {
+    const allText = await editPluginDialog.textContent();
+    console.log('DEBUG: editorValue fallback failed, dialog text:', allText);
+  }
+  return editorValue;
+};
+
+// Helper function to close edit dialog
+const closeEditDialog = async (editPluginDialog: Locator) => {
+  const buttons = await editPluginDialog.locator('button').allTextContents();
+  console.log('DEBUG: Edit Plugin dialog buttons:', buttons);
+  let closed = false;
+  for (const [i, name] of buttons.entries()) {
+    if (name.trim().toLowerCase() === 'cancel') {
+      await editPluginDialog.locator('button').nth(i).click();
+      closed = true;
+      break;
+    }
+  }
+  if (!closed && buttons.length > 0) {
+    await editPluginDialog.locator('button').first().click();
+  }
 };
 
 test.beforeAll(async () => {
@@ -152,19 +186,22 @@ test('should CRUD plugin metadata with all fields', async ({ page }) => {
   });
 
   await test.step('verify configuration changes were saved', async () => {
-    // Verify changes via API
-    const response = await e2eReq.get(`${API_PLUGIN_METADATA}/http-logger`);
-    const metadata = response.data;
+    // Re-open the edit dialog via UI
+    const httpLoggerCard = page.getByTestId('plugin-http-logger');
+    await httpLoggerCard.getByRole('button', { name: 'Edit' }).click();
+    const editPluginDialog = page.getByRole('dialog', { name: 'Edit Plugin' });
+    await expect(editPluginDialog).toBeVisible();
 
-    // Check that the configuration contains the updated fields
-    expect(metadata.value).toMatchObject({
-      log_format: {
-        time: '$time_iso8601',
-        user_agent: '$http_user_agent',
-        host: '$host',
-        client_ip: '$remote_addr',
-      },
-    });
+    // Get Monaco editor value using helper
+    const editorValue = await getMonacoEditorValue(editPluginDialog);
+    expect(editorValue).toMatch(/"time"\s*:\s*"\$time_iso8601"/);
+    expect(editorValue).toMatch(/"user_agent"\s*:\s*"\$http_user_agent"/);
+    expect(editorValue).toMatch(/"host"\s*:\s*"\$host"/);
+    expect(editorValue).toMatch(/"client_ip"\s*:\s*"\$remote_addr"/);
+
+    // Close the dialog using helper
+    await closeEditDialog(editPluginDialog);
+    await expect(editPluginDialog).toBeHidden();
   });
 
   await test.step('delete plugin metadata', async () => {
