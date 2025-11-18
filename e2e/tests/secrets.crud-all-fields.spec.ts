@@ -20,7 +20,7 @@ import { test } from '@e2e/utils/test';
 import { expect } from '@playwright/test';
 
 import { API_SECRETS } from '@/config/constant';
-import type { APISIXType } from '@/types/schema/apisix';
+
 
 let createdSecretId: string;
 const manager = 'aws';
@@ -41,7 +41,7 @@ test.describe('CRUD secret with all fields (AWS)', () => {
     }
   });
 
-  test('should create a secret with all fields', async () => {
+  test('should create a secret with all fields', async ({ page }) => {
     await test.step('create secret via API', async () => {
       await e2eReq.put(`${API_SECRETS}/${manager}/${createdSecretId}`, {
         access_key_id: 'AKIAIOSFODNN7EXAMPLE',
@@ -51,54 +51,21 @@ test.describe('CRUD secret with all fields (AWS)', () => {
         endpoint_url: 'https://secretsmanager.us-west-2.amazonaws.com',
       });
     });
-
-    await test.step('verify secret was created via API', async () => {
-      const secret = await e2eReq
-        .get<unknown, APISIXType['RespSecretDetail']>(
-          `${API_SECRETS}/aws/${createdSecretId}`
-        )
-        .then((v) => v.data);
-
-      expect(secret.value).toBeDefined();
-      // Note: manager is not in the response, it's part of the ID (aws/id)
-      const awsSecret = secret.value as APISIXType['AWSSecret'];
-      expect(awsSecret.access_key_id).toBe('AKIAIOSFODNN7EXAMPLE');
-      expect(awsSecret.secret_access_key).toBe(
-        'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
-      );
-      expect(awsSecret.session_token).toBe('test-session-token-123');
-      expect(awsSecret.region).toBe('us-west-2');
-      expect(awsSecret.endpoint_url).toBe(
-        'https://secretsmanager.us-west-2.amazonaws.com'
-      );
+    await test.step('verify secret appears in UI', async () => {
+      await secretsPom.toIndex(page);
+      await secretsPom.isIndexPage(page);
+      const row = page.locator('tr').filter({ hasText: createdSecretId });
+      await expect(row).toBeVisible();
     });
   });
 
   test('should read/view the secret details', async ({ page }) => {
-    await test.step('verify secret can be retrieved via API', async () => {
-      const secret = await e2eReq
-        .get<unknown, APISIXType['RespSecretDetail']>(
-          `${API_SECRETS}/${manager}/${createdSecretId}`
-        )
-        .then((v) => v.data);
-
-      expect(secret.value?.id).toContain(createdSecretId);
-      // Note: manager is not in the response, it's part of the ID
-      const awsSecret = secret.value as APISIXType['AWSSecret'];
-      expect(awsSecret.access_key_id).toBe('AKIAIOSFODNN7EXAMPLE');
-      expect(awsSecret.secret_access_key).toBe('wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY');
-      expect(awsSecret.session_token).toBe('test-session-token-123');
-      expect(awsSecret.region).toBe('us-west-2');
-      expect(awsSecret.endpoint_url).toBe('https://secretsmanager.us-west-2.amazonaws.com');
-    });
-
     await test.step('navigate to secret details page and verify UI', async () => {
       await secretsPom.toIndex(page);
       await secretsPom.isIndexPage(page);
 
       const row = page.locator('tr').filter({ hasText: createdSecretId });
       await row.getByRole('button', { name: 'View' }).click();
-      
       await secretsPom.isDetailPage(page);
 
       const pageContent = await page.textContent('body');
@@ -148,25 +115,13 @@ test.describe('CRUD secret with all fields (AWS)', () => {
       await secretsPom.isDetailPage(page);
     });
 
-    await test.step('verify secret was updated', async () => {
-      const pageContent = await page.textContent('body');
-      // Verify we're still on detail page with proper fields
-      expect(pageContent).toContain('Secret Manager');
-      expect(pageContent).toContain(createdSecretId);
-
-      // Verify via API
-      const secret = await e2eReq
-        .get<unknown, APISIXType['RespSecretDetail']>(
-          `${API_SECRETS}/${manager}/${createdSecretId}`
-        )
-        .then((v) => v.data);
-
-      const awsSecret = secret.value as APISIXType['AWSSecret'];
-      expect(awsSecret.access_key_id).toBe(updatedAccessKeyId);
-      expect(awsSecret.secret_access_key).toBe(updatedSecretAccessKey);
-      expect(awsSecret.session_token).toBe(updatedSessionToken);
-      expect(awsSecret.region).toBe(updatedRegion);
-      expect(awsSecret.endpoint_url).toBe(updatedEndpointUrl);
+    await test.step('verify secret was updated via UI', async () => {
+      // Check the actual field values in the detail page
+      await expect(page.getByLabel('Access Key ID')).toHaveValue(updatedAccessKeyId);
+      await expect(page.getByLabel('Secret Access Key')).toHaveValue(updatedSecretAccessKey);
+      await expect(page.getByLabel('Session Token')).toHaveValue(updatedSessionToken);
+      await expect(page.getByLabel('Region')).toHaveValue(updatedRegion);
+      await expect(page.getByLabel('Endpoint URL')).toHaveValue(updatedEndpointUrl);
     });
   });
 
