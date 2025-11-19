@@ -55,17 +55,36 @@ export const putUpstreamReq = (
 };
 
 export const deleteAllUpstreams = async (req: AxiosInstance) => {
-  const totalRes = await getUpstreamListReq(req, {
-    page: 1,
-    page_size: PAGE_SIZE_MIN,
-  });
+  const retry = async <T>(fn: () => Promise<T>, times = 3, delay = 500) => {
+    let lastErr: unknown;
+    for (let i = 0; i < times; i++) {
+      try {
+        return await fn();
+      } catch (err) {
+        lastErr = err;
+        // small backoff
+         
+        await new Promise((r) => setTimeout(r, delay));
+      }
+    }
+    throw lastErr;
+  };
+
+  const totalRes = await retry(() =>
+    getUpstreamListReq(req, {
+      page: 1,
+      page_size: PAGE_SIZE_MIN,
+    })
+  );
   const total = totalRes.total;
   if (total === 0) return;
   for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
-    const res = await getUpstreamListReq(req, {
-      page: 1,
-      page_size: PAGE_SIZE_MAX,
-    });
+    const res = await retry(() =>
+      getUpstreamListReq(req, {
+        page: 1,
+        page_size: PAGE_SIZE_MAX,
+      })
+    );
     await Promise.all(
       res.list.map((d) => req.delete(`${API_UPSTREAMS}/${d.value.id}`))
     );
