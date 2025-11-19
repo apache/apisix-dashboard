@@ -83,7 +83,7 @@ export const RouteList = (props: RouteListProps) => {
     routeKey,
     defaultParams
   );
-  const { params } = useSearchParams(routeKey);
+  const { params } = useSearchParams(routeKey) as { params: PageSearchType };
   const { t } = useTranslation();
 
   // Fetch all data when client-side filtering is active
@@ -121,8 +121,8 @@ export const RouteList = (props: RouteListProps) => {
       const filtered = filterRoutes(allData.list, params);
       const paginated = paginateResults(
         filtered,
-        (params as PageSearchType).page || 1,
-        (params as PageSearchType).page_size || 10
+        params.page || 1,
+        params.page_size || 10
       );
       return {
         filteredData: paginated.list,
