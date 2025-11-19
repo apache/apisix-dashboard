@@ -70,7 +70,7 @@ test.describe('CRUD secret with all fields (AWS)', () => {
 
       const pageContent = await page.textContent('body');
       expect(pageContent).toContain('Secret Manager');
-      expect(pageContent).toContain(createdSecretId);
+      await expect(page.locator('input[name="id"]')).toHaveValue(createdSecretId);
       // Verify AWS-specific fields are present (labels)
       expect(pageContent).toContain('Access Key ID');
       expect(pageContent).toContain('Secret Access Key');
