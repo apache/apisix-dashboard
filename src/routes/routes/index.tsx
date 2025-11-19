@@ -33,7 +33,7 @@ import { API_ROUTES, PAGE_SIZE_MAX } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { pageSearchSchema, type PageSearchType } from '@/types/schema/pageSearch';
 import {
   filterRoutes,
   needsClientSideFiltering,
@@ -121,8 +121,8 @@ export const RouteList = (props: RouteListProps) => {
       const filtered = filterRoutes(allData.list, params);
       const paginated = paginateResults(
         filtered,
-        params.page || 1,
-        params.page_size || 10
+        (params as PageSearchType).page || 1,
+        (params as PageSearchType).page_size || 10
       );
       return {
         filteredData: paginated.list,
