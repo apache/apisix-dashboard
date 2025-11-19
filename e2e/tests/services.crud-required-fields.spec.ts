@@ -27,6 +27,8 @@ import { expect } from '@playwright/test';
 
 import { deleteAllServices } from '@/apis/services';
 
+test.describe.configure({ mode: 'serial' });
+
 const serviceName = randomId('test-service');
 
 test.beforeAll(async () => {

@@ -25,6 +25,8 @@ import { deleteAllServices } from '@/apis/services';
 import { API_SERVICES } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 
+test.describe.configure({ mode: 'serial' });
+
 test('should navigate to services page', async ({ page }) => {
   await test.step('navigate to services page', async () => {
     await servicesPom.getServiceNavBtn(page).click();
