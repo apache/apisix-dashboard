@@ -21,14 +21,7 @@ import type { APISIXType } from '@/types/schema/apisix';
 
 export const uiFillStreamRouteRequiredFields = async (
   page: Page,
-  data: {
-    server_addr?: string;
-    server_port?: number;
-    remote_addr?: string;
-    sni?: string;
-    desc?: string;
-    labels?: Record<string, string>;
-  }
+  data: Partial<APISIXType['StreamRoute']>
 ) => {
   if (data.server_addr) {
     await page
@@ -65,14 +58,7 @@ export const uiFillStreamRouteRequiredFields = async (
 
 export const uiCheckStreamRouteRequiredFields = async (
   page: Page,
-  data: {
-    server_addr?: string;
-    server_port?: number;
-    remote_addr?: string;
-    sni?: string;
-    desc?: string;
-    labels?: Record<string, string>;
-  }
+  data: Partial<APISIXType['StreamRoute']>
 ) => {
   if (data.server_addr) {
     await expect(page.getByLabel('Server Address', { exact: true })).toHaveValue(
@@ -112,27 +98,7 @@ export const uiCheckStreamRouteRequiredFields = async (
 export const uiFillStreamRouteAllFields = async (
   page: Page,
   upstreamSection: Locator,
-  data: {
-    server_addr?: string;
-    server_port?: number;
-    remote_addr?: string;
-    sni?: string;
-    desc?: string;
-    labels?: Record<string, string>;
-    upstream?: {
-      nodes?: APISIXType['UpstreamNode'][];
-      retries?: number;
-      timeout?: {
-        connect?: number;
-        send?: number;
-        read?: number;
-      };
-    };
-    protocol?: {
-      name?: string;
-      superior_id?: string;
-    };
-  }
+  data: Partial<APISIXType['StreamRoute']>
 ) => {
   // Fill basic fields
   await uiFillStreamRouteRequiredFields(page, {
@@ -206,27 +172,7 @@ export const uiFillStreamRouteAllFields = async (
 export const uiCheckStreamRouteAllFields = async (
   page: Page,
   upstreamSection: Locator,
-  data: {
-    server_addr?: string;
-    server_port?: number;
-    remote_addr?: string;
-    sni?: string;
-    desc?: string;
-    labels?: Record<string, string>;
-    upstream?: {
-      nodes?: APISIXType['UpstreamNode'][];
-      retries?: number;
-      timeout?: {
-        connect?: number;
-        send?: number;
-        read?: number;
-      };
-    };
-    protocol?: {
-      name?: string;
-      superior_id?: string;
-    };
-  }
+  data: Partial<APISIXType['StreamRoute']>
 ) => {
   // Check basic fields
   await uiCheckStreamRouteRequiredFields(page, {
