@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import type { AxiosInstance } from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 
 import { API_UPSTREAMS, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
@@ -94,7 +94,17 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
     );
     // Delete all upstreams in the current batch concurrently.
     await Promise.all(
-      res.list.map((d) => req.delete(`${API_UPSTREAMS}/${d.value.id}`))
+      res.list.map((d) =>
+        retry(async () => {
+          try {
+            await req.delete(`${API_UPSTREAMS}/${d.value.id}`);
+          } catch (err) {
+            // Ignore 404 errors as the resource might have been deleted
+            if (axios.isAxiosError(err) && err.response?.status === 404) return;
+            throw err;
+          }
+        })
+      )
     );
   }
 };
