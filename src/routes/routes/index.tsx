@@ -83,7 +83,10 @@ export const RouteList = (props: RouteListProps) => {
     routeKey,
     defaultParams
   );
-  const { params } = useSearchParams(routeKey) as { params: PageSearchType };
+  const { params, resetParams } = useSearchParams(routeKey) as {
+    params: PageSearchType;
+    resetParams: () => void;
+  };
   const { t } = useTranslation();
 
   // Fetch all data when client-side filtering is active
@@ -108,10 +111,7 @@ export const RouteList = (props: RouteListProps) => {
   };
 
   const handleReset = () => {
-    setParams({
-      page: 1,
-      ...mapSearchParams({}),
-    });
+    resetParams();
   };
 
   // Apply client-side filtering and pagination

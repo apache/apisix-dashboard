@@ -99,8 +99,11 @@ export const SearchForm = (props: SearchFormProps) => {
     form.resetFields();
     form.setFieldsValue(resolvedInitialValues);
     const values = form.getFieldsValue();
-    onReset?.(values);
-    onSearch?.(values);
+    if (onReset) {
+      onReset(values);
+    } else {
+      onSearch?.(values);
+    }
   };
 
   return (
