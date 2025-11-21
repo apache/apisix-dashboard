@@ -17,6 +17,7 @@
 import { streamRoutesPom } from '@e2e/pom/stream_routes';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
+import { uiHasToastMsg } from '@e2e/utils/ui';
 import {
   uiCheckStreamRouteRequiredFields,
   uiFillStreamRouteRequiredFields,
@@ -36,7 +37,7 @@ test('CRUD stream route with all fields', async ({ page }) => {
 
   // Navigate to add page
   await streamRoutesPom.toAdd(page);
-  await expect(page.getByRole('heading', { name: 'Add Stream Route' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Add Stream Route' })).toBeVisible({ timeout: 30000 });
 
   const streamRouteData = {
     server_addr: '127.0.0.10',
@@ -55,6 +56,12 @@ test('CRUD stream route with all fields', async ({ page }) => {
 
   // Submit and land on detail page
   await page.getByRole('button', { name: 'Add', exact: true }).click();
+  
+  // Wait for success toast before checking detail page
+  await uiHasToastMsg(page, {
+    hasText: 'Add Stream Route Successfully',
+  });
+  
   await streamRoutesPom.isDetailPage(page);
 
   // Verify initial values in detail view
