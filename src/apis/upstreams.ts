@@ -72,6 +72,8 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
     throw lastErr;
   };
 
+  // Fetch the total count first to determine how many pages of deletions are needed.
+  // Using PAGE_SIZE_MIN (typically 1) is efficient just to get the 'total' count metadata.
   const totalRes = await retry(() =>
     getUpstreamListReq(req, {
       page: 1,
@@ -80,6 +82,9 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
   );
   const total = totalRes.total;
   if (total === 0) return;
+
+  // Iterate through all pages and delete upstreams in batches.
+  // We calculate the number of iterations based on the total count and maximum page size.
   for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
     const res = await retry(() =>
       getUpstreamListReq(req, {
@@ -87,6 +92,7 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
         page_size: PAGE_SIZE_MAX,
       })
     );
+    // Delete all upstreams in the current batch concurrently.
     await Promise.all(
       res.list.map((d) => req.delete(`${API_UPSTREAMS}/${d.value.id}`))
     );
