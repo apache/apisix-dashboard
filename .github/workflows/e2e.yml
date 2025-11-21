@@ -5,7 +5,7 @@ on:
     branches:
       - "**"
   pull_request:
-    types: [labeled, synchronize]
+    types: [synchronize]
     branches:
         - "**"
   schedule:
