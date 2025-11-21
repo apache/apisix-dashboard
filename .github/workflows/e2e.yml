@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Get PR Labels
         if: ${{ github.event_name == 'pull_request' }}
