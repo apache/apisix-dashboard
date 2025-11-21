@@ -24,7 +24,7 @@ test.use({ storageState: { cookies: [], origins: [] } });
 
 test('can auth with admin key', { tag: '@auth' }, async ({ page }) => {
   const settingsModal = page.getByRole('dialog', { name: 'Settings' });
-  const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
+  const adminKeyInput = page.getByLabel('Admin Key');
   const failedMsg = page.getByText('failed to check token');
 
   const checkSettingsModal = async () => {
@@ -62,5 +62,42 @@ test('can auth with admin key', { tag: '@auth' }, async ({ page }) => {
 
     await page.reload();
     await expect(failedMsg).toBeHidden();
+  });
+});
+
+test('password input can toggle visibility', { tag: '@auth' }, async ({ page }) => {
+  const settingsModal = page.getByRole('dialog', { name: 'Settings' });
+  const adminKeyInput = page.getByLabel('Admin Key');
+  const testPassword = 'test-admin-key-12345';
+
+  await expect(settingsModal).toBeVisible();
+
+  await test.step('verify password input is initially masked', async () => {
+    await adminKeyInput.fill(testPassword);
+
+    await expect(adminKeyInput).toHaveAttribute('type', 'password');
+  });
+
+  await test.step('reveal password by clicking visibility toggle', async () => {
+    // Mantine PasswordInput has a button with class mantine-PasswordInput-visibilityToggle
+    const toggleButton = settingsModal.locator(
+      '.mantine-PasswordInput-visibilityToggle'
+    );
+
+    await toggleButton.click();
+
+    await expect(adminKeyInput).toHaveAttribute('type', 'text');
+    await expect(adminKeyInput).toHaveValue(testPassword);
+  });
+
+  await test.step('hide password by clicking visibility toggle again', async () => {
+    const toggleButton = settingsModal.locator(
+      '.mantine-PasswordInput-visibilityToggle'
+    );
+
+    await toggleButton.click();
+
+    await expect(adminKeyInput).toHaveAttribute('type', 'password');
+    await expect(adminKeyInput).toHaveValue(testPassword);
   });
 });

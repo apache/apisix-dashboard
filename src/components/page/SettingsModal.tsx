@@ -14,7 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Divider, InputWrapper, Modal, Text, TextInput } from '@mantine/core';
+import {
+  Divider,
+  InputWrapper,
+  Modal,
+  PasswordInput,
+  Text,
+} from '@mantine/core';
 import { useAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
@@ -27,7 +33,7 @@ const AdminKey = () => {
   const [adminKey, setAdminKey] = useAtom(adminKeyAtom);
 
   return (
-    <TextInput
+    <PasswordInput
       label={t('settings.adminKey')}
       value={adminKey}
       onChange={(e) => {
