@@ -46,10 +46,23 @@ test('should CRUD service with required fields', async ({ page }) => {
     await uiFillServiceRequiredFields(page, {
       name: serviceName,
     });
+    
+    // Ensure the name field is properly filled before submitting
+    const nameField = page.getByRole('textbox', { name: 'Name' }).first();
+    await expect(nameField).toHaveValue(serviceName);
+    
     await servicesPom.getAddBtn(page).click();
-    await uiHasToastMsg(page, {
-      hasText: 'Add Service Successfully',
-    });
+    
+    // Wait for either success or error toast (longer timeout for CI)
+    const alertMsg = page.getByRole('alert');
+    await expect(alertMsg).toBeVisible({ timeout: 30000 });
+    
+    // Check if it's a success message
+    await expect(alertMsg).toContainText('Add Service Successfully', { timeout: 5000 });
+    
+    // Close the toast
+    await alertMsg.getByRole('button').click();
+    await expect(alertMsg).toBeHidden();
   });
 
   await test.step('auto navigate to service detail page', async () => {

@@ -96,13 +96,14 @@ test.afterAll(async () => {
 test('show disabled error', async ({ page }) => {
   await streamRoutesPom.toIndex(page);
 
-  await expect(page.locator('main > span')).toContainText(
-    'stream mode is disabled, can not add stream routes'
-  );
+  // Wait for the error message to appear (extra long timeout for CI after server restart)
+  await expect(
+    page.getByText('stream mode is disabled, can not add stream routes')
+  ).toBeVisible({ timeout: 30000 });
 
   // Verify the error message is still shown after refresh
   await page.reload();
-  await expect(page.locator('main > span')).toContainText(
-    'stream mode is disabled, can not add stream routes'
-  );
+  await expect(
+    page.getByText('stream mode is disabled, can not add stream routes')
+  ).toBeVisible({ timeout: 30000 });
 });
