@@ -51,7 +51,8 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
       // we need to authenticate
       const settingsModal = page.getByRole('dialog', { name: 'Settings' });
       await expect(settingsModal).toBeVisible();
-      const adminKeyInput = page.getByRole('textbox', { name: 'Admin Key' });
+      // PasswordInput renders with a label, use getByLabel instead
+      const adminKeyInput = page.getByLabel('Admin Key');
       await adminKeyInput.clear();
       await adminKeyInput.fill(adminKey);
       await page

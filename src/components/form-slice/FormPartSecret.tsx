@@ -18,6 +18,7 @@ import { Divider, InputWrapper } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { FormItemPasswordInput } from '@/components/form/PasswordInput';
 import { FormItemSelect } from '@/components/form/Select';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTextInput } from '@/components/form/TextInput';
@@ -42,7 +43,7 @@ const VaultSecretForm = () => {
         name="prefix"
         label={t('form.secrets.vault.prefix')}
       />
-      <FormItemTextInput
+      <FormItemPasswordInput
         control={control}
         name="token"
         label={t('form.secrets.vault.token')}
@@ -62,17 +63,17 @@ const AWSSecretForm = () => {
 
   return (
     <>
-      <FormItemTextInput
+      <FormItemPasswordInput
         control={control}
         name="access_key_id"
         label={t('form.secrets.aws.access_key_id')}
       />
-      <FormItemTextInput
+      <FormItemPasswordInput
         control={control}
         name="secret_access_key"
         label={t('form.secrets.aws.secret_access_key')}
       />
-      <FormItemTextInput
+      <FormItemPasswordInput
         control={control}
         name="session_token"
         label={t('form.secrets.aws.session_token')}
@@ -114,7 +115,7 @@ const GCPSecretForm = () => {
             name="auth_config.client_email"
             label={t('form.secrets.gcp.client_email')}
           />
-          <FormItemTextInput
+          <FormItemPasswordInput
             control={control}
             name="auth_config.private_key"
             label={t('form.secrets.gcp.private_key')}
