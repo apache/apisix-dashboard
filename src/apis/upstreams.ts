@@ -55,6 +55,8 @@ export const putUpstreamReq = (
 };
 
 export const deleteAllUpstreams = async (req: AxiosInstance) => {
+  // Retry wrapper to handle potential transient failures (e.g., 500 Internal Server Error) when fetching upstream list.
+  // This is particularly useful in E2E tests where rapid creation/deletion might cause temporary instability.
   const retry = async <T>(fn: () => Promise<T>, times = 3, delay = 500) => {
     let lastErr: unknown;
     for (let i = 0; i < times; i++) {
