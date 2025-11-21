@@ -1,1 +1,38 @@
-{}
+
+{
+	"form": {
+		"searchForm": {
+			"fields": {
+				"name": "名称",
+				"id": "ID",
+				"host": "主机",
+				"path": "路径",
+				"description": "描述",
+				"plugin": "插件",
+				"labels": "标签",
+				"version": "版本",
+				"status": "状态"
+			},
+			"placeholders": {
+				"name": "名称",
+				"id": "ID",
+				"host": "主机",
+				"path": "路径",
+				"description": "描述",
+				"plugin": "插件",
+				"labels": "选择标签",
+				"version": "选择版本",
+				"status": "选择状态"
+			},
+			"status": {
+				"all": "未发布/已发布",
+				"published": "已发布",
+				"unpublished": "未发布"
+			},
+			"actions": {
+				"reset": "重置",
+				"search": "搜索"
+			}
+		}
+	}
+}
