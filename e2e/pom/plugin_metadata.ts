@@ -14,42 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import { uiGoto } from '@e2e/utils/ui';
+import { expect, type Page } from '@playwright/test';
 
-import de_common from '@/locales/de/common.json';
-import en_common from '@/locales/en/common.json';
-import es_common from '@/locales/es/common.json';
-import tr_common from '@/locales/tr/common.json';
-import zh_common from '@/locales/zh/common.json'; 
+const locator = {
+  getPluginMetadataNavBtn: (page: Page) =>
+    page.getByRole('link', { name: 'Plugin Metadata', exact: true }),
+  getSelectPluginsBtn: (page: Page) =>
+    page.getByRole('button', { name: 'Select Plugins' }),
+};
 
-export const resources = {
-  en: {
-    common: en_common,
+const assert = {
+  isIndexPage: async (page: Page) => {
+    await expect(page).toHaveURL((url) =>
+      url.pathname.endsWith('/plugin_metadata')
+    );
+    const title = page.getByRole('heading', { name: 'Plugin Metadata' });
+    await expect(title).toBeVisible();
   },
-  de: {
-    common: de_common,
-  },
-  zh: {
-    common: zh_common,
-  },
-  es: {
-    common: es_common,
-  },
-  tr: {
-    common: tr_common,
-  },
-} as const;
+};
 
-export type Resources = typeof resources;
-export const defaultNS: keyof Resources['en'] = 'common';
+const goto = {
+  toIndex: (page: Page) => uiGoto(page, '/plugin_metadata'),
+};
 
-i18n.use(initReactI18next).init({
-  lng: 'en',
-  ns: ['common'],
-  defaultNS,
-  resources,
-  fallbackLng: 'en',
-});
-
-export default i18n;
+export const pluginMetadataPom = {
+  ...locator,
+  ...assert,
+  ...goto,
+};
