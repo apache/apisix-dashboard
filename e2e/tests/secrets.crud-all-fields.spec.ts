@@ -42,17 +42,28 @@ test.describe('CRUD secret with all fields (AWS)', () => {
   });
 
   test('should create a secret with all fields', async ({ page }) => {
-    await test.step('create secret via API', async () => {
-      await e2eReq.put(`${API_SECRETS}/${manager}/${createdSecretId}`, {
-        access_key_id: 'AKIAIOSFODNN7EXAMPLE',
-        secret_access_key: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
-        session_token: 'test-session-token-123',
-        region: 'us-west-2',
-        endpoint_url: 'https://secretsmanager.us-west-2.amazonaws.com',
-      });
-    });
-    await test.step('verify secret appears in UI', async () => {
+    await test.step('create secret via UI', async () => {
       await secretsPom.toIndex(page);
+      await secretsPom.getAddSecretBtn(page).click();
+      await secretsPom.isAddPage(page);
+
+      await page.getByLabel('ID').fill(createdSecretId);
+
+      // Select Manager AWS
+      const managerSection = page.getByRole('group', { name: 'Secret Manager' });
+      await managerSection.locator('input.mantine-Select-input').click();
+      await page.getByRole('option', { name: 'aws' }).click();
+
+      await page.getByLabel('Access Key ID').fill('AKIAIOSFODNN7EXAMPLE');
+      await page.getByLabel('Secret Access Key').fill('wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY');
+      await page.getByLabel('Session Token').fill('test-session-token-123');
+      await page.getByLabel('Region').fill('us-west-2');
+      await page.getByLabel('Endpoint URL').fill('https://secretsmanager.us-west-2.amazonaws.com');
+
+      await secretsPom.getAddBtn(page).click();
+    });
+
+    await test.step('verify secret appears in UI', async () => {
       await secretsPom.isIndexPage(page);
       const row = page.locator('tr').filter({ hasText: createdSecretId });
       await expect(row).toBeVisible();

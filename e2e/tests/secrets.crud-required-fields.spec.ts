@@ -41,15 +41,22 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
   });
 
   test('should create a secret with required fields', async ({ page }) => {
-    await test.step('create secret via API', async () => {
-      await e2eReq.put(`${API_SECRETS}/${manager}/${createdSecretId}`, {
-        uri: 'http://vault.example.com:8200',
-        prefix: '/secret/test',
-        token: 'test-vault-token-123',
-      });
-    });
-    await test.step('verify secret appears in UI', async () => {
+    await test.step('create secret via UI', async () => {
       await secretsPom.toIndex(page);
+      await secretsPom.getAddSecretBtn(page).click();
+      await secretsPom.isAddPage(page);
+
+      await page.getByLabel('ID').fill(createdSecretId);
+
+      // Vault is default
+      await page.getByLabel('URI').fill('http://vault.example.com:8200');
+      await page.getByLabel('Prefix').fill('/secret/test');
+      await page.getByLabel('Token').fill('test-vault-token-123');
+
+      await secretsPom.getAddBtn(page).click();
+    });
+
+    await test.step('verify secret appears in UI', async () => {
       await secretsPom.isIndexPage(page);
       const row = page.locator('tr').filter({ hasText: createdSecretId });
       await expect(row).toBeVisible();
