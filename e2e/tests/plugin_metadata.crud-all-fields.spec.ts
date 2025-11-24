@@ -36,13 +36,29 @@ const deletePluginMetadata = async (req: typeof e2eReq, name: string) => {
 const getMonacoEditorValue = async (editPluginDialog: Locator) => {
   let editorValue = '';
   const textarea = editPluginDialog.locator('textarea');
-  if (await textarea.count() > 0) {
-    editorValue = await textarea.inputValue();
+
+  // Retry logic to handle potential race conditions where editor content isn't fully loaded
+  for (let i = 0; i < 20; i++) {
+    if (await textarea.count() > 0) {
+      editorValue = await textarea.inputValue();
+    }
+
+    // Fallback to reading view-lines if textarea value seems incomplete
+    if (!editorValue || editorValue.trim() === '{') {
+      const lines = await editPluginDialog.locator('.view-line').allTextContents();
+      editorValue = lines.join('\n').replace(/\s+/g, ' ');
+    }
+
+    // If we have a valid-looking value (not just '{'), return it
+    if (editorValue && editorValue.trim() !== '{') {
+      return editorValue;
+    }
+
+    // Wait before retrying
+    // eslint-disable-next-line playwright/no-wait-for-timeout
+    await editPluginDialog.page().waitForTimeout(500);
   }
-  if (!editorValue || editorValue.trim() === '{') {
-    const lines = await editPluginDialog.locator('.view-line').allTextContents();
-    editorValue = lines.join('\n').replace(/\s+/g, ' ');
-  }
+
   if (!editorValue || editorValue.trim() === '{') {
     const allText = await editPluginDialog.textContent();
     console.log('DEBUG: editorValue fallback failed, dialog text:', allText);

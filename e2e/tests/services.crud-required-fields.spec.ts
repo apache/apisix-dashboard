@@ -42,24 +42,38 @@ test('should CRUD service with required fields', async ({ page }) => {
   await servicesPom.getAddServiceBtn(page).click();
   await servicesPom.isAddPage(page);
 
+
+
+
   await test.step('submit with required fields', async () => {
     await uiFillServiceRequiredFields(page, {
       name: serviceName,
     });
-    
+
+    // Ensure upstream is valid. In some configurations (e.g. http&stream), 
+    // the backend might require a valid upstream configuration.
+    const upstreamSection = page.getByRole('group', { name: 'Upstream' }).first();
+    const addNodeBtn = page.getByRole('button', { name: 'Add a Node' });
+    await addNodeBtn.click();
+
+    const rows = upstreamSection.locator('tr.ant-table-row');
+    await rows.first().locator('input').first().fill('127.0.0.1');
+    await rows.first().locator('input').nth(1).fill('80');
+    await rows.first().locator('input').nth(2).fill('1');
+
     // Ensure the name field is properly filled before submitting
     const nameField = page.getByRole('textbox', { name: 'Name' }).first();
     await expect(nameField).toHaveValue(serviceName);
-    
+
     await servicesPom.getAddBtn(page).click();
-    
+
     // Wait for either success or error toast (longer timeout for CI)
     const alertMsg = page.getByRole('alert');
     await expect(alertMsg).toBeVisible({ timeout: 30000 });
-    
+
     // Check if it's a success message
     await expect(alertMsg).toContainText('Add Service Successfully', { timeout: 5000 });
-    
+
     // Close the toast
     await alertMsg.getByRole('button').click();
     await expect(alertMsg).toBeHidden();
