@@ -5,7 +5,6 @@ on:
     branches:
       - "**"
   pull_request:
-    types: [labeled, synchronize]
     branches:
         - "**"
   schedule:
@@ -23,8 +22,8 @@ concurrency:
 
 jobs:
   test:
-    # only run when e2e-test label is added, scheduled, workflow_dispatch, repository_dispatch
-    if: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e-test')) || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' }}
+    # only run when e2e-test scheduled, workflow_dispatch, repository_dispatch
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch' }}
     timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
