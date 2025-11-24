@@ -26,6 +26,8 @@ import { expect } from '@playwright/test';
 
 import { deleteAllStreamRoutes } from '@/apis/stream_routes';
 
+test.describe.configure({ mode: 'serial' });
+
 test.beforeAll('clean up', async () => {
   await deleteAllStreamRoutes(e2eReq);
 });
@@ -56,12 +58,12 @@ test('CRUD stream route with all fields', async ({ page }) => {
 
   // Submit and land on detail page
   await page.getByRole('button', { name: 'Add', exact: true }).click();
-  
+
   // Wait for success toast before checking detail page
   await uiHasToastMsg(page, {
     hasText: 'Add Stream Route Successfully',
   });
-  
+
   await streamRoutesPom.isDetailPage(page);
 
   // Verify initial values in detail view
