@@ -41,15 +41,35 @@ test('CRUD stream route with required fields', async ({ page }) => {
   await streamRoutesPom.toAdd(page);
   await expect(page.getByRole('heading', { name: 'Add Stream Route' })).toBeVisible({ timeout: 30000 });
 
-
-
   const streamRouteData = {
-    server_addr: '127.0.0.1',
+    server_addr: '127.0.0.111',
     server_port: 9000,
   };
 
   // Fill required fields
   await uiFillStreamRouteRequiredFields(page, streamRouteData);
+
+  // Fill upstream nodes manually
+  const upstreamSection = page.getByRole('group', { name: 'Upstream', exact: true });
+  const nodesSection = upstreamSection.getByRole('group', { name: 'Nodes' });
+  const addBtn = nodesSection.getByRole('button', { name: 'Add a Node' });
+
+  // Add a node
+  await addBtn.click();
+  const dataRows = nodesSection.locator('tr.ant-table-row');
+  const firstRow = dataRows.first();
+
+  const hostInput = firstRow.locator('input').nth(0);
+  await hostInput.click();
+  await hostInput.fill('127.0.0.2');
+
+  const portInput = firstRow.locator('input').nth(1);
+  await portInput.click();
+  await portInput.fill('8080');
+
+  const weightInput = firstRow.locator('input').nth(2);
+  await weightInput.click();
+  await weightInput.fill('1');
 
   // Submit and land on detail page
   await page.getByRole('button', { name: 'Add', exact: true }).click();
@@ -96,16 +116,17 @@ test('CRUD stream route with required fields', async ({ page }) => {
   // Navigate back to index and ensure the row exists
   await streamRoutesPom.toIndex(page);
   const row = page.getByRole('row').filter({ hasText: streamRouteData.server_addr });
-  await expect(row).toBeVisible();
+  await expect(row.first()).toBeVisible();
 
   // View detail page from the list
-  await row.getByRole('button', { name: 'View' }).click();
+  await row.first().getByRole('button', { name: 'View' }).click();
   await streamRoutesPom.isDetailPage(page);
   await uiCheckStreamRouteRequiredFields(page, updatedData);
 
   // Delete from the detail page
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Delete' }).click();
+  await page.waitForURL((url) => url.pathname.endsWith('/stream_routes'));
 
   await streamRoutesPom.isIndexPage(page);
   await expect(

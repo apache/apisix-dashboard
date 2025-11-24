@@ -56,6 +56,28 @@ test('CRUD stream route with all fields', async ({ page }) => {
 
   await uiFillStreamRouteRequiredFields(page, streamRouteData);
 
+  // Fill upstream nodes manually
+  const upstreamSection = page.getByRole('group', { name: 'Upstream', exact: true });
+  const nodesSection = upstreamSection.getByRole('group', { name: 'Nodes' });
+  const addBtn = nodesSection.getByRole('button', { name: 'Add a Node' });
+
+  // Add a node
+  await addBtn.click();
+  const dataRows = nodesSection.locator('tr.ant-table-row');
+  const firstRow = dataRows.first();
+
+  const hostInput = firstRow.locator('input').nth(0);
+  await hostInput.click();
+  await hostInput.fill('127.0.0.11');
+
+  const portInput = firstRow.locator('input').nth(1);
+  await portInput.click();
+  await portInput.fill('8081');
+
+  const weightInput = firstRow.locator('input').nth(2);
+  await weightInput.click();
+  await weightInput.fill('100');
+
   // Submit and land on detail page
   await page.getByRole('button', { name: 'Add', exact: true }).click();
 
@@ -123,6 +145,7 @@ test('CRUD stream route with all fields', async ({ page }) => {
   // Delete from detail page
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Delete' }).click();
+  await page.waitForURL((url) => url.pathname.endsWith('/stream_routes'));
 
   await streamRoutesPom.isIndexPage(page);
   await expect(
