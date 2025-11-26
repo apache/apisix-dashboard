@@ -35,8 +35,11 @@ test.describe('CRUD secret with all fields (AWS)', () => {
   test.afterAll(async () => {
     // cleanup: delete the secret
     if (createdSecretId) {
-      await e2eReq.delete(`${API_SECRETS}/${manager}/${createdSecretId}`).catch(() => {
-        // ignore error if secret doesn't exist
+      await e2eReq.delete(`${API_SECRETS}/${manager}/${createdSecretId}`).catch((err) => {
+        // ignore 404 error if secret doesn't exist, rethrow others
+        if (err.response?.status !== 404 && !err.message.includes('404')) {
+          throw err;
+        }
       });
     }
   });
@@ -90,11 +93,13 @@ test.describe('CRUD secret with all fields (AWS)', () => {
   });
 
   test('should update the secret with new values', async ({ page }) => {
-    const updatedAccessKeyId = 'AKIAI44QH8DHBEXAMPLE';
-    const updatedSecretAccessKey = 'je7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY';
-    const updatedSessionToken = 'updated-session-token-456';
-    const updatedRegion = 'eu-west-1';
-    const updatedEndpointUrl = 'https://secretsmanager.eu-west-1.amazonaws.com';
+    const updatedFields = {
+      'Access Key ID': 'AKIAI44QH8DHBEXAMPLE',
+      'Secret Access Key': 'je7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY',
+      'Session Token': 'updated-session-token-456',
+      'Region': 'eu-west-1',
+      'Endpoint URL': 'https://secretsmanager.eu-west-1.amazonaws.com',
+    };
 
     await test.step('navigate to secret detail page', async () => {
       await secretsPom.toIndex(page);
@@ -109,16 +114,10 @@ test.describe('CRUD secret with all fields (AWS)', () => {
       await page.getByRole('button', { name: 'Edit' }).click();
 
       // Update AWS fields
-      await page.getByLabel('Access Key ID').clear();
-      await page.getByLabel('Access Key ID').fill(updatedAccessKeyId);
-      await page.getByLabel('Secret Access Key').clear();
-      await page.getByLabel('Secret Access Key').fill(updatedSecretAccessKey);
-      await page.getByLabel('Session Token').clear();
-      await page.getByLabel('Session Token').fill(updatedSessionToken);
-      await page.getByLabel('Region').clear();
-      await page.getByLabel('Region').fill(updatedRegion);
-      await page.getByLabel('Endpoint URL').clear();
-      await page.getByLabel('Endpoint URL').fill(updatedEndpointUrl);
+      for (const [label, value] of Object.entries(updatedFields)) {
+        await page.getByLabel(label).clear();
+        await page.getByLabel(label).fill(value);
+      }
     });
 
     await test.step('save the changes', async () => {
@@ -128,11 +127,9 @@ test.describe('CRUD secret with all fields (AWS)', () => {
 
     await test.step('verify secret was updated via UI', async () => {
       // Check the actual field values in the detail page
-      await expect(page.getByLabel('Access Key ID')).toHaveValue(updatedAccessKeyId);
-      await expect(page.getByLabel('Secret Access Key')).toHaveValue(updatedSecretAccessKey);
-      await expect(page.getByLabel('Session Token')).toHaveValue(updatedSessionToken);
-      await expect(page.getByLabel('Region')).toHaveValue(updatedRegion);
-      await expect(page.getByLabel('Endpoint URL')).toHaveValue(updatedEndpointUrl);
+      for (const [label, value] of Object.entries(updatedFields)) {
+        await expect(page.getByLabel(label)).toHaveValue(value);
+      }
     });
   });
 

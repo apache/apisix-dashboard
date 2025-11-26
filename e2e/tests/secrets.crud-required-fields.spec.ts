@@ -34,8 +34,11 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
   test.afterAll(async () => {
     // cleanup: delete the secret
     if (createdSecretId) {
-      await e2eReq.delete(`${API_SECRETS}/${manager}/${createdSecretId}`).catch(() => {
-        // ignore error if secret doesn't exist
+      await e2eReq.delete(`${API_SECRETS}/${manager}/${createdSecretId}`).catch((err) => {
+        // ignore 404 error if secret doesn't exist, rethrow others
+        if (err.response?.status !== 404 && !err.message.includes('404')) {
+          throw err;
+        }
       });
     }
   });
@@ -81,9 +84,11 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
   });
 
   test('should update the secret', async ({ page }) => {
-    const updatedUri = 'http://vault-updated.example.com:8200';
-    const updatedPrefix = '/secret/updated';
-    const updatedToken = 'updated-vault-token-456';
+    const updatedFields = {
+      URI: 'http://vault-updated.example.com:8200',
+      Prefix: '/secret/updated',
+      Token: 'updated-vault-token-456',
+    };
 
     await test.step('navigate to secret detail page', async () => {
       await secretsPom.toIndex(page);
@@ -98,12 +103,10 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
       await page.getByRole('button', { name: 'Edit' }).click();
 
       // Update Vault fields
-      await page.getByLabel('URI').clear();
-      await page.getByLabel('URI').fill(updatedUri);
-      await page.getByLabel('Prefix').clear();
-      await page.getByLabel('Prefix').fill(updatedPrefix);
-      await page.getByLabel('Token').clear();
-      await page.getByLabel('Token').fill(updatedToken);
+      for (const [label, value] of Object.entries(updatedFields)) {
+        await page.getByLabel(label).clear();
+        await page.getByLabel(label).fill(value);
+      }
     });
 
     await test.step('save the changes', async () => {
@@ -112,9 +115,9 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
     });
 
     await test.step('verify secret was updated via UI', async () => {
-      await expect(page.getByLabel('URI')).toHaveValue(updatedUri);
-      await expect(page.getByLabel('Prefix')).toHaveValue(updatedPrefix);
-      await expect(page.getByLabel('Token')).toHaveValue(updatedToken);
+      for (const [label, value] of Object.entries(updatedFields)) {
+        await expect(page.getByLabel(label)).toHaveValue(value);
+      }
     });
   });
 
