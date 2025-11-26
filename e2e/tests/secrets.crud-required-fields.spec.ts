@@ -21,15 +21,11 @@ import { expect } from '@playwright/test';
 
 import { API_SECRETS } from '@/config/constant';
 
-let createdSecretId: string;
+const createdSecretId = 'test-vault-secret-required';
 const manager = 'vault';
 
 test.describe('CRUD secret with required fields only (Vault)', () => {
   test.describe.configure({ mode: 'serial' });
-
-  test.beforeAll(async () => {
-    createdSecretId = 'test-vault-secret-required';
-  });
 
   test.afterAll(async () => {
     // cleanup: delete the secret

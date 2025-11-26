@@ -22,15 +22,11 @@ import { expect } from '@playwright/test';
 import { API_SECRETS } from '@/config/constant';
 
 
-let createdSecretId: string;
+const createdSecretId = 'test-aws-secret-all-fields';
 const manager = 'aws';
 
 test.describe('CRUD secret with all fields (AWS)', () => {
   test.describe.configure({ mode: 'serial' });
-
-  test.beforeAll(async () => {
-    createdSecretId = 'test-aws-secret-all-fields';
-  });
 
   test.afterAll(async () => {
     // cleanup: delete the secret
