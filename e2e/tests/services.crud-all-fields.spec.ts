@@ -14,40 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { upstreamsPom } from '@e2e/pom/upstreams';
+import { servicesPom } from '@e2e/pom/services';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { uiHasToastMsg } from '@e2e/utils/ui';
 import {
-  uiCheckUpstreamAllFields,
-  uiFillUpstreamAllFields,
-} from '@e2e/utils/ui/upstreams';
+  uiCheckServiceAllFields,
+  uiFillServiceAllFields,
+} from '@e2e/utils/ui/services';
 import { expect } from '@playwright/test';
 
-import { deleteAllUpstreams } from '@/apis/upstreams';
+import { deleteAllServices } from '@/apis/services';
+
+test.describe.configure({ mode: 'serial' });
 
 test.beforeAll(async () => {
-  await deleteAllUpstreams(e2eReq);
+  await deleteAllServices(e2eReq);
 });
 
-test('should CRUD upstream with all fields', async ({ page }) => {
-  test.setTimeout(30000);
-
-  const upstreamNameWithAllFields = randomId('test-upstream-full');
+test('should CRUD service with all fields', async ({ page }) => {
+  const serviceNameWithAllFields = randomId('test-service-full');
   const description =
-    'This is a test description for the upstream with all fields';
+    'This is a test description for the service with all fields';
 
-  // Navigate to the upstream list page
-  await upstreamsPom.toIndex(page);
-  await upstreamsPom.isIndexPage(page);
+  // Navigate to the service list page
+  await servicesPom.toIndex(page);
+  await servicesPom.isIndexPage(page);
 
-  // Click the add upstream button
-  await upstreamsPom.getAddUpstreamBtn(page).click();
-  await upstreamsPom.isAddPage(page);
+  // Click the add service button
+  await servicesPom.getAddServiceBtn(page).click();
+  await servicesPom.isAddPage(page);
 
-  await uiFillUpstreamAllFields(test, page, {
-    name: upstreamNameWithAllFields,
+  await uiFillServiceAllFields(test, page, {
+    name: serviceNameWithAllFields,
     desc: description,
   });
 
@@ -57,68 +57,64 @@ test('should CRUD upstream with all fields', async ({ page }) => {
 
   // Wait for success message
   await uiHasToastMsg(page, {
-    hasText: 'Add Upstream Successfully',
+    hasText: 'Add Service Successfully',
   });
 
   // Verify automatic redirection to detail page
-  await upstreamsPom.isDetailPage(page);
+  await servicesPom.isDetailPage(page);
 
   await test.step('verify all fields in detail page', async () => {
-    await uiCheckUpstreamAllFields(page, {
-      name: upstreamNameWithAllFields,
+    await uiCheckServiceAllFields(page, {
+      name: serviceNameWithAllFields,
       desc: description,
     });
   });
 
   await test.step('return to list page and verify', async () => {
-    // Return to the upstream list page
-    await upstreamsPom.getUpstreamNavBtn(page).click();
-    await upstreamsPom.isIndexPage(page);
+    // Return to the service list page
+    await servicesPom.getServiceNavBtn(page).click();
+    await servicesPom.isIndexPage(page);
 
-    // Verify the created upstream is visible in the list - using a more reliable method
-    // Using expect's toBeVisible method which has a retry mechanism
+    // Verify the created service is visible in the list
     await expect(page.locator('.ant-table-tbody')).toBeVisible();
 
-    // Use expect to wait for the upstream name to appear
-    await expect(page.getByText(upstreamNameWithAllFields)).toBeVisible();
+    // Use expect to wait for the service name to appear
+    await expect(page.getByText(serviceNameWithAllFields)).toBeVisible();
   });
 
-  await test.step('delete the created upstream', async () => {
-    // Find the row containing the upstream name
-    const row = page
-      .locator('tr')
-      .filter({ hasText: upstreamNameWithAllFields });
+  await test.step('delete the created service', async () => {
+    // Find the row containing the service name
+    const row = page.locator('tr').filter({ hasText: serviceNameWithAllFields });
     await expect(row).toBeVisible();
 
     // Click to view details
     await row.getByRole('button', { name: 'View' }).click();
 
     // Verify entered detail page
-    await upstreamsPom.isDetailPage(page);
+    await servicesPom.isDetailPage(page);
 
-    // Delete the upstream
+    // Delete the service
     await page.getByRole('button', { name: 'Delete' }).click();
 
     // Confirm deletion
-    const deleteDialog = page.getByRole('dialog', { name: 'Delete Upstream' });
+    const deleteDialog = page.getByRole('dialog', { name: 'Delete Service' });
     await expect(deleteDialog).toBeVisible();
     await deleteDialog.getByRole('button', { name: 'Delete' }).click();
 
     // Verify successful deletion
-    await upstreamsPom.isIndexPage(page);
+    await servicesPom.isIndexPage(page);
     await uiHasToastMsg(page, {
-      hasText: 'Delete Upstream Successfully',
+      hasText: 'Delete Service Successfully',
     });
 
     // Verify removed from the list
-    await expect(page.getByText(upstreamNameWithAllFields)).toBeHidden();
+    await expect(page.getByText(serviceNameWithAllFields)).toBeHidden();
 
     // Final verification: Reload the page and check again to ensure it's really gone
     await page.reload();
-    await page.waitForLoadState('load');
-    await upstreamsPom.isIndexPage(page);
+    await servicesPom.isIndexPage(page);
 
-    // After reload, the upstream should still be gone
-    await expect(page.getByText(upstreamNameWithAllFields)).toBeHidden();
+    // After reload, the service should still be gone
+    await expect(page.getByText(serviceNameWithAllFields)).toBeHidden();
   });
 });

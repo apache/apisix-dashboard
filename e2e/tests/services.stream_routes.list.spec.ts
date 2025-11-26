@@ -27,6 +27,8 @@ import {
   postStreamRouteReq,
 } from '@/apis/stream_routes';
 
+test.describe.configure({ mode: 'serial' });
+
 const serviceName = randomId('test-service');
 const anotherServiceName = randomId('another-service');
 const streamRoutes = [
