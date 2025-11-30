@@ -130,7 +130,7 @@ const TOC = (props: Pick<TableOfContentsProps, 'reinitializeRef'>) => {
         onClick: () => {
           return data.getNode().scrollIntoView({
             behavior: 'smooth',
-            block: 'end',
+            block: 'start',
             inline: 'end',
           });
         },

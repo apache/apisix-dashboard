@@ -1,5 +1,6 @@
 .root {
   margin-block: var(--mantine-font-size-md, 0);
+  scroll-margin-top: calc(var(--appshell-header-height, 60px) + 20px);
 
   & > fieldset {
     margin-bottom: 0;
