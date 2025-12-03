@@ -16,9 +16,9 @@
     "basic": {
       "desc": "描述",
       "labels": {
-        "errorFormat": "格式标签错误, 正确格式为`key:value`",
+        "errorFormat": "标签格式错误, 正确格式为`key:value`",
         "key": "Key",
-        "placeholder": "输入类似 `key:value`, then enter or blur",
+        "placeholder": "输入类似`key:value`, then enter or blur",
         "title": "标签",
         "value": "值"
       },
@@ -91,7 +91,7 @@
     "secrets": {
       "aws": {
         "access_key_id": "访问密钥ID",
-        "endpoint_url": "端点url",
+        "endpoint_url": "端点URL",
         "region": "地区",
         "secret_access_key": "Secret Access Key",
         "session_token": "Session Token"
@@ -194,7 +194,7 @@
         "passive": {
           "healthy": {
             "http_statuses": "HTTP状态",
-            "successes": "“成功",
+            "successes": "成功",
             "title": "Healthy"
           },
           "title": "Passive",
@@ -229,7 +229,7 @@
       },
       "key": "Key",
       "keyDesc": "This will be valid when `type` is `chash`",
-      "loadBalancing": "负载平衡",
+      "loadBalancing": "负载均衡",
       "nodes": {
         "action": {
           "title": "操作"
@@ -268,7 +268,7 @@
         "send": "发送",
         "title": "超时"
       },
-      "title": "上",
+      "title": "标题",
       "tls": {
         "clientCert": "客户端证书",
         "clientCertId": "客户端证书ID",
@@ -332,7 +332,7 @@
     "singular": "服务"
   },
   "settings": {
-    "adminKey": "管理员密钥”",
+    "adminKey": "管理员密钥",
     "title": "设置",
     "ui-commit-sha": "UI提交SHA"
   },
