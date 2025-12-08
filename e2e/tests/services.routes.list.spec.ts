@@ -25,6 +25,8 @@ import { deleteAllRoutes, postRouteReq } from '@/apis/routes';
 import { deleteAllServices, postServiceReq } from '@/apis/services';
 import type { APISIXType } from '@/types/schema/apisix';
 
+test.describe.configure({ mode: 'serial' });
+
 const serviceName = randomId('test-service');
 const anotherServiceName = randomId('another-service');
 const routes: APISIXType['Route'][] = [
