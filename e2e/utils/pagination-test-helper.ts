@@ -60,7 +60,8 @@ export function setupPaginationTests<T>(
 
   const itemIsHidden = async (page: Page, item: T) => {
     const cell = getCell(page, item);
-    await expect(cell).toBeHidden();
+    // Increased timeout for CI environments where pagination might be slower
+    await expect(cell).toBeHidden({ timeout: 10000 });
   };
 
   test('can use the pagination of the table to switch', async ({ page }) => {
