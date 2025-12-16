@@ -76,7 +76,7 @@
       "enableWebsocket": "启用WebSocket",
       "filterFunc": "过滤函数",
       "host": "主机",
-      "hosts": "主机",
+      "hosts": "主机列表",
       "matchRules": "匹配规则",
       "methods": "HTTP方法",
       "priority": "优先级",
