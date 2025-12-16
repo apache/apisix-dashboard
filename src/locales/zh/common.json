@@ -84,7 +84,7 @@
       "remoteAddrs": "远程地址列表",
       "service": "服务",
       "uri": "URI",
-      "uris": "URIs",
+      "uris": "URI 列表",
       "vars": "变量"
     },
     "search": "搜索",
