@@ -348,7 +348,7 @@
     "secrets": "Secrets",
     "services": "服务",
     "ssls": "SSLs",
-    "streamRoutes": "Stream Routes",
+    "streamRoutes": "流路由",
     "upstreams": "上游"
   },
   "ssls": {
