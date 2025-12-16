@@ -56,9 +56,9 @@ test('should CRUD plugin config with required fields', async ({ page }) => {
     // Just verify the Add button is present and accessible
     const addBtn = pluginConfigsPom.getAddBtn(page);
     await expect(addBtn).toBeVisible();
-    
-    // Note: Plugin configs may allow submission without plugins initially,
-    // as they only require a name field. The actual validation happens server-side.
+
+    // Note: The client-side schema allows submission without plugins (it validates structure).
+    // The server may perform additional logic validation.
   });
 
   await test.step('submit with required fields', async () => {
