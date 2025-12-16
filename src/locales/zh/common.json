@@ -18,7 +18,7 @@
       "labels": {
         "errorFormat": "标签格式错误，应为 `key:value`",
         "key": "Key",
-        "placeholder": "输入类似`key:value`, then enter or blur",
+        "placeholder": "输入类似 `key:value` 的文本，然后回车或失去焦点",
         "title": "标签",
         "value": "值"
       },
