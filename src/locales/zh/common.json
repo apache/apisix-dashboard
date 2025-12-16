@@ -31,8 +31,8 @@
       "title": "基本信息"
     },
     "btn": {
-      "add": "增加",
-      "addARow": "增加一行",
+      "add": "新增",
+      "addARow": "新增一行",
       "cancel": "取消",
       "delete": "删除",
       "edit": "编辑",
