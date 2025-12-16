@@ -129,7 +129,7 @@ export const RouteList = (props: RouteListProps) => {
         totalCount: paginated.total,
       };
     }
-    
+
     // Otherwise, use paginated data from backend
     return {
       filteredData: data?.list || [],
@@ -151,14 +151,14 @@ export const RouteList = (props: RouteListProps) => {
   const versionOptions = useMemo(() => {
     const dataSource = needsAllData && allData?.list ? allData.list : data?.list || [];
     const versions = new Set<string>();
-    
+
     dataSource.forEach((route) => {
       const versionLabel = route.value.labels?.version;
       if (versionLabel) {
         versions.add(versionLabel);
       }
     });
-    
+
     return Array.from(versions)
       .sort()
       .map((version) => ({
@@ -250,6 +250,18 @@ export const RouteList = (props: RouteListProps) => {
             ],
           },
         }}
+        tableAlertRender={
+          needsAllData
+            ? () => (
+              <span style={{ color: '#faad14' }}>
+                {t('table.searchLimit', {
+                  defaultValue: `Search only allows searching in the first ${PAGE_SIZE_MAX} records.`,
+                  count: PAGE_SIZE_MAX,
+                })}
+              </span>
+            )
+            : undefined
+        }
       />
     </AntdConfigProvider>
   );

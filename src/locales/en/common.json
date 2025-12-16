@@ -387,7 +387,8 @@
   "table": {
     "actions": "Actions",
     "disabled": "Disabled",
-    "enabled": "Enabled"
+    "enabled": "Enabled",
+    "searchLimit": "Search only allows searching in the first {{count}} records."
   },
   "upstreams": {
     "singular": "Upstream"
