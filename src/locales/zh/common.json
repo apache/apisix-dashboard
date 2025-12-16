@@ -44,7 +44,7 @@
       "groupId": "分组 ID",
       "username": "用户名"
     },
-    "disabled": "禁用,点击开关启用",
+    "disabled": "已禁用，点击开关启用",
     "general": {
       "title": "常规"
     },
