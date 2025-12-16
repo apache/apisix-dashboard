@@ -41,7 +41,7 @@
       "view": "查看"
     },
     "consumers": {
-      "groupId": "组ID",
+      "groupId": "分组 ID",
       "username": "用户名"
     },
     "disabled": "禁用,点击开关启用",
