@@ -81,7 +81,7 @@
       "methods": "HTTP方法",
       "priority": "优先级",
       "remoteAddr": "远程地址",
-      "remoteAddrs": "远程地址",
+      "remoteAddrs": "远程地址列表",
       "service": "服务",
       "uri": "URI",
       "uris": "URIs",
