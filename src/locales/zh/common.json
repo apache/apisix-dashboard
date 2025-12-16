@@ -359,7 +359,7 @@
   },
   "table": {
     "actions": "操作",
-    "disabled": "禁止",
+    "disabled": "已禁用",
     "enabled": "启用"
   },
   "upstreams": {
