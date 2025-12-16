@@ -16,7 +16,7 @@
     "basic": {
       "desc": "描述",
       "labels": {
-        "errorFormat": "标签格式错误, 正确格式为`key:value`",
+        "errorFormat": "标签格式错误，应为 `key:value`",
         "key": "Key",
         "placeholder": "输入类似`key:value`, then enter or blur",
         "title": "标签",
