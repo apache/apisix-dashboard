@@ -92,7 +92,7 @@
       "aws": {
         "access_key_id": "访问密钥ID",
         "endpoint_url": "端点URL",
-        "region": "地区",
+        "region": "区域",
         "secret_access_key": "Secret Access Key",
         "session_token": "Session Token"
       },
