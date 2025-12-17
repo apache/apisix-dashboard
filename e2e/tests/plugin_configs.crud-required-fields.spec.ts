@@ -52,13 +52,12 @@ test('should CRUD plugin config with required fields', async ({ page }) => {
   await pluginConfigsPom.getAddPluginConfigBtn(page).click();
   await pluginConfigsPom.isAddPage(page);
 
-  await test.step('verify Add button exists', async () => {
-    // Just verify the Add button is present and accessible
-    const addBtn = pluginConfigsPom.getAddBtn(page);
-    await expect(addBtn).toBeVisible();
-
-    // Note: The client-side schema allows submission without plugins (it validates structure).
-    // The server may perform additional logic validation.
+  await test.step('cannot submit without required fields', async () => {
+    await pluginConfigsPom.getAddBtn(page).click();
+    await pluginConfigsPom.isAddPage(page);
+    await uiHasToastMsg(page, {
+      hasText: 'invalid configuration',
+    });
   });
 
   await test.step('submit with required fields', async () => {
