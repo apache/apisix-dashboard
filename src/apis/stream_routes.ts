@@ -77,14 +77,7 @@ export const deleteAllStreamRoutes = async (req: AxiosInstance) => {
       page_size: PAGE_SIZE_MAX,
     });
     await Promise.all(
-      res.list.map((d) =>
-        req.delete(`${API_STREAM_ROUTES}/${d.value.id}`).catch((err) => {
-          // Ignore 404 errors - resource already deleted
-          if (err.response?.status !== 404) {
-            throw err;
-          }
-        })
-      )
+      res.list.map((d) => req.delete(`${API_STREAM_ROUTES}/${d.value.id}`))
     );
   }
 };

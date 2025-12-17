@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { streamRoutesPom } from '@e2e/pom/stream_routes';
-import { e2eReq } from '@e2e/utils/req';
+import { randomId } from '@e2e/utils/common';
 import { test } from '@e2e/utils/test';
 import { uiHasToastMsg } from '@e2e/utils/ui';
 import {
@@ -24,13 +24,7 @@ import {
 } from '@e2e/utils/ui/stream_routes';
 import { expect } from '@playwright/test';
 
-import { deleteAllStreamRoutes } from '@/apis/stream_routes';
-
 test.describe.configure({ mode: 'serial' });
-
-test.beforeAll('clean up', async () => {
-  await deleteAllStreamRoutes(e2eReq);
-});
 
 test('CRUD stream route with required fields', async ({ page }) => {
   // Navigate to stream routes page
@@ -41,9 +35,12 @@ test('CRUD stream route with required fields', async ({ page }) => {
   await streamRoutesPom.toAdd(page);
   await expect(page.getByRole('heading', { name: 'Add Stream Route' })).toBeVisible({ timeout: 30000 });
 
+  // Use unique server addresses to avoid collisions when running tests in parallel
+  const uniqueId = randomId('test');
+  const uniqueIpSuffix = parseInt(uniqueId.slice(-6), 36) % 240 + 10; // 10-249
   const streamRouteData = {
-    server_addr: '127.0.0.111',
-    server_port: 9000,
+    server_addr: `127.0.1.${uniqueIpSuffix}`,
+    server_port: 9000 + parseInt(uniqueId.slice(-4), 36) % 1000, // Unique port
   };
 
   // Fill required fields
@@ -94,7 +91,7 @@ test('CRUD stream route with required fields', async ({ page }) => {
   // Edit fields - add description and labels
   const updatedData = {
     ...streamRouteData,
-    desc: 'Updated stream route description',
+    desc: `Updated stream route description - ${uniqueId}`,
     labels: {
       env: 'test',
       version: '1.0',
@@ -116,7 +113,7 @@ test('CRUD stream route with required fields', async ({ page }) => {
   // Navigate back to index and ensure the row exists
   await streamRoutesPom.toIndex(page);
   const row = page.getByRole('row').filter({ hasText: streamRouteData.server_addr });
-  await expect(row.first()).toBeVisible();
+  await expect(row.first()).toBeVisible({ timeout: 10000 }); // Longer timeout for parallel tests
 
   // View detail page from the list
   await row.first().getByRole('button', { name: 'View' }).click();

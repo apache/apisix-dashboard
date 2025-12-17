@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { streamRoutesPom } from '@e2e/pom/stream_routes';
-import { e2eReq } from '@e2e/utils/req';
+import { randomId } from '@e2e/utils/common';
 import { test } from '@e2e/utils/test';
 import { uiHasToastMsg } from '@e2e/utils/ui';
 import {
@@ -24,13 +24,7 @@ import {
 } from '@e2e/utils/ui/stream_routes';
 import { expect } from '@playwright/test';
 
-import { deleteAllStreamRoutes } from '@/apis/stream_routes';
-
 test.describe.configure({ mode: 'serial' });
-
-test.beforeAll('clean up', async () => {
-  await deleteAllStreamRoutes(e2eReq);
-});
 
 test('CRUD stream route with all fields', async ({ page }) => {
   // Navigate to stream routes page
@@ -41,12 +35,15 @@ test('CRUD stream route with all fields', async ({ page }) => {
   await streamRoutesPom.toAdd(page);
   await expect(page.getByRole('heading', { name: 'Add Stream Route' })).toBeVisible({ timeout: 30000 });
 
+  // Use unique server addresses to avoid collisions when running tests in parallel
+  const uniqueId = randomId('test');
+  const uniqueIpSuffix = parseInt(uniqueId.slice(-6), 36) % 240 + 10; // 10-249
   const streamRouteData = {
-    server_addr: '127.0.0.10',
-    server_port: 9100,
+    server_addr: `127.0.0.${uniqueIpSuffix}`,
+    server_port: 9100 + parseInt(uniqueId.slice(-4), 36) % 1000, // Unique port
     remote_addr: '192.168.10.0/24',
-    sni: 'edge.example.com',
-    desc: 'Stream route with optional fields',
+    sni: `edge-${uniqueId}.example.com`,
+    desc: `Stream route with optional fields - ${uniqueId}`,
     labels: {
       env: 'production',
       version: '2.0',
@@ -97,12 +94,13 @@ test('CRUD stream route with all fields', async ({ page }) => {
   await uiCheckStreamRouteRequiredFields(page, streamRouteData);
 
   // Edit fields - update description, add a label, and modify server settings
+  const updatedIpSuffix = (uniqueIpSuffix + 100) % 240 + 10;
   const updatedData = {
-    server_addr: '127.0.0.20',
-    server_port: 9200,
+    server_addr: `127.0.0.${updatedIpSuffix}`,
+    server_port: 9200 + parseInt(uniqueId.slice(-4), 36) % 1000, // Unique port
     remote_addr: '10.10.0.0/16',
-    sni: 'edge-updated.example.com',
-    desc: 'Updated stream route with optional fields',
+    sni: `edge-updated-${uniqueId}.example.com`,
+    desc: `Updated stream route with optional fields - ${uniqueId}`,
     labels: {
       ...streamRouteData.labels,
       updated: 'true',
@@ -135,7 +133,7 @@ test('CRUD stream route with all fields', async ({ page }) => {
   const updatedRow = page
     .getByRole('row')
     .filter({ hasText: updatedData.server_addr });
-  await expect(updatedRow).toBeVisible();
+  await expect(updatedRow).toBeVisible({ timeout: 10000 }); // Longer timeout for parallel tests
 
   // View detail page from the list to double-check values
   await updatedRow.getByRole('button', { name: 'View' }).click();

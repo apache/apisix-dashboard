@@ -71,7 +71,9 @@ test.describe('page and page_size should work correctly', () => {
 
   test.afterAll(async () => {
     await Promise.all(
-      streamRoutes.map((d) => e2eReq.delete(`${API_STREAM_ROUTES}/${d.id}`))
+      streamRoutes.map((d) =>
+        e2eReq.delete(`${API_STREAM_ROUTES}/${d.id}`).catch(() => { })
+      )
     );
   });
 
