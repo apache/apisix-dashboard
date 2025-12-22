@@ -16,4 +16,4 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Check License Header
-        uses: apache/skywalking-eyes/header@b7f8b351c2db8005972712d7efc0a15484a15bcb
+        uses: apache/skywalking-eyes/header@13c0e5b2689ef8f93eb4b7990b04c72fc293bb4f
