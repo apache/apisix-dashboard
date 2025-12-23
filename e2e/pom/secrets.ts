@@ -18,45 +18,42 @@ import { uiGoto } from '@e2e/utils/ui';
 import { expect, type Page } from '@playwright/test';
 
 const locator = {
+  getSecretNavBtn: (page: Page) =>
+    page.getByRole('link', { name: 'Secrets' }),
+  getAddSecretBtn: (page: Page) =>
+    page.getByRole('button', { name: 'Add Secret' }),
   getAddBtn: (page: Page) =>
-    page.getByRole('link', { name: 'Add Stream Route' }),
+    page.getByRole('button', { name: 'Add', exact: true }),
 };
 
 const assert = {
   isIndexPage: async (page: Page) => {
-    await expect(page).toHaveURL(
-      (url) => url.pathname.endsWith('/stream_routes'),
-      { timeout: 15000 }
-    );
-    const title = page.getByRole('heading', { name: 'Stream Routes' });
-    await expect(title).toBeVisible({ timeout: 15000 });
+    await expect(page).toHaveURL((url) => url.pathname.endsWith('/secrets'));
+    const title = page.getByRole('heading', { name: 'Secrets' });
+    await expect(title).toBeVisible();
   },
   isAddPage: async (page: Page) => {
-    await expect(
-      page,
-      { timeout: 15000 }
-    ).toHaveURL((url) => url.pathname.endsWith('/stream_routes/add'));
-    const title = page.getByRole('heading', { name: 'Add Stream Route' });
-    await expect(title).toBeVisible({ timeout: 15000 });
+    await expect(page).toHaveURL((url) =>
+      url.pathname.endsWith('/secrets/add')
+    );
+    const title = page.getByRole('heading', { name: 'Add Secret' });
+    await expect(title).toBeVisible();
   },
   isDetailPage: async (page: Page) => {
-    await expect(
-      page,
-      { timeout: 20000 }
-    ).toHaveURL((url) => url.pathname.includes('/stream_routes/detail'));
-    const title = page.getByRole('heading', {
-      name: 'Stream Route Detail',
-    });
-    await expect(title).toBeVisible({ timeout: 20000 });
+    await expect(page).toHaveURL((url) =>
+      url.pathname.includes('/secrets/detail')
+    );
+    const title = page.getByRole('heading', { name: 'Secret Detail' });
+    await expect(title).toBeVisible();
   },
 };
 
 const goto = {
-  toIndex: (page: Page) => uiGoto(page, '/stream_routes'),
-  toAdd: (page: Page) => uiGoto(page, '/stream_routes/add'),
+  toIndex: (page: Page) => uiGoto(page, '/secrets'),
+  toAdd: (page: Page) => uiGoto(page, '/secrets/add'),
 };
 
-export const streamRoutesPom = {
+export const secretsPom = {
   ...locator,
   ...assert,
   ...goto,

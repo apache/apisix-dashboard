@@ -73,15 +73,13 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
     });
     // Delete all upstreams in the current batch concurrently.
     await Promise.all(
-      res.list.map(async (d) => {
-        try {
-          await req.delete(`${API_UPSTREAMS}/${d.value.id}`);
-        } catch (err) {
-          // Ignore 404 errors as the resource might have been deleted by another process
+      res.list.map((d) =>
+        req.delete(`${API_UPSTREAMS}/${d.value.id}`).catch((err) => {
+          // Ignore 404 errors as the resource might have been deleted
           if (axios.isAxiosError(err) && err.response?.status === 404) return;
           throw err;
-        }
-      })
+        })
+      )
     );
   }
 };

@@ -1,1 +1,368 @@
-{}
+{
+  "apisix": {
+    "dashboard": "APISIX Dashboard",
+    "logo": "APISIX Logo"
+  },
+  "consumerGroups": {
+    "singular": "消费者组"
+  },
+  "consumers": {
+    "singular": "消费者"
+  },
+  "credentials": {
+    "singular": "凭证"
+  },
+  "form": {
+    "basic": {
+      "desc": "描述",
+      "labels": {
+        "errorFormat": "标签格式错误，应为 `key:value`",
+        "key": "Key",
+        "placeholder": "输入类似 `key:value` 的文本，然后回车或失去焦点",
+        "title": "标签",
+        "value": "值"
+      },
+      "name": "名字",
+      "status": "状态",
+      "statusOption": {
+        "0": "已禁用",
+        "1": "已启用"
+      },
+      "title": "基本信息"
+    },
+    "btn": {
+      "add": "新增",
+      "addARow": "新增一行",
+      "cancel": "取消",
+      "delete": "删除",
+      "edit": "编辑",
+      "save": "保存",
+      "upload": "上传",
+      "view": "查看"
+    },
+    "consumers": {
+      "groupId": "分组 ID",
+      "username": "用户名"
+    },
+    "disabled": "已禁用，点击开关启用",
+    "general": {
+      "title": "常规"
+    },
+    "info": {
+      "create_time": "创建时间",
+      "id": "ID",
+      "title": "信息",
+      "update_time": "更新时间"
+    },
+    "json": {
+      "parseError": "JSON格式无效"
+    },
+    "plugins": {
+      "addPlugin": "添加插件",
+      "configId": "插件配置ID",
+      "editPlugin": "编辑插件",
+      "label": "插件",
+      "searchForSelectedPlugins": "搜索所选插件",
+      "selectPlugins": {
+        "title": "选择插件"
+      },
+      "viewPlugin": "查看插件"
+    },
+    "protos": {
+      "content": "内容",
+      "contentPlaceholder": "粘贴或上传 {{fileTypes}} 文件"
+    },
+    "routes": {
+      "enableWebsocket": "启用WebSocket",
+      "filterFunc": "过滤函数",
+      "host": "主机",
+      "hosts": "主机列表",
+      "matchRules": "匹配规则",
+      "methods": "HTTP方法",
+      "priority": "优先级",
+      "remoteAddr": "远程地址",
+      "remoteAddrs": "远程地址列表",
+      "service": "服务",
+      "uri": "URI",
+      "uris": "URI 列表",
+      "vars": "变量"
+    },
+    "search": "搜索",
+    "secrets": {
+      "aws": {
+        "access_key_id": "访问密钥ID",
+        "endpoint_url": "端点URL",
+        "region": "区域",
+        "secret_access_key": "访问密钥",
+        "session_token": "会话 Token"
+      },
+      "gcp": {
+        "auth": "认证",
+        "auth_config": "身份认证配置",
+        "auth_file": "身份认证文件",
+        "client_email": "客户端邮箱",
+        "entries_uri": "Entries URI",
+        "private_key": "私钥",
+        "project_id": "项目 ID",
+        "scope": "范围",
+        "ssl_verify": "SSL验证",
+        "token_uri": "Token URI"
+      },
+      "manager": "密钥管理器",
+      "managerConfig": "管理器配置",
+      "title": "密钥配置",
+      "vault": {
+        "namespace": "命名空间",
+        "prefix": "前缀",
+        "token": "Token",
+        "uri": "URI"
+      }
+    },
+    "services": {
+      "enableWebsocket": "启用WebSocket",
+      "hosts": "主机列表",
+      "script": "脚本",
+      "settings": "服务设置"
+    },
+    "ssls": {
+      "cert": "证书",
+      "cert_key_list": {
+        "add": "新增一对",
+        "delete": "删除该对",
+        "title": "证书和密钥对"
+      },
+      "client": {
+        "ca": "客户端CA证书",
+        "depth": "校验深度",
+        "skipMtlsUriRegex": "跳过 mTLS URI 正则表达式",
+        "title": "客户端"
+      },
+      "key": "私钥",
+      "sni": "SNI",
+      "snis": "SNI 列表",
+      "ssl_protocols": "SSL协议",
+      "type": "证书类型"
+    },
+    "streamRoutes": {
+      "protocol": {
+        "conf": "配置",
+        "logger": "日志",
+        "name": "协议名称",
+        "superiorId": "Superior ID",
+        "title": "协议信息"
+      },
+      "remoteAddr": "远程地址",
+      "server": "服务器",
+      "serverAddr": "服务器地址",
+      "serverPort": "服务器端口",
+      "sni": "SNI"
+    },
+    "tagsInput": {
+      "placeholder": "输入文本，然后回车或失去焦点"
+    },
+    "upload": {
+      "fileOverSize": "文件尺寸太大",
+      "readError": "文件读取错误："
+    },
+    "upstreams": {
+      "checks": {
+        "active": {
+          "concurrency": "并发",
+          "healthy": {
+            "http_statuses": "HTTP状态",
+            "interval": "间隔",
+            "successes": "成功次数",
+            "title": "健康"
+          },
+          "host": "主机",
+          "http_path": "HTTP路径",
+          "http_request_headers": "HTTP请求头",
+          "https_verify_certificate": "Https验证证书",
+          "port": "端口",
+          "timeout": "超时时间",
+          "title": "主动检查",
+          "type": "类型",
+          "unhealthy": {
+            "http_failures": "HTTP 失败数",
+            "http_statuses": "HTTP 状态码",
+            "interval": "间隔",
+            "tcp_failures": "TCP 失败数",
+            "timeouts": "超时次数",
+            "title": "不健康"
+          }
+        },
+        "passive": {
+          "healthy": {
+            "http_statuses": "HTTP 状态码",
+            "successes": "成功次数",
+            "title": "健康"
+          },
+          "title": "被动检查",
+          "type": "类型",
+          "unhealthy": {
+            "http_failures": "HTTP 失败数",
+            "http_statuses": "HTTP 状态码",
+            "tcp_failures": "TCP 失败数",
+            "timeouts": "超时次数",
+            "title": "不健康"
+          }
+        },
+        "title": "健康检查"
+      },
+      "connectionConfiguration": "连接配置",
+      "discoveryArgs": {
+        "title": "发现参数"
+      },
+      "discoveryType": {
+        "title": "发现类型"
+      },
+      "findUpstreamFrom": "从以下来源查找上游",
+      "hashOn": "哈希依据",
+      "hashOnDesc": "`type` 为 `chash` 时生效",
+      "identifier": "上游标识符",
+      "inline": "内联上游配置",
+      "keepalivePool": {
+        "idleTimeout": "空闲超时时间",
+        "requests": "请求数",
+        "size": "大小",
+        "title": "Keepalive 连接池"
+      },
+      "key": "Key",
+      "keyDesc": "`type` 为 `chash` 时生效",
+      "loadBalancing": "负载均衡",
+      "nodes": {
+        "action": {
+          "title": "操作"
+        },
+        "add": "添加节点",
+        "host": {
+          "title": "主机"
+        },
+        "port": {
+          "title": "端口"
+        },
+        "priority": {
+          "title": "优先级"
+        },
+        "title": "节点",
+        "weight": {
+          "title": "权重"
+        }
+      },
+      "passHost": "传递 Host",
+      "retries": "重试次数",
+      "retry": "重试",
+      "retryTimeout": "重试超时时间",
+      "scheme": "协议",
+      "serviceDiscovery": {
+        "serviceName": "服务名称",
+        "title": "服务发现"
+      },
+      "serviceId": "服务ID",
+      "serviceName": {
+        "title": "服务名称"
+      },
+      "timeout": {
+        "connect": "连接",
+        "read": "读取",
+        "send": "发送",
+        "title": "超时设置"
+      },
+      "title": "上游",
+      "tls": {
+        "clientCert": "客户端证书",
+        "clientCertId": "客户端证书ID",
+        "clientCertKeyPair": "客户端证书密钥对",
+        "clientKey": "客户端密钥",
+        "title": "TLS",
+        "verify": "校验"
+      },
+      "type": "类型",
+      "updateTime": "更新时间",
+      "upstreamHost": "上游主机名",
+      "upstreamHostDesc": "`pass_host` 为 `rewrite` 时设置",
+      "upstreamId": "上游ID"
+    }
+  },
+  "globalRules": {
+    "singular": "全局规则"
+  },
+  "help-us-translate": "帮助我们进行翻译!",
+  "info": {
+    "add": {
+      "success": "添加 {{name}} 成功",
+      "title": "添加 {{name}}"
+    },
+    "delete": {
+      "content": "是否要删除 {{name}}",
+      "success": "删除 {{name}} 成功",
+      "title": "删除 {{name}}"
+    },
+    "detail": {
+      "title": "{{name}} 详情"
+    },
+    "edit": {
+      "success": "编辑 {{name}} 成功",
+      "title": "编辑 {{name}}"
+    }
+  },
+  "mark": {
+    "question": "?"
+  },
+  "noData": "无数据",
+  "or": "OR",
+  "pluginConfigs": {
+    "singular": "插件配置"
+  },
+  "pluginMetadata": {
+    "search": "搜索插件元数据",
+    "singular": "插件元数据"
+  },
+  "protos": {
+    "singular": "Proto"
+  },
+  "routes": {
+    "singular": "路由"
+  },
+  "seconds": "秒",
+  "secrets": {
+    "singular": "Secret"
+  },
+  "services": {
+    "singular": "服务"
+  },
+  "settings": {
+    "adminKey": "管理员密钥",
+    "title": "设置",
+    "ui-commit-sha": "UI Commit SHA"
+  },
+  "sources": {
+    "consumerGroups": "消费者组",
+    "consumers": "消费者",
+    "credentials": "凭据",
+    "globalRules": "全局规则",
+    "pluginConfigs": "插件配置",
+    "pluginMetadata": "插件元数据",
+    "protos": "Proto",
+    "routes": "路由",
+    "secrets": "Secrets",
+    "services": "服务",
+    "ssls": "SSLs",
+    "streamRoutes": "流路由",
+    "upstreams": "上游"
+  },
+  "ssls": {
+    "singular": "SSL"
+  },
+  "streamRoutes": {
+    "singular": "流路由"
+  },
+  "table": {
+    "actions": "操作",
+    "disabled": "已禁用",
+    "enabled": "已启用"
+  },
+  "upstreams": {
+    "singular": "上游"
+  }
+}

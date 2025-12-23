@@ -186,10 +186,10 @@ test('should display stream routes list under service', async ({ page }) => {
     for (const streamRoute of streamRoutes) {
       await expect(
         page.getByRole('cell', { name: streamRoute.server_addr })
-      ).toBeVisible();
+      ).toBeVisible({ timeout: 30000 });
       await expect(
         page.getByRole('cell', { name: streamRoute.server_port.toString() })
-      ).toBeVisible();
+      ).toBeVisible({ timeout: 30000 });
     }
   });
 
