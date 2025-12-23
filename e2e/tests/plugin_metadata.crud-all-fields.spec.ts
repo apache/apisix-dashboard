@@ -34,29 +34,24 @@ const deletePluginMetadata = async (req: typeof e2eReq, name: string) => {
   });
 };
 const getMonacoEditorValue = async (editPluginDialog: Locator) => {
-  let editorValue = '';
   const textarea = editPluginDialog.locator('textarea');
 
-  // Retry logic to handle potential race conditions where editor content isn't fully loaded
-  for (let i = 0; i < 20; i++) {
-    if (await textarea.count() > 0) {
-      editorValue = await textarea.inputValue();
-    }
+  // Wait for Monaco editor to be fully loaded with content (increased timeout for CI)
+  await textarea.waitFor({ state: 'attached', timeout: 10000 });
 
-    // Fallback to reading view-lines if textarea value seems incomplete
-    if (!editorValue || editorValue.trim() === '{') {
-      const lines = await editPluginDialog.locator('.view-line').allTextContents();
-      editorValue = lines.join('\n').replace(/\s+/g, ' ');
-    }
+  let editorValue = '';
 
-    // If we have a valid-looking value (not just '{'), return it
-    if (editorValue && editorValue.trim() !== '{') {
-      return editorValue;
-    }
+  // Try to get value from textarea first
+  if (await textarea.count() > 0) {
+    editorValue = await textarea.inputValue();
+  }
 
-    // Wait before retrying
-    // eslint-disable-next-line playwright/no-wait-for-timeout
-    await editPluginDialog.page().waitForTimeout(500);
+  // Fallback to reading view-lines if textarea value is incomplete
+  if (!editorValue || editorValue.trim() === '{') {
+    // Wait for view-lines to be populated
+    await editPluginDialog.locator('.view-line').first().waitFor({ timeout: 10000 });
+    const lines = await editPluginDialog.locator('.view-line').allTextContents();
+    editorValue = lines.join('\n').replace(/\s+/g, ' ');
   }
 
   if (!editorValue || editorValue.trim() === '{') {
