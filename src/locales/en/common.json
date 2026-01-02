@@ -88,6 +88,33 @@
       "vars": "Vars"
     },
     "search": "Search",
+    "searchForm": {
+      "fields": {
+        "name": "Name",
+        "id": "ID",
+        "host": "Host",
+        "path": "Path",
+        "description": "Description",
+        "plugin": "Plugin",
+        "labels": "Labels",
+        "version": "Version",
+        "status": "Status"
+      },
+      "placeholders": {
+        "labels": "Select labels",
+        "version": "Select version",
+        "status": "Select status"
+      },
+      "status": {
+        "all": "UnPublished/Published",
+        "published": "Published",
+        "unpublished": "UnPublished"
+      },
+      "actions": {
+        "reset": "Reset",
+        "search": "Search"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "Access Key ID",
@@ -360,7 +387,8 @@
   "table": {
     "actions": "Actions",
     "disabled": "Disabled",
-    "enabled": "Enabled"
+    "enabled": "Enabled",
+    "searchLimit": "Search only allows searching in the first {{count}} records."
   },
   "upstreams": {
     "singular": "Upstream"
