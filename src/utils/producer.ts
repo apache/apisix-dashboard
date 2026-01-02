@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { clean,type ICleanerOptions } from 'fast-clean';
+import { clean, type ICleanerOptions } from 'fast-clean';
 import { produce } from 'immer';
 import { pipe } from 'rambdax';
 
@@ -27,6 +27,7 @@ export const deepCleanEmptyKeys = <T extends object>(
   clean(obj, {
     nullCleaner: true,
     cleanInPlace: true,
+    emptyObjectsCleaner: false, // Keep empty objects for plugins that need no config (e.g. key-auth)
     ...opts,
   });
 
