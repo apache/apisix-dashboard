@@ -182,6 +182,7 @@ test('should CRUD SSL with all fields', async ({ page }) => {
 
     // Final verification: Reload the page and check again
     await page.reload();
+    await page.waitForLoadState('load');
     await sslsPom.isIndexPage(page);
 
     // After reload, the SSL should still be gone

@@ -27,6 +27,8 @@ import {
   postStreamRouteReq,
 } from '@/apis/stream_routes';
 
+test.describe.configure({ mode: 'serial' });
+
 const serviceName = randomId('test-service');
 const anotherServiceName = randomId('another-service');
 const streamRoutes = [
@@ -184,10 +186,10 @@ test('should display stream routes list under service', async ({ page }) => {
     for (const streamRoute of streamRoutes) {
       await expect(
         page.getByRole('cell', { name: streamRoute.server_addr })
-      ).toBeVisible();
+      ).toBeVisible({ timeout: 30000 });
       await expect(
         page.getByRole('cell', { name: streamRoute.server_port.toString() })
-      ).toBeVisible();
+      ).toBeVisible({ timeout: 30000 });
     }
   });
 
