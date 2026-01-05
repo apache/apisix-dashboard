@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SchemaformdemoImport } from './routes/schema_form_demo'
 import { Route as IndexImport } from './routes/index'
 import { Route as UpstreamsIndexImport } from './routes/upstreams/index'
 import { Route as StreamroutesIndexImport } from './routes/stream_routes/index'
@@ -59,6 +60,12 @@ import { Route as ServicesDetailIdRoutesDetailRouteIdImport } from './routes/ser
 import { Route as ConsumersDetailUsernameCredentialsDetailIdImport } from './routes/consumers/detail.$username/credentials/detail.$id'
 
 // Create/Update Routes
+
+const SchemaformdemoRoute = SchemaformdemoImport.update({
+  id: '/schema_form_demo',
+  path: '/schema_form_demo',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -354,6 +361,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/schema_form_demo': {
+      id: '/schema_form_demo'
+      path: '/schema_form_demo'
+      fullPath: '/schema_form_demo'
+      preLoaderRoute: typeof SchemaformdemoImport
       parentRoute: typeof rootRoute
     }
     '/consumer_groups/add': {
@@ -727,6 +741,7 @@ const ServicesDetailIdRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/schema_form_demo': typeof SchemaformdemoRoute
   '/consumer_groups/add': typeof ConsumergroupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof GlobalrulesAddRoute
@@ -776,6 +791,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/schema_form_demo': typeof SchemaformdemoRoute
   '/consumer_groups/add': typeof ConsumergroupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof GlobalrulesAddRoute
@@ -824,6 +840,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/schema_form_demo': typeof SchemaformdemoRoute
   '/consumer_groups/add': typeof ConsumergroupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof GlobalrulesAddRoute
@@ -875,6 +892,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/schema_form_demo'
     | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
@@ -923,6 +941,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/schema_form_demo'
     | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
@@ -969,6 +988,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/schema_form_demo'
     | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
@@ -1019,6 +1039,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SchemaformdemoRoute: typeof SchemaformdemoRoute
   ConsumergroupsAddRoute: typeof ConsumergroupsAddRoute
   ConsumersAddRoute: typeof ConsumersAddRoute
   GlobalrulesAddRoute: typeof GlobalrulesAddRoute
@@ -1057,6 +1078,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SchemaformdemoRoute: SchemaformdemoRoute,
   ConsumergroupsAddRoute: ConsumergroupsAddRoute,
   ConsumersAddRoute: ConsumersAddRoute,
   GlobalrulesAddRoute: GlobalrulesAddRoute,
@@ -1104,6 +1126,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/schema_form_demo",
         "/consumer_groups/add",
         "/consumers/add",
         "/global_rules/add",
@@ -1142,6 +1165,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/schema_form_demo": {
+      "filePath": "schema_form_demo.tsx"
     },
     "/consumer_groups/add": {
       "filePath": "consumer_groups/add.tsx"
