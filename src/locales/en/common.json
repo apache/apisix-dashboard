@@ -3,6 +3,9 @@
     "dashboard": "APISIX Dashboard",
     "logo": "APISIX Logo"
   },
+  "copy_success": "Copied to clipboard!",
+  "copy": "Copy",
+
   "consumerGroups": {
     "singular": "Consumer Group"
   },
