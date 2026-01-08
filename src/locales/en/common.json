@@ -3,6 +3,9 @@
     "dashboard": "APISIX Dashboard",
     "logo": "APISIX Logo"
   },
+  "copy_success": "Copied to clipboard!",
+  "copy": "Copy",
+
   "consumerGroups": {
     "singular": "Consumer Group"
   },
@@ -329,7 +332,9 @@
     "singular": "Secret"
   },
   "services": {
-    "singular": "Service"
+    "singular": "Service",
+    "empty": "No services found. Click Add Service to create your first one."
+
   },
   "settings": {
     "adminKey": "Admin Key",
