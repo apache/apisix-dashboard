@@ -45,7 +45,8 @@ export const FormItemLabels = <T extends FieldValues>(
   const [internalError, setInternalError] = useState<string | null>();
 
   const values = useMemo(() => {
-    if (!value) return [];
+    // Defensive: ensure value is a plain object (not array or null)
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
     return Object.entries(value).map(([key, val]) => `${key}:${val}`);
   }, [value]);
 
