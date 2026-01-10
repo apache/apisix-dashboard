@@ -24,12 +24,17 @@ import IconLanguage from '~icons/material-symbols/language-chinese-array';
 const LangMap: Record<keyof Resources, string> = {
   en: 'English',
   de: 'Deutsch',
-  zh: '中文',
   es: 'Español',
+  pt_BR: 'Português (Brasil)',
   tr: 'Türkçe',
+  zh: '中文',
 };
 
 const TranslationProgress = ({ lang }: { lang: string }) => {
+  const langProgress = i18nProgress[lang]; 
+  if (!langProgress) {
+    return null;
+  }
   const percent = i18nProgress[lang].percent;
   if (typeof percent === 'number' && percent < 100) {
     return (
