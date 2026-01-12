@@ -25,12 +25,14 @@ import { FormDisplayDate } from './FormDisplayDate';
 import { FormSection } from './FormSection';
 
 const DisplayDate = () => {
-  const { control } = useFormContext<APISIXType['Info']>();
+  const { control, register } = useFormContext<APISIXType['Info']>();
   const { t } = useTranslation();
   const createTime = useWatch({ control, name: 'create_time' });
   const updateTime = useWatch({ control, name: 'update_time' });
   return (
     <>
+      <input type="hidden" {...register('create_time')} />
+      <input type="hidden" {...register('update_time')} />
       <FormDisplayDate date={createTime} label={t('form.info.create_time')} />
       <FormDisplayDate date={updateTime} label={t('form.info.update_time')} />
     </>
