@@ -28,6 +28,7 @@ RUN \
 
 # build ui
 FROM base AS builder
+ENV NODE_ENV=test
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .

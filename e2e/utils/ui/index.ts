@@ -64,16 +64,11 @@ export async function uiFillHTTPStatuses(
   }
 }
 
-export const uiClearMonacoEditor = async (page: Page, editor: Locator) => {
-  await editor.click();
-  const editorTextbox = editor.getByRole('textbox');
-
-  // Clear using fill('') first, which is more reliable
-  await editorTextbox.fill('');
-
-  // Verify it's actually cleared
-  await expect(editorTextbox).toHaveValue('');
-  await editor.blur();
+export const uiClearMonacoEditor = async (page: Page) => {
+  await page.evaluate(() => {
+    const editor = window.__monacoEditor__;
+    editor.getModel()?.setValue('');
+  });
 };
 
 export const uiGetMonacoEditor = async (
@@ -88,7 +83,7 @@ export const uiGetMonacoEditor = async (
   await expect(editor).toBeVisible({ timeout: 10000 });
 
   if (clear) {
-    await uiClearMonacoEditor(page, editor);
+    await uiClearMonacoEditor(page);
   }
 
   return editor;
