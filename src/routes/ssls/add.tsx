@@ -30,6 +30,7 @@ import {
 } from '@/components/form-slice/FormPartSSL/schema';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
+import { queryClient } from '@/config/global';
 import { req } from '@/config/req';
 import { pipeProduce } from '@/utils/producer';
 
@@ -43,6 +44,8 @@ const SSLAddForm = () => {
         message: t('info.add.success', { name: t('ssls.singular') }),
         color: 'green',
       });
+      // Invalidate SSLs list query to refetch fresh data
+      await queryClient.invalidateQueries({ queryKey: ['ssls'] });
       await router.navigate({
         to: '/ssls',
       });

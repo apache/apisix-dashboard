@@ -66,8 +66,13 @@ export async function uiFillHTTPStatuses(
 
 export const uiClearMonacoEditor = async (page: Page, editor: Locator) => {
   await editor.click();
-  await page.keyboard.press('ControlOrMeta+A');
-  await page.keyboard.press('Backspace');
+  const editorTextbox = editor.getByRole('textbox');
+
+  // Clear using fill('') first, which is more reliable
+  await editorTextbox.fill('');
+
+  // Verify it's actually cleared
+  await expect(editorTextbox).toHaveValue('');
   await editor.blur();
 };
 
@@ -95,7 +100,9 @@ export const uiFillMonacoEditor = async (
   value: string
 ) => {
   await editor.click();
-  await editor.getByRole('textbox').pressSequentially(value);
+  const editorTextbox = editor.getByRole('textbox');
+  // Use fill() instead of pressSequentially() for reliability
+  await editorTextbox.fill(value);
   await editor.blur();
   await page.waitForTimeout(800);
 };

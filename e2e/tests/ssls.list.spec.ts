@@ -45,24 +45,26 @@ test('should navigate to SSLs page', async ({ page }) => {
   });
 });
 
-const { cert, key } = genTLS();
-
-const ssls: APISIXType['SSL'][] = Array.from({ length: 11 }, (_, i) => ({
-  id: randomId('ssl_id'),
-  snis: [`ssl-${i + 1}.example.com`, `www.ssl-${i + 1}.example.com`],
-  cert,
-  key,
-  labels: {
-    env: 'test',
-    version: `v${i + 1}`,
-  },
-  status: 1,
-}));
+let ssls: APISIXType['SSL'][] = [];
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeAll(async () => {
+    // Generate TLS certificates at runtime
+    const { cert, key } = await genTLS();
+    ssls = Array.from({ length: 11 }, (_, i) => ({
+      id: randomId('ssl_id'),
+      snis: [`ssl-${i + 1}.example.com`, `www.ssl-${i + 1}.example.com`],
+      cert,
+      key,
+      labels: {
+        env: 'test',
+        version: `v${i + 1}`,
+      },
+      status: 1,
+    }));
+
     await deleteAllSSLs(e2eReq);
     await Promise.all(ssls.map((d) => putSSLReq(e2eReq, d)));
   });

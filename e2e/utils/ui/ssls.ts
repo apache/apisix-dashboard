@@ -27,7 +27,7 @@ export async function uiFillSSLRequiredFields(
   ssl: Partial<APISIXType['SSL']>
 ) {
   // Generate TLS certificate if not provided
-  const tls = ssl.cert && ssl.key ? ssl : genTLS();
+  const tls = ssl.cert && ssl.key ? ssl : await genTLS();
 
   await ctx.getByRole('textbox', { name: 'Certificate 1' }).fill(tls.cert);
   await ctx.getByRole('textbox', { name: 'Private Key 1' }).fill(tls.key);

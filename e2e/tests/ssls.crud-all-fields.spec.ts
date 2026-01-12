@@ -31,20 +31,11 @@ const snis = [
   'www.full-test.example.com',
   'api.full-test.example.com',
 ];
-const { cert, key } = genTLS();
 
 const initialLabels = {
   env: 'production',
   version: 'v1',
   team: 'backend',
-};
-
-const sslDataAllFields: Partial<APISIXType['SSL']> = {
-  snis,
-  cert,
-  key,
-  labels: initialLabels,
-  status: 1, // Enabled
 };
 
 test.beforeAll(async () => {
@@ -53,6 +44,16 @@ test.beforeAll(async () => {
 
 test('should CRUD SSL with all fields', async ({ page }) => {
   test.slow();
+
+  // Generate TLS certificates at runtime
+  const { cert, key } = await genTLS();
+  const sslDataAllFields: Partial<APISIXType['SSL']> = {
+    snis,
+    cert,
+    key,
+    labels: initialLabels,
+    status: 1, // Enabled
+  };
 
   await sslsPom.toIndex(page);
   await sslsPom.isIndexPage(page);
