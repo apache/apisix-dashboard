@@ -19,8 +19,8 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import { navRoutes } from '@/config/navRoutes';
 
 export const Route = createFileRoute('/')({
-  beforeLoad: () => {
-    return redirect({
+  beforeLoad: (): never => {
+    throw redirect({
       to: navRoutes[0].to,
     });
   },
