@@ -1,0 +1,368 @@
+{
+  "apisix": {
+    "dashboard": "APISIX Dashboard",
+    "logo": "APISIX Logo"
+  },
+  "consumerGroups": {
+    "singular": "Consumer Grubu"
+  },
+  "consumers": {
+    "singular": "Consumer"
+  },
+  "credentials": {
+    "singular": "Credential"
+  },
+  "form": {
+    "basic": {
+      "desc": "Açıklama",
+      "labels": {
+        "errorFormat": "Label formatı hatalı, `key:value` şeklinde olmalıdır",
+        "key": "Key",
+        "placeholder": "`key:value` formatında girin ve enter'a basın",
+        "title": "Label'lar",
+        "value": "Value"
+      },
+      "name": "İsim",
+      "status": "Durum",
+      "statusOption": {
+        "0": "Pasif",
+        "1": "Aktif"
+      },
+      "title": "Temel Bilgiler"
+    },
+    "btn": {
+      "add": "Ekle",
+      "addARow": "Satır ekle",
+      "cancel": "İptal",
+      "delete": "Sil",
+      "edit": "Düzenle",
+      "save": "Kaydet",
+      "upload": "Yükle",
+      "view": "Görüntüle"
+    },
+    "consumers": {
+      "groupId": "Grup ID",
+      "username": "Kullanıcı Adı"
+    },
+    "disabled": "Pasif, aktif etmek için tıklayın",
+    "general": {
+      "title": "Genel"
+    },
+    "info": {
+      "create_time": "Oluşturulma",
+      "id": "ID",
+      "title": "Bilgi",
+      "update_time": "Güncellenme"
+    },
+    "json": {
+      "parseError": "JSON formatı geçerli değil"
+    },
+    "plugins": {
+      "addPlugin": "Plugin Ekle",
+      "configId": "Plugin Config ID",
+      "editPlugin": "Plugin Düzenle",
+      "label": "Plugin'ler",
+      "searchForSelectedPlugins": "Seçili Plugin'lerde Ara",
+      "selectPlugins": {
+        "title": "Plugin Seç"
+      },
+      "viewPlugin": "Plugin'i Görüntüle"
+    },
+    "protos": {
+      "content": "İçerik",
+      "contentPlaceholder": "{{fileTypes}} dosyasını yapıştırın veya yükleyin"
+    },
+    "routes": {
+      "enableWebsocket": "WebSocket Aktif",
+      "filterFunc": "Filter Fonksiyonu",
+      "host": "Host",
+      "hosts": "Host'lar",
+      "matchRules": "Eşleşme Kuralları",
+      "methods": "HTTP Method'ları",
+      "priority": "Öncelik",
+      "remoteAddr": "Remote Adres",
+      "remoteAddrs": "Remote Adresler",
+      "service": "Service",
+      "uri": "URI",
+      "uris": "URI'ler",
+      "vars": "Değişkenler"
+    },
+    "search": "Ara",
+    "secrets": {
+      "aws": {
+        "access_key_id": "Access Key ID",
+        "endpoint_url": "Endpoint URL",
+        "region": "Region",
+        "secret_access_key": "Secret Access Key",
+        "session_token": "Session Token"
+      },
+      "gcp": {
+        "auth": "Auth",
+        "auth_config": "Auth Config",
+        "auth_file": "Auth Dosyası",
+        "client_email": "Client Email",
+        "entries_uri": "Entries URI",
+        "private_key": "Private Key",
+        "project_id": "Project ID",
+        "scope": "Scope",
+        "ssl_verify": "SSL Verify",
+        "token_uri": "Token URI"
+      },
+      "manager": "Secret Manager",
+      "managerConfig": "Manager Config",
+      "title": "Secret Yapılandırması",
+      "vault": {
+        "namespace": "Namespace",
+        "prefix": "Prefix",
+        "token": "Token",
+        "uri": "URI"
+      }
+    },
+    "services": {
+      "enableWebsocket": "WebSocket Aktif",
+      "hosts": "Host'lar",
+      "script": "Script",
+      "settings": "Service Ayarları"
+    },
+    "ssls": {
+      "cert": "Certificate",
+      "cert_key_list": {
+        "add": "Çift ekle",
+        "delete": "Çifti sil",
+        "title": "Certificate ve Key Çiftleri"
+      },
+      "client": {
+        "ca": "Client CA Certificate",
+        "depth": "Verification Depth",
+        "skipMtlsUriRegex": "mTLS URI Regex'i Atla",
+        "title": "Client"
+      },
+      "key": "Private Key",
+      "sni": "SNI",
+      "snis": "SNI'ler",
+      "ssl_protocols": "SSL Protocol'leri",
+      "type": "Certificate Tipi"
+    },
+    "streamRoutes": {
+      "protocol": {
+        "conf": "Config",
+        "logger": "Logger",
+        "name": "Protocol Adı",
+        "superiorId": "Superior ID",
+        "title": "Protocol Bilgisi"
+      },
+      "remoteAddr": "Remote Adres",
+      "server": "Server",
+      "serverAddr": "Server Adresi",
+      "serverPort": "Server Port",
+      "sni": "SNI"
+    },
+    "tagsInput": {
+      "placeholder": "Metin girin ve enter'a basın"
+    },
+    "upload": {
+      "fileOverSize": "Dosya boyutu çok büyük",
+      "readError": "Dosya okuma hatası:"
+    },
+    "upstreams": {
+      "checks": {
+        "active": {
+          "concurrency": "Concurrency",
+          "healthy": {
+            "http_statuses": "HTTP Status'leri",
+            "interval": "Interval",
+            "successes": "Başarı Sayısı",
+            "title": "Healthy"
+          },
+          "host": "Host",
+          "http_path": "HTTP Path",
+          "http_request_headers": "HTTP Request Header'ları",
+          "https_verify_certificate": "HTTPS Certificate Verify",
+          "port": "Port",
+          "timeout": "Timeout",
+          "title": "Active",
+          "type": "Tip",
+          "unhealthy": {
+            "http_failures": "HTTP Failure'ları",
+            "http_statuses": "HTTP Status'leri",
+            "interval": "Interval",
+            "tcp_failures": "TCP Failure'ları",
+            "timeouts": "Timeout'lar",
+            "title": "Unhealthy"
+          }
+        },
+        "passive": {
+          "healthy": {
+            "http_statuses": "HTTP Status'leri",
+            "successes": "Başarı Sayısı",
+            "title": "Healthy"
+          },
+          "title": "Passive",
+          "type": "Tip",
+          "unhealthy": {
+            "http_failures": "HTTP Failure'ları",
+            "http_statuses": "HTTP Status'leri",
+            "tcp_failures": "TCP Failure'ları",
+            "timeouts": "Timeout'lar",
+            "title": "Unhealthy"
+          }
+        },
+        "title": "Health Check'ler"
+      },
+      "connectionConfiguration": "Connection Configuration",
+      "discoveryArgs": {
+        "title": "Discovery Args"
+      },
+      "discoveryType": {
+        "title": "Discovery Type"
+      },
+      "findUpstreamFrom": "Upstream'i Nereden Bul",
+      "hashOn": "Hash On",
+      "hashOnDesc": "`type` değeri `chash` olduğunda geçerlidir",
+      "identifier": "Upstream Identifier",
+      "inline": "Inline Upstream Config",
+      "keepalivePool": {
+        "idleTimeout": "Idle Timeout",
+        "requests": "Request Sayısı",
+        "size": "Boyut",
+        "title": "Keepalive Pool"
+      },
+      "key": "Key",
+      "keyDesc": "`type` değeri `chash` olduğunda geçerlidir",
+      "loadBalancing": "Load Balancing",
+      "nodes": {
+        "action": {
+          "title": "İşlem"
+        },
+        "add": "Node Ekle",
+        "host": {
+          "title": "Host"
+        },
+        "port": {
+          "title": "Port"
+        },
+        "priority": {
+          "title": "Priority"
+        },
+        "title": "Node'lar",
+        "weight": {
+          "title": "Weight"
+        }
+      },
+      "passHost": "Pass Host",
+      "retries": "Retry Sayısı",
+      "retry": "Retry",
+      "retryTimeout": "Retry Timeout",
+      "scheme": "Scheme",
+      "serviceDiscovery": {
+        "serviceName": "Service Adı",
+        "title": "Service Discovery"
+      },
+      "serviceId": "Service ID",
+      "serviceName": {
+        "title": "Service Adı"
+      },
+      "timeout": {
+        "connect": "Connect",
+        "read": "Read",
+        "send": "Send",
+        "title": "Timeout"
+      },
+      "title": "Upstream",
+      "tls": {
+        "clientCert": "Client Cert",
+        "clientCertId": "Client Cert ID",
+        "clientCertKeyPair": "Client Cert Key Pair",
+        "clientKey": "Client Key",
+        "title": "TLS",
+        "verify": "Verify"
+      },
+      "type": "Tip",
+      "updateTime": "Güncelleme Zamanı",
+      "upstreamHost": "Upstream Host",
+      "upstreamHostDesc": "`pass_host` değeri `rewrite` olduğunda ayarlayın",
+      "upstreamId": "Upstream ID"
+    }
+  },
+  "globalRules": {
+    "singular": "Global Rule"
+  },
+  "help-us-translate": "Çeviri Yapmak İster misiniz?",
+  "info": {
+    "add": {
+      "success": "{{name}} başarıyla eklendi",
+      "title": "{{name}} Ekle"
+    },
+    "delete": {
+      "content": "{{name}} öğesini silmek istediğinizden emin misiniz?",
+      "success": "{{name}} başarıyla silindi",
+      "title": "{{name}} Sil"
+    },
+    "detail": {
+      "title": "{{name}} Detay"
+    },
+    "edit": {
+      "success": "{{name}} başarıyla güncellendi",
+      "title": "{{name}} Düzenle"
+    }
+  },
+  "mark": {
+    "question": "?"
+  },
+  "noData": "Veri Yok",
+  "or": "VEYA",
+  "pluginConfigs": {
+    "singular": "Plugin Config"
+  },
+  "pluginMetadata": {
+    "search": "Plugin Metadata Ara",
+    "singular": "Plugin Metadata"
+  },
+  "protos": {
+    "singular": "Proto"
+  },
+  "routes": {
+    "singular": "Route"
+  },
+  "seconds": "Saniye",
+  "secrets": {
+    "singular": "Secret"
+  },
+  "services": {
+    "singular": "Service"
+  },
+  "settings": {
+    "adminKey": "Admin Key",
+    "title": "Ayarlar",
+    "ui-commit-sha": "UI Commit SHA"
+  },
+  "sources": {
+    "consumerGroups": "Consumer Grupları",
+    "consumers": "Consumer'lar",
+    "credentials": "Credential'lar",
+    "globalRules": "Global Rule'lar",
+    "pluginConfigs": "Plugin Config'ler",
+    "pluginMetadata": "Plugin Metadata",
+    "protos": "Proto'lar",
+    "routes": "Route'lar",
+    "secrets": "Secret'lar",
+    "services": "Service'ler",
+    "ssls": "SSL'ler",
+    "streamRoutes": "Stream Route'lar",
+    "upstreams": "Upstream'ler"
+  },
+  "ssls": {
+    "singular": "SSL"
+  },
+  "streamRoutes": {
+    "singular": "Stream Route"
+  },
+  "table": {
+    "actions": "İşlemler",
+    "disabled": "Pasif",
+    "enabled": "Aktif"
+  },
+  "upstreams": {
+    "singular": "Upstream"
+  }
+}

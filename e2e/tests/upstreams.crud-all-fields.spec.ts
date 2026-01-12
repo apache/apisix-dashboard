@@ -115,6 +115,7 @@ test('should CRUD upstream with all fields', async ({ page }) => {
 
     // Final verification: Reload the page and check again to ensure it's really gone
     await page.reload();
+    await page.waitForLoadState('load');
     await upstreamsPom.isIndexPage(page);
 
     // After reload, the upstream should still be gone

@@ -24,6 +24,8 @@ import { expect } from '@playwright/test';
 import { deleteAllServices, postServiceReq } from '@/apis/services';
 import { deleteAllStreamRoutes } from '@/apis/stream_routes';
 
+test.describe.configure({ mode: 'serial' });
+
 const serviceName = randomId('test-service');
 const streamRouteServerAddr = '127.0.0.1';
 const streamRouteServerPort = 8080;

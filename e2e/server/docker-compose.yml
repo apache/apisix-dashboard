@@ -15,32 +15,38 @@
 # limitations under the License.
 #
 
-include:
-  - docker-compose.common.yml
 services:
-  dashboard-e2e:
+  apisix:
     build:
       context: ../..
       dockerfile: e2e/server/Dockerfile
+    restart: always
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./apisix_conf.yml:/usr/local/apisix/conf/config.yaml:ro
+    ports:
+      - '9180:9180'
+    depends_on:
+      - etcd
     networks:
       - apisix
-    ports:
-      - '6174:6174'
-    depends_on:
+
+  etcd:
+    image: bitnamilegacy/etcd:3.5
+
+    restart: always
+    volumes:
+      - etcd_data:/bitnami/etcd
+    environment:
+      ETCD_ENABLE_V2: 'true'
+      ALLOW_NONE_AUTHENTICATION: 'yes'
+      ETCD_ADVERTISE_CLIENT_URLS: 'http://etcd:2379'
+      ETCD_LISTEN_CLIENT_URLS: 'http://0.0.0.0:2379'
+    networks:
       - apisix
-    healthcheck:
-      test:
-        [
-          'CMD',
-          'wget',
-          '--quiet',
-          '--tries=1',
-          '--spider',
-          'http://127.0.0.1:6174/ui/',
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+
+networks:
+  apisix:
+    driver: bridge
+
+volumes:
+  etcd_data:
