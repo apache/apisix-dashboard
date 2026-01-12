@@ -58,15 +58,25 @@ interface GlobalRule {
   plugins: Record<string, unknown>;
 }
 
+// APISIX allows only one global rule per plugin type
+// So we need to use different plugins for each rule
+const pluginConfigs = [
+  { 'response-rewrite': { headers: { set: { 'X-Test': '1' } } } },
+  { cors: { allow_origins: '*' } },
+  { 'ip-restriction': { whitelist: ['127.0.0.1'] } },
+  { 'referer-restriction': { whitelist: ['*.example.com'] } },
+  { 'uri-blocker': { block_rules: ['^/blocked'] } },
+  { 'request-id': { include_in_response: true } },
+  { 'proxy-rewrite': { uri: '/test' } },
+  { 'echo': { body: 'test' } },
+  { 'gzip': { min_length: 1 } },
+  { 'real-ip': { source: 'http_x_forwarded_for' } },
+  { 'client-control': { max_body_size: 1024 } },
+];
+
 const globalRules: GlobalRule[] = Array.from({ length: 11 }, (_, i) => ({
   id: `global_rule_id_${i + 1}`,
-  plugins: {
-    'response-rewrite': {
-      headers: {
-        'X-Test-Rule': `global-rule-${i + 1}`,
-      },
-    },
-  },
+  plugins: pluginConfigs[i],
 }));
 
 test.describe('page and page_size should work correctly', () => {
