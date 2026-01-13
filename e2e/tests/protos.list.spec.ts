@@ -55,7 +55,6 @@ message TestMessage${i + 1} {
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
-
   test.beforeAll(async () => {
     // Delete all existing protos
     const existingProtos = await e2eReq
