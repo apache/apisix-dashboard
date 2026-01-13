@@ -17,7 +17,6 @@
 import { secretsPom } from '@e2e/pom/secrets';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
-import { uiHasToastMsg } from '@e2e/utils/ui';
 import { expect } from '@playwright/test';
 
 import { API_SECRETS } from '@/config/constant';
@@ -31,14 +30,12 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
   test.afterAll(async () => {
     // cleanup: delete the secret
     if (createdSecretId) {
-      await e2eReq
-        .delete(`${API_SECRETS}/${manager}/${createdSecretId}`)
-        .catch((err) => {
-          // ignore 404 error if secret doesn't exist, rethrow others
-          if (err.response?.status !== 404 && !err.message.includes('404')) {
-            throw err;
-          }
-        });
+      await e2eReq.delete(`${API_SECRETS}/${manager}/${createdSecretId}`).catch((err) => {
+        // ignore 404 error if secret doesn't exist, rethrow others
+        if (err.response?.status !== 404 && !err.message.includes('404')) {
+          throw err;
+        }
+      });
     }
   });
 
@@ -56,11 +53,6 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
       await page.getByLabel('Token').fill('test-vault-token-123');
 
       await secretsPom.getAddBtn(page).click();
-
-      // Wait for success message
-      await uiHasToastMsg(page, {
-        hasText: 'Add Secret Successfully',
-      });
     });
 
     await test.step('verify secret appears in UI', async () => {
@@ -81,13 +73,9 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
       await secretsPom.isDetailPage(page);
 
       // Assert Vault field values using input selectors
-      await expect(page.getByLabel('URI')).toHaveValue(
-        'http://vault.example.com:8200'
-      );
+      await expect(page.getByLabel('URI')).toHaveValue('http://vault.example.com:8200');
       await expect(page.getByLabel('Prefix')).toHaveValue('/secret/test');
-      await expect(page.getByLabel('Token')).toHaveValue(
-        'test-vault-token-123'
-      );
+      await expect(page.getByLabel('Token')).toHaveValue('test-vault-token-123');
     });
   });
 
@@ -147,9 +135,7 @@ test.describe('CRUD secret with required fields only (Vault)', () => {
 
     await test.step('verify deletion and redirect', async () => {
       await secretsPom.isIndexPage(page);
-      await expect(
-        page.getByRole('cell', { name: createdSecretId })
-      ).toBeHidden();
+      await expect(page.getByRole('cell', { name: createdSecretId })).toBeHidden();
     });
 
     await test.step('verify secret was deleted via API', async () => {

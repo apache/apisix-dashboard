@@ -23,7 +23,6 @@ import { env } from './e2e/utils/env';
  */
 export default defineConfig({
   testDir: './e2e/tests',
-  testMatch: '**/*.spec.ts',
   outputDir: './test-results',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

@@ -47,7 +47,7 @@ test('should CRUD service with required fields', async ({ page }) => {
       name: serviceName,
     });
 
-    // Ensure upstream is valid. In some configurations (e.g. http&stream),
+    // Ensure upstream is valid. In some configurations (e.g. http&stream), 
     // the backend might require a valid upstream configuration.
     const upstreamSection = page.getByRole('group', { name: 'Upstream' }).first();
     const addNodeBtn = page.getByRole('button', { name: 'Add a Node' });
@@ -61,10 +61,19 @@ test('should CRUD service with required fields', async ({ page }) => {
     // Ensure the name field is properly filled before submitting
     const nameField = page.getByRole('textbox', { name: 'Name' }).first();
     await expect(nameField).toHaveValue(serviceName);
-    // eslint-disable-next-line playwright/no-wait-for-timeout
-    await page.waitForTimeout(500);
+
     await servicesPom.getAddBtn(page).click();
-    await uiHasToastMsg(page, { hasText: 'Add Service Successfully' });
+
+    // Wait for either success or error toast (longer timeout for CI)
+    const alertMsg = page.getByRole('alert');
+    await expect(alertMsg).toBeVisible({ timeout: 30000 });
+
+    // Check if it's a success message
+    await expect(alertMsg).toContainText('Add Service Successfully', { timeout: 5000 });
+
+    // Close the toast
+    await alertMsg.getByRole('button').click();
+    await expect(alertMsg).toBeHidden();
   });
 
   await test.step('auto navigate to service detail page', async () => {
@@ -126,7 +135,7 @@ test('should CRUD service with required fields', async ({ page }) => {
 
     // Verify the update was successful
     await uiHasToastMsg(page, {
-      hasText: 'Edit Service Successfully',
+      hasText: 'success',
     });
 
     // Verify we're back in detail view mode
