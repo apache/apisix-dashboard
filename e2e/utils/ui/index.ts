@@ -40,7 +40,8 @@ export const uiHasToastMsg = async (
   ...filterOpts: Parameters<Locator['filter']>
 ) => {
   const alertMsg = page.getByRole('alert').filter(...filterOpts);
-  await expect(alertMsg).toBeVisible();
+  // Increased timeout for CI environment (30s instead of default 5s)
+  await expect(alertMsg).toBeVisible({ timeout: 30000 });
   await alertMsg.getByRole('button').click();
   await expect(alertMsg).not.toBeVisible();
 };

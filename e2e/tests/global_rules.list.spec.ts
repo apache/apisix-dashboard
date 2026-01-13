@@ -68,8 +68,8 @@ const pluginConfigs = [
   { 'uri-blocker': { block_rules: ['^/blocked'] } },
   { 'request-id': { include_in_response: true } },
   { 'proxy-rewrite': { uri: '/test' } },
-  { 'echo': { body: 'test' } },
-  { 'gzip': { min_length: 1 } },
+  { echo: { body: 'test' } },
+  { gzip: { min_length: 1 } },
   { 'real-ip': { source: 'http_x_forwarded_for' } },
   { 'client-control': { max_body_size: 1024 } },
 ];

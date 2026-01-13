@@ -20,6 +20,9 @@ import { API_SERVICES, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
+import { deleteAllRoutes } from './routes';
+import { deleteAllStreamRoutes } from './stream_routes';
+
 export type ServicePostType = APISIXType['ServicePost'];
 
 export const getServiceListReq = (req: AxiosInstance, params: PageSearchType) =>
@@ -52,6 +55,10 @@ export const postServiceReq = (req: AxiosInstance, data: ServicePostType) =>
   );
 
 export const deleteAllServices = async (req: AxiosInstance) => {
+  // Delete all routes and stream routes first to avoid foreign key constraints
+  await deleteAllRoutes(req);
+  await deleteAllStreamRoutes(req);
+
   const totalRes = await getServiceListReq(req, {
     page: 1,
     page_size: PAGE_SIZE_MIN,

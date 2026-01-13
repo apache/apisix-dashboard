@@ -28,8 +28,8 @@ export const env = parseEnv(process.env, {
   E2E_TARGET_URL: z
     .string()
     .url()
-    .default(`http://localhost:6174${BASE_PATH}/`)
+    .default(`http://localhost:9180${BASE_PATH}/`)
     .describe(
-      `If you want to access the test server from dev container playwright to host e2e server, try http://host.docker.internal:6174${BASE_PATH}/`
+      `If you want to access the test server from dev container playwright to host e2e server, try http://host.docker.internal:9180${BASE_PATH}/`
     ),
 });
