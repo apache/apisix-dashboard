@@ -61,7 +61,6 @@ const ssls: APISIXType['SSL'][] = Array.from({ length: 11 }, (_, i) => ({
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
-
   test.beforeAll(async () => {
     await deleteAllSSLs(e2eReq);
     await Promise.all(ssls.map((d) => putSSLReq(e2eReq, d)));
