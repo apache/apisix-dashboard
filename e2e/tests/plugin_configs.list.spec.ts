@@ -67,7 +67,6 @@ const pluginConfigs: APISIXType['PluginConfigPut'][] = Array.from(
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
-
   test.beforeAll(async () => {
     await deleteAllPluginConfigs(e2eReq);
     await Promise.all(pluginConfigs.map((d) => putPluginConfigReq(e2eReq, d)));

@@ -71,7 +71,6 @@ const globalRules: GlobalRule[] = Array.from({ length: 11 }, (_, i) => ({
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
-
   test.beforeAll(async () => {
     await deleteAllGlobalRules(e2eReq);
     await Promise.all(
