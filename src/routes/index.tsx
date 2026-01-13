@@ -20,7 +20,7 @@ import { navRoutes } from '@/config/navRoutes';
 
 export const Route = createFileRoute('/')({
   beforeLoad: () => {
-    return redirect({
+    throw redirect({
       to: navRoutes[0].to,
     });
   },
