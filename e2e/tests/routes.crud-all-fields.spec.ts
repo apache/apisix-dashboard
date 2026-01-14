@@ -172,7 +172,7 @@ test('should CRUD route with all fields', async ({ page }) => {
     ).toBeVisible();
 
     // clear the editor, will show JSON format is not valid
-    await uiClearMonacoEditor(page, pluginEditor);
+    await uiClearMonacoEditor(page);
     await expect(
       addPluginDialog.getByText('JSON format is not valid')
     ).toBeVisible();
