@@ -64,11 +64,11 @@ export async function uiFillHTTPStatuses(
   }
 }
 
-export const uiClearMonacoEditor = async (page: Page, editor: Locator) => {
-  await editor.click();
-  await page.keyboard.press('ControlOrMeta+A');
-  await page.keyboard.press('Backspace');
-  await editor.blur();
+export const uiClearMonacoEditor = async (page: Page) => {
+  await page.evaluate(() => {
+    const editor = window.__monacoEditor__;
+    editor.getModel()?.setValue('');
+  });
 };
 
 export const uiGetMonacoEditor = async (
@@ -83,7 +83,7 @@ export const uiGetMonacoEditor = async (
   await expect(editor).toBeVisible({ timeout: 10000 });
 
   if (clear) {
-    await uiClearMonacoEditor(page, editor);
+    await uiClearMonacoEditor(page);
   }
 
   return editor;
@@ -95,7 +95,9 @@ export const uiFillMonacoEditor = async (
   value: string
 ) => {
   await editor.click();
-  await editor.getByRole('textbox').pressSequentially(value);
+  const editorTextbox = editor.getByRole('textbox');
+  // Use fill() instead of pressSequentially() for reliability
+  await editorTextbox.fill(value);
   await editor.blur();
   await page.waitForTimeout(800);
 };

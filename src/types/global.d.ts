@@ -14,14 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import type * as monaco from 'monaco-editor';
 
-import { navRoutes } from '@/config/navRoutes';
-
-export const Route = createFileRoute('/')({
-  beforeLoad: () => {
-    throw redirect({
-      to: navRoutes[0].to,
-    });
-  },
-});
+declare global {
+  interface Window {
+    __monacoEditor__?: monaco.editor.IStandaloneCodeEditor;
+  }
+}

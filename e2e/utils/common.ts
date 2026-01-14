@@ -43,7 +43,7 @@ export const fileExists = async (filePath: string) => {
 
 export const randomId = (info: string) => `${info}_${nanoid()}`;
 
-export const genTLS = () => {
-  const { cert, private: key } = selfsigned.generate();
+export const genTLS = async () => {
+  const { cert, private: key } = await selfsigned.generate();
   return { cert, key };
 };

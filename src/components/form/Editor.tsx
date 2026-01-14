@@ -144,6 +144,11 @@ export const FormItemEditor = <T extends FieldValues>(
           monacoErrorRef.current = markers?.[0]?.message || null;
           trigger(props.name);
         }}
+        onMount={(editor) => {
+          if (process.env.NODE_ENV === 'test') {
+            window.__monacoEditor__ = editor;
+          }
+        }}
         loading={
           <Skeleton
             data-testid="editor-loading"
