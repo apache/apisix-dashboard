@@ -26,18 +26,20 @@ import { deleteAllSSLs } from '@/apis/ssls';
 import type { APISIXType } from '@/types/schema/apisix';
 
 const snis = ['test.example.com', 'www.test.example.com'];
-const { cert, key } = genTLS();
-const sslData: Partial<APISIXType['SSL']> = {
-  snis,
-  cert,
-  key,
-};
 
 test.beforeAll(async () => {
   await deleteAllSSLs(e2eReq);
 });
 
 test('should CRUD SSL with required fields', async ({ page }) => {
+  // Generate TLS certificates at runtime
+  const { cert, key } = await genTLS();
+  const sslData: Partial<APISIXType['SSL']> = {
+    snis,
+    cert,
+    key,
+  };
+
   await sslsPom.toIndex(page);
   await sslsPom.isIndexPage(page);
 

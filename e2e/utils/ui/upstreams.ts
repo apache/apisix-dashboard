@@ -227,7 +227,7 @@ export async function uiFillUpstreamAllFields(
 
     // 11. TLS client verification settings
     const tlsSection = ctx.getByRole('group', { name: 'TLS' });
-    const tls = genTLS();
+    const tls = await genTLS();
     await tlsSection
       .getByRole('textbox', { name: 'Client Cert', exact: true })
       .fill(tls.cert);

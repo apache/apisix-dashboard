@@ -15,7 +15,7 @@
   "dependencies": {
     "@ant-design/pro-components": "^2.8.7",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
-    "@hookform/resolvers": "^5.0.1",
+    "@hookform/resolvers": "5.0.1",
     "@mantine/core": "^8.0.0",
     "@mantine/hooks": "^8.0.0",
     "@mantine/modals": "^8.0.0",
@@ -24,7 +24,7 @@
     "@tanstack/react-query": "^5.74.4",
     "@tanstack/react-router": "^1.116.0",
     "antd": "^5.24.8",
-    "axios": "^1.11.0",
+    "axios": "^1.13.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
@@ -38,11 +38,11 @@
     "mobx-react-observer": "^1.1.0",
     "monaco-editor": "^0.52.2",
     "nanoid": "^5.1.5",
-    "qs": "^6.14.0",
+    "qs": "^6.14.1",
     "rambdax": "^11.3.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.0.0",
-    "react-hook-form": "^7.56.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hook-form": "7.56.1",
     "react-i18next": "^15.4.1",
     "react-use": "^17.6.0",
     "znv": "^0.5.0",
@@ -55,7 +55,7 @@
     "@hookform/devtools": "^4.4.0",
     "@iconify-json/material-symbols": "^1.2.20",
     "@m6web/eslint-plugin-i18n": "^2.0.4",
-    "@playwright/test": "^1.52.0",
+    "@playwright/test": "^1.57.0",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@tanstack/react-query-devtools": "^5.74.4",
@@ -83,12 +83,12 @@
     "lint-staged": "^15.5.2",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
-    "selfsigned": "^2.4.1",
+    "selfsigned": "^5.4.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.38.0",
     "unplugin-icons": "^22.1.0",
     "unplugin-info": "^1.2.2",
-    "vite": "^6.3.5",
+    "vite": "^6.3.6",
     "vite-tsconfig-paths": "^5.1.4",
     "yaml": "^2.7.1"
   },
@@ -97,5 +97,16 @@
       "pnpm lint:fix"
     ]
   },
-  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
+  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39",
+  "pnpm": {
+    "overrides": {
+      "lodash": ">=4.17.21",
+      "minimatch": ">=3.0.5",
+      "@swc/core": "1.10.0"
+    },
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "esbuild"
+    ]
+  }
 }
