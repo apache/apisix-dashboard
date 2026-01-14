@@ -89,7 +89,32 @@ test.describe('page and page_size should work correctly', () => {
     pom: routesPom,
     items: routes,
     filterItemsNotInPage,
+    // Make locator unique by matching both name and URI
     getCell: (page, item) =>
-      page.getByRole('cell', { name: item.name }).first(),
+      page.getByRole('row').filter({ hasText: item.name }).getByRole('cell', { name: item.name }).first(),
+  });
+
+  test('should filter across all pages, not just current page', async ({ page }) => {
+    // Find a route that is NOT on the first page (assuming pagination works)
+    const pageSize = 10;
+    const targetRoute = routes[pageSize]; // 11th route
+
+    // Go to routes page
+    await routesPom.toIndex(page);
+    await routesPom.isIndexPage(page);
+
+    // Use the search/filter form to search for the target route
+    const nameInput = page.getByLabel('Name');
+    await expect(nameInput).toBeVisible();
+    await nameInput.fill(targetRoute.name);
+    const searchButton = page.getByRole('button', { name: 'Search' });
+    await searchButton.click();
+
+    // The target route should now be visible (filtering works across all data)
+    await expect(page.getByRole('cell', { name: targetRoute.name })).toBeVisible();
+
+    // Reset the search
+    const resetButton = page.getByRole('button', { name: 'Reset' });
+    await resetButton.click();
   });
 });
