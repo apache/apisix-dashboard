@@ -23,6 +23,8 @@
     "@monaco-editor/react": "^4.7.0",
     "@tanstack/react-query": "^5.74.4",
     "@tanstack/react-router": "^1.116.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "antd": "^5.24.8",
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
