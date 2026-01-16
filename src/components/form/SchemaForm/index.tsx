@@ -239,5 +239,7 @@ function findDiscriminators(oneOf: JSONSchema7['oneOf']): string[] {
     return Array.from(discriminators);
 }
 
+export { ArrayField } from './ArrayField';
 export { SchemaField } from './SchemaField';
 export type { JSONSchema7 } from './types';
+export { createSchemaResolver, validateWithSchema } from './validation';

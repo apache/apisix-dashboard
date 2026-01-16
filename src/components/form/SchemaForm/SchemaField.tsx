@@ -20,7 +20,9 @@ import type { Control, FieldValues } from 'react-hook-form';
 import { FormItemNumberInput } from '../NumberInput';
 import { FormItemSelect } from '../Select';
 import { FormItemSwitch } from '../Switch';
+import { FormItemTextArray } from '../TextArray';
 import { FormItemTextInput } from '../TextInput';
+import { ArrayField } from './ArrayField';
 import type { JSONSchema7 } from './types';
 
 export type SchemaFieldProps = {
@@ -59,6 +61,36 @@ export const SchemaField = (
                 </Stack>
             </Fieldset>
         );
+    }
+
+    // Handle arrays
+    if (schema.type === 'array' && schema.items) {
+        const itemSchema = schema.items as JSONSchema7;
+
+        // Simple string/number arrays → TagsInput
+        if (itemSchema.type === 'string' || itemSchema.type === 'number') {
+            return (
+                <FormItemTextArray
+                    name={name}
+                    control={control}
+                    label={schema.title || formatLabel(name)}
+                    description={schema.description}
+                    placeholder={`Add ${formatLabel(name).toLowerCase()} and press Enter`}
+                />
+            );
+        }
+
+        // Object arrays → Use ArrayField with useFieldArray
+        if (itemSchema.type === 'object') {
+            return (
+                <ArrayField
+                    name={name}
+                    schema={schema}
+                    control={control}
+                    required={required}
+                />
+            );
+        }
     }
 
     // Handle enums → Select dropdown

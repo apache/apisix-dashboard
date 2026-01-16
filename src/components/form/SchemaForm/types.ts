@@ -50,6 +50,8 @@ export interface JSONSchema7 {
     properties?: Record<string, JSONSchema7>;
     required?: string[];
     additionalProperties?: boolean | JSONSchema7;
+    minProperties?: number;
+    maxProperties?: number;
 
     // Enum
     enum?: unknown[];
