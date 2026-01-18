@@ -17,6 +17,7 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
+import { Button, Empty,message  } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -36,12 +37,28 @@ const ServiceList = () => {
 
   const columns = useMemo<ProColumns<APISIXType['RespServiceItem']>[]>(() => {
     return [
-      {
-        dataIndex: ['value', 'id'],
-        title: 'ID',
-        key: 'id',
-        valueType: 'text',
-      },
+    {
+  dataIndex: ['value', 'id'],
+  title: 'ID',
+  key: 'id',
+  render: (_, record) => (
+    <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      {record.value.id}
+      <Button
+  size="small"
+  type="link"
+  onClick={() => {
+    navigator.clipboard.writeText(record.value.id);
+    message.success(t('copy_success'));
+  }}
+>
+  {t('copy')}
+</Button>
+
+    </span>
+  ),
+},
+
       {
         dataIndex: ['value', 'name'],
         title: t('form.basic.name'),
@@ -91,6 +108,15 @@ const ServiceList = () => {
   return (
     <AntdConfigProvider>
       <ProTable
+      locale={{
+  emptyText: (
+    <Empty
+      description={t('services.empty')}
+      image={Empty.PRESENTED_IMAGE_SIMPLE}
+    />
+  ),
+}}
+
         columns={columns}
         dataSource={data.list}
         rowKey="id"
