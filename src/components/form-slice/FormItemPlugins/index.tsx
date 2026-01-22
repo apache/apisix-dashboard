@@ -111,6 +111,12 @@ export const FormItemPlugins = <T extends FieldValues>(
     get curPluginSchema() {
       const d = this.pluginSchemaObj.get(this.curPlugin.name);
       if (!d) return {};
+
+      // fix: issue #3289
+      if (this.curPlugin.name === 'multi-auth') {
+        return {};
+      }
+
       return d[schema];
     },
     editorOpened: false,
