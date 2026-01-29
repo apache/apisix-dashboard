@@ -99,7 +99,7 @@ export const JSONEditDrawer = (props: JSONEditDrawerProps) => {
         color: 'green',
       });
       await refetch();
-      onSuccess?.();
+      await onSuccess?.();
       onClose();
     } catch (error) {
       notifications.show({

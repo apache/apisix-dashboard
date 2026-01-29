@@ -92,7 +92,7 @@ export const FormEditDrawer = <TForm extends object, TApi>(
         color: 'green',
       });
       await refetch();
-      onSuccess?.();
+      await onSuccess?.();
       onClose();
     },
     onError: (error) => {
