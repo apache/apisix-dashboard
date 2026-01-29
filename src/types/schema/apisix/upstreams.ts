@@ -58,8 +58,8 @@ const UpstreamPassHost = z.union([
 
 const UpstreamNode = z.object({
   host: z.string().min(1),
-  port: z.number().int().gte(1).lte(65535),
-  weight: z.number().int(),
+  port: z.number().int().gte(1).lte(65535).default(80),
+  weight: z.number().int().default(1),
   priority: z.number().int().optional(),
 });
 

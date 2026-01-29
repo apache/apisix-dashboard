@@ -181,7 +181,6 @@ export const FormSectionService = () => {
         control={control}
         name="service_id"
         label={t('form.upstreams.serviceId')}
-        placeholder="00000000000000000001"
       />
     </FormSection>
   );
