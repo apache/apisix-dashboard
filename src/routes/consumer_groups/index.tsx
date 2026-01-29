@@ -16,23 +16,66 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { Badge, CloseButton, Group, TextInput } from '@mantine/core';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getConsumerGroupListQueryOptions, useConsumerGroupList } from '@/apis/hooks';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { putConsumerGroupReq } from '@/apis/consumer_groups';
+import { getConsumerGroupListQueryOptions, getConsumerGroupQueryOptions, useConsumerGroupList } from '@/apis/hooks';
+import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { FormEditDrawer } from '@/components/page/FormEditDrawer';
+import { JSONEditDrawer } from '@/components/page/JSONEditDrawer';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { TableActionMenu } from '@/components/page/TableActionMenu';
+import { ToAddPageDropdown } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_CONSUMER_GROUPS } from '@/config/constant';
 import { queryClient } from '@/config/global';
-import type { APISIXType } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { pipeProduce } from '@/utils/producer';
+import IconSearch from '~icons/material-symbols/search';
 
-function ConsumerGroupsList() {
+// Transform API data to form values
+const toFormValues = (data: Record<string, unknown>): APISIXType['ConsumerGroupPut'] => {
+  return data as APISIXType['ConsumerGroupPut'];
+};
+
+// Transform form values to API data
+const toApiData = (formData: APISIXType['ConsumerGroupPut']): APISIXType['ConsumerGroupPut'] => {
+  return pipeProduce()(formData) as APISIXType['ConsumerGroupPut'];
+};
+
+function RouteComponent() {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useConsumerGroupList();
+  const { data, isLoading, refetch, pagination, setParams } = useConsumerGroupList();
+  const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
+  const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = useDebouncedCallback((value: string) => {
+    setParams({ name: value || undefined, page: 1 });
+  }, 300);
+
+  const handleClear = () => {
+    setSearchValue('');
+    setParams({ name: undefined });
+  };
+
+  const handleFormEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openFormDrawer();
+  }, [openFormDrawer]);
+
+  const handleJsonEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openJsonDrawer();
+  }, [openJsonDrawer]);
 
   const columns = useMemo<
     ProColumns<APISIXType['RespConsumerGroupItem']>[]
@@ -49,16 +92,38 @@ function ConsumerGroupsList() {
         title: t('form.basic.name'),
         key: 'name',
         valueType: 'text',
+        ellipsis: true,
       },
       {
         dataIndex: ['value', 'desc'],
         title: t('form.basic.desc'),
         key: 'desc',
         valueType: 'text',
+        ellipsis: true,
+      },
+      {
+        dataIndex: ['value', 'plugins'],
+        title: t('form.plugins.label'),
+        key: 'plugins',
+        render: (_, record) => {
+          const plugins = record.value.plugins;
+          if (!plugins || Object.keys(plugins).length === 0) return '-';
+          const pluginNames = Object.keys(plugins);
+          return (
+            <Group gap={4}>
+              {pluginNames.slice(0, 3).map((name) => (
+                <Badge key={name} size="xs" variant="light">{name}</Badge>
+              ))}
+              {pluginNames.length > 3 && (
+                <Badge size="xs" color="gray">+{pluginNames.length - 3}</Badge>
+              )}
+            </Group>
+          );
+        },
       },
       {
         dataIndex: ['value', 'update_time'],
-        title: t('form.info.update_time'),
+        title: t('table.updateTime'),
         key: 'update_time',
         valueType: 'dateTime',
         sorter: true,
@@ -71,66 +136,99 @@ function ConsumerGroupsList() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/consumer_groups/detail/$id"
-            params={{ id: record.value.id }}
-          />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('consumerGroups.singular')}
-            target={record.value.id}
-            api={`${API_CONSUMER_GROUPS}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
+        width: 80,
+        render: (_, record) => (
+          <TableActionMenu
+            resourceName={t('consumerGroups.singular')}
+            resourceTarget={record.value.id}
+            deleteApi={`${API_CONSUMER_GROUPS}/${record.value.id}`}
+            onDeleteSuccess={refetch}
+            onFormEdit={() => handleFormEdit(record.value.id)}
+            onJsonEdit={() => handleJsonEdit(record.value.id)}
+          />
+        ),
       },
     ];
-  }, [refetch, t]);
+  }, [refetch, t, handleFormEdit, handleJsonEdit]);
 
-  return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/consumer_groups/add"
-                    label={t('info.add.title', {
-                      name: t('consumerGroups.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
-  );
-}
-
-function RouteComponent() {
-  const { t } = useTranslation();
   return (
     <>
       <PageHeader title={t('sources.consumerGroups')} />
-      <ConsumerGroupsList />
+      <AntdConfigProvider>
+        <ProTable
+          columns={columns}
+          dataSource={data.list}
+          rowKey="id"
+          loading={isLoading}
+          search={false}
+          options={{
+            reload: () => refetch(),
+            density: true,
+            setting: true,
+          }}
+          pagination={pagination}
+          cardProps={{ bodyStyle: { padding: 0 } }}
+          toolbar={{
+            search: (
+              <TextInput
+                placeholder={t('form.search')}
+                leftSection={<IconSearch />}
+                rightSection={searchValue && <CloseButton size="sm" onClick={handleClear} />}
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  handleSearch(e.target.value);
+                }}
+                style={{ width: 250 }}
+              />
+            ),
+            menu: {
+              type: 'inline',
+              items: [
+                {
+                  key: 'add',
+                  label: (
+                    <ToAddPageDropdown
+                      to="/consumer_groups/add"
+                      label={t('info.add.title', {
+                        name: t('consumerGroups.singular'),
+                      })}
+                    />
+                  ),
+                },
+              ],
+            },
+          }}
+        />
+      </AntdConfigProvider>
+
+      {selectedId && (
+        <>
+          <FormEditDrawer<APISIXType['ConsumerGroupPut'], APISIXType['ConsumerGroupPut']>
+            opened={formDrawerOpened}
+            onClose={closeFormDrawer}
+            title={t('consumerGroups.singular')}
+            queryOptions={getConsumerGroupQueryOptions(selectedId)}
+            schema={APISIX.ConsumerGroupPut}
+            toFormValues={toFormValues}
+            toApiData={(d) => toApiData({ ...d, id: selectedId })}
+            onSave={(data) => putConsumerGroupReq(req, data)}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['consumerGroups'] })}
+          >
+            <FormSectionGeneral />
+            <FormPartPluginConfig basicProps={{ showName: false }} />
+          </FormEditDrawer>
+
+          <JSONEditDrawer
+            opened={jsonDrawerOpened}
+            onClose={closeJsonDrawer}
+            title={t('consumerGroups.singular')}
+            queryOptions={getConsumerGroupQueryOptions(selectedId)}
+            onSave={(data) => putConsumerGroupReq(req, data as APISIXType['ConsumerGroupPut'])}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['consumerGroups'] })}
+          />
+        </>
+      )}
     </>
   );
 }

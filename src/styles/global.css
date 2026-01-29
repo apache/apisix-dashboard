@@ -1,3 +1,30 @@
+/* Prevent antd tooltips and popovers from overflowing viewport and causing layout shift */
+.ant-tooltip,
+.ant-popover {
+  max-width: calc(100vw - 20px);
+}
+
+/* Prevent horizontal scrollbar from tooltips */
+html {
+  overflow-x: hidden;
+}
+
+/* Ensure tooltips near right edge don't overflow */
+.ant-tooltip {
+  word-wrap: break-word;
+}
+
+.ant-tooltip-placement-top,
+.ant-tooltip-placement-topLeft,
+.ant-tooltip-placement-topRight {
+  transform-origin: center bottom;
+}
+
+.ant-popover-inner {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
 .monaco-editor,
 .monaco-editor .overflow-guard {
   border-radius: var(--mantine-radius-sm);
@@ -9,15 +36,9 @@
   left: 60px !important;
 }
 
-.monaco-editor {
-  padding-bottom: 200px;
-}
-
 .editor-wrapper {
   border: 1px solid var(--mantine-color-gray-4);
   border-radius: var(--mantine-radius-sm);
-  position: relative;
-  height: 100%;
 
   &:focus-within {
     border-color: var(--mantine-color-blue-6);
@@ -27,15 +48,14 @@
 .editor-wrapper--disabled {
   background-color: var(--mantine-color-gray-0);
   border-color: var(--mantine-color-gray-3);
-  cursor: not-allowed !important;
+  cursor: default;
 
   &:focus-within {
     border-color: var(--mantine-color-gray-3);
   }
 
   & * {
-    cursor: not-allowed !important;
-    pointer-events: none !important;
+    cursor: default;
   }
 
   .monaco-editor,

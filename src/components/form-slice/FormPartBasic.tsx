@@ -61,6 +61,7 @@ export type FormPartBasicProps = Omit<FormSectionProps, 'form'> &
     showName?: boolean;
     showDesc?: boolean;
     showLabels?: boolean;
+    namePlaceholder?: string;
   };
 
 export const FormPartBasic = (props: FormPartBasicProps) => {
@@ -71,6 +72,7 @@ export const FormPartBasic = (props: FormPartBasicProps) => {
     showName = true,
     showDesc = true,
     showLabels = true,
+    namePlaceholder,
     ...restProps
   } = props;
   const { control } = useFormContext<APISIXType['Basic']>();
@@ -84,6 +86,8 @@ export const FormPartBasic = (props: FormPartBasicProps) => {
         <FormItemTextInput
           name={np('name')}
           label={t('form.basic.name')}
+          description={t('form.basic.nameDesc')}
+          placeholder={namePlaceholder ?? t('form.basic.namePlaceholder')}
           control={control}
         />
       )}
@@ -91,10 +95,17 @@ export const FormPartBasic = (props: FormPartBasicProps) => {
         <FormItemTextarea
           name={np('desc')}
           label={t('form.basic.desc')}
+          placeholder={t('form.basic.descPlaceholder')}
           control={control}
         />
       )}
-      {showLabels && <FormItemLabels name={np('labels')} control={control} />}
+      {showLabels && (
+        <FormItemLabels
+          name={np('labels')}
+          control={control}
+          description={t('form.basic.labels.desc')}
+        />
+      )}
       {showStatus && <FormItemStatus />}
       {children}
     </FormSection>

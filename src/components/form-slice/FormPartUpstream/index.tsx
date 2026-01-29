@@ -76,6 +76,7 @@ export const FormItemScheme = () => {
       control={control}
       name={np('scheme')}
       label={t('form.upstreams.scheme')}
+      description={t('form.upstreams.schemeDesc')}
       defaultValue={APISIX.UpstreamSchemeL7.options[0].value}
       data={[
         {
@@ -101,6 +102,7 @@ export const FormSectionLoadbalancing = () => {
         control={control}
         name={np('type')}
         label={t('form.upstreams.type')}
+        description={t('form.upstreams.typeDesc')}
         defaultValue={APISIX.UpstreamBalancer.options[0].value}
         data={APISIX.UpstreamBalancer.options.map((v) => v.value)}
       />
@@ -132,6 +134,7 @@ export const FormSectionPassHost = () => {
         control={control}
         name={np('pass_host')}
         label={t('form.upstreams.passHost')}
+        description={t('form.upstreams.passHostDesc')}
         defaultValue={APISIX.UpstreamPassHost.options[0].value}
         data={APISIX.UpstreamPassHost.options.map((v) => v.value)}
       />
@@ -155,12 +158,14 @@ export const FormSectionRetry = () => {
         control={control}
         name={np('retries')}
         label={t('form.upstreams.retries')}
+        description={t('form.upstreams.retriesDesc')}
         allowDecimal={false}
       />
       <FormItemNumberInput
         control={control}
         name={np('retry_timeout')}
         label={t('form.upstreams.retryTimeout')}
+        description={t('form.upstreams.retryTimeoutDesc')}
         suffix="s"
         allowDecimal={false}
       />
@@ -178,18 +183,21 @@ export const FormSectionTimeout = () => {
         control={control}
         name={np('timeout.connect')}
         label={t('form.upstreams.timeout.connect')}
+        description={t('form.upstreams.timeout.connectDesc')}
         suffix="s"
       />
       <FormItemNumberInput
         control={control}
         name={np('timeout.send')}
         label={t('form.upstreams.timeout.send')}
+        description={t('form.upstreams.timeout.sendDesc')}
         suffix="s"
       />
       <FormItemNumberInput
         control={control}
         name={np('timeout.read')}
         label={t('form.upstreams.timeout.read')}
+        description={t('form.upstreams.timeout.readDesc')}
         suffix="s"
       />
     </FormSection>
@@ -206,17 +214,20 @@ export const FormSectionKeepAlive = () => {
         control={control}
         name={np('keepalive_pool.size')}
         label={t('form.upstreams.keepalivePool.size')}
+        description={t('form.upstreams.keepalivePool.sizeDesc')}
       />
       <FormItemNumberInput
         control={control}
         name={np('keepalive_pool.idle_timeout')}
         label={t('form.upstreams.keepalivePool.idleTimeout')}
+        description={t('form.upstreams.keepalivePool.idleTimeoutDesc')}
         suffix="s"
       />
       <FormItemNumberInput
         control={control}
         name={np('keepalive_pool.requests')}
         label={t('form.upstreams.keepalivePool.requests')}
+        description={t('form.upstreams.keepalivePool.requestsDesc')}
         allowDecimal={false}
       />
     </FormSection>
@@ -228,10 +239,10 @@ export const FormPartUpstream = () => {
   const np = useNamePrefix();
   return (
     <>
-      <FormPartBasic />
+      <FormPartBasic namePlaceholder="my-upstream-name" />
       <FormSection legend={t('form.upstreams.findUpstreamFrom')}>
         <FormSection legend={t('form.upstreams.nodes.title')}>
-          <FormItemNodes name={np('nodes')} required />
+          <FormItemNodes name={np('nodes')} />
         </FormSection>
         <Divider my="xs" label={t('or')} />
         <FormSectionDiscovery />

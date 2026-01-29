@@ -57,7 +57,7 @@ function CredentialsList() {
       },
       {
         dataIndex: ['value', 'update_time'],
-        title: t('form.info.update_time'),
+        title: t('table.updateTime'),
         key: 'update_time',
         valueType: 'dateTime',
         sorter: true,

@@ -48,6 +48,12 @@ export const putRouteReq = (req: AxiosInstance, data: APISIXType['Route']) => {
 export const postRouteReq = (req: AxiosInstance, data: RoutePostType) =>
   req.post<unknown, APISIXType['RespRouteDetail']>(API_ROUTES, data);
 
+// Raw JSON POST for JSON View - accepts APISIX format directly
+export const postRouteRawReq = (
+  req: AxiosInstance,
+  data: Omit<APISIXType['Route'], 'id' | 'create_time' | 'update_time'>
+) => req.post<unknown, APISIXType['RespRouteDetail']>(API_ROUTES, data);
+
 export const deleteAllRoutes = async (req: AxiosInstance) => {
   const totalRes = await getRouteListReq(req, {
     page: 1,

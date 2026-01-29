@@ -40,9 +40,9 @@ const options: monaco.editor.IStandaloneEditorConstructionOptions = {
   lineDecorationsWidth: 0,
   theme: 'vs-light',
   acceptSuggestionOnEnter: 'on',
-  // auto adjust width and height to parent
-  // see: https://github.com/Microsoft/monaco-editor/issues/543#issuecomment-321767059
   automaticLayout: true,
+  wordWrap: 'on',
+  stickyScroll: { enabled: false },
 };
 
 type FormItemEditorProps<T extends FieldValues> = InputWrapperProps &

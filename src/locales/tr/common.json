@@ -57,6 +57,19 @@
     "json": {
       "parseError": "JSON formatı geçerli değil"
     },
+    "view": {
+      "formView": "Form Görünümü",
+      "jsonView": "JSON Görünümü",
+      "editJSON": "JSON Düzenle",
+      "viewJSON": "JSON Görüntüle",
+      "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var. Görünümü değiştirmek istediğinizden emin misiniz?",
+      "saveAndSwitch": "Kaydet ve Değiştir",
+      "discardAndSwitch": "Vazgeç ve Değiştir",
+      "invalidJSON": "Geçersiz JSON sözdizimi",
+      "schemaValidationFailed": "Şema doğrulaması başarısız oldu",
+      "jsonParseError": "JSON ayrıştırılamadı",
+      "transformError": "Veri dönüştürülemedi"
+    },
     "plugins": {
       "addPlugin": "Plugin Ekle",
       "configId": "Plugin Config ID",
@@ -360,7 +373,10 @@
   "table": {
     "actions": "İşlemler",
     "disabled": "Pasif",
-    "enabled": "Aktif"
+    "enabled": "Aktif",
+    "hosts": "Hostlar",
+    "methods": "Metodlar",
+    "updateTime": "Güncelleme Zamanı"
   },
   "upstreams": {
     "singular": "Upstream"

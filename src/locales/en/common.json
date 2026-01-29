@@ -15,20 +15,26 @@
   "form": {
     "basic": {
       "desc": "Description",
+      "descPlaceholder": "Brief description of this resource",
       "labels": {
         "errorFormat": "The format of label is wrong, it should be `key:value`",
         "key": "Key",
         "placeholder": "Input text like `key:value`, then enter or blur",
         "title": "Labels",
-        "value": "Value"
+        "value": "Value",
+        "desc": "Key-value pairs for organizing and filtering resources"
       },
       "name": "Name",
+      "namePlaceholder": "my-resource-name",
+      "nameDesc": "A unique identifier for this resource",
       "status": "Status",
+      "statusDesc": "Enable or disable this resource",
       "statusOption": {
         "0": "Disabled",
         "1": "Enabled"
       },
-      "title": "Basic Infomation"
+      "title": "Basic Information",
+      "required": "Required"
     },
     "btn": {
       "add": "Add",
@@ -57,6 +63,28 @@
     "json": {
       "parseError": "JSON format is not valid"
     },
+    "view": {
+      "formView": "Form View",
+      "jsonView": "JSON View",
+      "editJSON": "Edit JSON",
+      "viewJSON": "View JSON",
+      "createWithForm": "Create with Form",
+      "createWithJSON": "Create with JSON",
+      "editWithForm": "Edit with Form",
+      "editWithJSON": "Edit with JSON",
+      "viewWithForm": "View with Form",
+      "viewWithJSON": "View with JSON",
+      "previewJSON": "Preview JSON",
+      "copyToClipboard": "Copy to Clipboard",
+      "copied": "Copied!",
+      "unsavedChanges": "You have unsaved changes. Are you sure you want to switch views?",
+      "saveAndSwitch": "Save and Switch",
+      "discardAndSwitch": "Discard and Switch",
+      "invalidJSON": "Invalid JSON syntax",
+      "schemaValidationFailed": "Schema validation failed",
+      "jsonParseError": "Failed to parse JSON",
+      "transformError": "Failed to transform data"
+    },
     "plugins": {
       "addPlugin": "Add Plugin",
       "configId": "Plugin Config ID",
@@ -74,18 +102,35 @@
     },
     "routes": {
       "enableWebsocket": "Enable WebSocket",
+      "enableWebsocketDesc": "Enable WebSocket proxy for this route",
       "filterFunc": "Filter Func",
+      "filterFuncPlaceholder": "function(vars) return vars[\"arg_name\"] == \"test\" end",
+      "filterFuncDesc": "Custom Lua function for request filtering",
       "host": "Host",
+      "hostPlaceholder": "example.com",
+      "hostDesc": "Match requests with this host header",
       "hosts": "Hosts",
+      "hostsDesc": "Match requests with any of these host headers",
       "matchRules": "Match Rules",
+      "matchRulesDesc": "Define conditions for routing requests. At least URI or URIs is required.",
       "methods": "HTTP Methods",
+      "methodsDesc": "Allowed HTTP methods. Leave empty to allow all methods.",
       "priority": "Priority",
+      "priorityDesc": "Higher priority routes are matched first (default: 0)",
       "remoteAddr": "Remote Address",
+      "remoteAddrPlaceholder": "192.168.1.0/24",
+      "remoteAddrDesc": "Match requests from this client IP/CIDR",
       "remoteAddrs": "Remote Addresses",
+      "remoteAddrsDesc": "Match requests from any of these client IPs/CIDRs",
       "service": "Service",
+      "serviceDesc": "Link this route to an existing service configuration",
       "uri": "URI",
+      "uriPlaceholder": "/api/v1/*",
+      "uriDesc": "Request path to match. Supports wildcards (*)",
       "uris": "URIs",
-      "vars": "Vars"
+      "urisDesc": "Multiple request paths to match",
+      "vars": "Vars",
+      "varsDesc": "Advanced matching rules using Nginx variables (JSON array format)"
     },
     "search": "Search",
     "secrets": {
@@ -141,7 +186,10 @@
       "sni": "SNI",
       "snis": "SNIs",
       "ssl_protocols": "SSL Protocols",
-      "type": "Certificate Type"
+      "type": "Type",
+      "expiration": "Expiration",
+      "expired": "Expired",
+      "daysLeft": "{{days}}d left"
     },
     "streamRoutes": {
       "protocol": {
@@ -222,38 +270,54 @@
       "identifier": "Upstream Identifier",
       "inline": "Inline Upstream Configuration",
       "keepalivePool": {
-        "idleTimeout": "IDLE Timeout",
+        "idleTimeout": "Idle Timeout",
+        "idleTimeoutDesc": "Time in seconds before idle connections are closed",
         "requests": "Requests",
+        "requestsDesc": "Max requests per connection before recycling",
         "size": "Size",
-        "title": "Keepalive Pool"
+        "sizeDesc": "Number of connections to keep alive in the pool",
+        "title": "Keepalive Pool",
+        "desc": "Configure connection pooling for better performance"
       },
       "key": "Key",
       "keyDesc": "This will be valid when `type` is `chash`",
       "loadBalancing": "Load Balancing",
+      "loadBalancingDesc": "Configure how traffic is distributed across backend nodes",
       "nodes": {
         "action": {
           "title": "Action"
         },
-        "add": "Add a Node",
+        "add": "Add Node",
+        "desc": "Backend server addresses that will receive proxied traffic",
         "host": {
-          "title": "Host"
+          "title": "Host",
+          "desc": "IP address or hostname of the backend server"
         },
+        "label": "Target Nodes",
         "port": {
-          "title": "Port"
+          "title": "Port",
+          "desc": "Port number of the backend server (1-65535)"
         },
         "priority": {
-          "title": "Priority"
+          "title": "Priority",
+          "desc": "Lower values are tried first (default: 0)"
         },
         "title": "Nodes",
         "weight": {
-          "title": "Weight"
+          "title": "Weight",
+          "desc": "Load balancing weight (higher = more traffic)"
         }
       },
+      "requiredDesc": "Provide either an Upstream ID to reference an existing upstream, or configure nodes directly.",
       "passHost": "Pass Host",
+      "passHostDesc": "How to pass the host header to upstream",
       "retries": "Retries",
+      "retriesDesc": "Number of retry attempts on failure",
       "retry": "Retry",
-      "retryTimeout": "Retry timeout",
+      "retryTimeout": "Retry Timeout",
+      "retryTimeoutDesc": "Maximum time in seconds for retries",
       "scheme": "Scheme",
+      "schemeDesc": "Protocol for upstream communication",
       "serviceDiscovery": {
         "serviceName": "Service Name",
         "title": "Service Discovery"
@@ -264,9 +328,13 @@
       },
       "timeout": {
         "connect": "Connect",
+        "connectDesc": "Connection timeout in seconds",
         "read": "Read",
+        "readDesc": "Read timeout in seconds",
         "send": "Send",
-        "title": "Timeout"
+        "sendDesc": "Send timeout in seconds",
+        "title": "Timeout",
+        "desc": "Configure timeout settings for upstream connections"
       },
       "title": "Upstream",
       "tls": {
@@ -275,9 +343,11 @@
         "clientCertKeyPair": "Client Cert Key Pair",
         "clientKey": "Client Key",
         "title": "TLS",
-        "verify": "Verify"
+        "verify": "Verify",
+        "desc": "Configure TLS/SSL settings for upstream connections"
       },
       "type": "Type",
+      "typeDesc": "Load balancing algorithm to distribute traffic",
       "updateTime": "Update Time",
       "upstreamHost": "Upstream Host",
       "upstreamHostDesc": "Set this when `pass_host` is `rewrite`",
@@ -360,7 +430,10 @@
   "table": {
     "actions": "Actions",
     "disabled": "Disabled",
-    "enabled": "Enabled"
+    "enabled": "Enabled",
+    "hosts": "Hosts",
+    "methods": "Methods",
+    "updateTime": "Update Time"
   },
   "upstreams": {
     "singular": "Upstream"

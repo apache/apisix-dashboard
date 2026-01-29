@@ -15,8 +15,14 @@
  * limitations under the License.
  */
 import { EditableProTable, type ProColumns } from '@ant-design/pro-components';
-import { Button, InputWrapper, type InputWrapperProps } from '@mantine/core';
-import { useClickOutside } from '@mantine/hooks';
+import {
+  ActionIcon,
+  Button,
+  InputWrapper,
+  type InputWrapperProps,
+  Tooltip,
+} from '@mantine/core';
+import { useDebouncedCallback } from '@mantine/hooks';
 import { toJS } from 'mobx';
 import { useLocalObservable } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
@@ -33,6 +39,8 @@ import type { ZodObject, ZodRawShape } from 'zod';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { zGetDefault } from '@/utils/zod';
+import IconAdd from '~icons/material-symbols/add';
+import IconDelete from '~icons/material-symbols/delete';
 
 import { genControllerProps } from '../../form/util';
 
@@ -134,13 +142,25 @@ export const FormItemNodes = <T extends FieldValues>(
         title: t('form.upstreams.nodes.host.title'),
         dataIndex: 'host',
         valueType: 'text',
-        formItemProps: genProps('host'),
+        formItemProps: {
+          ...genProps('host'),
+        },
+        fieldProps: {
+          placeholder: 'httpbin.org',
+        },
+        width: '40%',
       },
       {
         title: t('form.upstreams.nodes.port.title'),
         dataIndex: 'port',
         valueType: 'digit',
         formItemProps: genProps('port'),
+        fieldProps: {
+          placeholder: '80',
+          min: 1,
+          max: 65535,
+        },
+        width: '15%',
         render: (_, entity) => {
           return entity.port.toString();
         },
@@ -150,6 +170,11 @@ export const FormItemNodes = <T extends FieldValues>(
         dataIndex: 'weight',
         valueType: 'digit',
         formItemProps: genProps('weight'),
+        fieldProps: {
+          placeholder: '1',
+          min: 0,
+        },
+        width: '15%',
         render: (_, entity) => {
           return entity.weight.toString();
         },
@@ -159,14 +184,18 @@ export const FormItemNodes = <T extends FieldValues>(
         dataIndex: 'priority',
         valueType: 'digit',
         formItemProps: genProps('priority'),
+        fieldProps: {
+          placeholder: '0',
+        },
+        width: '15%',
         render: (_, entity) => {
-          return entity.priority?.toString() || '-';
+          return entity.priority?.toString() || '0';
         },
       },
       {
-        title: t('form.upstreams.nodes.action.title'),
+        title: '',
         valueType: 'option',
-        width: 100,
+        width: 50,
         hidden: disabled,
         render: () => null,
       },
@@ -203,11 +232,12 @@ export const FormItemNodes = <T extends FieldValues>(
     ob.setDisabled(disabled);
   }, [disabled, ob]);
 
-  const ref = useClickOutside(() => {
-    const vals = parseToUpstreamNodes(toJS(ob.values));
+  // Sync form data with debounce to avoid excessive updates
+  const syncToForm = useDebouncedCallback((dataSource: DataSource[]) => {
+    const vals = parseToUpstreamNodes(dataSource);
     fOnChange?.(vals);
     restProps.onChange?.(vals);
-  }, ['mouseup', 'touchend', 'mousedown', 'touchstart']);
+  }, 100);
 
   return (
     <InputWrapper
@@ -215,7 +245,6 @@ export const FormItemNodes = <T extends FieldValues>(
       label={label}
       required={required}
       withAsterisk={withAsterisk}
-      ref={ref}
     >
       <input name={fName} type="hidden" />
       <AntdConfigProvider>
@@ -232,18 +261,23 @@ export const FormItemNodes = <T extends FieldValues>(
             editableKeys: ob.editableKeys,
             onValuesChange(_, dataSource) {
               ob.setValues(dataSource);
+              syncToForm(dataSource);
             },
             actionRender: (row) => {
               return [
-                <Button
-                  key="delete"
-                  variant="transparent"
-                  size="compact-xs"
-                  px={0}
-                  onClick={() => ob.remove(row.id)}
-                >
-                  {t('form.btn.delete')}
-                </Button>,
+                <Tooltip key="delete" label={t('form.btn.delete')}>
+                  <ActionIcon
+                    variant="subtle"
+                    color="red"
+                    size="sm"
+                    onClick={() => {
+                      ob.remove(row.id);
+                      syncToForm(toJS(ob.values));
+                    }}
+                  >
+                    <IconDelete />
+                  </ActionIcon>
+                </Tooltip>,
               ];
             },
           }}
@@ -251,12 +285,15 @@ export const FormItemNodes = <T extends FieldValues>(
       </AntdConfigProvider>
       <Button
         fullWidth
-        variant="default"
+        variant="light"
         mt={8}
         size="xs"
-        color="cyan"
-        style={{ borderColor: 'whitesmoke' }}
-        onClick={() => ob.append(genRecord())}
+        color="blue"
+        leftSection={<IconAdd style={{ width: 16, height: 16 }} />}
+        onClick={() => {
+          ob.append(genRecord());
+          syncToForm(toJS(ob.values));
+        }}
         {...(disabled && { display: 'none' })}
       >
         {t('form.upstreams.nodes.add')}

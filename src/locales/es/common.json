@@ -57,6 +57,19 @@
     "json": {
       "parseError": "El formato JSON no es válido"
     },
+    "view": {
+      "formView": "Vista de Formulario",
+      "jsonView": "Vista JSON",
+      "editJSON": "Editar JSON",
+      "viewJSON": "Ver JSON",
+      "unsavedChanges": "Tiene cambios sin guardar. ¿Está seguro de que desea cambiar de vista?",
+      "saveAndSwitch": "Guardar y Cambiar",
+      "discardAndSwitch": "Descartar y Cambiar",
+      "invalidJSON": "Sintaxis JSON inválida",
+      "schemaValidationFailed": "Falló la validación del esquema",
+      "jsonParseError": "Error al analizar JSON",
+      "transformError": "Error al transformar datos"
+    },
     "plugins": {
       "addPlugin": "Añadir Plugin",
       "configId": "ID de Configuración de Plugin",
@@ -360,7 +373,10 @@
   "table": {
     "actions": "Acciones",
     "disabled": "Deshabilitado",
-    "enabled": "Habilitado"
+    "enabled": "Habilitado",
+    "hosts": "Hosts",
+    "methods": "Métodos",
+    "updateTime": "Hora de Actualización"
   },
   "upstreams": {
     "singular": "Upstream"

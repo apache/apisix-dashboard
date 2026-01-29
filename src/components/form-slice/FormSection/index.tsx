@@ -20,6 +20,7 @@ import {
   Group,
   TableOfContents,
   type TableOfContentsProps,
+  Text,
 } from '@mantine/core';
 import { useShallowEffect } from '@mantine/hooks';
 import { clsx } from 'clsx';
@@ -55,28 +56,37 @@ const FormTOCCtx = createContext<{
 
 export type FormSectionProps = Omit<FieldsetProps, 'form'> & {
   extra?: ReactNode;
+  withAsterisk?: boolean;
 };
 
 const LegendGroup = ({
   legend,
   extra,
+  withAsterisk,
 }: {
   legend: ReactNode;
   extra?: ReactNode;
+  withAsterisk?: boolean;
 }) => {
   if (!legend && !extra) {
     return null;
   }
   return (
-    <Group>
+    <Group gap={4}>
       {legend}
+      {withAsterisk && (
+        <Text component="span" c="red" size="sm">
+          *
+        </Text>
+      )}
       {extra}
     </Group>
   );
 };
 
 export const FormSection = (props: FormSectionProps) => {
-  const { className, legend, extra, children, ...restProps } = props;
+  const { className, legend, extra, withAsterisk, children, ...restProps } =
+    props;
   const parentDepth = useContext(SectionDepthCtx);
   const { refreshTOC } = useContext(FormTOCCtx);
   const depth = useMemo(() => parentDepth + 1, [parentDepth]);
@@ -95,7 +105,9 @@ export const FormSection = (props: FormSectionProps) => {
     <SectionDepthProvider value={depth}>
       <Fieldset
         className={clsx(tocSelector, classes.root, className)}
-        legend={<LegendGroup legend={legend} extra={extra} />}
+        legend={
+          <LegendGroup legend={legend} extra={extra} withAsterisk={withAsterisk} />
+        }
         {...restProps}
         {...dataAttrs}
       >

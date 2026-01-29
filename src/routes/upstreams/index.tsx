@@ -16,23 +16,67 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { Badge, CloseButton, TextInput } from '@mantine/core';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getUpstreamListQueryOptions, useUpstreamList } from '@/apis/hooks';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { getUpstreamListQueryOptions, getUpstreamQueryOptions, useUpstreamList } from '@/apis/hooks';
+import { putUpstreamReq } from '@/apis/upstreams';
+import { FormPartUpstream } from '@/components/form-slice/FormPartUpstream';
+import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { FormEditDrawer } from '@/components/page/FormEditDrawer';
+import { JSONEditDrawer } from '@/components/page/JSONEditDrawer';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { TableActionMenu } from '@/components/page/TableActionMenu';
+import { ToAddPageDropdown } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_UPSTREAMS } from '@/config/constant';
 import { queryClient } from '@/config/global';
-import type { APISIXType } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { pipeProduce } from '@/utils/producer';
+import IconSearch from '~icons/material-symbols/search';
+
+// Transform API data to form values
+const toFormValues = (data: Record<string, unknown>): APISIXType['Upstream'] => {
+  return produceToUpstreamForm(data as Partial<APISIXType['Upstream']>) as APISIXType['Upstream'];
+};
+
+// Transform form values to API data
+const toApiData = (formData: APISIXType['Upstream']): APISIXType['Upstream'] => {
+  return pipeProduce()(formData) as APISIXType['Upstream'];
+};
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useUpstreamList();
+  const { data, isLoading, refetch, pagination, setParams } = useUpstreamList();
+  const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
+  const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = useDebouncedCallback((value: string) => {
+    setParams({ name: value || undefined, page: 1 });
+  }, 300);
+
+  const handleClear = () => {
+    setSearchValue('');
+    setParams({ name: undefined });
+  };
+
+  const handleFormEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openFormDrawer();
+  }, [openFormDrawer]);
+
+  const handleJsonEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openJsonDrawer();
+  }, [openJsonDrawer]);
 
   const columns = useMemo<
     ProColumns<APISIXType['RespUpstreamList']['data']['list'][number]>[]
@@ -49,18 +93,43 @@ function RouteComponent() {
         title: t('form.basic.name'),
         key: 'name',
         valueType: 'text',
+        ellipsis: true,
+      },
+      {
+        dataIndex: ['value', 'type'],
+        title: t('form.upstreams.type'),
+        key: 'type',
+        render: (_, record) => {
+          const type = record.value.type;
+          return type ? <Badge size="xs">{type}</Badge> : '-';
+        },
       },
       {
         dataIndex: ['value', 'scheme'],
         title: t('form.upstreams.scheme'),
         key: 'scheme',
-        valueType: 'text',
+        render: (_, record) => {
+          const scheme = record.value.scheme;
+          return scheme ? <Badge size="xs" color="gray">{scheme}</Badge> : '-';
+        },
+      },
+      {
+        dataIndex: ['value', 'nodes'],
+        title: 'Nodes',
+        key: 'nodes',
+        render: (_, record) => {
+          const nodes = record.value.nodes;
+          if (!nodes) return '-';
+          if (Array.isArray(nodes)) return nodes.length;
+          return Object.keys(nodes).length;
+        },
       },
       {
         dataIndex: ['value', 'update_time'],
-        title: t('form.upstreams.updateTime'),
+        title: t('table.updateTime'),
         key: 'update_time',
         valueType: 'dateTime',
+        sorter: true,
         renderText: (text) => {
           if (!text) return '-';
           return new Date(Number(text) * 1000).toISOString();
@@ -70,24 +139,20 @@ function RouteComponent() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/upstreams/detail/$id"
-            params={{ id: record.value.id }}
-          />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('upstreams.singular')}
-            target={record.value.id}
-            api={`${API_UPSTREAMS}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
+        width: 80,
+        render: (_, record) => (
+          <TableActionMenu
+            resourceName={t('upstreams.singular')}
+            resourceTarget={record.value.id}
+            deleteApi={`${API_UPSTREAMS}/${record.value.id}`}
+            onDeleteSuccess={refetch}
+            onFormEdit={() => handleFormEdit(record.value.id)}
+            onJsonEdit={() => handleJsonEdit(record.value.id)}
+          />
+        ),
       },
     ];
-  }, [t, refetch]);
+  }, [t, refetch, handleFormEdit, handleJsonEdit]);
 
   return (
     <>
@@ -99,18 +164,34 @@ function RouteComponent() {
           rowKey="id"
           loading={isLoading}
           search={false}
-          options={false}
+          options={{
+            reload: () => refetch(),
+            density: true,
+            setting: true,
+          }}
           pagination={pagination}
           cardProps={{ bodyStyle: { padding: 0 } }}
           toolbar={{
+            search: (
+              <TextInput
+                placeholder={t('form.search')}
+                leftSection={<IconSearch />}
+                rightSection={searchValue && <CloseButton size="sm" onClick={handleClear} />}
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  handleSearch(e.target.value);
+                }}
+                style={{ width: 250 }}
+              />
+            ),
             menu: {
               type: 'inline',
               items: [
                 {
                   key: 'add',
                   label: (
-                    <ToAddPageBtn
-                      key="add"
+                    <ToAddPageDropdown
                       to="/upstreams/add"
                       label={t('info.add.title', {
                         name: t('upstreams.singular'),
@@ -123,6 +204,34 @@ function RouteComponent() {
           }}
         />
       </AntdConfigProvider>
+
+      {selectedId && (
+        <>
+          <FormEditDrawer<APISIXType['Upstream'], APISIXType['Upstream']>
+            opened={formDrawerOpened}
+            onClose={closeFormDrawer}
+            title={t('upstreams.singular')}
+            queryOptions={getUpstreamQueryOptions(selectedId)}
+            schema={APISIX.Upstream}
+            toFormValues={toFormValues}
+            toApiData={toApiData}
+            onSave={(data) => putUpstreamReq(req, data)}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['upstreams'] })}
+          >
+            <FormSectionGeneral />
+            <FormPartUpstream />
+          </FormEditDrawer>
+
+          <JSONEditDrawer
+            opened={jsonDrawerOpened}
+            onClose={closeJsonDrawer}
+            title={t('upstreams.singular')}
+            queryOptions={getUpstreamQueryOptions(selectedId)}
+            onSave={(data) => putUpstreamReq(req, data as APISIXType['Upstream'])}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['upstreams'] })}
+          />
+        </>
+      )}
     </>
   );
 }

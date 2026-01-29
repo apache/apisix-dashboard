@@ -14,142 +14,98 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
+import { useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getStreamRouteListQueryOptions, useStreamRouteList } from '@/apis/hooks';
-import type { WithServiceIdFilter } from '@/apis/routes';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { getStreamRouteListQueryOptions, getStreamRouteQueryOptions } from '@/apis/hooks';
+import { putStreamRouteReq } from '@/apis/stream_routes';
+import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
+import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { FormEditDrawer } from '@/components/page/FormEditDrawer';
+import { JSONEditDrawer } from '@/components/page/JSONEditDrawer';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { StreamRouteList } from '@/components/page/StreamRouteList';
+import { TableActionMenu } from '@/components/page/TableActionMenu';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
-import type { APISIXType } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
-import type { ListPageKeys } from '@/utils/useTablePagination';
 
-export type StreamRouteListProps = {
-  routeKey: Extract<
-    ListPageKeys,
-    '/stream_routes/' | '/services/detail/$id/stream_routes/'
-  >;
-  ToDetailBtn: (props: {
-    record: APISIXType['RespStreamRouteItem'];
-  }) => React.ReactNode;
-  defaultParams?: Partial<WithServiceIdFilter>;
+// Transform API data to form values
+const toFormValues = (data: Record<string, unknown>): APISIXType['StreamRoute'] => {
+  return data as APISIXType['StreamRoute'];
 };
 
-export const StreamRouteList = (props: StreamRouteListProps) => {
-  const { routeKey, ToDetailBtn, defaultParams } = props;
-  const { data, isLoading, refetch, pagination } = useStreamRouteList(
-    routeKey,
-    defaultParams
-  );
-  const { t } = useTranslation();
-
-  const columns = useMemo<
-    ProColumns<APISIXType['RespStreamRouteItem']>[]
-  >(() => {
-    return [
-      {
-        dataIndex: ['value', 'id'],
-        title: 'ID',
-        key: 'id',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'server_addr'],
-        title: t('form.streamRoutes.serverAddr'),
-        key: 'server_addr',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'server_port'],
-        title: t('form.streamRoutes.serverPort'),
-        key: 'server_port',
-        valueType: 'text',
-      },
-      {
-        dataIndex: ['value', 'desc'],
-        title: t('form.basic.desc'),
-        key: 'desc',
-        valueType: 'text',
-      },
-      {
-        title: t('table.actions'),
-        valueType: 'option',
-        key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailBtn key="detail" record={record} />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('streamRoutes.singular')}
-            target={record.value.id}
-            api={`${API_STREAM_ROUTES}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
-      },
-    ];
-  }, [t, ToDetailBtn, refetch]);
-
-  return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    label={t('info.add.title', {
-                      name: t('streamRoutes.singular'),
-                    })}
-                    to={`${routeKey}add`}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
-  );
+// Transform form values to API data
+const toApiData = (formData: APISIXType['StreamRoute']): APISIXType['StreamRoute'] => {
+  return produceRoute(formData) as APISIXType['StreamRoute'];
 };
 
 function StreamRouteComponent() {
   const { t } = useTranslation();
+  const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
+  const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const handleFormEdit = (id: string) => {
+    setSelectedId(id);
+    openFormDrawer();
+  };
+
+  const handleJsonEdit = (id: string) => {
+    setSelectedId(id);
+    openJsonDrawer();
+  };
 
   return (
     <>
       <PageHeader title={t('sources.streamRoutes')} />
       <StreamRouteList
         routeKey="/stream_routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/stream_routes/detail/$id"
-            params={{ id: record.value.id }}
+        ActionMenu={({ record, refetch }) => (
+          <TableActionMenu
+            resourceName={t('streamRoutes.singular')}
+            resourceTarget={record.value.id}
+            deleteApi={`${API_STREAM_ROUTES}/${record.value.id}`}
+            onDeleteSuccess={refetch}
+            onFormEdit={() => handleFormEdit(record.value.id)}
+            onJsonEdit={() => handleJsonEdit(record.value.id)}
           />
         )}
       />
+
+      {selectedId && (
+        <>
+          <FormEditDrawer<APISIXType['StreamRoute'], APISIXType['StreamRoute']>
+            opened={formDrawerOpened}
+            onClose={closeFormDrawer}
+            title={t('streamRoutes.singular')}
+            queryOptions={getStreamRouteQueryOptions(selectedId)}
+            schema={APISIX.StreamRoute}
+            toFormValues={toFormValues}
+            toApiData={toApiData}
+            onSave={(data) => putStreamRouteReq(req, data)}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['streamRoutes'] })}
+          >
+            <FormSectionGeneral />
+            <FormPartStreamRoute />
+          </FormEditDrawer>
+
+          <JSONEditDrawer
+            opened={jsonDrawerOpened}
+            onClose={closeJsonDrawer}
+            title={t('streamRoutes.singular')}
+            queryOptions={getStreamRouteQueryOptions(selectedId)}
+            onSave={(data) => putStreamRouteReq(req, data as APISIXType['StreamRoute'])}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['streamRoutes'] })}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -57,6 +57,19 @@
     "json": {
       "parseError": "JSON格式无效"
     },
+    "view": {
+      "formView": "表单视图",
+      "jsonView": "JSON视图",
+      "editJSON": "编辑JSON",
+      "viewJSON": "查看JSON",
+      "unsavedChanges": "您有未保存的更改。确定要切换视图吗？",
+      "saveAndSwitch": "保存并切换",
+      "discardAndSwitch": "放弃并切换",
+      "invalidJSON": "无效的JSON语法",
+      "schemaValidationFailed": "架构验证失败",
+      "jsonParseError": "解析JSON失败",
+      "transformError": "数据转换失败"
+    },
     "plugins": {
       "addPlugin": "添加插件",
       "configId": "插件配置ID",
@@ -141,7 +154,10 @@
       "sni": "SNI",
       "snis": "SNI 列表",
       "ssl_protocols": "SSL协议",
-      "type": "证书类型"
+      "type": "类型",
+      "expiration": "到期时间",
+      "expired": "已过期",
+      "daysLeft": "剩余{{days}}天"
     },
     "streamRoutes": {
       "protocol": {
@@ -360,7 +376,10 @@
   "table": {
     "actions": "操作",
     "disabled": "已禁用",
-    "enabled": "已启用"
+    "enabled": "已启用",
+    "hosts": "主机",
+    "methods": "方法",
+    "updateTime": "更新时间"
   },
   "upstreams": {
     "singular": "上游"
