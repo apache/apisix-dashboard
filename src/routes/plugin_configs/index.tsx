@@ -16,23 +16,54 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getPluginConfigListQueryOptions, usePluginConfigList } from '@/apis/hooks';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { getPluginConfigListQueryOptions, getPluginConfigQueryOptions, usePluginConfigList } from '@/apis/hooks';
+import { putPluginConfigReq } from '@/apis/plugin_configs';
+import { FormPartPluginConfig } from '@/components/form-slice/FormPartPluginConfig';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { FormEditDrawer } from '@/components/page/FormEditDrawer';
+import { JSONEditDrawer } from '@/components/page/JSONEditDrawer';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { TableActionMenu } from '@/components/page/TableActionMenu';
+import { ToAddPageDropdown } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
 import { queryClient } from '@/config/global';
-import type { APISIXType } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { pipeProduce } from '@/utils/producer';
 
-function PluginConfigsList() {
+// Transform API data to form values
+const toFormValues = (data: Record<string, unknown>): APISIXType['PluginConfigPut'] => {
+  return data as APISIXType['PluginConfigPut'];
+};
+
+// Transform form values to API data
+const toApiData = (formData: APISIXType['PluginConfigPut']): APISIXType['PluginConfigPut'] => {
+  return pipeProduce()(formData) as APISIXType['PluginConfigPut'];
+};
+
+function RouteComponent() {
   const { t } = useTranslation();
   const { data, isLoading, refetch, pagination } = usePluginConfigList();
+  const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
+  const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const handleFormEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openFormDrawer();
+  }, [openFormDrawer]);
+
+  const handleJsonEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openJsonDrawer();
+  }, [openJsonDrawer]);
 
   const columns = useMemo<
     ProColumns<APISIXType['RespPluginConfigItem']>[]
@@ -71,66 +102,82 @@ function PluginConfigsList() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/plugin_configs/detail/$id"
-            params={{ id: record.value.id }}
-          />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('pluginConfigs.singular')}
-            target={record.value.id}
-            api={`${API_PLUGIN_CONFIGS}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
+        width: 60,
+        render: (_, record) => (
+          <TableActionMenu
+            resourceName={t('pluginConfigs.singular')}
+            resourceTarget={record.value.id}
+            deleteApi={`${API_PLUGIN_CONFIGS}/${record.value.id}`}
+            onDeleteSuccess={refetch}
+            onFormEdit={() => handleFormEdit(record.value.id)}
+            onJsonEdit={() => handleJsonEdit(record.value.id)}
+          />
+        ),
       },
     ];
-  }, [refetch, t]);
+  }, [refetch, t, handleFormEdit, handleJsonEdit]);
 
-  return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/plugin_configs/add"
-                    label={t('info.add.title', {
-                      name: t('pluginConfigs.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
-  );
-}
-
-function RouteComponent() {
-  const { t } = useTranslation();
   return (
     <>
       <PageHeader title={t('sources.pluginConfigs')} />
-      <PluginConfigsList />
+      <AntdConfigProvider>
+        <ProTable
+          columns={columns}
+          dataSource={data.list}
+          rowKey="id"
+          loading={isLoading}
+          search={false}
+          options={false}
+          pagination={pagination}
+          cardProps={{ bodyStyle: { padding: 0 } }}
+          toolbar={{
+            menu: {
+              type: 'inline',
+              items: [
+                {
+                  key: 'add',
+                  label: (
+                    <ToAddPageDropdown
+                      to="/plugin_configs/add"
+                      label={t('info.add.title', {
+                        name: t('pluginConfigs.singular'),
+                      })}
+                    />
+                  ),
+                },
+              ],
+            },
+          }}
+        />
+      </AntdConfigProvider>
+
+      {selectedId && (
+        <>
+          <FormEditDrawer<APISIXType['PluginConfigPut'], APISIXType['PluginConfigPut']>
+            opened={formDrawerOpened}
+            onClose={closeFormDrawer}
+            title={t('pluginConfigs.singular')}
+            queryOptions={getPluginConfigQueryOptions(selectedId)}
+            schema={APISIX.PluginConfigPut}
+            toFormValues={toFormValues}
+            toApiData={(d) => toApiData({ ...d, id: selectedId })}
+            onSave={(data) => putPluginConfigReq(req, data)}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['pluginConfigs'] })}
+          >
+            <FormSectionGeneral />
+            <FormPartPluginConfig basicProps={{ namePlaceholder: 'my-plugin-config-name' }} />
+          </FormEditDrawer>
+
+          <JSONEditDrawer
+            opened={jsonDrawerOpened}
+            onClose={closeJsonDrawer}
+            title={t('pluginConfigs.singular')}
+            queryOptions={getPluginConfigQueryOptions(selectedId)}
+            onSave={(data) => putPluginConfigReq(req, data as APISIXType['PluginConfigPut'])}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['pluginConfigs'] })}
+          />
+        </>
+      )}
     </>
   );
 }

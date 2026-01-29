@@ -14,12 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Button, Menu } from '@mantine/core';
 import type { LinkProps } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { RouteLinkBtn } from '@/components/Btn';
 import type { FileRoutesByTo } from '@/routeTree.gen';
 import IconPlus from '~icons/material-symbols/add';
+import IconCode from '~icons/material-symbols/code';
+import IconChevronDown from '~icons/material-symbols/expand-more';
+import IconForm from '~icons/material-symbols/list-alt';
 
 export type ToAddPageBtnProps = {
   to: keyof FilterKeys<FileRoutesByTo, 'add'>;
@@ -40,6 +45,49 @@ export const ToAddPageBtn = ({ to, params, label }: ToAddPageBtnProps) => {
   );
 };
 
+export type ToAddPageDropdownProps = {
+  to: string;
+  label: string;
+  params?: Record<string, string>;
+};
+
+export const ToAddPageDropdown = ({ to, label, params }: ToAddPageDropdownProps) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleFormClick = () => {
+    navigate({ to, params });
+  };
+
+  const handleJsonClick = () => {
+    navigate({ to, params, search: { mode: 'json' } });
+  };
+
+  return (
+    <Menu shadow="md" width={200}>
+      <Menu.Target>
+        <Button
+          leftSection={<IconPlus />}
+          rightSection={<IconChevronDown />}
+          size="compact-sm"
+          variant="gradient"
+        >
+          {label}
+        </Button>
+      </Menu.Target>
+
+      <Menu.Dropdown>
+        <Menu.Item leftSection={<IconForm />} onClick={handleFormClick}>
+          {t('form.view.createWithForm')}
+        </Menu.Item>
+        <Menu.Item leftSection={<IconCode />} onClick={handleJsonClick}>
+          {t('form.view.createWithJSON')}
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  );
+};
+
 export type ToDetailPageBtnProps = {
   to:
     | keyof FilterKeys<FileRoutesByTo, '$id'>
@@ -53,5 +101,46 @@ export const ToDetailPageBtn = (props: ToDetailPageBtnProps) => {
     <RouteLinkBtn size="compact-xs" variant="light" to={to} params={params}>
       {t('form.btn.view')}
     </RouteLinkBtn>
+  );
+};
+
+export type ToDetailPageDropdownProps = {
+  to: string;
+  params: Record<string, string>;
+};
+
+export const ToDetailPageDropdown = ({ to, params }: ToDetailPageDropdownProps) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleFormClick = () => {
+    navigate({ to, params });
+  };
+
+  const handleJsonClick = () => {
+    navigate({ to, params, search: { mode: 'json' } });
+  };
+
+  return (
+    <Menu shadow="md" width={200}>
+      <Menu.Target>
+        <Button
+          rightSection={<IconChevronDown />}
+          size="compact-xs"
+          variant="light"
+        >
+          {t('form.btn.edit')}
+        </Button>
+      </Menu.Target>
+
+      <Menu.Dropdown>
+        <Menu.Item leftSection={<IconForm />} onClick={handleFormClick}>
+          {t('form.view.editWithForm')}
+        </Menu.Item>
+        <Menu.Item leftSection={<IconCode />} onClick={handleJsonClick}>
+          {t('form.view.editWithJSON')}
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   );
 };

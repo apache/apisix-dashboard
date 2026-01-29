@@ -33,6 +33,7 @@ function RouteComponent() {
     <CommonFormContext.Provider value={{ readOnlyFields: ['service_id'] }}>
       <StreamRouteDetail
         id={routeId}
+        initialMode="form"
         onDeleteSuccess={() =>
           navigate({
             to: '/services/detail/$id/stream_routes',

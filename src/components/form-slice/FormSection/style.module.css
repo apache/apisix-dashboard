@@ -1,8 +1,28 @@
 .root {
-  margin-block: var(--mantine-font-size-md, 0);
+  margin-block: var(--mantine-spacing-lg, 1rem);
   scroll-margin-top: calc(var(--appshell-header-height, 60px) + 20px);
+  background-color: var(--mantine-color-gray-0);
+  border: 1px solid var(--mantine-color-gray-3);
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-md);
 
   & > fieldset {
     margin-bottom: 0;
   }
+
+  /* Nested sections should have different styling */
+  & .root {
+    background-color: var(--mantine-color-white);
+    border: 1px dashed var(--mantine-color-gray-4);
+    margin-block: var(--mantine-spacing-sm);
+  }
+}
+
+.root :global(.mantine-Fieldset-legend) {
+  font-weight: 600;
+  font-size: var(--mantine-font-size-md);
+  color: var(--mantine-color-blue-7);
+  padding: 0 var(--mantine-spacing-xs);
+  background-color: var(--mantine-color-white);
+  border-radius: var(--mantine-radius-sm);
 }

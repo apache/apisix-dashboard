@@ -57,6 +57,19 @@
     "json": {
       "parseError": "JSON Format ist ungültig"
     },
+    "view": {
+      "formView": "Formularansicht",
+      "jsonView": "JSON-Ansicht",
+      "editJSON": "JSON bearbeiten",
+      "viewJSON": "JSON anzeigen",
+      "unsavedChanges": "Sie haben ungespeicherte Änderungen. Möchten Sie die Ansicht wirklich wechseln?",
+      "saveAndSwitch": "Speichern und Wechseln",
+      "discardAndSwitch": "Verwerfen und Wechseln",
+      "invalidJSON": "Ungültige JSON-Syntax",
+      "schemaValidationFailed": "Schema-Validierung fehlgeschlagen",
+      "jsonParseError": "Fehler beim Parsen von JSON",
+      "transformError": "Fehler beim Transformieren von Daten"
+    },
     "plugins": {
       "addPlugin": "Plugin hinzufügen",
       "configId": "Plugin-Konfigurations-ID",

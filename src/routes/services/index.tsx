@@ -16,23 +16,55 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getServiceListQueryOptions, useServiceList } from '@/apis/hooks';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { getServiceListQueryOptions, getServiceQueryOptions, useServiceList } from '@/apis/hooks';
+import { putServiceReq } from '@/apis/services';
+import { FormPartService } from '@/components/form-slice/FormPartService';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { FormEditDrawer } from '@/components/page/FormEditDrawer';
+import { JSONEditDrawer } from '@/components/page/JSONEditDrawer';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { TableActionMenu } from '@/components/page/TableActionMenu';
+import { ToAddPageDropdown } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_SERVICES } from '@/config/constant';
 import { queryClient } from '@/config/global';
-import type { APISIXType } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
+import { pipeProduce } from '@/utils/producer';
 
-const ServiceList = () => {
-  const { data, isLoading, refetch, pagination } = useServiceList();
+// Transform API data to form values
+const toFormValues = (data: Record<string, unknown>): APISIXType['Service'] => {
+  return data as APISIXType['Service'];
+};
+
+// Transform form values to API data
+const toApiData = (formData: APISIXType['Service']): APISIXType['Service'] => {
+  return pipeProduce(produceRmUpstreamWhenHas('upstream_id'))(formData) as APISIXType['Service'];
+};
+
+function RouteComponent() {
   const { t } = useTranslation();
+  const { data, isLoading, refetch, pagination } = useServiceList();
+  const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
+  const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const handleFormEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openFormDrawer();
+  }, [openFormDrawer]);
+
+  const handleJsonEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openJsonDrawer();
+  }, [openJsonDrawer]);
 
   const columns = useMemo<ProColumns<APISIXType['RespServiceItem']>[]>(() => {
     return [
@@ -69,68 +101,82 @@ const ServiceList = () => {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/services/detail/$id"
-            params={{ id: record.value.id }}
-          />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('services.singular')}
-            target={record.value.id}
-            api={`${API_SERVICES}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
+        width: 60,
+        render: (_, record) => (
+          <TableActionMenu
+            resourceName={t('services.singular')}
+            resourceTarget={record.value.id}
+            deleteApi={`${API_SERVICES}/${record.value.id}`}
+            onDeleteSuccess={refetch}
+            onFormEdit={() => handleFormEdit(record.value.id)}
+            onJsonEdit={() => handleJsonEdit(record.value.id)}
+          />
+        ),
       },
     ];
-  }, [t, refetch]);
+  }, [t, refetch, handleFormEdit, handleJsonEdit]);
 
-  return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    label={t('info.add.title', {
-                      name: t('services.singular'),
-                    })}
-                    to="/services/add"
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
-  );
-};
-
-function RouteComponent() {
-  const { t } = useTranslation();
   return (
     <>
       <PageHeader title={t('sources.services')} />
       <AntdConfigProvider>
-        <ServiceList />
+        <ProTable
+          columns={columns}
+          dataSource={data.list}
+          rowKey="id"
+          loading={isLoading}
+          search={false}
+          options={false}
+          pagination={pagination}
+          cardProps={{ bodyStyle: { padding: 0 } }}
+          toolbar={{
+            menu: {
+              type: 'inline',
+              items: [
+                {
+                  key: 'add',
+                  label: (
+                    <ToAddPageDropdown
+                      to="/services/add"
+                      label={t('info.add.title', {
+                        name: t('services.singular'),
+                      })}
+                    />
+                  ),
+                },
+              ],
+            },
+          }}
+        />
       </AntdConfigProvider>
+
+      {selectedId && (
+        <>
+          <FormEditDrawer<APISIXType['Service'], APISIXType['Service']>
+            opened={formDrawerOpened}
+            onClose={closeFormDrawer}
+            title={t('services.singular')}
+            queryOptions={getServiceQueryOptions(selectedId)}
+            schema={APISIX.Service}
+            toFormValues={toFormValues}
+            toApiData={toApiData}
+            onSave={(data) => putServiceReq(req, data)}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['services'] })}
+          >
+            <FormSectionGeneral />
+            <FormPartService />
+          </FormEditDrawer>
+
+          <JSONEditDrawer
+            opened={jsonDrawerOpened}
+            onClose={closeJsonDrawer}
+            title={t('services.singular')}
+            queryOptions={getServiceQueryOptions(selectedId)}
+            onSave={(data) => putServiceReq(req, data as APISIXType['Service'])}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['services'] })}
+          />
+        </>
+      )}
     </>
   );
 }

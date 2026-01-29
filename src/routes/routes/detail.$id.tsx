@@ -16,17 +16,19 @@
  */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group, Skeleton } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
   useParams,
+  useSearch,
 } from '@tanstack/react-router';
-import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useBoolean } from 'react-use';
+import { z } from 'zod';
 
 import { getRouteQueryOptions } from '@/apis/hooks';
 import { putRouteReq } from '@/apis/routes';
@@ -44,20 +46,60 @@ import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { JSONEditorView } from '@/components/page/JSONEditorView';
 import PageHeader from '@/components/page/PageHeader';
+import { PreviewJSONModal } from '@/components/page/PreviewJSONModal';
 import { API_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
-import { type APISIXType } from '@/types/schema/apisix';
+import type { APISIXType } from '@/types/schema/apisix';
+import IconCode from '~icons/material-symbols/code';
+import IconForm from '~icons/material-symbols/list-alt';
+
+// Search params schema for mode selection
+const searchSchema = z.object({
+  mode: z.enum(['form', 'json']).optional().default('form'),
+});
+
+// Simplified: only 'form' and 'json' modes, both editable
+type EditMode = 'form' | 'json';
 
 type Props = {
-  readOnly: boolean;
-  setReadOnly: (v: boolean) => void;
+  setEditMode: (mode: EditMode) => void;
   id: string;
+  onDeleteSuccess: () => void;
 };
 
-const RouteDetailForm = (props: Props) => {
-  const { readOnly, setReadOnly, id } = props;
+// Preview JSON button for Form mode
+const PreviewJSONButton = () => {
   const { t } = useTranslation();
+  const [opened, { open, close }] = useDisclosure(false);
+  const { getValues } = useFormContext<RoutePutType>();
+  const [previewJson, setPreviewJson] = useState('{}');
+
+  const handlePreview = () => {
+    const formData = getValues();
+    const apiData = produceRoute(formData);
+    setPreviewJson(JSON.stringify(apiData, null, 2));
+    open();
+  };
+
+  return (
+    <>
+      <Button variant="light" leftSection={<IconCode />} onClick={handlePreview}>
+        {t('form.view.previewJSON')}
+      </Button>
+      <PreviewJSONModal opened={opened} onClose={close} json={previewJson} />
+    </>
+  );
+};
+
+/**
+ * Form Edit Component - Always editable
+ */
+const RouteDetailForm = (props: Props) => {
+  const { setEditMode, id, onDeleteSuccess } = props;
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const routeQuery = useQuery(getRouteQueryOptions(id));
   const { data: routeData, isLoading, refetch } = routeQuery;
@@ -67,7 +109,6 @@ const RouteDetailForm = (props: Props) => {
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
-    disabled: readOnly,
   });
 
   useEffect(() => {
@@ -89,7 +130,6 @@ const RouteDetailForm = (props: Props) => {
         color: 'green',
       });
       await refetch();
-      setReadOnly(true);
     },
   });
 
@@ -98,76 +138,203 @@ const RouteDetailForm = (props: Props) => {
   }
 
   return (
-    <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit((d) => putRoute.mutateAsync(d))}>
-        <FormSectionGeneral readOnly />
-        <FormPartRoute />
-        {!readOnly && (
-          <Group>
-            <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
-              {t('form.btn.cancel')}
-            </Button>
-          </Group>
-        )}
-      </form>
-    </FormProvider>
-  );
-};
-
-type RouteDetailProps = Pick<Props, 'id'> & {
-  onDeleteSuccess: () => void;
-};
-export const RouteDetail = (props: RouteDetailProps) => {
-  const { id, onDeleteSuccess } = props;
-  const { t } = useTranslation();
-  const [readOnly, setReadOnly] = useBoolean(true);
-
-  return (
     <>
       <PageHeader
         title={t('info.edit.title', { name: t('routes.singular') })}
-        {...(readOnly && {
-          title: t('info.detail.title', { name: t('routes.singular') }),
-          extra: (
-            <Group>
-              <Button
-                onClick={() => setReadOnly(false)}
-                size="compact-sm"
-                variant="gradient"
-              >
-                {t('form.btn.edit')}
-              </Button>
-              <DeleteResourceBtn
-                mode="detail"
-                name={t('routes.singular')}
-                target={id}
-                api={`${API_ROUTES}/${id}`}
-                onSuccess={onDeleteSuccess}
-              />
-            </Group>
-          ),
-        })}
+        extra={
+          <Group>
+            <Button
+              size="compact-sm"
+              variant="light"
+              leftSection={<IconCode />}
+              onClick={() => setEditMode('json')}
+            >
+              {t('form.view.editWithJSON')}
+            </Button>
+            <DeleteResourceBtn
+              mode="detail"
+              name={t('routes.singular')}
+              target={id}
+              api={`${API_ROUTES}/${id}`}
+              onSuccess={onDeleteSuccess}
+            />
+          </Group>
+        }
       />
       <FormTOCBox>
-        <RouteDetailForm
-          readOnly={readOnly}
-          setReadOnly={setReadOnly}
-          id={id}
-        />
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit((d) => putRoute.mutateAsync(d))}>
+            <FormSectionGeneral />
+            <FormPartRoute />
+            <Group>
+              <FormSubmitBtn loading={putRoute.isPending}>
+                {t('form.btn.save')}
+              </FormSubmitBtn>
+              <PreviewJSONButton />
+              <Button
+                variant="outline"
+                onClick={() => navigate({ to: '/routes' })}
+                disabled={putRoute.isPending}
+              >
+                {t('form.btn.cancel')}
+              </Button>
+            </Group>
+          </form>
+        </FormProvider>
       </FormTOCBox>
     </>
   );
 };
 
+/**
+ * JSON Edit Component - Always editable
+ */
+const RouteDetailJSON = (props: Props) => {
+  const { setEditMode, id, onDeleteSuccess } = props;
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const routeQuery = useQuery(getRouteQueryOptions(id));
+  const { data: routeData, isLoading, refetch } = routeQuery;
+
+  const [jsonValue, setJsonValue] = useState<string>('{}');
+
+  useEffect(() => {
+    if (routeData?.value && !isLoading) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { create_time: _ct, update_time: _ut, ...displayData } = routeData.value;
+      setJsonValue(JSON.stringify(displayData, null, 2));
+    }
+  }, [routeData, isLoading]);
+
+  const putRoute = useMutation({
+    mutationFn: (d: APISIXType['Route']) => putRouteReq(req, d),
+    async onSuccess() {
+      notifications.show({
+        message: t('info.edit.success', { name: t('routes.singular') }),
+        color: 'green',
+      });
+      await refetch();
+    },
+    onError(error) {
+      notifications.show({
+        message: error.message || t('form.view.transformError'),
+        color: 'red',
+      });
+    },
+  });
+
+  const handleSave = async (): Promise<boolean> => {
+    try {
+      const parsed = JSON.parse(jsonValue);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { create_time: _ct2, update_time: _ut2, ...dataToSave } = parsed;
+      await putRoute.mutateAsync(dataToSave);
+      return true;
+    } catch (error) {
+      notifications.show({
+        message:
+          error instanceof Error ? error.message : t('form.view.jsonParseError'),
+        color: 'red',
+      });
+      return false;
+    }
+  };
+
+  const handleCancel = () => {
+    navigate({ to: '/routes' });
+  };
+
+  if (isLoading) {
+    return <Skeleton height={400} />;
+  }
+
+  return (
+    <>
+      <PageHeader
+        title={`${t('info.edit.title', { name: t('routes.singular') })} (JSON)`}
+        extra={
+          <Group>
+            <Button
+              size="compact-sm"
+              variant="light"
+              leftSection={<IconForm />}
+              onClick={() => setEditMode('form')}
+            >
+              {t('form.view.editWithForm')}
+            </Button>
+            <DeleteResourceBtn
+              mode="detail"
+              name={t('routes.singular')}
+              target={id}
+              api={`${API_ROUTES}/${id}`}
+              onSuccess={onDeleteSuccess}
+            />
+          </Group>
+        }
+      />
+      <JSONEditorView
+        value={jsonValue}
+        readOnly={false}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        onChange={setJsonValue}
+        isSaving={putRoute.isPending}
+      />
+    </>
+  );
+};
+
+type RouteDetailProps = {
+  id: string;
+  onDeleteSuccess: () => void;
+  initialMode: EditMode;
+};
+
+export const RouteDetail = (props: RouteDetailProps) => {
+  const { id, onDeleteSuccess, initialMode } = props;
+  const [editMode, setEditMode] = useState<EditMode>(initialMode);
+
+  // Sync editMode with initialMode when URL param changes
+  useEffect(() => {
+    setEditMode(initialMode);
+  }, [initialMode]);
+
+  const isFormMode = editMode === 'form';
+
+  return isFormMode ? (
+    <RouteDetailForm
+      id={id}
+      setEditMode={setEditMode}
+      onDeleteSuccess={onDeleteSuccess}
+    />
+  ) : (
+    <RouteDetailJSON
+      id={id}
+      setEditMode={setEditMode}
+      onDeleteSuccess={onDeleteSuccess}
+    />
+  );
+};
+
 function RouteComponent() {
   const { id } = useParams({ from: '/routes/detail/$id' });
+  const { mode } = useSearch({ from: '/routes/detail/$id' });
   const navigate = useNavigate();
+
+  // Direct mapping: URL mode param to edit mode
+  const initialMode: EditMode = mode === 'json' ? 'json' : 'form';
+
   return (
-    <RouteDetail id={id} onDeleteSuccess={() => navigate({ to: '/routes' })} />
+    <RouteDetail
+      id={id}
+      initialMode={initialMode}
+      onDeleteSuccess={() => navigate({ to: '/routes' })}
+    />
   );
 }
 
 export const Route = createFileRoute('/routes/detail/$id')({
   component: RouteComponent,
+  validateSearch: searchSchema,
 });

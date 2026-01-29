@@ -16,39 +16,57 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getGlobalRuleListQueryOptions, useGlobalRuleList } from '@/apis/hooks';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { putGlobalRuleReq } from '@/apis/global_rules';
+import { getGlobalRuleListQueryOptions, getGlobalRuleQueryOptions, useGlobalRuleList } from '@/apis/hooks';
+import { FormPartGlobalRules } from '@/components/form-slice/FormPartGlobalRules';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { FormEditDrawer } from '@/components/page/FormEditDrawer';
+import { JSONEditDrawer } from '@/components/page/JSONEditDrawer';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { TableActionMenu } from '@/components/page/TableActionMenu';
+import { ToAddPageDropdown } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_GLOBAL_RULES } from '@/config/constant';
 import { queryClient } from '@/config/global';
-import type { APISIXType } from '@/types/schema/apisix';
+import { req } from '@/config/req';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { pipeProduce } from '@/utils/producer';
 
+// Transform API data to form values
+const toFormValues = (data: Record<string, unknown>): APISIXType['GlobalRulePut'] => {
+  return data as APISIXType['GlobalRulePut'];
+};
 
+// Transform form values to API data
+const toApiData = (formData: APISIXType['GlobalRulePut']): APISIXType['GlobalRulePut'] => {
+  return pipeProduce()(formData) as APISIXType['GlobalRulePut'];
+};
 
 function RouteComponent() {
   const { t } = useTranslation();
-
-  return (
-    <>
-      <PageHeader title={t('sources.globalRules')} />
-      <GlobalRulesList />
-    </>
-  );
-}
-
-function GlobalRulesList() {
-  const { t } = useTranslation();
   const { data, isLoading, refetch, pagination } = useGlobalRuleList();
+  const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
+  const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const handleFormEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openFormDrawer();
+  }, [openFormDrawer]);
+
+  const handleJsonEdit = useCallback((id: string) => {
+    setSelectedId(id);
+    openJsonDrawer();
+  }, [openJsonDrawer]);
 
   const columns = useMemo<
-    ProColumns<APISIXType['RespConsumerGroupItem']>[]
+    ProColumns<APISIXType['RespGlobalRuleItem']>[]
   >(() => {
     return [
       {
@@ -61,57 +79,83 @@ function GlobalRulesList() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailPageBtn
-            key="detail"
-            to="/global_rules/detail/$id"
-            params={{ id: record.value.id }}
-          />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('globalRules.singular')}
-            target={record.value.id}
-            api={`${API_GLOBAL_RULES}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
+        width: 60,
+        render: (_, record) => (
+          <TableActionMenu
+            resourceName={t('globalRules.singular')}
+            resourceTarget={record.value.id}
+            deleteApi={`${API_GLOBAL_RULES}/${record.value.id}`}
+            onDeleteSuccess={refetch}
+            onFormEdit={() => handleFormEdit(record.value.id)}
+            onJsonEdit={() => handleJsonEdit(record.value.id)}
+          />
+        ),
       },
     ];
-  }, [t, refetch]);
+  }, [t, refetch, handleFormEdit, handleJsonEdit]);
 
   return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/global_rules/add"
-                    label={t('info.add.title', {
-                      name: t('globalRules.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
+    <>
+      <PageHeader title={t('sources.globalRules')} />
+      <AntdConfigProvider>
+        <ProTable
+          columns={columns}
+          dataSource={data.list}
+          rowKey="id"
+          loading={isLoading}
+          search={false}
+          options={false}
+          pagination={pagination}
+          cardProps={{ bodyStyle: { padding: 0 } }}
+          toolbar={{
+            menu: {
+              type: 'inline',
+              items: [
+                {
+                  key: 'add',
+                  label: (
+                    <ToAddPageDropdown
+                      to="/global_rules/add"
+                      label={t('info.add.title', {
+                        name: t('globalRules.singular'),
+                      })}
+                    />
+                  ),
+                },
+              ],
+            },
+          }}
+        />
+      </AntdConfigProvider>
+
+      {selectedId && (
+        <>
+          <FormEditDrawer<APISIXType['GlobalRulePut'], APISIXType['GlobalRulePut']>
+            opened={formDrawerOpened}
+            onClose={closeFormDrawer}
+            title={t('globalRules.singular')}
+            queryOptions={getGlobalRuleQueryOptions(selectedId)}
+            schema={APISIX.GlobalRulePut}
+            toFormValues={toFormValues}
+            toApiData={(d) => toApiData({ ...d, id: selectedId })}
+            onSave={(data) => putGlobalRuleReq(req, data)}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['globalRules'] })}
+          >
+            <FormSectionGeneral />
+            <FormPartGlobalRules />
+          </FormEditDrawer>
+
+          <JSONEditDrawer
+            opened={jsonDrawerOpened}
+            onClose={closeJsonDrawer}
+            title={t('globalRules.singular')}
+            queryOptions={getGlobalRuleQueryOptions(selectedId)}
+            onSave={(data) => putGlobalRuleReq(req, data as APISIXType['GlobalRulePut'])}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['globalRules'] })}
+          />
+        </>
+      )}
+    </>
   );
 }
 

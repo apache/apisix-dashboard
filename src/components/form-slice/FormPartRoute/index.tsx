@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Divider, InputWrapper } from '@mantine/core';
+import { Divider, InputWrapper, Text } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -39,11 +39,12 @@ const FormPartBasicWithPriority = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
-    <FormPartBasic showStatus>
+    <FormPartBasic showStatus namePlaceholder="my-route-name">
       <FormItemNumberInput
         control={control}
         name="priority"
         label={t('form.routes.priority')}
+        description={t('form.routes.priorityDesc')}
         defaultValue={zGetDefault(APISIX.Route).priority!}
       />
     </FormPartBasic>
@@ -55,55 +56,75 @@ const FormSectionMatchRules = () => {
   const { control } = useFormContext<RoutePostType>();
   return (
     <FormSection legend={t('form.routes.matchRules')}>
+      <Text size="sm" c="dimmed" mb="md">
+        {t('form.routes.matchRulesDesc')}
+      </Text>
       <FormItemTagsInput
         control={control}
         name="methods"
         label={t('form.routes.methods')}
+        description={t('form.routes.methodsDesc')}
         data={APISIX.HttpMethod.options.map((v) => v.value)}
         searchValue=""
       />
-      <InputWrapper label={t('form.routes.enableWebsocket')}>
+      <InputWrapper
+        label={t('form.routes.enableWebsocket')}
+        description={t('form.routes.enableWebsocketDesc')}
+      >
         <FormItemSwitch control={control} name="enable_websocket" />
       </InputWrapper>
       <FormItemTextInput
         control={control}
         name="uri"
         label={t('form.routes.uri')}
+        description={t('form.routes.uriDesc')}
+        placeholder={t('form.routes.uriPlaceholder')}
+        withAsterisk
       />
       <FormItemTagsInput
         control={control}
         name="uris"
         label={t('form.routes.uris')}
+        description={t('form.routes.urisDesc')}
       />
       <FormItemTextInput
         control={control}
         name="host"
         label={t('form.routes.host')}
+        description={t('form.routes.hostDesc')}
+        placeholder={t('form.routes.hostPlaceholder')}
       />
       <FormItemTagsInput
         control={control}
         name="hosts"
         label={t('form.routes.hosts')}
+        description={t('form.routes.hostsDesc')}
       />
       <FormItemTextInput
         control={control}
         name="remote_addr"
         label={t('form.routes.remoteAddr')}
+        description={t('form.routes.remoteAddrDesc')}
+        placeholder={t('form.routes.remoteAddrPlaceholder')}
       />
       <FormItemTagsInput
         control={control}
         name="remote_addrs"
         label={t('form.routes.remoteAddrs')}
+        description={t('form.routes.remoteAddrsDesc')}
       />
       <FormItemEditor
         control={control}
         name="vars"
         label={t('form.routes.vars')}
+        description={t('form.routes.varsDesc')}
       />
       <FormItemTextarea
         control={control}
         name="filter_func"
         label={t('form.routes.filterFunc')}
+        description={t('form.routes.filterFuncDesc')}
+        placeholder={t('form.routes.filterFuncPlaceholder')}
       />
     </FormSection>
   );
@@ -113,7 +134,10 @@ export const FormSectionUpstream = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
-    <FormSection legend={t('form.upstreams.title')}>
+    <FormSection legend={t('form.upstreams.title')} withAsterisk>
+      <Text size="sm" c="dimmed" mb="md">
+        {t('form.upstreams.requiredDesc')}
+      </Text>
       <FormSection legend={t('form.upstreams.upstreamId')}>
         <FormItemTextInput control={control} name="upstream_id" />
       </FormSection>
@@ -150,10 +174,14 @@ export const FormSectionService = () => {
       legend={t('form.routes.service')}
       disabled={readOnlyFields.includes('service_id')}
     >
+      <Text size="sm" c="dimmed" mb="md">
+        {t('form.routes.serviceDesc')}
+      </Text>
       <FormItemTextInput
         control={control}
         name="service_id"
         label={t('form.upstreams.serviceId')}
+        placeholder="00000000000000000001"
       />
     </FormSection>
   );

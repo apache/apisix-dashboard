@@ -16,18 +16,28 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
+import { getRouteListQueryOptions, getRouteQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
-import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { putRouteReq } from '@/apis/routes';
+import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
+import { RoutePutSchema, type RoutePutType } from '@/components/form-slice/FormPartRoute/schema';
+import { produceRoute, produceVarsToForm } from '@/components/form-slice/FormPartRoute/util';
+import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
+import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
+import { FormEditDrawer } from '@/components/page/FormEditDrawer';
+import { JSONEditDrawer } from '@/components/page/JSONEditDrawer';
 import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import { TableActionMenu } from '@/components/page/TableActionMenu';
+import { ToAddPageBtn, ToAddPageDropdown } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
+import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
@@ -35,13 +45,15 @@ import type { ListPageKeys } from '@/utils/useTablePagination';
 export type RouteListProps = {
   routeKey: Extract<ListPageKeys, '/routes/' | '/services/detail/$id/routes/'>;
   defaultParams?: Partial<WithServiceIdFilter>;
-  ToDetailBtn: (props: {
+  ActionMenu: (props: {
     record: APISIXType['RespRouteItem'];
+    refetch: () => void;
   }) => React.ReactNode;
+  AddButton?: React.ReactNode;
 };
 
 export const RouteList = (props: RouteListProps) => {
-  const { routeKey, ToDetailBtn, defaultParams } = props;
+  const { routeKey, ActionMenu, defaultParams, AddButton } = props;
   const { data, isLoading, refetch, pagination } = useRouteList(
     routeKey,
     defaultParams
@@ -78,20 +90,11 @@ export const RouteList = (props: RouteListProps) => {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 120,
-        render: (_, record) => [
-          <ToDetailBtn key="detail" record={record} />,
-          <DeleteResourceBtn
-            key="delete"
-            name={t('routes.singular')}
-            target={record.value.id}
-            api={`${API_ROUTES}/${record.value.id}`}
-            onSuccess={refetch}
-          />,
-        ],
+        width: 60,
+        render: (_, record) => <ActionMenu record={record} refetch={refetch} />,
       },
     ];
-  }, [t, ToDetailBtn, refetch]);
+  }, [t, ActionMenu, refetch]);
 
   return (
     <AntdConfigProvider>
@@ -110,7 +113,7 @@ export const RouteList = (props: RouteListProps) => {
             items: [
               {
                 key: 'add',
-                label: (
+                label: AddButton ?? (
                   <ToAddPageBtn
                     key="add"
                     label={t('info.add.title', {
@@ -128,21 +131,86 @@ export const RouteList = (props: RouteListProps) => {
   );
 };
 
+// Transform API data to form values
+const toFormValues = (data: Record<string, unknown>): RoutePutType => {
+  const upstreamProduced = produceToUpstreamForm(
+    (data.upstream as Record<string, unknown>) || {},
+    data
+  );
+  return produceVarsToForm(upstreamProduced);
+};
+
+// Transform form values to API data
+const toApiData = (formData: RoutePutType): APISIXType['Route'] => {
+  return produceRoute(formData) as APISIXType['Route'];
+};
+
 function RouteComponent() {
   const { t } = useTranslation();
+  const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
+  const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
+  const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
+
+  const handleFormEdit = (routeId: string) => {
+    setSelectedRouteId(routeId);
+    openFormDrawer();
+  };
+
+  const handleJsonEdit = (routeId: string) => {
+    setSelectedRouteId(routeId);
+    openJsonDrawer();
+  };
+
   return (
     <>
       <PageHeader title={t('sources.routes')} />
       <RouteList
         routeKey="/routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/routes/detail/$id"
-            params={{ id: record.value.id }}
+        ActionMenu={({ record, refetch }) => (
+          <TableActionMenu
+            resourceName={t('routes.singular')}
+            resourceTarget={record.value.id}
+            deleteApi={`${API_ROUTES}/${record.value.id}`}
+            onDeleteSuccess={refetch}
+            onFormEdit={() => handleFormEdit(record.value.id)}
+            onJsonEdit={() => handleJsonEdit(record.value.id)}
           />
         )}
+        AddButton={
+          <ToAddPageDropdown
+            to="/routes/add"
+            label={t('info.add.title', { name: t('routes.singular') })}
+          />
+        }
       />
+
+      {selectedRouteId && (
+        <>
+          <FormEditDrawer<RoutePutType, APISIXType['Route']>
+            opened={formDrawerOpened}
+            onClose={closeFormDrawer}
+            title={t('routes.singular')}
+            queryOptions={getRouteQueryOptions(selectedRouteId)}
+            schema={RoutePutSchema}
+            toFormValues={toFormValues}
+            toApiData={toApiData}
+            onSave={(data) => putRouteReq(req, data)}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['routes'] })}
+          >
+            <FormSectionGeneral />
+            <FormPartRoute />
+          </FormEditDrawer>
+
+          <JSONEditDrawer
+            opened={jsonDrawerOpened}
+            onClose={closeJsonDrawer}
+            title={t('routes.singular')}
+            queryOptions={getRouteQueryOptions(selectedRouteId)}
+            onSave={(data) => putRouteReq(req, data as APISIXType['Route'])}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['routes'] })}
+          />
+        </>
+      )}
     </>
   );
 }
