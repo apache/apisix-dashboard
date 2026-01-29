@@ -41,7 +41,7 @@ export type APISIXType = RawAPISIXType & {
   RespStreamRouteList: AxiosResponse<
     APISIXListResponse<APISIXType['StreamRoute']>
   >;
-  RespStreamRouteItem: APISIXType['RespRouteList']['data']['list'][number];
+  RespStreamRouteItem: APISIXType['RespStreamRouteList']['data']['list'][number];
   RespStreamRouteDetail: AxiosResponse<
     APISIXDetailResponse<APISIXType['StreamRoute']>
   >;

@@ -44,6 +44,9 @@ const SSL = z
     type: SSLType.optional(),
     status: APISIXCommon.Status.optional(),
     ssl_protocols: z.array(SSLProtocols).optional(),
+    // Read-only fields populated by APISIX from certificate
+    validity_start: z.number().optional(),
+    validity_end: z.number().optional(),
   })
   .partial()
   .merge(APISIXCommon.Basic)

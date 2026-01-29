@@ -29,11 +29,11 @@ import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { FormEditDrawer } from '@/components/page/FormEditDrawer';
 import { JSONEditDrawer } from '@/components/page/JSONEditDrawer';
 import PageHeader from '@/components/page/PageHeader';
+import { RouteList } from '@/components/page/RouteList';
 import { TableActionMenu } from '@/components/page/TableActionMenu';
 import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import { req } from '@/config/req';
-import { RouteList } from '@/routes/routes';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 

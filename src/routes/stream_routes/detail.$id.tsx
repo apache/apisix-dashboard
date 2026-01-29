@@ -154,18 +154,20 @@ const StreamRouteDetailForm = (props: Props) => {
           <form onSubmit={form.handleSubmit((d) => putStreamRoute.mutateAsync(d))}>
             <FormSectionGeneral readOnly />
             <FormPartStreamRoute />
-            <Group>
-              <FormSubmitBtn loading={putStreamRoute.isPending}>
-                {t('form.btn.save')}
-              </FormSubmitBtn>
+            <Group mt="xl" justify="space-between">
               <PreviewJSONButton />
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/stream_routes' })}
-                disabled={putStreamRoute.isPending}
-              >
-                {t('form.btn.cancel')}
-              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate({ to: '/stream_routes' })}
+                  disabled={putStreamRoute.isPending}
+                >
+                  {t('form.btn.cancel')}
+                </Button>
+                <FormSubmitBtn loading={putStreamRoute.isPending}>
+                  {t('form.btn.save')}
+                </FormSubmitBtn>
+              </Group>
             </Group>
           </form>
         </FormProvider>

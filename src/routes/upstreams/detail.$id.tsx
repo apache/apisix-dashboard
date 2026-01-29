@@ -162,18 +162,20 @@ const UpstreamDetailForm = (props: Props) => {
           <form onSubmit={form.handleSubmit((d) => putUpstream.mutateAsync(d))}>
             <FormSectionGeneral readOnly />
             <FormPartUpstream />
-            <Group>
-              <FormSubmitBtn loading={putUpstream.isPending}>
-                {t('form.btn.save')}
-              </FormSubmitBtn>
+            <Group mt="xl" justify="space-between">
               <PreviewJSONButton />
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/upstreams' })}
-                disabled={putUpstream.isPending}
-              >
-                {t('form.btn.cancel')}
-              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate({ to: '/upstreams' })}
+                  disabled={putUpstream.isPending}
+                >
+                  {t('form.btn.cancel')}
+                </Button>
+                <FormSubmitBtn loading={putUpstream.isPending}>
+                  {t('form.btn.save')}
+                </FormSubmitBtn>
+              </Group>
             </Group>
           </form>
         </FormProvider>

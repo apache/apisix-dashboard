@@ -373,7 +373,10 @@
   "table": {
     "actions": "Aktionen",
     "disabled": "Deaktiviert",
-    "enabled": "Aktiviert"
+    "enabled": "Aktiviert",
+    "hosts": "Hosts",
+    "methods": "Methoden",
+    "updateTime": "Aktualisierungszeit"
   },
   "upstreams": {
     "singular": "Upstream"

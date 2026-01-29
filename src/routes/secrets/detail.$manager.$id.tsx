@@ -154,18 +154,20 @@ const SecretDetailForm = (props: Props) => {
           <form onSubmit={form.handleSubmit((d) => putSecret.mutateAsync(d))}>
             <FormSectionGeneral readOnly />
             <FormPartSecret readOnlyManager />
-            <Group>
-              <FormSubmitBtn loading={putSecret.isPending}>
-                {t('form.btn.save')}
-              </FormSubmitBtn>
+            <Group mt="xl" justify="space-between">
               <PreviewJSONButton />
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/secrets' })}
-                disabled={putSecret.isPending}
-              >
-                {t('form.btn.cancel')}
-              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate({ to: '/secrets' })}
+                  disabled={putSecret.isPending}
+                >
+                  {t('form.btn.cancel')}
+                </Button>
+                <FormSubmitBtn loading={putSecret.isPending}>
+                  {t('form.btn.save')}
+                </FormSubmitBtn>
+              </Group>
             </Group>
           </form>
         </FormProvider>

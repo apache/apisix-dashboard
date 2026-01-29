@@ -153,18 +153,20 @@ const PluginConfigDetailForm = (props: Props) => {
           <form onSubmit={form.handleSubmit((d) => putPluginConfig.mutateAsync(d))}>
             <FormSectionGeneral readOnly />
             <FormPartPluginConfig basicProps={{ namePlaceholder: 'my-plugin-config-name' }} />
-            <Group>
-              <FormSubmitBtn loading={putPluginConfig.isPending}>
-                {t('form.btn.save')}
-              </FormSubmitBtn>
+            <Group mt="xl" justify="space-between">
               <PreviewJSONButton />
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/plugin_configs' })}
-                disabled={putPluginConfig.isPending}
-              >
-                {t('form.btn.cancel')}
-              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate({ to: '/plugin_configs' })}
+                  disabled={putPluginConfig.isPending}
+                >
+                  {t('form.btn.cancel')}
+                </Button>
+                <FormSubmitBtn loading={putPluginConfig.isPending}>
+                  {t('form.btn.save')}
+                </FormSubmitBtn>
+              </Group>
             </Group>
           </form>
         </FormProvider>

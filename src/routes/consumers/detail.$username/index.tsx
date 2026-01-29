@@ -153,18 +153,20 @@ const ConsumerDetailForm = (props: Props) => {
           <form onSubmit={form.handleSubmit((d) => putConsumer.mutateAsync(d))}>
             <FormSectionGeneral showID={false} readOnly />
             <FormPartConsumer />
-            <Group>
-              <FormSubmitBtn loading={putConsumer.isPending}>
-                {t('form.btn.save')}
-              </FormSubmitBtn>
+            <Group mt="xl" justify="space-between">
               <PreviewJSONButton />
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/consumers' })}
-                disabled={putConsumer.isPending}
-              >
-                {t('form.btn.cancel')}
-              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate({ to: '/consumers' })}
+                  disabled={putConsumer.isPending}
+                >
+                  {t('form.btn.cancel')}
+                </Button>
+                <FormSubmitBtn loading={putConsumer.isPending}>
+                  {t('form.btn.save')}
+                </FormSubmitBtn>
+              </Group>
             </Group>
           </form>
         </FormProvider>

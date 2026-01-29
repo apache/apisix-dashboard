@@ -16,7 +16,8 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useDisclosure } from '@mantine/hooks';
+import { Badge, CloseButton, TextInput } from '@mantine/core';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +39,7 @@ import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
+import IconSearch from '~icons/material-symbols/search';
 
 // Transform API data to form values
 const toFormValues = (data: Record<string, unknown>): APISIXType['Service'] => {
@@ -51,10 +53,20 @@ const toApiData = (formData: APISIXType['Service']): APISIXType['Service'] => {
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useServiceList();
+  const { data, isLoading, refetch, pagination, setParams } = useServiceList();
   const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
   const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = useDebouncedCallback((value: string) => {
+    setParams({ name: value || undefined, page: 1 });
+  }, 300);
+
+  const handleClear = () => {
+    setSearchValue('');
+    setParams({ name: undefined });
+  };
 
   const handleFormEdit = useCallback((id: string) => {
     setSelectedId(id);
@@ -79,16 +91,30 @@ function RouteComponent() {
         title: t('form.basic.name'),
         key: 'name',
         valueType: 'text',
+        ellipsis: true,
       },
       {
         dataIndex: ['value', 'desc'],
         title: t('form.basic.desc'),
         key: 'desc',
         valueType: 'text',
+        ellipsis: true,
+      },
+      {
+        dataIndex: ['value', 'upstream_id'],
+        title: t('form.upstreams.upstreamId'),
+        key: 'upstream_id',
+        render: (_, record) => {
+          const upstreamId = record.value.upstream_id;
+          const hasInlineUpstream = record.value.upstream && Object.keys(record.value.upstream).length > 0;
+          if (upstreamId) return <Badge size="xs" variant="light">{upstreamId}</Badge>;
+          if (hasInlineUpstream) return <Badge size="xs" color="gray">{t('form.upstreams.inline')}</Badge>;
+          return '-';
+        },
       },
       {
         dataIndex: ['value', 'update_time'],
-        title: t('form.info.update_time'),
+        title: t('table.updateTime'),
         key: 'update_time',
         valueType: 'dateTime',
         sorter: true,
@@ -101,7 +127,7 @@ function RouteComponent() {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 60,
+        width: 80,
         render: (_, record) => (
           <TableActionMenu
             resourceName={t('services.singular')}
@@ -126,10 +152,27 @@ function RouteComponent() {
           rowKey="id"
           loading={isLoading}
           search={false}
-          options={false}
+          options={{
+            reload: () => refetch(),
+            density: true,
+            setting: true,
+          }}
           pagination={pagination}
           cardProps={{ bodyStyle: { padding: 0 } }}
           toolbar={{
+            search: (
+              <TextInput
+                placeholder={t('form.search')}
+                leftSection={<IconSearch />}
+                rightSection={searchValue && <CloseButton size="sm" onClick={handleClear} />}
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  handleSearch(e.target.value);
+                }}
+                style={{ width: 250 }}
+              />
+            ),
             menu: {
               type: 'inline',
               items: [

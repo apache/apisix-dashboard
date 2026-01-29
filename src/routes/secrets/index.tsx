@@ -16,7 +16,8 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useDisclosure } from '@mantine/hooks';
+import { CloseButton, TextInput } from '@mantine/core';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +38,7 @@ import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { pipeProduce } from '@/utils/producer';
+import IconSearch from '~icons/material-symbols/search';
 
 // Transform API data to form values
 const toFormValues = (data: Record<string, unknown>): APISIXType['Secret'] => {
@@ -55,10 +57,20 @@ type SelectedSecret = {
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useSecretList();
+  const { data, isLoading, refetch, pagination, setParams } = useSecretList();
   const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
   const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
   const [selectedSecret, setSelectedSecret] = useState<SelectedSecret | null>(null);
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = useDebouncedCallback((value: string) => {
+    setParams({ name: value || undefined, page: 1 });
+  }, 300);
+
+  const handleClear = () => {
+    setSearchValue('');
+    setParams({ name: undefined });
+  };
 
   const handleFormEdit = useCallback((id: string, manager: APISIXType['Secret']['manager']) => {
     setSelectedSecret({ id, manager });
@@ -79,20 +91,30 @@ function RouteComponent() {
         title: 'ID',
         key: 'id',
         valueType: 'text',
-        width: 300,
+        ellipsis: true,
       },
       {
         dataIndex: ['value', 'manager'],
         title: t('form.secrets.manager'),
         key: 'manager',
         valueType: 'text',
-        width: 120,
+      },
+      {
+        dataIndex: ['value', 'update_time'],
+        title: t('table.updateTime'),
+        key: 'update_time',
+        valueType: 'dateTime',
+        sorter: true,
+        renderText: (text) => {
+          if (!text) return '-';
+          return new Date(Number(text) * 1000).toISOString();
+        },
       },
       {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 60,
+        width: 80,
         render: (_, record) => (
           <TableActionMenu
             resourceName={t('secrets.singular')}
@@ -117,10 +139,27 @@ function RouteComponent() {
           rowKey="id"
           loading={isLoading}
           search={false}
-          options={false}
+          options={{
+            reload: () => refetch(),
+            density: true,
+            setting: true,
+          }}
           pagination={pagination}
           cardProps={{ bodyStyle: { padding: 0 } }}
           toolbar={{
+            search: (
+              <TextInput
+                placeholder={t('form.search')}
+                leftSection={<IconSearch />}
+                rightSection={searchValue && <CloseButton size="sm" onClick={handleClear} />}
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  handleSearch(e.target.value);
+                }}
+                style={{ width: 250 }}
+              />
+            ),
             menu: {
               type: 'inline',
               items: [

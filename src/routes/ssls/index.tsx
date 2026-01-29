@@ -16,7 +16,8 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useDisclosure } from '@mantine/hooks';
+import { Badge, CloseButton, TextInput } from '@mantine/core';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import { createFileRoute } from '@tanstack/react-router';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +38,7 @@ import { req } from '@/config/req';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import { pipeProduce } from '@/utils/producer';
+import IconSearch from '~icons/material-symbols/search';
 
 // Transform API data to form values
 const toFormValues = (data: Record<string, unknown>): APISIXType['SSL'] => {
@@ -50,10 +52,20 @@ const toApiData = (formData: APISIXType['SSL']): APISIXType['SSL'] => {
 
 function RouteComponent() {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useSSLList();
+  const { data, isLoading, refetch, pagination, setParams } = useSSLList();
   const [formDrawerOpened, { open: openFormDrawer, close: closeFormDrawer }] = useDisclosure(false);
   const [jsonDrawerOpened, { open: openJsonDrawer, close: closeJsonDrawer }] = useDisclosure(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = useDebouncedCallback((value: string) => {
+    setParams({ name: value || undefined, page: 1 });
+  }, 300);
+
+  const handleClear = () => {
+    setSearchValue('');
+    setParams({ name: undefined });
+  };
 
   const handleFormEdit = useCallback((id: string) => {
     setSelectedId(id);
@@ -78,6 +90,7 @@ function RouteComponent() {
         title: 'SNI',
         key: 'sni',
         valueType: 'text',
+        ellipsis: true,
         render: (_, record) => {
           // Show sni if available, otherwise show the first snis entry
           const sni = record.value.sni;
@@ -85,6 +98,39 @@ function RouteComponent() {
           if (sni) return sni;
           if (snis && snis.length > 0) return snis.join(', ');
           return '-';
+        },
+      },
+      {
+        dataIndex: ['value', 'type'],
+        title: t('form.ssls.type'),
+        key: 'type',
+        width: 100,
+        render: (_, record) => {
+          const type = record.value.type || 'server';
+          return <Badge size="xs" color={type === 'client' ? 'orange' : 'blue'}>{type}</Badge>;
+        },
+      },
+      {
+        dataIndex: ['value', 'validity_end'],
+        title: t('form.ssls.expiration'),
+        key: 'validity_end',
+        valueType: 'dateTime',
+        sorter: true,
+        render: (_, record) => {
+          const validityEnd = record.value.validity_end;
+          if (!validityEnd) return '-';
+          const expDate = new Date(validityEnd * 1000);
+          const now = new Date();
+          const daysUntilExpiry = Math.ceil((expDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          const isExpired = daysUntilExpiry < 0;
+          const isExpiringSoon = daysUntilExpiry >= 0 && daysUntilExpiry <= 30;
+          const color = isExpired ? 'red' : isExpiringSoon ? 'orange' : 'green';
+          const text = isExpired
+            ? t('form.ssls.expired')
+            : daysUntilExpiry <= 30
+              ? t('form.ssls.daysLeft', { days: daysUntilExpiry })
+              : expDate.toLocaleDateString();
+          return <Badge size="xs" color={color}>{text}</Badge>;
         },
       },
       {
@@ -97,10 +143,21 @@ function RouteComponent() {
         },
       },
       {
+        dataIndex: ['value', 'update_time'],
+        title: t('table.updateTime'),
+        key: 'update_time',
+        valueType: 'dateTime',
+        sorter: true,
+        renderText: (text) => {
+          if (!text) return '-';
+          return new Date(Number(text) * 1000).toISOString();
+        },
+      },
+      {
         title: t('table.actions'),
         valueType: 'option',
         key: 'option',
-        width: 60,
+        width: 80,
         render: (_, record) => (
           <TableActionMenu
             resourceName={t('ssls.singular')}
@@ -125,10 +182,27 @@ function RouteComponent() {
           rowKey="id"
           loading={isLoading}
           search={false}
-          options={false}
+          options={{
+            reload: () => refetch(),
+            density: true,
+            setting: true,
+          }}
           pagination={pagination}
           cardProps={{ bodyStyle: { padding: 0 } }}
           toolbar={{
+            search: (
+              <TextInput
+                placeholder={t('form.search')}
+                leftSection={<IconSearch />}
+                rightSection={searchValue && <CloseButton size="sm" onClick={handleClear} />}
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  handleSearch(e.target.value);
+                }}
+                style={{ width: 250 }}
+              />
+            ),
             menu: {
               type: 'inline',
               items: [

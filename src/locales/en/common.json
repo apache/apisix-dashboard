@@ -186,7 +186,10 @@
       "sni": "SNI",
       "snis": "SNIs",
       "ssl_protocols": "SSL Protocols",
-      "type": "Certificate Type"
+      "type": "Type",
+      "expiration": "Expiration",
+      "expired": "Expired",
+      "daysLeft": "{{days}}d left"
     },
     "streamRoutes": {
       "protocol": {
@@ -427,7 +430,10 @@
   "table": {
     "actions": "Actions",
     "disabled": "Disabled",
-    "enabled": "Enabled"
+    "enabled": "Enabled",
+    "hosts": "Hosts",
+    "methods": "Methods",
+    "updateTime": "Update Time"
   },
   "upstreams": {
     "singular": "Upstream"

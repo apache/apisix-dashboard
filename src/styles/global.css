@@ -1,3 +1,30 @@
+/* Prevent antd tooltips and popovers from overflowing viewport and causing layout shift */
+.ant-tooltip,
+.ant-popover {
+  max-width: calc(100vw - 20px);
+}
+
+/* Prevent horizontal scrollbar from tooltips */
+html {
+  overflow-x: hidden;
+}
+
+/* Ensure tooltips near right edge don't overflow */
+.ant-tooltip {
+  word-wrap: break-word;
+}
+
+.ant-tooltip-placement-top,
+.ant-tooltip-placement-topLeft,
+.ant-tooltip-placement-topRight {
+  transform-origin: center bottom;
+}
+
+.ant-popover-inner {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
 .monaco-editor,
 .monaco-editor .overflow-guard {
   border-radius: var(--mantine-radius-sm);

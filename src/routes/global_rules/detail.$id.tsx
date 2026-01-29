@@ -151,18 +151,20 @@ const GlobalRuleDetailForm = (props: Props) => {
           <form onSubmit={form.handleSubmit((d) => putGlobalRule.mutateAsync(d))}>
             <FormSectionGeneral readOnly />
             <FormPartGlobalRules />
-            <Group>
-              <FormSubmitBtn loading={putGlobalRule.isPending}>
-                {t('form.btn.save')}
-              </FormSubmitBtn>
+            <Group mt="xl" justify="space-between">
               <PreviewJSONButton />
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/global_rules' })}
-                disabled={putGlobalRule.isPending}
-              >
-                {t('form.btn.cancel')}
-              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate({ to: '/global_rules' })}
+                  disabled={putGlobalRule.isPending}
+                >
+                  {t('form.btn.cancel')}
+                </Button>
+                <FormSubmitBtn loading={putGlobalRule.isPending}>
+                  {t('form.btn.save')}
+                </FormSubmitBtn>
+              </Group>
             </Group>
           </form>
         </FormProvider>

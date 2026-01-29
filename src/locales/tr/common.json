@@ -373,7 +373,10 @@
   "table": {
     "actions": "İşlemler",
     "disabled": "Pasif",
-    "enabled": "Aktif"
+    "enabled": "Aktif",
+    "hosts": "Hostlar",
+    "methods": "Metodlar",
+    "updateTime": "Güncelleme Zamanı"
   },
   "upstreams": {
     "singular": "Upstream"

@@ -154,18 +154,20 @@ const ProtoDetailForm = (props: Props) => {
           <form onSubmit={form.handleSubmit((d) => putProto.mutateAsync(d))}>
             <FormSectionGeneral readOnly />
             <FormPartProto allowUpload />
-            <Group>
-              <FormSubmitBtn loading={putProto.isPending}>
-                {t('form.btn.save')}
-              </FormSubmitBtn>
+            <Group mt="xl" justify="space-between">
               <PreviewJSONButton />
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/protos' })}
-                disabled={putProto.isPending}
-              >
-                {t('form.btn.cancel')}
-              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate({ to: '/protos' })}
+                  disabled={putProto.isPending}
+                >
+                  {t('form.btn.cancel')}
+                </Button>
+                <FormSubmitBtn loading={putProto.isPending}>
+                  {t('form.btn.save')}
+                </FormSubmitBtn>
+              </Group>
             </Group>
           </form>
         </FormProvider>

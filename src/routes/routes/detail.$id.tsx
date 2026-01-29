@@ -166,18 +166,20 @@ const RouteDetailForm = (props: Props) => {
           <form onSubmit={form.handleSubmit((d) => putRoute.mutateAsync(d))}>
             <FormSectionGeneral />
             <FormPartRoute />
-            <Group>
-              <FormSubmitBtn loading={putRoute.isPending}>
-                {t('form.btn.save')}
-              </FormSubmitBtn>
+            <Group mt="xl" justify="space-between">
               <PreviewJSONButton />
-              <Button
-                variant="outline"
-                onClick={() => navigate({ to: '/routes' })}
-                disabled={putRoute.isPending}
-              >
-                {t('form.btn.cancel')}
-              </Button>
+              <Group>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate({ to: '/routes' })}
+                  disabled={putRoute.isPending}
+                >
+                  {t('form.btn.cancel')}
+                </Button>
+                <FormSubmitBtn loading={putRoute.isPending}>
+                  {t('form.btn.save')}
+                </FormSubmitBtn>
+              </Group>
             </Group>
           </form>
         </FormProvider>
