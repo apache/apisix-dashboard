@@ -22,7 +22,7 @@ import {
   type InputWrapperProps,
   Tooltip,
 } from '@mantine/core';
-import { useClickOutside } from '@mantine/hooks';
+import { useDebouncedCallback } from '@mantine/hooks';
 import { toJS } from 'mobx';
 import { useLocalObservable } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
@@ -232,11 +232,12 @@ export const FormItemNodes = <T extends FieldValues>(
     ob.setDisabled(disabled);
   }, [disabled, ob]);
 
-  const ref = useClickOutside(() => {
-    const vals = parseToUpstreamNodes(toJS(ob.values));
+  // Sync form data with debounce to avoid excessive updates
+  const syncToForm = useDebouncedCallback((dataSource: DataSource[]) => {
+    const vals = parseToUpstreamNodes(dataSource);
     fOnChange?.(vals);
     restProps.onChange?.(vals);
-  }, ['mouseup', 'touchend', 'mousedown', 'touchstart']);
+  }, 100);
 
   return (
     <InputWrapper
@@ -244,7 +245,6 @@ export const FormItemNodes = <T extends FieldValues>(
       label={label}
       required={required}
       withAsterisk={withAsterisk}
-      ref={ref}
     >
       <input name={fName} type="hidden" />
       <AntdConfigProvider>
@@ -261,6 +261,7 @@ export const FormItemNodes = <T extends FieldValues>(
             editableKeys: ob.editableKeys,
             onValuesChange(_, dataSource) {
               ob.setValues(dataSource);
+              syncToForm(dataSource);
             },
             actionRender: (row) => {
               return [
@@ -269,7 +270,10 @@ export const FormItemNodes = <T extends FieldValues>(
                     variant="subtle"
                     color="red"
                     size="sm"
-                    onClick={() => ob.remove(row.id)}
+                    onClick={() => {
+                      ob.remove(row.id);
+                      syncToForm(toJS(ob.values));
+                    }}
                   >
                     <IconDelete />
                   </ActionIcon>
@@ -286,7 +290,10 @@ export const FormItemNodes = <T extends FieldValues>(
         size="xs"
         color="blue"
         leftSection={<IconAdd style={{ width: 16, height: 16 }} />}
-        onClick={() => ob.append(genRecord())}
+        onClick={() => {
+          ob.append(genRecord());
+          syncToForm(toJS(ob.values));
+        }}
         {...(disabled && { display: 'none' })}
       >
         {t('form.upstreams.nodes.add')}
