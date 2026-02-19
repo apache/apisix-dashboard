@@ -19,17 +19,16 @@ import { z } from 'zod';
 
 export const pageSearchSchema = z
   .object({
-    page: z
-      .union([z.string(), z.number()])
-      .optional()
-      .default(1)
-      .transform((val) => (val ? Number(val) : 1)),
-    page_size: z
-      .union([z.string(), z.number()])
-      .optional()
-      .default(10)
-      .transform((val) => (val ? Number(val) : 10)),
+    page: z.preprocess(
+      (val) => (val === undefined || val === null ? undefined : Number(val)),
+      z.number().optional()
+    ),
+    page_size: z.preprocess(
+      (val) => (val === undefined || val === null ? undefined : Number(val)),
+      z.number().optional()
+    ),
     name: z.string().optional(),
+    search: z.string().optional(),
     label: z.string().optional(),
   })
   .passthrough();

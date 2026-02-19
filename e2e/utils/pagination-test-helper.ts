@@ -55,13 +55,14 @@ export function setupPaginationTests<T>(
 
   const itemIsVisible = async (page: Page, item: T) => {
     const cell = getCell(page, item);
-    await expect(cell).toBeVisible();
+    // Increased timeout for CI environments where pagination might be slower
+    await expect(cell).toBeVisible({ timeout: 15000 });
   };
 
   const itemIsHidden = async (page: Page, item: T) => {
     const cell = getCell(page, item);
     // Increased timeout for CI environments where pagination might be slower
-    await expect(cell).toBeHidden({ timeout: 10000 });
+    await expect(cell).toBeHidden({ timeout: 15000 });
   };
 
   test('can use the pagination of the table to switch', async ({ page }) => {
@@ -77,14 +78,14 @@ export function setupPaginationTests<T>(
           url.searchParams.get('page_size') === defaultPageSize.toString()
       );
       // page_size should exist in table
-      await expect(getPageSizeSelection(page, defaultPageSize)).toBeVisible();
+      await expect(getPageSizeSelection(page, defaultPageSize)).toBeVisible({ timeout: 15000 });
 
       // pageNum should exist in url
       await expect(page).toHaveURL(
         (url) => url.searchParams.get('page') === defaultPageNum.toString()
       );
       // pageNum should exist in table
-      await expect(getPageNum(page, defaultPageNum)).toBeVisible();
+      await expect(getPageNum(page, defaultPageNum)).toBeVisible({ timeout: 15000 });
 
       const itemsNotInPage = await filterItemsNotInPage(page);
       // items not in page should not be visible
@@ -97,6 +98,9 @@ export function setupPaginationTests<T>(
       // click page size selection, then click new page size option
       await getPageSizeSelection(page, defaultPageSize).click();
       await getPageSizeOption(page, newPageSize).click();
+
+      // Wait for the page to load new data after page size change
+      await page.waitForLoadState('load');
 
       await expect(getPageSizeSelection(page, newPageSize)).toBeVisible();
       await expect(getPageNum(page, defaultPageNum)).toBeVisible();
@@ -122,6 +126,8 @@ export function setupPaginationTests<T>(
       await getPageSizeSelection(page, newPageSize).click();
       await getPageSizeOption(page, defaultPageSize).click();
 
+      await page.waitForLoadState('load');
+
       await expect(getPageSizeSelection(page, defaultPageSize)).toBeVisible();
       await expect(getPageNum(page, defaultPageNum)).toBeVisible();
       await expect(getPageSizeSelection(page, newPageSize)).toBeHidden();
@@ -132,6 +138,8 @@ export function setupPaginationTests<T>(
       // click page num
       await getPageNum(page, defaultPageNum).click();
       await getPageNum(page, newPageNum).click();
+
+      await page.waitForLoadState('load');
 
       // pageNum should exist in url
       await expect(page).toHaveURL(
@@ -159,14 +167,14 @@ export function setupPaginationTests<T>(
           url.searchParams.get('page_size') === defaultPageSize.toString()
       );
       // page_size should exist in table
-      await expect(getPageSizeSelection(page, defaultPageSize)).toBeVisible();
+      await expect(getPageSizeSelection(page, defaultPageSize)).toBeVisible({ timeout: 15000 });
 
       // pageNum should exist in url
       await expect(page).toHaveURL(
         (url) => url.searchParams.get('page') === defaultPageNum.toString()
       );
       // pageNum should exist in table
-      await expect(getPageNum(page, defaultPageNum)).toBeVisible();
+      await expect(getPageNum(page, defaultPageNum)).toBeVisible({ timeout: 15000 });
 
       // items not in page should not be visible
       const itemsNotInPage = await filterItemsNotInPage(page);

@@ -27,7 +27,7 @@ export const getPlaywrightRequestAdapter = (
   ctx: APIRequestContext
 ): AxiosAdapter => {
   return async (config) => {
-    const { url, data, baseURL } = config;
+    const { url, data, baseURL, method } = config;
     if (typeof url === 'undefined') {
       throw new Error('Need to provide a url');
     }
@@ -35,19 +35,31 @@ export const getPlaywrightRequestAdapter = (
     type Payload = Parameters<APIRequestContext['fetch']>[1];
     const payload: Payload = {
       headers: config.headers,
-      method: config.method,
-      failOnStatusCode: true,
+      method,
+      failOnStatusCode: false,
       data,
     };
     const urlWithBase = `${baseURL}${url}`;
     const res = await ctx.fetch(urlWithBase, payload);
+    const status = res.status();
+
+    // Idempotent DELETE: Treat 404 as 200 OK
+    if (method?.toLowerCase() === 'delete' && status === 404) {
+      return {
+        data: {},
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config,
+      };
+    }
 
     try {
       return {
         ...res,
         data: await res.json(),
         config,
-        status: res.status(),
+        status,
         statusText: res.statusText(),
         headers: res.headers(),
       };

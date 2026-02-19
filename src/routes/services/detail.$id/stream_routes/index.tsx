@@ -17,11 +17,9 @@
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { getStreamRouteListQueryOptions } from '@/apis/hooks';
 import PageHeader from '@/components/page/PageHeader';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
-import { queryClient } from '@/config/global';
 import { StreamRouteList } from '@/routes/stream_routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
@@ -54,7 +52,4 @@ export const Route = createFileRoute('/services/detail/$id/stream_routes/')({
   component: StreamRouteComponent,
   errorComponent: StreamRoutesErrorComponent,
   validateSearch: pageSearchSchema,
-  loaderDeps: ({ search }) => search,
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(getStreamRouteListQueryOptions(deps)),
 });

@@ -29,7 +29,7 @@ import type { UseSearchParams } from './useSearchParams';
 
 export type ListPageKeys = `${keyof FilterKeys<FileRoutesByTo, 's'>}/`;
 type Props<T, P extends PageSearchType> = {
-  data: APISIXListResponse<T>;
+  data: APISIXListResponse<T> | undefined;
   /** if params is from useSearchParams, refetch is not needed */
   refetch?: () => void;
 } & Pick<UseSearchParams<ListPageKeys, P>, 'params' | 'setParams'>;
@@ -55,7 +55,7 @@ export const useTablePagination = <T, P extends PageSearchType>(
   const pagination = {
     current: page,
     pageSize: page_size,
-    total: data.total ?? 0,
+    total: data?.total ?? 0,
     showSizeChanger: true,
     onChange: onChange,
   } as TablePaginationConfig;

@@ -21,7 +21,7 @@ import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { expect, type Page } from '@playwright/test';
 
-import { deleteAllRoutes, putRouteReq } from '@/apis/routes';
+import { putRouteReq } from '@/apis/routes';
 import { API_ROUTES } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 
@@ -44,10 +44,11 @@ test('should navigate to routes page', async ({ page }) => {
   });
 });
 
+const uniquePrefix = `route_list_${Date.now()}`;
 const routes: APISIXType['Route'][] = Array.from({ length: 11 }, (_, i) => ({
-  id: `route_id_${i + 1}`,
-  name: `route_name_${i + 1}`,
-  uri: `/test_route_${i + 1}`,
+  id: `${uniquePrefix}_id_${i + 1}`,
+  name: `${uniquePrefix}_name_${i + 1}`,
+  uri: `/test_${uniquePrefix}_${i + 1}`,
   desc: `Description for route ${i + 1}`,
   methods: ['GET'],
   upstream: {
@@ -64,7 +65,8 @@ const routes: APISIXType['Route'][] = Array.from({ length: 11 }, (_, i) => ({
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
   test.beforeAll(async () => {
-    await deleteAllRoutes(e2eReq);
+    // Removed global cleanup to allow parallel execution
+    // await deleteAllRoutes(e2eReq);
     await Promise.all(routes.map((d) => putRouteReq(e2eReq, d)));
   });
 
@@ -79,7 +81,7 @@ test.describe('page and page_size should work correctly', () => {
     // filter the item which not in the current page
     // it should be random, so we need get all items in the table
     const itemsInPage = await page
-      .getByRole('cell', { name: /route_name_/ })
+      .getByRole('cell', { name: new RegExp(`${uniquePrefix}_name_`) })
       .all();
     const names = await Promise.all(itemsInPage.map((v) => v.textContent()));
     return routes.filter((d) => !names.includes(d.name));
@@ -90,6 +92,6 @@ test.describe('page and page_size should work correctly', () => {
     items: routes,
     filterItemsNotInPage,
     getCell: (page, item) =>
-      page.getByRole('cell', { name: item.name }).first(),
+      page.getByRole('cell', { name: item.name, exact: true }).first(),
   });
 });

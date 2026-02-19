@@ -15,28 +15,24 @@
  * limitations under the License.
  */
 import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getConsumerGroupListQueryOptions, useConsumerGroupList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import ResourceListPage from '@/components/page/ResourceListPage';
+import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_CONSUMER_GROUPS } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
-function ConsumerGroupsList() {
+const RouteComponent = () => {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useConsumerGroupList();
+  const { data, isLoading, pagination, refetch } = useConsumerGroupList();
 
-  const columns = useMemo<
-    ProColumns<APISIXType['RespConsumerGroupItem']>[]
-  >(() => {
+  const columns = useMemo<ProColumns<APISIXType['RespConsumerGroupItem']>[]>(() => {
     return [
       {
         dataIndex: ['value', 'id'],
@@ -91,49 +87,16 @@ function ConsumerGroupsList() {
   }, [refetch, t]);
 
   return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/consumer_groups/add"
-                    label={t('info.add.title', {
-                      name: t('consumerGroups.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
+    <ResourceListPage
+      titleKey="sources.consumerGroups"
+      columns={columns}
+      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      rowKey="id"
+      addPageTo="/consumer_groups/add"
+      resourceNameKey="consumerGroups.singular"
+    />
   );
-}
-
-function RouteComponent() {
-  const { t } = useTranslation();
-  return (
-    <>
-      <PageHeader title={t('sources.consumerGroups')} />
-      <ConsumerGroupsList />
-    </>
-  );
-}
+};
 
 export const Route = createFileRoute('/consumer_groups/')({
   component: RouteComponent,

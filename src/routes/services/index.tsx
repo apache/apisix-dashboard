@@ -15,24 +15,21 @@
  * limitations under the License.
  */
 import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getServiceListQueryOptions, useServiceList } from '@/apis/hooks';
+import { useServiceList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn,ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import ResourceListPage from '@/components/page/ResourceListPage';
+import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_SERVICES } from '@/config/constant';
-import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
-const ServiceList = () => {
-  const { data, isLoading, refetch, pagination } = useServiceList();
+const RouteComponent = () => {
   const { t } = useTranslation();
+  const { data, isLoading, pagination, refetch } = useServiceList();
 
   const columns = useMemo<ProColumns<APISIXType['RespServiceItem']>[]>(() => {
     return [
@@ -89,56 +86,18 @@ const ServiceList = () => {
   }, [t, refetch]);
 
   return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    label={t('info.add.title', {
-                      name: t('services.singular'),
-                    })}
-                    to="/services/add"
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
+    <ResourceListPage
+      titleKey="sources.services"
+      columns={columns}
+      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      rowKey="id"
+      addPageTo="/services/add"
+      resourceNameKey="services.singular"
+    />
   );
 };
-
-function RouteComponent() {
-  const { t } = useTranslation();
-  return (
-    <>
-      <PageHeader title={t('sources.services')} />
-      <AntdConfigProvider>
-        <ServiceList />
-      </AntdConfigProvider>
-    </>
-  );
-}
 
 export const Route = createFileRoute('/services/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
-  loaderDeps: ({ search }) => search,
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(getServiceListQueryOptions(deps)),
 });

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFile } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { expect, test as baseTest } from '@playwright/test';
@@ -29,11 +29,16 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
     async ({ browser }, use) => {
       // Use parallelIndex as a unique identifier for each worker.
       const id = test.info().parallelIndex;
-      const fileName = path.resolve(
-        test.info().project.outputDir,
-        `.auth/${id}.json`
-      );
+      const authDir = path.resolve(test.info().project.outputDir, '.auth');
+      const fileName = path.resolve(authDir, `${id}.json`);
       const { adminKey } = await getAPISIXConf();
+
+      // Ensure .auth directory exists
+      try {
+        await mkdir(authDir, { recursive: true });
+      } catch {
+        // Directory might already exist, ignore error
+      }
 
       // file exists and contains admin key, use it
       if (
@@ -43,31 +48,46 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
         return use(fileName);
       }
 
-      const page = await browser.newPage({ storageState: undefined });
+      try {
+        const page = await browser.newPage({ storageState: undefined });
 
-      // have to use env here, because the baseURL is not available in worker
-      await page.goto(env.E2E_TARGET_URL);
+        // have to use env here, because the baseURL is not available in worker
+        await page.goto(env.E2E_TARGET_URL, { waitUntil: 'load' });
 
-      // we need to authenticate
-      const settingsModal = page.getByRole('dialog', { name: 'Settings' });
-      await expect(settingsModal).toBeVisible();
-      // PasswordInput renders with a label, use getByLabel instead
-      const adminKeyInput = page.getByLabel('Admin Key');
-      await adminKeyInput.clear();
-      await adminKeyInput.fill(adminKey);
-      await page
-        .getByRole('dialog', { name: 'Settings' })
-        .getByRole('button')
-        .click();
+        // we need to authenticate
+        const settingsModal = page.getByRole('dialog', { name: 'Settings' });
+        await expect(settingsModal).toBeVisible({ timeout: 30000 });
+        // PasswordInput renders with a label, use getByLabel instead
+        const adminKeyInput = page.getByLabel('Admin Key');
+        await adminKeyInput.clear();
+        await adminKeyInput.fill(adminKey);
+        
+        const closeButton = page
+          .getByRole('dialog', { name: 'Settings' })
+          .getByRole('button');
+        await expect(closeButton).toBeVisible({ timeout: 10000 });
+        await closeButton.click();
 
-      await page.context().storageState({ path: fileName });
-      await page.close();
+        // Wait for auth to complete
+        await expect(settingsModal).toBeHidden({ timeout: 15000 });
+
+        // Wait for any post-auth navigation/loading to complete
+        await page.waitForLoadState('load');
+
+        await page.context().storageState({ path: fileName });
+        await page.close();
+      } catch (error) {
+        console.error(`Failed to authenticate worker ${id}:`, error);
+        throw error;
+      }
+
       await use(fileName);
     },
     { scope: 'worker' },
   ],
   page: async ({ baseURL, page }, use) => {
-    await page.goto(baseURL);
+    await page.goto(baseURL ?? '');
     await use(page);
   },
 });
+

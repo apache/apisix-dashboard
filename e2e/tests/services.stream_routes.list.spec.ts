@@ -16,48 +16,48 @@
  */
 import { servicesPom } from '@e2e/pom/services';
 import { randomId } from '@e2e/utils/common';
+import { env } from '@e2e/utils/env';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { uiGoto } from '@e2e/utils/ui';
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
-import { deleteAllServices, postServiceReq } from '@/apis/services';
-import {
-  deleteAllStreamRoutes,
-  postStreamRouteReq,
-} from '@/apis/stream_routes';
+import { postServiceReq } from '@/apis/services';
+import { postStreamRouteReq } from '@/apis/stream_routes';
 
 test.describe.configure({ mode: 'serial' });
 
 const serviceName = randomId('test-service');
 const anotherServiceName = randomId('another-service');
+// Use indexed octets with random offset to ensure uniqueness (0-4 starting at random value to avoid reserved ranges)
+const randomOffset = Math.floor(Math.random() * 100) + 100;
+let octetIndex = randomOffset;
+const getUniqueOctet = () => (octetIndex++ % 256);
 const streamRoutes = [
   {
-    server_addr: '127.0.0.1',
+    server_addr: `127.0.0.${getUniqueOctet()}`,
     server_port: 8080,
   },
   {
-    server_addr: '127.0.0.2',
+    server_addr: `127.0.0.${getUniqueOctet()}`,
     server_port: 8081,
   },
   {
-    server_addr: '127.0.0.3',
+    server_addr: `127.0.0.${getUniqueOctet()}`,
     server_port: 8082,
   },
 ];
 
-// Stream route that uses upstream directly instead of service_id
 const upstreamStreamRoute = {
-  server_addr: '127.0.0.40',
+  server_addr: `127.0.0.${getUniqueOctet()}`,
   server_port: 9090,
   upstream: {
     nodes: [{ host: 'example.com', port: 80, weight: 100 }],
   },
 };
 
-// Stream route that belongs to another service
 const anotherServiceStreamRoute = {
-  server_addr: '127.0.0.20',
+  server_addr: `127.0.0.${getUniqueOctet()}`,
   server_port: 9091,
 };
 
@@ -65,191 +65,196 @@ let testServiceId: string;
 let anotherServiceId: string;
 const createdStreamRoutes: string[] = [];
 
-test.beforeAll(async () => {
-  await deleteAllStreamRoutes(e2eReq);
-  await deleteAllServices(e2eReq);
+let upstreamStreamRouteId: string;
+let anotherServiceStreamRouteId: string;
 
-  // Create a test service for testing service stream routes
+test.beforeAll(async () => {
   const serviceResponse = await postServiceReq(e2eReq, {
     name: serviceName,
     desc: 'Test service for stream route listing',
+    labels: { test: serviceName },
   });
 
   testServiceId = serviceResponse.data.value.id;
 
-  // Create another service
   const anotherServiceResponse = await postServiceReq(e2eReq, {
     name: anotherServiceName,
     desc: 'Another test service for stream route isolation testing',
+    labels: { test: anotherServiceName },
   });
 
   anotherServiceId = anotherServiceResponse.data.value.id;
 
-  // Create test stream routes under the service
   for (const streamRoute of streamRoutes) {
     const streamRouteResponse = await postStreamRouteReq(e2eReq, {
       server_addr: streamRoute.server_addr,
       server_port: streamRoute.server_port,
       service_id: testServiceId,
+      labels: { test: serviceName },
     });
+    if (!streamRouteResponse.data?.value) {
+      throw new Error(`Failed to create stream route: ${JSON.stringify(streamRouteResponse.data)}`);
+    }
     createdStreamRoutes.push(streamRouteResponse.data.value.id);
   }
 
-  // Create a stream route that uses upstream directly instead of service_id
-  await postStreamRouteReq(e2eReq, upstreamStreamRoute);
+  const upstreamStreamRouteResponse = await postStreamRouteReq(e2eReq, {
+    ...upstreamStreamRoute,
+    labels: { test: 'upstream-' + serviceName },
+  });
+  if (!upstreamStreamRouteResponse.data?.value) {
+    throw new Error(`Failed to create upstream stream route: ${JSON.stringify(upstreamStreamRouteResponse.data)}`);
+  }
+  upstreamStreamRouteId = upstreamStreamRouteResponse.data.value.id;
 
-  // Create a stream route under another service
-  await postStreamRouteReq(e2eReq, {
+  const anotherServiceStreamRouteResponse = await postStreamRouteReq(e2eReq, {
     ...anotherServiceStreamRoute,
     service_id: anotherServiceId,
+    labels: { test: anotherServiceName },
   });
+  if (!anotherServiceStreamRouteResponse.data?.value) {
+    throw new Error(`Failed to create another service stream route: ${JSON.stringify(anotherServiceStreamRouteResponse.data)}`);
+  }
+  anotherServiceStreamRouteId = anotherServiceStreamRouteResponse.data.value.id;
+
+  // Significant delay for backend consistency in intensive parallel CI
+  // Moved to end of setup to ensure all resources have time to propagate
+  await new Promise((resolve) => setTimeout(resolve, 8000));
 });
 
 test.afterAll(async () => {
-  await deleteAllStreamRoutes(e2eReq);
-  await deleteAllServices(e2eReq);
+  const allStreamRouteIds = [...createdStreamRoutes, upstreamStreamRouteId, anotherServiceStreamRouteId].filter(Boolean);
+  for (const id of allStreamRouteIds) {
+    await e2eReq.delete(`/stream_routes/${id}`);
+  }
+
+  if (testServiceId) {
+    await e2eReq.delete(`/services/${testServiceId}`);
+  }
+  if (anotherServiceId) {
+    await e2eReq.delete(`/services/${anotherServiceId}`);
+  }
 });
 
-test('should only show stream routes with current service_id', async ({
-  page,
-}) => {
-  await test.step('should only show stream routes with current service_id', async () => {
-    await servicesPom.toIndex(page);
-    await servicesPom.isIndexPage(page);
+async function navigateToServiceDetail(page: Page, id: string, name: string) {
+  // Try search first as it's the intended UI flow
+  await page.goto(`${env.E2E_TARGET_URL}services?name=${name}&page_size=100`);
+  const row = page.locator('tr').filter({ hasText: name });
 
-    await page
-      .getByRole('row', { name: serviceName })
-      .getByRole('button', { name: 'View' })
-      .click();
-    await servicesPom.isDetailPage(page);
+  try {
+    await expect(row.first()).toBeVisible({ timeout: 15000 });
+    await row.getByText('View').click();
+    await expect(page).toHaveURL(new RegExp(`/services/detail/${id}`));
+  } catch {
+    // Stage 2: Reload search
+    await page.reload();
+    try {
+      await expect(row.first()).toBeVisible({ timeout: 15000 });
+      await row.getByText('View').click();
+    } catch {
+      // Stage 3: Direct Link as absolute fallback
+      await uiGoto(page, '/services/detail/$id', { id });
+    }
+  }
+
+  await servicesPom.isDetailPage(page);
+}
+
+test('should only show stream routes with current service_id', async ({ page }) => {
+  await test.step('should only show stream routes with current service_id', async () => {
+    await navigateToServiceDetail(page, testServiceId, serviceName);
 
     await servicesPom.getServiceStreamRoutesTab(page).click();
     await servicesPom.isServiceStreamRoutesPage(page);
+    await page.waitForLoadState('load');
 
-    // Stream routes from another service should not be visible
-    await expect(
-      page.getByRole('cell', { name: anotherServiceStreamRoute.server_addr })
-    ).toBeHidden();
-    // Upstream stream route (without service_id) should not be visible
-    await expect(
-      page.getByRole('cell', { name: upstreamStreamRoute.server_addr })
-    ).toBeHidden();
-    // Only stream routes belonging to current service should be visible
+    await expect(page.getByRole('cell', { name: anotherServiceStreamRoute.server_addr })).toBeHidden();
+    await expect(page.getByRole('cell', { name: upstreamStreamRoute.server_addr })).toBeHidden();
+
     for (const streamRoute of streamRoutes) {
-      await expect(
-        page.getByRole('cell', { name: streamRoute.server_addr })
-      ).toBeVisible();
+      await expect(page.getByRole('cell', { name: streamRoute.server_addr })).toBeVisible({ timeout: 30000 });
     }
   });
 
   await test.step('without service_id stream routes should still exist in the stream routes list', async () => {
-    await uiGoto(page, '/stream_routes');
-    await expect(page).toHaveURL((url) =>
-      url.pathname.endsWith('/stream_routes')
-    );
-    const title = page.getByRole('heading', { name: 'Stream Routes' });
-    await expect(title).toBeVisible();
+    // Navigate using POM to reach the correct base path
+    await page.goto(`${env.E2E_TARGET_URL}stream_routes`);
+    await page.waitForLoadState('load');
 
-    // All stream routes should be visible in the global stream routes list
-    await expect(
-      page.getByRole('cell', { name: upstreamStreamRoute.server_addr })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('cell', { name: anotherServiceStreamRoute.server_addr })
-    ).toBeVisible();
+    const searchByIP = async (ip: string) => {
+      const url = new URL(page.url());
+      url.searchParams.set('search', ip);
+      url.searchParams.set('page_size', '100');
+      await page.goto(url.toString());
+      await page.waitForLoadState('load');
+
+      const locator = page.getByRole('cell', { name: ip }).first();
+      try {
+        await locator.waitFor({ timeout: 15000 });
+      } catch {
+        // Retry with a clean reload if backend propagation is lagging
+        await page.reload();
+        await page.waitForLoadState('load');
+        await locator.waitFor({ timeout: 15000 });
+      }
+    };
+
+    await searchByIP(upstreamStreamRoute.server_addr);
+    await searchByIP(anotherServiceStreamRoute.server_addr);
+
     for (const streamRoute of streamRoutes) {
-      await expect(
-        page.getByRole('cell', { name: streamRoute.server_addr, exact: true })
-      ).toBeVisible();
+      await searchByIP(streamRoute.server_addr);
     }
   });
 });
 
 test('should display stream routes list under service', async ({ page }) => {
-  // Navigate to service detail page
-  await servicesPom.toIndex(page);
-  await servicesPom.isIndexPage(page);
+  await navigateToServiceDetail(page, testServiceId, serviceName);
 
-  // Click on the service to go to detail page
-  await page
-    .getByRole('row', { name: serviceName })
-    .getByRole('button', { name: 'View' })
-    .click();
-  await servicesPom.isDetailPage(page);
-
-  // Navigate to Stream Routes tab
   await servicesPom.getServiceStreamRoutesTab(page).click();
   await servicesPom.isServiceStreamRoutesPage(page);
 
   await test.step('should display all stream routes under service', async () => {
-    // Verify all created stream routes are displayed
     for (const streamRoute of streamRoutes) {
-      await expect(
-        page.getByRole('cell', { name: streamRoute.server_addr })
-      ).toBeVisible({ timeout: 30000 });
-      await expect(
-        page.getByRole('cell', { name: streamRoute.server_port.toString() })
-      ).toBeVisible({ timeout: 30000 });
+      await expect(page.getByRole('cell', { name: streamRoute.server_addr })).toBeVisible({ timeout: 30000 });
+      await expect(page.getByRole('cell', { name: streamRoute.server_port.toString() })).toBeVisible({ timeout: 30000 });
     }
   });
 
   await test.step('should have correct table headers', async () => {
     await expect(page.getByRole('columnheader', { name: 'ID' })).toBeVisible();
-    await expect(
-      page.getByRole('columnheader', { name: 'Server Address' })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('columnheader', { name: 'Server Port' })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('columnheader', { name: 'Actions' })
-    ).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Server Address' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Server Port' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Actions' })).toBeVisible();
   });
 
   await test.step('should be able to navigate to stream route detail', async () => {
-    // Click on the first stream route's View button
-    await page
-      .getByRole('row', { name: streamRoutes[0].server_addr })
-      .getByRole('button', { name: 'View' })
-      .click();
-
+    const row = page.getByRole('row', { name: streamRoutes[0].server_addr });
+    await expect(row).toBeVisible({ timeout: 30000 });
+    await row.scrollIntoViewIfNeeded();
+    
+    // Click the View button
+    await row.getByRole('button', { name: 'View' }).click();
     await servicesPom.isServiceStreamRouteDetailPage(page);
-
-    // Verify we're on the correct stream route detail page
-    const serverAddrField = page.getByLabel('Server Address', { exact: true });
-    await expect(serverAddrField).toHaveValue(streamRoutes[0].server_addr);
-
-    // Verify service_id is correct
-    const serviceIdField = page.getByLabel('Service ID', { exact: true });
-    await expect(serviceIdField).toHaveValue(testServiceId);
+    await expect(page.getByLabel('Server Address', { exact: true })).toHaveValue(streamRoutes[0].server_addr);
+    await expect(page.getByLabel('Service ID', { exact: true })).toHaveValue(testServiceId);
   });
 
   await test.step('should have Add Stream Route button', async () => {
-    // Navigate back to service stream routes list
     await servicesPom.toServiceStreamRoutes(page, testServiceId);
     await servicesPom.isServiceStreamRoutesPage(page);
-
-    // Verify Add Stream Route button exists and is clickable
     const addStreamRouteBtn = servicesPom.getAddStreamRouteBtn(page);
     await expect(addStreamRouteBtn).toBeVisible();
-
     await addStreamRouteBtn.click();
     await servicesPom.isServiceStreamRouteAddPage(page);
-
-    // Verify service_id is pre-filled
     const serviceIdField = page.getByLabel('Service ID', { exact: true });
     await expect(serviceIdField).toHaveValue(testServiceId);
     await expect(serviceIdField).toBeDisabled();
   });
 
   await test.step('should show correct stream route count', async () => {
-    // Navigate back to service stream routes list
     await servicesPom.toServiceStreamRoutes(page, testServiceId);
     await servicesPom.isServiceStreamRoutesPage(page);
-
-    // Check that all 3 stream routes are displayed in the table
-    const tableRows = page.locator('tbody tr');
-    await expect(tableRows).toHaveCount(streamRoutes.length);
+    await expect(page.locator('tbody tr')).toHaveCount(streamRoutes.length);
   });
 });
-

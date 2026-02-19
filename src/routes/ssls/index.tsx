@@ -15,24 +15,22 @@
  * limitations under the License.
  */
 import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getSSLListQueryOptions, useSSLList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import ResourceListPage from '@/components/page/ResourceListPage';
+import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_SSLS } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
-function RouteComponent() {
+const RouteComponent = () => {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useSSLList();
+  const { data, isLoading, pagination, refetch } = useSSLList();
 
   const columns = useMemo<ProColumns<APISIXType['RespSSLItem']>[]>(() => {
     return [
@@ -89,40 +87,16 @@ function RouteComponent() {
   }, [t, refetch]);
 
   return (
-    <>
-      <PageHeader title={t('sources.ssls')} />
-      <AntdConfigProvider>
-        <ProTable
-          columns={columns}
-          dataSource={data?.list}
-          rowKey="id"
-          loading={isLoading}
-          search={false}
-          options={false}
-          pagination={pagination}
-          cardProps={{ bodyStyle: { padding: 0 } }}
-          toolbar={{
-            menu: {
-              type: 'inline',
-              items: [
-                {
-                  key: 'add',
-                  label: (
-                    <ToAddPageBtn
-                      key="add"
-                      to="/ssls/add"
-                      label={t('info.add.title', { name: t('ssls.singular') })}
-                    />
-                  ),
-                },
-              ],
-            },
-          }}
-        />
-      </AntdConfigProvider>
-    </>
+    <ResourceListPage
+      titleKey="sources.ssls"
+      columns={columns}
+      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      rowKey="id"
+      addPageTo="/ssls/add"
+      resourceNameKey="ssls.singular"
+    />
   );
-}
+};
 
 export const Route = createFileRoute('/ssls/')({
   component: RouteComponent,
