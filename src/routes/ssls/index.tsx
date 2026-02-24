@@ -90,7 +90,7 @@ const RouteComponent = () => {
     <ResourceListPage
       titleKey="sources.ssls"
       columns={columns}
-      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      queryData={{ data, isLoading, pagination, refetch }}
       rowKey="id"
       addPageTo="/ssls/add"
       resourceNameKey="ssls.singular"

@@ -21,14 +21,13 @@ export const pageSearchSchema = z
   .object({
     page: z.preprocess(
       (val) => (val === undefined || val === null ? undefined : Number(val)),
-      z.number().optional()
+      z.number().optional().default(1)
     ),
     page_size: z.preprocess(
       (val) => (val === undefined || val === null ? undefined : Number(val)),
-      z.number().optional()
+      z.number().optional().default(10)
     ),
     name: z.string().optional(),
-    search: z.string().optional(),
     label: z.string().optional(),
   })
   .passthrough();

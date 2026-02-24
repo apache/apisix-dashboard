@@ -23,7 +23,7 @@ import { uiGoto } from '@e2e/utils/ui';
 import { expect, type Page } from '@playwright/test';
 
 import { postServiceReq } from '@/apis/services';
-import { postStreamRouteReq } from '@/apis/stream_routes';
+import { getStreamRouteListReq, postStreamRouteReq } from '@/apis/stream_routes';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -117,9 +117,13 @@ test.beforeAll(async () => {
   }
   anotherServiceStreamRouteId = anotherServiceStreamRouteResponse.data.value.id;
 
-  // Significant delay for backend consistency in intensive parallel CI
-  // Moved to end of setup to ensure all resources have time to propagate
-  await new Promise((resolve) => setTimeout(resolve, 8000));
+  // Wait for data propagation to complete by polling the backend
+  await expect(async () => {
+    const res = await getStreamRouteListReq(e2eReq, { page_size: 100 } as Parameters<typeof getStreamRouteListReq>[1]);
+    const existingIds = res.list.map((r) => r.value.id);
+    const expectedIds = [...createdStreamRoutes, upstreamStreamRouteId, anotherServiceStreamRouteId].filter(Boolean);
+    expect(expectedIds.every((id) => existingIds.includes(id))).toBeTruthy();
+  }).toPass({ timeout: 15000, intervals: [1000] });
 });
 
 test.afterAll(async () => {
@@ -183,7 +187,7 @@ test('should only show stream routes with current service_id', async ({ page }) 
 
     const searchByIP = async (ip: string) => {
       const url = new URL(page.url());
-      url.searchParams.set('search', ip);
+      // Removed search parameter to fix unused param warning. Filtering by locating text on page.
       url.searchParams.set('page_size', '100');
       await page.goto(url.toString());
       await page.waitForLoadState('load');
@@ -232,7 +236,7 @@ test('should display stream routes list under service', async ({ page }) => {
     const row = page.getByRole('row', { name: streamRoutes[0].server_addr });
     await expect(row).toBeVisible({ timeout: 30000 });
     await row.scrollIntoViewIfNeeded();
-    
+
     // Click the View button
     await row.getByRole('button', { name: 'View' }).click();
     await servicesPom.isServiceStreamRouteDetailPage(page);

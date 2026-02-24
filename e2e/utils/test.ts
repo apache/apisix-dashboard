@@ -61,7 +61,7 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
         const adminKeyInput = page.getByLabel('Admin Key');
         await adminKeyInput.clear();
         await adminKeyInput.fill(adminKey);
-        
+
         const closeButton = page
           .getByRole('dialog', { name: 'Settings' })
           .getByRole('button');
@@ -86,7 +86,7 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
     { scope: 'worker' },
   ],
   page: async ({ baseURL, page }, use) => {
-    await page.goto(baseURL ?? '');
+    await page.goto(baseURL && baseURL.length > 0 ? baseURL : env.E2E_TARGET_URL);
     await use(page);
   },
 });

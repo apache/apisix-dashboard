@@ -20,16 +20,15 @@ import type { TablePaginationConfig } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { APISIXListResponse } from '@/types/schema/apisix/type';
-
 import PageHeader from './PageHeader';
 import { ToAddPageBtn } from './ToAddPageBtn';
 
 interface ResourceListPageProps<T> {
     titleKey?: string;
     columns: ProColumns<T>[];
-    queryHook: () => {
-        data?: APISIXListResponse<T> | undefined;
+    queryData: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data?: any;
         isLoading: boolean;
         pagination: TablePaginationConfig | false;
         refetch?: () => void;
@@ -38,6 +37,8 @@ interface ResourceListPageProps<T> {
     addPageTo?: string;
     resourceNameKey?: string;
     emptyKey?: string;
+    pageSizeOptions?: number[] | string[];
+    showTotal?: (total: number, range: [number, number]) => React.ReactNode;
 }
 
 const ResourceListPage = <T extends Record<string, unknown>>(
@@ -46,17 +47,19 @@ const ResourceListPage = <T extends Record<string, unknown>>(
     const {
         titleKey,
         columns,
-        queryHook,
+        queryData,
         rowKey,
         addPageTo,
         resourceNameKey,
         emptyKey,
+        pageSizeOptions,
+        showTotal: customShowTotal,
     } = props;
     const { t } = useTranslation();
-    const { data, isLoading, pagination } = queryHook();
+    const { data, isLoading, pagination } = queryData;
 
-    const dataSource = useMemo(() => (data?.list as T[]) ?? [], [data]);
-    const total = pagination?.total ?? data?.total ?? 0;
+    const dataSource = useMemo(() => (data?.list as unknown as T[]) ?? [], [data]);
+    const total = (pagination !== false ? pagination?.total : undefined) ?? data?.total ?? 0;
 
     const paginationConfig = useMemo(() => {
         if (pagination === false) return false;
@@ -66,13 +69,13 @@ const ResourceListPage = <T extends Record<string, unknown>>(
             pageSize: pagination?.pageSize ?? 10,
             total,
             showSizeChanger: true,
-            pageSizeOptions: [10, 20, 50, 100],
+            pageSizeOptions: pageSizeOptions ?? [10, 20, 50, 100],
             hideOnSinglePage: false,
             onChange: pagination?.onChange,
-            showTotal: (total: number, range: [number, number]) =>
-                `${range[0]}-${range[1]} of ${total} items`,
+            showTotal: customShowTotal ?? ((total: number, range: [number, number]) =>
+                `${range[0]}-${range[1]} of ${total} items`),
         };
-    }, [pagination, total]);
+    }, [pagination, total, pageSizeOptions, customShowTotal]);
 
     return (
         <>
@@ -83,7 +86,7 @@ const ResourceListPage = <T extends Record<string, unknown>>(
                 rowKey={rowKey}
                 loading={isLoading}
                 search={false}
-                options={{ reload: true, density: true, setting: true }}
+                options={false}
                 pagination={paginationConfig}
                 cardProps={{ bodyStyle: { padding: 0 } }}
                 locale={

@@ -23,7 +23,7 @@ import { test } from '@e2e/utils/test';
 import { uiGoto } from '@e2e/utils/ui';
 import { expect, type Page } from '@playwright/test';
 
-import { postRouteReq } from '@/apis/routes';
+import { getRouteListReq, postRouteReq } from '@/apis/routes';
 import { postServiceReq } from '@/apis/services';
 import type { APISIXType } from '@/types/schema/apisix';
 
@@ -97,7 +97,7 @@ test.beforeAll(async () => {
 
   for (const route of routes) {
     const routeResponse = await postRouteReq(e2eReq, {
-      ...(route as unknown),
+      ...(route as Record<string, unknown>),
       service_id: testServiceId,
     });
     if (!routeResponse.data?.value) {
@@ -107,14 +107,14 @@ test.beforeAll(async () => {
   }
 
 
-  const upstreamRouteResponse = await postRouteReq(e2eReq, upstreamRoute as unknown);
+  const upstreamRouteResponse = await postRouteReq(e2eReq, upstreamRoute as unknown as Parameters<typeof postRouteReq>[1]);
   if (!upstreamRouteResponse.data?.value) {
     throw new Error(`Failed to create upstream route: ${JSON.stringify(upstreamRouteResponse.data)}`);
   }
   upstreamRouteId = upstreamRouteResponse.data.value.id;
 
   const anotherServiceRouteResponse = await postRouteReq(e2eReq, {
-    ...(anotherServiceRoute as unknown),
+    ...(anotherServiceRoute as Record<string, unknown>),
     service_id: anotherServiceId,
   });
   if (!anotherServiceRouteResponse.data?.value) {
@@ -122,9 +122,13 @@ test.beforeAll(async () => {
   }
   anotherServiceRouteId = anotherServiceRouteResponse.data.value.id;
 
-  // Significant delay for backend consistency in intensive parallel CI
-  // Moved to end of setup to ensure all resources have time to propagate
-  await new Promise((resolve) => setTimeout(resolve, 8000));
+  // Wait for data propagation to complete by polling the backend
+  await expect(async () => {
+    const res = await getRouteListReq(e2eReq, { page_size: 100 } as Parameters<typeof getRouteListReq>[1]);
+    const existingIds = res.list.map((r) => r.value.id);
+    const expectedIds = [...createdRoutes, upstreamRouteId, anotherServiceRouteId];
+    expect(expectedIds.every((id) => existingIds.includes(id))).toBeTruthy();
+  }).toPass({ timeout: 15000, intervals: [1000] });
 });
 
 test.afterAll(async () => {
@@ -146,11 +150,11 @@ async function navigateToServiceDetail(page: Page, id: string, name: string) {
   await page.goto(`${env.E2E_TARGET_URL}services?name=${name}&page_size=100`);
   const row = page.locator('tr').filter({ hasText: name });
 
-    try {
-      await expect(row.first()).toBeVisible({ timeout: 15000 });
-      await row.getByText('View').click();
-      await expect(page).toHaveURL(new RegExp(`/services/detail/${id}`));
-    } catch {
+  try {
+    await expect(row.first()).toBeVisible({ timeout: 15000 });
+    await row.getByText('View').click();
+    await expect(page).toHaveURL(new RegExp(`/services/detail/${id}`));
+  } catch {
     // Stage 2: Reload search
     await page.reload();
     try {
@@ -238,7 +242,7 @@ test('should display routes list under service', async ({ page }) => {
     const row = page.getByRole('row', { name: routes[0].name });
     await expect(row).toBeVisible({ timeout: 30000 });
     await row.scrollIntoViewIfNeeded();
-    
+
     // Click the View button
     await row.getByRole('button', { name: 'View' }).click();
     await servicesPom.isServiceRouteDetailPage(page);

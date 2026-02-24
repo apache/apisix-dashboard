@@ -70,7 +70,7 @@ const RouteComponent = () => {
     <ResourceListPage
       titleKey="sources.protos"
       columns={columns}
-      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      queryData={{ data, isLoading, pagination, refetch }}
       rowKey="id"
       addPageTo="/protos/add"
       resourceNameKey="protos.singular"

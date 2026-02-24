@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 import {
-  keepPreviousData,
   queryOptions,
-  useQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query';
 import type { AxiosInstance } from 'axios';
@@ -90,9 +88,8 @@ export const genUseList = <
   return (replaceKey?: U, defaultParams?: Partial<P>) => {
     const key = replaceKey || routeKey;
     const { params, setParams } = useSearchParams<T | U, P>(key);
-    const listQuery = useQuery({
+    const listQuery = useSuspenseQuery({
       ...listQueryOptions({ ...defaultParams, ...params }),
-      placeholderData: keepPreviousData,
     });
     const { data, isLoading, refetch } = listQuery;
     const opts = { data, setParams, params };

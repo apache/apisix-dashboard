@@ -19,11 +19,12 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useServiceList } from '@/apis/hooks';
+import { getServiceListQueryOptions, useServiceList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import ResourceListPage from '@/components/page/ResourceListPage';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_SERVICES } from '@/config/constant';
+import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
@@ -89,7 +90,7 @@ const RouteComponent = () => {
     <ResourceListPage
       titleKey="sources.services"
       columns={columns}
-      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      queryData={{ data, isLoading, pagination, refetch }}
       rowKey="id"
       addPageTo="/services/add"
       resourceNameKey="services.singular"
@@ -100,4 +101,7 @@ const RouteComponent = () => {
 export const Route = createFileRoute('/services/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps }) =>
+    queryClient.ensureQueryData(getServiceListQueryOptions(deps)),
 });

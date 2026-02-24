@@ -84,7 +84,7 @@ const RouteComponent = () => {
     <ResourceListPage
       titleKey="sources.consumers"
       columns={columns}
-      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      queryData={{ data, isLoading, pagination, refetch }}
       rowKey="username"
       addPageTo="/consumers/add"
       resourceNameKey="consumers.singular"

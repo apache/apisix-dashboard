@@ -90,7 +90,7 @@ const RouteComponent = () => {
     <ResourceListPage
       titleKey="sources.pluginConfigs"
       columns={columns}
-      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      queryData={{ data, isLoading, pagination, refetch }}
       rowKey="id"
       addPageTo="/plugin_configs/add"
       resourceNameKey="pluginConfigs.singular"

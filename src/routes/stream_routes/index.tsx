@@ -19,14 +19,17 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useStreamRouteList } from '@/apis/hooks';
+import {
+  getStreamRouteListQueryOptions,
+  useStreamRouteList,
+} from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
 import ResourceListPage from '@/components/page/ResourceListPage';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { API_STREAM_ROUTES } from '@/config/constant';
+import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
@@ -40,10 +43,11 @@ export type StreamRouteListProps = {
     record: APISIXType['RespStreamRouteItem'];
   }) => React.ReactNode;
   defaultParams?: Partial<WithServiceIdFilter>;
+  titleKey?: string;
 };
 
 export const StreamRouteList = (props: StreamRouteListProps) => {
-  const { routeKey, ToDetailBtn, defaultParams } = props;
+  const { routeKey, ToDetailBtn, defaultParams, titleKey } = props;
   const { t } = useTranslation();
   const useCurrentStreamRouteList = () => useStreamRouteList(routeKey, defaultParams);
   const { refetch, data, isLoading, pagination } = useCurrentStreamRouteList();
@@ -95,8 +99,9 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
 
   return (
     <ResourceListPage
+      titleKey={titleKey}
       columns={columns}
-      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      queryData={{ data, isLoading, pagination, refetch }}
       rowKey="id"
       addPageTo={`${routeKey}add`}
       resourceNameKey="streamRoutes.singular"
@@ -105,12 +110,10 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
 };
 
 function StreamRouteComponent() {
-  const { t } = useTranslation();
-
   return (
     <>
-      <PageHeader title={t('sources.streamRoutes')} />
       <StreamRouteList
+        titleKey="sources.streamRoutes"
         routeKey="/stream_routes/"
         ToDetailBtn={({ record }) => (
           <ToDetailPageBtn
@@ -128,4 +131,7 @@ export const Route = createFileRoute('/stream_routes/')({
   component: StreamRouteComponent,
   errorComponent: StreamRoutesErrorComponent,
   validateSearch: pageSearchSchema,
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps }) =>
+    queryClient.ensureQueryData(getStreamRouteListQueryOptions(deps)),
 });

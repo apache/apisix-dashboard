@@ -45,6 +45,7 @@ export const getPlaywrightRequestAdapter = (
 
     // Idempotent DELETE: Treat 404 as 200 OK
     if (method?.toLowerCase() === 'delete' && status === 404) {
+      console.warn(`[e2eReq] Ignored 404 on DELETE for ${urlWithBase}, treating as 200 OK.`);
       return {
         data: {},
         status: 200,

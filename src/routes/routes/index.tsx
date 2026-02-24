@@ -19,13 +19,14 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useRouteList } from '@/apis/hooks';
+import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import ResourceListPage from '@/components/page/ResourceListPage';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_ROUTES } from '@/config/constant';
+import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
@@ -95,7 +96,7 @@ export const RouteList = (props: RouteListProps) => {
   return (
     <ResourceListPage
       columns={columns}
-      queryHook={() => ({ data, isLoading, pagination, refetch })}
+      queryData={{ data, isLoading, pagination, refetch }}
       rowKey="id"
       addPageTo={`${routeKey}add`}
       resourceNameKey="routes.singular"
@@ -125,4 +126,7 @@ function RouteComponent() {
 export const Route = createFileRoute('/routes/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps }) =>
+    queryClient.ensureQueryData(getRouteListQueryOptions(deps)),
 });
