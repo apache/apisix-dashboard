@@ -22,7 +22,6 @@ import { useTranslation } from 'react-i18next';
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
 import ResourceListPage from '@/components/page/ResourceListPage';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_ROUTES } from '@/config/constant';
@@ -38,10 +37,11 @@ export type RouteListProps = {
   ToDetailBtn: (props: {
     record: APISIXType['RespRouteItem'];
   }) => React.ReactNode;
+  titleKey?: string;
 };
 
 export const RouteList = (props: RouteListProps) => {
-  const { routeKey, ToDetailBtn, defaultParams } = props;
+  const { routeKey, ToDetailBtn, defaultParams, titleKey } = props;
   const { t } = useTranslation();
   const { data, isLoading, pagination, refetch } = useRouteList(
     routeKey,
@@ -95,6 +95,7 @@ export const RouteList = (props: RouteListProps) => {
 
   return (
     <ResourceListPage
+      titleKey={titleKey}
       columns={columns}
       queryData={{ data, isLoading, pagination, refetch }}
       rowKey="id"
@@ -105,11 +106,10 @@ export const RouteList = (props: RouteListProps) => {
 };
 
 function RouteComponent() {
-  const { t } = useTranslation();
   return (
     <>
-      <PageHeader title={t('sources.routes')} />
       <RouteList
+        titleKey="sources.routes"
         routeKey="/routes/"
         ToDetailBtn={({ record }) => (
           <ToDetailPageBtn

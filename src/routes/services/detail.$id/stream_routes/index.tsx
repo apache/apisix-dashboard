@@ -15,21 +15,20 @@
  * limitations under the License.
  */
 import { createFileRoute, useParams } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
 
-import PageHeader from '@/components/page/PageHeader';
+import { getStreamRouteListQueryOptions } from '@/apis/hooks';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
+import { queryClient } from '@/config/global';
 import { StreamRouteList } from '@/routes/stream_routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function StreamRouteComponent() {
-  const { t } = useTranslation();
   const { id } = useParams({ from: '/services/detail/$id/stream_routes/' });
   return (
     <>
-      <PageHeader title={t('sources.streamRoutes')} />
       <StreamRouteList
+        titleKey="sources.streamRoutes"
         routeKey="/services/detail/$id/stream_routes/"
         ToDetailBtn={({ record }) => (
           <ToDetailPageBtn
@@ -52,4 +51,7 @@ export const Route = createFileRoute('/services/detail/$id/stream_routes/')({
   component: StreamRouteComponent,
   errorComponent: StreamRoutesErrorComponent,
   validateSearch: pageSearchSchema,
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps, params: { id } }) =>
+    queryClient.ensureQueryData(getStreamRouteListQueryOptions({ ...deps, filter: { service_id: id } })),
 });

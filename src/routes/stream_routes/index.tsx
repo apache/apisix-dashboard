@@ -49,8 +49,7 @@ export type StreamRouteListProps = {
 export const StreamRouteList = (props: StreamRouteListProps) => {
   const { routeKey, ToDetailBtn, defaultParams, titleKey } = props;
   const { t } = useTranslation();
-  const useCurrentStreamRouteList = () => useStreamRouteList(routeKey, defaultParams);
-  const { refetch, data, isLoading, pagination } = useCurrentStreamRouteList();
+  const { refetch, data, isLoading, pagination } = useStreamRouteList(routeKey, defaultParams);
 
   const columns = useMemo<ProColumns<APISIXType['RespStreamRouteItem']>[]>(() => {
     return [

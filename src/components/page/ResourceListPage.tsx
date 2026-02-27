@@ -20,6 +20,8 @@ import type { TablePaginationConfig } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { AntdConfigProvider } from '@/config/antdConfigProvider';
+
 import PageHeader from './PageHeader';
 import { ToAddPageBtn } from './ToAddPageBtn';
 
@@ -27,8 +29,7 @@ interface ResourceListPageProps<T> {
     titleKey?: string;
     columns: ProColumns<T>[];
     queryData: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        data?: any;
+        data?: { list: T[]; total: number;[key: string]: unknown } | undefined;
         isLoading: boolean;
         pagination: TablePaginationConfig | false;
         refetch?: () => void;
@@ -78,7 +79,7 @@ const ResourceListPage = <T extends Record<string, unknown>>(
     }, [pagination, total, pageSizeOptions, customShowTotal]);
 
     return (
-        <>
+        <AntdConfigProvider>
             {titleKey && <PageHeader title={t(titleKey as never)} />}
             <ProTable<T>
                 columns={columns}
@@ -108,7 +109,7 @@ const ResourceListPage = <T extends Record<string, unknown>>(
                     ),
                 ]}
             />
-        </>
+        </AntdConfigProvider>
     );
 };
 

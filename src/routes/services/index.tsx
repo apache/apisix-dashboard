@@ -94,6 +94,7 @@ const RouteComponent = () => {
       rowKey="id"
       addPageTo="/services/add"
       resourceNameKey="services.singular"
+      emptyKey="services.empty"
     />
   );
 };

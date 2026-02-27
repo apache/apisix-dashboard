@@ -15,22 +15,19 @@
  * limitations under the License.
  */
 import { createFileRoute, useParams } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions } from '@/apis/hooks';
-import PageHeader from '@/components/page/PageHeader';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { queryClient } from '@/config/global';
 import { RouteList } from '@/routes/routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function RouteComponent() {
-  const { t } = useTranslation();
   const { id } = useParams({ from: '/services/detail/$id/routes/' });
   return (
     <>
-      <PageHeader title={t('sources.routes')} />
       <RouteList
+        titleKey="sources.routes"
         routeKey="/services/detail/$id/routes/"
         defaultParams={{
           filter: {
