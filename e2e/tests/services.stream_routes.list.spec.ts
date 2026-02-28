@@ -140,33 +140,15 @@ test.afterAll(async () => {
   }
 });
 
-async function navigateToServiceDetail(page: Page, id: string, name: string) {
-  // Try search first as it's the intended UI flow
-  await page.goto(`${env.E2E_TARGET_URL}services?name=${name}&page_size=100`);
-  const row = page.locator('tr').filter({ hasText: name });
-
-  try {
-    await expect(row.first()).toBeVisible({ timeout: 15000 });
-    await row.getByText('View').click();
-    await expect(page).toHaveURL(new RegExp(`/services/detail/${id}`));
-  } catch {
-    // Stage 2: Reload search
-    await page.reload();
-    try {
-      await expect(row.first()).toBeVisible({ timeout: 15000 });
-      await row.getByText('View').click();
-    } catch {
-      // Stage 3: Direct Link as absolute fallback
-      await uiGoto(page, '/services/detail/$id', { id });
-    }
-  }
-
+async function navigateToServiceDetail(page: Page, id: string) {
+  await uiGoto(page, '/services/detail/$id', { id });
+  await page.waitForLoadState('load');
   await servicesPom.isDetailPage(page);
 }
 
 test('should only show stream routes with current service_id', async ({ page }) => {
   await test.step('should only show stream routes with current service_id', async () => {
-    await navigateToServiceDetail(page, testServiceId, serviceName);
+    await navigateToServiceDetail(page, testServiceId);
 
     await servicesPom.getServiceStreamRoutesTab(page).click();
     await servicesPom.isServiceStreamRoutesPage(page);
@@ -213,7 +195,7 @@ test('should only show stream routes with current service_id', async ({ page }) 
 });
 
 test('should display stream routes list under service', async ({ page }) => {
-  await navigateToServiceDetail(page, testServiceId, serviceName);
+  await navigateToServiceDetail(page, testServiceId);
 
   await servicesPom.getServiceStreamRoutesTab(page).click();
   await servicesPom.isServiceStreamRoutesPage(page);

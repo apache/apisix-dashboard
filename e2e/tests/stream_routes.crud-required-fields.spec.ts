@@ -1,4 +1,4 @@
-/**
+  /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -67,6 +67,10 @@ test('CRUD stream route with required fields', async ({ page }) => {
   const weightInput = firstRow.locator('input').nth(2);
   await weightInput.click();
   await weightInput.fill('1');
+
+  // Click outside to trigger row validation/blur so it is actually added
+  const titleHeader = page.getByRole('heading', { name: 'Add Stream Route' });
+  await titleHeader.click();
 
   // Submit and land on detail page
   await page.getByRole('button', { name: 'Add', exact: true }).click();

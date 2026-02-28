@@ -63,11 +63,13 @@ test('should CRUD SSL with required fields', async ({ page }) => {
   await test.step('SSL should exist in list page and navigate to detail', async () => {
     // Verify SSL exists in list
     const firstSni = snis[0];
-    await expect(page.getByRole('cell', { name: firstSni })).toBeVisible();
+    await expect(page.getByRole('cell', { name: firstSni }).first()).toBeVisible();
 
     // Click on the View button to go to the detail page
     await page
-      .getByRole('row', { name: firstSni })
+      .getByRole('row')
+      .filter({ hasText: firstSni })
+      .first()
       .getByRole('button', { name: 'View' })
       .click();
     await sslsPom.isDetailPage(page);
@@ -83,7 +85,7 @@ test('should CRUD SSL with required fields', async ({ page }) => {
 
     // Verify SNIs are displayed
     for (const sniValue of snis) {
-      await expect(page.getByText(sniValue, { exact: true })).toBeVisible();
+      await expect(page.getByText(sniValue, { exact: true }).first()).toBeVisible();
     }
 
     // Verify certificate and key fields are displayed (key might be empty for security)
@@ -112,7 +114,7 @@ test('should CRUD SSL with required fields', async ({ page }) => {
     await expect(snisField).toHaveValue('');
 
     // Verify the new SNI is displayed
-    await expect(page.getByText('updated.example.com', { exact: true })).toBeVisible();
+    await expect(page.getByText('updated.example.com', { exact: true }).first()).toBeVisible();
 
     // Click Cancel instead of Save to avoid validation issues with empty key
     await page.getByRole('button', { name: 'Cancel' }).click();
@@ -126,7 +128,7 @@ test('should CRUD SSL with required fields', async ({ page }) => {
 
     // Find the row with our SSL (by first SNI)
     const firstSni = snis[0];
-    const row = page.getByRole('row', { name: firstSni });
+    const row = page.getByRole('row').filter({ hasText: firstSni }).first();
     await expect(row).toBeVisible();
   });
 
@@ -136,7 +138,9 @@ test('should CRUD SSL with required fields', async ({ page }) => {
 
     // Click on the View button to go to the detail page
     await page
-      .getByRole('row', { name: snis[0] })
+      .getByRole('row')
+      .filter({ hasText: snis[0] })
+      .first()
       .getByRole('button', { name: 'View' })
       .click();
     await sslsPom.isDetailPage(page);

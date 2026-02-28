@@ -34,10 +34,10 @@ interface ResourceListPageProps<T> {
         pagination: TablePaginationConfig | false;
         refetch?: () => void;
     };
-    rowKey: string;
+    rowKey: string | ((record: T) => string);
     addPageTo?: string;
     resourceNameKey?: string;
-    emptyKey?: string;
+    emptyText?: React.ReactNode;
     pageSizeOptions?: number[] | string[];
     showTotal?: (total: number, range: [number, number]) => React.ReactNode;
 }
@@ -52,7 +52,7 @@ const ResourceListPage = <T extends Record<string, unknown>>(
         rowKey,
         addPageTo,
         resourceNameKey,
-        emptyKey,
+        emptyText,
         pageSizeOptions,
         showTotal: customShowTotal,
     } = props;
@@ -73,8 +73,7 @@ const ResourceListPage = <T extends Record<string, unknown>>(
             pageSizeOptions: pageSizeOptions ?? [10, 20, 50, 100],
             hideOnSinglePage: false,
             onChange: pagination?.onChange,
-            showTotal: customShowTotal ?? ((total: number, range: [number, number]) =>
-                `${range[0]}-${range[1]} of ${total} items`),
+            ...(customShowTotal ? { showTotal: customShowTotal } : {}),
         };
     }, [pagination, total, pageSizeOptions, customShowTotal]);
 
@@ -84,17 +83,16 @@ const ResourceListPage = <T extends Record<string, unknown>>(
             <ProTable<T>
                 columns={columns}
                 dataSource={dataSource}
-                rowKey={rowKey}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                rowKey={typeof rowKey === 'string' ? (record: any) => record.value?.[rowKey] ?? record[rowKey] : rowKey}
                 loading={isLoading}
                 search={false}
                 options={false}
                 pagination={paginationConfig}
                 cardProps={{ bodyStyle: { padding: 0 } }}
                 locale={
-                    emptyKey
-                        ? {
-                            emptyText: t(emptyKey as never),
-                        }
+                    emptyText
+                        ? { emptyText }
                         : undefined
                 }
                 toolBarRender={() => [

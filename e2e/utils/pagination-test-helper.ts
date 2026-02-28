@@ -41,12 +41,12 @@ export function setupPaginationTests<T>(
   const getPageSizeSelection = (page: Page, size: number) => {
     return page
       .locator('.ant-select-selection-item')
-      .filter({ hasText: new RegExp(`${size} / page`) })
+      .filter({ hasText: new RegExp(`${size}\\s*/\\s*page`) })
       .first();
   };
 
   const getPageSizeOption = (page: Page, size: number) => {
-    return page.getByRole('option', { name: `${size} / page` });
+    return page.getByRole('option', { name: new RegExp(`${size}\\s*/\\s*page`) });
   };
 
   const getPageNum = (page: Page, num: number) => {

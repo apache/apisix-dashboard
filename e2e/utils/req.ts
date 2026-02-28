@@ -56,9 +56,18 @@ export const getPlaywrightRequestAdapter = (
     }
 
     try {
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        // ignore JSON parse errors on empty or text responses
+      }
+      if (config.validateStatus && !config.validateStatus(status)) {
+        throw new Error(`Request failed with status code ${status}`);
+      }
       return {
         ...res,
-        data: await res.json(),
+        data,
         config,
         status,
         statusText: res.statusText(),

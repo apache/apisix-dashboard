@@ -16,6 +16,7 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
+import { Empty } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -94,7 +95,12 @@ const RouteComponent = () => {
       rowKey="id"
       addPageTo="/services/add"
       resourceNameKey="services.singular"
-      emptyKey="services.empty"
+      emptyText={
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={t('services.empty')}
+        />
+      }
     />
   );
 };

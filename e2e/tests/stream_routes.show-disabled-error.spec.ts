@@ -51,8 +51,7 @@ type APISIXConf = {
 };
 
 const getE2EServerDir = () => {
-  const currentDir = new URL('.', import.meta.url).pathname;
-  return path.join(currentDir, '../server');
+  return path.join(process.cwd(), 'e2e/server');
 };
 
 const updateAPISIXConf = async (
