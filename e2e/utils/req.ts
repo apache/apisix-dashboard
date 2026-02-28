@@ -56,9 +56,9 @@ export const getPlaywrightRequestAdapter = (
     }
 
     try {
-      let data = {};
+      let responseData = {};
       try {
-        data = await res.json();
+        responseData = await res.json();
       } catch {
         // ignore JSON parse errors on empty or text responses
       }
@@ -67,7 +67,7 @@ export const getPlaywrightRequestAdapter = (
       }
       return {
         ...res,
-        data,
+        data: responseData,
         config,
         status,
         statusText: res.statusText(),

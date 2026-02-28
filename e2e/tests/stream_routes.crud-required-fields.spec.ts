@@ -1,4 +1,4 @@
-  /**
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -68,9 +68,9 @@ test('CRUD stream route with required fields', async ({ page }) => {
   await weightInput.click();
   await weightInput.fill('1');
 
-  // Click outside to trigger row validation/blur so it is actually added
-  const titleHeader = page.getByRole('heading', { name: 'Add Stream Route' });
-  await titleHeader.click();
+  // Press Enter and click a form input to guarantee onBlur fires for the Upstream Node editor cell
+  await weightInput.press('Enter');
+  await page.getByLabel('Server Port', { exact: true }).click();
 
   // Submit and land on detail page
   await page.getByRole('button', { name: 'Add', exact: true }).click();

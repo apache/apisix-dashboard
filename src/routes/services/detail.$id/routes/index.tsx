@@ -25,24 +25,22 @@ import { pageSearchSchema } from '@/types/schema/pageSearch';
 function RouteComponent() {
   const { id } = useParams({ from: '/services/detail/$id/routes/' });
   return (
-    <>
-      <RouteList
-        titleKey="sources.routes"
-        routeKey="/services/detail/$id/routes/"
-        defaultParams={{
-          filter: {
-            service_id: id,
-          },
-        }}
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/services/detail/$id/routes/detail/$routeId"
-            params={{ id, routeId: record.value.id }}
-          />
-        )}
-      />
-    </>
+    <RouteList
+      titleKey="sources.routes"
+      routeKey="/services/detail/$id/routes/"
+      defaultParams={{
+        filter: {
+          service_id: id,
+        },
+      }}
+      ToDetailBtn={({ record }) => (
+        <ToDetailPageBtn
+          key="detail"
+          to="/services/detail/$id/routes/detail/$routeId"
+          params={{ id, routeId: record.value.id }}
+        />
+      )}
+    />
   );
 }
 

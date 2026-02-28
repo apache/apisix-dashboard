@@ -26,24 +26,22 @@ import { pageSearchSchema } from '@/types/schema/pageSearch';
 function StreamRouteComponent() {
   const { id } = useParams({ from: '/services/detail/$id/stream_routes/' });
   return (
-    <>
-      <StreamRouteList
-        titleKey="sources.streamRoutes"
-        routeKey="/services/detail/$id/stream_routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/services/detail/$id/stream_routes/detail/$routeId"
-            params={{ id, routeId: record.value.id }}
-          />
-        )}
-        defaultParams={{
-          filter: {
-            service_id: id,
-          },
-        }}
-      />
-    </>
+    <StreamRouteList
+      titleKey="sources.streamRoutes"
+      routeKey="/services/detail/$id/stream_routes/"
+      ToDetailBtn={({ record }) => (
+        <ToDetailPageBtn
+          key="detail"
+          to="/services/detail/$id/stream_routes/detail/$routeId"
+          params={{ id, routeId: record.value.id }}
+        />
+      )}
+      defaultParams={{
+        filter: {
+          service_id: id,
+        },
+      }}
+    />
   );
 }
 
@@ -53,5 +51,7 @@ export const Route = createFileRoute('/services/detail/$id/stream_routes/')({
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
   loader: ({ deps, params: { id } }) =>
-    queryClient.ensureQueryData(getStreamRouteListQueryOptions({ ...deps, filter: { service_id: id } })),
+    queryClient.ensureQueryData(
+      getStreamRouteListQueryOptions({ ...deps, filter: { service_id: id } }),
+    ),
 });

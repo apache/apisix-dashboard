@@ -30,7 +30,6 @@ import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
 
-
 export type RouteListProps = {
   routeKey: Extract<ListPageKeys, '/routes/' | '/services/detail/$id/routes/'>;
   defaultParams?: Partial<WithServiceIdFilter>;
@@ -45,7 +44,7 @@ export const RouteList = (props: RouteListProps) => {
   const { t } = useTranslation();
   const { data, isLoading, pagination, refetch } = useRouteList(
     routeKey,
-    defaultParams
+    defaultParams,
   );
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
@@ -107,19 +106,17 @@ export const RouteList = (props: RouteListProps) => {
 
 function RouteComponent() {
   return (
-    <>
-      <RouteList
-        titleKey="sources.routes"
-        routeKey="/routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/routes/detail/$id"
-            params={{ id: record.value.id }}
-          />
-        )}
-      />
-    </>
+    <RouteList
+      titleKey="sources.routes"
+      routeKey="/routes/"
+      ToDetailBtn={({ record }) => (
+        <ToDetailPageBtn
+          key="detail"
+          to="/routes/detail/$id"
+          params={{ id: record.value.id }}
+        />
+      )}
+    />
   );
 }
 

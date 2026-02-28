@@ -34,11 +34,7 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
       const { adminKey } = await getAPISIXConf();
 
       // Ensure .auth directory exists
-      try {
-        await mkdir(authDir, { recursive: true });
-      } catch {
-        // Directory might already exist, ignore error
-      }
+      await mkdir(authDir, { recursive: true });
 
       // file exists and contains admin key, use it
       if (
@@ -86,8 +82,7 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
     { scope: 'worker' },
   ],
   page: async ({ baseURL, page }, use) => {
-    await page.goto(baseURL && baseURL.length > 0 ? baseURL : env.E2E_TARGET_URL);
+    await page.goto(baseURL || env.E2E_TARGET_URL);
     await use(page);
   },
 });
-
