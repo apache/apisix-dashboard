@@ -33,6 +33,7 @@
 import { exec } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
 import { streamRoutesPom } from '@e2e/pom/stream_routes';
@@ -51,7 +52,7 @@ type APISIXConf = {
 };
 
 const getE2EServerDir = () => {
-  const currentDir = new URL('.', import.meta.url).pathname;
+  const currentDir = fileURLToPath(new URL('.', import.meta.url));
   return path.join(currentDir, '../server');
 };
 

@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button, Card,Group, Text } from '@mantine/core';
+import { Button, Card, Group, Text } from '@mantine/core';
+import { Typography as AntTypography } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 export type PluginCardProps = {
@@ -35,7 +36,15 @@ export const PluginCard = (props: PluginCardProps) => {
       <Card.Section withBorder inheritPadding py="xs">
         <Group justify="space-between">
           <Group>
-            <Text fw={500}>{name}</Text>
+            <AntTypography.Text
+              style={{ fontWeight: 500, margin: 0 }}
+              copyable={{
+                text: String(name),
+                tooltips: [t('copy'), t('copy_success')],
+              }}
+            >
+              {name}
+            </AntTypography.Text>
           </Group>
         </Group>
       </Card.Section>

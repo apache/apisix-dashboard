@@ -57,7 +57,7 @@ const putSecretReq = (req: typeof e2eReq, data: APISIXType['Secret']) => {
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
-  
+
   test.beforeAll(async () => {
     // Clean up existing secrets
     const existingSecrets = await e2eReq
@@ -88,7 +88,7 @@ test.describe('page and page_size should work correctly', () => {
       .getByRole('cell', { name: /secret_id_/ })
       .all();
     const ids = await Promise.all(itemsInPage.map((v) => v.textContent()));
-    return secrets.filter((d) => !ids.includes(d.id));
+    return secrets.filter((d) => !ids.some(idText => idText?.includes(d.id)));
   };
 
   setupPaginationTests(test, {

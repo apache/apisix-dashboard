@@ -84,7 +84,7 @@ test.describe('page and page_size should work correctly', () => {
       .getByRole('cell', { name: /proto_id_/ })
       .all();
     const ids = await Promise.all(itemsInPage.map((v) => v.textContent()));
-    return protos.filter((d) => !ids.includes(d.id));
+    return protos.filter((d) => !ids.some(idText => idText?.includes(d.id)));
   };
 
   setupPaginationTests(test, {

@@ -364,5 +364,7 @@
   },
   "upstreams": {
     "singular": "上游"
-  }
+  },
+  "copy": "复制",
+  "copy_success": "复制成功"
 }

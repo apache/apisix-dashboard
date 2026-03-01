@@ -64,11 +64,24 @@ export async function uiFillHTTPStatuses(
   }
 }
 
-export const uiClearMonacoEditor = async (page: Page) => {
-  await page.evaluate(() => {
-    const editor = window.__monacoEditor__;
-    editor.getModel()?.setValue('');
-  });
+export const uiClearMonacoEditor = async (page: Page, editorLoc?: Locator) => {
+  const isSet = await page.evaluate(() => window.__monacoEditor__ !== undefined).catch(() => false);
+  if (isSet) {
+    await page.evaluate(() => {
+      const editor = window.__monacoEditor__;
+      editor?.getModel()?.setValue('');
+    });
+    return;
+  }
+
+  // Fallback if frontend is out of date (i.e. window.__monacoEditor__ is undefined)
+  const el = editorLoc || page.locator('.monaco-editor').last();
+  await el.click();
+  const isMac = process.platform === 'darwin';
+  const modifier = isMac ? 'Meta' : 'Control';
+  await page.keyboard.press(`${modifier}+a`);
+  await page.keyboard.press('Backspace');
+  await page.waitForTimeout(100);
 };
 
 export const uiGetMonacoEditor = async (
@@ -83,7 +96,7 @@ export const uiGetMonacoEditor = async (
   await expect(editor).toBeVisible({ timeout: 10000 });
 
   if (clear) {
-    await uiClearMonacoEditor(page);
+    await uiClearMonacoEditor(page, editor);
   }
 
   return editor;

@@ -17,6 +17,7 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
+import { Typography } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -60,7 +61,16 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
         dataIndex: ['value', 'id'],
         title: 'ID',
         key: 'id',
-        valueType: 'text',
+        render: (_, record) => (
+          <Typography.Text
+            copyable={{
+              text: String(record.value.id),
+              tooltips: [t('copy'), t('copy_success')],
+            }}
+          >
+            {record.value.id}
+          </Typography.Text>
+        ),
       },
       {
         dataIndex: ['value', 'server_addr'],

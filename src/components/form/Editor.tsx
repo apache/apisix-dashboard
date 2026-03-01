@@ -145,9 +145,7 @@ export const FormItemEditor = <T extends FieldValues>(
           trigger(props.name);
         }}
         onMount={(editor) => {
-          if (process.env.NODE_ENV === 'test') {
-            window.__monacoEditor__ = editor;
-          }
+          window.__monacoEditor__ = editor;
         }}
         loading={
           <Skeleton

@@ -364,5 +364,7 @@
   },
   "upstreams": {
     "singular": "Upstream"
-  }
+  },
+  "copy": "Kopyala",
+  "copy_success": "Başarıyla kopyalandı"
 }
