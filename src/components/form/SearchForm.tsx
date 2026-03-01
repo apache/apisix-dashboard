@@ -129,14 +129,14 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.name')}
             style={{ marginBottom: '16px' }}
           >
-            <Input allowClear />
+            <Input placeholder={t('form.searchForm.placeholders.name')} allowClear />
           </Form.Item>
           <Form.Item<SearchFormValues>
             name="id"
             label={t('form.searchForm.fields.id')}
             style={{ marginBottom: '16px' }}
           >
-            <Input allowClear />
+            <Input placeholder={t('form.searchForm.placeholders.id')} allowClear />
           </Form.Item>
         </Col>
 
@@ -147,7 +147,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.host')}
             style={{ marginBottom: '16px' }}
           >
-            <Input allowClear />
+            <Input placeholder={t('form.searchForm.placeholders.host')} allowClear />
           </Form.Item>
           {/* Second column - second row */}
           <Form.Item<SearchFormValues>
@@ -155,7 +155,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.plugin')}
             style={{ marginBottom: '16px' }}
           >
-            <Input allowClear />
+            <Input placeholder={t('form.searchForm.placeholders.plugin')} allowClear />
           </Form.Item>
         </Col>
 
@@ -166,7 +166,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.path')}
             style={{ marginBottom: '16px' }}
           >
-            <Input allowClear />
+            <Input placeholder={t('form.searchForm.placeholders.path')} allowClear />
           </Form.Item>
           {/* Third column - second row */}
           <Form.Item<SearchFormValues>
@@ -190,7 +190,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.description')}
             style={{ marginBottom: '16px' }}
           >
-            <Input allowClear />
+            <Input placeholder={t('form.searchForm.placeholders.description')} allowClear />
           </Form.Item>
           {/* Fourth column - second row */}
           <Form.Item<SearchFormValues>
