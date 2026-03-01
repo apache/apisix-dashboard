@@ -75,8 +75,8 @@ export const filterRoutes = (
 
     // Filter by description
     // Note: Routes without a description field are excluded when description filter is active
-    if (filters.description && routeData.desc) {
-      const descMatch = routeData.desc
+    if (filters.description) {
+      const descMatch = (routeData.desc || '')
         .toLowerCase()
         .includes(filters.description.toLowerCase());
       if (!descMatch) return false;
