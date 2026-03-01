@@ -14,11 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Spotlight } from '@mantine/spotlight';
+import { ActionIcon } from '@mantine/core';
+import { Spotlight, spotlight } from '@mantine/spotlight';
 import { useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { navRoutes } from '@/config/navRoutes';
+import IconClose from '~icons/material-symbols/close';
+import IconDashboard from '~icons/material-symbols/dashboard-outline';
 import IconSearch from '~icons/material-symbols/search';
 
 export const GlobalSpotlight = () => {
@@ -29,6 +32,7 @@ export const GlobalSpotlight = () => {
         id: route.to,
         label: t(`sources.${route.label}`),
         description: `Jump to ${t(`sources.${route.label}`)} dashboard`,
+        leftSection: <IconDashboard style={{ width: 18, height: 18, opacity: 0.7 }} />,
         onClick: () => {
             navigate({ to: route.to });
         },
@@ -39,9 +43,21 @@ export const GlobalSpotlight = () => {
             actions={actions}
             nothingFound={t('noData')}
             highlightQuery
+            scrollAreaProps={{ type: 'scroll', offsetScrollbars: true, mah: 400 }}
             searchProps={{
-                leftSection: <IconSearch />,
+                leftSection: <IconSearch style={{ width: 22, height: 22 }} />,
                 placeholder: 'Search resources... (Ctrl + K)',
+                rightSection: (
+                    <ActionIcon
+                        color="red"
+                        variant="filled"
+                        size="md"
+                        radius={0}
+                        onClick={() => spotlight.close()}
+                    >
+                        <IconClose />
+                    </ActionIcon>
+                ),
             }}
         />
     );
