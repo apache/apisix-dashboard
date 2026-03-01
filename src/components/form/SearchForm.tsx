@@ -175,7 +175,7 @@ export const SearchForm = (props: SearchFormProps) => {
             style={{ marginBottom: '16px' }}
           >
             <Select
-              mode="multiple"
+              mode="tags"
               placeholder={t('form.searchForm.placeholders.labels')}
               allowClear
               options={labelOptions}
