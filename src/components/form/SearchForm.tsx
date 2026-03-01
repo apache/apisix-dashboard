@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button, Col, Form, Input, Row, Select, Space } from 'antd';
+import { AutoComplete, Button, Col, Form, Input, Row, Select, Space } from 'antd';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -198,7 +198,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={t('form.searchForm.fields.version')}
             style={{ marginBottom: '16px' }}
           >
-            <Select
+            <AutoComplete
               placeholder={t('form.searchForm.placeholders.version')}
               allowClear
               options={versionOptions}
@@ -242,7 +242,7 @@ export const SearchForm = (props: SearchFormProps) => {
           </div>
         </Col>
       </Row>
-    </Form>
+    </Form >
   );
 };
 
