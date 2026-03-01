@@ -242,7 +242,7 @@ export const SearchForm = (props: SearchFormProps) => {
           </div>
         </Col>
       </Row>
-    </Form >
+    </Form>
   );
 };
 
