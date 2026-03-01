@@ -47,11 +47,12 @@ export const GlobalSpotlight = () => {
             searchProps={{
                 leftSection: <IconSearch style={{ width: 22, height: 22 }} />,
                 placeholder: 'Search resources... (Ctrl + K)',
+                rightSectionPointerEvents: 'all',
                 rightSection: (
                     <ActionIcon
                         variant="subtle"
                         color="gray"
-                        onMouseDown={(e) => {
+                        onClick={(e) => {
                             e.preventDefault();
                             spotlight.close();
                         }}
