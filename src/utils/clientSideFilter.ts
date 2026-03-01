@@ -93,18 +93,23 @@ export const filterRoutes = (
 
     // Filter by labels: match provided label key:value tokens against route label pairs
     // Note: Routes without any labels are excluded when labels filter is active
-    if (filters.labels && filters.labels.length > 0) {
-      if (!routeData.labels) return false;
+    if (filters.labels) {
+      const labelFilters = Array.isArray(filters.labels)
+        ? filters.labels
+        : [filters.labels];
+      if (labelFilters.length > 0) {
+        if (!routeData.labels) return false;
 
-      const routeLabels = Object.keys(routeData.labels).map((key) =>
-        `${key}:${routeData.labels![key]}`.toLowerCase()
-      );
-      const hasMatchingLabel = filters.labels.some((filterLabel) =>
-        routeLabels.some((routeLabel) =>
-          routeLabel.includes(filterLabel.toLowerCase())
-        )
-      );
-      if (!hasMatchingLabel) return false;
+        const routeLabels = Object.keys(routeData.labels).map((key) =>
+          `${key}:${routeData.labels![key]}`.toLowerCase()
+        );
+        const hasMatchingLabel = labelFilters.some((filterLabel) =>
+          routeLabels.some((routeLabel) =>
+            routeLabel.includes(filterLabel.toLowerCase())
+          )
+        );
+        if (!hasMatchingLabel) return false;
+      }
     }
 
     // Filter by version
