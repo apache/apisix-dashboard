@@ -43,19 +43,20 @@ export const GlobalSpotlight = () => {
             actions={actions}
             nothingFound={t('noData')}
             highlightQuery
-            scrollAreaProps={{ type: 'scroll', offsetScrollbars: true, mah: 400 }}
+            scrollAreaProps={{ type: 'always', offsetScrollbars: true, mah: 400 }}
             searchProps={{
                 leftSection: <IconSearch style={{ width: 22, height: 22 }} />,
                 placeholder: 'Search resources... (Ctrl + K)',
                 rightSection: (
                     <ActionIcon
-                        color="red"
-                        variant="filled"
-                        size="md"
-                        radius={0}
-                        onClick={() => spotlight.close()}
+                        variant="subtle"
+                        color="gray"
+                        onMouseDown={(e) => {
+                            e.preventDefault();
+                            spotlight.close();
+                        }}
                     >
-                        <IconClose />
+                        <IconClose style={{ width: 18, height: 18 }} />
                     </ActionIcon>
                 ),
             }}
