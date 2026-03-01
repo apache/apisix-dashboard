@@ -45,6 +45,7 @@ export const FormSectionDiscovery = () => {
         label={t('form.upstreams.discoveryArgs.title')}
         control={control}
         toObject
+        shouldUnregister={false}
       />
     </FormSection>
   );
