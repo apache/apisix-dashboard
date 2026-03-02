@@ -61,6 +61,7 @@ test('can create upstream -> service -> route', async ({ page }) => {
     scheme: 'https',
     nodes: [{ host: 'httpbin.org', port: 443 }],
   };
+
   await test.step('create upstream', async () => {
     // Navigate to the upstream list page
     await upstreamsPom.toIndex(page);
@@ -158,6 +159,7 @@ test('can create upstream -> service -> route', async ({ page }) => {
       },
     },
   } satisfies Partial<APISIXType['Service']>;
+
   await test.step('create service', async () => {
     // upstream id should be set
     expect(service.upstream_id).not.toBeUndefined();
@@ -275,6 +277,7 @@ test('can create upstream -> service -> route', async ({ page }) => {
       },
     },
   };
+
   await test.step('create route', async () => {
     // service id should be set
     expect(route.service_id).not.toBeUndefined();
