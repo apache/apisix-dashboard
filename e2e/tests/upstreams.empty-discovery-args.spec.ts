@@ -30,34 +30,34 @@ import type { APISIXType } from '@/types/schema/apisix';
  * Regression test for: https://github.com/apache/apisix-dashboard/issues/3270
  */
 const upstream: APISIXType['Upstream'] = {
-    id: 'upstream_discovery_test',
-    name: 'upstream_discovery_test',
-    desc: 'Upstream with service discovery',
-    discovery_type: 'nacos',
-    service_name: 'test-service',
-    discovery_args: {},
+  id: 'upstream_discovery_test',
+  name: 'upstream_discovery_test',
+  desc: 'Upstream with service discovery',
+  discovery_type: 'nacos',
+  service_name: 'test-service',
+  discovery_args: {},
 };
 
 test.beforeAll(async () => {
-    await deleteAllUpstreams(e2eReq);
-    await putUpstreamReq(e2eReq, upstream);
+  await deleteAllUpstreams(e2eReq);
+  await putUpstreamReq(e2eReq, upstream);
 });
 
 test.afterAll(async () => {
-    await deleteAllUpstreams(e2eReq);
+  await deleteAllUpstreams(e2eReq);
 });
 
 test('should preserve empty discovery_args after editing upstream', async ({
-    page,
+  page,
 }) => {
-    await test.step('verify upstream exists and has discovery fields', async () => {
-        // Verify upstream was created with discovery_args via API
-        const resp = await e2eReq.get(`${API_UPSTREAMS}/${upstream.id}`);
-        const data = resp.data;
-        expect(data.value.discovery_type).toBe('nacos');
-        expect(data.value.service_name).toBe('test-service');
-        expect(data.value.discovery_args).toEqual({});
-    });
+  await test.step('verify upstream exists and has discovery fields', async () => {
+    // Verify upstream was created with discovery_args via API
+    const resp = await e2eReq.get(`${API_UPSTREAMS}/${upstream.id}`);
+    const data = resp.data;
+    expect(data.value.discovery_type).toBe('nacos');
+    expect(data.value.service_name).toBe('test-service');
+    expect(data.value.discovery_args).toEqual({});
+  });
 
     await test.step('navigate to upstream detail page', async () => {
         await upstreamsPom.toIndex(page);
