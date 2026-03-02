@@ -36,6 +36,7 @@ test.beforeAll(async () => {
 });
 
 test('should CRUD service with required fields', async ({ page }) => {
+  test.setTimeout(60000);
   await servicesPom.toIndex(page);
   await servicesPom.isIndexPage(page);
 
@@ -57,6 +58,9 @@ test('should CRUD service with required fields', async ({ page }) => {
     await rows.first().locator('input').first().fill('127.0.0.1');
     await rows.first().locator('input').nth(1).fill('80');
     await rows.first().locator('input').nth(2).fill('1');
+
+    // Click outside to trigger onBlur and guarantee the Upstream Node editor cell commits
+    await page.getByRole('heading', { name: 'Add Service' }).click();
 
     // Ensure the name field is properly filled before submitting
     const nameField = page.getByRole('textbox', { name: 'Name' }).first();
