@@ -65,12 +65,27 @@ export async function uiFillHTTPStatuses(
 }
 
 export const uiClearMonacoEditor = async (page: Page, editorLoc?: Locator) => {
-  const isSet = await page.evaluate(() => window.__monacoEditor__ !== undefined).catch(() => false);
-  if (isSet) {
-    await page.evaluate(() => {
-      const editor = window.__monacoEditor__;
-      editor?.getModel()?.setValue('');
-    });
+  const clearedViaMonaco = await page
+    .evaluate(() => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const editor = (window as any).__monacoEditor__;
+        if (!editor || typeof editor.getModel !== 'function') {
+          return false;
+        }
+        const model = editor.getModel();
+        if (!model || typeof model.setValue !== 'function') {
+          return false;
+        }
+        model.setValue('');
+        return true;
+      } catch {
+        return false;
+      }
+    })
+    .catch(() => false);
+
+  if (clearedViaMonaco) {
     return;
   }
 

@@ -94,7 +94,7 @@ test('should CRUD Consumer Group with required fields', async ({ page }) => {
 
     // Verify consumer group exists in list
     await expect(
-      page.getByRole('cell', { name: testId, exact: true })
+      page.getByRole('cell', { name: new RegExp(`^${testId}`) })
     ).toBeVisible();
   });
 
@@ -140,7 +140,7 @@ test('should CRUD Consumer Group with required fields', async ({ page }) => {
 
     // Verify consumer group is deleted
     await expect(
-      page.getByRole('cell', { name: testId, exact: true })
+      page.getByRole('cell', { name: new RegExp(`^${testId}`) })
     ).toBeHidden();
   });
 });
