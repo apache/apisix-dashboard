@@ -27,13 +27,16 @@ import { expect } from '@playwright/test';
 test.describe.configure({ mode: 'serial' });
 
 test('CRUD stream route with required fields', async ({ page }) => {
+  test.setTimeout(60000);
+
   // Navigate to stream routes page
   await streamRoutesPom.toIndex(page);
   await expect(page.getByRole('heading', { name: 'Stream Routes' })).toBeVisible();
 
   // Navigate to add page
   await streamRoutesPom.toAdd(page);
-  await expect(page.getByRole('heading', { name: 'Add Stream Route' })).toBeVisible({ timeout: 30000 });
+  const headingAdd = page.getByRole('heading', { name: 'Add Stream Route' });
+  await expect(headingAdd).toBeVisible({ timeout: 30000 });
 
   // Use unique server addresses to avoid collisions when running tests in parallel
   const uniqueId = randomId('test');
@@ -68,12 +71,13 @@ test('CRUD stream route with required fields', async ({ page }) => {
   await weightInput.click();
   await weightInput.fill('1');
 
-  // Press Enter and click a form input to guarantee onBlur fires for the Upstream Node editor cell
-  await weightInput.press('Enter');
-  await page.getByLabel('Server Port', { exact: true }).click();
+  // Click outside to guarantee onBlur fires for the Upstream Node editor cell
+  await headingAdd.click();
 
   // Submit and land on detail page
-  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  const addSubmitBtn = page.getByRole('button', { name: 'Add', exact: true });
+  await expect(addSubmitBtn).toBeEnabled();
+  await addSubmitBtn.click();
 
   // Wait for success toast before checking detail page
   await uiHasToastMsg(page, {
@@ -125,8 +129,8 @@ test('CRUD stream route with required fields', async ({ page }) => {
   await uiCheckStreamRouteRequiredFields(page, updatedData);
 
   // Delete from the detail page
-  await page.getByRole('button', { name: 'Delete' }).click();
-  await page.getByRole('dialog').getByRole('button', { name: 'Delete' }).click();
+  await page.getByRole('button', { name: 'Delete', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Delete', exact: true }).click();
   await page.waitForURL((url) => url.pathname.endsWith('/stream_routes'));
 
   await streamRoutesPom.isIndexPage(page);

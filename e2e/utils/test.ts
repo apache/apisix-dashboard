@@ -44,8 +44,9 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
         return use(fileName);
       }
 
+      let page;
       try {
-        const page = await browser.newPage({ storageState: undefined });
+        page = await browser.newPage({ storageState: undefined });
 
         // have to use env here, because the baseURL is not available in worker
         await page.goto(env.E2E_TARGET_URL, { waitUntil: 'load' });
@@ -71,10 +72,11 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
         await page.waitForLoadState('load');
 
         await page.context().storageState({ path: fileName });
-        await page.close();
       } catch (error) {
         console.error(`Failed to authenticate worker ${id}:`, error);
         throw error;
+      } finally {
+        await page?.close();
       }
 
       await use(fileName);

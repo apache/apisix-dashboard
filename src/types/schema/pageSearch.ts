@@ -20,12 +20,12 @@ import { z } from 'zod';
 export const pageSearchSchema = z
   .object({
     page: z.preprocess(
-      (val) => (val === undefined || val === null ? undefined : Number(val)),
-      z.number().optional().default(1)
+      (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
+      z.number().int().min(1).optional().default(1)
     ),
     page_size: z.preprocess(
-      (val) => (val === undefined || val === null ? undefined : Number(val)),
-      z.number().optional().default(10)
+      (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
+      z.number().int().min(1).optional().default(10)
     ),
     name: z.string().optional(),
     label: z.string().optional(),

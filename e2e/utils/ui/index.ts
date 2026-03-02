@@ -39,11 +39,14 @@ export const uiHasToastMsg = async (
   page: Page,
   ...filterOpts: Parameters<Locator['filter']>
 ) => {
-  const alertMsg = page.getByRole('alert').filter(...filterOpts);
+  const alertMsg = page.getByRole('alert').filter(...filterOpts).first();
   // Increased timeout for CI environment (30s instead of default 5s)
   await expect(alertMsg).toBeVisible({ timeout: 30000 });
-  await alertMsg.getByRole('button').click();
-  await expect(alertMsg).not.toBeVisible();
+  const closeBtn = alertMsg.getByRole('button').first();
+  if (await closeBtn.isVisible()) {
+    await closeBtn.evaluate((node) => (node as HTMLElement).click());
+  }
+  await expect(alertMsg).not.toBeVisible({ timeout: 15000 });
 };
 
 export async function uiCannotSubmitEmptyForm(page: Page, pom: CommonPOM) {

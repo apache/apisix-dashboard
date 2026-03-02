@@ -49,6 +49,7 @@ const consumers: APISIXType['ConsumerPut'][] = Array.from({ length: 11 }, (_, i)
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
+
   test.beforeAll(async () => {
     await deleteAllConsumers(e2eReq);
     await Promise.all(consumers.map((d) => putConsumerReq(e2eReq, d)));

@@ -24,10 +24,10 @@ import { env } from './e2e/utils/env';
 export default defineConfig({
   testDir: './e2e/tests',
   outputDir: './test-results',
-  fullyParallel: false,
+  fullyParallel: !process.env.CI,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: 1,
+  workers: process.env.CI ? 1 : undefined,
   reporter: [
     ['html'],
     ['list'],

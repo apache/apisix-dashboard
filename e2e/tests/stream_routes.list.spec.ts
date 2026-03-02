@@ -59,6 +59,7 @@ const streamRoutes: APISIXType['StreamRoute'][] = Array.from(
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
+
   test.beforeAll(async () => {
     // Removed global cleanup to allow parallel execution
     // await deleteAllStreamRoutes(e2eReq);

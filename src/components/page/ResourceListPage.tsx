@@ -88,11 +88,11 @@ const ResourceListPage = <T extends Record<string, unknown>>(
       typeof rowKey === 'function'
         ? rowKey
         : (record: T) => {
-            // APISIX list items wrap data in a `value` property
-            const raw = record['value'];
-            const value = isRecord(raw) ? raw : undefined;
-            return String(value?.[rowKey] ?? record[rowKey] ?? '');
-          },
+          // APISIX list items wrap data in a `value` property
+          const raw = record['value'];
+          const value = isRecord(raw) ? raw : undefined;
+          return String(value?.[rowKey] ?? record[rowKey] ?? '');
+        },
     [rowKey],
   );
 
@@ -109,17 +109,29 @@ const ResourceListPage = <T extends Record<string, unknown>>(
         pagination={paginationConfig}
         cardProps={{ bodyStyle: { padding: 0 } }}
         locale={emptyText ? { emptyText } : undefined}
-        toolBarRender={() => [
-          addPageTo && resourceNameKey && (
-            <ToAddPageBtn
-              key="create"
-              to={addPageTo}
-              label={t('info.add.title', {
-                name: t(resourceNameKey, resourceNameKey),
-              })}
-            />
-          ),
-        ]}
+        toolbar={
+          addPageTo && resourceNameKey
+            ? {
+              menu: {
+                type: 'inline',
+                items: [
+                  {
+                    key: 'add',
+                    label: (
+                      <ToAddPageBtn
+                        key="create"
+                        to={addPageTo}
+                        label={t('info.add.title', {
+                          name: t(resourceNameKey, resourceNameKey),
+                        })}
+                      />
+                    ),
+                  },
+                ],
+              },
+            }
+            : undefined
+        }
       />
     </AntdConfigProvider>
   );

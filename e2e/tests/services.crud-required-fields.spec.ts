@@ -41,6 +41,7 @@ test('should CRUD service with required fields', async ({ page }) => {
 
   await servicesPom.getAddServiceBtn(page).click();
   await servicesPom.isAddPage(page);
+
   await test.step('submit with required fields', async () => {
     await uiFillServiceRequiredFields(page, {
       name: serviceName,
