@@ -32,5 +32,4 @@ dist-ssr
 /playwright/.cache/
 
 .eslintcache
-jsonschema-poc/POC_SUMMARY.md
-jsonschema-poc/README.md
+
