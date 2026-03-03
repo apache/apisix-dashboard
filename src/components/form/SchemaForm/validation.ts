@@ -121,7 +121,7 @@ function generateErrorMessage(error: ErrorObject): string {
         case 'maximum':
             return `Must be at most ${params.limit}`;
         case 'pattern':
-            return `Invalid format`;
+            return 'Invalid format';
         case 'enum':
             return `Must be one of: ${(params.allowedValues as string[]).join(', ')}`;
         case 'minItems':

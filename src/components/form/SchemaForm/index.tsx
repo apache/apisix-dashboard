@@ -14,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { SchemaField } from './SchemaField';
 import type { JSONSchema7 } from './types';
+import { ajv } from './validation';
 
 export type SchemaFormProps = {
     schema: JSONSchema7;
@@ -42,6 +44,9 @@ export const SchemaForm = ({ schema, basePath = '' }: SchemaFormProps) => {
         return Object.entries(schema.properties).map(([key, propSchema]) => {
             const fieldPath = basePath ? `${basePath}.${key}` : key;
             const isRequired = schema.required?.includes(key) ?? false;
+            // encrypt_fields is an APISIX extension that marks fields as sensitive
+            const isEncrypted =
+                ((schema as Record<string, unknown>).encrypt_fields as string[] | undefined)?.includes(key) ?? false;
 
             return (
                 <SchemaField
@@ -50,6 +55,7 @@ export const SchemaForm = ({ schema, basePath = '' }: SchemaFormProps) => {
                     schema={propSchema as JSONSchema7}
                     control={control}
                     required={isRequired}
+                    isEncrypted={isEncrypted}
                 />
             );
         });
@@ -76,11 +82,25 @@ export const SchemaForm = ({ schema, basePath = '' }: SchemaFormProps) => {
         ));
     };
 
+    // Handle anyOf - same intent as oneOf in APISIX schemas: pick one branch
+    const renderAnyOf = () => {
+        if (!schema.anyOf) return null;
+        return <AnyOfFields schema={schema} basePath={basePath} />;
+    };
+
+    // Handle if/then/else - evaluate condition on live form data
+    const renderIfThenElse = () => {
+        if (!schema.if) return null;
+        return <IfThenElseFields schema={schema} basePath={basePath} />;
+    };
+
     return (
         <>
             {renderProperties()}
             {renderOneOf()}
+            {renderAnyOf()}
             {renderDependencies()}
+            {renderIfThenElse()}
         </>
     );
 };
@@ -217,7 +237,137 @@ const DependencyFields = ({
 };
 
 /**
- * Find discriminator field names from oneOf branches
+ * AnyOfFields - Renders conditional field groups for anyOf schemas.
+ *
+ * In APISIX plugin schemas, `anyOf` is used identically to `oneOf` — each
+ * branch has a discriminator property with a `const` value and the user picks
+ * one branch. We detect the discriminator automatically and render the
+ * corresponding branch's extra fields.
+ *
+ * Example schema shape:
+ * ```json
+ * { "anyOf": [
+ *     { "properties": { "type": { "const": "a" }, "a_field": {...} } },
+ *     { "properties": { "type": { "const": "b" }, "b_field": {...} } }
+ * ] }
+ * ```
+ */
+const AnyOfFields = ({
+    schema,
+    basePath,
+}: {
+    schema: JSONSchema7;
+    basePath: string;
+}) => {
+    const { control } = useFormContext();
+
+    const discriminators = findDiscriminators(schema.anyOf!);
+    const firstDiscriminator = discriminators[0];
+
+    const discriminatorPath = basePath
+        ? `${basePath}.${firstDiscriminator}`
+        : firstDiscriminator;
+    const watchedValue = useWatch({ control, name: discriminatorPath });
+
+    const matchingBranch = schema.anyOf?.find((branch) => {
+        const branchSchema = branch as JSONSchema7;
+        const constValue = branchSchema.properties?.[firstDiscriminator] as JSONSchema7;
+        return constValue?.const === watchedValue;
+    }) as JSONSchema7 | undefined;
+
+    if (!matchingBranch?.properties) return null;
+
+    return (
+        <>
+            {Object.entries(matchingBranch.properties)
+                .filter(([key]) => key !== firstDiscriminator)
+                .map(([key, propSchema]) => {
+                    const fieldPath = basePath ? `${basePath}.${key}` : key;
+                    const isRequired = matchingBranch.required?.includes(key) ?? false;
+
+                    return (
+                        <SchemaField
+                            key={fieldPath}
+                            name={fieldPath}
+                            schema={propSchema as JSONSchema7}
+                            control={control}
+                            required={isRequired}
+                        />
+                    );
+                })}
+        </>
+    );
+};
+
+/**
+ * IfThenElseFields - Renders fields conditionally using JSON Schema Draft 7
+ * `if` / `then` / `else` keywords.
+ *
+ * The `if` schema is evaluated against the current live form data using AJV.
+ * When it matches, the `then` schema's properties are rendered; otherwise
+ * the `else` schema's properties are rendered (if defined).
+ *
+ * Example schema shape:
+ * ```json
+ * {
+ *   "if":   { "properties": { "enable": { "const": true } }, "required": ["enable"] },
+ *   "then": { "properties": { "interval": { "type": "integer" } }, "required": ["interval"] },
+ *   "else": {}
+ * }
+ * ```
+ */
+const IfThenElseFields = ({
+    schema,
+    basePath,
+}: {
+    schema: JSONSchema7;
+    basePath: string;
+}) => {
+    const { control } = useFormContext();
+
+    // Watch the entire form values so we have access to defaultValues on the
+    // very first render (before individual fields register themselves).
+    // This is intentionally broad — if/then/else is a schema-level construct
+    // and typically depends on only one or two sibling fields.
+    const allValues = useWatch({ control });
+
+    const activeSchema = useMemo(() => {
+        if (!schema.if) return null;
+
+        // Extract the values that live under our basePath (or the root).
+        const dataToCheck = ((basePath
+            ? (allValues as Record<string, unknown>)?.[basePath]
+            : allValues) ?? {}) as Record<string, unknown>;
+
+        const validate = ajv.compile(schema.if as object);
+        const ifMatches = validate(dataToCheck);
+        return ifMatches ? (schema.then ?? null) : (schema.else ?? null);
+    }, [schema.if, schema.then, schema.else, allValues, basePath]);
+
+    if (!activeSchema?.properties) return null;
+
+    return (
+        <>
+            {Object.entries(activeSchema.properties).map(([key, propSchema]) => {
+                const fieldPath = basePath ? `${basePath}.${key}` : key;
+                const isRequired = activeSchema.required?.includes(key) ?? false;
+
+                return (
+                    <SchemaField
+                        key={fieldPath}
+                        name={fieldPath}
+                        schema={propSchema as JSONSchema7}
+                        control={control}
+                        required={isRequired}
+                    />
+                );
+            })}
+        </>
+    );
+};
+
+/**
+ * Find discriminator field names from oneOf/anyOf branches
  */
 function findDiscriminators(oneOf: JSONSchema7['oneOf']): string[] {
     if (!oneOf) return [];
@@ -242,4 +392,5 @@ function findDiscriminators(oneOf: JSONSchema7['oneOf']): string[] {
 export { ArrayField } from './ArrayField';
 export { SchemaField } from './SchemaField';
 export type { JSONSchema7 } from './types';
+// eslint-disable-next-line react-refresh/only-export-components
 export { createSchemaResolver, validateWithSchema } from './validation';
