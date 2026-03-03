@@ -18,6 +18,7 @@
 import { ActionIcon, Button, Fieldset, Group, Stack, Text } from '@mantine/core';
 import type { Control, FieldValues } from 'react-hook-form';
 import { useFieldArray } from 'react-hook-form';
+
 import IconPlus from '~icons/material-symbols/add';
 import IconTrash from '~icons/material-symbols/delete-outline';
 
@@ -38,7 +39,7 @@ export type ArrayFieldProps = {
  * - Arrays of objects with Add/Remove functionality
  * - Nested object schemas within array items
  */
-export const ArrayField = ({ name, schema, control, required: _required }: ArrayFieldProps) => {
+export const ArrayField = ({ name, schema, control }: ArrayFieldProps) => {
     const { fields, append, remove } = useFieldArray({
         control,
         name,

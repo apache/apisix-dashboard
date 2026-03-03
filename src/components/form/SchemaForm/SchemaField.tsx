@@ -18,6 +18,7 @@ import { Fieldset, Stack } from '@mantine/core';
 import type { Control, FieldValues } from 'react-hook-form';
 
 import { FormItemNumberInput } from '../NumberInput';
+import { FormItemPasswordInput } from '../PasswordInput';
 import { FormItemSelect } from '../Select';
 import { FormItemSwitch } from '../Switch';
 import { FormItemTextArray } from '../TextArray';
@@ -30,6 +31,8 @@ export type SchemaFieldProps = {
     schema: JSONSchema7;
     control: Control<FieldValues>;
     required?: boolean;
+    /** Render as a masked password input (for encrypt_fields) */
+    isEncrypted?: boolean;
 };
 
 /**
@@ -42,7 +45,7 @@ export type SchemaFieldProps = {
  * - FormItemSwitch
  */
 export const SchemaField = (
-    { name, schema, control, required }: SchemaFieldProps
+    { name, schema, control, required, isEncrypted }: SchemaFieldProps
 ) => {
     // Handle nested objects recursively
     if (schema.type === 'object' && schema.properties) {
@@ -142,6 +145,19 @@ export const SchemaField = (
                 max={schema.maximum}
                 required={required}
                 defaultValue={schema.default as number}
+            />
+        );
+    }
+
+    // Handle encrypted strings → PasswordInput
+    if (isEncrypted) {
+        return (
+            <FormItemPasswordInput
+                name={name}
+                control={control}
+                label={schema.title || formatLabel(name)}
+                description={schema.description}
+                required={required}
             />
         );
     }
