@@ -311,6 +311,151 @@ const proxyRewriteSchema: JSONSchema7 = {
     minProperties: 1,
 };
 
+/**
+ * anyOf demo schema — mirrors the APISIX limit-count plugin which supports
+ * multiple backend storage strategies through anyOf.
+ */
+const anyOfSchema: JSONSchema7 = {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    title: 'limit-count (anyOf demo)',
+    description:
+        'Demonstrates anyOf: pick a storage backend and fill in its specific options.',
+    type: 'object',
+    properties: {
+        count: {
+            type: 'integer',
+            title: 'Request Limit',
+            minimum: 1,
+            default: 100,
+            description: 'Max requests allowed within the time window',
+        },
+        time_window: {
+            type: 'integer',
+            title: 'Time Window (s)',
+            minimum: 1,
+            default: 60,
+            description: 'Duration of the rate-limit window in seconds',
+        },
+        policy: {
+            type: 'string',
+            title: 'Storage Policy',
+            enum: ['local', 'redis', 'redis-cluster'],
+            default: 'local',
+            description: 'Where to store request counts',
+        },
+    },
+    required: ['count', 'time_window', 'policy'],
+    anyOf: [
+        {
+            properties: {
+                policy: { const: 'local' },
+            },
+        },
+        {
+            properties: {
+                policy: { const: 'redis' },
+                redis_host: {
+                    type: 'string',
+                    title: 'Redis Host',
+                    description: 'Redis server hostname',
+                },
+                redis_port: {
+                    type: 'integer',
+                    title: 'Redis Port',
+                    minimum: 1,
+                    maximum: 65535,
+                    default: 6379,
+                },
+                redis_password: {
+                    type: 'string',
+                    title: 'Redis Password',
+                    description: 'Redis AUTH password (leave blank for no auth)',
+                },
+            },
+            required: ['redis_host'],
+        },
+        {
+            properties: {
+                policy: { const: 'redis-cluster' },
+                redis_cluster_nodes: {
+                    type: 'array',
+                    title: 'Cluster Nodes',
+                    description: 'Redis cluster node addresses (host:port)',
+                    items: { type: 'string' },
+                    minItems: 2,
+                },
+                redis_cluster_name: {
+                    type: 'string',
+                    title: 'Cluster Name',
+                },
+            },
+            required: ['redis_cluster_nodes'],
+        },
+    ],
+};
+
+/**
+ * if/then/else demo schema — demonstrates JSON Schema Draft 7 conditional
+ * rendering. Modelled after APISIX's fault-injection plugin where the
+ * abort and delay sub-schemas are conditionally required.
+ */
+const ifThenElseSchema: JSONSchema7 = {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    title: 'fault-injection (if/then/else demo)',
+    description:
+        'Demonstrates if/then/else: extra fields appear based on whether caching is enabled.',
+    type: 'object',
+    properties: {
+        enable_abort: {
+            type: 'boolean',
+            title: 'Enable Abort',
+            default: false,
+            description: 'When true, the plugin will abort requests with the configured status',
+        },
+    },
+    if: {
+        properties: { enable_abort: { const: true } },
+        required: ['enable_abort'],
+    },
+    then: {
+        properties: {
+            http_status: {
+                type: 'integer',
+                title: 'HTTP Status Code',
+                minimum: 200,
+                maximum: 599,
+                default: 503,
+                description: 'Status code to return when aborting',
+            },
+            body: {
+                type: 'string',
+                title: 'Response Body',
+                description: 'Optional body to send with the abort response',
+            },
+            percentage: {
+                type: 'integer',
+                title: 'Abort Percentage',
+                minimum: 0,
+                maximum: 100,
+                default: 100,
+                description: 'Percentage of requests to abort (0–100)',
+            },
+        },
+        required: ['http_status'],
+    },
+    else: {
+        properties: {
+            delay_duration: {
+                type: 'number',
+                title: 'Delay Duration (s)',
+                minimum: 0,
+                default: 0,
+                description: 'Add an artificial delay to every request instead',
+            },
+        },
+    },
+};
+
 export const Route = createFileRoute('/schema_form_demo')({
     component: SchemaFormDemoPage,
 });
@@ -368,8 +513,10 @@ function SchemaFormDemoPage() {
 
                 <Tabs defaultValue="demo">
                     <Tabs.List>
-                        <Tabs.Tab value="demo">Demo Schema</Tabs.Tab>
+                        <Tabs.Tab value="demo">Demo Schema (oneOf + deps)</Tabs.Tab>
                         <Tabs.Tab value="proxy-rewrite">proxy-rewrite Plugin</Tabs.Tab>
+                        <Tabs.Tab value="anyof">anyOf (limit-count)</Tabs.Tab>
+                        <Tabs.Tab value="ifthenelse">if/then/else (fault-injection)</Tabs.Tab>
                     </Tabs.List>
 
                     <Tabs.Panel value="demo" pt="md">
@@ -516,6 +663,145 @@ function SchemaFormDemoPage() {
                                     style={{ whiteSpace: 'pre-wrap', maxHeight: 400, overflow: 'auto' }}
                                 >
                                     {JSON.stringify(proxyRewriteSchema, null, 2)}
+                                </Code>
+                            </Card.Section>
+                        </Card>
+                    </Tabs.Panel>
+
+                    {/* ── anyOf tab ──────────────────────────────────────────── */}
+                    <Tabs.Panel value="anyof" pt="md">
+                        <Alert color="violet" title="anyOf: pick-one pattern" mb="md">
+                            <Stack gap="xs">
+                                <Text size="sm">
+                                    APISIX uses <strong>anyOf</strong> to let users switch between
+                                    mutually exclusive configuration strategies — here the{' '}
+                                    <strong>limit-count</strong> plugin&apos;s storage backend.
+                                </Text>
+                                <Text size="sm">
+                                    • Select <strong>local</strong> → no extra fields needed
+                                </Text>
+                                <Text size="sm">
+                                    • Select <strong>redis</strong> → Redis host / port / password appear
+                                </Text>
+                                <Text size="sm">
+                                    • Select <strong>redis-cluster</strong> → cluster node list appears
+                                </Text>
+                            </Stack>
+                        </Alert>
+
+                        <Grid>
+                            <Grid.Col span={6}>
+                                <Card withBorder shadow="sm">
+                                    <Card.Section withBorder inheritPadding py="xs">
+                                        <Title order={3}>limit-count Configuration</Title>
+                                    </Card.Section>
+                                    <Card.Section inheritPadding py="md">
+                                        <FormProvider {...anyOfForm}>
+                                            <form onSubmit={handleAnyOfSubmit}>
+                                                <Stack gap="md">
+                                                    <SchemaForm schema={anyOfSchema} />
+                                                    <Group justify="flex-end" mt="md">
+                                                        <Button type="button" variant="subtle" onClick={() => anyOfForm.reset()}>
+                                                            Reset
+                                                        </Button>
+                                                        <Button type="submit">Submit</Button>
+                                                    </Group>
+                                                </Stack>
+                                            </form>
+                                        </FormProvider>
+                                    </Card.Section>
+                                </Card>
+                            </Grid.Col>
+
+                            <Grid.Col span={6}>
+                                <Card withBorder shadow="sm" h="100%">
+                                    <Card.Section withBorder inheritPadding py="xs">
+                                        <Title order={3}>Live Form Data</Title>
+                                    </Card.Section>
+                                    <Card.Section inheritPadding py="md">
+                                        <Code block style={{ whiteSpace: 'pre-wrap' }}>
+                                            {JSON.stringify(anyOfFormValues, null, 2)}
+                                        </Code>
+                                    </Card.Section>
+                                </Card>
+                            </Grid.Col>
+                        </Grid>
+
+                        <Card withBorder shadow="sm" mt="md">
+                            <Card.Section withBorder inheritPadding py="xs">
+                                <Title order={3}>anyOf Schema (Source)</Title>
+                            </Card.Section>
+                            <Card.Section inheritPadding py="md">
+                                <Code block style={{ whiteSpace: 'pre-wrap', maxHeight: 400, overflow: 'auto' }}>
+                                    {JSON.stringify(anyOfSchema, null, 2)}
+                                </Code>
+                            </Card.Section>
+                        </Card>
+                    </Tabs.Panel>
+
+                    {/* ── if/then/else tab ───────────────────────────────────── */}
+                    <Tabs.Panel value="ifthenelse" pt="md">
+                        <Alert color="orange" title="if / then / else (JSON Schema Draft 7)" mb="md">
+                            <Stack gap="xs">
+                                <Text size="sm">
+                                    The <Code>if</Code> schema is evaluated against live form values
+                                    using AJV. When it matches, <Code>then</Code> fields are shown;
+                                    otherwise <Code>else</Code> fields appear.
+                                </Text>
+                                <Text size="sm">
+                                    • Toggle <strong>Enable Abort</strong> ON → HTTP status / body / percentage fields appear
+                                </Text>
+                                <Text size="sm">
+                                    • Toggle OFF → a simple delay field is shown instead
+                                </Text>
+                            </Stack>
+                        </Alert>
+
+                        <Grid>
+                            <Grid.Col span={6}>
+                                <Card withBorder shadow="sm">
+                                    <Card.Section withBorder inheritPadding py="xs">
+                                        <Title order={3}>fault-injection Configuration</Title>
+                                    </Card.Section>
+                                    <Card.Section inheritPadding py="md">
+                                        <FormProvider {...ifThenElseForm}>
+                                            <form onSubmit={handleIfThenElseSubmit}>
+                                                <Stack gap="md">
+                                                    <SchemaForm schema={ifThenElseSchema} />
+                                                    <Group justify="flex-end" mt="md">
+                                                        <Button type="button" variant="subtle" onClick={() => ifThenElseForm.reset()}>
+                                                            Reset
+                                                        </Button>
+                                                        <Button type="submit">Submit</Button>
+                                                    </Group>
+                                                </Stack>
+                                            </form>
+                                        </FormProvider>
+                                    </Card.Section>
+                                </Card>
+                            </Grid.Col>
+
+                            <Grid.Col span={6}>
+                                <Card withBorder shadow="sm" h="100%">
+                                    <Card.Section withBorder inheritPadding py="xs">
+                                        <Title order={3}>Live Form Data</Title>
+                                    </Card.Section>
+                                    <Card.Section inheritPadding py="md">
+                                        <Code block style={{ whiteSpace: 'pre-wrap' }}>
+                                            {JSON.stringify(ifThenElseFormValues, null, 2)}
+                                        </Code>
+                                    </Card.Section>
+                                </Card>
+                            </Grid.Col>
+                        </Grid>
+
+                        <Card withBorder shadow="sm" mt="md">
+                            <Card.Section withBorder inheritPadding py="xs">
+                                <Title order={3}>if/then/else Schema (Source)</Title>
+                            </Card.Section>
+                            <Card.Section inheritPadding py="md">
+                                <Code block style={{ whiteSpace: 'pre-wrap', maxHeight: 400, overflow: 'auto' }}>
+                                    {JSON.stringify(ifThenElseSchema, null, 2)}
                                 </Code>
                             </Card.Section>
                         </Card>
