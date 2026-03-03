@@ -500,6 +500,31 @@ function SchemaFormDemoPage() {
         alert(`Proxy Rewrite Config:\n${JSON.stringify(data, null, 2)}`);
     });
 
+    const anyOfForm = useForm({
+        defaultValues: {
+            count: 100,
+            time_window: 60,
+            policy: 'local',
+        },
+    });
+
+    const ifThenElseForm = useForm({
+        defaultValues: {
+            enable_abort: false,
+        },
+    });
+
+    const anyOfFormValues = anyOfForm.watch();
+    const ifThenElseFormValues = ifThenElseForm.watch();
+
+    const handleAnyOfSubmit = anyOfForm.handleSubmit((data) => {
+        alert(`limit-count Config:\n${JSON.stringify(data, null, 2)}`);
+    });
+
+    const handleIfThenElseSubmit = ifThenElseForm.handleSubmit((data) => {
+        alert(`fault-injection Config:\n${JSON.stringify(data, null, 2)}`);
+    });
+
     return (
         <Container size="xl" py="xl">
             <Stack gap="lg">
