@@ -130,6 +130,10 @@ export const SchemaField = (
 
     // Handle number/integer → NumberInput
     if (schema.type === 'number' || schema.type === 'integer') {
+        // Use exclusiveMinimum/exclusiveMaximum when present (JSON Schema Draft 7 numeric form);
+        // Mantine enforces >= as UI hint while AJV enforces strict exclusion on submit.
+        const minValue = schema.exclusiveMinimum !== undefined ? schema.exclusiveMinimum : schema.minimum;
+        const maxValue = schema.exclusiveMaximum !== undefined ? schema.exclusiveMaximum : schema.maximum;
         return (
             <FormItemNumberInput
                 name={name}
@@ -141,8 +145,8 @@ export const SchemaField = (
                         ? `Default: ${schema.default}`
                         : undefined
                 }
-                min={schema.minimum}
-                max={schema.maximum}
+                min={minValue}
+                max={maxValue}
                 required={required}
                 defaultValue={schema.default as number}
             />

@@ -396,61 +396,64 @@ const anyOfSchema: JSONSchema7 = {
 
 /**
  * if/then/else demo schema — demonstrates JSON Schema Draft 7 conditional
- * rendering. Modelled after APISIX's fault-injection plugin where the
- * abort and delay sub-schemas are conditionally required.
+ * rendering. Modelled after APISIX's limit-conn plugin where burst mode
+ * fields are conditionally shown based on the enable_burst toggle.
+ * Also exercises exclusiveMinimum (default_conn_delay must be > 0).
  */
 const ifThenElseSchema: JSONSchema7 = {
     $schema: 'http://json-schema.org/draft-07/schema#',
-    title: 'fault-injection (if/then/else demo)',
+    title: 'limit-conn (if/then/else demo)',
     description:
-        'Demonstrates if/then/else: extra fields appear based on whether caching is enabled.',
+        'Demonstrates if/then/else: burst mode fields appear only when Enable Burst Mode is toggled on.',
     type: 'object',
     properties: {
-        enable_abort: {
+        conn: {
+            type: 'integer',
+            title: 'Max Connections',
+            minimum: 1,
+            default: 100,
+            description: 'Maximum number of concurrent connections allowed',
+        },
+        enable_burst: {
             type: 'boolean',
-            title: 'Enable Abort',
+            title: 'Enable Burst Mode',
             default: false,
-            description: 'When true, the plugin will abort requests with the configured status',
+            description:
+                'When true, connections exceeding the limit are delayed instead of immediately rejected',
         },
     },
     if: {
-        properties: { enable_abort: { const: true } },
-        required: ['enable_abort'],
+        properties: { enable_burst: { const: true } },
+        required: ['enable_burst'],
     },
     then: {
         properties: {
-            http_status: {
+            burst: {
                 type: 'integer',
-                title: 'HTTP Status Code',
-                minimum: 200,
-                maximum: 599,
-                default: 503,
-                description: 'Status code to return when aborting',
+                title: 'Burst Connections',
+                minimum: 1,
+                default: 10,
+                description: 'Number of extra connections delayed before rejection (must be ≥ 1)',
             },
-            body: {
-                type: 'string',
-                title: 'Response Body',
-                description: 'Optional body to send with the abort response',
-            },
-            percentage: {
-                type: 'integer',
-                title: 'Abort Percentage',
-                minimum: 0,
-                maximum: 100,
-                default: 100,
-                description: 'Percentage of requests to abort (0–100)',
+            default_conn_delay: {
+                type: 'number',
+                title: 'Connection Delay (s)',
+                exclusiveMinimum: 0,
+                default: 0.1,
+                description: 'Processing delay in seconds applied to burst connections (must be > 0)',
             },
         },
-        required: ['http_status'],
+        required: ['burst', 'default_conn_delay'],
     },
     else: {
         properties: {
-            delay_duration: {
-                type: 'number',
-                title: 'Delay Duration (s)',
-                minimum: 0,
-                default: 0,
-                description: 'Add an artificial delay to every request instead',
+            rejected_code: {
+                type: 'integer',
+                title: 'Rejected Status Code',
+                minimum: 200,
+                maximum: 599,
+                default: 503,
+                description: 'HTTP status code returned when connections exceed the limit',
             },
         },
     },
@@ -510,7 +513,8 @@ function SchemaFormDemoPage() {
 
     const ifThenElseForm = useForm({
         defaultValues: {
-            enable_abort: false,
+            conn: 100,
+            enable_burst: false,
         },
     });
 
@@ -541,7 +545,7 @@ function SchemaFormDemoPage() {
                         <Tabs.Tab value="demo">Demo Schema (oneOf + deps)</Tabs.Tab>
                         <Tabs.Tab value="proxy-rewrite">proxy-rewrite Plugin</Tabs.Tab>
                         <Tabs.Tab value="anyof">anyOf (limit-count)</Tabs.Tab>
-                        <Tabs.Tab value="ifthenelse">if/then/else (fault-injection)</Tabs.Tab>
+                        <Tabs.Tab value="ifthenelse">if/then/else (limit-conn)</Tabs.Tab>
                     </Tabs.List>
 
                     <Tabs.Panel value="demo" pt="md">
@@ -774,10 +778,10 @@ function SchemaFormDemoPage() {
                                     otherwise <Code>else</Code> fields appear.
                                 </Text>
                                 <Text size="sm">
-                                    • Toggle <strong>Enable Abort</strong> ON → HTTP status / body / percentage fields appear
+                                    • Toggle <strong>Enable Burst Mode</strong> ON → Burst Connections and Connection Delay fields appear
                                 </Text>
                                 <Text size="sm">
-                                    • Toggle OFF → a simple delay field is shown instead
+                                    • Toggle OFF → a Rejected Status Code field is shown instead
                                 </Text>
                             </Stack>
                         </Alert>
@@ -786,7 +790,7 @@ function SchemaFormDemoPage() {
                             <Grid.Col span={6}>
                                 <Card withBorder shadow="sm">
                                     <Card.Section withBorder inheritPadding py="xs">
-                                        <Title order={3}>fault-injection Configuration</Title>
+                                        <Title order={3}>limit-conn Configuration</Title>
                                     </Card.Section>
                                     <Card.Section inheritPadding py="md">
                                         <FormProvider {...ifThenElseForm}>
