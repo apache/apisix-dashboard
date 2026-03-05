@@ -32,3 +32,9 @@ dist-ssr
 /playwright/.cache/
 
 .eslintcache
+.gemini/artifacts/codebase_architecture_guide.md
+.gemini/artifacts/gsoc_preparation_guide.md
+.gemini/artifacts/gsoc_proposal_draft.md
+jsonschema-poc/POC_SUMMARY.md
+jsonschema-poc/README.md
+.gemini/artifacts/gsoc_pr_description.md
