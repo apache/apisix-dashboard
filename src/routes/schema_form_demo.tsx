@@ -465,6 +465,7 @@ export const Route = createFileRoute('/schema_form_demo')({
 
 function SchemaFormDemoPage() {
     const demoForm = useForm({
+        shouldUnregister: true,
         defaultValues: {
             auth_type: '',
             storage_type: 'none',
@@ -477,6 +478,7 @@ function SchemaFormDemoPage() {
     });
 
     const proxyRewriteForm = useForm({
+        shouldUnregister: true,
         resolver: createSchemaResolver(proxyRewriteSchema),
         defaultValues: {
             uri: '',
@@ -504,6 +506,7 @@ function SchemaFormDemoPage() {
     });
 
     const anyOfForm = useForm({
+        shouldUnregister: true,
         defaultValues: {
             count: 100,
             time_window: 60,
@@ -512,6 +515,7 @@ function SchemaFormDemoPage() {
     });
 
     const ifThenElseForm = useForm({
+        shouldUnregister: true,
         defaultValues: {
             conn: 100,
             enable_burst: false,
