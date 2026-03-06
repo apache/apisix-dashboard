@@ -16,7 +16,6 @@
  */
 import { servicesPom } from '@e2e/pom/services';
 import { randomId } from '@e2e/utils/common';
-import { env } from '@e2e/utils/env';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { uiGoto } from '@e2e/utils/ui';
