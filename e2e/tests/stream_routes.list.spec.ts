@@ -86,7 +86,7 @@ test.describe('page and page_size should work correctly', () => {
       .getByRole('cell', { name: /stream_route_id_/ })
       .all();
     const ids = await Promise.all(itemsInPage.map((v) => v.textContent()));
-    return streamRoutes.filter((d) => !ids.some(idText => idText?.includes(d.id)));
+    return streamRoutes.filter((d) => !ids.some((idText) => idText?.trim() === d.id));
   };
 
   setupPaginationTests(test, {
