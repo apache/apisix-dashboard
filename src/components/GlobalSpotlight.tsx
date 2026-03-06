@@ -31,7 +31,7 @@ export const GlobalSpotlight = () => {
     const actions = navRoutes.map((route) => ({
         id: route.to,
         label: t(`sources.${route.label}`),
-        description: `Jump to ${t(`sources.${route.label}`)} dashboard`,
+        description: t('spotlight.jumpToDashboard', { resource: t(`sources.${route.label}`) }),
         leftSection: <IconDashboard style={{ width: 18, height: 18, opacity: 0.7 }} />,
         onClick: () => {
             navigate({ to: route.to });
