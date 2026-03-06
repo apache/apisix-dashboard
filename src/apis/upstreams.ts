@@ -76,7 +76,13 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
       res.list.map((d) =>
         req.delete(`${API_UPSTREAMS}/${d.value.id}`).catch((err) => {
           // Ignore 404 errors as the resource might have been deleted
-          if (axios.isAxiosError(err) && err.response?.status === 404) return;
+          // Ignore 400 errors as the upstream might still be referenced by routes/services
+          if (
+            axios.isAxiosError(err) &&
+            (err.response?.status === 404 || err.response?.status === 400)
+          ) {
+            return;
+          }
           throw err;
         })
       )

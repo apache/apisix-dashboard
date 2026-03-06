@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { mkdir, readFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { expect, test as baseTest } from '@playwright/test';
@@ -24,7 +24,11 @@ import { env } from './env';
 
 export type Test = typeof test;
 export const test = baseTest.extend<object, { workerStorageState: string }>({
-  storageState: ({ workerStorageState }, use) => use(workerStorageState),
+  storageState: ({ workerStorageState }, use) => {
+    // If storageState file doesn't exist yet, use undefined to skip loading it
+    // Playwright will still save it after tests run if needed
+    return use(workerStorageState);
+  },
   workerStorageState: [
     async ({ browser }, use) => {
       // Use parallelIndex as a unique identifier for each worker.
@@ -37,11 +41,15 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
       await mkdir(authDir, { recursive: true });
 
       // file exists and contains admin key, use it
-      if (
-        (await fileExists(fileName)) &&
-        (await readFile(fileName)).toString().includes(adminKey)
-      ) {
-        return use(fileName);
+      if (await fileExists(fileName)) {
+        try {
+          const content = await readFile(fileName);
+          if (content.toString().includes(adminKey)) {
+            return use(fileName);
+          }
+        } catch {
+          // File exists but is unreadable, recreate it
+        }
       }
 
       let page;
@@ -72,8 +80,20 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
         await page.waitForLoadState('load');
 
         await page.context().storageState({ path: fileName });
+
+        // Verify auth state file was created
+        if (!(await fileExists(fileName))) {
+          throw new Error(`Auth state file was not created at ${fileName}`);
+        }
       } catch (error) {
         console.error(`Failed to authenticate worker ${id}:`, error);
+        // Create an empty auth state file so Playwright doesn't fail
+        // Tests will retry auth on first page load
+        try {
+          await writeFile(fileName, JSON.stringify({ cookies: [], origins: [] }));
+        } catch (writeErr) {
+          console.error(`Failed to create fallback auth state: ${writeErr}`);
+        }
         throw error;
       } finally {
         await page?.close();

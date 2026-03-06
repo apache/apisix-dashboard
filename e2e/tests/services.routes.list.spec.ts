@@ -24,13 +24,13 @@ import { expect, type Page } from '@playwright/test';
 
 import { getRouteListReq, postRouteReq } from '@/apis/routes';
 import { postServiceReq } from '@/apis/services';
-import type { APISIXType } from '@/types/schema/apisix';
+import type { RoutePostType } from '@/components/form-slice/FormPartRoute/schema';
 
 test.describe.configure({ mode: 'serial' });
 
 const serviceName = randomId('test-service');
 const anotherServiceName = randomId('another-service');
-const routes: APISIXType['Route'][] = [
+const routes: RoutePostType[] = [
   {
     name: randomId('route1'),
     uri: '/api/v1/test1',
@@ -52,7 +52,7 @@ const routes: APISIXType['Route'][] = [
 ];
 
 const upstreamRouteName = randomId('upstream-route');
-const upstreamRoute: APISIXType['Route'] = {
+const upstreamRoute: RoutePostType = {
   name: upstreamRouteName,
   uri: '/api/v1/upstream-test',
   methods: ['GET'],
@@ -63,7 +63,7 @@ const upstreamRoute: APISIXType['Route'] = {
 };
 
 const anotherServiceRouteName = randomId('another-service-route');
-const anotherServiceRoute: APISIXType['Route'] = {
+const anotherServiceRoute: RoutePostType = {
   name: anotherServiceRouteName,
   uri: '/api/v1/another-test',
   methods: ['GET'],
@@ -96,7 +96,7 @@ test.beforeAll(async () => {
 
   for (const route of routes) {
     const routeResponse = await postRouteReq(e2eReq, {
-      ...(route as Record<string, unknown>),
+      ...route,
       service_id: testServiceId,
     });
     if (!routeResponse.data?.value) {
@@ -106,14 +106,14 @@ test.beforeAll(async () => {
   }
 
 
-  const upstreamRouteResponse = await postRouteReq(e2eReq, upstreamRoute as unknown as Parameters<typeof postRouteReq>[1]);
+  const upstreamRouteResponse = await postRouteReq(e2eReq, upstreamRoute);
   if (!upstreamRouteResponse.data?.value) {
     throw new Error(`Failed to create upstream route: ${JSON.stringify(upstreamRouteResponse.data)}`);
   }
   upstreamRouteId = upstreamRouteResponse.data.value.id;
 
   const anotherServiceRouteResponse = await postRouteReq(e2eReq, {
-    ...(anotherServiceRoute as Record<string, unknown>),
+    ...anotherServiceRoute,
     service_id: anotherServiceId,
   });
   if (!anotherServiceRouteResponse.data?.value) {

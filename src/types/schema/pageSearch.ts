@@ -23,7 +23,7 @@ export const pageSearchSchema = z
       (val) => {
         if (val === undefined || val === null || val === '') return undefined;
         const num = Number(val);
-        return Number.isNaN(num) || num <= 0 ? undefined : num;
+        return Number.isNaN(num) || !Number.isInteger(num) || num <= 0 ? undefined : num;
       },
       z.number().int().min(1).optional().default(1)
     ),
@@ -31,7 +31,7 @@ export const pageSearchSchema = z
       (val) => {
         if (val === undefined || val === null || val === '') return undefined;
         const num = Number(val);
-        return Number.isNaN(num) || num <= 0 ? undefined : num;
+        return Number.isNaN(num) || !Number.isInteger(num) || num <= 0 ? undefined : num;
       },
       z.number().int().min(1).optional().default(10)
     ),
