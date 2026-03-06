@@ -72,9 +72,14 @@ export const getPlaywrightRequestAdapter = (
       };
 
       if (config.validateStatus && !config.validateStatus(status)) {
+        const errCode =
+          status >= 400 && status < 500
+            ? AxiosError.ERR_BAD_REQUEST
+            : AxiosError.ERR_BAD_RESPONSE;
+
         throw new AxiosError(
           `Request failed with status code ${status}`,
-          AxiosError.ERR_BAD_REQUEST,
+          errCode,
           config as unknown as InternalAxiosRequestConfig,
           undefined,
           response as unknown as AxiosResponse
