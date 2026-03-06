@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { expect, test as baseTest } from '@playwright/test';
@@ -85,13 +85,6 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
         }
       } catch (error) {
         console.error(`Failed to authenticate worker ${id}:`, error);
-        // Create an empty auth state file so Playwright doesn't fail
-        // Tests will retry auth on first page load
-        try {
-          await writeFile(fileName, JSON.stringify({ cookies: [], origins: [] }));
-        } catch (writeErr) {
-          console.error(`Failed to create fallback auth state: ${writeErr}`);
-        }
         throw error;
       } finally {
         await page?.close();
