@@ -145,8 +145,22 @@ export const FormItemEditor = <T extends FieldValues>(
           trigger(props.name);
         }}
         onMount={(editor) => {
-          if (process.env.NODE_ENV === 'test') {
+          // Only expose editor reference in test/development environments
+          if (
+            process.env.NODE_ENV === 'test' ||
+            process.env.NODE_ENV === 'development'
+          ) {
             window.__monacoEditor__ = editor;
+          }
+        }}
+        onUnmount={(editor) => {
+          // Only clean up if we're tracking this editor in tests/dev
+          if (
+            (process.env.NODE_ENV === 'test' ||
+              process.env.NODE_ENV === 'development') &&
+            window.__monacoEditor__ === editor
+          ) {
+            window.__monacoEditor__ = undefined;
           }
         }}
         loading={

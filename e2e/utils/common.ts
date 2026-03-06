@@ -16,6 +16,7 @@
  */
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { nanoid } from 'nanoid';
 import selfsigned from 'selfsigned';
@@ -25,7 +26,7 @@ type APISIXConf = {
   deployment: { admin: { admin_key: { key: string }[] } };
 };
 export const getAPISIXConf = async () => {
-  const currentDir = new URL('.', import.meta.url).pathname;
+  const currentDir = fileURLToPath(new URL('.', import.meta.url));
   const confPath = path.join(currentDir, '../server/apisix_conf.yml');
   const file = await readFile(confPath, 'utf-8');
   const res = parse(file) as APISIXConf;

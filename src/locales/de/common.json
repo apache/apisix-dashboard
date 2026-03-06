@@ -364,5 +364,7 @@
   },
   "upstreams": {
     "singular": "Upstream"
-  }
+  },
+  "copy": "Kopieren",
+  "copy_success": "Erfolgreich kopiert"
 }

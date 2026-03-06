@@ -17,6 +17,7 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
+import { Typography } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -40,7 +41,16 @@ function ConsumersList() {
         dataIndex: ['value', 'username'],
         title: t('form.consumers.username'),
         key: 'username',
-        valueType: 'text',
+        render: (_, record) => (
+          <Typography.Text
+            copyable={{
+              text: String(record.value.username),
+              tooltips: [t('copy'), t('copy_success')],
+            }}
+          >
+            {record.value.username}
+          </Typography.Text>
+        ),
       },
       {
         dataIndex: ['value', 'desc'],

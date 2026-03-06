@@ -139,7 +139,7 @@ test('should CRUD Consumer Group with all fields', async ({ page }) => {
     await consumerGroupsPom.isIndexPage(page);
 
     // Verify consumer group exists
-    await expect(page.getByRole('cell', { name: testId, exact: true })).toBeVisible();
+    await expect(page.getByRole('cell', { name: new RegExp(`^${testId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`) })).toBeVisible();
     await expect(
       page.getByRole('cell', { name: 'Updated description with all fields' })
     ).toBeVisible();
@@ -148,7 +148,7 @@ test('should CRUD Consumer Group with all fields', async ({ page }) => {
   await test.step('delete consumer group', async () => {
     // Click View to go to detail page
     await page
-      .getByRole('row', { name: new RegExp(testId) })
+      .getByRole('row', { name: new RegExp(`^${testId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`) })
       .getByRole('button', { name: 'View' })
       .click();
     await consumerGroupsPom.isDetailPage(page);
@@ -168,6 +168,6 @@ test('should CRUD Consumer Group with all fields', async ({ page }) => {
     });
 
     // Verify deletion
-    await expect(page.getByRole('cell', { name: testId, exact: true })).toBeHidden();
+    await expect(page.getByRole('cell', { name: new RegExp(`^${testId}`) })).toBeHidden();
   });
 });

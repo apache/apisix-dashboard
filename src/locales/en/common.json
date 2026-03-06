@@ -331,7 +331,6 @@
   "services": {
     "singular": "Service",
     "empty": "No services found. Click Add Service to create your first one."
-
   },
   "settings": {
     "adminKey": "Admin Key",
@@ -366,5 +365,7 @@
   },
   "upstreams": {
     "singular": "Upstream"
-  }
+  },
+  "copy_success": "Copy success",
+  "copy": "Copy"
 }
