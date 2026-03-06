@@ -70,7 +70,7 @@ test.describe('page and page_size should work correctly', () => {
       .getByRole('cell', { name: /test-consumer-group-/ })
       .all();
     const ids = await Promise.all(itemsInPage.map((v) => v.textContent()));
-    return consumerGroups.filter((d) => !ids.some(idText => idText?.includes(d.id)));
+    return consumerGroups.filter((d) => !ids.some((idText) => idText?.trim() === d.id));
   };
 
   setupPaginationTests(test, {
