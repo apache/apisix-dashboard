@@ -21,6 +21,7 @@ import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { I18nextProvider } from 'react-i18next';
 
+import { GlobalSpotlight } from '@/components/GlobalSpotlight';
 import { Header } from '@/components/Header';
 import { Navbar } from '@/components/Navbar';
 import { SettingsModal } from '@/components/page/SettingsModal';
@@ -55,6 +56,7 @@ const Root = () => {
       <TanStackRouterDevtools />
       <ReactQueryDevtools initialIsOpen={false} />
       <SettingsModal />
+      <GlobalSpotlight />
     </I18nextProvider>
   );
 };
