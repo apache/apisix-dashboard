@@ -159,12 +159,10 @@ export const FormItemEditor = <T extends FieldValues>(
         }}
         onMount={(editor) => {
           window.__monacoEditor__ = editor;
-          (window as any).__monacoEditor__ = editor;
         }}
         onUnmount={(editor) => {
-          const w = window as any;
-          if (w.__monacoEditor__ === editor) {
-            w.__monacoEditor__ = undefined;
+          if (window.__monacoEditor__ === editor) {
+            window.__monacoEditor__ = undefined;
           }
         }}
         loading={
