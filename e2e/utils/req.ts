@@ -43,19 +43,18 @@ export const getPlaywrightRequestAdapter = (
     const res = await ctx.fetch(urlWithBase, payload);
     const status = res.status();
 
-    // Idempotent DELETE: Treat 404 as 200 OK
-    if (method?.toLowerCase() === 'delete' && status === 404) {
-      console.warn(`[e2eReq] Ignored 404 on DELETE for ${urlWithBase}, treating as 200 OK.`);
-      return {
-        data: {},
-        status: 200,
-        statusText: 'OK',
-        headers: {},
-        config,
-      };
-    }
-
     try {
+      // Idempotent DELETE: Treat 404 as 200 OK
+      if (method?.toLowerCase() === 'delete' && status === 404) {
+        console.warn(`[e2eReq] Ignored 404 on DELETE for ${urlWithBase}, treating as 200 OK.`);
+        return {
+          data: {},
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        };
+      }
       let responseData = {};
       try {
         responseData = await res.json();

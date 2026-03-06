@@ -86,13 +86,14 @@ test('show disabled error', async ({ page }) => {
   await streamRoutesPom.toIndex(page);
 
   // Wait for the error message to appear (extra long timeout for CI after server restart)
+  // Target specifically either the empty state span or the notification div to avoid strict mode violations
   await expect(
-    page.getByText('stream mode is disabled, can not add stream routes')
+    page.locator('span:has-text("stream mode is disabled, can not add stream routes"), div.mantine-Notification-description:has-text("stream mode is disabled, can not add stream routes")').first()
   ).toBeVisible({ timeout: 30000 });
 
   // Verify the error message is still shown after refresh
   await page.reload();
   await expect(
-    page.getByText('stream mode is disabled, can not add stream routes')
+    page.locator('span:has-text("stream mode is disabled, can not add stream routes"), div.mantine-Notification-description:has-text("stream mode is disabled, can not add stream routes")').first()
   ).toBeVisible({ timeout: 30000 });
 });

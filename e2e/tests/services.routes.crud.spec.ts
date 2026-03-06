@@ -205,7 +205,8 @@ test('should CRUD route under service with required fields', async ({
     // We're already on the detail page from the previous step
 
     // Delete the route
-    await page.getByRole('button', { name: 'Delete' }).click();
+    // eslint-disable-next-line playwright/no-force-option
+    await page.getByRole('button', { name: 'Delete', exact: true }).click({ force: true });
 
     await page
       .getByRole('dialog', { name: 'Delete Route' })
