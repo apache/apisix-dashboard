@@ -164,7 +164,7 @@ test('should only show stream routes with current service_id', async ({ page }) 
 
   await test.step('without service_id stream routes should still exist in the stream routes list', async () => {
     // Navigate using POM to reach the correct base path
-    await page.goto(`${env.E2E_TARGET_URL}stream_routes`);
+    await uiGoto(page, '/stream_routes');
     await page.waitForLoadState('load');
 
     const searchByIP = async (ip: string) => {
