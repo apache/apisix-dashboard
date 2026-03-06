@@ -20,11 +20,19 @@ import { z } from 'zod';
 export const pageSearchSchema = z
   .object({
     page: z.preprocess(
-      (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
+      (val) => {
+        if (val === undefined || val === null || val === '') return undefined;
+        const num = Number(val);
+        return Number.isNaN(num) || num <= 0 ? undefined : num;
+      },
       z.number().int().min(1).optional().default(1)
     ),
     page_size: z.preprocess(
-      (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
+      (val) => {
+        if (val === undefined || val === null || val === '') return undefined;
+        const num = Number(val);
+        return Number.isNaN(num) || num <= 0 ? undefined : num;
+      },
       z.number().int().min(1).optional().default(10)
     ),
     name: z.string().optional(),

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { type APIRequestContext, request } from '@playwright/test';
-import axios, { type AxiosAdapter } from 'axios';
+import axios, { type AxiosAdapter, AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 import { stringify } from 'qs';
 
 import { API_HEADER_KEY, API_PREFIX, BASE_PATH } from '@/config/constant';
@@ -62,10 +62,7 @@ export const getPlaywrightRequestAdapter = (
       } catch {
         // ignore JSON parse errors on empty or text responses
       }
-      if (config.validateStatus && !config.validateStatus(status)) {
-        throw new Error(`Request failed with status code ${status}`);
-      }
-      return {
+      const response = {
         ...res,
         data: responseData,
         config,
@@ -73,6 +70,18 @@ export const getPlaywrightRequestAdapter = (
         statusText: res.statusText(),
         headers: res.headers(),
       };
+
+      if (config.validateStatus && !config.validateStatus(status)) {
+        throw new AxiosError(
+          `Request failed with status code ${status}`,
+          AxiosError.ERR_BAD_REQUEST,
+          config as unknown as InternalAxiosRequestConfig,
+          undefined,
+          response as unknown as AxiosResponse
+        );
+      }
+
+      return response;
     } finally {
       await res.dispose();
     }
