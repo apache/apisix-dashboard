@@ -114,7 +114,10 @@ test.describe('page and page_size should work correctly', () => {
       .getByRole('cell', { name: /global_rule_id_/ })
       .all();
     const ids = await Promise.all(itemsInPage.map((v) => v.textContent()));
-    return globalRules.filter((d) => !ids.some(idText => idText?.includes(d.id)));
+    const cellIds = ids
+      .map((text) => text?.match(/global_rule_id_\d+/)?.[0] ?? '')
+      .filter(Boolean) as string[];
+    return globalRules.filter((d) => !cellIds.includes(d.id));
   };
 
   setupPaginationTests(test, {
