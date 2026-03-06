@@ -87,11 +87,10 @@ const ResourceListPage = <T extends Record<string, unknown>>(
     () =>
       typeof rowKey === 'function'
         ? rowKey
-        : (record: T) => {
-          // APISIX list items wrap data in a `value` property
+        : (record: T, index?: number) => {
           const raw = record['value'];
           const value = isRecord(raw) ? raw : undefined;
-          return String(value?.[rowKey] ?? record[rowKey] ?? record['key'] ?? '');
+          return String(value?.[rowKey] ?? record[rowKey] ?? record['key'] ?? index ?? '');
         },
     [rowKey],
   );

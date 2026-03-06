@@ -25,8 +25,6 @@ import { env } from './env';
 export type Test = typeof test;
 export const test = baseTest.extend<object, { workerStorageState: string }>({
   storageState: ({ workerStorageState }, use) => {
-    // If storageState file doesn't exist yet, use undefined to skip loading it
-    // Playwright will still save it after tests run if needed
     return use(workerStorageState);
   },
   workerStorageState: [

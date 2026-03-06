@@ -17,6 +17,7 @@
 import { createFileRoute, useParams } from '@tanstack/react-router';
 
 import { getRouteListQueryOptions } from '@/apis/hooks';
+import type { WithServiceIdFilter } from '@/apis/routes';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { queryClient } from '@/config/global';
 import { RouteList } from '@/routes/routes';
@@ -50,6 +51,6 @@ export const Route = createFileRoute('/services/detail/$id/routes/')({
   loaderDeps: ({ search }) => search,
   loader: ({ deps, params: { id } }) =>
     queryClient.ensureQueryData(
-      getRouteListQueryOptions({ ...deps, filter: { service_id: id } }),
+      getRouteListQueryOptions({ ...deps, filter: { ...(deps as WithServiceIdFilter).filter, service_id: id } }),
     ),
 });
