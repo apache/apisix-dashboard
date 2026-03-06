@@ -109,19 +109,6 @@ export const FormItemEditor = <T extends FieldValues>(
     setLoading(false);
   }, [customSchema]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const editorRef = useRef<any>(null);
-
-  useEffect(() => {
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const w = window as any;
-      if (w.__monacoEditor__ === editorRef.current) {
-        w.__monacoEditor__ = undefined;
-      }
-    };
-  }, []);
-
   return (
     <InputWrapper
       error={fieldState.error?.message}
