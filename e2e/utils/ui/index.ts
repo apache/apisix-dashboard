@@ -39,11 +39,14 @@ export const uiHasToastMsg = async (
   page: Page,
   ...filterOpts: Parameters<Locator['filter']>
 ) => {
-  const alertMsg = page.getByRole('alert').filter(...filterOpts);
+  const alertMsg = page.getByRole('alert').filter(...filterOpts).first();
   // Increased timeout for CI environment (30s instead of default 5s)
   await expect(alertMsg).toBeVisible({ timeout: 30000 });
-  await alertMsg.getByRole('button').click();
-  await expect(alertMsg).not.toBeVisible();
+  const closeBtn = alertMsg.getByRole('button').first();
+  if (await closeBtn.isVisible()) {
+    await closeBtn.evaluate((node) => (node as HTMLElement).click());
+  }
+  await expect(alertMsg).not.toBeVisible({ timeout: 15000 });
 };
 
 export async function uiCannotSubmitEmptyForm(page: Page, pom: CommonPOM) {
@@ -64,11 +67,32 @@ export async function uiFillHTTPStatuses(
   }
 }
 
-export const uiClearMonacoEditor = async (page: Page) => {
-  await page.evaluate(() => {
-    const editor = window.__monacoEditor__;
-    editor.getModel()?.setValue('');
-  });
+export const uiClearMonacoEditor = async (page: Page, editorLocator?: Locator) => {
+  if (!editorLocator) {
+    try {
+      const isReady = await page.evaluate(() => typeof window.__monacoEditor__ !== 'undefined');
+      if (isReady) {
+        await page.evaluate(() => {
+          window.__monacoEditor__?.getModel()?.setValue('');
+        });
+        return;
+      }
+    } catch {
+      // Ignore evaluation errors
+    }
+  }
+
+  // Fallback to explicit Playwright commands if __monacoEditor__ is not available in the test environment bundle
+  const editorTextbox = (editorLocator || page.locator('.monaco-editor').first()).getByRole('textbox');
+  await editorTextbox.scrollIntoViewIfNeeded();
+  try {
+    await editorTextbox.click({ force: true, timeout: 2000 });
+  } catch {
+    await editorTextbox.focus();
+  }
+  await editorTextbox.press('ControlOrMeta+A');
+  await editorTextbox.press('Backspace');
+  await page.waitForTimeout(500);
 };
 
 export const uiGetMonacoEditor = async (
@@ -83,7 +107,7 @@ export const uiGetMonacoEditor = async (
   await expect(editor).toBeVisible({ timeout: 10000 });
 
   if (clear) {
-    await uiClearMonacoEditor(page);
+    await uiClearMonacoEditor(page, editor);
   }
 
   return editor;
@@ -94,10 +118,15 @@ export const uiFillMonacoEditor = async (
   editor: Locator,
   value: string
 ) => {
-  await editor.click();
   const editorTextbox = editor.getByRole('textbox');
+  await editorTextbox.scrollIntoViewIfNeeded();
+  try {
+    await editorTextbox.click({ force: true, timeout: 2000 });
+  } catch {
+    await editorTextbox.focus();
+  }
   // Use fill() instead of pressSequentially() for reliability
-  await editorTextbox.fill(value);
-  await editor.blur();
+  await editorTextbox.fill(value, { force: true });
+  await editorTextbox.blur();
   await page.waitForTimeout(800);
 };

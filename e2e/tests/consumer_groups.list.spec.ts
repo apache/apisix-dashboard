@@ -47,6 +47,7 @@ const consumerGroups: APISIXType['ConsumerGroupPut'][] = Array.from(
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
+
   test.beforeAll(async () => {
     await deleteAllConsumerGroups(e2eReq);
     await Promise.all(
@@ -77,6 +78,6 @@ test.describe('page and page_size should work correctly', () => {
     items: consumerGroups,
     filterItemsNotInPage,
     getCell: (page, item) =>
-      page.getByRole('cell', { name: item.id }).first(),
+      page.getByRole('cell', { name: item.id, exact: true }).first(),
   });
 });

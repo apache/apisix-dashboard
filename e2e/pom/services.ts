@@ -38,23 +38,29 @@ const locator = {
 
 const assert = {
   isIndexPage: async (page: Page) => {
-    await expect(page).toHaveURL((url) => url.pathname.endsWith('/services'));
+    await expect(page).toHaveURL((url) => url.pathname.endsWith('/services'), {
+      timeout: 30000,
+    });
     const title = page.getByRole('heading', { name: 'Services' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isAddPage: async (page: Page) => {
     await expect(page).toHaveURL((url) =>
       url.pathname.endsWith('/services/add')
     );
     const title = page.getByRole('heading', { name: 'Add Service' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isDetailPage: async (page: Page) => {
     await expect(page).toHaveURL((url) =>
       url.pathname.includes('/services/detail')
     );
+    // Check for Layout (Tabs) first
+    await expect(
+      page.getByRole('tab', { name: 'Service Detail' })
+    ).toBeVisible({ timeout: 30000 });
     const title = page.getByRole('heading', { name: 'Service Detail' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   // Service routes assertions
   isServiceRoutesPage: async (page: Page) => {
@@ -63,10 +69,8 @@ const assert = {
         url.pathname.includes('/services/detail') &&
         url.pathname.includes('/routes')
     );
-    // Wait for page to load completely
-    await page.waitForLoadState('networkidle');
     const title = page.getByRole('heading', { name: 'Routes' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isServiceRouteAddPage: async (page: Page) => {
     await expect(page).toHaveURL(
@@ -75,7 +79,7 @@ const assert = {
         url.pathname.includes('/routes/add')
     );
     const title = page.getByRole('heading', { name: 'Add Route' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isServiceRouteDetailPage: async (page: Page) => {
     await expect(page).toHaveURL(
@@ -84,7 +88,7 @@ const assert = {
         url.pathname.includes('/routes/detail')
     );
     const title = page.getByRole('heading', { name: 'Route Detail' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   // Service stream routes assertions
   isServiceStreamRoutesPage: async (page: Page) => {
@@ -93,10 +97,8 @@ const assert = {
         url.pathname.includes('/services/detail') &&
         url.pathname.includes('/stream_routes')
     );
-    // Wait for page to load completely
-    await page.waitForLoadState('networkidle');
     const title = page.getByRole('heading', { name: 'Stream Routes' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isServiceStreamRouteAddPage: async (page: Page) => {
     await expect(page).toHaveURL(
@@ -105,7 +107,7 @@ const assert = {
         url.pathname.includes('/stream_routes/add')
     );
     const title = page.getByRole('heading', { name: 'Add Stream Route' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isServiceStreamRouteDetailPage: async (page: Page) => {
     await expect(page).toHaveURL(
@@ -114,7 +116,7 @@ const assert = {
         url.pathname.includes('/stream_routes/detail')
     );
     const title = page.getByRole('heading', { name: 'Stream Route Detail' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
 };
 

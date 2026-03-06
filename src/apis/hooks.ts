@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { queryOptions, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  queryOptions,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import type { AxiosInstance } from 'axios';
 
 import { getRouteListReq, getRouteReq } from '@/apis/routes';
@@ -53,24 +56,24 @@ const genDetailQueryOptions =
       ...args: T
     ) => Promise<APISIXDetailResponse<R>>
   ) =>
-  (...args: T) => {
-    return queryOptions({
-      queryKey: [key, ...args],
-      queryFn: () => getDetailReq(req, ...args),
-    });
-  };
+    (...args: T) => {
+      return queryOptions({
+        queryKey: [key, ...args],
+        queryFn: () => getDetailReq(req, ...args),
+      });
+    };
 /** simple factory func for list query options which support extends PageSearchType */
 const genListQueryOptions =
   <P extends PageSearchType, R>(
     key: string,
     listReq: (req: AxiosInstance, props: P) => Promise<APISIXListResponse<R>>
   ) =>
-  (props: P) => {
-    return queryOptions({
-      queryKey: [key, props],
-      queryFn: () => listReq(req, props),
-    });
-  };
+    (props: P) => {
+      return queryOptions({
+        queryKey: [key, props],
+        queryFn: () => listReq(req, props),
+      });
+    };
 
 /** simple hook factory func for list hooks which support extends PageSearchType */
 export const genUseList = <

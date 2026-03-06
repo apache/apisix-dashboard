@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,9 +22,8 @@ import { useTranslation } from 'react-i18next';
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import ResourceListPage from '@/components/page/ResourceListPage';
+import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
@@ -38,15 +36,16 @@ export type RouteListProps = {
   ToDetailBtn: (props: {
     record: APISIXType['RespRouteItem'];
   }) => React.ReactNode;
+  titleKey?: string;
 };
 
 export const RouteList = (props: RouteListProps) => {
-  const { routeKey, ToDetailBtn, defaultParams } = props;
-  const { data, isLoading, refetch, pagination } = useRouteList(
-    routeKey,
-    defaultParams
-  );
+  const { routeKey, ToDetailBtn, defaultParams, titleKey } = props;
   const { t } = useTranslation();
+  const { data, isLoading, pagination, refetch } = useRouteList(
+    routeKey,
+    defaultParams,
+  );
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
@@ -94,56 +93,30 @@ export const RouteList = (props: RouteListProps) => {
   }, [t, ToDetailBtn, refetch]);
 
   return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    label={t('info.add.title', {
-                      name: t('routes.singular'),
-                    })}
-                    to={`${routeKey}add`}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
+    <ResourceListPage
+      titleKey={titleKey}
+      columns={columns}
+      queryData={{ data, isLoading, pagination, refetch }}
+      rowKey="id"
+      addPageTo={`${routeKey}add`}
+      resourceNameKey="routes.singular"
+    />
   );
 };
 
 function RouteComponent() {
-  const { t } = useTranslation();
   return (
-    <>
-      <PageHeader title={t('sources.routes')} />
-      <RouteList
-        routeKey="/routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/routes/detail/$id"
-            params={{ id: record.value.id }}
-          />
-        )}
-      />
-    </>
+    <RouteList
+      titleKey="sources.routes"
+      routeKey="/routes/"
+      ToDetailBtn={({ record }) => (
+        <ToDetailPageBtn
+          key="detail"
+          to="/routes/detail/$id"
+          params={{ id: record.value.id }}
+        />
+      )}
+    />
   );
 }
 

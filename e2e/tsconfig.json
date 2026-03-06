@@ -15,7 +15,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
+    "noEmit": true,
     "verbatimModuleSyntax": true,
+    "types": ["node"],
     "paths": {
       "@e2e/*": [
         "./*"

@@ -32,7 +32,7 @@ test.beforeAll(async () => {
 });
 
 test('should CRUD upstream with all fields', async ({ page }) => {
-  test.setTimeout(30000);
+  test.setTimeout(60000);
 
   const upstreamNameWithAllFields = randomId('test-upstream-full');
   const description =

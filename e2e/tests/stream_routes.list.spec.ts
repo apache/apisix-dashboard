@@ -20,7 +20,6 @@ import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { expect, type Page } from '@playwright/test';
 
-import { deleteAllStreamRoutes } from '@/apis/stream_routes';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 
@@ -45,10 +44,12 @@ test('should navigate to stream routes page', async ({ page }) => {
   });
 });
 
+const uniquePrefix = `stream_route_list_${Date.now()}`;
 const streamRoutes: APISIXType['StreamRoute'][] = Array.from(
   { length: 11 },
   (_, i) => ({
-    id: `stream_route_id_${i + 1}`,
+    id: `${uniquePrefix}_id_${i + 1}`,
+    desc: `${uniquePrefix}`,
     server_addr: `127.0.0.${i + 1}`,
     server_port: 9000 + i,
     create_time: Date.now(),
@@ -58,8 +59,10 @@ const streamRoutes: APISIXType['StreamRoute'][] = Array.from(
 
 test.describe('page and page_size should work correctly', () => {
   test.describe.configure({ mode: 'serial' });
+
   test.beforeAll(async () => {
-    await deleteAllStreamRoutes(e2eReq);
+    // Removed global cleanup to allow parallel execution
+    // await deleteAllStreamRoutes(e2eReq);
     await Promise.all(
       streamRoutes.map((d) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,7 +85,7 @@ test.describe('page and page_size should work correctly', () => {
     // filter the item which not in the current page
     // it should be random, so we need get all items in the table
     const itemsInPage = await page
-      .getByRole('cell', { name: /stream_route_id_/ })
+      .getByRole('cell', { name: new RegExp(`${uniquePrefix}_id_`) })
       .all();
     const ids = await Promise.all(itemsInPage.map((v) => v.textContent()));
     return streamRoutes.filter((d) => !ids.includes(d.id));
@@ -93,7 +96,7 @@ test.describe('page and page_size should work correctly', () => {
     items: streamRoutes,
     filterItemsNotInPage,
     getCell: (page, item) =>
-      page.getByRole('cell', { name: item.id }).first(),
+      page.getByRole('cell', { name: new RegExp(`^${item.id}$`) }).first(),
   });
 });
 
