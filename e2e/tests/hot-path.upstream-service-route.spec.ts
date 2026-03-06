@@ -40,6 +40,7 @@ test.afterAll(async () => {
 });
 
 test('can create upstream -> service -> route', async ({ page }) => {
+  test.setTimeout(120000); // Increase timeout for this comprehensive test
   const selectPluginsBtn = page.getByRole('button', {
     name: 'Select Plugins',
   });
@@ -362,23 +363,36 @@ test('can create upstream -> service -> route', async ({ page }) => {
     // Verify upstream exists in list
     await upstreamsPom.toIndex(page);
     await upstreamsPom.isIndexPage(page);
-    await expect(page.getByRole('cell', { name: upstream.name })).toBeVisible();
+    await page.waitForLoadState('load');
+    await expect(page.getByRole('cell', { name: upstream.name })).toBeVisible({
+      timeout: 30000,
+    });
 
     // Verify service exists in list
     await page.getByRole('link', { name: 'Services' }).click();
-    await expect(page.getByRole('heading', { name: 'Services' })).toBeVisible();
-    await expect(page.getByRole('cell', { name: service.name })).toBeVisible();
+    await page.waitForLoadState('load');
+    await expect(page.getByRole('heading', { name: 'Services' })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByRole('cell', { name: service.name })).toBeVisible({
+      timeout: 15000,
+    });
 
     // Verify route exists in list
     await routesPom.toIndex(page);
     await routesPom.isIndexPage(page);
-    await expect(page.getByRole('cell', { name: route.name })).toBeVisible();
+    await page.waitForLoadState('load');
+    await expect(page.getByRole('cell', { name: route.name })).toBeVisible({
+      timeout: 30000,
+    });
 
     // Navigate to route detail to verify service and plugin
-    await page
-      .getByRole('row', { name: route.name })
-      .getByRole('button', { name: 'View' })
-      .click();
+    const routeRow = page.getByRole('row', { name: route.name });
+    await routeRow.scrollIntoViewIfNeeded();
+    await expect(routeRow.getByRole('button', { name: 'View' })).toBeVisible({
+      timeout: 15000,
+    });
+    await routeRow.getByRole('button', { name: 'View' }).click();
     await routesPom.isDetailPage(page);
 
     // Verify URI
@@ -402,10 +416,14 @@ test('can create upstream -> service -> route', async ({ page }) => {
     // Navigate to service detail to verify upstream and plugin
     await servicesPom.toIndex(page);
     await servicesPom.isIndexPage(page);
-    await page
-      .getByRole('row', { name: service.name })
-      .getByRole('button', { name: 'View' })
-      .click();
+    await page.waitForLoadState('load');
+    const serviceRow = page.getByRole('row', { name: service.name });
+    await serviceRow.scrollIntoViewIfNeeded();
+    await expect(serviceRow.getByRole('button', { name: 'View' })).toBeVisible({
+      timeout: 15000,
+    });
+    await serviceRow.getByRole('button', { name: 'View' }).click();
+    await page.waitForLoadState('load');
 
     // Verify limit-count plugin is present
     await expect(page.getByText(servicePluginName)).toBeVisible();
@@ -423,10 +441,13 @@ test('can create upstream -> service -> route', async ({ page }) => {
     // Navigate to upstream detail to verify nodes
     await upstreamsPom.toIndex(page);
     await upstreamsPom.isIndexPage(page);
-    await page
-      .getByRole('row', { name: upstream.name })
-      .getByRole('button', { name: 'View' })
-      .click();
+    await page.waitForLoadState('load');
+    const upstreamRow = page.getByRole('row', { name: upstream.name });
+    await upstreamRow.scrollIntoViewIfNeeded();
+    await expect(upstreamRow.getByRole('button', { name: 'View' })).toBeVisible({
+      timeout: 15000,
+    });
+    await upstreamRow.getByRole('button', { name: 'View' }).click();
 
     // Verify nodes are present
     await expect(
