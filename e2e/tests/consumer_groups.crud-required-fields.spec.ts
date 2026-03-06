@@ -94,7 +94,7 @@ test('should CRUD Consumer Group with required fields', async ({ page }) => {
 
     // Verify consumer group exists in list
     await expect(
-      page.getByRole('cell', { name: new RegExp(`^${testId}`) })
+      page.getByRole('cell', { name: new RegExp(`^${testId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`) })
     ).toBeVisible();
   });
 
