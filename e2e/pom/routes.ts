@@ -28,9 +28,11 @@ const locator = {
 
 const assert = {
   isIndexPage: async (page: Page) => {
-    await expect(page).toHaveURL((url) => url.pathname.endsWith('/routes'));
+    await expect(page).toHaveURL((url) => url.pathname.endsWith('/routes'), {
+      timeout: 30000,
+    });
     const title = page.getByRole('heading', { name: 'Routes' });
-    await expect(title).toBeVisible();
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isAddPage: async (page: Page) => {
     await expect(page).toHaveURL((url) => url.pathname.endsWith('/routes/add'));

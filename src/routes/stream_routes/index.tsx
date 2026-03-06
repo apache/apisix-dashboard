@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getStreamRouteListQueryOptions, useStreamRouteList } from '@/apis/hooks';
+import {
+  getStreamRouteListQueryOptions,
+  useStreamRouteList,
+} from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
+import ResourceListPage from '@/components/page/ResourceListPage';
+import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
@@ -42,15 +43,16 @@ export type StreamRouteListProps = {
     record: APISIXType['RespStreamRouteItem'];
   }) => React.ReactNode;
   defaultParams?: Partial<WithServiceIdFilter>;
+  titleKey?: string;
 };
 
 export const StreamRouteList = (props: StreamRouteListProps) => {
-  const { routeKey, ToDetailBtn, defaultParams } = props;
-  const { data, isLoading, refetch, pagination } = useStreamRouteList(
-    routeKey,
-    defaultParams
-  );
+  const { routeKey, ToDetailBtn, defaultParams, titleKey } = props;
   const { t } = useTranslation();
+  const { refetch, data, isLoading, pagination } = useStreamRouteList(
+    routeKey,
+    defaultParams,
+  );
 
   const columns = useMemo<
     ProColumns<APISIXType['RespStreamRouteItem']>[]
@@ -100,57 +102,30 @@ export const StreamRouteList = (props: StreamRouteListProps) => {
   }, [t, ToDetailBtn, refetch]);
 
   return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    label={t('info.add.title', {
-                      name: t('streamRoutes.singular'),
-                    })}
-                    to={`${routeKey}add`}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
+    <ResourceListPage
+      titleKey={titleKey}
+      columns={columns}
+      queryData={{ data, isLoading, pagination, refetch }}
+      rowKey="id"
+      addPageTo={`${routeKey}add`}
+      resourceNameKey="streamRoutes.singular"
+    />
   );
 };
 
 function StreamRouteComponent() {
-  const { t } = useTranslation();
-
   return (
-    <>
-      <PageHeader title={t('sources.streamRoutes')} />
-      <StreamRouteList
-        routeKey="/stream_routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/stream_routes/detail/$id"
-            params={{ id: record.value.id }}
-          />
-        )}
-      />
-    </>
+    <StreamRouteList
+      titleKey="sources.streamRoutes"
+      routeKey="/stream_routes/"
+      ToDetailBtn={({ record }) => (
+        <ToDetailPageBtn
+          key="detail"
+          to="/stream_routes/detail/$id"
+          params={{ id: record.value.id }}
+        />
+      )}
+    />
   );
 }
 

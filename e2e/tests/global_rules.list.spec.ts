@@ -121,6 +121,6 @@ test.describe('page and page_size should work correctly', () => {
     pom: globalRulePom,
     items: globalRules,
     filterItemsNotInPage,
-    getCell: (page, item) => page.getByRole('cell', { name: item.id }).first(),
+    getCell: (page, item) => page.getByRole('cell', { name: item.id, exact: true }).first(),
   });
 });

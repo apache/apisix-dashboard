@@ -32,3 +32,4 @@ dist-ssr
 /playwright/.cache/
 
 .eslintcache
+*.tsbuildinfo

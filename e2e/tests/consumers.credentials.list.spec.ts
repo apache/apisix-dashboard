@@ -149,13 +149,13 @@ test('should only show credentials for current consumer', async ({ page }) => {
 
     // Credentials from another consumer should not be visible
     await expect(
-      page.getByRole('cell', { name: anotherConsumerCredential.id })
+      page.getByRole('cell', { name: anotherConsumerCredential.id, exact: true })
     ).toBeHidden();
 
     // Only credentials belonging to current consumer should be visible
     for (const credential of credentials) {
       await expect(
-        page.getByRole('cell', { name: credential.id })
+        page.getByRole('cell', { name: credential.id, exact: true })
       ).toBeVisible();
     }
   });
@@ -167,13 +167,13 @@ test('should only show credentials for current consumer', async ({ page }) => {
 
     // Should only see the other consumer's credential
     await expect(
-      page.getByRole('cell', { name: anotherConsumerCredential.id })
+      page.getByRole('cell', { name: anotherConsumerCredential.id, exact: true })
     ).toBeVisible();
 
     // Should not see test consumer's credentials
     for (const credential of credentials) {
       await expect(
-        page.getByRole('cell', { name: credential.id })
+        page.getByRole('cell', { name: credential.id, exact: true })
       ).toBeHidden();
     }
   });
@@ -190,7 +190,7 @@ test('should display credentials list under consumer', async ({ page }) => {
     // Verify all created credentials are displayed
     for (const credential of credentials) {
       await expect(
-        page.getByRole('cell', { name: credential.id })
+        page.getByRole('cell', { name: credential.id, exact: true })
       ).toBeVisible();
       await expect(
         page.getByRole('cell', { name: credential.desc || '' })
@@ -290,7 +290,7 @@ test('should be able to delete credential', async ({ page }) => {
 
   await test.step('verify temporary credential exists', async () => {
     await expect(
-      page.getByRole('cell', { name: tempCredential.id })
+      page.getByRole('cell', { name: tempCredential.id, exact: true })
     ).toBeVisible();
   });
 
@@ -317,7 +317,7 @@ test('should be able to delete credential', async ({ page }) => {
 
     // Verify the credential no longer appears
     await expect(
-      page.getByRole('cell', { name: tempCredential.id })
+      page.getByRole('cell', { name: tempCredential.id, exact: true })
     ).toBeHidden();
   });
 });

@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 import { createFileRoute, useParams } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
 
 import { getStreamRouteListQueryOptions } from '@/apis/hooks';
-import PageHeader from '@/components/page/PageHeader';
+import type { WithServiceIdFilter } from '@/apis/routes';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { queryClient } from '@/config/global';
@@ -26,27 +25,24 @@ import { StreamRouteList } from '@/routes/stream_routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function StreamRouteComponent() {
-  const { t } = useTranslation();
   const { id } = useParams({ from: '/services/detail/$id/stream_routes/' });
   return (
-    <>
-      <PageHeader title={t('sources.streamRoutes')} />
-      <StreamRouteList
-        routeKey="/services/detail/$id/stream_routes/"
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/services/detail/$id/stream_routes/detail/$routeId"
-            params={{ id, routeId: record.value.id }}
-          />
-        )}
-        defaultParams={{
-          filter: {
-            service_id: id,
-          },
-        }}
-      />
-    </>
+    <StreamRouteList
+      titleKey="sources.streamRoutes"
+      routeKey="/services/detail/$id/stream_routes/"
+      ToDetailBtn={({ record }) => (
+        <ToDetailPageBtn
+          key="detail"
+          to="/services/detail/$id/stream_routes/detail/$routeId"
+          params={{ id, routeId: record.value.id }}
+        />
+      )}
+      defaultParams={{
+        filter: {
+          service_id: id,
+        },
+      }}
+    />
   );
 }
 
@@ -55,6 +51,8 @@ export const Route = createFileRoute('/services/detail/$id/stream_routes/')({
   errorComponent: StreamRoutesErrorComponent,
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(getStreamRouteListQueryOptions(deps)),
+  loader: ({ deps, params: { id } }) =>
+    queryClient.ensureQueryData(
+      getStreamRouteListQueryOptions({ ...deps, filter: { ...(deps as WithServiceIdFilter).filter, service_id: id } }),
+    ),
 });

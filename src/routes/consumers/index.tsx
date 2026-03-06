@@ -15,24 +15,22 @@
  * limitations under the License.
  */
 import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getConsumerListQueryOptions, useConsumerList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import ResourceListPage from '@/components/page/ResourceListPage';
+import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_CONSUMERS } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
-function ConsumersList() {
+const RouteComponent = () => {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useConsumerList();
+  const { data, isLoading, pagination, refetch } = useConsumerList();
 
   const columns = useMemo<ProColumns<APISIXType['RespConsumerItem']>[]>(() => {
     return [
@@ -83,49 +81,16 @@ function ConsumersList() {
   }, [refetch, t]);
 
   return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="username"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/consumers/add"
-                    label={t('info.add.title', {
-                      name: t('consumers.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
-        }}
-      />
-    </AntdConfigProvider>
+    <ResourceListPage
+      titleKey="sources.consumers"
+      columns={columns}
+      queryData={{ data, isLoading, pagination, refetch }}
+      rowKey="username"
+      addPageTo="/consumers/add"
+      resourceNameKey="consumers.singular"
+    />
   );
-}
-
-function RouteComponent() {
-  const { t } = useTranslation();
-  return (
-    <>
-      <PageHeader title={t('sources.consumers')} />
-      <ConsumersList />
-    </>
-  );
-}
+};
 
 export const Route = createFileRoute('/consumers/')({
   component: RouteComponent,

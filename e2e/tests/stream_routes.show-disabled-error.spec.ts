@@ -33,36 +33,29 @@
 import { exec } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
 import { streamRoutesPom } from '@e2e/pom/stream_routes';
 import { env } from '@e2e/utils/env';
 import { test } from '@e2e/utils/test';
 import { expect } from '@playwright/test';
-import { produce, type WritableDraft } from 'immer';
-import { parse, stringify } from 'yaml';
 
 const execAsync = promisify(exec);
 
-type APISIXConf = {
-  apisix: {
-    proxy_mode: string;
-  };
-};
-
 const getE2EServerDir = () => {
-  const currentDir = new URL('.', import.meta.url).pathname;
+  const currentDir = path.dirname(fileURLToPath(import.meta.url));
   return path.join(currentDir, '../server');
 };
 
-const updateAPISIXConf = async (
-  func: (v: WritableDraft<APISIXConf>) => void
-) => {
+const updateAPISIXProxyMode = async (mode: string) => {
   const confPath = path.join(getE2EServerDir(), 'apisix_conf.yml');
   const fileContent = await readFile(confPath, 'utf-8');
-  const config = parse(fileContent) as APISIXConf;
 
-  const updatedContent = stringify(produce(config, func));
+  const updatedContent = fileContent.replace(
+    /proxy_mode:\s+[^\r\n]*/,
+    `proxy_mode: ${mode}`
+  );
   await writeFile(confPath, updatedContent, 'utf-8');
 };
 
@@ -80,16 +73,12 @@ const restartDockerServices = async () => {
 };
 
 test.beforeAll(async () => {
-  await updateAPISIXConf((d) => {
-    d.apisix.proxy_mode = 'http';
-  });
+  await updateAPISIXProxyMode('http');
   await restartDockerServices();
 });
 
 test.afterAll(async () => {
-  await updateAPISIXConf((d) => {
-    d.apisix.proxy_mode = 'http&stream';
-  });
+  await updateAPISIXProxyMode('http&stream');
   await restartDockerServices();
 });
 
@@ -97,13 +86,14 @@ test('show disabled error', async ({ page }) => {
   await streamRoutesPom.toIndex(page);
 
   // Wait for the error message to appear (extra long timeout for CI after server restart)
+  // Target specifically either the empty state span or the notification div to avoid strict mode violations
   await expect(
-    page.getByText('stream mode is disabled, can not add stream routes')
+    page.locator('span:has-text("stream mode is disabled, can not add stream routes"), div.mantine-Notification-description:has-text("stream mode is disabled, can not add stream routes")').first()
   ).toBeVisible({ timeout: 30000 });
 
   // Verify the error message is still shown after refresh
   await page.reload();
   await expect(
-    page.getByText('stream mode is disabled, can not add stream routes')
+    page.locator('span:has-text("stream mode is disabled, can not add stream routes"), div.mantine-Notification-description:has-text("stream mode is disabled, can not add stream routes")').first()
   ).toBeVisible({ timeout: 30000 });
 });

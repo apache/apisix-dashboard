@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { type APIRequestContext, request } from '@playwright/test';
-import axios, { type AxiosAdapter } from 'axios';
+import axios, { type AxiosAdapter, AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 import { stringify } from 'qs';
 
 import { API_HEADER_KEY, API_PREFIX, BASE_PATH } from '@/config/constant';
@@ -27,7 +27,7 @@ export const getPlaywrightRequestAdapter = (
   ctx: APIRequestContext
 ): AxiosAdapter => {
   return async (config) => {
-    const { url, data, baseURL } = config;
+    const { url, data, baseURL, method } = config;
     if (typeof url === 'undefined') {
       throw new Error('Need to provide a url');
     }
@@ -35,22 +35,57 @@ export const getPlaywrightRequestAdapter = (
     type Payload = Parameters<APIRequestContext['fetch']>[1];
     const payload: Payload = {
       headers: config.headers,
-      method: config.method,
-      failOnStatusCode: true,
+      method,
+      failOnStatusCode: false,
       data,
     };
     const urlWithBase = `${baseURL}${url}`;
     const res = await ctx.fetch(urlWithBase, payload);
+    const status = res.status();
 
     try {
-      return {
+      // Idempotent DELETE: Treat 404 as 200 OK
+      if (method?.toLowerCase() === 'delete' && status === 404) {
+        console.warn(`[e2eReq] Ignored 404 on DELETE for ${urlWithBase}, treating as 200 OK.`);
+        return {
+          data: {},
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        };
+      }
+      let responseData = {};
+      try {
+        responseData = await res.json();
+      } catch {
+        // ignore JSON parse errors on empty or text responses
+      }
+      const response = {
         ...res,
-        data: await res.json(),
+        data: responseData,
         config,
-        status: res.status(),
+        status,
         statusText: res.statusText(),
         headers: res.headers(),
       };
+
+      if (config.validateStatus && !config.validateStatus(status)) {
+        const errCode =
+          status >= 400 && status < 500
+            ? AxiosError.ERR_BAD_REQUEST
+            : AxiosError.ERR_BAD_RESPONSE;
+
+        throw new AxiosError(
+          `Request failed with status code ${status}`,
+          errCode,
+          config as unknown as InternalAxiosRequestConfig,
+          undefined,
+          response as unknown as AxiosResponse
+        );
+      }
+
+      return response;
     } finally {
       await res.dispose();
     }

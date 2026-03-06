@@ -15,24 +15,22 @@
  * limitations under the License.
  */
 import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getUpstreamListQueryOptions, useUpstreamList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
-import PageHeader from '@/components/page/PageHeader';
-import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
-import { AntdConfigProvider } from '@/config/antdConfigProvider';
+import ResourceListPage from '@/components/page/ResourceListPage';
+import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { API_UPSTREAMS } from '@/config/constant';
 import { queryClient } from '@/config/global';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
-function RouteComponent() {
+const RouteComponent = () => {
   const { t } = useTranslation();
-  const { data, isLoading, refetch, pagination } = useUpstreamList();
+  const { data, isLoading, pagination, refetch } = useUpstreamList();
 
   const columns = useMemo<
     ProColumns<APISIXType['RespUpstreamList']['data']['list'][number]>[]
@@ -90,42 +88,16 @@ function RouteComponent() {
   }, [t, refetch]);
 
   return (
-    <>
-      <PageHeader title={t('sources.upstreams')} />
-      <AntdConfigProvider>
-        <ProTable
-          columns={columns}
-          dataSource={data?.list}
-          rowKey="id"
-          loading={isLoading}
-          search={false}
-          options={false}
-          pagination={pagination}
-          cardProps={{ bodyStyle: { padding: 0 } }}
-          toolbar={{
-            menu: {
-              type: 'inline',
-              items: [
-                {
-                  key: 'add',
-                  label: (
-                    <ToAddPageBtn
-                      key="add"
-                      to="/upstreams/add"
-                      label={t('info.add.title', {
-                        name: t('upstreams.singular'),
-                      })}
-                    />
-                  ),
-                },
-              ],
-            },
-          }}
-        />
-      </AntdConfigProvider>
-    </>
+    <ResourceListPage
+      titleKey="sources.upstreams"
+      columns={columns}
+      queryData={{ data, isLoading, pagination, refetch }}
+      rowKey="id"
+      addPageTo="/upstreams/add"
+      resourceNameKey="upstreams.singular"
+    />
   );
-}
+};
 
 export const Route = createFileRoute('/upstreams/')({
   component: RouteComponent,
