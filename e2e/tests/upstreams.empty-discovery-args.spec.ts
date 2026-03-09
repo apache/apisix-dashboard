@@ -59,59 +59,59 @@ test('should preserve empty discovery_args after editing upstream', async ({
     expect(data.value.discovery_args).toEqual({});
   });
 
-    await test.step('navigate to upstream detail page', async () => {
-        await upstreamsPom.toIndex(page);
-        await upstreamsPom.isIndexPage(page);
+  await test.step('navigate to upstream detail page', async () => {
+    await upstreamsPom.toIndex(page);
+    await upstreamsPom.isIndexPage(page);
 
-        // Click on the upstream to view details
-        const row = page.locator('tr').filter({ hasText: upstream.name });
-        await expect(row).toBeVisible();
-        await row.getByRole('button', { name: 'View' }).click();
-        await upstreamsPom.isDetailPage(page);
+    // Click on the upstream to view details
+    const row = page.locator('tr').filter({ hasText: upstream.name });
+    await expect(row).toBeVisible();
+    await row.getByRole('button', { name: 'View' }).click();
+    await upstreamsPom.isDetailPage(page);
+  });
+
+  await test.step('edit upstream description and save', async () => {
+    // Click Edit button
+    await page.getByRole('button', { name: 'Edit' }).click();
+
+    // Verify we're in edit mode
+    const nameField = page.getByLabel('Name', { exact: true }).first();
+    await expect(nameField).toBeEnabled();
+
+    // Verify discovery fields are visible
+    const discoverySection = page.getByRole('group', {
+      name: 'Service Discovery',
+    });
+    await expect(discoverySection).toBeVisible();
+
+    // Update the description to trigger a change
+    const descriptionField = page.getByLabel('Description').first();
+    await descriptionField.fill(
+      'Updated description to verify discovery_args persists'
+    );
+
+    // Save the changes
+    const saveBtn = page.getByRole('button', { name: 'Save' });
+    await saveBtn.click();
+
+    // Verify the update was successful
+    await uiHasToastMsg(page, {
+      hasText: 'success',
     });
 
-    await test.step('edit upstream description and save', async () => {
-        // Click Edit button
-        await page.getByRole('button', { name: 'Edit' }).click();
+    // Verify we're back in detail view mode
+    await upstreamsPom.isDetailPage(page);
+  });
 
-        // Verify we're in edit mode
-        const nameField = page.getByLabel('Name', { exact: true }).first();
-        await expect(nameField).toBeEnabled();
-
-        // Verify discovery fields are visible
-        const discoverySection = page.getByRole('group', {
-            name: 'Service Discovery',
-        });
-        await expect(discoverySection).toBeVisible();
-
-        // Update the description to trigger a change
-        const descriptionField = page.getByLabel('Description').first();
-        await descriptionField.fill(
-            'Updated description to verify discovery_args persists'
-        );
-
-        // Save the changes
-        const saveBtn = page.getByRole('button', { name: 'Save' });
-        await saveBtn.click();
-
-        // Verify the update was successful
-        await uiHasToastMsg(page, {
-            hasText: 'success',
-        });
-
-        // Verify we're back in detail view mode
-        await upstreamsPom.isDetailPage(page);
-    });
-
-    await test.step('verify discovery_args is preserved after edit', async () => {
-        // Verify via API that discovery_args was not dropped
-        const resp = await e2eReq.get(`${API_UPSTREAMS}/${upstream.id}`);
-        const data = resp.data;
-        expect(data.value.discovery_type).toBe('nacos');
-        expect(data.value.service_name).toBe('test-service');
-        expect(data.value.discovery_args).toEqual({});
-        expect(data.value.desc).toBe(
-            'Updated description to verify discovery_args persists'
-        );
-    });
+  await test.step('verify discovery_args is preserved after edit', async () => {
+    // Verify via API that discovery_args was not dropped
+    const resp = await e2eReq.get(`${API_UPSTREAMS}/${upstream.id}`);
+    const data = resp.data;
+    expect(data.value.discovery_type).toBe('nacos');
+    expect(data.value.service_name).toBe('test-service');
+    expect(data.value.discovery_args).toEqual({});
+    expect(data.value.desc).toBe(
+      'Updated description to verify discovery_args persists'
+    );
+  });
 });
