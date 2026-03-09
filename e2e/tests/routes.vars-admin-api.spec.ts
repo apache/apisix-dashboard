@@ -25,49 +25,49 @@ import { deleteAllRoutes, putRouteReq } from '@/apis/routes';
 const routeId = 'test-vars-admin-api';
 
 test.beforeAll(async () => {
-    await deleteAllRoutes(e2eReq);
+  await deleteAllRoutes(e2eReq);
 });
 
 test('route with vars created via Admin API', async ({ page }) => {
-    await test.step('create route with vars via Admin API', async () => {
-        await putRouteReq(e2eReq, {
-            id: routeId,
-            name: routeId,
-            uri: '/test-vars-route',
-            methods: ['GET', 'POST'],
-            upstream: {
-                type: 'roundrobin',
-                nodes: [{ host: 'httpbin.org', port: 80, weight: 1 }],
-            },
-            vars: [
-                [
-                    'uri',
-                    '~~',
-                    '^/(.*)/v1beta/models/(gemini-3-pro-preview)(?::[A-Za-z0-9._-]+)?$',
-                ],
-            ],
-        });
+  await test.step('create route with vars via Admin API', async () => {
+    await putRouteReq(e2eReq, {
+      id: routeId,
+      name: routeId,
+      uri: '/test-vars-route',
+      methods: ['GET', 'POST'],
+      upstream: {
+        type: 'roundrobin',
+        nodes: [{ host: 'httpbin.org', port: 80, weight: 1 }],
+      },
+      vars: [
+        [
+          'uri',
+          '~~',
+          '^/(.*)/v1beta/models/(gemini-3-pro-preview)(?::[A-Za-z0-9._-]+)?$',
+        ],
+      ],
     });
+  });
 
-    await test.step('view route detail without error', async () => {
-        // Navigate to routes list
-        await routesPom.toIndex(page);
-        await routesPom.isIndexPage(page);
+  await test.step('view route detail without error', async () => {
+    // Navigate to routes list
+    await routesPom.toIndex(page);
+    await routesPom.isIndexPage(page);
 
-        // Find our route row and click "View"
-        await page
-            .getByRole('row', { name: routeId })
-            .getByRole('button', { name: 'View' })
-            .click();
+    // Find and click "View on our route"
+    await page
+      .getByRole('row', { name: routeId })
+      .getByRole('button', { name: 'View' })
+      .click();
 
-        // Verify the detail page loaded successfully
-        await routesPom.isDetailPage(page);
+    // Verify the detail page loaded successfully
+    await routesPom.isDetailPage(page);
 
-        const name = page.getByLabel('Name', { exact: true }).first();
-        await expect(name).toHaveValue(routeId);
-    });
+    const name = page.getByLabel('Name', { exact: true }).first();
+    await expect(name).toHaveValue(routeId);
+  });
 });
 
 test.afterAll(async () => {
-    await deleteAllRoutes(e2eReq);
+  await deleteAllRoutes(e2eReq);
 });
