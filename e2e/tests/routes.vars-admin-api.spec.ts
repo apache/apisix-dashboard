@@ -54,7 +54,7 @@ test('route with vars created via Admin API', async ({ page }) => {
         await routesPom.toIndex(page);
         await routesPom.isIndexPage(page);
 
-        // Find and click "View on our route"
+        // Find our route row and click "View"
         await page
             .getByRole('row', { name: routeId })
             .getByRole('button', { name: 'View' })
