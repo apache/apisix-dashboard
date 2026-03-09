@@ -44,4 +44,4 @@ deployment:
 discovery:
   nacos:
     host:
-      - "http://127.0.0.1:8848"
+      - "http://nacos:8848"
