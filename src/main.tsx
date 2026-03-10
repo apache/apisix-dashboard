@@ -36,7 +36,7 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <MantineProvider theme={theme}>
+      <MantineProvider theme={theme} defaultColorScheme="auto">
         <Notifications position="top-right" autoClose={5000} limit={5} />
         <QueryClientProvider client={queryClient}>
           <ModalsProvider>
