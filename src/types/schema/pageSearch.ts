@@ -37,26 +37,15 @@ export const pageSearchSchema = z
     labels: z
       .preprocess((val) => {
         if (val === undefined || val === null) {
-          return [];
+          return undefined;
         }
         if (Array.isArray(val)) {
           return val;
         }
         return [val];
-      }, z.array(z.string()))
-      .optional()
-      .default([]),
-    status: z
-      .preprocess((val) => {
-        if (val === undefined || val === null) {
-          return [];
-        }
-        if (Array.isArray(val)) {
-          return val;
-        }
-        return [val];
-      }, z.array(z.string()))
+      }, z.array(z.string()).optional())
       .optional(),
+    status: z.string().optional(),
   })
   .passthrough();
 
