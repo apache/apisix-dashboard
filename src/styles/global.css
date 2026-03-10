@@ -3,10 +3,6 @@
   border-radius: var(--mantine-radius-sm);
 }
 
-/*
- * Temporary transition applied only during active theme switch (removed after 250ms).
- * No !important — avoids overriding component transitions (e.g. SegmentedControl indicator).
- */
 body.theme-transitioning,
 body.theme-transitioning * {
   transition: background-color 0.2s ease, color 0.2s ease,
