@@ -22,6 +22,7 @@ import apisixLogo from '@/assets/apisix-logo.svg';
 
 import { LanguageMenu } from './LanguageMenu';
 import { SettingModalBtn } from './SettingModalBtn';
+import { ThemeToggle } from './ThemeToggle';
 
 const Logo = () => {
   const { t } = useTranslation();
@@ -46,6 +47,7 @@ export const Header: FC<HeaderProps> = (props) => {
           <div>{t('apisix.dashboard')}</div>
         </Group>
         <Group h="100%" gap="sm">
+          <ThemeToggle />
           <SettingModalBtn />
           <LanguageMenu />
         </Group>
