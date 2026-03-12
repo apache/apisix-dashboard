@@ -10,8 +10,12 @@
         var scheme = localStorage.getItem('mantine-color-scheme-value');
         if (scheme === 'dark' || scheme === 'light') {
           document.documentElement.setAttribute('data-mantine-color-scheme', scheme);
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.documentElement.setAttribute('data-mantine-color-scheme', 'dark');
+        } else {
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.setAttribute(
+            'data-mantine-color-scheme',
+            prefersDark ? 'dark' : 'light'
+          );
         }
       } catch (e) {}
     </script>
