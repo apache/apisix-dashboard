@@ -31,7 +31,8 @@ import { uiFillHTTPStatuses } from '.';
  */
 export async function uiFillUpstreamRequiredFields(
   ctx: Page | Locator,
-  upstream: Partial<APISIXType['Upstream']>
+  upstream: Partial<APISIXType['Upstream']>,
+  page?: Page
 ) {
   // Fill in the Name field
   await ctx.getByLabel('Name', { exact: true }).fill(upstream.name);
@@ -50,19 +51,22 @@ export async function uiFillUpstreamRequiredFields(
   const firstRowHost = rows.nth(0).getByRole('textbox').first();
   await firstRowHost.fill(upstream.nodes[1].host);
   await expect(firstRowHost).toHaveValue(upstream.nodes[1].host);
-  await nodesSection.click();
 
-  // Add second node
+  // Add second node - blur first, wait for useClickOutside state sync, then click Add
+  await firstRowHost.blur();
+  if (page) await page.waitForTimeout(500);
   await addNodeBtn.click();
-  await expect(rows.nth(1)).toBeVisible();
+  await expect(rows).toHaveCount(2, { timeout: 10000 });
   const secondRowHost = rows.nth(1).getByRole('textbox').first();
   await secondRowHost.fill(upstream.nodes[0].host);
   await expect(secondRowHost).toHaveValue(upstream.nodes[0].host);
-  await nodesSection.click();
 
   // Add a third node and then remove it to test deletion functionality
+  await secondRowHost.blur();
+  if (page) await page.waitForTimeout(500);
   await addNodeBtn.click();
-  rows.nth(2).getByRole('button', { name: 'Delete' }).click();
+  await expect(rows).toHaveCount(3, { timeout: 10000 });
+  await rows.nth(2).getByRole('button', { name: 'Delete' }).click();
   await expect(rows).toHaveCount(2);
 }
 
@@ -142,11 +146,11 @@ export async function uiFillUpstreamAllFields(
     await priorityInput.click();
     await priorityInput.fill('1');
 
-    // Add the second node with a more reliable approach
-    await nodesSection.click();
+    // Add the second node - blur any focused input first, then click Add
+    await priorityInput.blur();
+    await page.waitForTimeout(500);
     await addNodeBtn.click();
-
-    await expect(rows.nth(1)).toBeVisible();
+    await expect(rows).toHaveCount(2, { timeout: 10000 });
 
     // Fill in the Host for the second node - click first then fill
     const hostInput2 = rows.nth(1).locator('input').first();
@@ -234,12 +238,7 @@ export async function uiFillUpstreamAllFields(
     await tlsSection
       .getByRole('textbox', { name: 'Client Key', exact: true })
       .fill(tls.key);
-    await tlsSection
-      .locator('label')
-      .filter({ hasText: 'Verify' })
-      .locator('div')
-      .first()
-      .click();
+    await tlsSection.getByRole('switch', { name: 'Verify' }).click();
 
     // 12. Health Check settings
     // Activate active health check

@@ -310,18 +310,18 @@ export interface FileRoutesByFullPath {
   '/ssls/add': typeof SslsAddRoute
   '/stream_routes/add': typeof Stream_routesAddRoute
   '/upstreams/add': typeof UpstreamsAddRoute
-  '/consumer_groups': typeof Consumer_groupsIndexRoute
-  '/consumers': typeof ConsumersIndexRoute
-  '/global_rules': typeof Global_rulesIndexRoute
-  '/plugin_configs': typeof Plugin_configsIndexRoute
-  '/plugin_metadata': typeof Plugin_metadataIndexRoute
-  '/protos': typeof ProtosIndexRoute
-  '/routes': typeof RoutesIndexRoute
-  '/secrets': typeof SecretsIndexRoute
-  '/services': typeof ServicesIndexRoute
-  '/ssls': typeof SslsIndexRoute
-  '/stream_routes': typeof Stream_routesIndexRoute
-  '/upstreams': typeof UpstreamsIndexRoute
+  '/consumer_groups/': typeof Consumer_groupsIndexRoute
+  '/consumers/': typeof ConsumersIndexRoute
+  '/global_rules/': typeof Global_rulesIndexRoute
+  '/plugin_configs/': typeof Plugin_configsIndexRoute
+  '/plugin_metadata/': typeof Plugin_metadataIndexRoute
+  '/protos/': typeof ProtosIndexRoute
+  '/routes/': typeof RoutesIndexRoute
+  '/secrets/': typeof SecretsIndexRoute
+  '/services/': typeof ServicesIndexRoute
+  '/ssls/': typeof SslsIndexRoute
+  '/stream_routes/': typeof Stream_routesIndexRoute
+  '/upstreams/': typeof UpstreamsIndexRoute
   '/consumer_groups/detail/$id': typeof Consumer_groupsDetailIdRoute
   '/consumers/detail/$username': typeof ConsumersDetailUsernameRouteWithChildren
   '/global_rules/detail/$id': typeof Global_rulesDetailIdRoute
@@ -338,9 +338,9 @@ export interface FileRoutesByFullPath {
   '/consumers/detail/$username/credentials/add': typeof ConsumersDetailUsernameCredentialsAddRoute
   '/services/detail/$id/routes/add': typeof ServicesDetailIdRoutesAddRoute
   '/services/detail/$id/stream_routes/add': typeof ServicesDetailIdStream_routesAddRoute
-  '/consumers/detail/$username/credentials': typeof ConsumersDetailUsernameCredentialsIndexRoute
-  '/services/detail/$id/routes': typeof ServicesDetailIdRoutesIndexRoute
-  '/services/detail/$id/stream_routes': typeof ServicesDetailIdStream_routesIndexRoute
+  '/consumers/detail/$username/credentials/': typeof ConsumersDetailUsernameCredentialsIndexRoute
+  '/services/detail/$id/routes/': typeof ServicesDetailIdRoutesIndexRoute
+  '/services/detail/$id/stream_routes/': typeof ServicesDetailIdStream_routesIndexRoute
   '/consumers/detail/$username/credentials/detail/$id': typeof ConsumersDetailUsernameCredentialsDetailIdRoute
   '/services/detail/$id/routes/detail/$routeId': typeof ServicesDetailIdRoutesDetailRouteIdRoute
   '/services/detail/$id/stream_routes/detail/$routeId': typeof ServicesDetailIdStream_routesDetailRouteIdRoute
@@ -455,18 +455,18 @@ export interface FileRouteTypes {
     | '/ssls/add'
     | '/stream_routes/add'
     | '/upstreams/add'
-    | '/consumer_groups'
-    | '/consumers'
-    | '/global_rules'
-    | '/plugin_configs'
-    | '/plugin_metadata'
-    | '/protos'
-    | '/routes'
-    | '/secrets'
-    | '/services'
-    | '/ssls'
-    | '/stream_routes'
-    | '/upstreams'
+    | '/consumer_groups/'
+    | '/consumers/'
+    | '/global_rules/'
+    | '/plugin_configs/'
+    | '/plugin_metadata/'
+    | '/protos/'
+    | '/routes/'
+    | '/secrets/'
+    | '/services/'
+    | '/ssls/'
+    | '/stream_routes/'
+    | '/upstreams/'
     | '/consumer_groups/detail/$id'
     | '/consumers/detail/$username'
     | '/global_rules/detail/$id'
@@ -483,9 +483,9 @@ export interface FileRouteTypes {
     | '/consumers/detail/$username/credentials/add'
     | '/services/detail/$id/routes/add'
     | '/services/detail/$id/stream_routes/add'
-    | '/consumers/detail/$username/credentials'
-    | '/services/detail/$id/routes'
-    | '/services/detail/$id/stream_routes'
+    | '/consumers/detail/$username/credentials/'
+    | '/services/detail/$id/routes/'
+    | '/services/detail/$id/stream_routes/'
     | '/consumers/detail/$username/credentials/detail/$id'
     | '/services/detail/$id/routes/detail/$routeId'
     | '/services/detail/$id/stream_routes/detail/$routeId'
@@ -635,84 +635,84 @@ declare module '@tanstack/react-router' {
     '/upstreams/': {
       id: '/upstreams/'
       path: '/upstreams'
-      fullPath: '/upstreams'
+      fullPath: '/upstreams/'
       preLoaderRoute: typeof UpstreamsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/stream_routes/': {
       id: '/stream_routes/'
       path: '/stream_routes'
-      fullPath: '/stream_routes'
+      fullPath: '/stream_routes/'
       preLoaderRoute: typeof Stream_routesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ssls/': {
       id: '/ssls/'
       path: '/ssls'
-      fullPath: '/ssls'
+      fullPath: '/ssls/'
       preLoaderRoute: typeof SslsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/': {
       id: '/services/'
       path: '/services'
-      fullPath: '/services'
+      fullPath: '/services/'
       preLoaderRoute: typeof ServicesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/secrets/': {
       id: '/secrets/'
       path: '/secrets'
-      fullPath: '/secrets'
+      fullPath: '/secrets/'
       preLoaderRoute: typeof SecretsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/routes/': {
       id: '/routes/'
       path: '/routes'
-      fullPath: '/routes'
+      fullPath: '/routes/'
       preLoaderRoute: typeof RoutesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/protos/': {
       id: '/protos/'
       path: '/protos'
-      fullPath: '/protos'
+      fullPath: '/protos/'
       preLoaderRoute: typeof ProtosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plugin_metadata/': {
       id: '/plugin_metadata/'
       path: '/plugin_metadata'
-      fullPath: '/plugin_metadata'
+      fullPath: '/plugin_metadata/'
       preLoaderRoute: typeof Plugin_metadataIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plugin_configs/': {
       id: '/plugin_configs/'
       path: '/plugin_configs'
-      fullPath: '/plugin_configs'
+      fullPath: '/plugin_configs/'
       preLoaderRoute: typeof Plugin_configsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/global_rules/': {
       id: '/global_rules/'
       path: '/global_rules'
-      fullPath: '/global_rules'
+      fullPath: '/global_rules/'
       preLoaderRoute: typeof Global_rulesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/consumers/': {
       id: '/consumers/'
       path: '/consumers'
-      fullPath: '/consumers'
+      fullPath: '/consumers/'
       preLoaderRoute: typeof ConsumersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/consumer_groups/': {
       id: '/consumer_groups/'
       path: '/consumer_groups'
-      fullPath: '/consumer_groups'
+      fullPath: '/consumer_groups/'
       preLoaderRoute: typeof Consumer_groupsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -887,21 +887,21 @@ declare module '@tanstack/react-router' {
     '/services/detail/$id/stream_routes/': {
       id: '/services/detail/$id/stream_routes/'
       path: '/stream_routes'
-      fullPath: '/services/detail/$id/stream_routes'
+      fullPath: '/services/detail/$id/stream_routes/'
       preLoaderRoute: typeof ServicesDetailIdStream_routesIndexRouteImport
       parentRoute: typeof ServicesDetailIdRoute
     }
     '/services/detail/$id/routes/': {
       id: '/services/detail/$id/routes/'
       path: '/routes'
-      fullPath: '/services/detail/$id/routes'
+      fullPath: '/services/detail/$id/routes/'
       preLoaderRoute: typeof ServicesDetailIdRoutesIndexRouteImport
       parentRoute: typeof ServicesDetailIdRoute
     }
     '/consumers/detail/$username/credentials/': {
       id: '/consumers/detail/$username/credentials/'
       path: '/credentials'
-      fullPath: '/consumers/detail/$username/credentials'
+      fullPath: '/consumers/detail/$username/credentials/'
       preLoaderRoute: typeof ConsumersDetailUsernameCredentialsIndexRouteImport
       parentRoute: typeof ConsumersDetailUsernameRoute
     }
