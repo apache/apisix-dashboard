@@ -72,7 +72,7 @@ async function fillUpstreamFields(
     nodes: upstreamNodes,
     name: upstreamName,
     desc: upstreamDesc,
-  });
+  }, page);
 
   return upstreamSection;
 }
