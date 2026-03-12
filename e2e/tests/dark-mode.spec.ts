@@ -19,7 +19,7 @@ import { test } from '@e2e/utils/test';
 import { expect } from '@playwright/test';
 
 const themeSegment = (value: string) =>
-  `label:has(input[value="${value}"])`;
+  `input[value="${value}"] + label`;
 
 test.describe('Dark Mode', () => {
   test(
