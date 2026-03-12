@@ -329,7 +329,9 @@
     "singular": "Secret"
   },
   "services": {
-    "singular": "Service"
+    "singular": "Service",
+    "empty": "No services found. Click Add Service to create your first one."
+
   },
   "settings": {
     "adminKey": "Admin Key",
