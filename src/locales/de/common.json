@@ -88,6 +88,39 @@
       "vars": "Variablen"
     },
     "search": "Suche",
+    "searchForm": {
+      "fields": {
+        "name": "Name",
+        "id": "ID",
+        "host": "Host",
+        "path": "Pfad",
+        "description": "Beschreibung",
+        "plugin": "Plugin",
+        "labels": "Labels",
+        "version": "Version",
+        "status": "Status"
+      },
+      "placeholders": {
+        "name": "Name",
+        "id": "ID",
+        "host": "Host",
+        "path": "Pfad",
+        "description": "Beschreibung",
+        "plugin": "Plugin",
+        "labels": "Labels auswählen",
+        "version": "Version auswählen",
+        "status": "Status auswählen"
+      },
+      "status": {
+        "all": "Unveröffentlicht/Veröffentlicht",
+        "published": "Veröffentlicht",
+        "unpublished": "Unveröffentlicht"
+      },
+      "actions": {
+        "reset": "Zurücksetzen",
+        "search": "Suchen"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "Access Key ID",
@@ -360,7 +393,8 @@
   "table": {
     "actions": "Aktionen",
     "disabled": "Deaktiviert",
-    "enabled": "Aktiviert"
+    "enabled": "Aktiviert",
+    "searchLimit": "Es werden nur die ersten {{count}} Routen aus der Datenbank abgerufen. Die clientseitige Filterung wird auf diese Datensätze angewendet."
   },
   "upstreams": {
     "singular": "Upstream"

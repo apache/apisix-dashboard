@@ -54,9 +54,21 @@ test('should CRUD service with required fields', async ({ page }) => {
     await addNodeBtn.click();
 
     const rows = upstreamSection.locator('tr.ant-table-row');
-    await rows.first().locator('input').first().fill('127.0.0.1');
-    await rows.first().locator('input').nth(1).fill('80');
-    await rows.first().locator('input').nth(2).fill('1');
+
+    const hostInput = rows.first().locator('input').first();
+    await hostInput.click();
+    await hostInput.fill('127.0.0.1');
+    await expect(hostInput).toHaveValue('127.0.0.1');
+
+    const portInput = rows.first().locator('input').nth(1);
+    await portInput.click();
+    await portInput.fill('80');
+    await expect(portInput).toHaveValue('80');
+
+    const weightInput = rows.first().locator('input').nth(2);
+    await weightInput.click();
+    await weightInput.fill('1');
+    await expect(weightInput).toHaveValue('1');
 
     // Ensure the name field is properly filled before submitting
     const nameField = page.getByRole('textbox', { name: 'Name' }).first();

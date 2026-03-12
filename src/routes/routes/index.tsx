@@ -16,20 +16,30 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
+import { getRouteListReq } from '@/apis/routes';
+import { SearchForm, type SearchFormValues } from '@/components/form/SearchForm';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
-import { API_ROUTES } from '@/config/constant';
+import { API_ROUTES, PAGE_SIZE_MAX, STATUS_ALL } from '@/config/constant';
 import { queryClient } from '@/config/global';
+import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
-import { pageSearchSchema } from '@/types/schema/pageSearch';
+import { pageSearchSchema, type PageSearchType } from '@/types/schema/pageSearch';
+import {
+  filterRoutes,
+  needsClientSideFiltering,
+  paginateResults,
+} from '@/utils/clientSideFilter';
+import { useSearchParams } from '@/utils/useSearchParams';
 import type { ListPageKeys } from '@/utils/useTablePagination';
 
 export type RouteListProps = {
@@ -40,13 +50,133 @@ export type RouteListProps = {
   }) => React.ReactNode;
 };
 
+const SEARCH_PARAM_KEYS: (keyof SearchFormValues)[] = [
+  'name',
+  'id',
+  'host',
+  'path',
+  'description',
+  'plugin',
+  'labels',
+  'version',
+  'status',
+];
+
+const mapSearchParams = (values: Partial<SearchFormValues>) =>
+  Object.fromEntries(
+    SEARCH_PARAM_KEYS
+      .map((key) => [key, values[key]] as const)
+      .filter(([, value]) => value !== undefined)
+  ) as Partial<SearchFormValues>;
+
 export const RouteList = (props: RouteListProps) => {
   const { routeKey, ToDetailBtn, defaultParams } = props;
-  const { data, isLoading, refetch, pagination } = useRouteList(
+  const { data, isLoading, refetch, pagination, setParams: setRouteListParams } = useRouteList(
     routeKey,
     defaultParams
   );
+  const { params, resetParams, setParams: setSearchParams } = useSearchParams(routeKey) as {
+    params: PageSearchType;
+    resetParams: (defaults?: Partial<PageSearchType>) => void;
+    setParams: (params: Partial<PageSearchType>) => void;
+  };
   const { t } = useTranslation();
+
+  // Client-side filtering strategy:
+  // The backend API has limited support for complex filtering (e.g., fuzzy search on description,
+  // plugin content) combined with pagination. Therefore, we use client-side filtering for these fields.
+  // Limitation: We only fetch the first PAGE_SIZE_MAX records. If the total number of records
+  // exceeds this limit, the filter may miss matching records that are not in the first batch.
+  // This limitation is communicated to the user via a warning alert in the table.
+  const needsAllData = needsClientSideFiltering(params);
+  const nameFilter = params.name;
+  const { data: allData, isLoading: isLoadingAllData } = useQuery({
+    queryKey: ['routes-all', defaultParams, nameFilter],
+    queryFn: () =>
+      getRouteListReq(req, {
+        page: 1,
+        page_size: PAGE_SIZE_MAX,
+        ...defaultParams,
+        ...(nameFilter ? { name: nameFilter } : {}),
+      }),
+    enabled: needsAllData,
+  });
+
+  const handleSearch = (values: SearchFormValues) => {
+    // Send name filter to backend, keep others for client-side filtering
+    setRouteListParams({
+      page: 1,
+      ...mapSearchParams(values),
+    });
+  };
+
+  const handleReset = () => {
+    // Clear existing search params and then re-apply the default status filter
+    resetParams({
+      page: 1,
+      status: STATUS_ALL,
+    });
+  };
+
+  // Apply client-side filtering and pagination
+  const { filteredData, totalCount } = useMemo(() => {
+    // If client-side filtering is needed, use all data
+    if (needsAllData && allData?.list) {
+      const filtered = filterRoutes(allData.list, params);
+      const paginated = paginateResults(
+        filtered,
+        params.page || 1,
+        params.page_size || 10
+      );
+      return {
+        filteredData: paginated.list,
+        totalCount: paginated.total,
+      };
+    }
+
+    // Otherwise, use paginated data from backend
+    return {
+      filteredData: data?.list || [],
+      totalCount: data?.total || 0,
+    };
+  }, [needsAllData, allData, data, params]);
+
+  const actualLoading = needsAllData ? isLoadingAllData : isLoading;
+
+  // Update pagination to use filtered total and prevent unnecessary refetch during client-side pagination
+  const customPagination = useMemo(() => {
+    return {
+      ...pagination,
+      total: totalCount,
+      // When client-side filtering is active, only update URL params without triggering refetch
+      // since all data is already loaded
+      onChange: needsAllData
+        ? (page: number, pageSize: number) => {
+          setSearchParams({ page, page_size: pageSize });
+        }
+        : pagination.onChange,
+    };
+  }, [pagination, totalCount, needsAllData, setSearchParams]);
+
+  // Extract unique version values from route labels
+  const versionOptions = useMemo(() => {
+    const dataSource = needsAllData && allData?.list ? allData.list : data?.list || [];
+    const versions = new Set<string>();
+
+    dataSource.forEach((route) => {
+      const versionLabel = route.value.labels?.version;
+      if (versionLabel) {
+        versions.add(versionLabel);
+      }
+    });
+
+    return Array.from(versions)
+      .sort()
+      .map((version) => ({
+        label: version,
+        value: version,
+      }));
+  }, [needsAllData, allData, data]);
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
@@ -95,14 +225,22 @@ export const RouteList = (props: RouteListProps) => {
 
   return (
     <AntdConfigProvider>
+      <div style={{ marginBottom: 24 }}>
+        <SearchForm
+          onSearch={handleSearch}
+          onReset={handleReset}
+          versionOptions={versionOptions}
+          initialValues={mapSearchParams(params)}
+        />
+      </div>
       <ProTable
         columns={columns}
-        dataSource={data.list}
+        dataSource={filteredData}
         rowKey="id"
-        loading={isLoading}
+        loading={actualLoading}
         search={false}
         options={false}
-        pagination={pagination}
+        pagination={customPagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
           menu: {
@@ -123,6 +261,18 @@ export const RouteList = (props: RouteListProps) => {
             ],
           },
         }}
+        tableAlertRender={
+          needsAllData
+            ? () => (
+              <span style={{ color: '#faad14' }}>
+                {t('table.searchLimit', {
+                  defaultValue: `Only the first ${PAGE_SIZE_MAX} routes are fetched from the database. Client-side filtering is applied to these records.`,
+                  count: PAGE_SIZE_MAX,
+                })}
+              </span>
+            )
+            : undefined
+        }
       />
     </AntdConfigProvider>
   );

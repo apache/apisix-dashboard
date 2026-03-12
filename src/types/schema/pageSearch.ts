@@ -29,8 +29,23 @@ export const pageSearchSchema = z
       .optional()
       .default(10)
       .transform((val) => (val ? Number(val) : 10)),
+    // Common search filter fields used by routes and other pages.
+    // Keeping these optional preserves backward compatibility while
+    // ensuring URL params are normalized into consistent shapes.
     name: z.string().optional(),
-    label: z.string().optional(),
+    version: z.string().optional(),
+    labels: z
+      .preprocess((val) => {
+        if (val === undefined || val === null) {
+          return undefined;
+        }
+        if (Array.isArray(val)) {
+          return val;
+        }
+        return [val];
+      }, z.array(z.string()).optional())
+      .optional(),
+    status: z.string().optional(),
   })
   .passthrough();
 

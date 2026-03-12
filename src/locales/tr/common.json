@@ -88,6 +88,39 @@
       "vars": "Değişkenler"
     },
     "search": "Ara",
+    "searchForm": {
+      "fields": {
+        "name": "İsim",
+        "id": "ID",
+        "host": "Host",
+        "path": "Path",
+        "description": "Açıklama",
+        "plugin": "Plugin",
+        "labels": "Label'lar",
+        "version": "Versiyon",
+        "status": "Durum"
+      },
+      "placeholders": {
+        "name": "İsim",
+        "id": "ID",
+        "host": "Host",
+        "path": "Path",
+        "description": "Açıklama",
+        "plugin": "Plugin",
+        "labels": "Label Seç",
+        "version": "Versiyon Seç",
+        "status": "Durum Seç"
+      },
+      "status": {
+        "all": "Yayınlanmamış/Yayınlanmış",
+        "published": "Yayınlanmış",
+        "unpublished": "Yayınlanmamış"
+      },
+      "actions": {
+        "reset": "Sıfırla",
+        "search": "Ara"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "Access Key ID",
@@ -360,7 +393,8 @@
   "table": {
     "actions": "İşlemler",
     "disabled": "Pasif",
-    "enabled": "Aktif"
+    "enabled": "Aktif",
+    "searchLimit": "Veritabanından sadece ilk {{count}} route getirildi. İstemci tarafı filtreleme bu kayıtlara uygulanır."
   },
   "upstreams": {
     "singular": "Upstream"

@@ -43,7 +43,8 @@ export const useSearchParams = <T extends RouteTreeIds, P extends object>(
     [navigate]
   );
   const resetParams = useCallback(
-    () => navigate({ to: '.', search: {}, replace: true }),
+    (defaults?: Partial<P>) =>
+      navigate({ to: '.', search: defaults || {}, replace: true }),
     [navigate]
   );
 

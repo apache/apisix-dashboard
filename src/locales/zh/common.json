@@ -88,6 +88,39 @@
       "vars": "变量"
     },
     "search": "搜索",
+    "searchForm": {
+      "fields": {
+        "name": "名称",
+        "id": "ID",
+        "host": "域名",
+        "path": "路径",
+        "description": "描述",
+        "plugin": "插件",
+        "labels": "标签",
+        "version": "版本",
+        "status": "状态"
+      },
+      "placeholders": {
+        "name": "名称",
+        "id": "ID",
+        "host": "域名",
+        "path": "路径",
+        "description": "描述",
+        "plugin": "插件",
+        "labels": "选择标签",
+        "version": "选择版本",
+        "status": "选择状态"
+      },
+      "status": {
+        "all": "未发布/已发布",
+        "published": "已发布",
+        "unpublished": "未发布"
+      },
+      "actions": {
+        "reset": "重置",
+        "search": "搜索"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "访问密钥ID",
@@ -360,7 +393,8 @@
   "table": {
     "actions": "操作",
     "disabled": "已禁用",
-    "enabled": "已启用"
+    "enabled": "已启用",
+    "searchLimit": "仅从数据库中获取前 {{count}} 条路由。客户端过滤应用于这些记录。"
   },
   "upstreams": {
     "singular": "上游"
