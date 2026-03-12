@@ -21,7 +21,7 @@ import IconDarkMode from '~icons/material-symbols/dark-mode';
 import IconDesktop from '~icons/material-symbols/desktop-windows';
 import IconLightMode from '~icons/material-symbols/light-mode';
 
-const TRANSITION_DURATION_MS = 250;
+const TRANSITION_DURATION_MS = 200;
 
 const iconStyle = { width: 14, height: 14 } as const;
 
