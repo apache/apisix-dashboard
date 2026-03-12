@@ -329,7 +329,8 @@
     "singular": "Secret"
   },
   "services": {
-    "singular": "Service"
+    "singular": "Service",
+    "empty": "Hizmet bulunamadı. İlk hizmetinizi oluşturmak için Hizmet Ekle'ye tıklayın."
   },
   "settings": {
     "adminKey": "Admin Key",

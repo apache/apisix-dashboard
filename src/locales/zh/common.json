@@ -329,7 +329,8 @@
     "singular": "Secret"
   },
   "services": {
-    "singular": "服务"
+    "singular": "服务",
+    "empty": "未找到服务。点击添加服务以创建您的第一个服务。"
   },
   "settings": {
     "adminKey": "管理员密钥",
