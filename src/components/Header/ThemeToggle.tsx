@@ -35,7 +35,7 @@ export const ThemeToggle = () => {
   const { colorScheme, setColorScheme } = useMantineColorScheme({
     keepTransitions: true,
   });
-  const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Clean up pending transition timer on unmount
   useEffect(() => {
