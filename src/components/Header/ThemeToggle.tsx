@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SegmentedControl, useMantineColorScheme } from '@mantine/core';
+import { SegmentedControl, VisuallyHidden, useMantineColorScheme } from '@mantine/core';
 import { useCallback, useEffect, useRef } from 'react';
 
 import IconDarkMode from '~icons/material-symbols/dark-mode';
@@ -26,9 +26,33 @@ const TRANSITION_DURATION_MS = 200;
 const iconStyle = { width: 14, height: 14 } as const;
 
 const segmentData = [
-  { value: 'light', label: <IconLightMode style={iconStyle} /> },
-  { value: 'dark', label: <IconDarkMode style={iconStyle} /> },
-  { value: 'auto', label: <IconDesktop style={iconStyle} /> },
+  {
+    value: 'light',
+    label: (
+      <>
+        <VisuallyHidden>Light theme</VisuallyHidden>
+        <IconLightMode style={iconStyle} />
+      </>
+    ),
+  },
+  {
+    value: 'dark',
+    label: (
+      <>
+        <VisuallyHidden>Dark theme</VisuallyHidden>
+        <IconDarkMode style={iconStyle} />
+      </>
+    ),
+  },
+  {
+    value: 'auto',
+    label: (
+      <>
+        <VisuallyHidden>System theme</VisuallyHidden>
+        <IconDesktop style={iconStyle} />
+      </>
+    ),
+  },
 ];
 
 export const ThemeToggle = () => {
