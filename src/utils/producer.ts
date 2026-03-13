@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { clean,type ICleanerOptions } from 'fast-clean';
+import { clean, type ICleanerOptions } from 'fast-clean';
 import { produce } from 'immer';
 import { pipe } from 'rambdax';
 
@@ -32,7 +32,10 @@ export const deepCleanEmptyKeys = <T extends object>(
 
 export const produceDeepCleanEmptyKeys = (opts: ICleanerOptions = {}) =>
   produce((draft) => {
-    deepCleanEmptyKeys(draft, opts);
+    deepCleanEmptyKeys(draft, {
+      ...opts,
+      emptyObjectsCleaner: false,
+    });
   });
 
 export const rmDoubleUnderscoreKeys = (obj: object) => {
