@@ -242,7 +242,6 @@ export async function uiFillUpstreamAllFields(
     // Use keyboard interaction to toggle the switch - more reliable with React components
     await verifySwitch.focus();
     await verifySwitch.press('Space');
-    await tlsSection.getByRole('switch', { name: 'Verify' }).click();
 
     // 12. Health Check settings
     // Activate active health check
