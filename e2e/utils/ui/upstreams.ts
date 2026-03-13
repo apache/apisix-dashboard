@@ -238,7 +238,10 @@ export async function uiFillUpstreamAllFields(
     await tlsSection
       .getByRole('textbox', { name: 'Client Key', exact: true })
       .fill(tls.key);
-    await tlsSection.getByRole('switch', { name: 'Verify' }).click();
+    const verifySwitch = tlsSection.getByRole('switch', { name: 'Verify' });
+    // Use keyboard interaction to toggle the switch - more reliable with React components
+    await verifySwitch.focus();
+    await verifySwitch.press('Space');
 
     // 12. Health Check settings
     // Activate active health check

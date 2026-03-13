@@ -92,6 +92,6 @@ test.describe('page and page_size should work correctly', () => {
     pom: protosPom,
     items: protos,
     filterItemsNotInPage,
-    getCell: (page, item) => page.getByRole('cell', { name: item.id }).first(),
+    getCell: (page, item) => page.getByRole('cell', { name: item.id, exact: true }).first(),
   });
 });

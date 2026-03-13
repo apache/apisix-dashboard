@@ -15,37 +15,33 @@
  * limitations under the License.
  */
 import { createFileRoute, useParams } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions } from '@/apis/hooks';
-import PageHeader from '@/components/page/PageHeader';
+import type { WithServiceIdFilter } from '@/apis/routes';
 import { ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { queryClient } from '@/config/global';
 import { RouteList } from '@/routes/routes';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 
 function RouteComponent() {
-  const { t } = useTranslation();
   const { id } = useParams({ from: '/services/detail/$id/routes/' });
   return (
-    <>
-      <PageHeader title={t('sources.routes')} />
-      <RouteList
-        routeKey="/services/detail/$id/routes/"
-        defaultParams={{
-          filter: {
-            service_id: id,
-          },
-        }}
-        ToDetailBtn={({ record }) => (
-          <ToDetailPageBtn
-            key="detail"
-            to="/services/detail/$id/routes/detail/$routeId"
-            params={{ id, routeId: record.value.id }}
-          />
-        )}
-      />
-    </>
+    <RouteList
+      titleKey="sources.routes"
+      routeKey="/services/detail/$id/routes/"
+      defaultParams={{
+        filter: {
+          service_id: id,
+        },
+      }}
+      ToDetailBtn={({ record }) => (
+        <ToDetailPageBtn
+          key="detail"
+          to="/services/detail/$id/routes/detail/$routeId"
+          params={{ id, routeId: record.value.id }}
+        />
+      )}
+    />
   );
 }
 
@@ -53,6 +49,8 @@ export const Route = createFileRoute('/services/detail/$id/routes/')({
   component: RouteComponent,
   validateSearch: pageSearchSchema,
   loaderDeps: ({ search }) => search,
-  loader: ({ deps }) =>
-    queryClient.ensureQueryData(getRouteListQueryOptions(deps)),
+  loader: ({ deps, params: { id } }) =>
+    queryClient.ensureQueryData(
+      getRouteListQueryOptions({ ...deps, filter: { ...(deps as WithServiceIdFilter).filter, service_id: id } }),
+    ),
 });

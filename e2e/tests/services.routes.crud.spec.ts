@@ -205,7 +205,10 @@ test('should CRUD route under service with required fields', async ({
     // We're already on the detail page from the previous step
 
     // Delete the route
-    await page.getByRole('button', { name: 'Delete' }).click();
+    const deleteButton = page.getByRole('button', { name: 'Delete', exact: true });
+    await expect(deleteButton).toBeVisible();
+    await expect(deleteButton).toBeEnabled();
+    await deleteButton.click();
 
     await page
       .getByRole('dialog', { name: 'Delete Route' })

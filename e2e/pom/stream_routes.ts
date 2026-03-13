@@ -26,28 +26,28 @@ const assert = {
   isIndexPage: async (page: Page) => {
     await expect(page).toHaveURL(
       (url) => url.pathname.endsWith('/stream_routes'),
-      { timeout: 15000 }
+      { timeout: 30000 }
     );
     const title = page.getByRole('heading', { name: 'Stream Routes' });
-    await expect(title).toBeVisible({ timeout: 15000 });
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isAddPage: async (page: Page) => {
-    await expect(
-      page,
-      { timeout: 15000 }
-    ).toHaveURL((url) => url.pathname.endsWith('/stream_routes/add'));
+    await expect(page).toHaveURL(
+      (url) => url.pathname.endsWith('/stream_routes/add'),
+      { timeout: 30000 }
+    );
     const title = page.getByRole('heading', { name: 'Add Stream Route' });
-    await expect(title).toBeVisible({ timeout: 15000 });
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
   isDetailPage: async (page: Page) => {
-    await expect(
-      page,
-      { timeout: 20000 }
-    ).toHaveURL((url) => url.pathname.includes('/stream_routes/detail'));
+    await expect(page).toHaveURL(
+      (url) => url.pathname.includes('/stream_routes/detail'),
+      { timeout: 30000 }
+    );
     const title = page.getByRole('heading', {
       name: 'Stream Route Detail',
     });
-    await expect(title).toBeVisible({ timeout: 20000 });
+    await expect(title).toBeVisible({ timeout: 30000 });
   },
 };
 

@@ -88,6 +88,6 @@ test.describe('page and page_size should work correctly', () => {
     items: upstreams,
     filterItemsNotInPage,
     getCell: (page, item) =>
-      page.getByRole('cell', { name: item.name }).first(),
+      page.getByRole('cell', { name: item.name, exact: true }).first(),
   });
 });

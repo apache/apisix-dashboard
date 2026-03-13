@@ -66,6 +66,7 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
 
   // Iterate through all pages and delete upstreams in batches.
   // We calculate the number of iterations based on the total count and maximum page size.
+  const undeletedUpstreams: Array<{ id: string; reason: string }> = [];
   for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
     const res = await getUpstreamListReq(req, {
       page: 1,
@@ -73,13 +74,36 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
     });
     // Delete all upstreams in the current batch concurrently.
     await Promise.all(
-      res.list.map((d) =>
-        req.delete(`${API_UPSTREAMS}/${d.value.id}`).catch((err) => {
-          // Ignore 404 errors as the resource might have been deleted
-          if (axios.isAxiosError(err) && err.response?.status === 404) return;
+      res.list.map(async (d) => {
+        try {
+          await req.delete(`${API_UPSTREAMS}/${d.value.id}`, {
+            headers: { 'X-Allow-404-Delete': 'true' },
+          });
+        } catch (err) {
+          // Upstream still referenced by routes/services - cannot delete
+          if (
+            axios.isAxiosError(err) &&
+            err.response?.status === 400 &&
+            typeof err.response?.data?.error_msg === 'string' &&
+            err.response.data.error_msg.includes('still being used')
+          ) {
+            undeletedUpstreams.push({ id: d.value.id, reason: 'still being used' });
+            // eslint-disable-next-line no-console
+            console.warn(`[e2eTest] Upstream ${d.value.id} is still being used, could not delete`);
+            return;
+          }
+          // Unexpected error - should not be silently ignored
           throw err;
-        })
-      )
+        }
+      })
+    );
+  }
+
+  // Log undeleted upstreams as a warning since they may affect subsequent test runs
+  if (undeletedUpstreams.length > 0) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[e2eTest] Failed to delete ${undeletedUpstreams.length} upstream(s): ${undeletedUpstreams.map((u) => `${u.id} (${u.reason})`).join(', ')}`
     );
   }
 };

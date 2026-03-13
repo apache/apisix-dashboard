@@ -200,7 +200,7 @@ test('should CRUD stream route under service', async ({ page }) => {
     // We're already on the detail page from the previous step
 
     // Delete the stream route
-    await page.getByRole('button', { name: 'Delete' }).click();
+    await page.getByRole('button', { name: 'Delete', exact: true }).click();
 
     await page
       .getByRole('dialog', { name: 'Delete Stream Route' })
@@ -241,7 +241,7 @@ test('should CRUD stream route under service', async ({ page }) => {
     ).toHaveValue('192.168.1.1');
 
     // Clean up - delete this stream route too
-    await page.getByRole('button', { name: 'Delete' }).click();
+    await page.getByRole('button', { name: 'Delete', exact: true }).click();
     await page
       .getByRole('dialog', { name: 'Delete Stream Route' })
       .getByRole('button', { name: 'Delete' })

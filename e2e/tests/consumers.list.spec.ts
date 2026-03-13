@@ -77,6 +77,6 @@ test.describe('page and page_size should work correctly', () => {
     items: consumers,
     filterItemsNotInPage,
     getCell: (page, item) =>
-      page.getByRole('cell', { name: item.username }).first(),
+      page.getByRole('cell', { name: item.username, exact: true }).first(),
   });
 });

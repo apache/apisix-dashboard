@@ -52,7 +52,7 @@ type FormItemEditorProps<T extends FieldValues> = InputWrapperProps &
     customSchema?: object;
   };
 export const FormItemEditor = <T extends FieldValues>(
-  props: FormItemEditorProps<T>
+  props: FormItemEditorProps<T>,
 ) => {
   const { t } = useTranslation();
   const { controllerProps, restProps } = genControllerProps(props, '');
@@ -134,7 +134,7 @@ export const FormItemEditor = <T extends FieldValues>(
         wrapperProps={{
           className: clsx(
             'editor-wrapper',
-            restField.disabled && 'editor-wrapper--disabled'
+            restField.disabled && 'editor-wrapper--disabled',
           ),
         }}
         defaultValue={controllerProps.defaultValue}
