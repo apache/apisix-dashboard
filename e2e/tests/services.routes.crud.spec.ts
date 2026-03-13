@@ -108,7 +108,7 @@ test('should CRUD route under service with required fields', async ({
       nodes,
       name: 'test-upstream',
       desc: 'test',
-    });
+    }, page);
 
     // Submit the form
     await servicesPom.getAddBtn(page).click();

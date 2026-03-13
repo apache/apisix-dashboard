@@ -33,7 +33,6 @@ interface ResourceListPageProps<T> {
     data?: { list: T[]; total: number } | undefined;
     isLoading: boolean;
     pagination: TablePaginationConfig | false;
-    refetch?: () => void;
   };
   rowKey: string | ((record: T) => string);
   addPageTo?: ToAddPageBtnProps['to'];

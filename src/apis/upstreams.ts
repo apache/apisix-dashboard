@@ -84,6 +84,8 @@ export const deleteAllUpstreams = async (req: AxiosInstance) => {
             typeof err.response?.data?.error_msg === 'string' &&
             err.response.data.error_msg.includes('still being used')
           ) {
+            // eslint-disable-next-line no-console
+            console.warn(`[e2eReq] Upstream ${d.value.id} is still being used, could not delete`);
             return;
           }
           throw err;
