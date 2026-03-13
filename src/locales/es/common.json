@@ -329,7 +329,8 @@
     "singular": "Secreto"
   },
   "services": {
-    "singular": "Servicio"
+    "singular": "Servicio",
+    "empty": "No se encontraron servicios. Haga clic en Agregar servicio para crear el primero."
   },
   "settings": {
     "adminKey": "Clave de Administrador",
