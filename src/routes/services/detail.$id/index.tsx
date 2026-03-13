@@ -61,6 +61,7 @@ const ServiceDetailForm = (props: Props) => {
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
+    defaultValues: serviceData?.value,
   });
 
   useEffect(() => {

@@ -62,12 +62,20 @@ const RouteDetailForm = (props: Props) => {
   const routeQuery = useQuery(getRouteQueryOptions(id));
   const { data: routeData, isLoading, refetch } = routeQuery;
 
+  // Compute initial form values from route data
+  const formDefaults = routeData?.value
+    ? produceVarsToForm(
+      produceToUpstreamForm(routeData.value.upstream || {}, routeData.value)
+    )
+    : undefined;
+
   const form = useForm({
     resolver: zodResolver(RoutePutSchema),
     shouldUnregister: true,
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
+    defaultValues: formDefaults,
   });
 
   useEffect(() => {

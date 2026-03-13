@@ -61,6 +61,7 @@ const StreamRouteDetailForm = (props: Props) => {
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
+    defaultValues: streamRouteData?.value,
   });
 
   useEffect(() => {

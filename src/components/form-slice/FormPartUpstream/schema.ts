@@ -20,8 +20,8 @@ import { APISIX } from '@/types/schema/apisix';
 
 // We don't omit id now, as we need it for detail view
 export const FormPartUpstreamSchema = APISIX.Upstream.extend({
-  __checksEnabled: z.boolean().optional().default(false),
-  __checksPassiveEnabled: z.boolean().optional().default(false),
+  __checksEnabled: z.boolean().default(false),
+  __checksPassiveEnabled: z.boolean().default(false),
 });
 
 export type FormPartUpstreamType = z.infer<typeof FormPartUpstreamSchema>;
