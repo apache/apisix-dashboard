@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ReloadOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import type { TablePaginationConfig } from 'antd';
@@ -62,7 +63,7 @@ const ResourceListPage = <T extends Record<string, unknown>>(
     showTotal: customShowTotal,
   } = props;
   const { t } = useTranslation();
-  const { data, isLoading, pagination } = queryData;
+  const { data, isLoading, pagination, refetch } = queryData;
 
   const dataSource = useMemo(() => data?.list ?? [], [data]);
   const total =
@@ -128,8 +129,23 @@ const ResourceListPage = <T extends Record<string, unknown>>(
                   },
                 ],
               },
+              settings: refetch ? [
+                {
+                  key: 'refresh',
+                  icon: <ReloadOutlined />,
+                  onClick: refetch,
+                },
+              ] : undefined,
             }
-            : undefined
+            : refetch ? {
+              settings: [
+                {
+                  key: 'refresh',
+                  icon: <ReloadOutlined />,
+                  onClick: refetch,
+                },
+              ],
+            } : undefined
         }
       />
     </AntdConfigProvider>
