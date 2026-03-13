@@ -44,9 +44,17 @@ export const FormItemTagsInput = <T extends FieldValues, R>(
     field: { value, onChange: fOnChange, ...restField },
     fieldState,
   } = useController<T>(controllerProps);
+
+  // Defensive: ensure value is always an array of strings to prevent
+  // "a.trim is not a function" errors when non-string values are passed
+  const rawValue = Array.isArray(value) ? value : [];
+  const tagsInputValue = from
+    ? rawValue.map(from).filter((item: unknown): item is string => typeof item === 'string')
+    : rawValue.filter((item: unknown): item is string => typeof item === 'string');
+
   return (
     <TagsInput
-      value={from ? value.map(from) : value}
+      value={tagsInputValue}
       error={fieldState.error?.message}
       onChange={(value) => {
         const val = to ? value.map(to) : value;
