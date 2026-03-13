@@ -16,6 +16,8 @@
     "skipLibCheck": true,
     "noImplicitAny": false,
     "noEmit": true,
+    "composite": true,
+    "tsBuildInfoFile": "./.e2e.tsbuildinfo",
     "verbatimModuleSyntax": true,
     "types": ["node"],
     "paths": {
