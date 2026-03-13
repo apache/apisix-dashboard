@@ -84,6 +84,7 @@ export const test = baseTest.extend<object, { workerStorageState: string }>({
           throw new Error(`Auth state file was not created at ${fileName}`);
         }
       } catch (error) {
+         
         console.error(`Failed to authenticate worker ${id}:`, error);
         throw error;
       } finally {

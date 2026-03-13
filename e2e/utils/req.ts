@@ -45,8 +45,9 @@ export const getPlaywrightRequestAdapter = (
 
     try {
       // Idempotent DELETE: Only treat 404 as 200 OK if explicitly requested via header
-      const allowDelete404 = config.headers?.['X-Allow-404-Delete'] === 'true';
+      const allowDelete404 = (config.headers?.['x-allow-404-delete'] ?? config.headers?.['X-Allow-404-Delete']) === 'true';
       if (allowDelete404 && method?.toLowerCase() === 'delete' && status === 404) {
+         
         console.warn(`[e2eReq] Ignored 404 on DELETE for ${urlWithBase}, treating as 200 OK.`);
         return {
           data: {},
