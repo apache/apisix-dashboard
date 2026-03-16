@@ -366,5 +366,7 @@
   },
   "upstreams": {
     "singular": "Upstream"
-  }
+  },
+  "copy": "Copy",
+  "copy_success": "Copy success"
 }
