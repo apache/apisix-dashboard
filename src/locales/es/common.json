@@ -330,7 +330,7 @@
   },
   "services": {
     "singular": "Servicio",
-    "empty": "No se encontraron servicios. Haga clic en Agregar servicio para crear el primero."
+    "empty": "No se encontraron servicios. Haga clic en Añadir Servicio para crear el primero."
   },
   "settings": {
     "adminKey": "Clave de Administrador",
