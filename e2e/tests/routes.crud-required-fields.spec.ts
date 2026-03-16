@@ -70,7 +70,7 @@ test('should CRUD route with required fields', async ({ page }) => {
       nodes,
       name: 'test-upstream',
       desc: 'test',
-    });
+    }, page);
     // Submit the form
     await routesPom.getAddBtn(page).click();
     await uiHasToastMsg(page, {

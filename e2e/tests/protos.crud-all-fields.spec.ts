@@ -76,7 +76,7 @@ test.describe('CRUD proto with all fields', () => {
       );
       expect(createdProto).toBeDefined();
       expect(createdProto?.value.id).toBeDefined();
-      // eslint-disable-next-line playwright/no-conditional-in-test
+       
       createdProtoId = createdProto?.value.id || '';
 
       // Verify content matches
@@ -111,7 +111,7 @@ test.describe('CRUD proto with all fields', () => {
       await protosPom.isDetailPage(page);
 
       // Verify the content is displayed correctly on the details page
-      const pageContent = await page.textContent('body');
+      const pageContent = await page.locator('body').textContent();
       expect(pageContent).toContain('package test;');
       expect(pageContent).toContain('TestMessage');
     });
@@ -158,7 +158,7 @@ message UpdatedTestMessage {
 
     await test.step('verify proto was updated', async () => {
       // Verify the updated content is displayed
-      const pageContent = await page.textContent('body');
+      const pageContent = await page.locator('body').textContent();
       expect(pageContent).toContain('package test_updated');
       expect(pageContent).toContain('UpdatedTestMessage');
 

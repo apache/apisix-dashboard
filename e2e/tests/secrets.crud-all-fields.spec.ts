@@ -78,7 +78,7 @@ test.describe('CRUD secret with all fields (AWS)', () => {
       await row.getByRole('button', { name: 'View' }).click();
       await secretsPom.isDetailPage(page);
 
-      const pageContent = await page.textContent('body');
+      const pageContent = await page.locator('body').textContent();
       expect(pageContent).toContain('Secret Manager');
       await expect(page.locator('input[name="id"]')).toHaveValue(createdSecretId);
       // Verify AWS-specific fields are present (labels)

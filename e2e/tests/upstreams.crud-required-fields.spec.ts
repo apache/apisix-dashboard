@@ -53,7 +53,7 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     await uiFillUpstreamRequiredFields(page, {
       name: upstreamName,
       nodes,
-    });
+    }, page);
     await upstreamsPom.getAddBtn(page).click();
     await uiHasToastMsg(page, {
       hasText: 'Add Upstream Successfully',
@@ -119,7 +119,8 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     const firstRowHost = rows.nth(0).getByRole('textbox').first();
     await firstRowHost.fill('updated-test.com');
     await expect(firstRowHost).toHaveValue('updated-test.com');
-    await nodesSection.click();
+    // Click outside nodes table to trigger useClickOutside → MobX → RHF sync
+    await page.getByLabel('Description').click();
 
     // Click the Save button to save changes
     const saveBtn = page.getByRole('button', { name: 'Save' });
