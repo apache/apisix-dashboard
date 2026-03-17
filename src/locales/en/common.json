@@ -30,6 +30,7 @@
       },
       "title": "Basic Information"
     },
+
     "btn": {
       "add": "Add",
       "addARow": "Add a row",
@@ -58,6 +59,7 @@
       "parseError": "JSON format is not valid"
     },
     "plugins": {
+      "formViewComingSoon": "Form View (Coming Soon)",
       "addPlugin": "Add Plugin",
       "configId": "Plugin Config ID",
       "editPlugin": "Edit Plugin",
@@ -331,7 +333,6 @@
   "services": {
     "singular": "Service",
     "empty": "No services found. Click Add Service to create your first one."
-
   },
   "settings": {
     "adminKey": "Admin Key",
