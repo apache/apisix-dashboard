@@ -335,7 +335,7 @@
   },
   "services": {
     "singular": "Service",
-    "empty": "Hizmet bulunamadı. İlk hizmetinizi oluşturmak için Service Ekle'ye tıklayın."
+    "empty": "Service bulunamadı. İlk Service'inizi oluşturmak için Service Ekle'ye tıklayın."
   },
   "settings": {
     "adminKey": "Admin Key",
