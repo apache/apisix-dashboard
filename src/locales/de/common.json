@@ -304,6 +304,11 @@
     "edit": {
       "success": "{{name}} erfolgreich bearbeitet",
       "title": "{{name}} bearbeiten"
+    },
+    "unsaved": {
+      "confirm": "Änderungen verwerfen",
+      "content": "Sie haben nicht gespeicherte Änderungen. Möchten Sie wirklich schließen?",
+      "title": "Nicht gespeicherte Änderungen"
     }
   },
   "mark": {

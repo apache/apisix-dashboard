@@ -304,6 +304,11 @@
     "edit": {
       "success": "Editado {{name}} con éxito",
       "title": "Editar {{name}}"
+    },
+    "unsaved": {
+      "confirm": "Descartar cambios",
+      "content": "Tiene cambios sin guardar. ¿Está seguro de que desea cerrar?",
+      "title": "Cambios sin guardar"
     }
   },
   "mark": {

@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Drawer, Group, Title } from '@mantine/core';
+import { Drawer, Group, Text, Title } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { isEmpty, isNil } from 'rambdax';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -47,8 +48,21 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
     defaultValues: { config: toConfigStr(config) },
   });
   const handleClose = () => {
-    onClose();
-    methods.reset();
+    if (mode !== 'view' && methods.getValues('config') !== toConfigStr(config)) {
+      modals.openConfirmModal({
+        centered: true,
+        title: t('info.unsaved.title'),
+        children: <Text size="sm">{t('info.unsaved.content')}</Text>,
+        labels: { confirm: t('info.unsaved.confirm'), cancel: t('form.btn.cancel') },
+        onConfirm: () => {
+          onClose();
+          methods.reset();
+        },
+      });
+    } else {
+      onClose();
+      methods.reset();
+    }
   };
 
   useEffect(() => {

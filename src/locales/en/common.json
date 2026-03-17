@@ -304,6 +304,11 @@
     "edit": {
       "success": "Edit {{name}} Successfully",
       "title": "Edit {{name}}"
+    },
+    "unsaved": {
+      "confirm": "Discard Changes",
+      "content": "You have unsaved changes. Are you sure you want to close?",
+      "title": "Unsaved Changes"
     }
   },
   "mark": {
