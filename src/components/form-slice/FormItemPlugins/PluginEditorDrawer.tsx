@@ -104,7 +104,8 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
               variant="light"
               onClick={methods.handleSubmit(({ config }) => {
                 onSave({ name, config: JSON.parse(config) });
-                handleClose();
+                onClose();
+                methods.reset();
               })}
             >
               {mode === 'add' && t('form.btn.add')}
