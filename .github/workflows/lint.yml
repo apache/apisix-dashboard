@@ -1,0 +1,47 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint and Check Formatting
+        run: |
+          pnpm lint:fix
+          if [ -n "$(git status --porcelain -uno)" ]; then
+            echo "Error: The codebase is not properly formatted or has linting issues that can be auto-fixed."
+            echo "Please run 'pnpm lint:fix' locally, commit the changes, and push again."
+            git status --porcelain -uno
+            git diff
+            exit 1
+          fi
+
+      - name: Run Type Check
+        run: pnpm exec tsc -b
