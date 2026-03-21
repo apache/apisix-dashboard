@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button, Card,Group, Text } from '@mantine/core';
+import { Button, Card, Group, Text } from '@mantine/core';
+import { useCallbackRef } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
 export type PluginCardProps = {
@@ -30,6 +32,31 @@ export type PluginCardProps = {
 export const PluginCard = (props: PluginCardProps) => {
   const { name, desc, mode, onAdd, onEdit, onView, onDelete } = props;
   const { t } = useTranslation();
+
+  const handleDelete = useCallbackRef(() =>
+    modals.openConfirmModal({
+      centered: true,
+      confirmProps: { color: 'red' },
+      title: t('info.delete.title', { name: name }),
+      children: (
+        <Text>
+          {t('info.delete.content', { name: name })}
+          <Text
+            component="span"
+            fw={700}
+            mx="0.25em"
+            style={{ wordBreak: 'break-all' }}
+          >
+            {name}
+          </Text>
+          {t('mark.question')}
+        </Text>
+      ),
+      labels: { confirm: t('form.btn.delete'), cancel: t('form.btn.cancel') },
+      onConfirm: () => onDelete?.(name),
+    })
+  );
+
   return (
     <Card withBorder radius="md" p="md" data-testid={`plugin-${name}`}>
       <Card.Section withBorder inheritPadding py="xs">
@@ -78,7 +105,7 @@ export const PluginCard = (props: PluginCardProps) => {
               size="compact-xs"
               variant="light"
               color="red"
-              onClick={() => onDelete?.(name)}
+              onClick={handleDelete}
             >
               {t('form.btn.delete')}
             </Button>

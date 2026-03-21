@@ -102,23 +102,15 @@ function PluginConfigsList() {
         pagination={pagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/plugin_configs/add"
-                    label={t('info.add.title', {
-                      name: t('pluginConfigs.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
+          actions: [
+            <ToAddPageBtn
+              key="add"
+              to="/plugin_configs/add"
+              label={t('info.add.title', {
+                name: t('pluginConfigs.singular'),
+              })}
+            />,
+          ],
         }}
       />
     </AntdConfigProvider>

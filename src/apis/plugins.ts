@@ -26,6 +26,37 @@ import {
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 
+const normalizePluginMap = (
+  payload: unknown
+): Record<string, Record<string, unknown>> => {
+  if (!payload || typeof payload !== 'object') {
+    return {};
+  }
+
+  const obj = payload as Record<string, unknown>;
+
+  // Some APISIX variants may wrap plugin definitions under `plugins`.
+  if (obj.plugins && typeof obj.plugins === 'object' && !Array.isArray(obj.plugins)) {
+    return obj.plugins as Record<string, Record<string, unknown>>;
+  }
+
+  // Some variants may return an array of one-key objects.
+  if (Array.isArray(payload)) {
+    const merged: Record<string, Record<string, unknown>> = {};
+    for (const item of payload) {
+      if (!item || typeof item !== 'object' || Array.isArray(item)) continue;
+      for (const [name, schemaObj] of Object.entries(item)) {
+        if (schemaObj && typeof schemaObj === 'object') {
+          merged[name] = schemaObj as Record<string, unknown>;
+        }
+      }
+    }
+    return merged;
+  }
+
+  return obj as Record<string, Record<string, unknown>>;
+};
+
 
 export type NeedPluginSchema = {
   schema: APISIXType['PluginSchemaKeys'];
@@ -53,14 +84,15 @@ export const getPluginsListWithSchemaQueryOptions = (
           params: { subsystem, all: true },
         })
         .then((v) => {
-          const data = Object.entries(v.data);
-          const names = [];
+          const originObj = normalizePluginMap(v.data);
+          const data = Object.entries(originObj);
+          const names: string[] = [];
           for (const [name, config] of data) {
             if (config[schema]) {
               names.push(name);
             }
           }
-          return { names, originObj: v.data };
+          return { names, originObj };
         }),
   });
 };
@@ -73,11 +105,11 @@ export const getPluginSchemaQueryOptions = (
     queryKey: ['plugin-schema', name],
     queryFn: name
       ? () =>
-          req
-            .get<unknown, APISIXType['RespPluginSchema']>(
-              `${API_PLUGINS}/${name}`
-            )
-            .then((v) => v.data)
+        req
+          .get<unknown, APISIXType['RespPluginSchema']>(
+            `${API_PLUGINS}/${name}`
+          )
+          .then((v) => v.data)
       : skipToken,
     enabled,
   });
