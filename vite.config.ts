@@ -65,14 +65,34 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'monaco-editor-vendor': ['monaco-editor', '@monaco-editor/react'],
-          'antd-vendor': [
-            'antd',
-            '@ant-design/pro-components',
-            '@ant-design/v5-patch-for-react-19',
-          ],
+        manualChunks(id) {
+          const normalizedId = id.replace(/\\/g, '/');
+
+          if (
+            normalizedId.includes('/node_modules/react/') ||
+            normalizedId.includes('/node_modules/react-dom/')
+          ) {
+            return 'react-vendor';
+          }
+
+          if (
+            normalizedId.includes('/node_modules/monaco-editor/') ||
+            normalizedId.includes('/node_modules/@monaco-editor/react/')
+          ) {
+            return 'monaco-editor-vendor';
+          }
+
+          if (
+            normalizedId.includes('/node_modules/antd/') ||
+            normalizedId.includes('/node_modules/@ant-design/pro-components/') ||
+            normalizedId.includes(
+              '/node_modules/@ant-design/v5-patch-for-react-19/'
+            )
+          ) {
+            return 'antd-vendor';
+          }
+
+          return undefined;
         },
       },
     },

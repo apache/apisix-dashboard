@@ -16,9 +16,9 @@
  */
 import { z } from 'zod';
 
-const Plugin = z.record(z.unknown());
+const Plugin = z.record(z.string(), z.unknown());
 
-const Plugins = z.record(Plugin);
+const Plugins = z.record(z.string(), Plugin);
 
 const PluginsQuery = z.object({
   subsystem: z.union([z.literal('http'), z.literal('stream')]).optional(),

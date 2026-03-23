@@ -56,24 +56,21 @@ test('should CRUD service with required fields', async ({ page }) => {
     const rows = upstreamSection.locator('tr.ant-table-row');
     await rows.first().locator('input').first().fill('127.0.0.1');
     await rows.first().locator('input').nth(1).fill('80');
-    await rows.first().locator('input').nth(2).fill('1');
+    const weightInput = rows.first().locator('input').nth(2);
+    await weightInput.fill('1');
+
+    // Editable table cells may require blur/click-outside before form submit.
+    await weightInput.blur();
+    await upstreamSection.click();
 
     // Ensure the name field is properly filled before submitting
     const nameField = page.getByRole('textbox', { name: 'Name' }).first();
     await expect(nameField).toHaveValue(serviceName);
 
     await servicesPom.getAddBtn(page).click();
-
-    // Wait for either success or error toast (longer timeout for CI)
-    const alertMsg = page.getByRole('alert');
-    await expect(alertMsg).toBeVisible({ timeout: 30000 });
-
-    // Check if it's a success message
-    await expect(alertMsg).toContainText('Add Service Successfully', { timeout: 5000 });
-
-    // Close the toast
-    await alertMsg.getByRole('button').click();
-    await expect(alertMsg).toBeHidden();
+    await uiHasToastMsg(page, {
+      hasText: 'Add Service Successfully',
+    });
   });
 
   await test.step('auto navigate to service detail page', async () => {

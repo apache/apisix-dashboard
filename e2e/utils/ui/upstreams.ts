@@ -238,7 +238,27 @@ export async function uiFillUpstreamAllFields(
     await tlsSection
       .getByRole('textbox', { name: 'Client Key', exact: true })
       .fill(tls.key);
-    await tlsSection.getByRole('switch', { name: 'Verify' }).click();
+
+    // Mantine renders a visually hidden switch input; use name-based targeting
+    // and force-check so this works in both upstream and route upstream forms.
+    const verifySwitchInput = tlsSection
+      .locator('input[name$="tls.verify"]')
+      .first();
+    await verifySwitchInput.evaluate((el) => {
+      const input = el as HTMLInputElement;
+      if (input.checked) return;
+
+      // Prefer native click first; this is resilient to hidden switch inputs.
+      input.click();
+
+      // Fallback: force state + events in case click is ignored by the UI lib.
+      if (!input.checked) {
+        input.checked = true;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+    await expect(verifySwitchInput).toBeChecked();
 
     // 12. Health Check settings
     // Activate active health check

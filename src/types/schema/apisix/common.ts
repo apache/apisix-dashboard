@@ -16,7 +16,7 @@
  */
 import { z } from 'zod';
 
-const Labels = z.record(z.string());
+const Labels = z.record(z.string(), z.string());
 
 const Expr = z.array(z.unknown());
 

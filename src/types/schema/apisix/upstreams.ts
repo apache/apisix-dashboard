@@ -65,7 +65,7 @@ const UpstreamNode = z.object({
 
 const UpstreamNodes = z.array(UpstreamNode);
 
-const UpstreamNodeObj = z.record(z.number());
+const UpstreamNodeObj = z.record(z.string(), z.number());
 
 const UpstreamNodeListOrObj = z.union([UpstreamNodes, UpstreamNodeObj]);
 

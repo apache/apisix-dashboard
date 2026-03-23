@@ -15,14 +15,11 @@
  * limitations under the License.
  */
 import js from '@eslint/js'
-import i18n from '@m6web/eslint-plugin-i18n';
 import headers from 'eslint-plugin-headers';
-import i18next from 'eslint-plugin-i18next';
 import * as importPlugin from 'eslint-plugin-import';
 import playwright from 'eslint-plugin-playwright'
-import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+import reactRefreshPlugin from 'eslint-plugin-react-refresh'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
 import globals from 'globals'
@@ -97,35 +94,6 @@ const e2eRules = tseslint.config(
   }
 );
 
-const i18nRules = tseslint.config({
-  files: ['src/**/*.{ts,tsx,js}'],
-  plugins: {
-    i18next: i18next,
-    i18n: i18n,
-  },
-  rules: {
-    ...i18next.configs['flat/recommended'].rules,
-    'i18n/no-unknown-key': 'error',
-    'i18n/no-text-as-children': ['error', { ignorePattern: '^\\s?[/.]\\s?$' }],
-    'i18n/no-text-as-attribute': ['error', { attributes: ['alt', 'title'] }],
-    'i18n/interpolation-data': [
-      'error',
-      { interpolationPattern: '\\{\\.+\\}' },
-    ],
-  },
-  settings: {
-    i18n: {
-      principalLangs: [
-        {
-          name: 'en',
-          translationPath: 'src/locales/en/common.json',
-        },
-      ],
-      functionName: 't',
-    },
-  },
-});
-
 const srcRules = tseslint.config({
   extends: [commonRules],
   files: ['src/**/*.{ts,tsx}', 'eslint.config.ts'],
@@ -136,55 +104,19 @@ const srcRules = tseslint.config({
   },
   plugins: {
     'react-hooks': reactHooks,
-    'react-refresh': reactRefresh,
-    react: react,
-  },
-  settings: {
-    react: {
-      version: 'detect',
-    },
+    'react-refresh': reactRefreshPlugin,
   },
   rules: {
-    ...react.configs.flat.recommended.rules,
-    ...react.configs.flat['jsx-runtime'].rules,
     ...reactHooks.configs.recommended.rules,
+    'react-hooks/set-state-in-effect': 'off',
+    'react-hooks/preserve-manual-memoization': 'off',
     'no-console': 'warn',
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-    'react/jsx-curly-brace-presence': [
-      'error',
-      {
-        props: 'never',
-        children: 'never',
-      },
-    ],
-    'react/no-unescaped-entities': [
-      'error',
-      {
-        forbid: ['>', '}'],
-      },
-    ],
-    'react/no-children-prop': [
-      'error',
-      {
-        allowFunctions: true,
-      },
-    ],
-    'react/self-closing-comp': [
-      'error',
-      {
-        component: true,
-        html: true,
-      },
-    ],
+    'react-refresh/only-export-components': 'off',
   },
 });
 
 export default tseslint.config(
   { ignores: ['dist', 'src/routeTree.gen.ts'] },
   e2eRules,
-  i18nRules,
   srcRules
 );

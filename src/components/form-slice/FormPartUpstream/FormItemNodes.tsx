@@ -28,7 +28,7 @@ import {
   type UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { ZodObject, ZodRawShape } from 'zod';
+import type { ZodObject, ZodRawShape, ZodTypeAny } from 'zod';
 
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
@@ -43,7 +43,7 @@ const zValidateField = <T extends ZodRawShape, R extends keyof T>(
   field: R,
   value: unknown
 ) => {
-  const fieldSchema = zObj.shape[field];
+  const fieldSchema = zObj.shape[field] as unknown as ZodTypeAny;
   const res = fieldSchema.safeParse(value);
   if (res.success) {
     return Promise.resolve();
