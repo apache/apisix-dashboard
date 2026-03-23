@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Group, Skeleton } from '@mantine/core';
+import { Button, Group, Skeleton, Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -93,6 +94,23 @@ const RouteDetailForm = (props: Props) => {
     },
   });
 
+  const handleCancel = () => {
+    if (form.formState.isDirty) {
+      modals.openConfirmModal({
+        centered: true,
+        title: t('info.unsaved.title'),
+        children: <Text size="sm">{t('info.unsaved.content')}</Text>,
+        labels: { confirm: t('info.unsaved.confirm'), cancel: t('form.btn.cancel') },
+        onConfirm: () => {
+          form.reset();
+          setReadOnly(true);
+        },
+      });
+    } else {
+      setReadOnly(true);
+    }
+  };
+
   if (isLoading) {
     return <Skeleton height={400} />;
   }
@@ -105,7 +123,7 @@ const RouteDetailForm = (props: Props) => {
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
+            <Button variant="outline" onClick={handleCancel}>
               {t('form.btn.cancel')}
             </Button>
           </Group>
