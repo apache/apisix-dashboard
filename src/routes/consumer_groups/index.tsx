@@ -89,40 +89,23 @@ function ConsumerGroupsList() {
       },
     ];
   }, [refetch, t]);
-
   return (
-    <AntdConfigProvider>
-      <ProTable
-        columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
-        search={false}
-        options={false}
-        pagination={pagination}
-        cardProps={{ bodyStyle: { padding: 0 } }}
-        toolbar={{
-          menu: {
-            type: 'inline',
-            items: [
-              {
-                key: 'add',
-                label: (
-                  <ToAddPageBtn
-                    key="add"
-                    to="/consumer_groups/add"
-                    label={t('info.add.title', {
-                      name: t('consumerGroups.singular'),
-                    })}
-                  />
-                ),
-              },
-            ],
-          },
+  <AntdConfigProvider>
+
+    <div style={{ marginBottom: 10 }}>
+      <input
+        type="text"
+        placeholder="Search consumer groups..."
+        style={{
+          padding: "6px",
+          width: "200px",
+          border: "1px solid #ccc",
+          borderRadius: "4px"
         }}
       />
-    </AntdConfigProvider>
-  );
+    </div>
+
+    <ProTable
 }
 
 function RouteComponent() {
