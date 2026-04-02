@@ -108,7 +108,12 @@
       "diff": ">=8.0.3",
       "@swc/core": "1.10.0",
       "flatted": ">=3.4.2",
-      "undici": ">=6.24.0"
+      "undici": ">=6.24.0",
+      "path-to-regexp": ">=8.4.0",
+      "brace-expansion": ">=5.0.5",
+      "anymatch>picomatch": "2.3.2",
+      "readdirp>picomatch": "2.3.2",
+      "picomatch": ">=4.0.4"
     },
     "onlyBuiltDependencies": [
       "@swc/core",
