@@ -64,41 +64,43 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
       closeOnEscape={false}
       opened={opened}
       onClose={handleClose}
-      styles={{ body: { paddingTop: '18px' } }}
+      classNames={{
+        body: 'plugin-editor-drawer__body',
+      }}
       {...(mode === 'add' && { title: t('form.plugins.addPlugin') })}
       {...(mode === 'edit' && { title: t('form.plugins.editPlugin') })}
       {...(mode === 'view' && { title: t('form.plugins.viewPlugin') })}
     >
-      <Title order={3} mb={10}>
-        {name}
-      </Title>
-      <FormProvider {...methods}>
-        <form>
-          <FormItemEditor
-            name="config"
-            h={500}
-            customSchema={schema}
-            isLoading={!schema}
-            required
-          />
-        </form>
+      <div className="plugin-editor-drawer__content">
+        <Title order={3}>{name}</Title>
+        <FormProvider {...methods}>
+          <form className="plugin-editor-drawer__form">
+            <FormItemEditor
+              name="config"
+              h="clamp(280px, calc(100vh - 320px), 620px)"
+              customSchema={schema}
+              isLoading={!schema}
+              required
+            />
+          </form>
 
-        {mode !== 'view' && (
-          <Group justify="flex-end" mt={8}>
-            <FormSubmitBtn
-              size="xs"
-              variant="light"
-              onClick={methods.handleSubmit(({ config }) => {
-                onSave({ name, config: JSON.parse(config) });
-                handleClose();
-              })}
-            >
-              {mode === 'add' && t('form.btn.add')}
-              {mode === 'edit' && t('form.btn.save')}
-            </FormSubmitBtn>
-          </Group>
-        )}
-      </FormProvider>
+          {mode !== 'view' && (
+            <Group className="plugin-editor-drawer__actions" justify="flex-end">
+              <FormSubmitBtn
+                size="xs"
+                variant="light"
+                onClick={methods.handleSubmit(({ config }) => {
+                  onSave({ name, config: JSON.parse(config) });
+                  handleClose();
+                })}
+              >
+                {mode === 'add' && t('form.btn.add')}
+                {mode === 'edit' && t('form.btn.save')}
+              </FormSubmitBtn>
+            </Group>
+          )}
+        </FormProvider>
+      </div>
     </Drawer>
   );
 };

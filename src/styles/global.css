@@ -50,3 +50,30 @@
     color: var(--mantine-color-gray-5) !important;
   }
 }
+
+.plugin-editor-drawer__body {
+  padding-top: 18px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.plugin-editor-drawer__content {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+}
+
+.plugin-editor-drawer__form {
+  min-height: 0;
+}
+
+.plugin-editor-drawer__actions {
+  position: sticky;
+  bottom: 0;
+  margin-top: var(--mantine-spacing-xs);
+  padding-top: var(--mantine-spacing-xs);
+  background: var(--mantine-color-body);
+  border-top: 1px solid var(--mantine-color-gray-2);
+  z-index: 2;
+}
