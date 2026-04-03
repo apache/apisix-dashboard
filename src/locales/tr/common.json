@@ -304,6 +304,11 @@
     "edit": {
       "success": "{{name}} başarıyla güncellendi",
       "title": "{{name}} Düzenle"
+    },
+    "unsaved": {
+      "title": "Kaydedilmemiş Değişiklikler",
+      "content": "Kaydedilmemiş değişiklikleriniz var. Kapatmak istediğinizden emin misiniz?",
+      "confirm": "Değişiklikleri at"
     }
   },
   "mark": {
