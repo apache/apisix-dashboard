@@ -72,7 +72,7 @@ const UpstreamNodeListOrObj = z.union([UpstreamNodes, UpstreamNodeObj]);
 const UpstreamDiscovery = z.object({
   discovery_type: z.string().optional(),
   service_name: z.string().optional(),
-  discovery_args: z.object({}).optional(),
+  discovery_args: z.record(z.string(), z.unknown()).optional(),
 });
 
 const UpstreamTimeout = z.object({
