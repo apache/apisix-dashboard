@@ -334,6 +334,11 @@
   },
   "settings": {
     "adminKey": "Clave de Administrador",
+    "theme": {
+      "auto": "Tema del sistema",
+      "dark": "Tema oscuro",
+      "light": "Tema claro"
+    },
     "title": "Configuraciones",
     "ui-commit-sha": "SHA de Commit de la UI"
   },

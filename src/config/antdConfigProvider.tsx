@@ -16,25 +16,36 @@
  */
 import '@ant-design/v5-patch-for-react-19';
 
-import { ConfigProvider } from 'antd';
+import { useComputedColorScheme } from '@mantine/core';
+import { ConfigProvider, theme } from 'antd';
 import enUS from 'antd/locale/en_US';
-import type { PropsWithChildren } from 'react';
+import { type PropsWithChildren, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const AntdConfigProvider = (props: PropsWithChildren) => {
   const { children } = props;
   const { t } = useTranslation();
+  const colorScheme = useComputedColorScheme('light');
+
+  const antdTheme = useMemo(
+    () => ({
+      algorithm:
+        colorScheme === 'dark'
+          ? theme.darkAlgorithm
+          : theme.defaultAlgorithm,
+      token: {
+        borderRadiusSM: 2,
+      },
+    }),
+    [colorScheme]
+  );
 
   return (
     <ConfigProvider
       virtual
       locale={enUS}
       renderEmpty={() => <div>{t('noData')}</div>}
-      theme={{
-        token: {
-          borderRadiusSM: 2,
-        },
-      }}
+      theme={antdTheme}
     >
       {children}
     </ConfigProvider>

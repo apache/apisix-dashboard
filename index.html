@@ -5,6 +5,31 @@
     <link rel="icon" type="image/svg+xml" href="/src/assets/apisix-logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Apache APISIX Dashboard</title>
+    <script>
+      (() => {
+        try {
+          const scheme = localStorage.getItem('mantine-color-scheme-value');
+          if (scheme === 'dark' || scheme === 'light') {
+            document.documentElement.setAttribute('data-mantine-color-scheme', scheme);
+          } else {
+            const prefersDark =
+              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute(
+              'data-mantine-color-scheme',
+              prefersDark ? 'dark' : 'light'
+            );
+          }
+        } catch (error) {
+          // If storage access is restricted, fall back to system preference or a safe default.
+          const prefersDark =
+            window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.setAttribute(
+            'data-mantine-color-scheme',
+            prefersDark ? 'dark' : 'light'
+          );
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

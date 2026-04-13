@@ -14,7 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { InputWrapper, type InputWrapperProps, Skeleton } from '@mantine/core';
+import {
+  InputWrapper,
+  type InputWrapperProps,
+  Skeleton,
+  useComputedColorScheme,
+} from '@mantine/core';
 import { Editor } from '@monaco-editor/react';
 import { clsx } from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -32,13 +37,12 @@ import { genControllerProps } from './util';
 
 setupMonacoEditor();
 
-const options: monaco.editor.IStandaloneEditorConstructionOptions = {
+const baseOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
   minimap: { enabled: false },
   contextmenu: false,
   lineNumbersMinChars: 3,
   renderLineHighlight: 'none',
   lineDecorationsWidth: 0,
-  theme: 'vs-light',
   acceptSuggestionOnEnter: 'on',
   // auto adjust width and height to parent
   // see: https://github.com/Microsoft/monaco-editor/issues/543#issuecomment-321767059
@@ -55,11 +59,15 @@ export const FormItemEditor = <T extends FieldValues>(
   props: FormItemEditorProps<T>
 ) => {
   const { t } = useTranslation();
+  const colorScheme = useComputedColorScheme('light');
+  const monacoTheme = colorScheme === 'dark' ? 'vs-dark' : 'vs-light';
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const { controllerProps, restProps } = genControllerProps(props, '');
   const { customSchema, language, isLoading, required, ...wrapperProps } =
     restProps;
   const { trigger, watch } = useFormContext();
   const monacoErrorRef = useRef<string | null>(null);
+
   const enhancedControllerProps = useMemo(() => {
     return {
       ...controllerProps,
@@ -103,7 +111,19 @@ export const FormItemEditor = <T extends FieldValues>(
       : undefined;
   const value = restField.disabled ? normalizedWatchedValue ?? '' : controlledValue;
 
+  const editorOptions = useMemo(
+    () => ({ ...baseOptions, theme: monacoTheme, readOnly: restField.disabled }),
+    [monacoTheme, restField.disabled]
+  );
+
   const [internalLoading, setLoading] = useState(false);
+
+  // Imperatively switch Monaco theme — prop changes alone don't re-theme after mount
+  useEffect(() => {
+    if (editorRef.current) {
+      monaco.editor.setTheme(monacoTheme);
+    }
+  }, [monacoTheme]);
 
   useEffect(() => {
     setLoading(true);
@@ -163,6 +183,7 @@ export const FormItemEditor = <T extends FieldValues>(
           trigger(props.name);
         }}
         onMount={(editor) => {
+          editorRef.current = editor;
           if (process.env.NODE_ENV === 'test') {
             window.__monacoEditor__ = editor;
           }
@@ -175,7 +196,7 @@ export const FormItemEditor = <T extends FieldValues>(
             width="100%"
           />
         }
-        options={{ ...options, readOnly: restField.disabled }}
+        options={editorOptions}
         defaultLanguage="json"
         {...(language && { language })}
       />

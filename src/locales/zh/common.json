@@ -334,6 +334,11 @@
   },
   "settings": {
     "adminKey": "管理员密钥",
+    "theme": {
+      "auto": "系统主题",
+      "dark": "深色主题",
+      "light": "浅色主题"
+    },
     "title": "设置",
     "ui-commit-sha": "UI Commit SHA"
   },
