@@ -88,6 +88,39 @@
       "vars": "Değişkenler"
     },
     "search": "Ara",
+    "searchForm": {
+      "fields": {
+        "name": "İsim",
+        "id": "ID",
+        "host": "Host",
+        "path": "Path",
+        "description": "Açıklama",
+        "plugin": "Plugin",
+        "labels": "Label'lar",
+        "version": "Versiyon",
+        "status": "Durum"
+      },
+      "placeholders": {
+        "name": "İsim",
+        "id": "ID",
+        "host": "Host",
+        "path": "Path",
+        "description": "Açıklama",
+        "plugin": "Plugin",
+        "labels": "Label Seç",
+        "version": "Versiyon Seç",
+        "status": "Durum Seç"
+      },
+      "status": {
+        "all": "Pasif/Aktif",
+        "enabled": "Aktif",
+        "disabled": "Pasif"
+      },
+      "actions": {
+        "reset": "Sıfırla",
+        "search": "Ara"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "Access Key ID",
@@ -361,7 +394,8 @@
   "table": {
     "actions": "İşlemler",
     "disabled": "Pasif",
-    "enabled": "Aktif"
+    "enabled": "Aktif",
+    "searchLimitReached": "Not: Yalnızca ilk {{count}} kayıt kontrol edildi. Bazı eşleşmeler sonuçlarda eksik olabilir."
   },
   "upstreams": {
     "singular": "Upstream"

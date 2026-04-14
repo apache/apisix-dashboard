@@ -88,6 +88,39 @@
       "vars": "Variablen"
     },
     "search": "Suche",
+    "searchForm": {
+      "fields": {
+        "name": "Name",
+        "id": "ID",
+        "host": "Host",
+        "path": "Pfad",
+        "description": "Beschreibung",
+        "plugin": "Plugin",
+        "labels": "Labels",
+        "version": "Version",
+        "status": "Status"
+      },
+      "placeholders": {
+        "name": "Name",
+        "id": "ID",
+        "host": "Host",
+        "path": "Pfad",
+        "description": "Beschreibung",
+        "plugin": "Plugin",
+        "labels": "Labels auswählen",
+        "version": "Version auswählen",
+        "status": "Status auswählen"
+      },
+      "status": {
+        "all": "Deaktiviert/Aktiviert",
+        "enabled": "Aktiviert",
+        "disabled": "Deaktiviert"
+      },
+      "actions": {
+        "reset": "Zurücksetzen",
+        "search": "Suchen"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "Access Key ID",
@@ -361,7 +394,8 @@
   "table": {
     "actions": "Aktionen",
     "disabled": "Deaktiviert",
-    "enabled": "Aktiviert"
+    "enabled": "Aktiviert",
+    "searchLimitReached": "Hinweis: Es wurden nur die ersten {{count}} Datensätze geprüft. Einige Treffer könnten fehlen."
   },
   "upstreams": {
     "singular": "Upstream"

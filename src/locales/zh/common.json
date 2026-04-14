@@ -88,6 +88,39 @@
       "vars": "变量"
     },
     "search": "搜索",
+    "searchForm": {
+      "fields": {
+        "name": "名称",
+        "id": "ID",
+        "host": "域名",
+        "path": "路径",
+        "description": "描述",
+        "plugin": "插件",
+        "labels": "标签",
+        "version": "版本",
+        "status": "状态"
+      },
+      "placeholders": {
+        "name": "名称",
+        "id": "ID",
+        "host": "域名",
+        "path": "路径",
+        "description": "描述",
+        "plugin": "插件",
+        "labels": "选择标签",
+        "version": "选择版本",
+        "status": "选择状态"
+      },
+      "status": {
+        "all": "已禁用/已启用",
+        "enabled": "已启用",
+        "disabled": "已禁用"
+      },
+      "actions": {
+        "reset": "重置",
+        "search": "搜索"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "访问密钥ID",
@@ -361,7 +394,8 @@
   "table": {
     "actions": "操作",
     "disabled": "已禁用",
-    "enabled": "已启用"
+    "enabled": "已启用",
+    "limitReached": "注意：仅检查了前 {{count}} 条记录。 结果中可能会缺少某些匹配项。"
   },
   "upstreams": {
     "singular": "上游"
