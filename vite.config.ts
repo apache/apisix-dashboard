@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { readdirSync } from 'node:fs';
+
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react-swc';
 import observerPlugin from 'mobx-react-observer/swc-plugin';
@@ -91,7 +93,7 @@ export default defineConfig({
       semicolons: false,
     }),
     i18nProgress({
-      langs: ['en', 'es', 'de', 'zh', 'tr'],
+      langs: readdirSync('./src/locales'),
       baseLang: 'en',
       getTranslationDir: (lang) => `./src/locales/${lang}`,
     }),
