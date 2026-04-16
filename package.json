@@ -84,7 +84,7 @@
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
     "selfsigned": "^5.4.0",
-    "typescript": "~5.8.3",
+    "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.2",
     "unplugin-icons": "^22.1.0",
     "unplugin-info": "^1.2.2",
