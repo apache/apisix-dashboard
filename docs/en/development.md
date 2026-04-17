@@ -34,7 +34,7 @@ If there is no prompt, open the `Command Palette`, type `reopen`, and select `De
 
 ### 2. Wait for the environment to be ready
 
-After clicking, it will take some time for the environment to be built, depending on your network conditions. 
+After clicking, it will take some time for the environment to be built, depending on your network conditions.
 
 Once the environment is ready, similar information will be displayed in the `TERMINAL` tab.
 
@@ -49,3 +49,9 @@ pnpm dev
 ```
 
 You can then modify the code and preview the updated page in the browser in real-time.
+
+### 4. Admin Key
+
+![Insert Admin Key](./assets/development/insert-admin-key.png)
+
+You can find the admin key under `e2e/server/apisix_conf.yml`.
