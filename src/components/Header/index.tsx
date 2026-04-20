@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 import apisixLogo from '@/assets/apisix-logo.svg';
 
+import { DarkModeToggleBtn } from './DarkModeToggleBtn';
 import { LanguageMenu } from './LanguageMenu';
 import { SettingModalBtn } from './SettingModalBtn';
 
@@ -46,6 +47,7 @@ export const Header: FC<HeaderProps> = (props) => {
           <div>{t('apisix.dashboard')}</div>
         </Group>
         <Group h="100%" gap="sm">
+          <DarkModeToggleBtn />
           <SettingModalBtn />
           <LanguageMenu />
         </Group>
