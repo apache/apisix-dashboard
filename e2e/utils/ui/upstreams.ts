@@ -21,13 +21,15 @@ import type { APISIXType } from '@/types/schema/apisix';
 
 import { genTLS } from '../common';
 import type { Test } from '../test';
-import { uiFillHTTPStatuses } from '.';
+import {
+  uiEnsureSettingsClosed,
+  uiFillHTTPStatuses,
+} from '.';
 
 /**
  * Fill the upstream form with required fields
  * @param ctx - Playwright page object or locator
- * @param upstreamName - Name for the upstream
- * @param nodes - Array of upstream nodes
+ * @param upstreamName - Name
  */
 export async function uiFillUpstreamRequiredFields(
   ctx: Page | Locator,
@@ -52,10 +54,10 @@ export async function uiFillUpstreamRequiredFields(
   await firstRowHost.fill(upstream.nodes[1].host);
   await expect(firstRowHost).toHaveValue(upstream.nodes[1].host);
 
-  // Add second node - blur first, wait for useClickOutside state sync, then click Add
+  // Add second node - blur first to trigger sync, then click Add
   await firstRowHost.blur();
   if (page) await page.waitForTimeout(500);
-  await addNodeBtn.click();
+  await addNodeBtn.click({ force: true });
   await expect(rows).toHaveCount(2, { timeout: 10000 });
   const secondRowHost = rows.nth(1).getByRole('textbox').first();
   await secondRowHost.fill(upstream.nodes[0].host);
@@ -100,13 +102,11 @@ export async function uiCheckUpstreamRequiredFields(
 export async function uiFillUpstreamAllFields(
   test: Test,
   ctx: Page | Locator,
-  /**
-   * currently only name and desc are useful,
-   * because I dont want to change too many fields in upstreams related tests
-   */
-  upstream: Partial<APISIXType['Upstream']>,
-  page: Page = ctx as Page
+  upstream: Partial<APISIXType['Upstream']> = {},
+  page: Page = (ctx as Locator).page ? (ctx as Locator).page() : (ctx as Page)
 ) {
+  await uiEnsureSettingsClosed(page);
+
   await test.step('fill in required fields', async () => {
     // Fill in the required fields
     // 1. Name (required)
@@ -156,8 +156,8 @@ export async function uiFillUpstreamAllFields(
 
     // Add the second node - blur any focused input first, then click Add
     await priorityInput.blur();
-    await page.waitForTimeout(500);
-    await addNodeBtn.click();
+    if (page) await page.waitForTimeout(500);
+    await addNodeBtn.click({ force: true });
     await expect(rows).toHaveCount(2, { timeout: 10000 });
 
     // Fill in the Host for the second node - click first then fill
@@ -246,15 +246,17 @@ export async function uiFillUpstreamAllFields(
     await tlsSection
       .getByRole('textbox', { name: 'Client Key', exact: true })
       .fill(tls.key);
-    await tlsSection.getByRole('switch', { name: 'Verify' }).click();
+    await tlsSection.getByText('Verify').scrollIntoViewIfNeeded();
+    await tlsSection.locator('.mantine-Switch-track').click({ force: true });
 
     // 12. Health Check settings
     // Activate active health check
     const healthCheckSection = ctx.getByRole('group', {
       name: 'Health Check',
     });
-    const checksEnabled = ctx.getByTestId('checksEnabled').locator('..');
-    await checksEnabled.click();
+    const checksEnabled = ctx.getByTestId('checksEnabled').locator('..').locator('.mantine-Switch-track');
+    await checksEnabled.scrollIntoViewIfNeeded();
+    await checksEnabled.click({ force: true });
 
     // Set the Healthy part of Active health check settings
     const activeSection = healthCheckSection.getByRole('group', {
@@ -290,11 +292,12 @@ export async function uiFillUpstreamAllFields(
       '503'
     );
 
-    // Activate passive health check
-    await healthCheckSection
+    const checksPassiveEnabled = healthCheckSection
       .getByTestId('checksPassiveEnabled')
       .locator('..')
-      .click();
+      .locator('.mantine-Switch-track');
+    await checksPassiveEnabled.scrollIntoViewIfNeeded();
+    await checksPassiveEnabled.click({ force: true });
 
     // Set the Healthy part of Passive health check settings
     const passiveSection = healthCheckSection.getByRole('group', {

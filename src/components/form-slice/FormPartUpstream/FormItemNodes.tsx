@@ -16,7 +16,6 @@
  */
 import { EditableProTable, type ProColumns } from '@ant-design/pro-components';
 import { Button, InputWrapper, type InputWrapperProps } from '@mantine/core';
-import { useClickOutside } from '@mantine/hooks';
 import { toJS } from 'mobx';
 import { useLocalObservable } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
@@ -54,9 +53,10 @@ const zValidateField = <T extends ZodRawShape, R extends keyof T>(
 
 const genRecord = (data?: DataSource | APISIXType['UpstreamNode']) => {
   const d = data || zGetDefault(APISIX.UpstreamNode);
+  const id = (d as DataSource).id || nanoid();
   return {
-    id: nanoid(),
     ...d,
+    id,
   } as DataSource;
 };
 
@@ -181,8 +181,9 @@ export const FormItemNodes = <T extends FieldValues>(
     },
     values: [] as DataSource[],
     setValues(data: DataSource[]) {
-      if (equals(toJS(this.values), data)) return;
+      if (equals(parseToUpstreamNodes(toJS(this.values)), parseToUpstreamNodes(data))) return;
       this.values = data;
+      this.save();
     },
     append(data: DataSource) {
       this.values.push(data);
@@ -195,6 +196,11 @@ export const FormItemNodes = <T extends FieldValues>(
     get editableKeys() {
       return this.disabled ? [] : this.values.map((item) => item.id);
     },
+    save() {
+      const vals = parseToUpstreamNodes(toJS(this.values));
+      fOnChange?.(vals);
+      restProps.onChange?.(vals);
+    },
   }));
   useEffect(() => {
     ob.setValues(parseToDataSource(value));
@@ -203,11 +209,7 @@ export const FormItemNodes = <T extends FieldValues>(
     ob.setDisabled(disabled);
   }, [disabled, ob]);
 
-  const ref = useClickOutside(() => {
-    const vals = parseToUpstreamNodes(toJS(ob.values));
-    fOnChange?.(vals);
-    restProps.onChange?.(vals);
-  }, ['mouseup', 'touchend', 'mousedown', 'touchstart']);
+
 
   return (
     <InputWrapper
@@ -215,7 +217,6 @@ export const FormItemNodes = <T extends FieldValues>(
       label={label}
       required={required}
       withAsterisk={withAsterisk}
-      ref={ref}
     >
       <input name={fName} type="hidden" />
       <AntdConfigProvider>
@@ -240,7 +241,10 @@ export const FormItemNodes = <T extends FieldValues>(
                   variant="transparent"
                   size="compact-xs"
                   px={0}
-                  onClick={() => ob.remove(row.id)}
+                  onClick={() => {
+                    ob.remove(row.id);
+                    ob.save();
+                  }}
                 >
                   {t('form.btn.delete')}
                 </Button>,
@@ -256,7 +260,10 @@ export const FormItemNodes = <T extends FieldValues>(
         size="xs"
         color="cyan"
         style={{ borderColor: 'whitesmoke' }}
-        onClick={() => ob.append(genRecord())}
+        onClick={() => {
+          ob.append(genRecord());
+          ob.save();
+        }}
         {...(disabled && { display: 'none' })}
       >
         {t('form.upstreams.nodes.add')}

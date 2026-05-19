@@ -20,6 +20,7 @@ import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import {
   uiClearMonacoEditor,
+  uiEnsureSettingsClosed,
   uiFillMonacoEditor,
   uiGetMonacoEditor,
   uiHasToastMsg,
@@ -47,6 +48,7 @@ test.beforeAll(async () => {
 });
 
 test('should CRUD route with all fields', async ({ page }) => {
+  await uiEnsureSettingsClosed(page);
   test.slow();
 
   const varsSection = page.getByRole('group', { name: 'Match Rules' }).getByText('Vars').locator('..');

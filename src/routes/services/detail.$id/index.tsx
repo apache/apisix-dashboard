@@ -23,7 +23,7 @@ import {
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
@@ -32,7 +32,10 @@ import { getServiceQueryOptions } from '@/apis/hooks';
 import { putServiceReq } from '@/apis/services';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartService } from '@/components/form-slice/FormPartService';
-import { produceRmEmptyUpstreamFields } from '@/components/form-slice/FormPartUpstream/util';
+import {
+  produceRmEmptyUpstreamFields,
+  produceToNestedUpstreamForm,
+} from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
@@ -54,7 +57,7 @@ const ServiceDetailForm = (props: Props) => {
   const { id } = useParams({ from: '/services/detail/$id' });
 
   const serviceQuery = useSuspenseQuery(getServiceQueryOptions(id));
-  const { data: serviceData, isLoading, refetch } = serviceQuery;
+  const { data: serviceData, refetch } = serviceQuery;
 
   const form = useForm({
     resolver: zodResolver(APISIX.Service),
@@ -62,19 +65,21 @@ const ServiceDetailForm = (props: Props) => {
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
+    defaultValues: serviceData.value,
   });
 
   useEffect(() => {
-    if (serviceData?.value && !isLoading) {
-      form.reset(serviceData.value);
-    }
-  }, [serviceData, form, isLoading]);
+    form.reset(produceToNestedUpstreamForm(serviceData.value));
+  }, [serviceData, form]);
 
   const putService = useMutation({
     mutationFn: (d: APISIXType['Service']) =>
       putServiceReq(
         req,
-        pipeProduce(produceRmUpstreamWhenHas('upstream_id'), produceRmEmptyUpstreamFields)(d)
+        pipeProduce(
+          produceRmUpstreamWhenHas('upstream_id'),
+          produceRmEmptyUpstreamFields
+        )(d) as APISIXType['Service']
       ),
     async onSuccess() {
       notifications.show({
@@ -85,10 +90,6 @@ const ServiceDetailForm = (props: Props) => {
       setReadOnly(true);
     },
   });
-
-  if (isLoading) {
-    return <Skeleton height={400} />;
-  }
 
   return (
     <FormProvider {...form}>
@@ -140,9 +141,17 @@ function RouteComponent() {
           ),
         })}
       />
-      <FormTOCBox>
-        <ServiceDetailForm readOnly={readOnly} setReadOnly={setReadOnly} />
-      </FormTOCBox>
+      <Suspense
+        fallback={
+          <FormTOCBox>
+            <Skeleton height={400} />
+          </FormTOCBox>
+        }
+      >
+        <FormTOCBox>
+          <ServiceDetailForm readOnly={readOnly} setReadOnly={setReadOnly} />
+        </FormTOCBox>
+      </Suspense>
     </>
   );
 }

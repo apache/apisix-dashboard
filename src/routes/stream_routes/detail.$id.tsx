@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Group,Skeleton } from '@mantine/core';
+import { Button, Group, Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
@@ -52,8 +52,8 @@ const StreamRouteDetailForm = (props: Props) => {
   const { readOnly, setReadOnly, id } = props;
   const { t } = useTranslation();
 
-  const streamRouteQuery = useQuery(getStreamRouteQueryOptions(id));
-  const { data: streamRouteData, isLoading, refetch } = streamRouteQuery;
+  const streamRouteQuery = useSuspenseQuery(getStreamRouteQueryOptions(id));
+  const { data: streamRouteData, refetch } = streamRouteQuery;
 
   const form = useForm({
     resolver: zodResolver(APISIX.StreamRoute),
@@ -61,13 +61,12 @@ const StreamRouteDetailForm = (props: Props) => {
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
+    defaultValues: streamRouteData.value,
   });
 
   useEffect(() => {
-    if (streamRouteData?.value && !isLoading) {
-      form.reset(streamRouteData.value);
-    }
-  }, [streamRouteData, form, isLoading]);
+    form.reset(streamRouteData.value);
+  }, [streamRouteData, form]);
 
   const putStreamRoute = useMutation({
     mutationFn: (d: APISIXType['StreamRoute']) =>
@@ -81,10 +80,6 @@ const StreamRouteDetailForm = (props: Props) => {
       setReadOnly(true);
     },
   });
-
-  if (isLoading) {
-    return <Skeleton height={400} />;
-  }
 
   return (
     <FormProvider {...form}>
@@ -103,6 +98,8 @@ const StreamRouteDetailForm = (props: Props) => {
     </FormProvider>
   );
 };
+
+
 
 type StreamRouteDetailProps = Pick<Props, 'id'> & {
   onDeleteSuccess: () => void;
@@ -139,13 +136,21 @@ export const StreamRouteDetail = (props: StreamRouteDetailProps) => {
           ),
         })}
       />
-      <FormTOCBox>
-        <StreamRouteDetailForm
-          readOnly={readOnly}
-          setReadOnly={setReadOnly}
-          id={id}
-        />
-      </FormTOCBox>
+      <Suspense
+        fallback={
+          <FormTOCBox>
+            <Skeleton height={400} />
+          </FormTOCBox>
+        }
+      >
+        <FormTOCBox>
+          <StreamRouteDetailForm
+            readOnly={readOnly}
+            setReadOnly={setReadOnly}
+            id={id}
+          />
+        </FormTOCBox>
+      </Suspense>
     </>
   );
 };

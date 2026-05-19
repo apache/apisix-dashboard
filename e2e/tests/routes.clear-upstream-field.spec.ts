@@ -23,10 +23,13 @@ import { uiDeleteRoute } from '@e2e/utils/ui/routes';
 import { uiFillUpstreamRequiredFields } from '@e2e/utils/ui/upstreams';
 import { expect, type Page } from '@playwright/test';
 
-import { deleteAllRoutes, getRouteReq } from '@/apis/routes';
-import { deleteAllServices, postServiceReq } from '@/apis/services';
-import { deleteAllUpstreams, postUpstreamReq } from '@/apis/upstreams';
+import { getRouteReq } from '@/apis/routes';
+import { postServiceReq } from '@/apis/services';
+import { postUpstreamReq } from '@/apis/upstreams';
+import { API_ROUTES, API_SERVICES, API_UPSTREAMS } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
+
+test.describe.configure({ mode: 'serial' });
 
 const upstreamName = randomId('test-upstream');
 const serviceName = randomId('test-service');
@@ -42,6 +45,7 @@ const upstreamNodes: APISIXType['UpstreamNode'][] = [
 
 let testUpstreamId: string;
 let testServiceId: string;
+const createdRouteIds = new Set<string>();
 
 // Common helper functions
 async function fillBasicRouteFields(
@@ -130,11 +134,6 @@ async function editRouteAndAddUpstream(
 }
 
 test.beforeAll(async () => {
-  // Clean up existing resources
-  await deleteAllRoutes(e2eReq);
-  await deleteAllServices(e2eReq);
-  await deleteAllUpstreams(e2eReq);
-
   // Create a test upstream for testing upstream_id scenario
   const upstreamResponse = await postUpstreamReq(e2eReq, {
     name: upstreamName,
@@ -150,10 +149,24 @@ test.beforeAll(async () => {
   testServiceId = serviceResponse.data.value.id;
 });
 
+test.afterEach(async () => {
+  await Promise.all(
+    Array.from(createdRouteIds).map((routeId) =>
+      e2eReq.delete(`${API_ROUTES}/${routeId}`).catch(() => {
+        // Ignore cleanup errors so tests can proceed; route may already be deleted.
+      })
+    )
+  );
+  createdRouteIds.clear();
+});
+
 test.afterAll(async () => {
-  await deleteAllRoutes(e2eReq);
-  await deleteAllServices(e2eReq);
-  await deleteAllUpstreams(e2eReq);
+  await e2eReq.delete(`${API_SERVICES}/${testServiceId}`).catch(() => {
+    // Ignore cleanup errors; resource may already be deleted.
+  });
+  await e2eReq.delete(`${API_UPSTREAMS}/${testUpstreamId}`).catch(() => {
+    // Ignore cleanup errors; resource may already be deleted.
+  });
 });
 
 test('should clear upstream field when upstream_id exists (create and edit)', async ({
@@ -189,7 +202,8 @@ test('should clear upstream field when upstream_id exists (create and edit)', as
   });
 
   await test.step('verify upstream field is cleared after creation', async () => {
-    await verifyRouteData(page, 'upstream_id', testUpstreamId);
+    const routeId = await verifyRouteData(page, 'upstream_id', testUpstreamId);
+    createdRouteIds.add(routeId);
   });
 
   await test.step('edit route and add upstream configuration again', async () => {
@@ -201,7 +215,8 @@ test('should clear upstream field when upstream_id exists (create and edit)', as
   });
 
   await test.step('verify upstream field is still cleared after editing', async () => {
-    await verifyRouteData(page, 'upstream_id', testUpstreamId);
+    const routeId = await verifyRouteData(page, 'upstream_id', testUpstreamId);
+    createdRouteIds.add(routeId);
     await uiDeleteRoute(page);
   });
 });
@@ -240,7 +255,8 @@ test('should clear upstream field when service_id exists (create and edit)', asy
   });
 
   await test.step('verify upstream field is cleared after creation', async () => {
-    await verifyRouteData(page, 'service_id', testServiceId);
+    const routeId = await verifyRouteData(page, 'service_id', testServiceId);
+    createdRouteIds.add(routeId);
   });
 
   await test.step('edit route and add upstream configuration again', async () => {
@@ -252,7 +268,8 @@ test('should clear upstream field when service_id exists (create and edit)', asy
   });
 
   await test.step('verify upstream field is still cleared after editing', async () => {
-    await verifyRouteData(page, 'service_id', testServiceId);
+    const routeId = await verifyRouteData(page, 'service_id', testServiceId);
+    createdRouteIds.add(routeId);
     await uiDeleteRoute(page);
   });
 });

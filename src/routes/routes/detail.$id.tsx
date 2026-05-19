@@ -17,13 +17,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group, Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
   useParams,
 } from '@tanstack/react-router';
-import { useEffect, useMemo } from 'react';
+import { Suspense, useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useBoolean } from 'react-use';
@@ -40,7 +40,11 @@ import {
   produceRoute,
   produceVarsToForm,
 } from '@/components/form-slice/FormPartRoute/util';
-import { produceToUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
+import {
+  produceRmEmptyUpstreamFields,
+  produceToNestedUpstreamForm,
+  produceToUpstreamForm,
+} from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
@@ -48,6 +52,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { type APISIXType } from '@/types/schema/apisix';
+import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   readOnly: boolean;
@@ -59,18 +64,16 @@ const RouteDetailForm = (props: Props) => {
   const { readOnly, setReadOnly, id } = props;
   const { t } = useTranslation();
 
-  const routeQuery = useQuery(getRouteQueryOptions(id));
-  const { data: routeData, isLoading, refetch } = routeQuery;
+  const routeQuery = useSuspenseQuery(getRouteQueryOptions(id));
+  const { data: routeData, refetch } = routeQuery;
 
-  const formDefaults = useMemo(() => {
-    if (routeData?.value) {
-      const upstreamProduced = produceToUpstreamForm(
-        routeData.value.upstream || {},
-        routeData.value
-      );
-      return produceVarsToForm(upstreamProduced);
-    }
-  }, [routeData]);
+  const formDefaults = useMemo(
+    () =>
+      produceVarsToForm(
+        produceToUpstreamForm(routeData.value.upstream || {}, routeData.value)
+      ),
+    [routeData.value]
+  );
 
   const form = useForm({
     resolver: zodResolver(RoutePutSchema),
@@ -78,17 +81,27 @@ const RouteDetailForm = (props: Props) => {
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
+    defaultValues: formDefaults,
   });
 
   useEffect(() => {
-    if (formDefaults && !isLoading) {
-      form.reset(formDefaults);
-    }
-  }, [formDefaults, form, isLoading]);
+    if (!routeData.value) return;
+
+    const upstreamProduced = produceToNestedUpstreamForm(
+      routeData.value
+    );
+    form.reset(produceVarsToForm(upstreamProduced));
+  }, [routeData, form]);
 
   const putRoute = useMutation({
     mutationFn: (d: RoutePutType) =>
-      putRouteReq(req, produceRoute(d) as APISIXType['Route']),
+      putRouteReq(
+        req,
+        pipeProduce(
+          produceRmEmptyUpstreamFields,
+          produceRoute
+        )(d) as APISIXType['Route']
+      ),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('routes.singular') }),
@@ -97,11 +110,14 @@ const RouteDetailForm = (props: Props) => {
       await refetch();
       setReadOnly(true);
     },
+    onError(err: Error & { response?: { data?: { error_msg?: string } } }) {
+      notifications.show({
+        title: 'Error',
+        message: err.response?.data?.error_msg || err.message || 'Failed to update route',
+        color: 'red',
+      });
+    },
   });
-
-  if (isLoading) {
-    return <Skeleton height={400} />;
-  }
 
   return (
     <FormProvider {...form}>
@@ -155,13 +171,21 @@ export const RouteDetail = (props: RouteDetailProps) => {
           ),
         })}
       />
-      <FormTOCBox>
-        <RouteDetailForm
-          readOnly={readOnly}
-          setReadOnly={setReadOnly}
-          id={id}
-        />
-      </FormTOCBox>
+      <Suspense
+        fallback={
+          <FormTOCBox>
+            <Skeleton height={400} />
+          </FormTOCBox>
+        }
+      >
+        <FormTOCBox>
+          <RouteDetailForm
+            readOnly={readOnly}
+            setReadOnly={setReadOnly}
+            id={id}
+          />
+        </FormTOCBox>
+      </Suspense>
     </>
   );
 };

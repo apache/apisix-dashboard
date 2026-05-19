@@ -29,10 +29,12 @@ import {
   type RoutePostType,
 } from '@/components/form-slice/FormPartRoute/schema';
 import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
+import { produceRmEmptyUpstreamFields } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
+import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   navigate: (res: APISIXType['RespRouteDetail']) => Promise<void>;
@@ -44,7 +46,14 @@ export const RouteAddForm = (props: Props) => {
   const { t } = useTranslation();
 
   const postRoute = useMutation({
-    mutationFn: (d: RoutePostType) => postRouteReq(req, produceRoute(d)),
+    mutationFn: (d: RoutePostType) =>
+      postRouteReq(
+        req,
+        pipeProduce(
+          produceRmEmptyUpstreamFields,
+          produceRoute
+        )(d) as APISIXType['Route']
+      ),
     async onSuccess(res) {
       notifications.show({
         message: t('info.add.success', { name: t('routes.singular') }),

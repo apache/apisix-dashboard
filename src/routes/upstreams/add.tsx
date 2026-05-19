@@ -62,7 +62,11 @@ const UpstreamAddForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit((d) => postUpstream.mutateAsync(d as PostUpstreamType))}>
+      <form
+        onSubmit={form.handleSubmit((d) =>
+          postUpstream.mutateAsync(pipeProduce(produceRmEmptyUpstreamFields)(d))
+        )}
+      >
         <FormPartUpstream />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>

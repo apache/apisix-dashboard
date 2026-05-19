@@ -31,6 +31,22 @@ export const produceToUpstreamForm = (
     d.__checksPassiveEnabled =
       !!upstream.checks?.passive && isNotEmpty(upstream.checks.passive);
   });
+export const produceToNestedUpstreamForm = produce((draft: Record<string, unknown>) => {
+  const d = draft as Record<string, unknown> & { 
+    upstream?: Record<string, unknown>;
+    checks?: { passive?: unknown };
+    __checksEnabled?: boolean;
+    __checksPassiveEnabled?: boolean;
+  };
+  if (d.upstream && typeof d.upstream === 'object' && !Array.isArray(d.upstream)) {
+    d.upstream = produceToUpstreamForm(d.upstream, d.upstream) as Record<string, unknown>;
+  }
+  // Also handle top-level checks if they exist
+  if (d.checks) {
+    d.__checksEnabled = !!d.checks && isNotEmpty(d.checks);
+    d.__checksPassiveEnabled = !!d.checks?.passive && isNotEmpty(d.checks.passive);
+  }
+});
 
 const isAllUndefined = (obj: Record<string, unknown>) =>
   Object.values(obj).every(

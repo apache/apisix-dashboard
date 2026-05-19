@@ -16,7 +16,6 @@
  */
 import type { AxiosInstance } from 'axios';
 
-import type { RoutePostType } from '@/components/form-slice/FormPartRoute/schema';
 import { API_ROUTES, PAGE_SIZE_MAX, PAGE_SIZE_MIN } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 import type { PageSearchType } from '@/types/schema/pageSearch';
@@ -45,7 +44,7 @@ export const putRouteReq = (req: AxiosInstance, data: APISIXType['Route']) => {
   );
 };
 
-export const postRouteReq = (req: AxiosInstance, data: RoutePostType) =>
+export const postRouteReq = (req: AxiosInstance, data: APISIXType['Route']) =>
   req.post<unknown, APISIXType['RespRouteDetail']>(API_ROUTES, data);
 
 export const deleteAllRoutes = async (req: AxiosInstance) => {

@@ -30,9 +30,9 @@ export const produceVarsToForm = produce((draft: RoutePostType) => {
 
 export const produceVarsToAPI = produce((draft: RoutePostType) => {
   if (draft.vars && typeof draft.vars === 'string') {
-    draft.vars = JSON.parse(draft.vars);
+    (draft as RoutePostType & { vars: unknown }).vars = JSON.parse(draft.vars);
   }
-});
+}) as (draft: RoutePostType) => Omit<RoutePostType, 'vars'> & { vars?: unknown[] };
 
 export const produceRoute = pipeProduce(
   produceRmUpstreamWhenHas('service_id', 'upstream_id'),

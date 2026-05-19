@@ -25,20 +25,23 @@ import {
 } from '@e2e/utils/ui/upstreams';
 import { expect } from '@playwright/test';
 
+import { deleteAllRoutes } from '@/apis/routes';
 import { deleteAllUpstreams } from '@/apis/upstreams';
 import type { APISIXType } from '@/types/schema/apisix';
 
 const upstreamName = randomId('test-upstream');
 const nodes: APISIXType['UpstreamNode'][] = [
-  { host: 'test.com' },
-  { host: 'test2.com', port: 80 },
+  { host: 'test.com', port: 80, weight: 100 },
+  { host: 'test2.com', port: 80, weight: 100 },
 ];
 
 test.beforeAll(async () => {
+  await deleteAllRoutes(e2eReq);
   await deleteAllUpstreams(e2eReq);
 });
 
 test('should CRUD upstream with required fields', async ({ page }) => {
+
   await upstreamsPom.toIndex(page);
   await upstreamsPom.isIndexPage(page);
 
@@ -156,7 +159,8 @@ test('should CRUD upstream with required fields', async ({ page }) => {
   });
 
   await test.step('delete upstream in detail page', async () => {
-    await page.getByRole('button', { name: 'Delete' }).click();
+    // Delete the upstream
+    await page.getByRole('button', { name: 'Delete', exact: true }).first().click();
 
     await page
       .getByRole('dialog', { name: 'Delete Upstream' })
