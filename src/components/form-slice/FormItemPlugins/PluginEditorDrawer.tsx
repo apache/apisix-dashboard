@@ -72,8 +72,13 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
       <Title order={3} mb={10}>
         {name}
       </Title>
+
       <FormProvider {...methods}>
         <form>
+          <button style={{ marginBottom: 10 }}>
+            {t('form.plugins.formViewComingSoon')}
+          </button>
+
           <FormItemEditor
             name="config"
             h={500}
