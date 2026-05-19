@@ -304,6 +304,11 @@
     "edit": {
       "success": "编辑 {{name}} 成功",
       "title": "编辑 {{name}}"
+    },
+    "unsaved": {
+      "confirm": "放弃更改",
+      "content": "您有未保存的更改，确定要关闭吗？",
+      "title": "未保存的更改"
     }
   },
   "mark": {
