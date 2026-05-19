@@ -21,6 +21,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getSecretListQueryOptions, useSecretList } from '@/apis/hooks';
+import { CopyableText } from '@/components/CopyableText';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -44,6 +45,9 @@ function SecretList() {
         key: 'id',
         valueType: 'text',
         width: 300,
+        render: (_, record) => (
+          <CopyableText text={String(record.value.id ?? '')} />
+        ),
       },
       {
         dataIndex: ['value', 'manager'],

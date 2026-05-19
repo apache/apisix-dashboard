@@ -246,7 +246,15 @@ export async function uiFillUpstreamAllFields(
     await tlsSection
       .getByRole('textbox', { name: 'Client Key', exact: true })
       .fill(tls.key);
-    await tlsSection.getByRole('switch', { name: 'Verify' }).click();
+    const verifySwitch = tlsSection
+      .locator('input[name$="tls.verify"]')
+      .first();
+    if (!(await verifySwitch.isChecked())) {
+      await verifySwitch.evaluate((node) => {
+        (node as HTMLInputElement).click();
+      });
+    }
+    await expect(verifySwitch).toBeChecked();
 
     // 12. Health Check settings
     // Activate active health check

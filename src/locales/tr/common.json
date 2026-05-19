@@ -12,6 +12,8 @@
   "credentials": {
     "singular": "Credential"
   },
+  "copy": "Kopyala",
+  "copy_success": "Kopyalandi",
   "form": {
     "basic": {
       "desc": "Açıklama",

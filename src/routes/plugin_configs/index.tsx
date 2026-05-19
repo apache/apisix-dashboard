@@ -21,6 +21,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getPluginConfigListQueryOptions, usePluginConfigList } from '@/apis/hooks';
+import { CopyableText } from '@/components/CopyableText';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -43,6 +44,9 @@ function PluginConfigsList() {
         title: 'ID',
         key: 'id',
         valueType: 'text',
+        render: (_, record) => (
+          <CopyableText text={String(record.value.id ?? '')} />
+        ),
       },
       {
         dataIndex: ['value', 'name'],

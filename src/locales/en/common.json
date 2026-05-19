@@ -12,6 +12,8 @@
   "credentials": {
     "singular": "Credential"
   },
+  "copy": "Copy",
+  "copy_success": "Copied",
   "form": {
     "basic": {
       "desc": "Description",

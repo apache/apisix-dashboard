@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Button, Card,Group, Text } from '@mantine/core';
+import { Button, Card, Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+
+import { CopyableText } from '@/components/CopyableText';
 
 export type PluginCardProps = {
   name: string;
@@ -30,12 +32,16 @@ export type PluginCardProps = {
 export const PluginCard = (props: PluginCardProps) => {
   const { name, desc, mode, onAdd, onEdit, onView, onDelete } = props;
   const { t } = useTranslation();
+  const pluginName = String(name);
+
   return (
-    <Card withBorder radius="md" p="md" data-testid={`plugin-${name}`}>
+    <Card withBorder radius="md" p="md" data-testid={`plugin-${pluginName}`}>
       <Card.Section withBorder inheritPadding py="xs">
         <Group justify="space-between">
           <Group>
-            <Text fw={500}>{name}</Text>
+            <Text fw={500}>
+              <CopyableText text={pluginName} />
+            </Text>
           </Group>
         </Group>
       </Card.Section>
@@ -50,7 +56,7 @@ export const PluginCard = (props: PluginCardProps) => {
             size="compact-xs"
             variant="light"
             color="blue"
-            onClick={() => onAdd?.(name)}
+            onClick={() => onAdd?.(pluginName)}
           >
             {t('form.btn.add')}
           </Button>
@@ -59,7 +65,7 @@ export const PluginCard = (props: PluginCardProps) => {
           <Button
             size="compact-xs"
             variant="light"
-            onClick={() => onView?.(name)}
+            onClick={() => onView?.(pluginName)}
           >
             {t('form.btn.view')}
           </Button>
@@ -70,7 +76,7 @@ export const PluginCard = (props: PluginCardProps) => {
               size="compact-xs"
               variant="light"
               color="blue"
-              onClick={() => onEdit?.(name)}
+              onClick={() => onEdit?.(pluginName)}
             >
               {t('form.btn.edit')}
             </Button>
@@ -78,7 +84,7 @@ export const PluginCard = (props: PluginCardProps) => {
               size="compact-xs"
               variant="light"
               color="red"
-              onClick={() => onDelete?.(name)}
+              onClick={() => onDelete?.(pluginName)}
             >
               {t('form.btn.delete')}
             </Button>

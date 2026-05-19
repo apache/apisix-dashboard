@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
 import type { WithServiceIdFilter } from '@/apis/routes';
+import { CopyableText } from '@/components/CopyableText';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -55,6 +56,9 @@ export const RouteList = (props: RouteListProps) => {
         title: 'ID',
         key: 'id',
         valueType: 'text',
+        render: (_, record) => (
+          <CopyableText text={String(record.value.id ?? '')} />
+        ),
       },
       {
         dataIndex: ['value', 'name'],

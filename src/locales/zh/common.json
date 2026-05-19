@@ -12,6 +12,8 @@
   "credentials": {
     "singular": "凭证"
   },
+  "copy": "复制",
+  "copy_success": "复制成功",
   "form": {
     "basic": {
       "desc": "描述",

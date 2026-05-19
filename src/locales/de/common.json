@@ -12,6 +12,8 @@
   "credentials": {
     "singular": "Anmeldeinformation"
   },
+  "copy": "Kopieren",
+  "copy_success": "Kopiert",
   "form": {
     "basic": {
       "desc": "Beschreibung",

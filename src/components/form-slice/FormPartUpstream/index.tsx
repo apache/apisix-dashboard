@@ -44,6 +44,7 @@ export const FormSectionTLS = () => {
         control={control}
         name={np('tls.verify')}
         label={t('form.upstreams.tls.verify')}
+        data-testid="upstream-tls-verify-switch"
       />
       <FormSection legend={t('form.upstreams.tls.clientCertKeyPair')}>
         <FormItemTextareaWithUpload
