@@ -90,6 +90,7 @@
     "unplugin-info": "^1.2.2",
     "vite": "^6.3.6",
     "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.1.4",
     "yaml": "^2.8.3"
   },
   "lint-staged": {
