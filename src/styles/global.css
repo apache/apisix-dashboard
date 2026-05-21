@@ -45,6 +45,13 @@
     background-color: var(--mantine-color-gray-0) !important;
   }
 
+  /* Allow scrolling on disabled Monaco editor */
+  .monaco-scrollable-element,
+  .monaco-scrollable-element > .scrollbar,
+  .monaco-scrollable-element > .scrollbar > .slider {
+    pointer-events: auto !important;
+  }
+
   .monaco-editor .view-lines,
   .monaco-editor .view-line * {
     color: var(--mantine-color-gray-5) !important;
