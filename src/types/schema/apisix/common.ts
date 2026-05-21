@@ -22,9 +22,19 @@ const Expr = z.array(z.unknown());
 
 const Status = z.union([z.literal(0), z.literal(1)]);
 
+// `name` is optional via `.partial()` below — but a user who deliberately
+// types whitespace into the Name field expects either visible feedback or
+// the value to be discarded. Accepting `"   "` produces resources that show
+// up blank in list columns and are essentially impossible to identify.
+const NonBlankName = z
+  .string()
+  .refine((s) => s.length === 0 || s.trim().length > 0, {
+    message: 'Name cannot be only whitespace',
+  });
+
 const Basic = z
   .object({
-    name: z.string(),
+    name: NonBlankName,
     desc: z.string(),
     labels: Labels,
     status: Status.optional(),

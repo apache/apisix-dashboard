@@ -129,8 +129,12 @@ test('should CRUD plugin metadata with required fields only', async ({
     // Find the syslog card
     const syslogCard = page.getByTestId('plugin-syslog');
 
-    // Click Delete button
+    // Click Delete button — confirm modal per #3342 fix
     await syslogCard.getByRole('button', { name: 'Delete' }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'Delete' })
+      .click();
 
     // Should show success message
     await uiHasToastMsg(page, {

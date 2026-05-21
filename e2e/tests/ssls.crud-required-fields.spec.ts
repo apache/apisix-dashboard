@@ -114,8 +114,14 @@ test('should CRUD SSL with required fields', async ({ page }) => {
     // Verify the new SNI is displayed
     await expect(page.getByText('updated.example.com', { exact: true })).toBeVisible();
 
-    // Click Cancel instead of Save to avoid validation issues with empty key
+    // Click Cancel instead of Save to avoid validation issues with empty key.
+    // The Edit→Cancel guard now confirms before discarding (see
+    // src/hooks/useEditCancelGuard.tsx), so dismiss the modal too.
     await page.getByRole('button', { name: 'Cancel' }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'Discard Changes' })
+      .click();
 
     // Verify we're back in detail view mode
     await sslsPom.isDetailPage(page);

@@ -36,8 +36,13 @@ export const getCredentialListReq = (req: AxiosInstance, params: WithUsername) =
     )
     .then((v) => v.data)
     .catch((e) => {
-      // 404 means credentials is empty
-      if (e.response.status === 404) {
+      // Both "404 (credentials never created)" and "no response at all
+      // (network abort / timeout / CORS preflight failure)" are treated as
+      // an empty list so the consumer detail page stays usable. Letting
+      // the original bug pattern through (`e.response.status` on an
+      // undefined response) crashed the whole consumer detail view into
+      // the app-level error boundary.
+      if (!e?.response || e.response.status === 404) {
         const res: APISIXListResponse<APISIXType['Credential']> = {
           total: 0,
           list: [],

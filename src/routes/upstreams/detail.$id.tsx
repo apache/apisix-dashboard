@@ -50,6 +50,7 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_UPSTREAMS } from '@/config/constant';
 import { req } from '@/config/req';
+import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -119,6 +120,8 @@ const UpstreamDetailForm = (
     }
   }, [upstreamData, form]);
 
+  const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
+
   return (
     <FormTOCBox>
       <FormProvider {...form}>
@@ -132,7 +135,7 @@ const UpstreamDetailForm = (
           {!readOnly && (
             <Group>
               <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-              <Button variant="outline" onClick={() => setReadOnly(true)}>
+              <Button variant="outline" onClick={handleCancel}>
                 {t('form.btn.cancel')}
               </Button>
             </Group>
