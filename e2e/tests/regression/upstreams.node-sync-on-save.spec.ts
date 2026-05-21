@@ -50,13 +50,11 @@ test.beforeAll(broadClean);
 
 test.afterAll(broadClean);
 
-// Skipped: confirmed-real bug #3293, but tractable fixes attempted in this
-// PR (debounced syncToForm, unconditional ob.save) each broke unrelated
-// CRUD specs by racing the EditableProTable's internal editable state.
-// A proper fix likely needs to live inside the table's commit lifecycle
-// rather than around it. Test left in place as a regression sentinel for
-// whoever picks up #3293 next.
-test.fixme(
+// Fixed in this PR by removing the MobX mirror in FormItemNodes. RHF is
+// now the single source of truth and every keystroke / add / remove
+// pushes UP via fOnChange immediately, so an immediate Submit captures
+// the typed values.
+test(
   'upstream node typed values reach Admin API on immediate Save (no blur)',
   async ({ page }) => {
   const upstreamName = randomId('reg-node-sync');
