@@ -38,6 +38,7 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_PLUGIN_CONFIGS } from '@/config/constant';
 import { req } from '@/config/req';
+import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -81,6 +82,8 @@ const PluginConfigDetailForm = (props: Props) => {
     form.reset(initialValue);
   }, [form, initialValue]);
 
+  const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
+
   if (!data) return <Skeleton height={200} />;
 
   return (
@@ -91,7 +94,7 @@ const PluginConfigDetailForm = (props: Props) => {
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
+            <Button variant="outline" onClick={handleCancel}>
               {t('form.btn.cancel')}
             </Button>
           </Group>

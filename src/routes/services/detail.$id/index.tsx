@@ -42,6 +42,7 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SERVICES } from '@/config/constant';
 import { req } from '@/config/req';
+import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
@@ -91,6 +92,8 @@ const ServiceDetailForm = (props: Props) => {
     },
   });
 
+  const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putService.mutateAsync(d))}>
@@ -99,7 +102,7 @@ const ServiceDetailForm = (props: Props) => {
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
+            <Button variant="outline" onClick={handleCancel}>
               {t('form.btn.cancel')}
             </Button>
           </Group>

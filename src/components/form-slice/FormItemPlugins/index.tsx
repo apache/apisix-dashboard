@@ -21,17 +21,14 @@ import {
   type InputWrapperProps,
 } from '@mantine/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { toJS } from 'mobx';
-import { useLocalObservable } from 'mobx-react-lite';
 import { difference } from 'rambdax';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   type FieldValues,
   useController,
   type UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useDeepCompareEffect } from 'react-use';
 
 import {
   getPluginsListWithSchemaQueryOptions,
@@ -50,6 +47,21 @@ export type FormItemPluginsProps<T extends FieldValues> = InputWrapperProps &
     onChange?: (value: Record<string, unknown>) => void;
   } & Partial<NeedPluginSchema>;
 
+/**
+ * Plugins editor for Route / Service / Upstream forms.
+ *
+ * Architecture: react-hook-form's controller value (`rawObject`) is the
+ * single source of truth. There is no local Map cache that mirrors it —
+ * the previous `useLocalObservable + __map + useEffect([..., rawObject])
+ * + save → fOnChange` triangle created the same bidirectional-sync race
+ * as #3293, where an in-flight `rawObject` update from elsewhere could
+ * reinitialize `__map` from a stale snapshot and overwrite a just-saved
+ * plugin config on Submit. Reading directly from `rawObject` removes the
+ * race entirely.
+ *
+ * Only transient UI state (current open plugin name, drawer open flags,
+ * search query, edit/view mode) lives in component state.
+ */
 export const FormItemPlugins = <T extends FieldValues>(
   props: FormItemPluginsProps<T>
 ) => {
@@ -60,108 +72,105 @@ export const FormItemPlugins = <T extends FieldValues>(
   const { t } = useTranslation();
 
   const {
-    field: { value: rawObject, onChange: fOnChange, name: fName, ...restField },
+    field: { value: rawValue, onChange: fOnChange, name: fName, ...restField },
     fieldState,
   } = useController<T>(controllerProps);
   const isView = useMemo(() => restField.disabled, [restField.disabled]);
 
-  const pluginsOb = useLocalObservable(() => ({
-    __map: new Map<string, object>(),
-    init(obj: Record<string, object>) {
-      this.__map = new Map(Object.entries(obj));
-    },
-    delete(name: string) {
-      this.__map.delete(name);
-      this.save();
-    },
-    allPluginNames: [] as string[],
-    pluginSchemaObj: new Map<string, APISIXType['PluginSchema']>(),
-    initPlugins(props: {
-      names: string[];
-      originObj: Record<string, Record<string, unknown>>;
-    }) {
-      const { names, originObj } = props;
-      this.allPluginNames = names;
-      this.pluginSchemaObj = new Map(Object.entries(originObj));
-    },
-    get selected() {
-      return Array.from(this.__map.keys());
-    },
-    get unSelected() {
-      return difference(this.allPluginNames, this.selected);
-    },
-    save() {
-      const obj = Object.fromEntries(toJS(this.__map));
-      fOnChange(obj);
-    },
-    update(config: PluginConfig) {
-      const { name, config: pluginConfig } = config;
-      this.__map.set(name, pluginConfig);
-      this.save();
-      this.setSelectPluginsOpened(false);
-    },
-    curPlugin: {} as PluginConfig,
-    setCurPlugin(name: string) {
-      this.curPlugin = {
-        name,
-        config: this.__map.get(name),
-      } as PluginConfig;
-      this.setEditorOpened(true);
-    },
-    get curPluginSchema() {
-      const d = this.pluginSchemaObj.get(this.curPlugin.name);
-      if (!d) return {};
-      return d[schema];
-    },
-    editorOpened: false,
-    setEditorOpened(val: boolean) {
-      this.editorOpened = val;
-    },
-    closeEditor() {
-      this.setEditorOpened(false);
-      this.curPlugin = {} as PluginConfig;
-    },
-    search: '',
-    setSearch(val: string) {
-      this.search = val;
-    },
-    mode: 'edit' as PluginCardProps['mode'],
-    selectPluginsOpened: false,
-    setSelectPluginsOpened(val: boolean) {
-      this.selectPluginsOpened = val;
-    },
-    on(mode: PluginCardProps['mode'], name: string) {
-      this.setCurPlugin(name);
-      this.mode = mode;
-    },
-  }));
+  // rawValue may be `undefined` when the form is first mounted with no
+  // plugins yet — normalize to an empty object for read paths. Wrapped in
+  // useMemo so identity is stable across renders that don't change the
+  // form value (otherwise downstream useCallback / useMemo deps would
+  // churn every render).
+  const rawObject = useMemo(
+    () => (rawValue ?? {}) as Record<string, object>,
+    [rawValue]
+  );
+
+  // Selected plugins are derived directly from the form value — no mirror.
+  const selected = useMemo(() => Object.keys(rawObject), [rawObject]);
 
   const pluginsListReq = useSuspenseQuery(
     getPluginsListWithSchemaQueryOptions({ schema })
   );
+  const allPluginNames = pluginsListReq.data.names;
+  const pluginSchemaObj = pluginsListReq.data.originObj as Record<
+    string,
+    APISIXType['PluginSchema']
+  >;
+  const unSelected = useMemo(
+    () => difference(allPluginNames, selected),
+    [allPluginNames, selected]
+  );
 
-  // init the selected plugins
-  useEffect(() => {
-    pluginsOb.init(rawObject);
-  }, [pluginsOb, rawObject]);
-  useDeepCompareEffect(() => {
-    pluginsOb.initPlugins(pluginsListReq.data);
-  }, [pluginsOb, pluginsListReq.data]);
+  // Pure-UI state. None of these mirror form data.
+  const [curPluginName, setCurPluginName] = useState<string | null>(null);
+  const [mode, setMode] = useState<PluginCardProps['mode']>('edit');
+  const [editorOpened, setEditorOpened] = useState(false);
+  const [selectPluginsOpened, setSelectPluginsOpened] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const curPlugin = useMemo<PluginConfig>(() => {
+    if (!curPluginName) return {} as PluginConfig;
+    return {
+      name: curPluginName,
+      config: rawObject[curPluginName],
+    } as PluginConfig;
+  }, [curPluginName, rawObject]);
+
+  const curPluginSchema = useMemo(() => {
+    if (!curPluginName) return {};
+    const d = pluginSchemaObj[curPluginName];
+    if (!d) return {};
+    return d[schema];
+  }, [curPluginName, pluginSchemaObj, schema]);
+
+  const closeEditor = useCallback(() => {
+    setEditorOpened(false);
+    setCurPluginName(null);
+  }, []);
+
+  const handleUpdate = useCallback(
+    (config: PluginConfig) => {
+      const { name, config: pluginConfig } = config;
+      // Build the new plugins object inline — no intermediate cache to go
+      // stale. Submit always sees this exact value.
+      fOnChange({ ...rawObject, [name]: pluginConfig });
+      setSelectPluginsOpened(false);
+      closeEditor();
+    },
+    [closeEditor, fOnChange, rawObject]
+  );
+
+  const handleDelete = useCallback(
+    (name: string) => {
+      const next = { ...rawObject };
+      delete next[name];
+      fOnChange(next);
+    },
+    [fOnChange, rawObject]
+  );
+
+  const handleOpen = useCallback(
+    (m: PluginCardProps['mode'], name: string) => {
+      setCurPluginName(name);
+      setMode(m);
+      setEditorOpened(true);
+    },
+    []
+  );
 
   return (
     <InputWrapper error={fieldState.error?.message} {...restProps}>
       <input name={fName} type="hidden" />
       <Drawer.Stack>
         <Group>
-          <PluginCardListSearch
-            search={pluginsOb.search}
-            setSearch={pluginsOb.setSearch}
-          />
+          <PluginCardListSearch search={search} setSearch={setSearch} />
           <SelectPluginsDrawer
-            plugins={pluginsOb.unSelected}
-            opened={pluginsOb.selectPluginsOpened}
-            setOpened={pluginsOb.setSelectPluginsOpened}
-            onAdd={(name) => pluginsOb.on('add', name)}
+            plugins={unSelected}
+            opened={selectPluginsOpened}
+            setOpened={setSelectPluginsOpened}
+            onAdd={(name) => handleOpen('add', name)}
             disabled={restField.disabled}
           />
         </Group>
@@ -169,19 +178,19 @@ export const FormItemPlugins = <T extends FieldValues>(
           mode={isView ? 'view' : 'edit'}
           placeholder={t('form.plugins.searchForSelectedPlugins')}
           mah="60vh"
-          search={pluginsOb.search}
-          plugins={pluginsOb.selected}
-          onDelete={pluginsOb.delete}
-          onView={(name) => pluginsOb.on('view', name)}
-          onEdit={(name) => pluginsOb.on('edit', name)}
+          search={search}
+          plugins={selected}
+          onDelete={handleDelete}
+          onView={(name) => handleOpen('view', name)}
+          onEdit={(name) => handleOpen('edit', name)}
         />
         <PluginEditorDrawer
-          mode={isView ? 'view' : pluginsOb.mode}
-          schema={toJS(pluginsOb.curPluginSchema)}
-          opened={pluginsOb.editorOpened}
-          onClose={pluginsOb.closeEditor}
-          plugin={toJS(pluginsOb.curPlugin)}
-          onSave={pluginsOb.update}
+          mode={isView ? 'view' : mode}
+          schema={curPluginSchema}
+          opened={editorOpened}
+          onClose={closeEditor}
+          plugin={curPlugin}
+          onSave={handleUpdate}
         />
       </Drawer.Stack>
     </InputWrapper>

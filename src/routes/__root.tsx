@@ -52,8 +52,12 @@ const Root = () => {
           <Outlet />
         </AppShell.Main>
       </AppShell>
-      <TanStackRouterDevtools />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {import.meta.env.MODE !== 'test' && (
+        <>
+          <TanStackRouterDevtools />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </>
+      )}
       <SettingsModal />
     </I18nextProvider>
   );

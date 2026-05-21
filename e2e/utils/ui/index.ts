@@ -120,9 +120,20 @@ export const uiFillMonacoEditor = async (
   value: string
 ) => {
   await editor.click();
-  const editorTextbox = editor.getByRole('textbox');
-  // Use fill() instead of pressSequentially() for reliability
-  await editorTextbox.fill(value);
+  // Wait for the Monaco global to be wired up (set when an editor instance
+  // mounts — same hook uiClearMonacoEditor depends on).
+  await page.waitForFunction(
+    () => typeof window.__monacoEditor__ !== 'undefined',
+    null,
+    { timeout: 10_000 }
+  );
+  // Set value directly on the model. Going through keystroke `fill()`
+  // triggers Monaco's auto-bracket / auto-quote pairing, which silently
+  // corrupts JSON inputs containing `{` or `"`.
+  await page.evaluate((v) => {
+    const ed = window.__monacoEditor__;
+    ed.getModel()?.setValue(v);
+  }, value);
   await editor.blur();
   await page.waitForTimeout(800);
 };

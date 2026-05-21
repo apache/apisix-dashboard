@@ -117,8 +117,13 @@ test('should CRUD Consumer Group with required fields', async ({ page }) => {
     const idField = page.getByRole('textbox', { name: 'ID', exact: true });
     await expect(idField).toBeDisabled();
 
-    // Cancel without making changes
+    // Cancel without making changes. The Edit→Cancel guard now always
+    // confirms before discarding (see src/hooks/useEditCancelGuard.tsx).
     await page.getByRole('button', { name: 'Cancel' }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'Discard Changes' })
+      .click();
 
     // Verify we're back in detail view
     await consumerGroupsPom.isDetailPage(page);

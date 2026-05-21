@@ -38,6 +38,7 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_GLOBAL_RULES } from '@/config/constant';
 import { req } from '@/config/req';
+import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 
 type Props = {
@@ -77,6 +78,8 @@ const GlobalRuleDetailForm = (props: Props) => {
     },
   });
 
+  const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putGlobalRule.mutateAsync(d))}>
@@ -85,7 +88,7 @@ const GlobalRuleDetailForm = (props: Props) => {
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
+            <Button variant="outline" onClick={handleCancel}>
               {t('form.btn.cancel')}
             </Button>
           </Group>

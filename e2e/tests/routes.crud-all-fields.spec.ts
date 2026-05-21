@@ -154,8 +154,15 @@ test('should CRUD route with all fields', async ({ page }) => {
     await editPluginDialog.getByRole('button', { name: 'Save' }).click();
     await expect(editPluginDialog).toBeHidden();
 
-    // delete basic-auth plugin
+    // delete basic-auth plugin — now requires confirmation per #3342 fix
     await basicAuthPlugin.getByRole('button', { name: 'Delete' }).click();
+    const confirmDeleteDialog = page
+      .getByRole('dialog')
+      .filter({ hasText: /basic-auth/i });
+    await expect(confirmDeleteDialog).toBeVisible({ timeout: 5000 });
+    await confirmDeleteDialog
+      .getByRole('button', { name: 'Delete' })
+      .click();
     await expect(basicAuthPlugin).toBeHidden();
 
     // add real-ip plugin
