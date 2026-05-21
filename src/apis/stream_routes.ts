@@ -81,8 +81,14 @@ export const deleteAllStreamRoutes = async (req: AxiosInstance) => {
       // axios interceptor surfaces `e.response.data.error_msg`, while the
       // e2e Playwright fetch adapter throws an Error whose `.message`
       // includes the upstream status and body text.
+      // Require BOTH a 400-class status (or no response at all) AND the
+      // "stream mode" text — a string match alone could swallow unrelated
+      // errors whose messages happen to mention stream mode.
+      const status = e?.response?.status;
+      const isStreamGate =
+        status === undefined || (status >= 400 && status < 500);
       const haystack = `${e?.response?.data?.error_msg ?? ''} ${e?.message ?? ''}`;
-      if (/stream mode/i.test(haystack)) {
+      if (isStreamGate && /stream mode/i.test(haystack)) {
         return { total: 0, list: [] } as Awaited<
           ReturnType<typeof getStreamRouteListReq>
         >;

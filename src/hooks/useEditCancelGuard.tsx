@@ -24,13 +24,27 @@ import { useTranslation } from 'react-i18next';
  * Guard the Edit-mode → Cancel handler with a confirmation modal so a
  * misclick can't silently throw away in-flight changes.
  *
- * Mirrors the same UX as the in-form PluginEditorDrawer guard added by
- * #3333. We always show the modal because every Edit page in the app
- * re-runs `form.reset(...)` whenever its useSuspenseQuery data is
- * referentially refreshed (e.g. on tab focus / refetch), which wipes
- * react-hook-form's `isDirty` flag and makes it unreliable as a "skip the
- * modal" signal. The extra click is a small price to pay for never losing
- * an edit.
+ * Why the modal always shows (even on a clean form):
+ *
+ * Every Edit page in this app uses the pattern
+ *
+ *   useForm({ disabled: readOnly, defaultValues: ... })
+ *   useEffect(() => form.reset(producedValues), [data, form])
+ *
+ * which has two failure modes for any "is the form actually dirty?" check:
+ *
+ *   1. Toggling `disabled` from true→false on Edit re-renders every
+ *      controlled input and can fire spurious change events that flip
+ *      react-hook-form's `isDirty` to true with no user input.
+ *   2. The `form.reset(...)` inside a useEffect runs whenever the backing
+ *      query refetches (tab focus, window focus, mutation success), which
+ *      wipes `isDirty` back to false mid-session — so a legitimately
+ *      edited form can transiently appear clean.
+ *
+ * Both make `isDirty` unreliable as a "skip the modal" signal. Until the
+ * underlying form lifecycle is restructured (tracked as a follow-up
+ * cleanup), we always show the modal. One extra click is a far better
+ * failure mode than silently losing an edit.
  */
 export const useEditCancelGuard = <T extends FieldValues>(
   form: UseFormReturn<T>,

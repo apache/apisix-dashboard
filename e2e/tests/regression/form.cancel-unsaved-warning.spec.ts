@@ -97,12 +97,13 @@ test('route detail Edit → Cancel with unsaved changes warns the user', async (
   });
 });
 
-test('route detail Edit → Cancel always confirms before discarding (even with no changes)', async ({
+test('route detail Edit → Cancel modal is dismissable (Cancel in modal stays in edit mode)', async ({
   page,
 }) => {
-  // Note: this app calls `form.reset(...)` from a useEffect whenever the
-  // backing query data is refreshed, which wipes react-hook-form's dirty
-  // state. The guard therefore always confirms — see useEditCancelGuard.
+  // Until the underlying form lifecycle is restructured (see the comment in
+  // useEditCancelGuard.tsx), the modal is shown on every Cancel click.
+  // This test pins the dismiss path: backing out of the warning modal must
+  // leave the user in edit mode without touching the form data.
   await uiGoto(page, '/routes/detail/$id', { id: seededRouteId });
   await routesPom.isDetailPage(page);
 

@@ -90,4 +90,27 @@ test('removing a plugin from a route requires confirmation', async ({
 
   // The plugin chip must still be present until confirmation is given.
   await expect(pluginChip).toBeVisible();
+
+  // Cancel path: dismissing the dialog must NOT delete the plugin. A
+  // future bug that wires the Cancel button to the delete handler (or one
+  // that auto-confirms on open) would slip past the "appeared" check
+  // above, so we verify the chip survives the cancel.
+  await dialog.getByRole('button', { name: /cancel/i }).click();
+  await expect(dialog).toBeHidden();
+  await expect(pluginChip).toBeVisible();
+
+  // Confirm path: clicking the destructive button actually removes the
+  // chip from the form.
+  await pluginChip
+    .getByRole('button', { name: /(delete|remove|close)/i })
+    .first()
+    .click()
+    .catch(async () => {
+      await pluginChip.locator('button').last().click();
+    });
+  await expect(dialog).toBeVisible({ timeout: 5000 });
+  await dialog
+    .getByRole('button', { name: /^(delete|remove|confirm)$/i })
+    .click();
+  await expect(pluginChip).toBeHidden();
 });
