@@ -31,7 +31,7 @@ import { PluginCard, type PluginCardProps } from './PluginCard';
 
 type PluginCardListSearchProps = Pick<TextInputProps, 'placeholder'> & {
   search: string;
-  setSearch: (search: string) => void;
+  setSearch: (search: string | string[] | null | undefined) => void;
 };
 export const PluginCardListSearch = (props: PluginCardListSearchProps) => {
   const { placeholder, search, setSearch } = props;
@@ -98,9 +98,18 @@ export type PluginCardListProps = Omit<OptionProps, 'name'> &
     cols?: number;
     h?: number | string;
     mah?: number | string;
-    search: string;
+    search: string | string[] | null | undefined;
     plugins: string[];
   };
+
+const normalizeSearch = (
+  search: string | string[] | null | undefined
+): string => {
+  if (Array.isArray(search)) {
+    return search.filter((v): v is string => typeof v === 'string').join(' ');
+  }
+  return typeof search === 'string' ? search : '';
+};
 
 export const PluginCardList = (props: PluginCardListProps) => {
   const { search = '', cols = 3, h, mah, plugins } = props;
@@ -111,8 +120,8 @@ export const PluginCardList = (props: PluginCardListProps) => {
     search: '',
     plugins: [] as string[],
     mode: 'add' as OptionProps['mode'],
-    setSearch(search: string) {
-      this.search = search.toLowerCase().trim();
+    setSearch(search: string | string[] | null | undefined) {
+      this.search = normalizeSearch(search).toLowerCase().trim();
     },
     setPlugins(plugins: string[]) {
       this.plugins = plugins;
