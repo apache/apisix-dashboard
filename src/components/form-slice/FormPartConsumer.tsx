@@ -33,7 +33,12 @@ export const FormSectionPluginsOnly = () => {
   );
 };
 
-export const FormPartConsumer = () => {
+export type FormPartConsumerProps = {
+  readOnlyUsername?: boolean;
+};
+
+export const FormPartConsumer = (props: FormPartConsumerProps) => {
+  const { readOnlyUsername = false } = props;
   const { t } = useTranslation();
   const { control } = useFormContext<APISIXType['ConsumerPut']>();
 
@@ -47,6 +52,7 @@ export const FormPartConsumer = () => {
             name="username"
             label={t('form.consumers.username')}
             required
+            readOnly={readOnlyUsername}
           />
         }
       />

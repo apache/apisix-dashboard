@@ -92,7 +92,7 @@ const ConsumerDetailForm = (props: Props) => {
         })}
       >
         <FormSectionGeneral showID={false} readOnly />
-        <FormPartConsumer />
+        <FormPartConsumer readOnlyUsername />
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
