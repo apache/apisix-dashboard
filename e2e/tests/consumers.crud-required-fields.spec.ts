@@ -68,6 +68,10 @@ test('should CRUD consumer with required fields', async ({ page }) => {
     // Click the Edit button in the detail page
     await page.getByRole('button', { name: 'Edit' }).click();
 
+    // Verify username remains disabled in edit mode
+    const username = page.getByRole('textbox', { name: 'Username' });
+    await expect(username).toBeDisabled();
+
     // Update the description field
     const descriptionField = page.getByRole('textbox', { name: 'Description' });
     await descriptionField.fill('Updated description for testing');
