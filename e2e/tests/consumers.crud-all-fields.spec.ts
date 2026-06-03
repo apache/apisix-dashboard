@@ -76,6 +76,9 @@ test('should CRUD consumer with all fields', async ({ page }) => {
     // Enter edit mode
     await page.getByRole('button', { name: 'Edit' }).click();
 
+    // Verify username remains readonly in edit mode
+    await expect(page.getByRole('textbox', { name: 'Username' })).toHaveAttribute('readonly');
+
     // Update description
     await page.getByRole('textbox', { name: 'Description' }).fill('Updated: ' + description);
 

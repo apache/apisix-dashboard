@@ -62,7 +62,7 @@ const ConsumerAddForm = () => {
           putConsumer.mutateAsync(pipeProduce()(d))
         )}
       >
-        <FormPartConsumer />
+        <FormPartConsumer readOnlyUsername={false} />
         <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
       </form>
     </FormProvider>
