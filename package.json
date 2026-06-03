@@ -36,7 +36,7 @@
     "mobx-persist-store": "^1.1.8",
     "mobx-react-lite": "^4.1.0",
     "mobx-react-observer": "^1.1.0",
-    "monaco-editor": "^0.52.2",
+    "monaco-editor": "^0.55.1",
     "nanoid": "^5.1.7",
     "qs": "^6.15.2",
     "rambdax": "^11.3.1",
