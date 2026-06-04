@@ -218,8 +218,14 @@ test('should CRUD plugin metadata with all fields', async ({ page }) => {
     // Find the http-logger card
     const httpLoggerCard = page.getByTestId('plugin-http-logger');
 
-    // Click Delete button
+    // Click Delete button. The plugin card now opens a confirmation
+    // modal before removing the plugin (see src/components/form-slice/
+    // FormItemPlugins/PluginCard.tsx).
     await httpLoggerCard.getByRole('button', { name: 'Delete' }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'Delete' })
+      .click();
 
     // Should show success message
     await uiHasToastMsg(page, {

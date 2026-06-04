@@ -56,7 +56,7 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     await uiFillUpstreamRequiredFields(page, {
       name: upstreamName,
       nodes,
-    }, page);
+    });
     await upstreamsPom.getAddBtn(page).click();
     await uiHasToastMsg(page, {
       hasText: 'Add Upstream Successfully',

@@ -40,6 +40,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
+import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 
 type Props = {
@@ -81,6 +82,8 @@ const StreamRouteDetailForm = (props: Props) => {
     },
   });
 
+  const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => putStreamRoute.mutateAsync(d))}>
@@ -89,7 +92,7 @@ const StreamRouteDetailForm = (props: Props) => {
         {!readOnly && (
           <Group>
             <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-            <Button variant="outline" onClick={() => setReadOnly(true)}>
+            <Button variant="outline" onClick={handleCancel}>
               {t('form.btn.cancel')}
             </Button>
           </Group>

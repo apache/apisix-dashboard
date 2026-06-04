@@ -43,6 +43,7 @@ import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SSLS } from '@/config/constant';
 import { req } from '@/config/req';
+import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -84,6 +85,8 @@ const SSLDetailForm = (props: Props & { id: string }) => {
     }
   }, [sslData, form, isLoading]);
 
+  const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
+
   if (isLoading) {
     return <Skeleton height={400} />;
   }
@@ -101,7 +104,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
           {!readOnly && (
             <Group>
               <FormSubmitBtn>{t('form.btn.save')}</FormSubmitBtn>
-              <Button variant="outline" onClick={() => setReadOnly(true)}>
+              <Button variant="outline" onClick={handleCancel}>
                 {t('form.btn.cancel')}
               </Button>
             </Group>

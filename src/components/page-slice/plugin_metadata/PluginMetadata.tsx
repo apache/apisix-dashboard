@@ -17,11 +17,9 @@
 import { Drawer, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
-import { toJS } from 'mobx';
-import { useLocalObservable } from 'mobx-react-lite';
 import { difference } from 'rambdax';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDeepCompareEffect } from 'react-use';
 
 import { deletePluginMetadataReq, putPluginMetadataReq } from '@/apis/plugins';
 import type { PluginCardProps } from '@/components/form-slice/FormItemPlugins/PluginCard';
@@ -35,12 +33,26 @@ import {
 } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
 import { SelectPluginsDrawer } from '@/components/form-slice/FormItemPlugins/SelectPluginsDrawer';
 
-import { type PluginInfo, usePluginMetadataList } from './hooks';
+import { usePluginMetadataList } from './hooks';
 
+/**
+ * Plugin Metadata page.
+ *
+ * Architecture: read directly from the `usePluginMetadataList()` query
+ * result (`pluginInfoMap` + `hasConfigNames`). The previous design used a
+ * MobX `__map` / `__schemaMap` mirror that was reinitialized via
+ * `useDeepCompareEffect` on every refetch — a parallel refetch could
+ * clobber an in-flight edit (same anti-pattern as #3293). Reading the
+ * query state directly eliminates the mirror and the race.
+ *
+ * Only transient UI state lives in component state.
+ */
 export const PluginMetadata = () => {
   const { t } = useTranslation();
 
-  const getMetadataListReq = usePluginMetadataList();
+  const metadataList = usePluginMetadataList();
+  const { pluginInfoMap, hasConfigNames, allPluginNames } = metadataList;
+
   const putMetadata = useMutation({
     mutationFn: putPluginMetadataReq,
     onSuccess(_, variables) {
@@ -50,7 +62,7 @@ export const PluginMetadata = () => {
         }),
         color: 'green',
       });
-      getMetadataListReq.refetch();
+      metadataList.refetch();
     },
   });
   const deleteMetadata = useMutation({
@@ -62,107 +74,87 @@ export const PluginMetadata = () => {
         }),
         color: 'green',
       });
-      getMetadataListReq.refetch();
+      metadataList.refetch();
     },
   });
 
-  const pluginsOb = useLocalObservable(() => ({
-    __map: new Map<string, PluginConfig>(),
-    __schemaMap: new Map<string, object>(),
-    init(map: Map<string, PluginInfo>, hasConfigNames: string[]) {
-      // we need to clear the map first
-      this.__map.clear();
-      this.__schemaMap.clear();
-      this.allPluginNames = [];
-      for (const [name, info] of map.entries()) {
-        if (hasConfigNames.includes(name)) {
-          this.__map.set(name, info);
-        }
-        this.__schemaMap.set(name, info.schema);
-        this.allPluginNames.push(name);
-      }
-    },
-    delete(name: string) {
-      deleteMetadata.mutateAsync(name);
-    },
-    update(config: PluginConfig) {
-      putMetadata.mutateAsync(config);
-    },
-    allPluginNames: [] as string[],
-    get selected() {
-      return Array.from(this.__map.keys());
-    },
-    get unSelected() {
-      return difference(this.allPluginNames, this.selected);
-    },
-    curPlugin: {} as PluginConfig,
-    curPluginSchema: {} as object,
-    setCurPlugin(name: string) {
-      this.curPlugin = this.__map.get(name) || { name, config: {} };
-      this.curPluginSchema = this.__schemaMap.get(name)!;
-      this.setEditorOpened(true);
-    },
-    editorOpened: false,
-    setEditorOpened(val: boolean) {
-      this.editorOpened = val;
-    },
-    closeEditor() {
-      this.setEditorOpened(false);
-      this.setSelectPluginsOpened(false);
-      this.curPlugin = {} as PluginConfig;
-    },
-    search: '',
-    setSearch(val: string) {
-      this.search = val;
-    },
-    mode: 'edit' as PluginCardProps['mode'],
-    selectPluginsOpened: false,
-    setSelectPluginsOpened(val: boolean) {
-      this.selectPluginsOpened = val;
-    },
-    on(mode: PluginCardProps['mode'], name: string) {
-      this.setCurPlugin(name);
-      this.mode = mode;
-    },
-  }));
+  // Pure-UI state. None of these mirror query data.
+  const [curPluginName, setCurPluginName] = useState<string | null>(null);
+  const [mode, setMode] = useState<PluginCardProps['mode']>('edit');
+  const [editorOpened, setEditorOpened] = useState(false);
+  const [selectPluginsOpened, setSelectPluginsOpened] = useState(false);
+  const [search, setSearch] = useState('');
 
-  const { pluginInfoMap, hasConfigNames, isLoading } = getMetadataListReq;
-  // init the selected plugins
-  useDeepCompareEffect(() => {
-    if (isLoading) return;
-    pluginsOb.init(pluginInfoMap, hasConfigNames);
-  }, [pluginInfoMap, hasConfigNames, pluginsOb, isLoading]);
+  const unSelected = useMemo(
+    () => difference(allPluginNames ?? [], hasConfigNames),
+    [allPluginNames, hasConfigNames]
+  );
+
+  const curPlugin = useMemo<PluginConfig>(() => {
+    if (!curPluginName) return {} as PluginConfig;
+    const info = pluginInfoMap.get(curPluginName);
+    return info
+      ? ({ name: info.name, config: info.config } as PluginConfig)
+      : ({ name: curPluginName, config: {} } as PluginConfig);
+  }, [curPluginName, pluginInfoMap]);
+
+  const curPluginSchema = useMemo(() => {
+    if (!curPluginName) return {};
+    return pluginInfoMap.get(curPluginName)?.schema ?? {};
+  }, [curPluginName, pluginInfoMap]);
+
+  const closeEditor = useCallback(() => {
+    setEditorOpened(false);
+    setSelectPluginsOpened(false);
+    setCurPluginName(null);
+  }, []);
+
+  const handleOpen = useCallback(
+    (m: PluginCardProps['mode'], name: string) => {
+      setCurPluginName(name);
+      setMode(m);
+      setEditorOpened(true);
+    },
+    []
+  );
+
+  const handleUpdate = useCallback(
+    (config: PluginConfig) => putMetadata.mutateAsync(config),
+    [putMetadata]
+  );
+
+  const handleDelete = useCallback(
+    (name: string) => deleteMetadata.mutateAsync(name),
+    [deleteMetadata]
+  );
 
   return (
     <Drawer.Stack>
       <Group>
-        <PluginCardListSearch
-          search={pluginsOb.search}
-          setSearch={pluginsOb.setSearch}
-        />
+        <PluginCardListSearch search={search} setSearch={setSearch} />
         <SelectPluginsDrawer
-          plugins={pluginsOb.unSelected}
-          onAdd={(name) => pluginsOb.on('add', name)}
-          opened={pluginsOb.selectPluginsOpened}
-          setOpened={pluginsOb.setSelectPluginsOpened}
+          plugins={unSelected}
+          onAdd={(name) => handleOpen('add', name)}
+          opened={selectPluginsOpened}
+          setOpened={setSelectPluginsOpened}
         />
       </Group>
       <PluginCardList
         mode="edit"
         placeholder={t('pluginMetadata.search')}
         mah="60vh"
-        search={pluginsOb.search}
-        plugins={pluginsOb.selected}
-        onDelete={pluginsOb.delete}
-        onEdit={(name) => pluginsOb.on('edit', name)}
+        search={search}
+        plugins={hasConfigNames}
+        onDelete={handleDelete}
+        onEdit={(name) => handleOpen('edit', name)}
       />
       <PluginEditorDrawer
-        mode={pluginsOb.mode}
-        schema={toJS(pluginsOb.curPluginSchema)}
-        opened={pluginsOb.editorOpened}
-        onClose={pluginsOb.closeEditor}
-        plugin={toJS(pluginsOb.curPlugin)}
-        onSave={pluginsOb.update}
+        mode={mode}
+        schema={curPluginSchema}
+        opened={editorOpened}
+        onClose={closeEditor}
+        plugin={curPlugin}
+        onSave={handleUpdate}
       />
     </Drawer.Stack>
   );

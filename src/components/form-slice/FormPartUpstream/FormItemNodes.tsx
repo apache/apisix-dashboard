@@ -16,11 +16,9 @@
  */
 import { EditableProTable, type ProColumns } from '@ant-design/pro-components';
 import { Button, InputWrapper, type InputWrapperProps } from '@mantine/core';
-import { toJS } from 'mobx';
-import { useLocalObservable } from 'mobx-react-lite';
 import { nanoid } from 'nanoid';
-import { equals, isNil } from 'rambdax';
-import { useEffect, useMemo } from 'react';
+import { isNil } from 'rambdax';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   type FieldValues,
   useController,
@@ -31,7 +29,6 @@ import type { ZodObject, ZodRawShape } from 'zod';
 
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
-import { zGetDefault } from '@/utils/zod';
 
 import { genControllerProps } from '../../form/util';
 
@@ -51,15 +48,6 @@ const zValidateField = <T extends ZodRawShape, R extends keyof T>(
   return Promise.reject(new Error(error.message));
 };
 
-const genRecord = (data?: DataSource | APISIXType['UpstreamNode']) => {
-  const d = data || zGetDefault(APISIX.UpstreamNode);
-  const id = (d as DataSource).id || nanoid();
-  return {
-    ...d,
-    id,
-  } as DataSource;
-};
-
 const objToUpstreamNodes = (data: APISIXType['UpstreamNodeObj']) => {
   return Object.entries(data).map(([key, val]) => {
     const [host, port] = key.split(':');
@@ -73,25 +61,24 @@ const objToUpstreamNodes = (data: APISIXType['UpstreamNodeObj']) => {
   });
 };
 
-const parseToDataSource = (data: APISIXType['UpstreamNodeListOrObj']) => {
+const toDataSource = (data: APISIXType['UpstreamNodeListOrObj']): DataSource[] => {
   let val: APISIXType['UpstreamNodes'];
   if (isNil(data)) val = [];
   else if (Array.isArray(data)) val = data as APISIXType['UpstreamNodes'];
   else val = objToUpstreamNodes(data as APISIXType['UpstreamNodeObj']);
-  return val.map(genRecord);
+  return val.map(
+    (node) => ({ ...node, id: nanoid() }) as DataSource
+  );
 };
 
-const parseToUpstreamNodes = (data: DataSource[] | undefined) => {
+const toUpstreamNodes = (data: DataSource[]): APISIXType['UpstreamNode'][] => {
   if (!data?.length) return [];
-  return data.map((item) => {
-    const d: APISIXType['UpstreamNode'] = {
-      host: item.host,
-      port: item.port,
-      weight: item.weight,
-      priority: item.priority,
-    };
-    return d;
-  });
+  return data.map((item) => ({
+    host: item.host,
+    port: item.port,
+    weight: item.weight,
+    priority: item.priority,
+  }));
 };
 
 const genProps = (field: keyof APISIXType['UpstreamNode']) => {
@@ -111,6 +98,22 @@ export type FormItemNodesProps<T extends FieldValues> =
     defaultValue?: APISIXType['UpstreamNode'][];
   } & Pick<InputWrapperProps, 'label' | 'required' | 'withAsterisk'>;
 
+/**
+ * Upstream nodes editor.
+ *
+ * Architecture: react-hook-form is the single source of truth. The
+ * EditableProTable is `controlled={false}` so it manages its own internal
+ * cell editing state — we initialize it once from the form value and only
+ * push changes UP (typing / add / remove → `fOnChange`). We never push
+ * the form value DOWN into the table after mount, which eliminates the
+ * feedback loop that caused #3293.
+ *
+ * The previous design used a MobX `useLocalObservable` mirror plus a
+ * `useEffect([..., value])` that re-derived row ids from the form value
+ * on every Submit-adjacent re-render. The id churn disrupted the table's
+ * editable lifecycle and meant a fresh keystroke could be discarded if
+ * the user clicked Save before the `useClickOutside` blur sync fired.
+ */
 export const FormItemNodes = <T extends FieldValues>(
   props: FormItemNodesProps<T>
 ) => {
@@ -123,6 +126,95 @@ export const FormItemNodes = <T extends FieldValues>(
     field: { value, onChange: fOnChange, name: fName, disabled },
     fieldState,
   } = useController<T>(controllerProps);
+
+  // One-shot initialization of table rows from the form value. Subsequent
+  // form value changes (e.g. a parent useEffect reset) re-mount this
+  // component via React keying at the route level, so a fresh init is
+  // correct without us watching `value` continuously.
+  const [rows, setRows] = useState<DataSource[]>(() => toDataSource(value));
+  // Keep the latest rows accessible to action handlers without putting
+  // them in their `useCallback` deps (which would re-render the table
+  // and reset cell edit focus on every keystroke).
+  const rowsRef = useRef(rows);
+  rowsRef.current = rows;
+  // Ref on the wrapper so the DOM-flush listener can scope its query.
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const pushUp = useCallback(
+    (next: DataSource[]) => {
+      const vals = toUpstreamNodes(next);
+      fOnChange?.(vals);
+      restProps.onChange?.(vals);
+    },
+    [fOnChange, restProps]
+  );
+
+  // Read whatever the user CURRENTLY sees in the cell inputs (DOM values)
+  // and push that to react-hook-form. This is the last-resort sync that
+  // fires when something outside the table is mousedowned — typically the
+  // Submit button — because `valueType: "digit"` cells in
+  // ant-design ProTable don't commit their typed value to Antd Form's
+  // internal state until blur. Without this, a user who types into a
+  // weight/port cell and clicks Save without blurring first would submit
+  // stale (uncommitted) values, which was #3293.
+  const flushFromDom = useCallback(() => {
+    const root = wrapperRef.current;
+    if (!root) return;
+    const rowEls = root.querySelectorAll<HTMLElement>('tr.ant-table-row');
+    if (rowEls.length === 0) return;
+    const next: DataSource[] = [];
+    rowEls.forEach((rowEl, index) => {
+      const inputs = rowEl.querySelectorAll<HTMLInputElement>('input');
+      const existing = rowsRef.current[index];
+      const host = inputs[0]?.value ?? existing?.host ?? '';
+      // ant-design InputNumber renders as type=number; parseInt is safe
+      // because the schema rejects non-integer values upstream.
+      const portRaw = inputs[1]?.value;
+      const weightRaw = inputs[2]?.value;
+      const priorityRaw = inputs[3]?.value;
+      next.push({
+        id: existing?.id ?? nanoid(),
+        host,
+        port:
+          portRaw !== undefined && portRaw !== ''
+            ? Number(portRaw)
+            : (existing?.port ?? 80),
+        weight:
+          weightRaw !== undefined && weightRaw !== ''
+            ? Number(weightRaw)
+            : (existing?.weight ?? 1),
+        priority:
+          priorityRaw !== undefined && priorityRaw !== ''
+            ? Number(priorityRaw)
+            : (existing?.priority ?? 0),
+      } as DataSource);
+    });
+    pushUp(next);
+  }, [pushUp]);
+
+  // Mousedown fires BEFORE the click-induced blur on the active cell,
+  // and BEFORE the click handler on a Submit button. By flushing DOM
+  // values at this point we guarantee react-hook-form sees the current
+  // visible state, regardless of whether Antd Form has committed yet.
+  useEffect(() => {
+    const onMouseDown = (e: MouseEvent) => {
+      const root = wrapperRef.current;
+      if (!root) return;
+      if (root.contains(e.target as Node)) return; // inside the table — ignore
+      flushFromDom();
+    };
+    document.addEventListener('mousedown', onMouseDown, true);
+    document.addEventListener('touchstart', onMouseDown as EventListener, true);
+    return () => {
+      document.removeEventListener('mousedown', onMouseDown, true);
+      document.removeEventListener(
+        'touchstart',
+        onMouseDown as EventListener,
+        true
+      );
+    };
+  }, [flushFromDom]);
+
   const columns = useMemo<ProColumns<DataSource>[]>(
     () => [
       {
@@ -173,46 +265,51 @@ export const FormItemNodes = <T extends FieldValues>(
     ],
     [disabled, t]
   );
+
+  const editableKeys = useMemo(
+    () => (disabled ? [] : rows.map((r) => r.id)),
+    [disabled, rows]
+  );
+
+  const handleValuesChange = useCallback(
+    (_record: DataSource, dataSource: DataSource[]) => {
+      // Cell-level edit: push every keystroke straight to react-hook-form
+      // so a Submit fired before blur still sees the typed values.
+      setRows(dataSource);
+      pushUp(dataSource);
+    },
+    [pushUp]
+  );
+
+  const handleRemove = useCallback(
+    (id: string) => {
+      const next = rowsRef.current.filter((r) => r.id !== id);
+      setRows(next);
+      pushUp(next);
+    },
+    [pushUp]
+  );
+
+  const handleAppend = useCallback(() => {
+    const next: DataSource[] = [
+      ...rowsRef.current,
+      {
+        host: '',
+        port: 80,
+        weight: 1,
+        priority: 0,
+        id: nanoid(),
+      } as DataSource,
+    ];
+    setRows(next);
+    pushUp(next);
+  }, [pushUp]);
+
   const { label, required, withAsterisk } = props;
-  const ob = useLocalObservable(() => ({
-    disabled: false,
-    setDisabled(disabled: boolean | undefined) {
-      this.disabled = disabled || false;
-    },
-    values: [] as DataSource[],
-    setValues(data: DataSource[]) {
-      if (equals(parseToUpstreamNodes(toJS(this.values)), parseToUpstreamNodes(data))) return;
-      this.values = data;
-      this.save();
-    },
-    append(data: DataSource) {
-      this.values.push(data);
-    },
-    remove(id: string) {
-      const index = this.values.findIndex((item) => item.id === id);
-      if (index === -1) return;
-      this.values.splice(index, 1);
-    },
-    get editableKeys() {
-      return this.disabled ? [] : this.values.map((item) => item.id);
-    },
-    save() {
-      const vals = parseToUpstreamNodes(toJS(this.values));
-      fOnChange?.(vals);
-      restProps.onChange?.(vals);
-    },
-  }));
-  useEffect(() => {
-    ob.setValues(parseToDataSource(value));
-  }, [ob, value]);
-  useEffect(() => {
-    ob.setDisabled(disabled);
-  }, [disabled, ob]);
-
-
 
   return (
     <InputWrapper
+      ref={wrapperRef}
       error={fieldState.error?.message}
       label={label}
       required={required}
@@ -225,15 +322,13 @@ export const FormItemNodes = <T extends FieldValues>(
           rowKey="id"
           bordered
           controlled={false}
-          value={ob.values}
+          value={rows}
           recordCreatorProps={false}
           columns={columns}
           editable={{
             type: 'multiple',
-            editableKeys: ob.editableKeys,
-            onValuesChange(_, dataSource) {
-              ob.setValues(dataSource);
-            },
+            editableKeys,
+            onValuesChange: handleValuesChange,
             actionRender: (row) => {
               return [
                 <Button
@@ -241,10 +336,7 @@ export const FormItemNodes = <T extends FieldValues>(
                   variant="transparent"
                   size="compact-xs"
                   px={0}
-                  onClick={() => {
-                    ob.remove(row.id);
-                    ob.save();
-                  }}
+                  onClick={() => handleRemove(row.id)}
                 >
                   {t('form.btn.delete')}
                 </Button>,
@@ -260,10 +352,7 @@ export const FormItemNodes = <T extends FieldValues>(
         size="xs"
         color="cyan"
         style={{ borderColor: 'whitesmoke' }}
-        onClick={() => {
-          ob.append(genRecord());
-          ob.save();
-        }}
+        onClick={handleAppend}
         {...(disabled && { display: 'none' })}
       >
         {t('form.upstreams.nodes.add')}

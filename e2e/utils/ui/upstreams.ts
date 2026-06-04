@@ -33,9 +33,16 @@ import {
  */
 export async function uiFillUpstreamRequiredFields(
   ctx: Page | Locator,
-  upstream: Partial<APISIXType['Upstream']>,
-  page?: Page
+  upstream: Partial<APISIXType['Upstream']>
 ) {
+  // Derive a Page handle for the small settle delays needed between
+  // rapid-fire Add Node clicks (EditableProTable's editable lifecycle
+  // doesn't tolerate clicks during its post-append re-render).
+  const page: Page =
+    typeof (ctx as Locator).page === 'function'
+      ? (ctx as Locator).page()
+      : (ctx as Page);
+
   // Fill in the Name field
   await ctx.getByLabel('Name', { exact: true }).fill(upstream.name);
 
@@ -46,35 +53,39 @@ export async function uiFillUpstreamRequiredFields(
 
   await expect(noData).toBeVisible();
 
-  // Add first node
+  // Add first node — wait for table to settle to a single row before
+  // attempting to type, so the re-render from `ob.append + ob.save` is
+  // done.
   await addNodeBtn.click();
   await expect(noData).toBeHidden();
   const rows = nodesSection.locator('tr.ant-table-row');
+  await expect(rows).toHaveCount(1);
   const firstRowHost = rows.nth(0).getByRole('textbox').first();
   await firstRowHost.fill(upstream.nodes[1].host);
   await expect(firstRowHost).toHaveValue(upstream.nodes[1].host);
 
-  // Add second node - blur first to trigger sync, then click Add
+  // Add second node. Previously this used `force: true` paired with a
+  // conditional `waitForTimeout(500)` that most callers skipped, leaving a
+  // race against the prior render. We keep `force: true` (the button is
+  // never realistically blocked, and Playwright's stability heuristic can
+  // false-negative on Mantine's hover styles) but also wait for the
+  // post-blur state to stabilize before the click.
   await firstRowHost.blur();
-  if (page) await page.waitForTimeout(500);
+  await expect(rows).toHaveCount(1);
+  await expect(firstRowHost).toHaveValue(upstream.nodes[1].host);
+  await page.waitForTimeout(300);
   await addNodeBtn.click({ force: true });
   await expect(rows).toHaveCount(2, { timeout: 10000 });
   const secondRowHost = rows.nth(1).getByRole('textbox').first();
   await secondRowHost.fill(upstream.nodes[0].host);
   await expect(secondRowHost).toHaveValue(upstream.nodes[0].host);
 
-  // Add a third node and then remove it to test deletion functionality
+  // Add a third node and then remove it to test deletion functionality.
   await secondRowHost.blur();
-  let p: Page;
-  if (
-    typeof (ctx as Locator).page === 'function'
-  ) {
-    p = (ctx as Locator).page();
-  } else {
-    p = ctx as Page;
-  }
-  await p.waitForTimeout(500);
-  await addNodeBtn.click();
+  await expect(rows).toHaveCount(2);
+  await expect(secondRowHost).toHaveValue(upstream.nodes[0].host);
+  await page.waitForTimeout(300);
+  await addNodeBtn.click({ force: true });
   await expect(rows).toHaveCount(3, { timeout: 10000 });
   await rows.nth(2).getByRole('button', { name: 'Delete' }).click();
   await expect(rows).toHaveCount(2);

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { Button, Card,Group, Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
 export type PluginCardProps = {
@@ -78,7 +79,22 @@ export const PluginCard = (props: PluginCardProps) => {
               size="compact-xs"
               variant="light"
               color="red"
-              onClick={() => onDelete?.(name)}
+              onClick={() =>
+                modals.openConfirmModal({
+                  title: t('info.delete.title', { name }),
+                  children: (
+                    <Text size="sm">
+                      {t('info.delete.content', { name })}
+                    </Text>
+                  ),
+                  labels: {
+                    confirm: t('form.btn.delete'),
+                    cancel: t('form.btn.cancel'),
+                  },
+                  confirmProps: { color: 'red' },
+                  onConfirm: () => onDelete?.(name),
+                })
+              }
             >
               {t('form.btn.delete')}
             </Button>

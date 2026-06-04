@@ -65,10 +65,37 @@ export const postStreamRouteReq = (
   );
 
 export const deleteAllStreamRoutes = async (req: AxiosInstance) => {
+  // APISIX deployments without `apisix.proxy_mode: http&stream` reject the
+  // list endpoint with 400 "stream mode is disabled". Treat that as "no
+  // stream routes" so the helper (and `deleteAllServices`, which chains
+  // through it) doesn't bring the whole cleanup path down with it.
   const totalRes = await getStreamRouteListReq(req, {
     page: 1,
     page_size: PAGE_SIZE_MIN,
-  });
+  }).catch(
+    (e: {
+      response?: { status?: number; data?: { error_msg?: string } };
+      message?: string;
+    }) => {
+      // Both shapes occur depending on the request adapter: the dashboard's
+      // axios interceptor surfaces `e.response.data.error_msg`, while the
+      // e2e Playwright fetch adapter throws an Error whose `.message`
+      // includes the upstream status and body text.
+      // Require BOTH a 400-class status (or no response at all) AND the
+      // "stream mode" text — a string match alone could swallow unrelated
+      // errors whose messages happen to mention stream mode.
+      const status = e?.response?.status;
+      const isStreamGate =
+        status === undefined || (status >= 400 && status < 500);
+      const haystack = `${e?.response?.data?.error_msg ?? ''} ${e?.message ?? ''}`;
+      if (isStreamGate && /stream mode/i.test(haystack)) {
+        return { total: 0, list: [] } as Awaited<
+          ReturnType<typeof getStreamRouteListReq>
+        >;
+      }
+      throw e;
+    }
+  );
   const total = totalRes.total;
   if (total === 0) return;
   for (let times = Math.ceil(total / PAGE_SIZE_MAX); times > 0; times--) {
