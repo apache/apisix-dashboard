@@ -89,8 +89,10 @@ test('port 0 auto-corrects to 1 (min constraint)', async ({ page }) => {
   await fillSingleNode(page, name, 'zero-port.local', '0');
 
   // InputNumber with min=1 auto-corrects 0 → 1
-  const nodesSection = page.getByRole('group', { name: 'Nodes' });
-  const portInput = nodesSection.locator('input').nth(1);
+  const rows = page
+    .getByRole('group', { name: 'Nodes' })
+    .locator('tr.ant-table-row');
+  const portInput = rows.first().locator('input').nth(1);
   await expect(portInput).toHaveValue('1');
 });
 
@@ -99,7 +101,9 @@ test('port 65536 auto-corrects to 65535 (max constraint)', async ({ page }) => {
   await fillSingleNode(page, name, 'over-port.local', '65536');
 
   // InputNumber with max=65535 auto-corrects 65536 → 65535
-  const nodesSection = page.getByRole('group', { name: 'Nodes' });
-  const portInput = nodesSection.locator('input').nth(1);
+  const rows = page
+    .getByRole('group', { name: 'Nodes' })
+    .locator('tr.ant-table-row');
+  const portInput = rows.first().locator('input').nth(1);
   await expect(portInput).toHaveValue('65535');
 });
