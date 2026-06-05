@@ -25,7 +25,7 @@ import {
   type UseControllerProps,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { ZodObject, ZodRawShape } from 'zod';
+import { z, type ZodObject, type ZodRawShape } from 'zod';
 
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
@@ -90,6 +90,18 @@ const genProps = (field: keyof APISIXType['UpstreamNode']) => {
       },
     ],
   };
+};
+
+const genFieldProps = (field: keyof APISIXType['UpstreamNode']) => {
+  const fieldSchema = APISIX.UpstreamNode.shape[field];
+  if (fieldSchema instanceof z.ZodNumber) {
+    const { minValue, maxValue } = fieldSchema;
+    const props: Record<string, unknown> = {};
+    if (minValue !== null) props.min = minValue;
+    if (maxValue !== null) props.max = maxValue;
+    return props;
+  }
+  return {};
 };
 
 export type FormItemNodesProps<T extends FieldValues> =
@@ -233,6 +245,7 @@ export const FormItemNodes = <T extends FieldValues>(
         dataIndex: 'port',
         valueType: 'digit',
         formItemProps: genProps('port'),
+        fieldProps: genFieldProps('port'),
         render: (_, entity) => {
           return entity.port.toString();
         },

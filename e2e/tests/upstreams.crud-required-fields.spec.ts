@@ -99,6 +99,27 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     const nameField = page.getByLabel('Name', { exact: true });
     await expect(nameField).toBeEnabled();
 
+    // Verify port decrement arrow is disabled at min=1
+    const nodesSection = page.getByRole('group', { name: 'Nodes' });
+    const rows = nodesSection.locator('tr.ant-table-row');
+    const portCell = rows.nth(0).locator('.ant-input-number').first();
+    // default port is 1, decrement arrow should be disabled
+    await expect(
+      portCell.locator('.ant-input-number-handler-down')
+    ).toHaveClass(/ant-input-number-handler-down-disabled/);
+
+    // Set port to max 65535, increment arrow should be disabled
+    const portInput = rows.nth(0).locator('input').nth(1);
+    await portInput.fill('65535');
+    await expect(portInput).toHaveValue('65535');
+    await expect(
+      portCell.locator('.ant-input-number-handler-up')
+    ).toHaveClass(/ant-input-number-handler-up-disabled/);
+
+    // Reset port to valid value for subsequent edits
+    await portInput.fill('80');
+    await expect(portInput).toHaveValue('80');
+
     // Update the description field
     const descriptionField = page.getByLabel('Description');
     await descriptionField.fill('Updated description for testing');
@@ -117,8 +138,6 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     await expect(labelsField).toHaveValue('');
 
     // Update a node - change the host of the first node
-    const nodesSection = page.getByRole('group', { name: 'Nodes' });
-    const rows = nodesSection.locator('tr.ant-table-row');
     const firstRowHost = rows.nth(0).getByRole('textbox').first();
     await firstRowHost.fill('updated-test.com');
     await expect(firstRowHost).toHaveValue('updated-test.com');
