@@ -99,17 +99,20 @@ test('should CRUD upstream with required fields', async ({ page }) => {
     const nameField = page.getByLabel('Name', { exact: true });
     await expect(nameField).toBeEnabled();
 
-    // Verify port decrement arrow is disabled at min=1
+    // Verify port decrement arrow is disabled at min=1 and increment at max=65535
     const nodesSection = page.getByRole('group', { name: 'Nodes' });
     const rows = nodesSection.locator('tr.ant-table-row');
     const portCell = rows.nth(0).locator('.ant-input-number').first();
-    // default port is 1, decrement arrow should be disabled
+    const portInput = rows.nth(0).locator('input').nth(1);
+
+    // Set port to min=1, decrement arrow should be disabled
+    await portInput.fill('1');
+    await expect(portInput).toHaveValue('1');
     await expect(
       portCell.locator('.ant-input-number-handler-down')
     ).toHaveClass(/ant-input-number-handler-down-disabled/);
 
-    // Set port to max 65535, increment arrow should be disabled
-    const portInput = rows.nth(0).locator('input').nth(1);
+    // Set port to max=65535, increment arrow should be disabled
     await portInput.fill('65535');
     await expect(portInput).toHaveValue('65535');
     await expect(

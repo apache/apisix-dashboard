@@ -84,34 +84,22 @@ test('port 65535 is accepted', async ({ page }) => {
   expect(up.nodes?.[0]?.port).toBe(65535);
 });
 
-test('port 0 is rejected', async ({ page }) => {
+test('port 0 auto-corrects to 1 (min constraint)', async ({ page }) => {
   const name = randomId('edge-port-zero');
   await fillSingleNode(page, name, 'zero-port.local', '0');
-  await upstreamsPom.getAddBtn(page).click();
 
-  const success = page
-    .getByRole('alert')
-    .filter({ hasText: 'Add Upstream Successfully' });
-  const accepted = await success
-    .first()
-    .waitFor({ state: 'visible', timeout: 5000 })
-    .then(() => true)
-    .catch(() => false);
-  expect(accepted, 'port 0 must NOT be silently accepted').toBe(false);
+  // InputNumber with min=1 auto-corrects 0 → 1
+  const nodesSection = page.getByRole('group', { name: 'Nodes' });
+  const portInput = nodesSection.locator('input').nth(1);
+  await expect(portInput).toHaveValue('1');
 });
 
-test('port 65536 (out of range) is rejected', async ({ page }) => {
+test('port 65536 auto-corrects to 65535 (max constraint)', async ({ page }) => {
   const name = randomId('edge-port-overflow');
   await fillSingleNode(page, name, 'over-port.local', '65536');
-  await upstreamsPom.getAddBtn(page).click();
 
-  const success = page
-    .getByRole('alert')
-    .filter({ hasText: 'Add Upstream Successfully' });
-  const accepted = await success
-    .first()
-    .waitFor({ state: 'visible', timeout: 5000 })
-    .then(() => true)
-    .catch(() => false);
-  expect(accepted, 'port 65536 must NOT be silently accepted').toBe(false);
+  // InputNumber with max=65535 auto-corrects 65536 → 65535
+  const nodesSection = page.getByRole('group', { name: 'Nodes' });
+  const portInput = nodesSection.locator('input').nth(1);
+  await expect(portInput).toHaveValue('65535');
 });
