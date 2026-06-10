@@ -39,3 +39,13 @@ export const API_PLUGIN_CONFIGS = '/plugin_configs';
 export const SKIP_INTERCEPTOR_HEADER = '__dashboard__skipInterceptor';
 export const APPSHELL_HEADER_HEIGHT = 60;
 export const APPSHELL_NAVBAR_WIDTH = 250;
+
+// Resource status enum for consistent value handling
+export enum ResourceStatus {
+  DISABLED = 0,
+  ENABLED = 1,
+  ALL = 'all',
+}
+
+// Status filter value that shows all routes (both enabled and disabled)
+export const STATUS_ALL = ResourceStatus.ALL as string;
