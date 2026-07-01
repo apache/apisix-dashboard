@@ -37,13 +37,14 @@ export const useSearchParams = <T extends RouteTreeIds, P extends object>(
     (props: Partial<P>) => {
       return navigate({
         to: '.',
-        search: (prev) => ({ ...prev, ...props }),
+        search: (prev: P) => ({ ...prev, ...props }),
       });
     },
     [navigate]
   );
   const resetParams = useCallback(
-    () => navigate({ to: '.', search: {}, replace: true }),
+    (defaults?: Partial<P>) =>
+      navigate({ to: '.', search: defaults || {}, replace: true }),
     [navigate]
   );
 
