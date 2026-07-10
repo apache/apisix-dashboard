@@ -33,6 +33,7 @@ import { putStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
+import { produceToNestedUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
@@ -66,7 +67,10 @@ const StreamRouteDetailForm = (props: Props) => {
   });
 
   useEffect(() => {
-    form.reset(streamRouteData.value);
+    // derive the root-level __checksEnabled flags from the nested
+    // upstream, or the checks section unmounts and drops upstream.checks
+    // from the next PUT (#3414)
+    form.reset(produceToNestedUpstreamForm(streamRouteData.value));
   }, [streamRouteData, form]);
 
   const putStreamRoute = useMutation({
