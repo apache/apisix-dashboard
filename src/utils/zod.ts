@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { xor } from 'rambdax';
 import { type RefinementCtx, z } from 'zod';
 import { init } from 'zod-empty';
 
@@ -28,23 +27,31 @@ export const zOneOf =
       (
         | (Required<Pick<A, K1>> & { [P in K2]: undefined })
         | (Required<Pick<A, K2>> & { [P in K1]: undefined })
+      ) = A &
+      (
+        | (Required<Pick<A, K1>> & { [P in K2]: undefined })
+        | (Required<Pick<A, K2>> & { [P in K1]: undefined })
       )
   >(
     key1: K1,
     key2: K2
   ): ((arg: A, ctx: RefinementCtx) => arg is R) =>
   (arg, ctx): arg is R => {
-    if (xor(arg[key1] as boolean, arg[key2] as boolean)) {
-      [key1, key2].forEach((key) => {
-        ctx.addIssue({
-          path: [key],
-          code: z.ZodIssueCode.custom,
-          message: `Either '${key1}' or '${key2}' must be filled, but not both`,
-        });
-      });
-      return false;
+    // "filled" must treat empty strings like missing values: form inputs
+    // produce '' rather than undefined when cleared
+    const isFilled = (v: unknown) => v !== undefined && v !== null && v !== '';
+    // valid state: exactly one of the two keys is filled
+    if (isFilled(arg[key1]) !== isFilled(arg[key2])) {
+      return true;
     }
-    return true;
+    [key1, key2].forEach((key) => {
+      ctx.addIssue({
+        path: [key],
+        code: z.ZodIssueCode.custom,
+        message: `Either '${key1}' or '${key2}' must be filled, but not both`,
+      });
+    });
+    return false;
   };
 
 export const zGetDefault = init;

@@ -9,6 +9,7 @@
     "lint": "eslint . --cache --max-warnings=0 --no-warn-ignored",
     "lint:fix": "pnpm lint --fix",
     "preview": "vite preview",
+    "test": "vitest run src",
     "prepare": "husky",
     "e2e": "playwright test"
   },
