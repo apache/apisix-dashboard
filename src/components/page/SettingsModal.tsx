@@ -21,6 +21,7 @@ import {
   PasswordInput,
   Text,
 } from '@mantine/core';
+import { useDebouncedCallback } from '@mantine/hooks';
 import { useAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
@@ -28,9 +29,20 @@ import { queryClient } from '@/config/global';
 import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
 import { sha } from '~build/git';
 
+const REFRESH_DEBOUNCE_MS = 500;
+
 const AdminKey = () => {
   const { t } = useTranslation();
   const [adminKey, setAdminKey] = useAtom(adminKeyAtom);
+
+  // the atom must update per keystroke (controlled input + the axios
+  // interceptor reads it), but refreshing every mounted query per
+  // keystroke hammered the Admin API: typing a 32-char key fired 32
+  // full invalidate+refetch storms. Refresh once the user pauses.
+  const refreshQueries = useDebouncedCallback(() => {
+    queryClient.invalidateQueries();
+    queryClient.refetchQueries();
+  }, REFRESH_DEBOUNCE_MS);
 
   return (
     <PasswordInput
@@ -38,10 +50,7 @@ const AdminKey = () => {
       value={adminKey}
       onChange={(e) => {
         setAdminKey(e.currentTarget.value);
-        setTimeout(() => {
-          queryClient.invalidateQueries();
-          queryClient.refetchQueries();
-        });
+        refreshQueries();
       }}
       required
     />
