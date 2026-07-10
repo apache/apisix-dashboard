@@ -16,6 +16,7 @@
  */
 import { AppShell, Button, Code, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   createRootRoute,
@@ -25,6 +26,7 @@ import {
   useRouter,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { useEffect } from 'react';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 
 import { Header } from '@/components/Header';
@@ -73,6 +75,13 @@ const RootErrorContent = (props: ErrorComponentProps) => {
   const { error } = props;
   const { t } = useTranslation();
   const router = useRouter();
+  // detail pages throw from useSuspenseQuery during render; unless the
+  // query error-reset boundary is reset, react-query re-throws the cached
+  // error on remount and the Retry button would loop back here
+  const queryErrorResetBoundary = useQueryErrorResetBoundary();
+  useEffect(() => {
+    queryErrorResetBoundary.reset();
+  }, [queryErrorResetBoundary]);
   return (
     <Stack align="center" justify="center" mih="60vh" gap="md" p="xl">
       <Text fw={700} size="lg">

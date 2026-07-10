@@ -23,7 +23,7 @@
 // AND reject, so callers take their normal error path.
 
 import { routesPom } from '@e2e/pom/routes';
-import { randomId } from '@e2e/utils/common';
+import { getAPISIXConf, randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { expect } from '@playwright/test';
@@ -44,6 +44,7 @@ test('a 401 response must not produce a success toast', async ({ page }) => {
   await putRouteReq(e2eReq, {
     name,
     uri: `/regression/401/${name}`,
+    methods: ['GET'],
     upstream: {
       type: 'roundrobin',
       nodes: { 'reg-401.local:80': 1 },
@@ -79,10 +80,42 @@ test('a 401 response must not produce a success toast', async ({ page }) => {
   // The settings modal must open so the user can fix the key ...
   await expect(page.getByRole('dialog', { name: 'Settings' })).toBeVisible();
 
+  // Anchor on the interceptor's red toast first: it is emitted in both the
+  // old (fake-success) and new (reject) worlds strictly before the success
+  // chain could toast, so the negative assertion below is order-safe.
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'failed to check token' })
+  ).toBeVisible();
+
   // ... and no success toast may appear; the row must survive.
   const successToast = page
     .getByRole('alert')
     .filter({ hasText: /successfully/i });
   await expect(successToast).toHaveCount(0);
   await expect(row).toBeVisible();
+});
+
+test.describe('fresh install recovery', () => {
+  // no stored admin key: every request 401s until the user enters one
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test('entering the key and clicking Retry recovers without a reload', async ({
+    page,
+  }) => {
+    await routesPom.toIndex(page);
+
+    // the root error component replaces the page but keeps the modal
+    await expect(page.getByText('Something went wrong')).toBeVisible();
+    const settingsModal = page.getByRole('dialog', { name: 'Settings' });
+    await expect(settingsModal).toBeVisible();
+
+    const { adminKey } = await getAPISIXConf();
+    await page.getByLabel('Admin Key').fill(adminKey);
+    // close the modal, then recover via Retry — no page.reload()
+    await settingsModal.getByRole('button').first().click();
+    await page.getByRole('button', { name: 'Retry' }).click();
+
+    await expect(page.getByText('Something went wrong')).toBeHidden();
+    await routesPom.isIndexPage(page);
+  });
 });
