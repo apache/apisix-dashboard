@@ -69,7 +69,7 @@ test('page load with unconfigured plugins shows no error toasts', async ({
         lastSeen = probes;
         return settled;
       },
-      { timeout: 15000, intervals: [500] }
+      { timeout: 15000, intervals: [1000] }
     )
     .toBe(true);
 
@@ -82,4 +82,37 @@ test('page load with unconfigured plugins shows no error toasts', async ({
   const drawer = page.getByRole('dialog');
   await expect(drawer.getByRole('button', { name: 'Add' }).first())
     .toBeVisible();
+});
+
+test('a plugin whose metadata probe fails is not offered as an empty config', async ({
+  page,
+}) => {
+  // Fault injection: a real Admin API cannot be made to 500 a single
+  // plugin's metadata GET deterministically. A failed (non-404) probe
+  // must NOT be presented as "unconfigured" — saving the offered empty
+  // config would overwrite the plugin's existing metadata.
+  await page.route('**/apisix/admin/plugin_metadata/http-logger', (route) =>
+    route.fulfill({
+      status: 500,
+      contentType: 'application/json',
+      body: JSON.stringify({ error_msg: 'injected metadata failure' }),
+    })
+  );
+
+  await pluginMetadataPom.toIndex(page);
+  await pluginMetadataPom.isIndexPage(page);
+
+  // The real failure must surface to the user ...
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'injected metadata failure' })
+  ).toBeVisible({ timeout: 15000 });
+
+  // ... and the failed plugin must not be offered in the select drawer.
+  await page.getByRole('button', { name: 'Select Plugins' }).click();
+  const drawer = page.getByRole('dialog');
+  await expect(drawer.getByRole('button', { name: 'Add' }).first())
+    .toBeVisible();
+  await expect(
+    drawer.getByText('http-logger', { exact: true })
+  ).toHaveCount(0);
 });

@@ -46,7 +46,14 @@ export const usePluginMetadataList = () => {
             // Real failures (5xx, network) still toast.
             [SKIP_INTERCEPTOR_HEADER]: ['404'],
           }),
-          retry: false,
+          // 404 = "not configured", retrying is pointless (and would
+          // multiply the probe storm); give real failures two more tries
+          retry: (failureCount: number, error: unknown) =>
+            failureCount < 2 &&
+            !(
+              isAxiosError(error) &&
+              error.response?.status === HttpStatusCode.NotFound
+            ),
         }))
       : [],
   });
@@ -82,11 +89,25 @@ export const usePluginMetadataList = () => {
     }
   }, [metadataQueries, names]);
 
+  // plugins whose metadata fetch failed with something other than 404;
+  // they must not be offered as an empty editable config anywhere
+  const failedPluginNames = (names ?? []).filter((_, index) => {
+    const query = metadataQueries[index];
+    return (
+      query.isError &&
+      !(
+        isAxiosError(query.error) &&
+        query.error.response?.status === HttpStatusCode.NotFound
+      )
+    );
+  });
+
   return {
     isLoading,
     isError: pluginsListQuery.isError,
     error: pluginsListQuery.error,
     hasConfigNames,
+    failedPluginNames,
     pluginInfoMap,
     allPluginNames: names,
     originalMetadataQueries: metadataQueries,

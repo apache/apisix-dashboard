@@ -51,7 +51,8 @@ export const PluginMetadata = () => {
   const { t } = useTranslation();
 
   const metadataList = usePluginMetadataList();
-  const { pluginInfoMap, hasConfigNames, allPluginNames } = metadataList;
+  const { pluginInfoMap, hasConfigNames, failedPluginNames, allPluginNames } =
+    metadataList;
 
   const putMetadata = useMutation({
     mutationFn: putPluginMetadataReq,
@@ -86,17 +87,28 @@ export const PluginMetadata = () => {
   const [search, setSearch] = useState('');
 
   const unSelected = useMemo(
-    () => difference(allPluginNames ?? [], hasConfigNames),
-    [allPluginNames, hasConfigNames]
+    // a plugin whose metadata fetch failed (non-404) must not be offered
+    // as an empty config: saving it would overwrite existing metadata
+    () =>
+      difference(allPluginNames ?? [], [
+        ...hasConfigNames,
+        ...failedPluginNames,
+      ]),
+    [allPluginNames, hasConfigNames, failedPluginNames]
   );
 
   const curPlugin = useMemo<PluginConfig>(() => {
     if (!curPluginName) return {} as PluginConfig;
     const info = pluginInfoMap.get(curPluginName);
-    return info
-      ? ({ name: info.name, config: info.config } as PluginConfig)
-      : ({ name: curPluginName, config: {} } as PluginConfig);
-  }, [curPluginName, pluginInfoMap]);
+    if (info) {
+      return { name: info.name, config: info.config } as PluginConfig;
+    }
+    // fall back to an empty config only for plugins legitimately offered
+    // as unconfigured — never for ones whose fetch failed
+    return unSelected.includes(curPluginName)
+      ? ({ name: curPluginName, config: {} } as PluginConfig)
+      : ({} as PluginConfig);
+  }, [curPluginName, pluginInfoMap, unSelected]);
 
   const curPluginSchema = useMemo(() => {
     if (!curPluginName) return {};
