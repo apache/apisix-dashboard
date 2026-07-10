@@ -38,11 +38,21 @@ const AdminKey = () => {
   // the atom must update per keystroke (controlled input + the axios
   // interceptor reads it), but refreshing every mounted query per
   // keystroke hammered the Admin API: typing a 32-char key fired 32
-  // full invalidate+refetch storms. Refresh once the user pauses.
-  const refreshQueries = useDebouncedCallback(() => {
-    queryClient.invalidateQueries();
-    queryClient.refetchQueries();
-  }, REFRESH_DEBOUNCE_MS);
+  // full refetch storms. Refresh once the user pauses.
+  // - invalidate with refetchType 'none' + a single refetchQueries():
+  //   marks everything stale and issues exactly one fetch per query
+  //   (the old invalidate + refetch pair double-fetched active queries),
+  //   while still refetching observer-less error-state queries, which
+  //   recovery from a wrong key depends on
+  // - flushOnUnmount: pasting a key and immediately closing the modal
+  //   unmounts this component — the pending refresh must still fire
+  const refreshQueries = useDebouncedCallback(
+    () => {
+      queryClient.invalidateQueries({ refetchType: 'none' });
+      queryClient.refetchQueries();
+    },
+    { delay: REFRESH_DEBOUNCE_MS, flushOnUnmount: true }
+  );
 
   return (
     <PasswordInput

@@ -45,7 +45,14 @@ test('typing the admin key does not refetch per keystroke', async ({
   // mounted query once per character
   await adminKeyInput.pressSequentially(adminKey, { delay: 30 });
 
-  // wait until the debounced refresh fired and the request count settled
+  // the debounced refresh must actually fire and succeed with the
+  // completed key — 401-retry noise alone cannot satisfy this
+  await page.waitForResponse(
+    (res) => res.url().includes('/apisix/admin/') && res.ok(),
+    { timeout: 5000 }
+  );
+
+  // wait until the request count settled
   let lastSeen = -1;
   await expect
     .poll(
@@ -58,7 +65,8 @@ test('typing the admin key does not refetch per keystroke', async ({
     )
     .toBe(true);
 
-  // one debounced refresh refetches each mounted query once; allow a
-  // small margin, but far below one-refetch-per-keystroke (32+)
-  expect(adminRequests).toBeLessThan(8);
+  // the old behavior issued at least one refetch per keystroke
+  // (>= adminKey.length); one debounced refresh plus 401-retry noise
+  // stays far below that
+  expect(adminRequests).toBeLessThan(adminKey.length);
 });
