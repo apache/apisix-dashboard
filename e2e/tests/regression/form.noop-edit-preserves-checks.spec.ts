@@ -37,12 +37,17 @@ import { deleteAllRoutes } from '@/apis/routes';
 import { deleteAllServices } from '@/apis/services';
 import type { APISIXType } from '@/types/schema/apisix';
 
+// deliberately sparse: no active.type, no active.healthy, no passive.type —
+// this mirrors what the UI's own create flow stores (only the unhealthy
+// side configured) and pins the zod over-constraint that required
+// active.healthy and silently blocked every save of such a route
 const checks = {
   active: {
-    type: 'http',
     http_path: '/health',
-    healthy: { interval: 2, successes: 2 },
     unhealthy: { interval: 2, http_failures: 3 },
+  },
+  passive: {
+    unhealthy: { http_failures: 3, tcp_failures: 3 },
   },
 };
 
@@ -121,6 +126,11 @@ test('no-op edit-save preserves route inline upstream health checks', async ({
   expect(after.data.value.upstream?.checks?.active?.http_path).toBe(
     '/health'
   );
+  // the passive block must survive too (its own flag drives a separate
+  // sub-section that can unmount independently)
+  expect(
+    after.data.value.upstream?.checks?.passive?.unhealthy?.http_failures
+  ).toBe(3);
 });
 
 test('no-op edit-save preserves service inline upstream health checks', async ({
@@ -162,4 +172,9 @@ test('no-op edit-save preserves service inline upstream health checks', async ({
   expect(after.data.value.upstream?.checks?.active?.http_path).toBe(
     '/health'
   );
+  // the passive block must survive too (its own flag drives a separate
+  // sub-section that can unmount independently)
+  expect(
+    after.data.value.upstream?.checks?.passive?.unhealthy?.http_failures
+  ).toBe(3);
 });

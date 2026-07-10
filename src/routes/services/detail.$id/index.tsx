@@ -66,7 +66,13 @@ const ServiceDetailForm = (props: Props) => {
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
-    defaultValues: serviceData.value,
+    // must run through the producer so the root-level __checksEnabled
+    // flags exist from the very first mount — otherwise the checks
+    // sections mount only after the reset below and their fields miss
+    // the reset values (passive block was dropped from the next PUT)
+    defaultValues: produceToNestedUpstreamForm(
+      serviceData.value
+    ) as typeof serviceData.value,
   });
 
   useEffect(() => {

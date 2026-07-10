@@ -63,7 +63,11 @@ const StreamRouteDetailForm = (props: Props) => {
     shouldFocusError: true,
     mode: 'all',
     disabled: readOnly,
-    defaultValues: streamRouteData.value,
+    // producer required here too: the root-level __checksEnabled flags
+    // must exist from the first mount (see services detail)
+    defaultValues: produceToNestedUpstreamForm(
+      streamRouteData.value
+    ) as typeof streamRouteData.value,
   });
 
   useEffect(() => {

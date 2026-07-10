@@ -128,8 +128,10 @@ const UpstreamHealthCheckActive = z.object({
   http_path: z.string().optional(),
   https_verify_certificate: z.boolean().optional(),
   http_request_headers: z.array(z.string()).optional(),
-  healthy: UpstreamHealthCheckActiveHealthy.partial(),
-  unhealthy: UpstreamHealthCheckActiveUnhealthy.partial(),
+  // both are optional in the Admin API (defaults apply); requiring them
+  // rejected API-stored checks that only configure one side (#3414 CI)
+  healthy: UpstreamHealthCheckActiveHealthy.partial().optional(),
+  unhealthy: UpstreamHealthCheckActiveUnhealthy.partial().optional(),
 });
 
 const UpstreamHealthCheckPassiveType = UpstreamHealthCheckActiveType;
