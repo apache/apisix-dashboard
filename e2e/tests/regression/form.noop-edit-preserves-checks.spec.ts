@@ -103,6 +103,10 @@ test('no-op edit-save preserves route inline upstream health checks', async ({
   await uiGoto(page, '/routes/detail/$id', { id });
   await routesPom.isDetailPage(page);
   await waitForDetailQueriesToSettle(() => routeGets);
+  // deterministic discriminator: after the post-refetch reset, the form
+  // must still show health checks as enabled — the bug's first visible
+  // symptom was this switch reading off
+  await expect(page.getByTestId('checksEnabled')).toBeChecked();
 
   await page.getByRole('button', { name: 'Edit' }).click();
   await page.getByRole('button', { name: 'Save' }).click();
@@ -142,6 +146,8 @@ test('no-op edit-save preserves service inline upstream health checks', async ({
   await uiGoto(page, '/services/detail/$id', { id });
   await servicesPom.isDetailPage(page);
   await waitForDetailQueriesToSettle(() => serviceGets);
+  // deterministic discriminator (see the route variant above)
+  await expect(page.getByTestId('checksEnabled')).toBeChecked();
 
   await page.getByRole('button', { name: 'Edit' }).click();
   await page.getByRole('button', { name: 'Save' }).click();
