@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference types="vitest/config" />
 import { readdirSync } from 'node:fs';
 
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
@@ -39,6 +40,11 @@ if (inDevContainer) {
 // https://vite.dev/config/
 export default defineConfig({
   base: BASE_PATH,
+  test: {
+    // unit tests live under src/; the Playwright specs in e2e/ must not
+    // be collected even when vitest is invoked without the src filter
+    include: ['src/**/*.test.{ts,tsx}'],
+  },
   server: {
     // as an example, if you want to use the e2e server as the api server,
     proxy: {

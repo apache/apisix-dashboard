@@ -38,7 +38,10 @@ export const zOneOf =
   ): ((arg: A, ctx: RefinementCtx) => arg is R) =>
   (arg, ctx): arg is R => {
     // "filled" must treat empty strings like missing values: form inputs
-    // produce '' rather than undefined when cleared
+    // produce '' rather than undefined when cleared.
+    // NOTE: object values (including {} and zod-empty defaults) always
+    // count as filled — for an object/string pair, clear the object side
+    // to undefined before validation.
     const isFilled = (v: unknown) => v !== undefined && v !== null && v !== '';
     // valid state: exactly one of the two keys is filled
     if (isFilled(arg[key1]) !== isFilled(arg[key2])) {

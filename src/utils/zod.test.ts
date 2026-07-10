@@ -64,4 +64,15 @@ describe('zOneOf', () => {
     expect(schema.safeParse({ a: '', b: 'y' }).success).toBe(true);
     expect(schema.safeParse({ a: '', b: '' }).success).toBe(false);
   });
+
+  it('treats 0 and false as filled', () => {
+    // 0 is a legitimate port/weight and false a deliberate toggle — a
+    // truthiness-based implementation would wrongly treat them as empty
+    const s = z
+      .object({ n: z.number().optional(), f: z.boolean().optional() })
+      .superRefine(zOneOf<{ n?: number; f?: boolean }, 'n', 'f'>('n', 'f'));
+    expect(s.safeParse({ n: 0 }).success).toBe(true);
+    expect(s.safeParse({ f: false }).success).toBe(true);
+    expect(s.safeParse({ n: 0, f: false }).success).toBe(false);
+  });
 });
