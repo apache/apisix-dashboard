@@ -135,7 +135,7 @@ const ConsumerDetailTab = () => {
                 name={t('consumers.singular')}
                 target={username}
                 api={`${API_CONSUMERS}/${username}`}
-                onSuccess={() => navigate({ to: '/consumer_groups' })}
+                onSuccess={() => navigate({ to: '/consumers' })}
               />
             </Group>
           ),
