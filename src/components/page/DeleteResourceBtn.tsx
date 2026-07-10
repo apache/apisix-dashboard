@@ -85,6 +85,11 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
             // So this is a workaround for now
             // TODO: remove this
             queryClient.invalidateQueries();
+          })
+          .catch(() => {
+            // the axios interceptor owns the error toast; swallow the
+            // rejection so a failed delete (401/5xx/network) does not
+            // surface as an unhandled promise rejection
           }),
     })
   );

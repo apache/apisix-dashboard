@@ -370,5 +370,9 @@
   },
   "upstreams": {
     "singular": "Upstream"
+  },
+  "error": {
+    "title": "Bir şeyler ters gitti",
+    "retry": "Yeniden dene"
   }
 }

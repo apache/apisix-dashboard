@@ -370,5 +370,9 @@
   },
   "upstreams": {
     "singular": "上游"
+  },
+  "error": {
+    "title": "出错了",
+    "retry": "重试"
   }
 }

@@ -370,5 +370,9 @@
   },
   "upstreams": {
     "singular": "Upstream"
+  },
+  "error": {
+    "title": "Etwas ist schiefgelaufen",
+    "retry": "Erneut versuchen"
   }
 }

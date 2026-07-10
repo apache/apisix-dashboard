@@ -14,12 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AppShell } from '@mantine/core';
+import { AppShell, Button, Code, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { createRootRoute, HeadContent, Outlet } from '@tanstack/react-router';
+import {
+  createRootRoute,
+  type ErrorComponentProps,
+  HeadContent,
+  Outlet,
+  useRouter,
+} from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { I18nextProvider } from 'react-i18next';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 
 import { Header } from '@/components/Header';
 import { Navbar } from '@/components/Navbar';
@@ -63,6 +69,34 @@ const Root = () => {
   );
 };
 
+const RootErrorContent = (props: ErrorComponentProps) => {
+  const { error } = props;
+  const { t } = useTranslation();
+  const router = useRouter();
+  return (
+    <Stack align="center" justify="center" mih="60vh" gap="md" p="xl">
+      <Text fw={700} size="lg">
+        {t('error.title')}
+      </Text>
+      <Code block>{error.message}</Code>
+      <Button onClick={() => router.invalidate()}>{t('error.retry')}</Button>
+    </Stack>
+  );
+};
+
+/**
+ * Loader/render failures land here when no child route handles them.
+ * The settings modal must stay mounted: on a fresh install every request
+ * 401s until the admin key is entered, and the modal is the only way in.
+ */
+const RootError = (props: ErrorComponentProps) => (
+  <I18nextProvider i18n={i18n}>
+    <RootErrorContent {...props} />
+    <SettingsModal />
+  </I18nextProvider>
+);
+
 export const Route = createRootRoute({
   component: Root,
+  errorComponent: RootError,
 });
