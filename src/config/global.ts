@@ -16,6 +16,7 @@
  */
 import { QueryClient } from '@tanstack/react-query';
 import { createRouter } from '@tanstack/react-router';
+import { HttpStatusCode, isAxiosError } from 'axios';
 
 import { routeTree } from '@/routeTree.gen';
 
@@ -25,4 +26,20 @@ export const router = createRouter({ routeTree, basepath: BASE_PATH });
 
 export type Router = typeof router;
 
-export const queryClient = new QueryClient({});
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        // retrying a 401 cannot succeed until the user fixes the admin
+        // key; fail fast so the settings modal appears immediately
+        if (
+          isAxiosError(error) &&
+          error.response?.status === HttpStatusCode.Unauthorized
+        ) {
+          return false;
+        }
+        return failureCount < 3;
+      },
+    },
+  },
+});

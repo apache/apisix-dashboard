@@ -18,7 +18,7 @@ import { Button, type ButtonProps, Text } from '@mantine/core';
 import { useCallbackRef } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
-import type { AxiosResponse } from 'axios';
+import { type AxiosResponse, isAxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 
 import { queryClient } from '@/config/global';
@@ -85,6 +85,13 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
             // So this is a workaround for now
             // TODO: remove this
             queryClient.invalidateQueries();
+          })
+          .catch((e) => {
+            // the axios interceptor owns the error toast for HTTP/network
+            // failures; swallow only those so a failed delete does not
+            // surface as an unhandled rejection, while real bugs thrown
+            // by onSuccess/invalidate still propagate
+            if (!isAxiosError(e)) throw e;
           }),
     })
   );

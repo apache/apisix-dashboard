@@ -85,10 +85,13 @@ req.interceptors.response.use(
         message,
         color: 'red',
       });
-      // Requires to enter admin key at 401
+      // Requires to enter admin key at 401.
+      // Note: do NOT resolve with fabricated data here — callers must take
+      // their normal error path. Resolving `{ data: {} }` made a 401'd
+      // DELETE/PUT show success toasts and fed `{}` into `onSuccess`
+      // handlers and suspense queries, crashing detail/add pages.
       if (res.status === HttpStatusCode.Unauthorized) {
         getDefaultStore().set(isSettingsOpenAtom, true);
-        return Promise.resolve({ data: {} });
       }
     }
     return Promise.reject(err);
