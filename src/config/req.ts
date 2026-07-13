@@ -23,11 +23,12 @@ import { stringify } from 'qs';
 import {
   API_HEADER_KEY,
   API_PREFIX,
+  API_TIMEOUT_MS,
   SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
 import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
 
-export const req = axios.create();
+export const req = axios.create({ timeout: API_TIMEOUT_MS });
 
 req.interceptors.request.use((conf) => {
   conf.paramsSerializer = (p) => {

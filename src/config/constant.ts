@@ -37,5 +37,14 @@ export const API_SSLS = '/ssls';
 export const API_PLUGIN_CONFIGS = '/plugin_configs';
 
 export const SKIP_INTERCEPTOR_HEADER = '__dashboard__skipInterceptor';
+/**
+ * Client-side timeout for Admin API requests. Without it (axios default 0),
+ * a hung backend keeps requests pending until the browser gives up (minutes)
+ * with zero feedback. 60s is deliberately generous: Admin API operations are
+ * metadata CRUD and normally complete in milliseconds, while a timed-out
+ * mutation may still succeed server-side — so false timeouts must stay rare.
+ * Stopgap until the value is runtime-configurable (e.g. via Settings).
+ */
+export const API_TIMEOUT_MS = 60_000;
 export const APPSHELL_HEADER_HEIGHT = 60;
 export const APPSHELL_NAVBAR_WIDTH = 250;

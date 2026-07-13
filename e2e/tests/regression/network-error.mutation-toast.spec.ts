@@ -51,6 +51,7 @@ const nanoid = customAlphabet(
 
 const deleteTargetUsername = `regnetdel${nanoid()}`;
 const createUsername = `regnetadd${nanoid()}`;
+const timeoutUsername = `regnethang${nanoid()}`;
 const routeId = `regnetroute${nanoid()}`;
 
 test.beforeAll(async () => {
@@ -75,6 +76,9 @@ test.afterAll(async () => {
     .catch(() => undefined);
   await e2eReq
     .delete(`${API_CONSUMERS}/${createUsername}`)
+    .catch(() => undefined);
+  await e2eReq
+    .delete(`${API_CONSUMERS}/${timeoutUsername}`)
     .catch(() => undefined);
   await e2eReq.delete(`${API_ROUTES}/${routeId}`).catch(() => undefined);
 });
@@ -173,4 +177,36 @@ test('route edit shows exactly one error toast when the request gets no response
   await page.waitForTimeout(1000);
   await expect(errorToasts).toHaveCount(1);
   await expect(page.getByRole('alert').filter({ hasText: /\S/ })).toHaveCount(1);
+});
+
+test('consumer create shows a timeout toast when the backend hangs', async ({
+  page,
+}) => {
+  // A hung backend (connection accepted, response never sent) used to keep
+  // the request pending for minutes with zero feedback: axios had no timeout
+  // configured, so nothing rejected until the browser gave up. API_TIMEOUT_MS
+  // now bounds this — the request aborts client-side (ECONNABORTED, no
+  // response) and the interceptor toasts. This test genuinely waits out the
+  // 60s timeout; it is the only honest way to exercise the real code path.
+  test.setTimeout(120_000);
+
+  // Stall the PUT forever: never fulfill, continue, or abort.
+  await page.route('**/apisix/admin/consumers', (route) => {
+    if (route.request().method() === 'PUT') {
+      return new Promise<never>(() => {});
+    }
+    return route.fallback();
+  });
+
+  await uiGoto(page, '/consumers/add');
+  await page.getByRole('textbox', { name: 'Username' }).fill(timeoutUsername);
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+  const timeoutToast = page
+    .getByRole('alert')
+    .filter({ hasText: /timeout of \d+ms exceeded/i });
+  await expect(timeoutToast.first()).toBeVisible({ timeout: 75_000 });
+
+  // Still on the add page — the create did not go through.
+  await expect(page).toHaveURL((url) => url.pathname.endsWith('/consumers/add'));
 });
