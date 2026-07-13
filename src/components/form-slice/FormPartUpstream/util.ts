@@ -39,7 +39,17 @@ export const produceToNestedUpstreamForm = produce((draft: Record<string, unknow
     __checksPassiveEnabled?: boolean;
   };
   if (d.upstream && typeof d.upstream === 'object' && !Array.isArray(d.upstream)) {
-    d.upstream = produceToUpstreamForm(d.upstream, d.upstream) as Record<string, unknown>;
+    const upstream = d.upstream as Partial<APISIXType['Upstream']>;
+    d.upstream = produceToUpstreamForm(upstream, upstream) as Record<string, unknown>;
+    // The health-check switches live at the form ROOT: FormSectionChecks
+    // registers `__checksEnabled` unprefixed and reads it from the root.
+    // They must be derived from the nested upstream's checks — otherwise a
+    // reset with this producer leaves them undefined, the checks section
+    // renders "disabled", its inputs unmount, and `shouldUnregister: true`
+    // silently drops `upstream.checks` from the next PUT (#3414).
+    d.__checksEnabled = !!upstream.checks && isNotEmpty(upstream.checks);
+    d.__checksPassiveEnabled =
+      !!upstream.checks?.passive && isNotEmpty(upstream.checks.passive);
   }
   // Also handle top-level checks if they exist
   if (d.checks) {
