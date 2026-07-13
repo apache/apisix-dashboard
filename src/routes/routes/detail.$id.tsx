@@ -111,13 +111,6 @@ const RouteDetailForm = (props: Props) => {
       await refetch();
       setReadOnly(true);
     },
-    onError(err: Error & { response?: { data?: { error_msg?: string } } }) {
-      notifications.show({
-        title: 'Error',
-        message: err.response?.data?.error_msg || err.message || 'Failed to update route',
-        color: 'red',
-      });
-    },
   });
 
   const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
