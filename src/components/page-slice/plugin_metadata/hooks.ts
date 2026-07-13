@@ -16,6 +16,7 @@
  */
 import { useListState, useMap } from '@mantine/hooks';
 import { useQueries, useSuspenseQuery } from '@tanstack/react-query';
+import { HttpStatusCode, isAxiosError } from 'axios';
 import { useDeepCompareEffect } from 'react-use';
 
 import {
@@ -39,10 +40,20 @@ export const usePluginMetadataList = () => {
     queries: names
       ? names.map((pluginName) => ({
           ...getPluginMetadataQueryOptions(pluginName, {
-            // skip show 500 error toast
-            [SKIP_INTERCEPTOR_HEADER]: ['500'],
+            // the Admin API answers 404 for a plugin whose metadata was
+            // never configured — that is the normal state for most
+            // plugins, not an error, so keep the interceptor quiet.
+            // Real failures (5xx, network) still toast.
+            [SKIP_INTERCEPTOR_HEADER]: ['404'],
           }),
-          retry: false,
+          // 404 = "not configured", retrying is pointless (and would
+          // multiply the probe storm); give real failures two more tries
+          retry: (failureCount: number, error: unknown) =>
+            failureCount < 2 &&
+            !(
+              isAxiosError(error) &&
+              error.response?.status === HttpStatusCode.NotFound
+            ),
         }))
       : [],
   });
@@ -58,6 +69,14 @@ export const usePluginMetadataList = () => {
     hasConfigNamesOp.setState([]);
     for (const [index, pluginName] of names.entries()) {
       const req = metadataQueries[index];
+      // 404 means "not configured yet" — offer an empty config.
+      // Any other failure (5xx, network) must NOT be presented as an
+      // empty config: saving that would overwrite existing metadata.
+      const isUnconfigured =
+        req.isError &&
+        isAxiosError(req.error) &&
+        req.error.response?.status === HttpStatusCode.NotFound;
+      if (!req.isSuccess && !isUnconfigured) continue;
       const info = {
         name: pluginName,
         config: req.isSuccess ? req.data?.value : {},
@@ -70,11 +89,25 @@ export const usePluginMetadataList = () => {
     }
   }, [metadataQueries, names]);
 
+  // plugins whose metadata fetch failed with something other than 404;
+  // they must not be offered as an empty editable config anywhere
+  const failedPluginNames = (names ?? []).filter((_, index) => {
+    const query = metadataQueries[index];
+    return (
+      query.isError &&
+      !(
+        isAxiosError(query.error) &&
+        query.error.response?.status === HttpStatusCode.NotFound
+      )
+    );
+  });
+
   return {
     isLoading,
     isError: pluginsListQuery.isError,
     error: pluginsListQuery.error,
     hasConfigNames,
+    failedPluginNames,
     pluginInfoMap,
     allPluginNames: names,
     originalMetadataQueries: metadataQueries,
