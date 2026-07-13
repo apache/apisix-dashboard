@@ -17,18 +17,14 @@
 import { z } from 'zod';
 
 
+// Search params come from the URL and can be arbitrary garbage
+// (hand-edited, stale bookmarks, duplicated keys parsed as arrays).
+// `catch` degrades every invalid shape to the default instead of sending
+// NaN to the Admin API or throwing a ZodError out of validateSearch.
 export const pageSearchSchema = z
   .object({
-    page: z
-      .union([z.string(), z.number()])
-      .optional()
-      .default(1)
-      .transform((val) => (val ? Number(val) : 1)),
-    page_size: z
-      .union([z.string(), z.number()])
-      .optional()
-      .default(10)
-      .transform((val) => (val ? Number(val) : 10)),
+    page: z.coerce.number().int().min(1).catch(1),
+    page_size: z.coerce.number().int().min(1).catch(10),
     name: z.string().optional(),
     label: z.string().optional(),
   })
