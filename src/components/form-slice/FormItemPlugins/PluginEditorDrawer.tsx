@@ -16,6 +16,7 @@
  */
 import { Drawer, Group, Text, Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
+import { isAxiosError } from 'axios';
 import { isEmpty, isNil } from 'rambdax';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -30,7 +31,7 @@ export type PluginConfig = { name: string; config: object };
 export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
   opened: boolean;
   onClose: () => void;
-  onSave: (props: PluginConfig) => void;
+  onSave: (props: PluginConfig) => void | Promise<unknown>;
   plugin: PluginConfig;
   schema?: object;
 };
@@ -104,8 +105,16 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
             <FormSubmitBtn
               size="xs"
               variant="light"
-              onClick={methods.handleSubmit(({ config }) => {
-                onSave({ name, config: JSON.parse(config) });
+              onClick={methods.handleSubmit(async ({ config }) => {
+                try {
+                  await onSave({ name, config: JSON.parse(config) });
+                } catch (e) {
+                  // the axios interceptor owns the error toast; keep the
+                  // drawer open with the edits intact so the save can be
+                  // retried, and rethrow non-axios errors (real bugs)
+                  if (!isAxiosError(e)) throw e;
+                  return;
+                }
                 onClose();
                 methods.reset();
               })}
