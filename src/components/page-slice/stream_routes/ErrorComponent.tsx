@@ -26,7 +26,9 @@ export const StreamRoutesErrorComponent = (props: ErrorComponentProps) => {
   if (props.error instanceof AxiosError) {
     const err = props.error as AxiosError<APISIXRespErr>;
     if (err.response?.status === 400) {
-      return <span>{err.response?.data.error_msg}</span>;
+      // data can be missing or unparsed (empty/non-JSON body); never
+      // dereference it bare and never render an empty error area
+      return <span>{err.response.data?.error_msg ?? err.message}</span>;
     }
   }
   return <ErrorComponent {...props} />;
