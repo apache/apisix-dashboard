@@ -23,11 +23,12 @@ import { stringify } from 'qs';
 import {
   API_HEADER_KEY,
   API_PREFIX,
+  API_TIMEOUT_MS,
   SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
 import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
 
-export const req = axios.create();
+export const req = axios.create({ timeout: API_TIMEOUT_MS });
 
 req.interceptors.request.use((conf) => {
   conf.paramsSerializer = (p) => {
@@ -93,6 +94,19 @@ req.interceptors.response.use(
       if (res.status === HttpStatusCode.Unauthorized) {
         getDefaultStore().set(isSettingsOpenAtom, true);
       }
+    } else if (!axios.isCancel(err)) {
+      // Network-level failure: no response at all (backend down/unreachable,
+      // timeout, DNS error, CORS preflight failure). Toast here — the single
+      // choke point every request flows through — so raw calls (e.g.
+      // DeleteResourceBtn) and react-query paths all surface feedback.
+      // `matchSkipInterceptor` can't apply: there is no status code to match.
+      // `id` dedupes retries and concurrent failures into one notification.
+      const message = err.message || 'Network Error';
+      notifications.show({
+        id: message,
+        message,
+        color: 'red',
+      });
     }
     return Promise.reject(err);
   }
