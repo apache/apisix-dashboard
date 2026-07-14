@@ -17,7 +17,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group,Skeleton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useNavigate,
@@ -52,7 +52,7 @@ const SecretDetailForm = (props: Props) => {
   const { t } = useTranslation();
   const { manager, id } = useParams({ from: '/secrets/detail/$manager/$id' });
 
-  const secretQuery = useQuery(
+  const secretQuery = useSuspenseQuery(
     getSecretQueryOptions({
       id,
       manager: manager as APISIXType['Secret']['manager'],
