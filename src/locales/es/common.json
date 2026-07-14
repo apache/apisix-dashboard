@@ -88,6 +88,39 @@
       "vars": "Variables"
     },
     "search": "Buscar",
+    "searchForm": {
+      "fields": {
+        "name": "Nombre",
+        "id": "ID",
+        "host": "Host",
+        "path": "Ruta",
+        "description": "Descripción",
+        "plugin": "Plugin",
+        "labels": "Etiquetas",
+        "version": "Versión",
+        "status": "Estado"
+      },
+      "placeholders": {
+        "name": "Nombre",
+        "id": "ID",
+        "host": "Host",
+        "path": "Ruta",
+        "description": "Descripción",
+        "plugin": "Plugin",
+        "labels": "Selecciona etiquetas",
+        "version": "Selecciona versión",
+        "status": "Selecciona estado"
+      },
+      "status": {
+        "all": "Deshabilitado/Habilitado",
+        "enabled": "Habilitado",
+        "disabled": "Deshabilitado"
+      },
+      "actions": {
+        "reset": "Restablecer",
+        "search": "Buscar"
+      }
+    },
     "secrets": {
       "aws": {
         "access_key_id": "ID de Clave de Acceso",
@@ -366,7 +399,8 @@
   "table": {
     "actions": "Acciones",
     "disabled": "Deshabilitado",
-    "enabled": "Habilitado"
+    "enabled": "Habilitado",
+    "searchLimitReached": "Nota: Solo se revisaron los primeros {{count}} registros. Es posible que falten coincidencias en los resultados."
   },
   "upstreams": {
     "singular": "Upstream"

@@ -80,7 +80,7 @@ test.describe('CRUD proto with all fields', () => {
       createdProtoId = createdProto!.value.id;
 
       // Verify content matches
-      expect(createdProto?.value.content).toBe(protoContent);
+      expect(createdProto!.value.content).toBe(protoContent);
     });
   });
 
@@ -106,7 +106,7 @@ test.describe('CRUD proto with all fields', () => {
       // Find and click the View button for the created proto
       const row = page.locator('tr').filter({ hasText: createdProtoId });
       await row.getByRole('button', { name: 'View' }).click();
-      
+
       // Verify we're on the detail page
       await protosPom.isDetailPage(page);
 
