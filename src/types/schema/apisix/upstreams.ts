@@ -58,7 +58,10 @@ const UpstreamPassHost = z.union([
 
 const UpstreamNode = z.object({
   host: z.string().min(1),
-  port: z.number().int().gte(1).lte(65535),
+  // the Admin API accepts array-form nodes without a port (the scheme
+  // decides at runtime) — requiring it here rejected valid API-created
+  // nodes and forced the object-form converter to invent one (#3417)
+  port: z.number().int().gte(1).lte(65535).optional(),
   weight: z.number().int(),
   priority: z.number().int().optional(),
 });

@@ -31,6 +31,7 @@ import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 
 import { genControllerProps } from '../../form/util';
+import { objToUpstreamNodes } from './nodes-conversion';
 
 type DataSource = APISIXType['UpstreamNode'] & APISIXType['ID'];
 
@@ -46,19 +47,6 @@ const zValidateField = <T extends ZodRawShape, R extends keyof T>(
   }
   const error = res.error.issues[0];
   return Promise.reject(new Error(error.message));
-};
-
-const objToUpstreamNodes = (data: APISIXType['UpstreamNodeObj']) => {
-  return Object.entries(data).map(([key, val]) => {
-    const [host, port] = key.split(':');
-    const d: APISIXType['UpstreamNode'] = {
-      host,
-      port: Number(port) || 1,
-      weight: val,
-      priority: 0,
-    };
-    return d;
-  });
 };
 
 const toDataSource = (data: APISIXType['UpstreamNodeListOrObj']): DataSource[] => {
@@ -175,10 +163,12 @@ export const FormItemNodes = <T extends FieldValues>(
       next.push({
         id: existing?.id ?? nanoid(),
         host,
+        // no ?? 80 fallback: a port-less node must stay port-less through
+        // the flush, or a no-op save would invent a port (#3417)
         port:
           portRaw !== undefined && portRaw !== ''
             ? Number(portRaw)
-            : (existing?.port ?? 80),
+            : existing?.port,
         weight:
           weightRaw !== undefined && weightRaw !== ''
             ? Number(weightRaw)
@@ -233,8 +223,10 @@ export const FormItemNodes = <T extends FieldValues>(
         dataIndex: 'port',
         valueType: 'digit',
         formItemProps: genProps('port'),
+        // port is optional (scheme decides at runtime) — same guard as
+        // priority below
         render: (_, entity) => {
-          return entity.port.toString();
+          return entity.port?.toString() || '-';
         },
       },
       {
