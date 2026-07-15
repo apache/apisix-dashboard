@@ -88,9 +88,15 @@ export const produceRmEmptyUpstreamFields = produce(
 
     if (draft.upstream) {
       const u = draft.upstream as Record<string, unknown>;
-      delete u.name;
-      delete u.desc;
-      delete u.labels;
+      // only strip these when EMPTY: the Admin API rejects e.g. name: ''
+      // (minLength 1) but accepts and stores non-empty name/desc/labels
+      // on an inline upstream — unconditional deletes silently erased
+      // stored values on every edit-save and discarded form input (#3417)
+      if (!u.name) delete u.name;
+      if (!u.desc) delete u.desc;
+      if (!u.labels || Object.keys(u.labels as object).length === 0) {
+        delete u.labels;
+      }
 
       if (draft.upstream.timeout && isAllUndefined(draft.upstream.timeout)) {
         delete draft.upstream.timeout;
