@@ -25,6 +25,11 @@ import { useTranslation } from 'react-i18next';
 
 import type { APISIXType } from '@/types/schema/apisix';
 
+import {
+  labelsToTags,
+  parseLabelTag,
+  tagsToLabels,
+} from './labels-conversion';
 import { genControllerProps } from './util';
 
 export type FormItemLabels<T extends FieldValues> = UseControllerProps<T> &
@@ -44,17 +49,12 @@ export const FormItemLabels = <T extends FieldValues>(
   const { t } = useTranslation();
   const [internalError, setInternalError] = useState<string | null>();
 
-  const values = useMemo(() => {
-    // Defensive: ensure value is a plain object (not array or null)
-    if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
-    return Object.entries(value).map(([key, val]) => `${key}:${val}`);
-  }, [value]);
+  const values = useMemo(() => labelsToTags(value), [value]);
 
   const handleSearchChange = useCallback(
     (val: string) => {
-      const tuple = val.split(':');
       // when clear input, val can be ''
-      if (val && tuple.length !== 2) {
+      if (val && !parseLabelTag(val)) {
         setInternalError(t('form.basic.labels.errorFormat'));
         return;
       }
@@ -65,20 +65,16 @@ export const FormItemLabels = <T extends FieldValues>(
 
   const handleChange = useCallback(
     (vals: string[]) => {
-      const obj: APISIXType['Labels'] = {};
-      for (const val of vals) {
-        const tuple = val.split(':');
-        if (tuple.length !== 2) {
-          setInternalError(t('form.basic.labels.errorFormat'));
-          return;
-        }
-        obj[tuple[0]] = tuple[1];
+      const obj = tagsToLabels(vals, value);
+      if (!obj) {
+        setInternalError(t('form.basic.labels.errorFormat'));
+        return;
       }
       setInternalError(null);
       fOnChange(obj);
       restProps.onChange?.(obj);
     },
-    [fOnChange, restProps, t]
+    [fOnChange, restProps, t, value]
   );
 
   return (
