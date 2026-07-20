@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { InputWrapper, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -54,12 +54,13 @@ const FormSectionClient = () => {
             defaultValue={1}
             min={0}
           />
-          <InputWrapper label={t('form.ssls.client.skipMtlsUriRegex')}>
-            <FormItemSwitch
-              control={control}
-              name="client.skip_mtls_uri_regex"
-            />
-          </InputWrapper>
+          {/* array<string> of URI regexes — a TagsInput, not a Switch:
+              the boolean broke this field both ways (#3417) */}
+          <FormItemTagsInput
+            control={control}
+            name="client.skip_mtls_uri_regex"
+            label={t('form.ssls.client.skipMtlsUriRegex')}
+          />
         </>
       ) : (
         <Text c="gray.6" size="sm">
