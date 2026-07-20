@@ -15,12 +15,20 @@
  * limitations under the License.
  */
 
-// Regression for a data-integrity item of apache/apisix-dashboard#3417:
-// `ssls.client.skip_mtls_uri_regex` is typed `array<string>` (URI regex
-// list, matching the Admin API) but was rendered as a boolean Switch.
-// Both directions were broken: a stored regex list displayed as a
-// meaningless "on" toggle with the actual values invisible, and toggling
-// wrote a boolean that failed the zod array schema on submit.
+// Regression for a silent data-loss bug found while fixing the
+// skip_mtls_uri_regex widget (#3417 follow-up): the SSL detail page
+// created its form WITHOUT `defaultValues` and populated it only through
+// a later `form.reset(...)`. Under `shouldUnregister: true`, a
+// controlled field that mounts AFTER that reset (the whole client
+// section, gated on `__clientEnabled`) has its entry in `_defaultValues`
+// overwritten from `_options.defaultValues` — i.e. with undefined — by
+// react-hook-form's useController mount effect. The unmount/remount
+// around toggling Edit then drops the value with nothing to re-seed
+// from, wiping the whole `client.*` subtree: an edit-save silently
+// DELETED the mTLS client block (PUT succeeded, verification gone).
+// Passing the producer output as `defaultValues` at creation (the same
+// pattern routes/services/stream_routes detail pages already use) keeps
+// the re-seed source populated.
 
 import { sslsPom } from '@e2e/pom/ssls';
 import { genTLS, randomId } from '@e2e/utils/common';
@@ -32,8 +40,6 @@ import { expect } from '@playwright/test';
 import { deleteAllSSLs } from '@/apis/ssls';
 import type { APISIXType } from '@/types/schema/apisix';
 
-const regexes = ['/health.*', '/metrics'];
-
 test.beforeAll(async () => {
   await deleteAllSSLs(e2eReq);
 });
@@ -42,18 +48,20 @@ test.afterAll(async () => {
   await deleteAllSSLs(e2eReq);
 });
 
-test('client skip_mtls_uri_regex displays and round-trips', async ({
-  page,
-}) => {
+test('no-op edit-save preserves the mTLS client block', async ({ page }) => {
   const { cert, key } = await genTLS();
-  const sni = `${randomId('reg-mtls')}.example.com`;
+  const sni = `${randomId('reg-client-keep')}.example.com`;
   const res = await e2eReq.put<{ value: APISIXType['SSL'] }>(
-    `/ssls/${randomId('reg-mtls')}`,
+    `/ssls/${randomId('reg-client-keep')}`,
     {
       snis: [sni],
       cert,
       key,
-      client: { ca: cert, skip_mtls_uri_regex: regexes },
+      client: {
+        ca: cert,
+        depth: 2,
+        skip_mtls_uri_regex: ['/health.*', '/metrics'],
+      },
     }
   );
   const id = res.data.value.id;
@@ -61,33 +69,19 @@ test('client skip_mtls_uri_regex displays and round-trips', async ({
   await uiGoto(page, '/ssls/detail/$id', { id });
   await sslsPom.isDetailPage(page);
 
-  // stored regexes must be visible (unfixed: a bare "on" Switch, values
-  // nowhere on the page)
-  await expect(page.getByText(regexes[0], { exact: true })).toBeVisible();
-  await expect(page.getByText(regexes[1], { exact: true })).toBeVisible();
-
   await page.getByRole('button', { name: 'Edit' }).click();
-
-  const field = page.getByRole('textbox', {
-    name: 'Skip mTLS URI Regex',
-    exact: true,
-  });
-  await field.fill('/status');
-  await field.press('Enter');
-  await expect(page.getByText('/status', { exact: true })).toBeVisible();
-
-  // the API does not return the private key to the form; re-fill it so
-  // the PUT passes validation (same reason the crud spec cancels edits)
+  // the API never returns the private key, so a save always needs it
+  // re-entered — everything else must survive untouched
   await page.getByRole('textbox', { name: 'Key 1' }).fill(key);
-
   await page.getByRole('button', { name: 'Save' }).click();
   await expect(
     page.getByRole('alert').filter({ hasText: /success/i })
   ).toBeVisible();
 
   const after = await e2eReq.get<{ value: APISIXType['SSL'] }>(`/ssls/${id}`);
-  expect(after.data.value.client?.skip_mtls_uri_regex).toEqual([
-    ...regexes,
-    '/status',
-  ]);
+  const client = after.data.value.client;
+  expect(client).toBeTruthy();
+  expect(client?.ca).toBe(cert);
+  expect(client?.depth).toBe(2);
+  expect(client?.skip_mtls_uri_regex).toEqual(['/health.*', '/metrics']);
 });

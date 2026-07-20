@@ -65,6 +65,14 @@ const SSLDetailForm = (props: Props & { id: string }) => {
     shouldUnregister: true,
     mode: 'all',
     disabled: readOnly,
+    // Without creation-time defaultValues, any controlled field that
+    // mounts AFTER the reset below (the whole client section, gated on
+    // __clientEnabled) gets its _defaultValues entry overwritten with
+    // undefined by RHF's useController mount effect under
+    // shouldUnregister — the unmount/remount around toggling Edit then
+    // wipes the client.* subtree and an edit-save silently deletes the
+    // mTLS client block (same pattern as routes/services detail, #3414).
+    defaultValues: produceToSSLForm(sslData),
   });
 
   const putSSL = useMutation({
