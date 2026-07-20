@@ -71,7 +71,13 @@ export const rmDoubleUnderscoreKeys = (obj: object) => {
   Object.keys(obj).forEach((key) => {
     const k = key as keyof typeof obj;
     if ((key as string).startsWith('__')) return delete obj[k];
-    if (typeof obj[k] === 'object' && !Array.isArray(obj[k])) {
+    // typeof null === 'object': recursing into null threw at Object.keys.
+    // Nulls are the downstream null-cleaner's job, not ours (#3417).
+    if (
+      typeof obj[k] === 'object' &&
+      obj[k] !== null &&
+      !Array.isArray(obj[k])
+    ) {
       (obj[k] as object) = rmDoubleUnderscoreKeys(obj[k]);
     }
   });
