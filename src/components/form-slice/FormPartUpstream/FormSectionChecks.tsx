@@ -18,7 +18,6 @@ import { Text } from '@mantine/core';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { FormItemLabels } from '@/components/form/Labels';
 import { FormItemNumberInput } from '@/components/form/NumberInput';
 import { FormItemSelect } from '@/components/form/Select';
 import { FormItemSwitch } from '@/components/form/Switch';
@@ -76,7 +75,10 @@ const FormSectionChecksActive = () => {
         name={np('checks.active.http_path')}
         label={t('form.upstreams.checks.active.http_path')}
       />
-      <FormItemLabels
+      {/* array<string> of raw header lines — a TagsInput, not the Labels
+          widget (which produces an object and broke this field both ways,
+          #3417) */}
+      <FormItemTagsInput
         control={control}
         name={np('checks.active.http_request_headers')}
         label={t('form.upstreams.checks.active.http_request_headers')}
