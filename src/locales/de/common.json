@@ -296,7 +296,8 @@
     "delete": {
       "content": "Möchten Sie {{name}} löschen?",
       "success": "{{name}} erfolgreich gelöscht",
-      "title": "{{name}} löschen"
+      "title": "{{name}} löschen",
+      "confirm": "Möchten Sie <0>{{name}}</0> wirklich löschen?"
     },
     "detail": {
       "title": "{{name}} Detail"
