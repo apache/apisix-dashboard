@@ -37,11 +37,13 @@ import {
   APPSHELL_NAVBAR_WIDTH,
 } from '@/config/constant';
 import i18n from '@/config/i18n';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
-const Root = () => {
+const RootShell = () => {
   const [opened, { toggle }] = useDisclosure(false);
+  useDocumentTitle();
   return (
-    <I18nextProvider i18n={i18n}>
+    <>
       <HeadContent />
       <AppShell
         header={{ height: APPSHELL_HEADER_HEIGHT }}
@@ -67,6 +69,14 @@ const Root = () => {
         </>
       )}
       <SettingsModal />
+    </>
+  );
+};
+
+const Root = () => {
+  return (
+    <I18nextProvider i18n={i18n}>
+      <RootShell />
     </I18nextProvider>
   );
 };
