@@ -125,17 +125,26 @@ export const FormSectionUpstream = () => {
   );
 };
 
-export const FormSectionPlugins = () => {
+export type FormSectionPluginsProps = {
+  /** stream_routes has no plugin_config_id — the Admin API rejects it */
+  showConfigId?: boolean;
+};
+export const FormSectionPlugins = (props: FormSectionPluginsProps) => {
+  const { showConfigId = true } = props;
   const { t } = useTranslation();
   const { control } = useFormContext<RoutePostType>();
   return (
     <FormSection legend={t('form.plugins.label')}>
-      <FormItemTextInput
-        control={control}
-        name="plugin_config_id"
-        label={t('form.plugins.configId')}
-      />
-      <Divider my="xs" label={t('or')} />
+      {showConfigId && (
+        <>
+          <FormItemTextInput
+            control={control}
+            name="plugin_config_id"
+            label={t('form.plugins.configId')}
+          />
+          <Divider my="xs" label={t('or')} />
+        </>
+      )}
       <FormItemPlugins name="plugins" />
     </FormSection>
   );
