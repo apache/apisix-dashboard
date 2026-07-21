@@ -52,8 +52,10 @@
     pointer-events: auto !important;
   }
 
+  /* gray-7 on the gray-0 background clears WCAG AA (~7:1); gray-5 was
+     ~2:1 and unreadable on the primary read path (#3417) */
   .monaco-editor .view-lines,
   .monaco-editor .view-line * {
-    color: var(--mantine-color-gray-5) !important;
+    color: var(--mantine-color-gray-7) !important;
   }
 }

@@ -16,18 +16,21 @@
  */
 import { ActionIcon } from '@mantine/core';
 import { useSetAtom } from 'jotai';
+import { useTranslation } from 'react-i18next';
 
 import { isSettingsOpenAtom } from '@/stores/global';
 import IconSettings from '~icons/material-symbols/settings';
 
 export const SettingModalBtn = () => {
   const setIsSettingsOpen = useSetAtom(isSettingsOpenAtom);
+  const { t } = useTranslation();
 
   return (
     <ActionIcon
       onClick={() => setIsSettingsOpen(true)}
       variant="light"
       size="sm"
+      aria-label={t('a11y.openSettings')}
     >
       <IconSettings />
     </ActionIcon>

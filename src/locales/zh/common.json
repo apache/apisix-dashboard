@@ -374,5 +374,10 @@
   "error": {
     "title": "出错了",
     "retry": "重试"
+  },
+  "a11y": {
+    "openSettings": "打开设置",
+    "selectLanguage": "选择语言",
+    "toggleNavigation": "切换导航"
   }
 }
