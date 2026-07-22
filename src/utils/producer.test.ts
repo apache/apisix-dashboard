@@ -108,6 +108,24 @@ describe('pipeProduce', () => {
     expect(produced.plugins).toEqual(plugins);
   });
 
+  // #3438 review (LiteSun): the __-key cleaner runs over the whole draft
+  // before the plugins subtree is snapshotted, so a plugin config field
+  // that legitimately starts with __ was deleted — the "verbatim" claim
+  // did not hold. Plugin JSON is gateway-owned; nothing in it is a UI flag.
+  it('passes __-prefixed plugin config fields through verbatim', () => {
+    const plugins = { 'my-plugin': { __mode: 'strict', on: true } };
+    const val = {
+      uri: '/r-uu',
+      plugins,
+      upstream: {
+        type: 'roundrobin',
+        nodes: [{ host: 'a.local', port: 80, weight: 1 }],
+      },
+    };
+    const produced = pipeProduce()(val);
+    expect(produced.plugins).toEqual(plugins);
+  });
+
   it('restores discovery_args on an inline upstream', () => {
     const val = {
       uri: '/r3',

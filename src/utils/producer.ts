@@ -60,6 +60,11 @@ const isEmptyObject = (v: unknown): v is object =>
  * nested pipeProduce composition (the routes detail page composes
  * produceRoute, itself a pipeProduce, as a stage of another pipeProduce,
  * so inner stages receive the outer draft, not a plain value).
+ *
+ * The `__`-prefixed UI-flag removal (form-only fields like __checksEnabled)
+ * also runs here, AFTER the plugins subtree is detached — otherwise a
+ * plugin config field that legitimately begins with `__` would be
+ * stripped, breaking the verbatim contract (#3438 review).
  */
 export const produceCleanPreservingUserValues = (opts: ICleanerOptions = {}) =>
   produce((draft: Record<string, unknown>) => {
@@ -69,6 +74,7 @@ export const produceCleanPreservingUserValues = (opts: ICleanerOptions = {}) =>
       (draft.upstream as Record<string, unknown> | undefined)?.discovery_args
     );
     delete draft.plugins;
+    rmDoubleUnderscoreKeys(draft);
     deepCleanEmptyKeys(draft, opts);
     if (plugins && typeof plugins === 'object') {
       draft.plugins = plugins;
@@ -99,10 +105,6 @@ export const rmDoubleUnderscoreKeys = (obj: object) => {
   return obj;
 };
 
-export const produceRmDoubleUnderscoreKeys = produce((draft) => {
-  rmDoubleUnderscoreKeys(draft);
-});
-
 /**
  * FIXME: type error
  */
@@ -115,8 +117,9 @@ export const pipeProduce = (...funcs: ((a: any) => unknown)[]) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         ...fs,
-        produceRmDoubleUnderscoreKeys,
         produceTime,
+        // __-flag removal happens inside this stage, after the plugins
+        // subtree is detached (see #3438 review)
         produceCleanPreservingUserValues()
       )(draft) as never;
     }) as T;
