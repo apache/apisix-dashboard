@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as Schema_form_demoRouteImport } from './routes/schema_form_demo'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UpstreamsIndexRouteImport } from './routes/upstreams/index'
 import { Route as Stream_routesIndexRouteImport } from './routes/stream_routes/index'
@@ -56,6 +57,11 @@ import { Route as ServicesDetailIdStream_routesDetailRouteIdRouteImport } from '
 import { Route as ServicesDetailIdRoutesDetailRouteIdRouteImport } from './routes/services/detail.$id/routes/detail.$routeId'
 import { Route as ConsumersDetailUsernameCredentialsDetailIdRouteImport } from './routes/consumers/detail.$username/credentials/detail.$id'
 
+const Schema_form_demoRoute = Schema_form_demoRouteImport.update({
+  id: '/schema_form_demo',
+  path: '/schema_form_demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -299,6 +305,7 @@ const ConsumersDetailUsernameCredentialsDetailIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/schema_form_demo': typeof Schema_form_demoRoute
   '/consumer_groups/add': typeof Consumer_groupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof Global_rulesAddRoute
@@ -347,6 +354,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/schema_form_demo': typeof Schema_form_demoRoute
   '/consumer_groups/add': typeof Consumer_groupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof Global_rulesAddRoute
@@ -394,6 +402,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/schema_form_demo': typeof Schema_form_demoRoute
   '/consumer_groups/add': typeof Consumer_groupsAddRoute
   '/consumers/add': typeof ConsumersAddRoute
   '/global_rules/add': typeof Global_rulesAddRoute
@@ -444,6 +453,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/schema_form_demo'
     | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
@@ -492,6 +502,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/schema_form_demo'
     | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
@@ -538,6 +549,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/schema_form_demo'
     | '/consumer_groups/add'
     | '/consumers/add'
     | '/global_rules/add'
@@ -587,6 +599,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  Schema_form_demoRoute: typeof Schema_form_demoRoute
   Consumer_groupsAddRoute: typeof Consumer_groupsAddRoute
   ConsumersAddRoute: typeof ConsumersAddRoute
   Global_rulesAddRoute: typeof Global_rulesAddRoute
@@ -625,6 +638,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/schema_form_demo': {
+      id: '/schema_form_demo'
+      path: '/schema_form_demo'
+      fullPath: '/schema_form_demo'
+      preLoaderRoute: typeof Schema_form_demoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -1001,6 +1021,7 @@ const ServicesDetailIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  Schema_form_demoRoute: Schema_form_demoRoute,
   Consumer_groupsAddRoute: Consumer_groupsAddRoute,
   ConsumersAddRoute: ConsumersAddRoute,
   Global_rulesAddRoute: Global_rulesAddRoute,
