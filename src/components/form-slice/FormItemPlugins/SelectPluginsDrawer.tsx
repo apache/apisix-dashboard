@@ -47,7 +47,8 @@ export const SelectPluginsDrawer = (props: SelectPluginsDrawerProps) => {
         radius="md"
         position="right"
         size="xl"
-        closeOnEscape={false}
+        // this drawer only picks a plugin to add — no unsaved edits to
+        // protect, so Escape should close it like any other dialog (#3417)
         opened={opened}
         onClose={() => setOpened(false)}
         title={t('form.plugins.selectPlugins.title')}

@@ -41,7 +41,13 @@ export const Header: FC<HeaderProps> = (props) => {
     <AppShell.Header>
       <Group h="100%" px="md" justify="space-between">
         <Group h="100%" gap="sm">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          <Burger
+            opened={opened}
+            onClick={toggle}
+            hiddenFrom="sm"
+            size="sm"
+            aria-label={t('a11y.toggleNavigation')}
+          />
           <Logo />
           <div>{t('apisix.dashboard')}</div>
         </Group>

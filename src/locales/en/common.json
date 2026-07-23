@@ -374,5 +374,10 @@
   "error": {
     "title": "Something went wrong",
     "retry": "Retry"
+  },
+  "a11y": {
+    "openSettings": "Open settings",
+    "selectLanguage": "Select language",
+    "toggleNavigation": "Toggle navigation"
   }
 }
