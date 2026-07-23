@@ -65,7 +65,11 @@ describe('produceStreamRoute', () => {
     expect(out.plugins).toEqual({ 'key-auth': {} });
   });
 
-  it('still deletes name/status and empty protocol', () => {
+  // #3437 review (LiteSun): the Admin API accepts a stream-route `name`
+  // (201) but rejects `status` (400). The producer must preserve name so
+  // an API-created named stream route does not lose its name on an
+  // edit-save, while still stripping the unsupported status.
+  it('keeps name, strips status, and drops empty protocol', () => {
     const val = {
       ...base,
       name: 'n1',
@@ -73,7 +77,7 @@ describe('produceStreamRoute', () => {
       protocol: { conf: {} },
     } as unknown as StreamRoutePostType;
     const out = produceStreamRoute(val) as Record<string, unknown>;
-    expect('name' in out).toBe(false);
+    expect(out.name).toBe('n1');
     expect('status' in out).toBe(false);
     expect('protocol' in out).toBe(false);
   });

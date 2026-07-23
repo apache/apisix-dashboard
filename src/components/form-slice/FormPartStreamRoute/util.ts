@@ -33,10 +33,11 @@ export const produceStreamRoute = pipeProduce(
   produceRmUpstreamWhenHas('service_id', 'upstream_id'),
   produceRmEmptyUpstreamFields,
   produce((draft: StreamRoutePostType) => {
-    // the form never renders name/status for stream routes; strip them in
-    // case values arrive via reused generic components
-    const d = draft as StreamRoutePostType & { name?: string; status?: number };
-    delete d.name;
+    // The Admin API accepts a stream-route `name` (kept — the form renders
+    // it, and an API-created name must survive an edit-save, #3437 review)
+    // but rejects `status` (stripped; the form never renders it, but a
+    // reused generic component could introduce it).
+    const d = draft as StreamRoutePostType & { status?: number };
     delete d.status;
 
     // Cleanup protocol if name is missing

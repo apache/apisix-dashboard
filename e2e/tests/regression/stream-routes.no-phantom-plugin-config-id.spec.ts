@@ -65,6 +65,39 @@ test('stream route forms do not offer the unsupported Plugin Config ID', async (
   await expect(page.getByLabel('Plugin Config ID')).toHaveCount(0);
 });
 
+// #3437 review: the Admin API accepts a stream-route name, so it must
+// survive a dashboard edit-save instead of being deleted by the producer.
+test('a stream route keeps its name across a no-op edit-save', async ({
+  page,
+}) => {
+  const id = randomId('reg-sr-name');
+  const name = `sr name ${id}`;
+  const res = await e2eReq.put<{ value: APISIXType['StreamRoute'] }>(
+    `/stream_routes/${id}`,
+    {
+      name,
+      server_port: 9100,
+      upstream: { type: 'roundrobin', nodes: { 'sr-name.local:80': 1 } },
+    }
+  );
+
+  await uiGoto(page, '/stream_routes/detail/$id', { id: res.data.value.id });
+  await streamRoutesPom.isDetailPage(page);
+  // the name must render (form now shows it) and survive edit-save
+  await expect(page.locator('input[name="name"]')).toHaveValue(name);
+
+  await page.getByRole('button', { name: 'Edit' }).click();
+  await page.getByRole('button', { name: 'Save' }).click();
+  await expect(
+    page.getByRole('alert').filter({ hasText: /success/i })
+  ).toBeVisible();
+
+  const after = await e2eReq.get<{ value: APISIXType['StreamRoute'] }>(
+    `/stream_routes/${res.data.value.id}`
+  );
+  expect((after.data.value as { name?: string }).name).toBe(name);
+});
+
 test('the HTTP route form still offers Plugin Config ID', async ({ page }) => {
   await routesPom.toIndex(page);
   await routesPom.isIndexPage(page);

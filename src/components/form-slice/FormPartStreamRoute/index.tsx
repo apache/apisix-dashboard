@@ -97,7 +97,7 @@ const FormSectionStreamRouteProtocol = () => {
 export const FormPartStreamRoute = () => {
   return (
     <>
-      <FormPartBasic showName={false} />
+      <FormPartBasic />
       <FormSectionStreamRouteBasic />
       <FormSectionService />
       <FormSectionUpstream />
