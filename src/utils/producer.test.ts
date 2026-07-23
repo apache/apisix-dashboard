@@ -76,4 +76,99 @@ describe('pipeProduce', () => {
     // owned by the existing null-cleaner / empty-plugin-restore stages
     expect(produced?.plugins['key-auth']).toBeTruthy();
   });
+
+  // Regression for #3417 D2: plugin configs are user-authored JSON — the
+  // deep-clean silently removed meaningful empty members ({} / [] / "" /
+  // null) from configs that partially survived cleaning (the old restore
+  // only brought back WHOLE plugin entries). The gateway is the only
+  // judge of such members: loose-schema plugins accept and store them
+  // (verified live, 201), strict ones reject with a descriptive 400.
+  it('passes plugin configs through verbatim, empties included', () => {
+    const plugins = {
+      'key-auth': {
+        empty_obj: {},
+        empty_arr: [],
+        empty_str: '',
+        note: null,
+        kept: 'x',
+      },
+    };
+    const val = {
+      uri: '/r2',
+      plugins,
+      // array-form nodes: this shape (the add-page default) once tripped
+      // an immer set-trap crash when the restore stage assigned the
+      // original base reference back into the draft — keep it here
+      upstream: {
+        type: 'roundrobin',
+        nodes: [{ host: 'a.local', port: 80, weight: 1 }],
+      },
+    };
+    const produced = pipeProduce()(val);
+    expect(produced.plugins).toEqual(plugins);
+  });
+
+  // #3438 review (LiteSun): the __-key cleaner runs over the whole draft
+  // before the plugins subtree is snapshotted, so a plugin config field
+  // that legitimately starts with __ was deleted — the "verbatim" claim
+  // did not hold. Plugin JSON is gateway-owned; nothing in it is a UI flag.
+  it('passes __-prefixed plugin config fields through verbatim', () => {
+    const plugins = { 'my-plugin': { __mode: 'strict', on: true } };
+    const val = {
+      uri: '/r-uu',
+      plugins,
+      upstream: {
+        type: 'roundrobin',
+        nodes: [{ host: 'a.local', port: 80, weight: 1 }],
+      },
+    };
+    const produced = pipeProduce()(val);
+    expect(produced.plugins).toEqual(plugins);
+  });
+
+  it('restores discovery_args on an inline upstream', () => {
+    const val = {
+      uri: '/r3',
+      upstream: {
+        type: 'roundrobin',
+        discovery_type: 'dns',
+        service_name: 'svc.local',
+        discovery_args: {},
+      },
+    };
+    const produced = pipeProduce()(val);
+    expect(produced.upstream.discovery_args).toEqual({});
+  });
+
+  // the routes detail page composes produceRoute — itself a pipeProduce —
+  // as a stage of another pipeProduce, so inner stages receive the outer
+  // DRAFT instead of a plain value; a restore stage that closed over the
+  // pipeline input crashed exactly here (immer set trap / structuredClone
+  // on a live proxy). Keep this composition pinned.
+  it('survives nested pipeProduce composition with plugins verbatim', () => {
+    const plugins = { 'basic-auth': { hide_credentials: true, e: {} } };
+    const val = {
+      uri: '/r4',
+      plugins,
+      upstream: {
+        type: 'roundrobin',
+        nodes: [{ host: 'a.local', port: 80, weight: 1 }],
+      },
+    };
+    const inner = pipeProduce();
+    const produced = pipeProduce((v: object) => inner(v))(val);
+    expect(produced.plugins).toEqual(plugins);
+  });
+
+  it('still restores discovery_args at the root (upstreams page)', () => {
+    const val = {
+      name: 'u1',
+      type: 'roundrobin',
+      discovery_type: 'dns',
+      service_name: 'svc.local',
+      discovery_args: {},
+    };
+    const produced = pipeProduce()(val);
+    expect(produced.discovery_args).toEqual({});
+  });
 });

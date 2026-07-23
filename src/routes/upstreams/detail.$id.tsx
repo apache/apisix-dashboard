@@ -91,7 +91,7 @@ const UpstreamDetailForm = (
   const putUpstream = useMutation({
     mutationFn: (d: APISIXType['Upstream']) => {
       // Merge original discovery_args into form data before processing,
-      // so pipeProduce's produceRestoreEmptyPlugins can restore discovery_args: {}
+      // so pipeProduce's produceCleanPreservingUserValues can restore discovery_args: {}
       // even if the field was not touched (and thus absent from d).
       const merged = {
         ...d,
