@@ -28,7 +28,6 @@ import {
   createContext,
   type PropsWithChildren,
   type ReactNode,
-  useCallback,
   useContext,
   useMemo,
   useRef,
@@ -88,8 +87,12 @@ export const FormSection = (props: FormSectionProps) => {
     [legend, depth]
   );
 
-  // refresh TOC when children changes
-  useShallowEffect(refreshTOC, [children]);
+  // refresh TOC when children change, and again on unmount — a section
+  // that disappears must also drop out of the TOC
+  useShallowEffect(() => {
+    refreshTOC();
+    return refreshTOC;
+  }, [children]);
 
   return (
     <SectionDepthProvider value={depth}>
@@ -146,10 +149,15 @@ export type FormTOCBoxProps = PropsWithChildren;
 export const FormTOCBox = (props: FormTOCBoxProps) => {
   const { children } = props;
   const reinitializeRef = useRef(() => {});
-  const refreshTOC = useCallback(
-    () => debounce(reinitializeRef.current, 200),
-    []
-  );
+  // one stable debounced function, invoked through the ref so it always
+  // reaches Mantine's latest reinitialize. The previous version built a
+  // debounced wrapper on every call and discarded it — the TOC only kept
+  // refreshing because React treated that discarded return value as an
+  // effect CLEANUP and invoked it on the next change (see #3417).
+  const refreshTOC = useMemo(() => {
+    const run = debounce(() => reinitializeRef.current(), 200);
+    return () => run(undefined);
+  }, []);
 
   return (
     <Group
