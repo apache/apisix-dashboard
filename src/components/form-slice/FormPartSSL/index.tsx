@@ -55,11 +55,14 @@ const FormSectionClient = () => {
             min={0}
           />
           {/* array<string> of URI regexes — a TagsInput, not a Switch:
-              the boolean broke this field both ways (#3417) */}
+              the boolean broke this field both ways (#3417). splitChars={[]}
+              because a regex can contain a comma (e.g. the quantifier
+              `{1,3}`) and must stay one entry (#3435 review). */}
           <FormItemTagsInput
             control={control}
             name="client.skip_mtls_uri_regex"
             label={t('form.ssls.client.skipMtlsUriRegex')}
+            splitChars={[]}
           />
         </>
       ) : (

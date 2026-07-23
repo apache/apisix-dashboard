@@ -77,11 +77,14 @@ const FormSectionChecksActive = () => {
       />
       {/* array<string> of raw header lines — a TagsInput, not the Labels
           widget (which produces an object and broke this field both ways,
-          #3417) */}
+          #3417). splitChars={[]} because a header value can contain a
+          comma (e.g. `Accept: text/html,application/json`) and must stay
+          one entry (#3435 review). */}
       <FormItemTagsInput
         control={control}
         name={np('checks.active.http_request_headers')}
         label={t('form.upstreams.checks.active.http_request_headers')}
+        splitChars={[]}
       />
       <FormSection legend={t('form.upstreams.checks.active.healthy.title')}>
         <FormItemNumberInput

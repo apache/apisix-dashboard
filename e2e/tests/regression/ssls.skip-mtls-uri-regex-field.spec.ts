@@ -72,9 +72,14 @@ test('client skip_mtls_uri_regex displays and round-trips', async ({
     name: 'Skip mTLS URI Regex',
     exact: true,
   });
-  await field.fill('/status');
+  // a regex legitimately containing a comma (quantifier {1,3}) must stay
+  // ONE tag — the field must not comma-split it (#3435 review)
+  const commaRegex = '^/v[0-9]{1,3}$';
+  // type character by character so the comma keystroke would trigger
+  // Mantine's default comma-split (the actual user path)
+  await field.pressSequentially(commaRegex);
   await field.press('Enter');
-  await expect(page.getByText('/status', { exact: true })).toBeVisible();
+  await expect(page.getByText(commaRegex, { exact: true })).toBeVisible();
 
   // the API does not return the private key to the form; re-fill it so
   // the PUT passes validation (same reason the crud spec cancels edits)
@@ -88,6 +93,6 @@ test('client skip_mtls_uri_regex displays and round-trips', async ({
   const after = await e2eReq.get<{ value: APISIXType['SSL'] }>(`/ssls/${id}`);
   expect(after.data.value.client?.skip_mtls_uri_regex).toEqual([
     ...regexes,
-    '/status',
+    commaRegex,
   ]);
 });

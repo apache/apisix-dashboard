@@ -78,9 +78,12 @@ test('active health-check request headers display and round-trip', async ({
     name: 'HTTP Request Headers',
     exact: true,
   });
-  await field.fill('X-Extra: 2');
+  // a header value legitimately containing a comma must stay ONE entry —
+  // the field must not comma-split it (#3435 review)
+  const commaHeader = 'Accept: text/html,application/json';
+  await field.pressSequentially(commaHeader);
   await field.press('Enter');
-  await expect(page.getByText('X-Extra: 2', { exact: true })).toBeVisible();
+  await expect(page.getByText(commaHeader, { exact: true })).toBeVisible();
 
   await page.getByRole('button', { name: 'Save' }).click();
   await expect(
@@ -92,6 +95,6 @@ test('active health-check request headers display and round-trip', async ({
   );
   expect(after.data.value.checks?.active?.http_request_headers).toEqual([
     ...headers,
-    'X-Extra: 2',
+    commaHeader,
   ]);
 });
