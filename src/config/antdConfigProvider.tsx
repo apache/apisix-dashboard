@@ -17,18 +17,33 @@
 import '@ant-design/v5-patch-for-react-19';
 
 import { ConfigProvider } from 'antd';
+import deDE from 'antd/locale/de_DE';
 import enUS from 'antd/locale/en_US';
+import esES from 'antd/locale/es_ES';
+import trTR from 'antd/locale/tr_TR';
+import zhCN from 'antd/locale/zh_CN';
 import type { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
+// antd's own locale must follow the app language, or antd-rendered
+// surfaces (pagination, table controls) stay English after a switch
+// (#3417).
+const antdLocales: Record<string, typeof enUS> = {
+  en: enUS,
+  zh: zhCN,
+  es: esES,
+  de: deDE,
+  tr: trTR,
+};
+
 export const AntdConfigProvider = (props: PropsWithChildren) => {
   const { children } = props;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <ConfigProvider
       virtual
-      locale={enUS}
+      locale={antdLocales[i18n.language] ?? enUS}
       renderEmpty={() => <div>{t('noData')}</div>}
       theme={{
         token: {

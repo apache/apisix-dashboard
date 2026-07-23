@@ -296,7 +296,8 @@
     "delete": {
       "content": "{{name}} öğesini silmek istediğinizden emin misiniz?",
       "success": "{{name}} başarıyla silindi",
-      "title": "{{name}} Sil"
+      "title": "{{name}} Sil",
+      "confirm": "<0>{{name}}</0> öğesini silmek istediğinizden emin misiniz?"
     },
     "detail": {
       "title": "{{name}} Detay"

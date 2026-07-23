@@ -44,12 +44,42 @@ export const resources = {
 export type Resources = typeof resources;
 export const defaultNS: keyof Resources['en'] = 'common';
 
+// Persist the language the same way the admin key is persisted (both are
+// user settings). A reload must not reset a zh/tr user to English (#3417).
+// We restore the STORED choice only and default to English otherwise —
+// deliberately not auto-detecting the browser language, which would
+// silently change the default for existing English users.
+export const LANG_STORAGE_KEY = 'settings:lang';
+
+const supportedLngs = Object.keys(resources) as (keyof Resources)[];
+
+const detectInitialLng = (): keyof Resources => {
+  try {
+    const stored = localStorage.getItem(LANG_STORAGE_KEY);
+    if (stored && (supportedLngs as string[]).includes(stored)) {
+      return stored as keyof Resources;
+    }
+  } catch {
+    // localStorage unavailable (SSR, privacy mode) — fall back to English
+  }
+  return 'en';
+};
+
 i18n.use(initReactI18next).init({
-  lng: 'en',
+  lng: detectInitialLng(),
+  supportedLngs,
   ns: ['common'],
   defaultNS,
   resources,
   fallbackLng: 'en',
+});
+
+i18n.on('languageChanged', (lng) => {
+  try {
+    localStorage.setItem(LANG_STORAGE_KEY, lng);
+  } catch {
+    // ignore persistence failures (privacy mode)
+  }
 });
 
 export default i18n;

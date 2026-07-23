@@ -19,7 +19,7 @@ import { useCallbackRef } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { type AxiosResponse, isAxiosError } from 'axios';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { queryClient } from '@/config/global';
 import { req } from '@/config/req';
@@ -54,18 +54,23 @@ export const DeleteResourceBtn = (props: DeleteResourceProps) => {
       title: t('info.delete.title', { name: name }),
       children: (
         <Text>
-          {t('info.delete.content', { name: name })}
-          {target && (
-            <Text
-              component="span"
-              fw={700}
-              mx="0.25em"
-              style={{ wordBreak: 'break-all' }}
-            >
-              {target}
-            </Text>
-          )}
-          {t('mark.question')}
+          {/* one locale-owned sentence with the identifier in a bold slot
+              — the old three-piece concatenation (sentence + target + a
+              literal '?'/'¿?') garbled es/de/tr where the sentence
+              already ends the question (#3417) */}
+          <Trans
+            i18nKey="info.delete.confirm"
+            values={{ name: target || name }}
+            components={[
+              <Text
+                key="target"
+                component="span"
+                fw={700}
+                mx="0.25em"
+                style={{ wordBreak: 'break-all' }}
+              />,
+            ]}
+          />
         </Text>
       ),
       labels: { confirm: t('form.btn.delete'), cancel: t('form.btn.cancel') },
