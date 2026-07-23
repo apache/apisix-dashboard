@@ -20,9 +20,13 @@
 // route (section name + Add/Detail qualifier) from the nav route table.
 
 import { routesPom } from '@e2e/pom/routes';
+import { randomId } from '@e2e/utils/common';
+import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
 import { uiGoto } from '@e2e/utils/ui';
 import { expect } from '@playwright/test';
+
+import { deleteAllConsumers } from '@/apis/consumers';
 
 test('each page has a distinct, section-specific document title', async ({
   page,
@@ -46,4 +50,24 @@ test('each page has a distinct, section-specific document title', async ({
   await routesPom.getAddRouteBtn(page).click();
   await routesPom.isAddPage(page);
   await expect(page).toHaveTitle(/Add .* - /);
+});
+
+// #3441 review: a nested resource page must be classified by the deepest
+// matched route, not by the parent `detail/$id` in the middle of the path.
+test('nested resource pages get their own title, not the parent detail', async ({
+  page,
+}) => {
+  const username = randomId('title_c');
+  await e2eReq.put(`/consumers/${username}`, { username });
+
+  await uiGoto(page, '/consumers/detail/$username', { username });
+  await expect(page).toHaveTitle(/^Consumers Detail - /);
+
+  await uiGoto(page, '/consumers/detail/$username/credentials/add', {
+    username,
+  });
+  // must be the credential add page, NOT "Consumers Detail"
+  await expect(page).toHaveTitle(/^Add Credentials - /);
+
+  await deleteAllConsumers(e2eReq);
 });

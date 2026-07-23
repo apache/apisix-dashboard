@@ -18,41 +18,81 @@ import { useRouterState } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import type { Resources } from '@/config/i18n';
 import { navRoutes } from '@/config/navRoutes';
 
 // matches the static <title> in index.html (the default before any route
 // resolves and the suffix on every page)
 const APP_NAME = 'Apache APISIX Dashboard';
 
-// Longest `to` first so '/consumer_groups' wins over '/consumers'.
-const sectionsByPathLength = [...navRoutes].sort(
-  (a, b) => b.to.length - a.to.length
-);
+type SourceLabel = keyof Resources['en']['common']['sources'];
+
+// path segment -> sources i18n label. Built from the nav table (the single
+// source of truth), plus `credentials`, which is only ever a nested
+// resource (never a top-level nav entry).
+const segmentToLabel: Record<string, SourceLabel> = {
+  ...Object.fromEntries(
+    navRoutes.map((r) => [r.to.replace(/^\//, ''), r.label])
+  ),
+  credentials: 'credentials',
+};
+
+const isParam = (seg: string) => seg.startsWith('$');
+
+/**
+ * Classify the DEEPEST matched route by its pattern (e.g.
+ * `/services/detail/$id/routes/add`). The action is read from the TAIL of
+ * the pattern so a `detail/$id` in the middle (navigation context) does
+ * not misclassify a nested add/detail page as the parent's detail (#3441
+ * review): a nested `…/routes/add` is "Add Route", not "Service Detail".
+ */
+const classify = (
+  routeId: string
+): { label: SourceLabel; action: 'add' | 'detail' | 'list' } | null => {
+  const segs = routeId.split('/').filter(Boolean);
+  if (segs.length === 0) return null;
+
+  const last = segs[segs.length - 1];
+  let action: 'add' | 'detail' | 'list';
+  let resourceIdx: number;
+
+  if (last === 'add') {
+    action = 'add';
+    resourceIdx = segs.length - 2;
+  } else if (isParam(last) && segs[segs.length - 2] === 'detail') {
+    action = 'detail';
+    resourceIdx = segs.length - 3;
+  } else {
+    // list page: the leaf segment is the resource (skip a trailing param)
+    action = 'list';
+    resourceIdx = isParam(last) ? segs.length - 2 : segs.length - 1;
+  }
+
+  const resource = segs[resourceIdx];
+  const label = resource && segmentToLabel[resource];
+  return label ? { label, action } : null;
+};
 
 /**
  * Give every page a distinct, localized document.title instead of the one
  * static title the app shipped with (#3417). Derived centrally from the
- * current path + the nav route table (single source of truth), reactive
- * to both navigation and language change — no per-route boilerplate.
+ * deepest matched route + the nav route table, reactive to both
+ * navigation and language change — no per-route boilerplate.
  */
 export const useDocumentTitle = () => {
   const { t, i18n } = useTranslation();
-  const pathname = useRouterState({
-    select: (s) => s.location.pathname,
+  const routeId = useRouterState({
+    select: (s) => s.matches[s.matches.length - 1]?.routeId as string,
   });
 
   useEffect(() => {
-    const section = sectionsByPathLength.find(
-      (r) => pathname === r.to || pathname.startsWith(`${r.to}/`)
-    );
-
+    const matched = routeId ? classify(routeId) : null;
     let title = APP_NAME;
-    if (section) {
-      const name = t(`sources.${section.label}`);
-      const rest = pathname.slice(section.to.length);
-      if (rest.startsWith('/add')) {
+    if (matched) {
+      const name = t(`sources.${matched.label}`);
+      if (matched.action === 'add') {
         title = `${t('info.add.title', { name })} - ${APP_NAME}`;
-      } else if (rest.startsWith('/detail')) {
+      } else if (matched.action === 'detail') {
         title = `${t('info.detail.title', { name })} - ${APP_NAME}`;
       } else {
         title = `${name} - ${APP_NAME}`;
@@ -60,5 +100,5 @@ export const useDocumentTitle = () => {
     }
     document.title = title;
     // i18n.language in deps so the title re-localizes on a language switch
-  }, [pathname, t, i18n.language]);
+  }, [routeId, t, i18n.language]);
 };
