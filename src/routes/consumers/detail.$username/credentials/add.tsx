@@ -15,20 +15,23 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useParams, useRouter } from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { putCredentialReq } from '@/apis/credentials';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormCancelBtn, FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -38,6 +41,18 @@ const CredentialAddForm = () => {
   const { username } = useParams({
     from: '/consumers/detail/$username/credentials/add',
   });
+  const [id] = useState(() => nanoid());
+
+  const form = useForm({
+    resolver: zodResolver(APISIX.CredentialPut),
+    shouldUnregister: true,
+    shouldFocusError: true,
+    mode: 'all',
+    defaultValues: {
+      id,
+    },
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
 
   const putCredential = useMutation({
     mutationFn: (d: APISIXType['CredentialPut']) =>
@@ -49,20 +64,11 @@ const CredentialAddForm = () => {
         }),
         color: 'green',
       });
+      bypass();
       await router.navigate({
         to: '/consumers/detail/$username/credentials/detail/$id',
         params: { username, id: res.id },
       });
-    },
-  });
-
-  const form = useForm({
-    resolver: zodResolver(APISIX.CredentialPut),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
-    defaultValues: {
-      id: nanoid(),
     },
   });
 
@@ -71,7 +77,13 @@ const CredentialAddForm = () => {
       <form onSubmit={form.handleSubmit((d) => putCredential.mutateAsync(d))}>
         <FormSectionGeneral />
         <FormPartCredential />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn
+            to="/consumers/detail/$username/credentials"
+            params={{ username }}
+          />
+        </Group>
       </form>
     </FormProvider>
   );

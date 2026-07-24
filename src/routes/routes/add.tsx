@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
@@ -22,7 +23,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { postRouteReq } from '@/apis/routes';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import {
+  FormCancelBtn,
+  type FormCancelBtnProps,
+  FormSubmitBtn,
+} from '@/components/form/Btn';
 import { FormPartRoute } from '@/components/form-slice/FormPartRoute';
 import {
   RoutePostSchema,
@@ -33,17 +38,28 @@ import { produceRmEmptyUpstreamFields } from '@/components/form-slice/FormPartUp
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
   navigate: (res: APISIXType['RespRouteDetail']) => Promise<void>;
   defaultValues?: Partial<RoutePostType>;
+  cancelLink: FormCancelBtnProps;
 };
 
 export const RouteAddForm = (props: Props) => {
-  const { navigate, defaultValues } = props;
+  const { navigate, defaultValues, cancelLink } = props;
   const { t } = useTranslation();
+
+  const form = useForm({
+    resolver: zodResolver(RoutePostSchema),
+    shouldUnregister: true,
+    shouldFocusError: true,
+    mode: 'all',
+    defaultValues,
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
 
   const postRoute = useMutation({
     mutationFn: (d: RoutePostType) =>
@@ -59,23 +75,19 @@ export const RouteAddForm = (props: Props) => {
         message: t('info.add.success', { name: t('routes.singular') }),
         color: 'green',
       });
+      bypass();
       await navigate(res);
     },
-  });
-
-  const form = useForm({
-    resolver: zodResolver(RoutePostSchema),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
-    defaultValues,
   });
 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => postRoute.mutateAsync(d))}>
         <FormPartRoute />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn {...cancelLink} />
+        </Group>
       </form>
     </FormProvider>
   );
@@ -95,6 +107,7 @@ function RouteComponent() {
               params: { id: res.data.value.id },
             })
           }
+          cancelLink={{ to: '/routes' }}
         />
       </FormTOCBox>
     </>

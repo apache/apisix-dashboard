@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
@@ -22,7 +23,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { postStreamRouteReq } from '@/apis/stream_routes';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import {
+  FormCancelBtn,
+  type FormCancelBtnProps,
+  FormSubmitBtn,
+} from '@/components/form/Btn';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
 import {
   StreamRoutePostSchema,
@@ -33,16 +38,27 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { APISIXType } from '@/types/schema/apisix';
 
 type Props = {
   navigate: (res: APISIXType['RespStreamRouteDetail']) => Promise<void>;
   defaultValues?: Partial<StreamRoutePostType>;
+  cancelLink: FormCancelBtnProps;
 };
 
 export const StreamRouteAddForm = (props: Props) => {
-  const { navigate, defaultValues } = props;
+  const { navigate, defaultValues, cancelLink } = props;
   const { t } = useTranslation();
+
+  const form = useForm({
+    resolver: zodResolver(StreamRoutePostSchema),
+    shouldUnregister: true,
+    shouldFocusError: true,
+    mode: 'all',
+    defaultValues,
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
 
   const postStreamRoute = useMutation({
     mutationFn: (d: StreamRoutePostType) =>
@@ -52,23 +68,19 @@ export const StreamRouteAddForm = (props: Props) => {
         message: t('info.add.success', { name: t('streamRoutes.singular') }),
         color: 'green',
       });
+      bypass();
       await navigate(res);
     },
-  });
-
-  const form = useForm({
-    resolver: zodResolver(StreamRoutePostSchema),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
-    defaultValues,
   });
 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => postStreamRoute.mutateAsync(d))}>
         <FormPartStreamRoute />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn {...cancelLink} />
+        </Group>
       </form>
     </FormProvider>
   );
@@ -90,6 +102,7 @@ function RouteComponent() {
               params: { id: res.data.value.id },
             })
           }
+          cancelLink={{ to: '/stream_routes' }}
         />
       </FormTOCBox>
     </>

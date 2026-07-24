@@ -149,13 +149,10 @@ test('should CRUD SSL with all fields', async ({ page }) => {
     const cert1Field = page.getByRole('textbox', { name: 'Certificate 1' });
     await expect(cert1Field).toBeEnabled();
 
-    // Cancel without making changes. The Edit→Cancel guard now always
-    // confirms before discarding (see src/hooks/useEditCancelGuard.tsx).
+    // Cancel without making changes. The Edit→Cancel guard only warns when
+    // the form actually holds unsaved edits (see src/hooks/useEditCancelGuard.tsx),
+    // so a pristine Cancel returns straight to view mode without a modal.
     await page.getByRole('button', { name: 'Cancel' }).click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: 'Discard Changes' })
-      .click();
 
     // Return to list page
     await sslsPom.getSSLNavBtn(page).click();

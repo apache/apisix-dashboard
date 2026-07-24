@@ -14,56 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
 import { useCallback } from 'react';
 import type { FieldValues, UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { confirmDiscardChanges } from '@/hooks/useUnsavedChangesGuard';
+import { isFormDirty } from '@/utils/form-dirty';
+
 /**
- * Guard the Edit-mode → Cancel handler with a confirmation modal so a
- * misclick can't silently throw away in-flight changes.
+ * Guard the Edit-mode → Cancel handler so a misclick cannot throw away
+ * in-flight changes — but only when there are changes to throw away.
  *
- * Why the modal always shows (even on a clean form):
+ * This hook used to open the modal unconditionally, on the theory that
+ * `isDirty` could not be trusted under the `disabled`-toggling edit
+ * architecture: that toggling `disabled` fires spurious change events, and
+ * that the reset-on-refetch effect wipes dirtiness mid-session. Neither
+ * reproduces. Entering edit mode leaves the form clean on all twelve
+ * detail pages, and an ordinary refetch returns the same `data` reference
+ * (react-query structural sharing), so the reset effect never re-runs.
  *
- * Every Edit page in this app uses the pattern
- *
- *   useForm({ disabled: readOnly, defaultValues: ... })
- *   useEffect(() => form.reset(producedValues), [data, form])
- *
- * which has two failure modes for any "is the form actually dirty?" check:
- *
- *   1. Toggling `disabled` from true→false on Edit re-renders every
- *      controlled input and can fire spurious change events that flip
- *      react-hook-form's `isDirty` to true with no user input.
- *   2. The `form.reset(...)` inside a useEffect runs whenever the backing
- *      query refetches (tab focus, window focus, mutation success), which
- *      wipes `isDirty` back to false mid-session — so a legitimately
- *      edited form can transiently appear clean.
- *
- * Both make `isDirty` unreliable as a "skip the modal" signal. Until the
- * underlying form lifecycle is restructured (tracked as a follow-up
- * cleanup), we always show the modal. One extra click is a far better
- * failure mode than silently losing an edit.
+ * `isFormDirty` rather than react-hook-form's `isDirty` because the raw
+ * flag reports pristine add pages as dirty; the two hooks share one
+ * definition of "changed".
  */
 export const useEditCancelGuard = <T extends FieldValues>(
   form: UseFormReturn<T>,
   onCancel: () => void
 ) => {
   const { t } = useTranslation();
-  return useCallback(() => {
-    modals.openConfirmModal({
-      centered: true,
-      title: t('info.unsaved.title'),
-      children: <Text size="sm">{t('info.unsaved.content')}</Text>,
-      labels: {
-        confirm: t('info.unsaved.confirm'),
-        cancel: t('form.btn.cancel'),
-      },
-      onConfirm: () => {
-        form.reset();
-        onCancel();
-      },
-    });
+  return useCallback(async () => {
+    const discard = () => {
+      form.reset();
+      onCancel();
+    };
+    if (!isFormDirty(form.formState.defaultValues, form.getValues())) {
+      discard();
+      return;
+    }
+    if (await confirmDiscardChanges(t)) discard();
   }, [form, onCancel, t]);
 };

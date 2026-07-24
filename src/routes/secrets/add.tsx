@@ -15,27 +15,43 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { putSecretReq } from '@/apis/secrets';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormCancelBtn, FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartSecret } from '@/components/form-slice/FormPartSecret';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import PageHeader from '@/components/page/PageHeader';
 import { queryClient } from '@/config/global';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const SecretAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const [id] = useState(() => nanoid());
+
+  const form = useForm({
+    resolver: zodResolver(APISIX.Secret),
+    shouldUnregister: true,
+    shouldFocusError: true,
+    defaultValues: {
+      id,
+      manager: APISIX.Secret.options[0].shape.manager.value,
+    },
+    mode: 'all',
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
 
   const putSecret = useMutation({
     mutationFn: (d: APISIXType['Secret']) =>
@@ -47,21 +63,11 @@ const SecretAddForm = () => {
       });
       // Invalidate secrets list query to refetch fresh data
       await queryClient.invalidateQueries({ queryKey: ['secrets'] });
+      bypass();
       await router.navigate({
         to: '/secrets',
       });
     },
-  });
-
-  const form = useForm({
-    resolver: zodResolver(APISIX.Secret),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    defaultValues: {
-      id: nanoid(),
-      manager: APISIX.Secret.options[0].shape.manager.value,
-    },
-    mode: 'all',
   });
 
   return (
@@ -69,7 +75,10 @@ const SecretAddForm = () => {
       <form onSubmit={form.handleSubmit((d) => putSecret.mutateAsync(d))}>
         <FormSectionGeneral />
         <FormPartSecret />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn to="/secrets" />
+        </Group>
       </form>
     </FormProvider>
   );

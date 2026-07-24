@@ -43,6 +43,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_SERVICES } from '@/config/constant';
 import { req } from '@/config/req';
 import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
@@ -98,6 +99,7 @@ const ServiceDetailForm = (props: Props) => {
     },
   });
 
+  useUnsavedChangesGuard(form, { disabled: readOnly });
   const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
 
   return (

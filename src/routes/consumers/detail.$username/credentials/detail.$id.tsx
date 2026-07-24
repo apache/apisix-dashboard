@@ -39,6 +39,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_CREDENTIALS } from '@/config/constant';
 import { req } from '@/config/req';
 import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -87,6 +88,7 @@ const CredentialDetailForm = (props: CredentialFormProps) => {
     },
   });
 
+  useUnsavedChangesGuard(form, { disabled: readOnly });
   const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
 
   if (isLoading) {

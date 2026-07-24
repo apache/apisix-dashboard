@@ -39,6 +39,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_CONSUMERS } from '@/config/constant';
 import { req } from '@/config/req';
 import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -81,6 +82,7 @@ const ConsumerDetailForm = (props: Props) => {
     },
   });
 
+  useUnsavedChangesGuard(form, { disabled: readOnly });
   const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
 
   if (isLoading) {
