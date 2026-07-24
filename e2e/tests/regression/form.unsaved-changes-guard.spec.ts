@@ -1,0 +1,111 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Regression for the dirty-form navigation guard: leaving a form with
+// unsaved edits — by sidebar link, browser Back, or the new Cancel button —
+// must confirm before discarding. Conversely a form the user has not
+// actually changed must never interrogate them, which is the failure mode
+// the raw react-hook-form `isDirty` flag produces on add pages whose
+// widgets normalize `undefined` to empty values on mount.
+
+import { routesPom } from '@e2e/pom/routes';
+import { randomId } from '@e2e/utils/common';
+import { e2eReq } from '@e2e/utils/req';
+import { test } from '@e2e/utils/test';
+import { uiHasToastMsg } from '@e2e/utils/ui';
+import { uiFillUpstreamRequiredFields } from '@e2e/utils/ui/upstreams';
+import { expect, type Page } from '@playwright/test';
+
+import { deleteAllRoutes } from '@/apis/routes';
+
+const unsavedModal = (page: Page) =>
+  page.getByRole('dialog').filter({ hasText: /unsaved/i });
+
+test.beforeAll(async () => {
+  await deleteAllRoutes(e2eReq);
+});
+
+test.afterAll(async () => {
+  await deleteAllRoutes(e2eReq);
+});
+
+test('leaving a dirty add form via the sidebar warns, and backing out keeps the input', async ({
+  page,
+}) => {
+  const name = randomId('reg-guard');
+  await routesPom.toAdd(page);
+  await routesPom.isAddPage(page);
+
+  await page.locator('input[name="name"]').fill(name);
+
+  await page.getByRole('link', { name: 'Services', exact: true }).click();
+
+  const modal = unsavedModal(page);
+  await expect(modal).toBeVisible({ timeout: 5000 });
+
+  await modal.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(modal).toBeHidden();
+
+  await routesPom.isAddPage(page);
+  await expect(page.locator('input[name="name"]')).toHaveValue(name);
+});
+
+test('confirming the warning discards the edits and completes the navigation', async ({
+  page,
+}) => {
+  await routesPom.toAdd(page);
+  await routesPom.isAddPage(page);
+
+  await page.locator('input[name="name"]').fill(randomId('reg-guard'));
+  await page.getByRole('link', { name: 'Services', exact: true }).click();
+
+  const modal = unsavedModal(page);
+  await expect(modal).toBeVisible({ timeout: 5000 });
+  await modal.getByRole('button', { name: /discard/i }).click();
+
+  await expect(page).toHaveURL((url) => url.pathname.endsWith('/services'));
+});
+
+test('a successful submit navigates without a warning', async ({ page }) => {
+  // After a successful POST the form is still dirty relative to its
+  // defaults, so without `bypass()` the add page's own success redirect is
+  // blocked by the guard it just installed.
+  const name = randomId('reg-guard-submit');
+  await routesPom.toAdd(page);
+  await routesPom.isAddPage(page);
+
+  await page.locator('input[name="name"]').fill(name);
+  await page.getByLabel('URI', { exact: true }).fill(`/reg-guard/${name}`);
+
+  const upstreamSection = page.getByRole('group', {
+    name: 'Upstream',
+    exact: true,
+  });
+  await uiFillUpstreamRequiredFields(upstreamSection, {
+    name: `${name}-upstream`,
+    nodes: [
+      { host: 'guard-a.local', port: 80, weight: 100 },
+      { host: 'guard-b.local', port: 80, weight: 100 },
+    ],
+  });
+
+  await routesPom.getAddBtn(page).click();
+  await uiHasToastMsg(page, { hasText: 'Add Route Successfully' });
+
+  await expect(unsavedModal(page)).toBeHidden();
+  await routesPom.isDetailPage(page);
+});

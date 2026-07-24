@@ -33,6 +33,7 @@ import { produceRmEmptyUpstreamFields } from '@/components/form-slice/FormPartUp
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
@@ -44,6 +45,15 @@ type Props = {
 export const RouteAddForm = (props: Props) => {
   const { navigate, defaultValues } = props;
   const { t } = useTranslation();
+
+  const form = useForm({
+    resolver: zodResolver(RoutePostSchema),
+    shouldUnregister: true,
+    shouldFocusError: true,
+    mode: 'all',
+    defaultValues,
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
 
   const postRoute = useMutation({
     mutationFn: (d: RoutePostType) =>
@@ -59,16 +69,9 @@ export const RouteAddForm = (props: Props) => {
         message: t('info.add.success', { name: t('routes.singular') }),
         color: 'green',
       });
+      bypass();
       await navigate(res);
     },
-  });
-
-  const form = useForm({
-    resolver: zodResolver(RoutePostSchema),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
-    defaultValues,
   });
 
   return (
