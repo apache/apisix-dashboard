@@ -44,6 +44,7 @@ import PageHeader from '@/components/page/PageHeader';
 import { API_SSLS } from '@/config/constant';
 import { req } from '@/config/req';
 import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { pipeProduce } from '@/utils/producer';
 
 type Props = {
@@ -93,6 +94,7 @@ const SSLDetailForm = (props: Props & { id: string }) => {
     }
   }, [sslData, form, isLoading]);
 
+  useUnsavedChangesGuard(form, { disabled: readOnly });
   const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
 
   if (isLoading) {

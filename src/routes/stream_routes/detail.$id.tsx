@@ -42,6 +42,7 @@ import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_route
 import { API_STREAM_ROUTES } from '@/config/constant';
 import { req } from '@/config/req';
 import { useEditCancelGuard } from '@/hooks/useEditCancelGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 
 type Props = {
@@ -90,6 +91,7 @@ const StreamRouteDetailForm = (props: Props) => {
     },
   });
 
+  useUnsavedChangesGuard(form, { disabled: readOnly });
   const handleCancel = useEditCancelGuard(form, () => setReadOnly(true));
 
   return (

@@ -27,11 +27,12 @@ import { sslsPom } from '@e2e/pom/ssls';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
-import { uiHasToastMsg } from '@e2e/utils/ui';
+import { uiGoto, uiHasToastMsg } from '@e2e/utils/ui';
 import { uiFillUpstreamRequiredFields } from '@e2e/utils/ui/upstreams';
 import { expect, type Page } from '@playwright/test';
 
 import { deleteAllRoutes } from '@/apis/routes';
+import type { APISIXType } from '@/types/schema/apisix';
 
 const unsavedModal = (page: Page) =>
   page.getByRole('dialog').filter({ hasText: /unsaved/i });
@@ -150,4 +151,52 @@ test('Cancel on a dirty add page warns first', async ({ page }) => {
   await modal.getByRole('button', { name: /discard/i }).click();
 
   await routesPom.isIndexPage(page);
+});
+
+test('Edit then Cancel with nothing changed does not interrogate the user', async ({
+  page,
+}) => {
+  const name = randomId('reg-guard-clean');
+  const res = await e2eReq.put<{ value: APISIXType['Route'] }>(
+    `/routes/${name}`,
+    {
+      name,
+      uri: `/reg-guard-clean/${name}`,
+      upstream: { type: 'roundrobin', nodes: { 'guard.local:80': 1 } },
+    }
+  );
+  const id = res.data.value.id;
+
+  await uiGoto(page, '/routes/detail/$id', { id });
+  await routesPom.isDetailPage(page);
+
+  await page.getByRole('button', { name: 'Edit' }).click();
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+
+  await expect(unsavedModal(page)).toBeHidden();
+  await expect(page.getByLabel('URI', { exact: true })).toBeDisabled();
+});
+
+test('leaving a dirty detail form via the sidebar warns', async ({ page }) => {
+  const name = randomId('reg-guard-dirty');
+  const res = await e2eReq.put<{ value: APISIXType['Route'] }>(
+    `/routes/${name}`,
+    {
+      name,
+      uri: `/reg-guard-dirty/${name}`,
+      upstream: { type: 'roundrobin', nodes: { 'guard.local:80': 1 } },
+    }
+  );
+  const id = res.data.value.id;
+
+  await uiGoto(page, '/routes/detail/$id', { id });
+  await routesPom.isDetailPage(page);
+
+  await page.getByRole('button', { name: 'Edit' }).click();
+  // The route detail page renders two "Description" fields (the route's own
+  // and the nested upstream's), so target the route-level one by name.
+  await page.locator('textarea[name="desc"]').fill('changed by the guard spec');
+
+  await page.getByRole('link', { name: 'Services', exact: true }).click();
+  await expect(unsavedModal(page)).toBeVisible({ timeout: 5000 });
 });

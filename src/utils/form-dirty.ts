@@ -16,10 +16,56 @@
  */
 import { equals } from 'rambdax';
 
+import { objToUpstreamNodes } from '@/components/form-slice/FormPartUpstream/nodes-conversion';
+import type { APISIXType } from '@/types/schema/apisix';
+
 import { deepCleanEmptyKeys, rmDoubleUnderscoreKeys } from './producer';
 
 /** Server-managed timestamps: never a user edit. */
 const IGNORED_KEYS = ['create_time', 'update_time'];
+
+/**
+ * Canonicalize upstream `nodes` so the object-map form the Admin API stores
+ * (`{ "host:port": weight }`) compares equal to the array form the nodes
+ * widget produces on mount (`[{ host, port, weight, priority }]`).
+ *
+ * Without this, every edit page whose upstream stores object-form nodes reads
+ * dirty the instant the widget mounts, with zero user input:
+ * `formState.defaultValues` keeps the object form (it is seeded straight from
+ * the producer, which never rewrites nodes) while `getValues()` returns the
+ * array form the widget normalized to. `priority` defaults to 0 on both sides
+ * — the widget invents 0, the object form cannot express it at all.
+ */
+const canonicalizeNodes = (nodes: unknown): unknown => {
+  const arr = Array.isArray(nodes)
+    ? nodes
+    : nodes && typeof nodes === 'object'
+      ? objToUpstreamNodes(nodes as APISIXType['UpstreamNodeObj'])
+      : null;
+  if (!arr) return nodes;
+  return arr
+    .map((node) =>
+      node && typeof node === 'object'
+        ? {
+            ...(node as Record<string, unknown>),
+            priority: (node as Record<string, unknown>).priority ?? 0,
+          }
+        : node
+    )
+    .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
+};
+
+/** Rewrite every `nodes` field in place to its canonical, comparable form. */
+const canonicalizeNodesDeep = (value: unknown): void => {
+  if (!value || typeof value !== 'object') return;
+  if (Array.isArray(value)) {
+    value.forEach(canonicalizeNodesDeep);
+    return;
+  }
+  const obj = value as Record<string, unknown>;
+  if ('nodes' in obj) obj.nodes = canonicalizeNodes(obj.nodes);
+  Object.values(obj).forEach(canonicalizeNodesDeep);
+};
 
 /**
  * Reduce a form value to the shape that decides whether the user has
@@ -52,6 +98,7 @@ export const normalizeForCompare = (
   const plugins = copy.plugins;
   delete copy.plugins;
   IGNORED_KEYS.forEach((key) => delete copy[key]);
+  canonicalizeNodesDeep(copy);
   rmDoubleUnderscoreKeys(copy);
   deepCleanEmptyKeys(copy);
   return { ...copy, plugins: plugins ?? {} };

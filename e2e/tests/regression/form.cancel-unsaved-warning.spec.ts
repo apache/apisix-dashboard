@@ -100,14 +100,16 @@ test('route detail Edit → Cancel with unsaved changes warns the user', async (
 test('route detail Edit → Cancel modal is dismissable (Cancel in modal stays in edit mode)', async ({
   page,
 }) => {
-  // Until the underlying form lifecycle is restructured (see the comment in
-  // useEditCancelGuard.tsx), the modal is shown on every Cancel click.
-  // This test pins the dismiss path: backing out of the warning modal must
-  // leave the user in edit mode without touching the form data.
+  // The modal is shown only when the form actually holds changes, so make
+  // one first. This test pins the dismiss path: backing out of the warning
+  // must leave the user in edit mode without touching the form data.
   await uiGoto(page, '/routes/detail/$id', { id: seededRouteId });
   await routesPom.isDetailPage(page);
 
   await page.getByRole('button', { name: 'Edit' }).click();
+  await page
+    .getByLabel('URI', { exact: true })
+    .fill('/regression/edit-cancel-dismiss');
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
 
   const modal = page
