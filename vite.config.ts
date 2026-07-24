@@ -19,7 +19,6 @@ import { readdirSync } from 'node:fs';
 
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react-swc';
-import observerPlugin from 'mobx-react-observer/swc-plugin';
 import postcssPresetMantine from 'postcss-preset-mantine';
 import postcssSimpleVars from 'postcss-simple-vars';
 import UnpluginIcons from 'unplugin-icons/vite';
@@ -103,9 +102,7 @@ export default defineConfig({
       baseLang: 'en',
       getTranslationDir: (lang) => `./src/locales/${lang}`,
     }),
-    react({
-      plugins: [observerPlugin() as never],
-    }),
+    react(),
   ],
   css: {
     postcss: {
