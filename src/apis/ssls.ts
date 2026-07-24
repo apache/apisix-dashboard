@@ -16,9 +16,9 @@
  */
 import type { AxiosInstance } from 'axios';
 
-import type { SSLPostType } from '@/components/form-slice/FormPartSSL/schema';
 import { API_SSLS } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
+import type { SSLPostBody } from '@/types/schema/apisix/ssls';
 import type { PageSearchType } from '@/types/schema/pageSearch';
 
 export const getSSLListReq = (req: AxiosInstance, params: PageSearchType) =>
@@ -41,7 +41,7 @@ export const putSSLReq = (req: AxiosInstance, data: APISIXType['SSL']) => {
   );
 };
 
-export const postSSLReq = (req: AxiosInstance, data: SSLPostType) =>
+export const postSSLReq = (req: AxiosInstance, data: SSLPostBody) =>
   req.post<APISIXType['SSL'], APISIXType['RespSSLDetail']>(API_SSLS, data);
 
 export const deleteAllSSLs = async (req: AxiosInstance) => {

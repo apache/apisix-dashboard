@@ -49,6 +49,18 @@ const SSL = z
   .merge(APISIXCommon.Basic)
   .merge(APISIXCommon.Info);
 
+// The request body of an SSL create: the stored resource minus the
+// server-managed id/timestamps. The form's own post type (which also carries
+// the UI-only `__clientEnabled` helper) is assignable to this, so the API
+// layer can type its payload without importing from components/.
+export const SSLPostBodySchema = SSL.omit({
+  id: true,
+  create_time: true,
+  update_time: true,
+});
+
+export type SSLPostBody = z.infer<typeof SSLPostBodySchema>;
+
 export const APISIXSSLs = {
   SSL,
   SSLStatus: APISIXCommon.Status,
