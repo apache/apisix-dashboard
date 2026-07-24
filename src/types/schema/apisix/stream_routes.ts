@@ -48,6 +48,16 @@ const StreamRoute = z
   .merge(APISIXCommon.Basic.omit({ name: true, status: true }))
   .merge(APISIXCommon.Info);
 
+// The shape the create form submits: the stored resource minus the
+// server-managed id/timestamps, plus the editable Basic fields.
+export const StreamRoutePostSchema = StreamRoute.omit({
+  create_time: true,
+  update_time: true,
+  id: true,
+}).merge(APISIXCommon.Basic);
+
+export type StreamRoutePostType = z.infer<typeof StreamRoutePostSchema>;
+
 export const APISIXStreamRoutes = {
   StreamRoute,
 };

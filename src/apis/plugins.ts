@@ -17,7 +17,6 @@
 import { queryOptions, skipToken } from '@tanstack/react-query';
 import type { AxiosRequestConfig } from 'axios';
 
-import type { PluginConfig } from '@/components/form-slice/FormItemPlugins/PluginEditorDrawer';
 import {
   API_PLUGIN_METADATA,
   API_PLUGINS,
@@ -25,6 +24,9 @@ import {
 } from '@/config/constant';
 import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
+
+/** A plugin's name paired with its config object (the plugin-editor shape). */
+export type PluginConfig = { name: string; config: object };
 
 
 export type NeedPluginSchema = {

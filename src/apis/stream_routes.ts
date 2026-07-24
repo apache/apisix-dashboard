@@ -17,13 +17,13 @@
 
 import type { AxiosInstance } from 'axios';
 
-import type { StreamRoutePostType } from '@/components/form-slice/FormPartStreamRoute/schema';
 import {
   API_STREAM_ROUTES,
   PAGE_SIZE_MAX,
   PAGE_SIZE_MIN,
 } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
+import type { StreamRoutePostType } from '@/types/schema/apisix/stream_routes';
 
 import type { WithServiceIdFilter } from './routes';
 

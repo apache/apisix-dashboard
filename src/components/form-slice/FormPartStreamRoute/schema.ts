@@ -14,15 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { TypeOf } from 'zod';
-
-import { APISIXCommon } from '@/types/schema/apisix/common';
-import { APISIXStreamRoutes } from '@/types/schema/apisix/stream_routes';
-
-export const StreamRoutePostSchema = APISIXStreamRoutes.StreamRoute.omit({
-  create_time: true,
-  update_time: true,
-  id: true,
-}).merge(APISIXCommon.Basic);
-
-export type StreamRoutePostType = TypeOf<typeof StreamRoutePostSchema>;
+// The stream-route create-form schema lives in the schema layer so the API
+// layer can type its request body without importing from components/.
+export {
+  StreamRoutePostSchema,
+  type StreamRoutePostType,
+} from '@/types/schema/apisix/stream_routes';

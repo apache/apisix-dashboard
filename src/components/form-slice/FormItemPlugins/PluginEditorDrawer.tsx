@@ -22,12 +22,15 @@ import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import type { PluginConfig } from '@/apis/plugins';
 import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormItemEditor } from '@/components/form/Editor';
 
 import type { PluginCardListProps } from './PluginCardList';
 
-export type PluginConfig = { name: string; config: object };
+// PluginConfig is defined in the API layer (apis/plugins) and re-exported
+// here so existing importers keep their path.
+export type { PluginConfig };
 export type PluginEditorDrawerProps = Pick<PluginCardListProps, 'mode'> & {
   opened: boolean;
   onClose: () => void;
