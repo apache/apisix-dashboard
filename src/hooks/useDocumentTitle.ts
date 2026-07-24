@@ -39,37 +39,34 @@ const segmentToLabel: Record<string, SourceLabel> = {
 
 const isParam = (seg: string) => seg.startsWith('$');
 
+export type RouteTitleParts = {
+  label: SourceLabel;
+  action: 'add' | 'detail' | 'list';
+};
+
 /**
  * Classify the DEEPEST matched route by its pattern (e.g.
- * `/services/detail/$id/routes/add`). The action is read from the TAIL of
- * the pattern so a `detail/$id` in the middle (navigation context) does
- * not misclassify a nested add/detail page as the parent's detail (#3441
- * review): a nested `…/routes/add` is "Add Route", not "Service Detail".
+ * `/services/detail/$id/routes/add`).
+ *
+ * All TRAILING params are stripped first, so routes with more than one
+ * (`/secrets/detail/$manager/$id`) are recognised as detail pages too
+ * (#3441 review). The action then comes from the tail of what remains, so
+ * a `detail/$id` in the MIDDLE (navigation context) never wins: a nested
+ * `…/routes/add` is "Add Route", not "Service Detail".
  */
-const classify = (
-  routeId: string
-): { label: SourceLabel; action: 'add' | 'detail' | 'list' } | null => {
+export const classifyRouteId = (routeId: string): RouteTitleParts | null => {
   const segs = routeId.split('/').filter(Boolean);
+  while (segs.length > 0 && isParam(segs[segs.length - 1])) segs.pop();
   if (segs.length === 0) return null;
 
   const last = segs[segs.length - 1];
-  let action: 'add' | 'detail' | 'list';
-  let resourceIdx: number;
+  const action: RouteTitleParts['action'] =
+    last === 'add' ? 'add' : last === 'detail' ? 'detail' : 'list';
+  // for add/detail the resource is the segment before the action keyword;
+  // for a list page the leaf segment IS the resource
+  const resource = action === 'list' ? last : segs[segs.length - 2];
 
-  if (last === 'add') {
-    action = 'add';
-    resourceIdx = segs.length - 2;
-  } else if (isParam(last) && segs[segs.length - 2] === 'detail') {
-    action = 'detail';
-    resourceIdx = segs.length - 3;
-  } else {
-    // list page: the leaf segment is the resource (skip a trailing param)
-    action = 'list';
-    resourceIdx = isParam(last) ? segs.length - 2 : segs.length - 1;
-  }
-
-  const resource = segs[resourceIdx];
-  const label = resource && segmentToLabel[resource];
+  const label = resource ? segmentToLabel[resource] : undefined;
   return label ? { label, action } : null;
 };
 
@@ -86,7 +83,7 @@ export const useDocumentTitle = () => {
   });
 
   useEffect(() => {
-    const matched = routeId ? classify(routeId) : null;
+    const matched = routeId ? classifyRouteId(routeId) : null;
     let title = APP_NAME;
     if (matched) {
       const name = t(`sources.${matched.label}`);
