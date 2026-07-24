@@ -45,3 +45,6 @@ jobs:
 
       - name: Run Type Check
         run: pnpm exec tsc -b
+
+      - name: Run unit tests
+        run: pnpm test
