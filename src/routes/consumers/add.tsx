@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
@@ -22,17 +23,26 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { putConsumerReq } from '@/apis/consumers';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormCancelBtn, FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartConsumer } from '@/components/form-slice/FormPartConsumer';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { APISIX, type APISIXType } from '@/types/schema/apisix';
 import { pipeProduce } from '@/utils/producer';
 
 const ConsumerAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
+
+  const form = useForm({
+    resolver: zodResolver(APISIX.ConsumerPut),
+    shouldUnregister: true,
+    shouldFocusError: true,
+    mode: 'all',
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
 
   const putConsumer = useMutation({
     mutationFn: (d: APISIXType['ConsumerPut']) => putConsumerReq(req, d),
@@ -41,18 +51,12 @@ const ConsumerAddForm = () => {
         message: t('info.add.success', { name: t('consumers.singular') }),
         color: 'green',
       });
+      bypass();
       await router.navigate({
         to: '/consumers/detail/$username',
         params: { username: res.username },
       });
     },
-  });
-
-  const form = useForm({
-    resolver: zodResolver(APISIX.ConsumerPut),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
   });
 
   return (
@@ -63,7 +67,10 @@ const ConsumerAddForm = () => {
         )}
       >
         <FormPartConsumer readOnlyUsername={false} />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn to="/consumers" />
+        </Group>
       </form>
     </FormProvider>
   );

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
@@ -22,19 +23,28 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { postServiceReq, type ServicePostType } from '@/apis/services';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormCancelBtn, FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartService } from '@/components/form-slice/FormPartService';
 import { ServicePostSchema } from '@/components/form-slice/FormPartService/schema';
 import { produceRmEmptyUpstreamFields } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
 import { pipeProduce } from '@/utils/producer';
 
 const ServiceAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
+
+  const form = useForm({
+    resolver: zodResolver(ServicePostSchema),
+    shouldUnregister: true,
+    shouldFocusError: true,
+    mode: 'all',
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
 
   const postService = useMutation({
     mutationFn: (d: ServicePostType) =>
@@ -47,6 +57,7 @@ const ServiceAddForm = () => {
         message: t('info.add.success', { name: t('services.singular') }),
         color: 'green',
       });
+      bypass();
       await router.navigate({
         to: '/services/detail/$id',
         params: { id: res.data.value.id },
@@ -54,18 +65,14 @@ const ServiceAddForm = () => {
     },
   });
 
-  const form = useForm({
-    resolver: zodResolver(ServicePostSchema),
-    shouldUnregister: true,
-    shouldFocusError: true,
-    mode: 'all',
-  });
-
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => postService.mutateAsync(d as ServicePostType))}>
         <FormPartService />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn to="/services" />
+        </Group>
       </form>
     </FormProvider>
   );

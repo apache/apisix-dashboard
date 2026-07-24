@@ -44,6 +44,10 @@ function RouteComponent() {
           defaultValues={{
             service_id: id,
           }}
+          cancelLink={{
+            to: '/services/detail/$id/routes',
+            params: { id },
+          }}
         />
       </FormTOCBox>
     </CommonFormContext.Provider>

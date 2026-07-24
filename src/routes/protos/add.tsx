@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import {
@@ -25,10 +26,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { postProtoReq } from '@/apis/protos';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormCancelBtn, FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartProto } from '@/components/form-slice/FormPartProto';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { APISIXType } from '@/types/schema/apisix';
 import { APISIXProtos } from '@/types/schema/apisix/protos';
 
@@ -40,17 +42,6 @@ const ProtoAddForm = () => {
   const { t } = useTranslation();
   const router = useReactRouter();
 
-  const postProto = useMutation({
-    mutationFn: (d: APISIXType['ProtoPost']) => postProtoReq(req, d),
-    async onSuccess() {
-      notifications.show({
-        message: t('info.add.success', { name: t('protos.singular') }),
-        color: 'green',
-      });
-      await router.navigate({ to: '/protos' });
-    },
-  });
-
   const form = useForm({
     resolver: zodResolver(APISIXProtos.ProtoPost),
     shouldUnregister: true,
@@ -58,12 +49,28 @@ const ProtoAddForm = () => {
     defaultValues,
     mode: 'onChange',
   });
+  const { bypass } = useUnsavedChangesGuard(form);
+
+  const postProto = useMutation({
+    mutationFn: (d: APISIXType['ProtoPost']) => postProtoReq(req, d),
+    async onSuccess() {
+      notifications.show({
+        message: t('info.add.success', { name: t('protos.singular') }),
+        color: 'green',
+      });
+      bypass();
+      await router.navigate({ to: '/protos' });
+    },
+  });
 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => postProto.mutateAsync(d))}>
         <FormPartProto />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn to="/protos" />
+        </Group>
       </form>
     </FormProvider>
   );

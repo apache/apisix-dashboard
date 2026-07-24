@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
@@ -22,7 +23,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { postSSLReq } from '@/apis/ssls';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormCancelBtn, FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartSSL } from '@/components/form-slice/FormPartSSL';
 import {
   SSLPostSchema,
@@ -32,11 +33,19 @@ import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { queryClient } from '@/config/global';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { pipeProduce } from '@/utils/producer';
 
 const SSLAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(SSLPostSchema),
+    shouldUnregister: true,
+    mode: 'all',
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
+
   const postSSL = useMutation({
     mutationFn: (d: SSLPostType) => postSSLReq(req, pipeProduce()(d)),
     async onSuccess() {
@@ -46,23 +55,21 @@ const SSLAddForm = () => {
       });
       // Invalidate SSLs list query to refetch fresh data
       await queryClient.invalidateQueries({ queryKey: ['ssls'] });
+      bypass();
       await router.navigate({
         to: '/ssls',
       });
     },
   });
 
-  const form = useForm({
-    resolver: zodResolver(SSLPostSchema),
-    shouldUnregister: true,
-    mode: 'all',
-  });
-
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit((d) => postSSL.mutateAsync(d))}>
         <FormPartSSL />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn to="/ssls" />
+        </Group>
       </form>
     </FormProvider>
   );

@@ -16,13 +16,14 @@
  */
 
 // Regression for the dirty-form navigation guard: leaving a form with
-// unsaved edits — by sidebar link, browser Back, or the new Cancel button —
-// must confirm before discarding. Conversely a form the user has not
-// actually changed must never interrogate them, which is the failure mode
-// the raw react-hook-form `isDirty` flag produces on add pages whose
-// widgets normalize `undefined` to empty values on mount.
+// unsaved edits — by sidebar link or the Cancel button — must confirm
+// before discarding. Conversely a form the user has not actually changed
+// must never interrogate them, which is the failure mode the raw
+// react-hook-form `isDirty` flag produces on add pages whose widgets
+// normalize `undefined` to empty values on mount.
 
 import { routesPom } from '@e2e/pom/routes';
+import { sslsPom } from '@e2e/pom/ssls';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
@@ -108,4 +109,45 @@ test('a successful submit navigates without a warning', async ({ page }) => {
 
   await expect(unsavedModal(page)).toBeHidden();
   await routesPom.isDetailPage(page);
+});
+
+test('a pristine add page navigates away without interrogating the user', async ({
+  page,
+}) => {
+  // ssls/add is one of five add pages whose widgets normalize `undefined`
+  // to empty values on mount (certs: [], keys: []), so react-hook-form
+  // reports it dirty with zero user input. The guard must not.
+  await sslsPom.toAdd(page);
+  await sslsPom.isAddPage(page);
+
+  await page.getByRole('link', { name: 'Services', exact: true }).click();
+
+  await expect(unsavedModal(page)).toBeHidden();
+  await expect(page).toHaveURL((url) => url.pathname.endsWith('/services'));
+});
+
+test('Cancel on a pristine add page returns to the list without a warning', async ({
+  page,
+}) => {
+  await routesPom.toAdd(page);
+  await routesPom.isAddPage(page);
+
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+
+  await expect(unsavedModal(page)).toBeHidden();
+  await routesPom.isIndexPage(page);
+});
+
+test('Cancel on a dirty add page warns first', async ({ page }) => {
+  await routesPom.toAdd(page);
+  await routesPom.isAddPage(page);
+
+  await page.locator('input[name="name"]').fill(randomId('reg-guard-cancel'));
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+
+  const modal = unsavedModal(page);
+  await expect(modal).toBeVisible({ timeout: 5000 });
+  await modal.getByRole('button', { name: /discard/i }).click();
+
+  await routesPom.isIndexPage(page);
 });

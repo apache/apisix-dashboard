@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
@@ -23,13 +24,14 @@ import { useTranslation } from 'react-i18next';
 import type { z } from 'zod';
 
 import { postUpstreamReq } from '@/apis/upstreams';
-import { FormSubmitBtn } from '@/components/form/Btn';
+import { FormCancelBtn, FormSubmitBtn } from '@/components/form/Btn';
 import { FormPartUpstream } from '@/components/form-slice/FormPartUpstream';
 import { FormPartUpstreamSchema } from '@/components/form-slice/FormPartUpstream/schema';
 import { produceRmEmptyUpstreamFields } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import PageHeader from '@/components/page/PageHeader';
 import { req } from '@/config/req';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { pipeProduce } from '@/utils/producer';
 
 const PostUpstreamSchema = FormPartUpstreamSchema.omit({
@@ -41,6 +43,13 @@ type PostUpstreamType = z.infer<typeof PostUpstreamSchema>;
 const UpstreamAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(PostUpstreamSchema),
+    shouldUnregister: true,
+    mode: 'all',
+  });
+  const { bypass } = useUnsavedChangesGuard(form);
+
   const postUpstream = useMutation({
     mutationFn: (d: PostUpstreamType) => postUpstreamReq(req, pipeProduce(produceRmEmptyUpstreamFields)(d) as PostUpstreamType),
     async onSuccess(data) {
@@ -48,16 +57,12 @@ const UpstreamAddForm = () => {
         message: t('info.add.success', { name: t('upstreams.singular') }),
         color: 'green',
       });
+      bypass();
       await router.navigate({
         to: '/upstreams/detail/$id',
         params: { id: data.data.value.id },
       });
     },
-  });
-  const form = useForm({
-    resolver: zodResolver(PostUpstreamSchema),
-    shouldUnregister: true,
-    mode: 'all',
   });
 
   return (
@@ -68,7 +73,10 @@ const UpstreamAddForm = () => {
         )}
       >
         <FormPartUpstream />
-        <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+        <Group>
+          <FormSubmitBtn>{t('form.btn.add')}</FormSubmitBtn>
+          <FormCancelBtn to="/upstreams" />
+        </Group>
       </form>
     </FormProvider>
   );
