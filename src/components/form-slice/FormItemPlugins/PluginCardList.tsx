@@ -23,8 +23,7 @@ import {
   type TextInputProps,
   useVirtualizedCombobox,
 } from '@mantine/core';
-import { useLocalObservable } from 'mobx-react-lite';
-import { useEffect } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PluginCard, type PluginCardProps } from './PluginCard';
@@ -107,47 +106,31 @@ export const PluginCardList = (props: PluginCardListProps) => {
   const { mode, onAdd, onEdit, onDelete, onView } = props;
   const { t } = useTranslation();
   const combobox = useVirtualizedCombobox();
-  const optionsOb = useLocalObservable(() => ({
-    search: '',
-    plugins: [] as string[],
-    mode: 'add' as OptionProps['mode'],
-    setSearch(search: string) {
-      this.search = search.toLowerCase().trim();
-    },
-    setPlugins(plugins: string[]) {
-      this.plugins = plugins;
-    },
-    setMode(mode: PluginCardProps['mode']) {
-      this.mode = mode;
-    },
-    get list() {
-      const arr = !this.search
-        ? this.plugins
-        : this.plugins.filter((d) => d.toLowerCase().includes(this.search));
-      return arr.map((name) => ({
-        name,
-        mode: this.mode,
-        onAdd,
-        onEdit,
-        onDelete,
-        onView,
-      }));
-    },
-  }));
 
-  useEffect(() => optionsOb.setPlugins(plugins), [optionsOb, plugins]);
-  useEffect(() => optionsOb.setSearch(search), [optionsOb, search]);
-  useEffect(() => optionsOb.setMode(mode), [optionsOb, mode]);
+  const list = useMemo(() => {
+    const query = search.toLowerCase().trim();
+    const matched = !query
+      ? plugins
+      : plugins.filter((d) => d.toLowerCase().includes(query));
+    return matched.map((name) => ({
+      name,
+      mode,
+      onAdd,
+      onEdit,
+      onDelete,
+      onView,
+    }));
+  }, [search, plugins, mode, onAdd, onEdit, onDelete, onView]);
 
   return (
     <Combobox store={combobox}>
       <Combobox.Options mt="1em">
         <ScrollArea.Autosize h={h} mah={mah} type="scroll">
-          {!optionsOb.list.length ? (
+          {!list.length ? (
             <Combobox.Empty>{t('noData')}</Combobox.Empty>
           ) : (
             <SimpleGrid cols={cols}>
-              <Options list={optionsOb.list} />
+              <Options list={list} />
             </SimpleGrid>
           )}
         </ScrollArea.Autosize>
