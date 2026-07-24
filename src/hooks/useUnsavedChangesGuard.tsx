@@ -79,13 +79,18 @@ export const useUnsavedChangesGuard = <T extends FieldValues>(
     return isFormDirty(form.formState.defaultValues, form.getValues());
   }, [form]);
 
+  // Stable identity so useBlocker (which keys its effect on shouldBlockFn)
+  // subscribes once rather than re-subscribing every render — which would
+  // also re-run isFormDirty's structuredClone on each render.
+  const shouldBlockFn = useCallback(async () => {
+    if (!hasUnsavedChanges()) return false;
+    return !(await confirmDiscardChanges(t));
+  }, [hasUnsavedChanges, t]);
+
   useBlocker({
     disabled: options.disabled,
     enableBeforeUnload: hasUnsavedChanges,
-    shouldBlockFn: async () => {
-      if (!hasUnsavedChanges()) return false;
-      return !(await confirmDiscardChanges(t));
-    },
+    shouldBlockFn,
   });
 
   const bypass = useCallback(() => {
