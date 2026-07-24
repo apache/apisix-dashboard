@@ -31,8 +31,8 @@ import { useBoolean } from 'react-use';
 import { getStreamRouteQueryOptions } from '@/apis/hooks';
 import { putStreamRouteReq } from '@/apis/stream_routes';
 import { FormSubmitBtn } from '@/components/form/Btn';
-import { produceRoute } from '@/components/form-slice/FormPartRoute/util';
 import { FormPartStreamRoute } from '@/components/form-slice/FormPartStreamRoute';
+import { produceStreamRoute } from '@/components/form-slice/FormPartStreamRoute/util';
 import { produceToNestedUpstreamForm } from '@/components/form-slice/FormPartUpstream/util';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
@@ -79,7 +79,7 @@ const StreamRouteDetailForm = (props: Props) => {
 
   const putStreamRoute = useMutation({
     mutationFn: (d: APISIXType['StreamRoute']) =>
-      putStreamRouteReq(req, produceRoute(d)),
+      putStreamRouteReq(req, produceStreamRoute(d)),
     async onSuccess() {
       notifications.show({
         message: t('info.edit.success', { name: t('streamRoutes.singular') }),

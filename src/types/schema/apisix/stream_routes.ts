@@ -45,7 +45,10 @@ const StreamRoute = z
     protocol: StreamRouteProtocol.partial().optional(),
   })
   .partial()
-  .merge(APISIXCommon.Basic.omit({ name: true, status: true }))
+  // the Admin API accepts name/desc/labels on a stream route but rejects
+  // status — omit only status so the edit form (which resolves against
+  // this schema) does not strip a stored name (#3437 review)
+  .merge(APISIXCommon.Basic.omit({ status: true }))
   .merge(APISIXCommon.Info);
 
 export const APISIXStreamRoutes = {

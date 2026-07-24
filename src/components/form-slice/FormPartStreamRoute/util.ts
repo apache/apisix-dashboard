@@ -15,28 +15,34 @@
  * limitations under the License.
  */
 import { produce } from 'immer';
-import { pipe } from 'rambdax';
 
 import { produceRmEmptyUpstreamFields } from '@/components/form-slice/FormPartUpstream/util';
 import { produceRmUpstreamWhenHas } from '@/utils/form-producer';
+import { pipeProduce } from '@/utils/producer';
 
 import type { StreamRoutePostType } from './schema';
 
-export const produceStreamRoute = (val: StreamRoutePostType) =>
-  pipe(
-    produceRmEmptyUpstreamFields,
-    (produceRmUpstreamWhenHas('service_id', 'upstream_id') as unknown as (
-      d: StreamRoutePostType
-    ) => StreamRoutePostType),
-    produce((draft: StreamRoutePostType) => {
-      // Stream Routes do not support name and status
-      const d = draft as StreamRoutePostType & { name?: string; status?: number };
-      delete d.name;
-      delete d.status;
+/**
+ * Shared by BOTH the create and edit paths — stream routes used to be the
+ * only resource whose two paths ran different cleaning pipelines (create
+ * skipped pipeProduce entirely; edit borrowed the HTTP-route producer).
+ * pipeProduce supplies the __-flag removal, empty-value cleaning and
+ * empty-plugin restore every other resource gets (#3417).
+ */
+export const produceStreamRoute = pipeProduce(
+  produceRmUpstreamWhenHas('service_id', 'upstream_id'),
+  produceRmEmptyUpstreamFields,
+  produce((draft: StreamRoutePostType) => {
+    // The Admin API accepts a stream-route `name` (kept — the form renders
+    // it, and an API-created name must survive an edit-save, #3437 review)
+    // but rejects `status` (stripped; the form never renders it, but a
+    // reused generic component could introduce it).
+    const d = draft as StreamRoutePostType & { status?: number };
+    delete d.status;
 
-      // Cleanup protocol if name is missing
-      if (draft.protocol && !draft.protocol.name) {
-        delete draft.protocol;
-      }
-    })
-  )(val);
+    // Cleanup protocol if name is missing
+    if (draft.protocol && !draft.protocol.name) {
+      delete draft.protocol;
+    }
+  })
+);
