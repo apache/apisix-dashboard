@@ -16,6 +16,8 @@
  */
 import { describe, expect, it } from 'vitest';
 
+import { objToUpstreamNodes } from '@/components/form-slice/FormPartUpstream/nodes-conversion';
+
 import { isFormDirty, normalizeForCompare } from './form-dirty';
 
 // Fixtures are real snapshots captured from the running app: on these add
@@ -110,5 +112,93 @@ describe('normalizeForCompare', () => {
     const input = { desc: '', plugins: { a: {} } };
     normalizeForCompare(input);
     expect(input).toEqual({ desc: '', plugins: { a: {} } });
+  });
+});
+
+// The Admin API stores upstream `nodes` as an object map (`{ "host:port":
+// weight }`); the nodes widget normalizes that into an array on mount
+// (`[{ host, port, weight, priority }]`). Fixtures below build the array
+// side with the real converter (`objToUpstreamNodes`) so they match its
+// output exactly rather than guessing field names/order.
+describe('isFormDirty — upstream nodes object-map vs array form', () => {
+  it('does not flag a pristine edit page nested under upstream.nodes', () => {
+    const nodes = { 'h1.local:80': 1 };
+    const defaults = { upstream: { type: 'roundrobin', nodes } };
+    const values = {
+      upstream: { type: 'roundrobin', nodes: objToUpstreamNodes(nodes) },
+    };
+    expect(isFormDirty(defaults, values)).toBe(false);
+  });
+
+  it('does not flag a pristine edit page with top-level nodes (upstreams/add)', () => {
+    const nodes = { 'h1.local:80': 1 };
+    const defaults = { nodes };
+    const values = { nodes: objToUpstreamNodes(nodes) };
+    expect(isFormDirty(defaults, values)).toBe(false);
+  });
+
+  it('does not flag a bracketed IPv6 node key', () => {
+    const nodes = { '[::1]:80': 1 };
+    const defaults = { upstream: { nodes } };
+    const values = { upstream: { nodes: objToUpstreamNodes(nodes) } };
+    expect(isFormDirty(defaults, values)).toBe(false);
+  });
+
+  it('does not flag a port-less node key', () => {
+    const nodes = { 'h1.local': 1 };
+    const defaults = { upstream: { nodes } };
+    const values = { upstream: { nodes: objToUpstreamNodes(nodes) } };
+    expect(isFormDirty(defaults, values)).toBe(false);
+  });
+
+  it('still flags a genuinely edited node weight', () => {
+    const defaults = {
+      upstream: { nodes: { 'h1.local:80': 1, 'h2.local:80': 2 } },
+    };
+    const values = {
+      upstream: {
+        nodes: objToUpstreamNodes({ 'h1.local:80': 5, 'h2.local:80': 2 }),
+      },
+    };
+    expect(isFormDirty(defaults, values)).toBe(true);
+  });
+
+  it('still flags a node added by the user', () => {
+    const defaults = { upstream: { nodes: { 'h1.local:80': 1 } } };
+    const values = {
+      upstream: {
+        nodes: objToUpstreamNodes({
+          'h1.local:80': 1,
+          'h2.local:80': 2,
+        }),
+      },
+    };
+    expect(isFormDirty(defaults, values)).toBe(true);
+  });
+
+  it('still flags a node removed by the user', () => {
+    const defaults = {
+      upstream: { nodes: { 'h1.local:80': 1, 'h2.local:80': 2 } },
+    };
+    const values = {
+      upstream: { nodes: objToUpstreamNodes({ 'h1.local:80': 1 }) },
+    };
+    expect(isFormDirty(defaults, values)).toBe(true);
+  });
+
+  it('still flags a node host edited by the user', () => {
+    const defaults = { upstream: { nodes: { 'h1.local:80': 1 } } };
+    const values = {
+      upstream: { nodes: objToUpstreamNodes({ 'h2.local:80': 1 }) },
+    };
+    expect(isFormDirty(defaults, values)).toBe(true);
+  });
+
+  it('ignores node order in the array form', () => {
+    const a = { host: 'h1.local', port: 80, weight: 1 };
+    const b = { host: 'h2.local', port: 80, weight: 2 };
+    const defaults = { upstream: { nodes: [a, b] } };
+    const values = { upstream: { nodes: [b, a] } };
+    expect(isFormDirty(defaults, values)).toBe(false);
   });
 });
