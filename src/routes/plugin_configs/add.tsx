@@ -20,6 +20,7 @@ import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -37,6 +38,7 @@ import { pipeProduce } from '@/utils/producer';
 const PluginConfigAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const [id] = useState(() => nanoid());
 
   const form = useForm({
     resolver: zodResolver(APISIX.PluginConfigPut),
@@ -44,7 +46,7 @@ const PluginConfigAddForm = () => {
     shouldFocusError: true,
     mode: 'all',
     defaultValues: {
-      id: nanoid(),
+      id,
     },
   });
   const { bypass } = useUnsavedChangesGuard(form);

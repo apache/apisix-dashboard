@@ -23,6 +23,7 @@
 // normalize `undefined` to empty values on mount.
 
 import { routesPom } from '@e2e/pom/routes';
+import { secretsPom } from '@e2e/pom/secrets';
 import { sslsPom } from '@e2e/pom/ssls';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
@@ -120,6 +121,21 @@ test('a pristine add page navigates away without interrogating the user', async 
   // reports it dirty with zero user input. The guard must not.
   await sslsPom.toAdd(page);
   await sslsPom.isAddPage(page);
+
+  await page.getByRole('link', { name: 'Services', exact: true }).click();
+
+  await expect(unsavedModal(page)).toBeHidden();
+  await expect(page).toHaveURL((url) => url.pathname.endsWith('/services'));
+});
+
+test('a pristine nanoid add page (secrets) navigates away without interrogating the user', async ({
+  page,
+}) => {
+  // secrets/add seeds defaultValues.id with nanoid(); the id must be stable
+  // across renders or the pristine form reads dirty and the guard wrongly
+  // interrogates the user.
+  await secretsPom.toAdd(page);
+  await secretsPom.isAddPage(page);
 
   await page.getByRole('link', { name: 'Services', exact: true }).click();
 

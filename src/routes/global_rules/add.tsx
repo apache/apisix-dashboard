@@ -23,6 +23,7 @@ import {
   useRouter as useReactRouter,
 } from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -40,6 +41,7 @@ import { APISIX } from '@/types/schema/apisix';
 const GlobalRuleAddForm = () => {
   const { t } = useTranslation();
   const router = useReactRouter();
+  const [id] = useState(() => nanoid());
 
   const form = useForm({
     resolver: zodResolver(APISIX.GlobalRulePut),
@@ -47,7 +49,7 @@ const GlobalRuleAddForm = () => {
     shouldFocusError: true,
     defaultValues: {
       plugins: {},
-      id: nanoid(),
+      id,
     },
     mode: 'onChange',
   });

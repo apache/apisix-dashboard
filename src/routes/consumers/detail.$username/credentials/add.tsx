@@ -20,6 +20,7 @@ import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useParams, useRouter } from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -40,6 +41,7 @@ const CredentialAddForm = () => {
   const { username } = useParams({
     from: '/consumers/detail/$username/credentials/add',
   });
+  const [id] = useState(() => nanoid());
 
   const form = useForm({
     resolver: zodResolver(APISIX.CredentialPut),
@@ -47,7 +49,7 @@ const CredentialAddForm = () => {
     shouldFocusError: true,
     mode: 'all',
     defaultValues: {
-      id: nanoid(),
+      id,
     },
   });
   const { bypass } = useUnsavedChangesGuard(form);

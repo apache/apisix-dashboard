@@ -20,6 +20,7 @@ import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -38,13 +39,14 @@ import { pipeProduce } from '@/utils/producer';
 const SecretAddForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const [id] = useState(() => nanoid());
 
   const form = useForm({
     resolver: zodResolver(APISIX.Secret),
     shouldUnregister: true,
     shouldFocusError: true,
     defaultValues: {
-      id: nanoid(),
+      id,
       manager: APISIX.Secret.options[0].shape.manager.value,
     },
     mode: 'all',
