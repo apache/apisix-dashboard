@@ -10,6 +10,7 @@
     "lint:fix": "pnpm lint --fix",
     "preview": "vite preview",
     "test": "vitest run src",
+    "refresh:gateway-schema": "node scripts/refresh-gateway-schema.mjs",
     "prepare": "husky",
     "e2e": "playwright test"
   },

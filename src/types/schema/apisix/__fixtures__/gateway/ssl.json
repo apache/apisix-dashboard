@@ -1,0 +1,172 @@
+{
+  "type": "object",
+  "if": {
+    "properties": {
+      "type": {
+        "enum": [
+          "server"
+        ]
+      }
+    }
+  },
+  "else": {
+    "required": [
+      "key",
+      "cert"
+    ]
+  },
+  "properties": {
+    "update_time": {
+      "type": "integer"
+    },
+    "key": {
+      "type": "string",
+      "maxLength": 65536,
+      "minLength": 64
+    },
+    "desc": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-_.]+$",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        {
+          "type": "integer",
+          "minimum": 1
+        }
+      ]
+    },
+    "create_time": {
+      "type": "integer"
+    },
+    "status": {
+      "description": "ssl status, 1 to enable, 0 to disable",
+      "default": 1,
+      "type": "integer",
+      "enum": [
+        1,
+        0
+      ]
+    },
+    "sni": {
+      "type": "string",
+      "pattern": "^\\*$|^\\*?[0-9a-zA-Z-._\\[\\]:]+$"
+    },
+    "type": {
+      "description": "ssl certificate type, server to server certificate, client to client certificate for upstream",
+      "type": "string",
+      "default": "server",
+      "enum": [
+        "server",
+        "client"
+      ]
+    },
+    "cert": {
+      "type": "string",
+      "maxLength": 65536,
+      "minLength": 128
+    },
+    "labels": {
+      "description": "key/value pairs to specify attributes",
+      "patternProperties": {
+        ".*": {
+          "maxLength": 256,
+          "description": "value of label",
+          "pattern": "^\\S+$",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "type": "object"
+    },
+    "ssl_protocols": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "TLSv1.1",
+          "TLSv1.2",
+          "TLSv1.3"
+        ]
+      },
+      "maxItems": 3,
+      "description": "set ssl protocols",
+      "uniqueItems": true
+    },
+    "keys": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 65536,
+        "minLength": 64
+      }
+    },
+    "client": {
+      "type": "object",
+      "required": [
+        "ca"
+      ],
+      "properties": {
+        "ca": {
+          "type": "string",
+          "maxLength": 65536,
+          "minLength": 128
+        },
+        "skip_mtls_uri_regex": {
+          "type": "array",
+          "items": {
+            "description": "uri regular expression to skip mtls",
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "depth": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        }
+      }
+    },
+    "snis": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^\\*$|^\\*?[0-9a-zA-Z-._\\[\\]:]+$"
+      },
+      "minItems": 1
+    },
+    "certs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 65536,
+        "minLength": 128
+      }
+    }
+  },
+  "additionalProperties": false,
+  "then": {
+    "oneOf": [
+      {
+        "required": [
+          "sni",
+          "key",
+          "cert"
+        ]
+      },
+      {
+        "required": [
+          "snis",
+          "key",
+          "cert"
+        ]
+      }
+    ]
+  }
+}

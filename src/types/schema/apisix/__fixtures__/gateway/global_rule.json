@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "plugins"
+  ],
+  "properties": {
+    "id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-_.]+$",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        {
+          "type": "integer",
+          "minimum": 1
+        }
+      ]
+    },
+    "create_time": {
+      "type": "integer"
+    },
+    "plugins": {
+      "type": "object"
+    },
+    "update_time": {
+      "type": "integer"
+    }
+  }
+}

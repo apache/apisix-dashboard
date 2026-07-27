@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "plugins"
+  ],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "labels": {
+      "description": "key/value pairs to specify attributes",
+      "patternProperties": {
+        ".*": {
+          "maxLength": 256,
+          "description": "value of label",
+          "pattern": "^\\S+$",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "type": "object"
+    },
+    "desc": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "plugins": {
+      "type": "object"
+    },
+    "create_time": {
+      "type": "integer"
+    },
+    "id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-_.]+$",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        {
+          "type": "integer",
+          "minimum": 1
+        }
+      ]
+    },
+    "update_time": {
+      "type": "integer"
+    }
+  }
+}
