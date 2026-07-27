@@ -31,7 +31,7 @@ import { describe, expect, it } from 'vitest';
 // share a string with English); it checks only that the key SETS match, which
 // is the part a unit test can enforce cheaply and deterministically.
 
-const LOCALES_DIR = fileURLToPath(new URL('.', import.meta.url));
+const LOCALES_DIR = fileURLToPath(new URL('./locales/', import.meta.url));
 const BASE_LANG = 'en';
 
 const flattenKeys = (value: unknown, prefix = ''): string[] => {
