@@ -86,6 +86,10 @@ export const FormItemScheme = () => {
           group: 'L4',
           items: APISIX.UpstreamSchemeL4.options.map((v) => v.value),
         },
+        {
+          group: 'Specific',
+          items: [APISIX.UpstreamSchemeSpecific.value],
+        },
       ]}
     />
   );

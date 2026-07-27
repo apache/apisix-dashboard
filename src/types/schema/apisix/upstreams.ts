@@ -44,9 +44,14 @@ const UpstreamSchemeL7 = z.union([
   z.literal('grpc'),
   z.literal('grpcs'),
 ]);
+// Protocol-specific schemes the gateway accepts that are neither L4 nor L7
+// (per the Admin API upstream schema: "For specific protocols, it can be
+// kafka").
+const UpstreamSchemeSpecific = z.literal('kafka');
 const UpstreamScheme = z.union([
   ...UpstreamSchemeL4.options,
   ...UpstreamSchemeL7.options,
+  UpstreamSchemeSpecific,
 ]);
 
 // keep the order, unless apisix change the order
@@ -182,6 +187,7 @@ export const APISIXUpstreams = {
   UpstreamHashOn,
   UpstreamSchemeL4,
   UpstreamSchemeL7,
+  UpstreamSchemeSpecific,
   UpstreamScheme,
   UpstreamPassHost,
   UpstreamNode,
