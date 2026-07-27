@@ -29,6 +29,7 @@ import { routesPom } from '@e2e/pom/routes';
 import { randomId } from '@e2e/utils/common';
 import { e2eReq } from '@e2e/utils/req';
 import { test } from '@e2e/utils/test';
+import { uiGoto } from '@e2e/utils/ui';
 import { uiFillUpstreamRequiredFields } from '@e2e/utils/ui/upstreams';
 import { expect } from '@playwright/test';
 
@@ -91,6 +92,77 @@ test('route create surface a visible error when the Admin API replies 500', asyn
 
   // The toast can contain the server-supplied message OR a generic failure
   // string — either way it must appear as an alert role.
+  const errorToast = page
+    .getByRole('alert')
+    .filter({ hasText: /forced 500|fail|error/i });
+  await expect(errorToast.first()).toBeVisible({ timeout: 10000 });
+});
+
+const seedRoute = async (id: string) => {
+  await e2eReq.put(`/routes/${id}`, {
+    name: id,
+    uri: `/regression/${id}`,
+    upstream: { type: 'roundrobin', nodes: { 'mut-fail.local:80': 1 } },
+  });
+};
+
+test('route edit-save surfaces a visible error when the Admin API replies 500', async ({
+  page,
+}) => {
+  // The create path (POST) is covered above; update (PUT) goes through the
+  // same interceptor but is a distinct verb worth pinning.
+  const id = randomId('reg-mut-edit');
+  await seedRoute(id);
+
+  await page.route('**/apisix/admin/routes/*', async (route) => {
+    if (route.request().method() === 'PUT') {
+      await route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ error_msg: 'forced 500 on update' }),
+      });
+    } else {
+      await route.fallback();
+    }
+  });
+
+  await uiGoto(page, '/routes/detail/$id', { id });
+  await routesPom.isDetailPage(page);
+
+  // A no-op edit still issues the PUT — enough to exercise the failure path.
+  await page.getByRole('button', { name: 'Edit' }).click();
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+
+  const errorToast = page
+    .getByRole('alert')
+    .filter({ hasText: /forced 500|fail|error/i });
+  await expect(errorToast.first()).toBeVisible({ timeout: 10000 });
+});
+
+test('route delete surfaces a visible error when the Admin API replies 500', async ({
+  page,
+}) => {
+  const id = randomId('reg-mut-del');
+  await seedRoute(id);
+
+  await page.route('**/apisix/admin/routes/*', async (route) => {
+    if (route.request().method() === 'DELETE') {
+      await route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ error_msg: 'forced 500 on delete' }),
+      });
+    } else {
+      await route.fallback();
+    }
+  });
+
+  await uiGoto(page, '/routes/detail/$id', { id });
+  await routesPom.isDetailPage(page);
+
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Delete' }).click();
+
   const errorToast = page
     .getByRole('alert')
     .filter({ hasText: /forced 500|fail|error/i });
