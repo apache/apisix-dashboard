@@ -91,9 +91,7 @@ const ALLOWLIST: Record<string, Record<string, string>> = {
   consumer_group: {
     name: 'the dashboard consumer-group form exposes id/desc/labels/plugins, not a separate name field',
   },
-  stream_route: {
-    name: 'the base StreamRoute schema omits name (and status); name IS accepted on the write path via StreamRoutePostSchema (#3437) — the read schema just does not model it',
-  },
+  stream_route: {},
   proto: {
     name: 'the dashboard proto form models content/id only',
     labels: 'the dashboard proto form models content/id only',
