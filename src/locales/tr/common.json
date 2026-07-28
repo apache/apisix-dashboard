@@ -12,6 +12,7 @@
   "credentials": {
     "singular": "Credential"
   },
+  "docs": "Dokümanlar",
   "form": {
     "basic": {
       "desc": "Açıklama",

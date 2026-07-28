@@ -12,6 +12,7 @@
   "credentials": {
     "singular": "Credencial"
   },
+  "docs": "Documentación",
   "form": {
     "basic": {
       "desc": "Descripción",

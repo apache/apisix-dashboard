@@ -43,11 +43,13 @@ export const Navbar = () => {
   const { t } = useTranslation();
   return (
     <AppShellNavbar>
-      {navRoutes.map((route) => (
+      {navRoutes.map(({ icon: Icon, ...route }) => (
         <NavbarLink
           {...route}
           key={route.to}
           label={t(`sources.${route.label}`)}
+          // decorative: the link's accessible name must stay the label alone
+          leftSection={<Icon aria-hidden focusable="false" />}
         />
       ))}
     </AppShellNavbar>

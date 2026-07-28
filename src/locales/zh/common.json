@@ -12,6 +12,7 @@
   "credentials": {
     "singular": "凭证"
   },
+  "docs": "文档",
   "form": {
     "basic": {
       "desc": "描述",

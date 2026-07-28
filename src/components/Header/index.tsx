@@ -14,14 +14,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AppShell, Burger, Group, Image } from '@mantine/core';
+import {
+  ActionIcon,
+  AppShell,
+  Burger,
+  Button,
+  Group,
+  Image,
+  Text,
+} from '@mantine/core';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import apisixLogo from '@/assets/apisix-logo.svg';
+import IconDocs from '~icons/tabler/book';
 
 import { LanguageMenu } from './LanguageMenu';
 import { SettingModalBtn } from './SettingModalBtn';
+
+const DOCS_URL = 'https://apisix.apache.org/docs/';
+
+const docsAnchorProps = {
+  component: 'a',
+  href: DOCS_URL,
+  target: '_blank',
+  rel: 'noopener noreferrer',
+  variant: 'light',
+} as const;
+
+/**
+ * Labelled from `sm` up, icon-only below it. The header also carries the
+ * language control, whose label is the whole point of showing it, so Docs —
+ * the secondary affordance — is what sheds its label when space runs out.
+ * Long locales ("Documentación", "Dokumentation") overflow otherwise.
+ */
+const DocsBtn = () => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Button
+        {...docsAnchorProps}
+        visibleFrom="sm"
+        size="compact-sm"
+        leftSection={<IconDocs aria-hidden focusable="false" />}
+      >
+        {t('docs')}
+      </Button>
+      <ActionIcon
+        {...docsAnchorProps}
+        hiddenFrom="sm"
+        size="md"
+        aria-label={t('docs')}
+      >
+        <IconDocs aria-hidden focusable="false" />
+      </ActionIcon>
+    </>
+  );
+};
 
 const Logo = () => {
   const { t } = useTranslation();
@@ -39,8 +88,8 @@ export const Header: FC<HeaderProps> = (props) => {
   const { t } = useTranslation();
   return (
     <AppShell.Header>
-      <Group h="100%" px="md" justify="space-between">
-        <Group h="100%" gap="sm">
+      <Group h="100%" px="md" justify="space-between" wrap="nowrap">
+        <Group h="100%" gap="sm" wrap="nowrap">
           <Burger
             opened={opened}
             onClick={toggle}
@@ -49,9 +98,17 @@ export const Header: FC<HeaderProps> = (props) => {
             aria-label={t('a11y.toggleNavigation')}
           />
           <Logo />
-          <div>{t('apisix.dashboard')}</div>
+          {/* Below `sm` the burger appears and the header also carries the
+              Docs and language controls; with a long locale (e.g. German
+              "Dokumentation"/"Deutsch") that no longer fits on one row and
+              the controls overlapped the page content. The logo still
+              identifies the app, so drop the wordmark rather than the
+              control labels — showing the active language is the point of
+              the language button. */}
+          <Text visibleFrom="sm">{t('apisix.dashboard')}</Text>
         </Group>
-        <Group h="100%" gap="sm">
+        <Group h="100%" gap="sm" wrap="nowrap">
+          <DocsBtn />
           <SettingModalBtn />
           <LanguageMenu />
         </Group>

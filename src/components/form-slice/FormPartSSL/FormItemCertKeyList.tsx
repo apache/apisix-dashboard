@@ -20,7 +20,7 @@ import { useFieldArray, useFormContext, useFormState } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { FormItemTextareaWithUpload } from '@/components/form/TextareaWithUpload';
-import IconDelete from '~icons/material-symbols/delete-forever-outline';
+import IconDelete from '~icons/tabler/trash';
 
 import { FormSection } from '../FormSection';
 import type { SSLPostType } from './schema';

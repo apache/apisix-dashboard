@@ -19,7 +19,7 @@ import { useSetAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
 import { isSettingsOpenAtom } from '@/stores/global';
-import IconSettings from '~icons/material-symbols/settings';
+import IconSettings from '~icons/tabler/settings';
 
 export const SettingModalBtn = () => {
   const setIsSettingsOpen = useSetAtom(isSettingsOpenAtom);

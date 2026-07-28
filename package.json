@@ -50,7 +50,7 @@
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@estruyf/github-actions-reporter": "^1.11.0",
-    "@iconify-json/material-symbols": "^1.2.63",
+    "@iconify-json/tabler": "^1.2.37",
     "@m6web/eslint-plugin-i18n": "^2.0.4",
     "@playwright/test": "^1.57.0",
     "@svgr/core": "^8.1.0",

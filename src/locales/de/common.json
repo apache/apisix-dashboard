@@ -12,6 +12,7 @@
   "credentials": {
     "singular": "Anmeldeinformation"
   },
+  "docs": "Dokumentation",
   "form": {
     "basic": {
       "desc": "Beschreibung",

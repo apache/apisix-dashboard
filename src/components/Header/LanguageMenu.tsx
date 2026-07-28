@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionIcon, Anchor, Menu } from '@mantine/core';
+import { Anchor, Button, Menu } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import i18nProgress from 'virtual:i18n-progress';
 
 import type { Resources } from '@/config/i18n';
-import IconLanguage from '~icons/material-symbols/language-chinese-array';
+import IconLanguage from '~icons/tabler/language';
 
 const LangMap: Record<keyof Resources, string> = {
   en: 'English',
@@ -47,16 +47,26 @@ const TranslationProgress = ({ lang }: { lang: string }) => {
 
 export const LanguageMenu = () => {
   const { i18n, t } = useTranslation();
+  const current = (i18n.resolvedLanguage ??
+    i18n.language) as keyof Resources;
+  // Fall back to the raw code so an unmapped locale still shows something.
+  const currentLabel = LangMap[current] ?? current;
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
-        <ActionIcon
+        {/* Pairing the icon with the active language name makes the current
+            state readable at a glance instead of hidden behind a click. The
+            accessible name keeps the `a11y.selectLanguage` prefix — it states
+            the control's purpose and contains the visible text, so it
+            satisfies WCAG 2.5.3 (Label in Name). */}
+        <Button
           variant="light"
-          size="sm"
-          aria-label={t('a11y.selectLanguage')}
+          size="compact-sm"
+          leftSection={<IconLanguage aria-hidden focusable="false" />}
+          aria-label={`${t('a11y.selectLanguage')}: ${currentLabel}`}
         >
-          <IconLanguage />
-        </ActionIcon>
+          {currentLabel}
+        </Button>
       </Menu.Target>
       <Menu.Dropdown>
         {Object.keys(LangMap).map((lang) => (

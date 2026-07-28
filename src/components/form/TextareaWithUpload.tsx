@@ -30,7 +30,7 @@ import {
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import IconUpload from '~icons/material-symbols/upload';
+import IconUpload from '~icons/tabler/upload';
 
 import { genControllerProps } from './util';
 
