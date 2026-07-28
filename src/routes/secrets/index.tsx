@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getSecretListQueryOptions, useSecretList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { ListEmptyState } from '@/components/page/ListEmptyState';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
@@ -81,6 +82,9 @@ function SecretList() {
   return (
     <AntdConfigProvider>
       <ProTable
+        locale={{
+          emptyText: <ListEmptyState resource="secrets" />,
+        }}
         columns={columns}
         dataSource={data?.list || []}
         rowKey="id"

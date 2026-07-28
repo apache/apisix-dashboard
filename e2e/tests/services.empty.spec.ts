@@ -39,8 +39,7 @@ test.describe('Services Empty State', () => {
             const table = page.getByRole('table');
             await expect(table).toBeVisible();
 
-            const emptyDescription = page.getByText('No services found. Click Add Service to create your first one.');
-            await expect(emptyDescription).toBeVisible();
+            await expect(page.getByText('No Services yet')).toBeVisible();
 
             const emptyImage = page.locator('.ant-empty-image');
             await expect(emptyImage).toBeVisible();

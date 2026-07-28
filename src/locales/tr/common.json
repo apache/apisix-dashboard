@@ -13,6 +13,9 @@
     "singular": "Credential"
   },
   "docs": "Dokümanlar",
+  "empty": {
+    "description": "Henüz {{name}} yok"
+  },
   "form": {
     "basic": {
       "desc": "Açıklama",
@@ -340,8 +343,7 @@
     "singular": "Secret"
   },
   "services": {
-    "singular": "Service",
-    "empty": "Service bulunamadı. İlk Service'inizi oluşturmak için Service Ekle'ye tıklayın."
+    "singular": "Service"
   },
   "settings": {
     "adminKey": "Admin Key",

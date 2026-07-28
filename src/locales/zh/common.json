@@ -13,6 +13,9 @@
     "singular": "凭证"
   },
   "docs": "文档",
+  "empty": {
+    "description": "还没有{{name}}"
+  },
   "form": {
     "basic": {
       "desc": "描述",
@@ -340,8 +343,7 @@
     "singular": "Secret"
   },
   "services": {
-    "singular": "服务",
-    "empty": "未找到服务。创建您的第一个服务。"
+    "singular": "服务"
   },
   "settings": {
     "adminKey": "管理员密钥",

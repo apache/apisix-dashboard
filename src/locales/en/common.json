@@ -13,6 +13,9 @@
     "singular": "Credential"
   },
   "docs": "Docs",
+  "empty": {
+    "description": "No {{name}} yet"
+  },
   "form": {
     "basic": {
       "desc": "Description",
@@ -340,8 +343,7 @@
     "singular": "Secret"
   },
   "services": {
-    "singular": "Service",
-    "empty": "No services found. Click Add Service to create your first one."
+    "singular": "Service"
   },
   "settings": {
     "adminKey": "Admin Key",

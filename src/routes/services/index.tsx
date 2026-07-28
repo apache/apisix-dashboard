@@ -17,12 +17,12 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { createFileRoute } from '@tanstack/react-router';
-import { Empty } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getServiceListQueryOptions, useServiceList } from '@/apis/hooks';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { ListEmptyState } from '@/components/page/ListEmptyState';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
@@ -93,12 +93,7 @@ const ServiceList = () => {
     <AntdConfigProvider>
       <ProTable
         locale={{
-          emptyText: (
-            <Empty
-              description={t('services.empty')}
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-            />
-          ),
+          emptyText: <ListEmptyState resource="services" />,
         }}
         columns={columns}
         dataSource={data.list}

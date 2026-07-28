@@ -13,6 +13,9 @@
     "singular": "Credencial"
   },
   "docs": "Documentación",
+  "empty": {
+    "description": "Aún no hay {{name}}"
+  },
   "form": {
     "basic": {
       "desc": "Descripción",
@@ -340,8 +343,7 @@
     "singular": "Secreto"
   },
   "services": {
-    "singular": "Servicio",
-    "empty": "No se encontraron servicios. Haga clic en Añadir Servicio para crear el primero."
+    "singular": "Servicio"
   },
   "settings": {
     "adminKey": "Clave de Administrador",

@@ -31,6 +31,7 @@ import { deleteAllConsumers } from '@/apis/consumers';
 import { deleteAllRoutes } from '@/apis/routes';
 import { deleteAllServices } from '@/apis/services';
 import { deleteAllSSLs } from '@/apis/ssls';
+import { deleteAllStreamRoutes } from '@/apis/stream_routes';
 import { deleteAllUpstreams } from '@/apis/upstreams';
 
 type Resource = {
@@ -39,6 +40,12 @@ type Resource = {
   apiPath: string;
 };
 
+// `secrets` is deliberately absent: its Admin API key is compound
+// (`/secrets/{manager}/{id}`) while the list response has already split
+// `manager` out of `value.id`, so the generic `purge()` below would issue
+// `DELETE /secrets/{id}` and silently leave rows behind — the empty-state
+// assertion would then fail for the wrong reason. Covering it needs a
+// manager-aware cleanup.
 const RESOURCES: Resource[] = [
   { path: '/services', label: 'Services', apiPath: '/services' },
   { path: '/routes', label: 'Routes', apiPath: '/routes' },
@@ -57,6 +64,11 @@ const RESOURCES: Resource[] = [
     apiPath: '/plugin_configs',
   },
   { path: '/protos', label: 'Protos', apiPath: '/protos' },
+  {
+    path: '/stream_routes',
+    label: 'Stream Routes',
+    apiPath: '/stream_routes',
+  },
 ];
 
 // Inline delete-all for resources that don't have a product-side helper.
@@ -86,6 +98,7 @@ test.beforeAll(async () => {
     () => deleteAllConsumers(e2eReq),
     () => deleteAllConsumerGroups(e2eReq),
     () => deleteAllSSLs(e2eReq),
+    () => deleteAllStreamRoutes(e2eReq),
     () => purge('/global_rules'),
     () => purge('/plugin_configs'),
     () => purge('/protos')
@@ -104,6 +117,11 @@ for (const resource of RESOURCES) {
     await expect(
       page.getByRole('heading', { name: resource.label, exact: true })
     ).toBeVisible();
+
+    // The empty state must name the resource, not just avoid leaking keys.
+    // `resource.label` is the same plural noun the message interpolates, so
+    // this also proves the interpolation resolved.
+    await expect(page.getByText(`No ${resource.label} yet`)).toBeVisible();
 
     // Hard-fail symptoms of #3321 — raw translation key in the visible UI.
     const bodyText = await page.locator('body').innerText();
