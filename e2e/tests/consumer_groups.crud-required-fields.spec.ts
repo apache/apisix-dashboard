@@ -93,8 +93,11 @@ test('should CRUD Consumer Group with required fields', async ({ page }) => {
     await consumerGroupsPom.isIndexPage(page);
 
     // Verify consumer group exists in list
+    // Target the id text, not the cell's accessible name: the identifier
+    // cell also holds a copy control, so the cell's name is "<id> Copy" and
+    // an exact match on the id alone no longer applies.
     await expect(
-      page.getByRole('cell', { name: testId, exact: true })
+      page.getByRole('table').getByText(testId, { exact: true })
     ).toBeVisible();
   });
 
@@ -141,8 +144,11 @@ test('should CRUD Consumer Group with required fields', async ({ page }) => {
     await consumerGroupsPom.isIndexPage(page);
 
     // Verify consumer group is deleted
+    // Target the id text, not the cell's accessible name: the identifier
+    // cell also holds a copy control, so the cell's name is "<id> Copy" and
+    // an exact match on the id alone no longer applies.
     await expect(
-      page.getByRole('cell', { name: testId, exact: true })
+      page.getByRole('table').getByText(testId, { exact: true })
     ).toBeHidden();
   });
 });

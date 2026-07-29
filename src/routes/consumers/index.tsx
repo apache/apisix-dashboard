@@ -21,6 +21,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getConsumerListQueryOptions, useConsumerList } from '@/apis/hooks';
+import { CopyableId } from '@/components/page/CopyableId';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -41,6 +42,7 @@ function ConsumersList() {
         title: t('form.consumers.username'),
         key: 'username',
         valueType: 'text',
+        render: (_, record) => <CopyableId value={record.value.username} />,
       },
       {
         dataIndex: ['value', 'desc'],

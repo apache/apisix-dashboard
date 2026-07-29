@@ -21,6 +21,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getUpstreamListQueryOptions, useUpstreamList } from '@/apis/hooks';
+import { CopyableId } from '@/components/page/CopyableId';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -43,6 +44,7 @@ function RouteComponent() {
         title: 'ID',
         key: 'id',
         valueType: 'text',
+        render: (_, record) => <CopyableId value={record.value.id} />,
       },
       {
         dataIndex: ['value', 'name'],

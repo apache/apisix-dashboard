@@ -22,6 +22,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getServiceListQueryOptions, useServiceList } from '@/apis/hooks';
+import { CopyableId } from '@/components/page/CopyableId';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
@@ -42,6 +43,7 @@ const ServiceList = () => {
         title: 'ID',
         key: 'id',
         valueType: 'text',
+        render: (_, record) => <CopyableId value={record.value.id} />,
       },
       {
         dataIndex: ['value', 'name'],
