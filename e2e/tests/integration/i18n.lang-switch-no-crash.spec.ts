@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable playwright/no-wait-for-timeout, playwright/no-conditional-in-test -- regression test stabilization */
+/* eslint-disable playwright/no-wait-for-timeout -- the crash watcher needs a
+   settle window for asynchronous errors to surface after each switch */
 
 // Integration F-10: switching language must not crash. The dashboard ships
 // `en`, `zh`, `de`, `es`, `tr` locales; de/es/tr are mostly placeholders so
@@ -41,34 +42,36 @@ test('switching to every offered language never crashes the page', async ({
     crashes.expectNoCrash(`initial load of ${path}`);
   }
 
-  // The language switcher lives in the banner. Open it, pick every
-  // option, return to English. Fail if any toggle produces an
-  // unhandled error.
-  const banner = page.getByRole('banner');
-  const languageButton = banner
-    .getByRole('button')
-    .filter({ hasText: /(English|EN|中文|ZH|Deutsch|Español|Türkçe)/i })
-    .first();
+  // Locate the switcher structurally — it is the banner's only menu
+  // trigger. Matching on rendered text does not work: this test used to
+  // filter the banner's buttons by `/English|中文|.../` and silently
+  // `return` when nothing matched, which is exactly what happened for as
+  // long as the control was icon-only. It reported green without ever
+  // running the body below. Matching on the accessible name is no better,
+  // because `a11y.selectLanguage` is itself translated (zh: 选择语言), so
+  // the locator would break the moment the test switched away from English.
+  const languageButton = page
+    .getByRole('banner')
+    .locator('button[aria-haspopup="menu"]');
+  await expect(languageButton).toBeVisible();
 
-  if (!(await languageButton.isVisible().catch(() => false))) {
-    // Switcher not exposed via accessible text — abort gracefully rather
-    // than hard-fail. The crash-prevention assertion above still ran.
-    test.info().annotations.push({
-      type: 'skip-reason',
-      description: 'language switcher not discoverable by accessible name',
-    });
-    return;
-  }
-
-  const targetLanguages = ['中文', 'English'];
+  // Every other locale, ending back on English. de/es/tr carry the most
+  // placeholder copy and are the likeliest to blow up, so the point of
+  // this test is to actually visit them — the previous version only ever
+  // named 中文.
+  const targetLanguages = ['Deutsch', '中文', 'Español', 'Türkçe', 'English'];
   for (const label of targetLanguages) {
     await languageButton.click();
+    // Substring match: locales below 100% translated render a "(99%)"
+    // suffix inside the same menu item.
     const option = page.getByRole('menuitem', { name: label }).first();
-    if (await option.isVisible().catch(() => false)) {
-      await option.click();
-      await page.waitForTimeout(500);
-      crashes.expectNoCrash(`switched to ${label}`);
-    }
+    // The menu disables whichever language is already active. Asserting
+    // enabled keeps the loop honest — clicking a disabled item just times
+    // out with no indication of why.
+    await expect(option).toBeEnabled();
+    await option.click();
+    await page.waitForTimeout(500);
+    crashes.expectNoCrash(`switched to ${label}`);
   }
 
   // Visit a different page after the last switch and verify no late crash.
@@ -76,8 +79,9 @@ test('switching to every offered language never crashes the page', async ({
   await page.waitForTimeout(800);
   crashes.expectNoCrash('after language switches');
 
-  // Page must still render its main nav.
+  // Page must still render its main nav. Anchor the name: an unanchored
+  // /Routes/ also matches "Stream Routes" and trips strict mode.
   await expect(
-    page.getByRole('link', { name: /Routes|路由/ })
+    page.getByRole('link', { name: /^(Routes|路由)$/ })
   ).toBeVisible();
 });
