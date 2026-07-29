@@ -61,11 +61,13 @@
       "addPlugin": "Plugin hinzufügen",
       "configId": "Plugin-Konfigurations-ID",
       "editPlugin": "Plugin bearbeiten",
+      "hideSecrets": "Geheimnisse verbergen",
       "label": "Plugins",
       "searchForSelectedPlugins": "Nach ausgewählten Plugins suchen",
       "selectPlugins": {
         "title": "Plugins auswählen"
       },
+      "showSecrets": "Geheimnisse anzeigen",
       "viewPlugin": "Plugin anzeigen"
     },
     "protos": {
@@ -138,6 +140,8 @@
         "title": "Client"
       },
       "key": "Private Key",
+      "keyHidden": "••••••",
+      "keyHint": "Das Gateway gibt private Schlüssel nie zurück. Geben Sie den Schlüssel erneut ein, um Änderungen zu speichern.",
       "sni": "SNI",
       "snis": "SNIs",
       "ssl_protocols": "SSL Protokolle",

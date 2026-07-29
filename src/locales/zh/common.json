@@ -61,11 +61,13 @@
       "addPlugin": "添加插件",
       "configId": "插件配置ID",
       "editPlugin": "编辑插件",
+      "hideSecrets": "隐藏密钥",
       "label": "插件",
       "searchForSelectedPlugins": "搜索所选插件",
       "selectPlugins": {
         "title": "选择插件"
       },
+      "showSecrets": "显示密钥",
       "viewPlugin": "查看插件"
     },
     "protos": {
@@ -138,6 +140,8 @@
         "title": "客户端"
       },
       "key": "私钥",
+      "keyHidden": "••••••",
+      "keyHint": "网关不会返回私钥。保存任何修改都需要重新填入私钥。",
       "sni": "SNI",
       "snis": "SNI 列表",
       "ssl_protocols": "SSL协议",

@@ -61,11 +61,13 @@
       "addPlugin": "Add Plugin",
       "configId": "Plugin Config ID",
       "editPlugin": "Edit Plugin",
+      "hideSecrets": "Hide secrets",
       "label": "Plugins",
       "searchForSelectedPlugins": "Search for Selected Plugins",
       "selectPlugins": {
         "title": "Select Plugins"
       },
+      "showSecrets": "Show secrets",
       "viewPlugin": "View Plugin"
     },
     "protos": {
@@ -138,6 +140,8 @@
         "title": "Client"
       },
       "key": "Private Key",
+      "keyHidden": "••••••",
+      "keyHint": "The gateway never returns private keys. Enter the key again to save any change.",
       "sni": "SNI",
       "snis": "SNIs",
       "ssl_protocols": "SSL Protocols",

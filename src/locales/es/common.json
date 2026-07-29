@@ -61,11 +61,13 @@
       "addPlugin": "Añadir Plugin",
       "configId": "ID de Configuración de Plugin",
       "editPlugin": "Editar Plugin",
+      "hideSecrets": "Ocultar secretos",
       "label": "Plugins",
       "searchForSelectedPlugins": "Buscar Plugins Seleccionados",
       "selectPlugins": {
         "title": "Seleccionar Plugins"
       },
+      "showSecrets": "Mostrar secretos",
       "viewPlugin": "Ver Plugin"
     },
     "protos": {
@@ -138,6 +140,8 @@
         "title": "Cliente"
       },
       "key": "Clave Privada",
+      "keyHidden": "••••••",
+      "keyHint": "La puerta de enlace nunca devuelve claves privadas. Introduzca la clave de nuevo para guardar cualquier cambio.",
       "sni": "SNI",
       "snis": "SNIs",
       "ssl_protocols": "Protocolos SSL",

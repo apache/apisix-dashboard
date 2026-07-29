@@ -61,11 +61,13 @@
       "addPlugin": "Plugin Ekle",
       "configId": "Plugin Config ID",
       "editPlugin": "Plugin Düzenle",
+      "hideSecrets": "Gizli değerleri gizle",
       "label": "Plugin'ler",
       "searchForSelectedPlugins": "Seçili Plugin'lerde Ara",
       "selectPlugins": {
         "title": "Plugin Seç"
       },
+      "showSecrets": "Gizli değerleri göster",
       "viewPlugin": "Plugin'i Görüntüle"
     },
     "protos": {
@@ -138,6 +140,8 @@
         "title": "Client"
       },
       "key": "Private Key",
+      "keyHidden": "••••••",
+      "keyHint": "Ağ geçidi özel anahtarları asla döndürmez. Değişiklikleri kaydetmek için anahtarı yeniden girin.",
       "sni": "SNI",
       "snis": "SNI'ler",
       "ssl_protocols": "SSL Protocol'leri",
