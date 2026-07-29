@@ -53,6 +53,8 @@ const RequiredCertKey = () => {
         control={control}
         label={`${t('form.ssls.key')} 1`}
         name="key"
+        placeholder={t('form.ssls.keyHidden')}
+        description={t('form.ssls.keyHint')}
         required
       />
     </PairWrapper>
@@ -99,6 +101,8 @@ const CertKeyPairList = () => {
             key={keys.fields[idx].id}
             name={`keys.${idx}`}
             label={`${t('form.ssls.key')} ${idx + 2}`}
+            placeholder={t('form.ssls.keyHidden')}
+            description={t('form.ssls.keyHint')}
           />
         </PairWrapper>
       ))}
