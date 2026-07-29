@@ -44,12 +44,19 @@ const redactPath = (node: unknown, segments: string[]): unknown => {
  * Replace every value named by `paths` with {@link REDACTED}.
  *
  * `paths` come from the plugin schema's `encrypt_fields`, i.e. the gateway
- * decides what is sensitive — the dashboard keeps no list of its own.
+ * decides what is sensitive — the dashboard keeps no list of its own. Since
+ * that arrives over the network as `unknown` in practice, a non-array is
+ * ignored and any non-string element is skipped, rather than trusting the
+ * declared `string[]` shape.
  * Returns a new value; the input is left intact so edit mode still has the
  * real config.
  */
-export const redactByPaths = (config: unknown, paths: string[]): unknown =>
-  paths.reduce<unknown>(
-    (acc, path) => redactPath(acc, path.split('.')),
+export const redactByPaths = (config: unknown, paths: unknown): unknown => {
+  if (!Array.isArray(paths)) return config;
+
+  return paths.reduce<unknown>(
+    (acc, path) =>
+      typeof path === 'string' ? redactPath(acc, path.split('.')) : acc,
     config
   );
+};

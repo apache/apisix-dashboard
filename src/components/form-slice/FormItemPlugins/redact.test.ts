@@ -73,4 +73,22 @@ describe('redactByPaths', () => {
   it('returns the input unchanged when there are no paths', () => {
     expect(redactByPaths({ key: 'SECRET' }, [])).toEqual({ key: 'SECRET' });
   });
+
+  // `encrypt_fields` rides in over the network as part of the plugin
+  // schema, so a malformed value must not crash the drawer's render.
+  it('ignores a non-array paths value', () => {
+    const cfg = { key: 'SECRET' };
+    expect(redactByPaths(cfg, 'key')).toEqual({ key: 'SECRET' });
+    expect(redactByPaths(cfg, null)).toEqual({ key: 'SECRET' });
+    expect(redactByPaths(cfg, { 0: 'key' })).toEqual({ key: 'SECRET' });
+  });
+
+  it('skips a non-string element but still applies the valid ones', () => {
+    expect(
+      redactByPaths({ key: 'SECRET', header: 'apikey' }, [42, 'key', null])
+    ).toEqual({
+      key: REDACTED,
+      header: 'apikey',
+    });
+  });
 });
