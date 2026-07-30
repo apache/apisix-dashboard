@@ -75,6 +75,11 @@
       "content": "内容",
       "contentPlaceholder": "粘贴或上传 {{fileTypes}} 文件"
     },
+    "ref": {
+      "view": "查看{{name}}",
+      "viewNamed": "查看{{resource}}：{{name}}",
+      "missing": "没有此 ID 的{{name}}"
+    },
     "routes": {
       "enableWebsocket": "启用WebSocket",
       "filterFunc": "过滤函数",

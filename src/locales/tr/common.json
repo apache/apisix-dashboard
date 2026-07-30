@@ -75,6 +75,11 @@
       "content": "İçerik",
       "contentPlaceholder": "{{fileTypes}} dosyasını yapıştırın veya yükleyin"
     },
+    "ref": {
+      "view": "{{name}} görüntüle",
+      "viewNamed": "{{resource}} görüntüle: {{name}}",
+      "missing": "Bu ID'ye sahip {{name}} yok"
+    },
     "routes": {
       "enableWebsocket": "WebSocket Aktif",
       "filterFunc": "Filter Fonksiyonu",

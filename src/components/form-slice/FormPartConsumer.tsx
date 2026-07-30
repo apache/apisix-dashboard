@@ -17,6 +17,7 @@
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { FormItemResourceRef } from '@/components/form/ResourceRef';
 import { FormItemTextInput } from '@/components/form/TextInput';
 import type { APISIXType } from '@/types/schema/apisix';
 
@@ -56,10 +57,11 @@ export const FormPartConsumer = (props: FormPartConsumerProps) => {
           />
         }
       />
-      <FormItemTextInput
+      <FormItemResourceRef
         control={control}
         name="group_id"
         label={t('form.consumers.groupId')}
+        resource="consumerGroups"
       />
       <FormSectionPluginsOnly />
     </>

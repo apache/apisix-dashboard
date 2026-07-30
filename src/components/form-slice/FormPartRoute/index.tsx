@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FormItemEditor } from '@/components/form/Editor';
 import { FormItemNumberInput } from '@/components/form/NumberInput';
+import { FormItemResourceRef } from '@/components/form/ResourceRef';
 import { FormItemSwitch } from '@/components/form/Switch';
 import { FormItemTagsInput } from '@/components/form/TagInput';
 import { FormItemTextarea } from '@/components/form/Textarea';
@@ -115,7 +116,11 @@ export const FormSectionUpstream = () => {
   return (
     <FormSection legend={t('form.upstreams.title')}>
       <FormSection legend={t('form.upstreams.upstreamId')}>
-        <FormItemTextInput control={control} name="upstream_id" />
+        <FormItemResourceRef
+          control={control}
+          name="upstream_id"
+          resource="upstreams"
+        />
       </FormSection>
       <Divider my="xs" label={t('or')} />
       <NamePrefixProvider value="upstream">
@@ -137,10 +142,11 @@ export const FormSectionPlugins = (props: FormSectionPluginsProps) => {
     <FormSection legend={t('form.plugins.label')}>
       {showConfigId && (
         <>
-          <FormItemTextInput
+          <FormItemResourceRef
             control={control}
             name="plugin_config_id"
             label={t('form.plugins.configId')}
+            resource="pluginConfigs"
           />
           <Divider my="xs" label={t('or')} />
         </>
@@ -159,10 +165,11 @@ export const FormSectionService = () => {
       legend={t('form.routes.service')}
       disabled={readOnlyFields.includes('service_id')}
     >
-      <FormItemTextInput
+      <FormItemResourceRef
         control={control}
         name="service_id"
         label={t('form.upstreams.serviceId')}
+        resource="services"
       />
     </FormSection>
   );

@@ -75,6 +75,11 @@
       "content": "Content",
       "contentPlaceholder": "Paste or upload {{fileTypes}} file"
     },
+    "ref": {
+      "view": "View {{name}}",
+      "viewNamed": "View {{resource}}: {{name}}",
+      "missing": "No {{name}} with this ID"
+    },
     "routes": {
       "enableWebsocket": "Enable WebSocket",
       "filterFunc": "Filter Func",

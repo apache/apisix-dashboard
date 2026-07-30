@@ -75,6 +75,11 @@
       "content": "Contenido",
       "contentPlaceholder": "Pegar o subir archivo {{fileTypes}}"
     },
+    "ref": {
+      "view": "Ver {{name}}",
+      "viewNamed": "Ver {{resource}}: {{name}}",
+      "missing": "{{name}} con este ID no existe"
+    },
     "routes": {
       "enableWebsocket": "Habilitar WebSocket",
       "filterFunc": "Función de Filtro",

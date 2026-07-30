@@ -75,6 +75,11 @@
       "content": "Inhalt",
       "contentPlaceholder": "Datei {{fileTypes}} einfügen oder hochladen"
     },
+    "ref": {
+      "view": "{{name}} anzeigen",
+      "viewNamed": "{{resource}} anzeigen: {{name}}",
+      "missing": "{{name}} mit dieser ID existiert nicht"
+    },
     "routes": {
       "enableWebsocket": "WebSocket aktivieren",
       "filterFunc": "Filterfunktion",
