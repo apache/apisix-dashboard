@@ -20,6 +20,7 @@ import {
   useParams,
 } from '@tanstack/react-router';
 
+import { genDetailErrorComponent } from '@/components/page/DetailNotFound';
 import { RouteDetail } from '@/routes/routes/detail.$id';
 import { CommonFormContext } from '@/utils/form-context';
 
@@ -47,4 +48,9 @@ export const Route = createFileRoute(
   '/services/detail/$id/routes/detail/$routeId'
 )({
   component: RouteComponent,
+  errorComponent: genDetailErrorComponent({
+    idParam: 'routeId',
+    resource: 'routes',
+    to: '/services/detail/$id/routes',
+  }),
 });

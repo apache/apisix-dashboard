@@ -90,6 +90,13 @@ test('secret detail shows the error page, not a blank editable form, when its fe
   await expect(page.getByRole('button', { name: 'Edit' })).toBeHidden();
   await expect(page.getByLabel('URI')).toBeHidden();
 
+  // The button must recover, not merely render. Task 3 moved which boundary
+  // catches this error from the root to the route, so `router.invalidate()`
+  // plus the query-error reset are exercised at a level they never were.
+  await page.unrouteAll({ behavior: 'ignoreErrors' });
+  await page.getByRole('button', { name: 'Retry' }).click();
+  await expect(page.getByLabel('URI')).toBeVisible({ timeout: 15_000 });
+
   // The real secret is untouched on the backend.
   const secret = await getSecretReq(e2eReq, {
     manager: 'vault',

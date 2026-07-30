@@ -45,7 +45,7 @@ const assert = {
     await expect(page).toHaveURL((url) =>
       url.pathname.includes('/plugin_configs/detail')
     );
-    const title = page.getByRole('heading', { name: 'Plugin Config Detail' });
+    const title = page.getByRole('heading', { name: /^Plugin Config · /u });
     await expect(title).toBeVisible();
   },
 };

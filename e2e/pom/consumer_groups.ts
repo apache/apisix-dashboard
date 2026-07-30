@@ -45,7 +45,7 @@ const assert = {
     await expect(page).toHaveURL((url) =>
       url.pathname.includes('/consumer_groups/detail')
     );
-    const title = page.getByRole('heading', { name: 'Consumer Group Detail' });
+    const title = page.getByRole('heading', { name: /^Consumer Group · /u });
     await expect(title).toBeVisible();
   },
 };

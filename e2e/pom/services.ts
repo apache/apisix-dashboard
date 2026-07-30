@@ -53,7 +53,7 @@ const assert = {
     await expect(page).toHaveURL((url) =>
       url.pathname.includes('/services/detail')
     );
-    const title = page.getByRole('heading', { name: 'Service Detail' });
+    const title = page.getByRole('heading', { name: /^Service · /u });
     await expect(title).toBeVisible();
   },
   // Service routes assertions
@@ -83,7 +83,7 @@ const assert = {
         url.pathname.includes('/services/detail') &&
         url.pathname.includes('/routes/detail')
     );
-    const title = page.getByRole('heading', { name: 'Route Detail' });
+    const title = page.getByRole('heading', { name: /^Route · /u });
     await expect(title).toBeVisible();
   },
   // Service stream routes assertions
@@ -113,7 +113,7 @@ const assert = {
         url.pathname.includes('/services/detail') &&
         url.pathname.includes('/stream_routes/detail')
     );
-    const title = page.getByRole('heading', { name: 'Stream Route Detail' });
+    const title = page.getByRole('heading', { name: /^Stream Route · /u });
     await expect(title).toBeVisible();
   },
 };

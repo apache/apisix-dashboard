@@ -43,7 +43,7 @@ const assert = {
     await expect(page).toHaveURL((url) =>
       url.pathname.includes('/upstreams/detail')
     );
-    const title = page.getByRole('heading', { name: 'Upstream Detail' });
+    const title = page.getByRole('heading', { name: /^Upstream · /u });
     await expect(title).toBeVisible();
   },
 };

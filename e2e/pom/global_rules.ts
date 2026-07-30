@@ -45,7 +45,7 @@ const assert = {
     await expect(page).toHaveURL((url) =>
       url.pathname.includes('/global_rules/detail')
     );
-    const title = page.getByRole('heading', { name: 'Global Rule Detail' });
+    const title = page.getByRole('heading', { name: /^Global Rule · /u });
     await expect(title).toBeVisible();
   },
 };

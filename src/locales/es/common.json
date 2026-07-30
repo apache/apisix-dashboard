@@ -305,7 +305,8 @@
       "confirm": "¿Está seguro de que desea eliminar <0>{{name}}</0>?"
     },
     "detail": {
-      "title": "Detalle de {{name}}"
+      "title": "Detalle de {{name}}",
+      "titleWithId": "{{name}} · {{id}}"
     },
     "edit": {
       "success": "Editado {{name}} con éxito",
@@ -379,7 +380,11 @@
   },
   "error": {
     "title": "Algo salió mal",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "notFound": {
+      "description": "{{name}} no existe o se ha eliminado.",
+      "back": "Volver a {{name}}"
+    }
   },
   "a11y": {
     "openSettings": "Open settings",

@@ -305,7 +305,8 @@
       "confirm": "确定要删除 <0>{{name}}</0> 吗？"
     },
     "detail": {
-      "title": "{{name}} 详情"
+      "title": "{{name}} 详情",
+      "titleWithId": "{{name}} · {{id}}"
     },
     "edit": {
       "success": "编辑 {{name}} 成功",
@@ -379,7 +380,11 @@
   },
   "error": {
     "title": "出错了",
-    "retry": "重试"
+    "retry": "重试",
+    "notFound": {
+      "description": "该{{name}}不存在，可能已被删除。",
+      "back": "返回{{name}}"
+    }
   },
   "a11y": {
     "openSettings": "打开设置",

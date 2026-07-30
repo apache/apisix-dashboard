@@ -19,6 +19,7 @@ import { createRouter } from '@tanstack/react-router';
 import { HttpStatusCode, isAxiosError } from 'axios';
 
 import { routeTree } from '@/routeTree.gen';
+import { isNotFoundError } from '@/utils/error';
 
 import { BASE_PATH } from './constant';
 
@@ -36,6 +37,15 @@ export const queryClient = new QueryClient({
           isAxiosError(error) &&
           error.response?.status === HttpStatusCode.Unauthorized
         ) {
+          return false;
+        }
+        // A 404 means the resource does not exist; no number of retries
+        // changes that. This is also load-bearing for the detail pages'
+        // not-found state: a retry sequence PAUSES while the tab is hidden
+        // (query-core retryer `canContinue` -> focusManager), and a paused
+        // query never reaches `error`, so nothing is thrown and the page
+        // would sit on its loading skeleton indefinitely.
+        if (isNotFoundError(error)) {
           return false;
         }
         return failureCount < 3;

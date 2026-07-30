@@ -46,7 +46,7 @@ const assert = {
       url.pathname.includes('/consumers/detail/') &&
       url.pathname.includes('/credentials/detail/')
     );
-    const title = page.getByRole('heading', { name: 'Credential Detail' });
+    const title = page.getByRole('heading', { name: /^Credential · /u });
     await expect(title).toBeVisible();
   },
 };

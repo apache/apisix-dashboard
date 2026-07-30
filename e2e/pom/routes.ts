@@ -41,7 +41,7 @@ const assert = {
     await expect(page).toHaveURL((url) =>
       url.pathname.includes('/routes/detail')
     );
-    const title = page.getByRole('heading', { name: 'Route Detail' });
+    const title = page.getByRole('heading', { name: /^Route · /u });
     await expect(title).toBeVisible();
   },
 };

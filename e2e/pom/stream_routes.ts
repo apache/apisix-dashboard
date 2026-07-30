@@ -45,7 +45,7 @@ const assert = {
       { timeout: 20000 }
     ).toHaveURL((url) => url.pathname.includes('/stream_routes/detail'));
     const title = page.getByRole('heading', {
-      name: 'Stream Route Detail',
+      name: /^Stream Route · /u,
     });
     await expect(title).toBeVisible({ timeout: 30000 });
   },

@@ -40,6 +40,7 @@ import {
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { genDetailErrorComponent } from '@/components/page/DetailNotFound';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SSLS } from '@/config/constant';
 import { req } from '@/config/req';
@@ -136,7 +137,10 @@ function RouteComponent() {
       <PageHeader
         title={t('info.edit.title', { name: t('ssls.singular') })}
         {...(readOnly && {
-          title: t('info.detail.title', { name: t('ssls.singular') }),
+          title: t('info.detail.titleWithId', {
+            name: t('ssls.singular'),
+            id,
+          }),
           extra: (
             <Group>
               <Button
@@ -164,4 +168,9 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/ssls/detail/$id')({
   component: RouteComponent,
+  errorComponent: genDetailErrorComponent({
+    idParam: 'id',
+    resource: 'ssls',
+    to: '/ssls',
+  }),
 });

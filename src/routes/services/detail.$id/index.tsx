@@ -39,6 +39,7 @@ import {
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { genDetailErrorComponent } from '@/components/page/DetailNotFound';
 import PageHeader from '@/components/page/PageHeader';
 import { API_SERVICES } from '@/config/constant';
 import { req } from '@/config/req';
@@ -131,7 +132,10 @@ function RouteComponent() {
       <PageHeader
         title={t('info.edit.title', { name: t('services.singular') })}
         {...(readOnly && {
-          title: t('info.detail.title', { name: t('services.singular') }),
+          title: t('info.detail.titleWithId', {
+            name: t('services.singular'),
+            id,
+          }),
           extra: (
             <Group>
               <Button
@@ -169,4 +173,9 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/services/detail/$id/')({
   component: RouteComponent,
+  errorComponent: genDetailErrorComponent({
+    idParam: 'id',
+    resource: 'services',
+    to: '/services',
+  }),
 });

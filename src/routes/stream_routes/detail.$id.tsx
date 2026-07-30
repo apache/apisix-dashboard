@@ -37,6 +37,7 @@ import { produceToNestedUpstreamForm } from '@/components/form-slice/FormPartUps
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { genDetailErrorComponent } from '@/components/page/DetailNotFound';
 import PageHeader from '@/components/page/PageHeader';
 import { StreamRoutesErrorComponent } from '@/components/page-slice/stream_routes/ErrorComponent';
 import { API_STREAM_ROUTES } from '@/config/constant';
@@ -128,7 +129,10 @@ export const StreamRouteDetail = (props: StreamRouteDetailProps) => {
       <PageHeader
         title={t('info.edit.title', { name: t('streamRoutes.singular') })}
         {...(readOnly && {
-          title: t('info.detail.title', { name: t('streamRoutes.singular') }),
+          title: t('info.detail.titleWithId', {
+            name: t('streamRoutes.singular'),
+            id,
+          }),
           extra: (
             <Group>
               <Button
@@ -181,5 +185,11 @@ function RouteComponent() {
 
 export const Route = createFileRoute('/stream_routes/detail/$id')({
   component: RouteComponent,
-  errorComponent: StreamRoutesErrorComponent,
+  errorComponent: genDetailErrorComponent({
+    idParam: 'id',
+    resource: 'streamRoutes',
+    to: '/stream_routes',
+    // 400 = stream mode disabled on the gateway; that hint must survive.
+    fallback: StreamRoutesErrorComponent,
+  }),
 });

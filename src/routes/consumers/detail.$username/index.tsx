@@ -35,6 +35,7 @@ import { FormPartConsumer } from '@/components/form-slice/FormPartConsumer';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { genDetailErrorComponent } from '@/components/page/DetailNotFound';
 import PageHeader from '@/components/page/PageHeader';
 import { API_CONSUMERS } from '@/config/constant';
 import { req } from '@/config/req';
@@ -122,7 +123,10 @@ const ConsumerDetailTab = () => {
       <PageHeader
         title={t('info.edit.title', { name: t('consumers.singular') })}
         {...(readOnly && {
-          title: t('info.detail.title', { name: t('consumers.singular') }),
+          title: t('info.detail.titleWithId', {
+            name: t('consumers.singular'),
+            id: username,
+          }),
           extra: (
             <Group>
               <Button
@@ -153,4 +157,9 @@ const ConsumerDetailTab = () => {
 
 export const Route = createFileRoute('/consumers/detail/$username/')({
   component: ConsumerDetailTab,
+  errorComponent: genDetailErrorComponent({
+    idParam: 'username',
+    resource: 'consumers',
+    to: '/consumers',
+  }),
 });

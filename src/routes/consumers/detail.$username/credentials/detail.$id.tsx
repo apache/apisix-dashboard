@@ -35,6 +35,7 @@ import { FormPartCredential } from '@/components/form-slice/FormPartCredential';
 import { FormTOCBox } from '@/components/form-slice/FormSection';
 import { FormSectionGeneral } from '@/components/form-slice/FormSectionGeneral';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
+import { genDetailErrorComponent } from '@/components/page/DetailNotFound';
 import PageHeader from '@/components/page/PageHeader';
 import { API_CREDENTIALS } from '@/config/constant';
 import { req } from '@/config/req';
@@ -126,7 +127,10 @@ function RouteComponent() {
       <PageHeader
         title={t('info.edit.title', { name: t('credentials.singular') })}
         {...(readOnly && {
-          title: t('info.detail.title', { name: t('credentials.singular') }),
+          title: t('info.detail.titleWithId', {
+            name: t('credentials.singular'),
+            id,
+          }),
           extra: (
             <Group>
               <Button
@@ -161,4 +165,9 @@ export const Route = createFileRoute(
   '/consumers/detail/$username/credentials/detail/$id'
 )({
   component: RouteComponent,
+  errorComponent: genDetailErrorComponent({
+    idParam: 'id',
+    resource: 'credentials',
+    to: '/consumers/detail/$username/credentials',
+  }),
 });

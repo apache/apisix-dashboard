@@ -14,23 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AppShell, Button, Code, Stack, Text } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   createRootRoute,
   type ErrorComponentProps,
   HeadContent,
   Outlet,
-  useRouter,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { useEffect } from 'react';
-import { I18nextProvider, useTranslation } from 'react-i18next';
+import { I18nextProvider } from 'react-i18next';
 
 import { Header } from '@/components/Header';
 import { Navbar } from '@/components/Navbar';
+import { PageError } from '@/components/page/PageError';
 import { SettingsModal } from '@/components/page/SettingsModal';
 import {
   APPSHELL_HEADER_HEIGHT,
@@ -81,28 +79,6 @@ const Root = () => {
   );
 };
 
-const RootErrorContent = (props: ErrorComponentProps) => {
-  const { error } = props;
-  const { t } = useTranslation();
-  const router = useRouter();
-  // detail pages throw from useSuspenseQuery during render; unless the
-  // query error-reset boundary is reset, react-query re-throws the cached
-  // error on remount and the Retry button would loop back here
-  const queryErrorResetBoundary = useQueryErrorResetBoundary();
-  useEffect(() => {
-    queryErrorResetBoundary.reset();
-  }, [queryErrorResetBoundary]);
-  return (
-    <Stack align="center" justify="center" mih="60vh" gap="md" p="xl">
-      <Text fw={700} size="lg">
-        {t('error.title')}
-      </Text>
-      <Code block>{error.message}</Code>
-      <Button onClick={() => router.invalidate()}>{t('error.retry')}</Button>
-    </Stack>
-  );
-};
-
 /**
  * Loader/render failures land here when no child route handles them.
  * The settings modal must stay mounted: on a fresh install every request
@@ -110,7 +86,7 @@ const RootErrorContent = (props: ErrorComponentProps) => {
  */
 const RootError = (props: ErrorComponentProps) => (
   <I18nextProvider i18n={i18n}>
-    <RootErrorContent {...props} />
+    <PageError {...props} />
     <SettingsModal />
   </I18nextProvider>
 );

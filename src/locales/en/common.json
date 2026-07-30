@@ -305,7 +305,8 @@
       "confirm": "Are you sure you want to delete <0>{{name}}</0>?"
     },
     "detail": {
-      "title": "{{name}} Detail"
+      "title": "{{name}} Detail",
+      "titleWithId": "{{name}} · {{id}}"
     },
     "edit": {
       "success": "Edit {{name}} Successfully",
@@ -379,7 +380,11 @@
   },
   "error": {
     "title": "Something went wrong",
-    "retry": "Retry"
+    "retry": "Retry",
+    "notFound": {
+      "description": "This {{name}} does not exist. It may have been deleted.",
+      "back": "Back to {{name}}"
+    }
   },
   "a11y": {
     "openSettings": "Open settings",

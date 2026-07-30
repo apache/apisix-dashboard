@@ -27,6 +27,7 @@ import {
   SKIP_INTERCEPTOR_HEADER,
 } from '@/config/constant';
 import { adminKeyAtom, isSettingsOpenAtom } from '@/stores/global';
+import { isNotFoundError } from '@/utils/error';
 
 export const req = axios.create({ timeout: API_TIMEOUT_MS });
 
@@ -81,11 +82,19 @@ req.interceptors.response.use(
       const res = err.response as AxiosResponse<APISIXRespErr>;
       const d = res.data;
       const message = d?.error_msg || d?.message || `Error status: ${res.status}`;
-      notifications.show({
-        id: message,
-        message,
-        color: 'red',
-      });
+      // A 404 on a read is data — "this does not exist" — which the page
+      // itself now renders; the gateway's raw wording ("Key not found") as
+      // a red toast is noise. A 404 from a write is a real surprise the
+      // user must hear about, so only reads are quiet.
+      const isMissingOnRead =
+        isNotFoundError(err) && err.config?.method?.toUpperCase() === 'GET';
+      if (!isMissingOnRead) {
+        notifications.show({
+          id: message,
+          message,
+          color: 'red',
+        });
+      }
       // Requires to enter admin key at 401.
       // Note: do NOT resolve with fabricated data here — callers must take
       // their normal error path. Resolving `{ data: {} }` made a 401'd

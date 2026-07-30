@@ -305,7 +305,8 @@
       "confirm": "<0>{{name}}</0> öğesini silmek istediğinizden emin misiniz?"
     },
     "detail": {
-      "title": "{{name}} Detay"
+      "title": "{{name}} Detay",
+      "titleWithId": "{{name}} · {{id}}"
     },
     "edit": {
       "success": "{{name}} başarıyla güncellendi",
@@ -379,7 +380,11 @@
   },
   "error": {
     "title": "Bir şeyler ters gitti",
-    "retry": "Yeniden dene"
+    "retry": "Yeniden dene",
+    "notFound": {
+      "description": "{{name}} bulunamadı. Silinmiş olabilir.",
+      "back": "{{name}} listesine dön"
+    }
   },
   "a11y": {
     "openSettings": "Open settings",

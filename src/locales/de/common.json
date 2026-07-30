@@ -305,7 +305,8 @@
       "confirm": "Möchten Sie <0>{{name}}</0> wirklich löschen?"
     },
     "detail": {
-      "title": "{{name}} Detail"
+      "title": "{{name}} Detail",
+      "titleWithId": "{{name}} · {{id}}"
     },
     "edit": {
       "success": "{{name}} erfolgreich bearbeitet",
@@ -379,7 +380,11 @@
   },
   "error": {
     "title": "Etwas ist schiefgelaufen",
-    "retry": "Erneut versuchen"
+    "retry": "Erneut versuchen",
+    "notFound": {
+      "description": "{{name}} existiert nicht oder wurde gelöscht.",
+      "back": "Zurück zu {{name}}"
+    }
   },
   "a11y": {
     "openSettings": "Open settings",
