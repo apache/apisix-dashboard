@@ -110,3 +110,28 @@ test('the documentation link follows the UI language', async ({ page }) => {
     `${DOCS}/zh/docs/apisix/plugins/key-auth/`
   );
 });
+
+test('a picker card links that plugin documentation', async ({ page }) => {
+  const picker = await openPicker(page);
+  await picker.getByPlaceholder('Search').fill('key-auth');
+
+  // Icon-only: the accessible name is what tells a screen reader which of
+  // a hundred identical icons this one belongs to.
+  const link = picker
+    .getByTestId('plugin-key-auth')
+    .getByRole('link', { name: 'key-auth documentation' });
+  await expect(link).toHaveAttribute(
+    'href',
+    `${DOCS}/docs/apisix/plugins/key-auth/`
+  );
+});
+
+test('a picker card for an undocumented plugin has no link', async ({
+  page,
+}) => {
+  const picker = await openPicker(page);
+  await picker.getByPlaceholder('Search').fill('example-plugin');
+  await expect(
+    picker.getByTestId('plugin-example-plugin').getByRole('link')
+  ).toHaveCount(0);
+});

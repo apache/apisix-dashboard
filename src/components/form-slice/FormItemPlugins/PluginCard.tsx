@@ -18,6 +18,8 @@ import { Button, Card,Group, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useTranslation } from 'react-i18next';
 
+import { PluginDocsLink } from './PluginDocsLink';
+
 export type PluginCardProps = {
   name: string;
   desc?: string;
@@ -34,10 +36,9 @@ export const PluginCard = (props: PluginCardProps) => {
   return (
     <Card withBorder radius="md" p="md" data-testid={`plugin-${name}`}>
       <Card.Section withBorder inheritPadding py="xs">
-        <Group justify="space-between">
-          <Group>
-            <Text fw={500}>{name}</Text>
-          </Group>
+        <Group justify="space-between" wrap="nowrap">
+          <Text fw={500}>{name}</Text>
+          <PluginDocsLink name={name} />
         </Group>
       </Card.Section>
 
