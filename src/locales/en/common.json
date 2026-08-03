@@ -384,6 +384,27 @@
     "disabled": "Disabled",
     "enabled": "Enabled"
   },
+  "test": {
+    "title": "Test request",
+    "entry": "Test",
+    "gatewayUrl": "Gateway URL",
+    "gatewayUrlPlaceholder": "http://127.0.0.1:9080",
+    "gatewayUrlRequired": "Set the gateway URL first",
+    "method": "Method",
+    "path": "Path",
+    "wildcardHint": "Replace the wildcard/regex with a concrete path",
+    "headers": "Headers",
+    "addHeader": "Add header",
+    "removeHeader": "Remove header",
+    "body": "Body",
+    "curl": "curl",
+    "copy": "Copy",
+    "copied": "Copied",
+    "send": "Send request",
+    "response": "Response",
+    "responseHeaders": "Headers",
+    "blocked": "The browser couldn't read a response (likely cross-origin or unreachable). Copy the command above and run it in a terminal."
+  },
   "upstreams": {
     "singular": "Upstream"
   },

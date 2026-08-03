@@ -384,6 +384,27 @@
     "disabled": "已禁用",
     "enabled": "已启用"
   },
+  "test": {
+    "title": "测试请求",
+    "entry": "测试",
+    "gatewayUrl": "网关地址",
+    "gatewayUrlPlaceholder": "http://127.0.0.1:9080",
+    "gatewayUrlRequired": "请先填写网关地址",
+    "method": "方法",
+    "path": "路径",
+    "wildcardHint": "请将通配符/正则替换为具体路径",
+    "headers": "请求头",
+    "addHeader": "添加请求头",
+    "removeHeader": "删除请求头",
+    "body": "请求体",
+    "curl": "curl",
+    "copy": "复制",
+    "copied": "已复制",
+    "send": "发送请求",
+    "response": "响应",
+    "responseHeaders": "响应头",
+    "blocked": "浏览器无法读取响应(很可能是跨域或不可达)。请复制上面的命令到终端运行。"
+  },
   "upstreams": {
     "singular": "上游"
   },
