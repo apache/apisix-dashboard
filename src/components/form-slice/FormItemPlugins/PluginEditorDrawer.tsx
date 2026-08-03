@@ -27,6 +27,7 @@ import { FormSubmitBtn } from '@/components/form/Btn';
 import { FormItemEditor } from '@/components/form/Editor';
 
 import type { PluginCardListProps } from './PluginCardList';
+import { PluginDocsLink } from './PluginDocsLink';
 import { redactByPaths } from './redact';
 
 // PluginConfig is defined in the API layer (apis/plugins) and re-exported
@@ -113,9 +114,10 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
       {...(mode === 'edit' && { title: t('form.plugins.editPlugin') })}
       {...(mode === 'view' && { title: t('form.plugins.viewPlugin') })}
     >
-      <Title order={3} mb={10}>
-        {name}
-      </Title>
+      <Group gap="xs" mb={10} align="center">
+        <Title order={3}>{name}</Title>
+        <PluginDocsLink name={name} withLabel />
+      </Group>
       <FormProvider {...methods}>
         {mode === 'view' && hasSecrets && (
           <Button

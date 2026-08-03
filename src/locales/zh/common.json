@@ -66,6 +66,7 @@
     "plugins": {
       "addPlugin": "添加插件",
       "configId": "插件配置ID",
+      "docsFor": "{{name}} 文档",
       "editPlugin": "编辑插件",
       "hideSecrets": "隐藏密钥",
       "label": "插件",

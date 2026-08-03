@@ -66,6 +66,7 @@
     "plugins": {
       "addPlugin": "Add Plugin",
       "configId": "Plugin Config ID",
+      "docsFor": "{{name}} documentation",
       "editPlugin": "Edit Plugin",
       "hideSecrets": "Hide secrets",
       "label": "Plugins",

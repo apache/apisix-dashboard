@@ -66,6 +66,7 @@
     "plugins": {
       "addPlugin": "Plugin Ekle",
       "configId": "Plugin Config ID",
+      "docsFor": "{{name}} dokümantasyonu",
       "editPlugin": "Plugin Düzenle",
       "hideSecrets": "Gizli değerleri gizle",
       "label": "Plugin'ler",
