@@ -137,3 +137,37 @@ export const uiFillMonacoEditor = async (
   await editor.blur();
   await page.waitForTimeout(800);
 };
+
+/**
+ * Read an editor's contents back.
+ *
+ * Reads the Monaco model, the same source `uiFillMonacoEditor` and
+ * `uiClearMonacoEditor` write to. Do not scrape the DOM for this: the hidden
+ * `textarea` holds only a small buffer around the cursor rather than the whole
+ * document, and `.view-line` elements are virtualised, so both return partial
+ * content until the editor has finished painting.
+ *
+ * Polls, because the drawer that owns the editor mounts it asynchronously and
+ * `window.__monacoEditor__` can still point at a previously mounted instance
+ * for a moment after a new drawer opens.
+ */
+export const uiGetMonacoEditorValue = async (page: Page, parent: Locator) => {
+  await expect(parent.getByTestId('editor-loading')).toBeHidden();
+  await expect(parent.locator('.monaco-editor').first()).toBeVisible({
+    timeout: 10_000,
+  });
+
+  await expect
+    .poll(
+      () =>
+        page.evaluate(
+          () => window.__monacoEditor__?.getModel()?.getValue().length ?? 0
+        ),
+      { timeout: 10_000 }
+    )
+    .toBeGreaterThan(0);
+
+  return page.evaluate(
+    () => window.__monacoEditor__?.getModel()?.getValue() ?? ''
+  );
+};
