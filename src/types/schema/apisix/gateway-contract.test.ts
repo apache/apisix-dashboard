@@ -50,7 +50,10 @@ import { APISIX } from '.';
 const FIXTURE_DIR = fileURLToPath(new URL('./__fixtures__/gateway/', import.meta.url));
 
 type GatewaySchema = {
-  properties?: Record<string, { enum?: unknown[]; type?: string }>;
+  properties?: Record<
+    string,
+    { enum?: unknown[]; type?: string; anyOf?: { type?: string }[] }
+  >;
   required?: string[];
 };
 
@@ -165,5 +168,63 @@ describe('gateway contract: zod is looser-or-equal to the APISIX schema', () => 
       { notCovered, enumGaps, staleAllow },
       `${resource}: zod is stricter than the gateway (or the allowlist is stale)`
     ).toEqual({ notCovered: [], enumGaps: [], staleAllow: [] });
+  });
+});
+
+// Reference fields (`upstream_id`, `service_id`, `plugin_config_id`,
+// `group_id`) are `id_schema` on the gateway: `anyOf [string, integer]`. The
+// gateway stores whatever JSON type the writer sent, so a resource written by
+// another client with `"plugin_config_id": 10001` reads back with a number in
+// that field. #3471: the dashboard modelled these as `z.string()`, which took
+// the detail page down in `ResourceRef` and, before that, failed the resolver
+// on save with "Expected string, received number". Every id-typed field must
+// accept the integer form and normalize it to the string the form works with.
+// Driven by the same fixtures as the coverage check so a new id-typed field
+// cannot land as a bare `z.string()` unnoticed.
+const isIdSchema = (spec: { anyOf?: { type?: string }[] }) =>
+  Array.isArray(spec.anyOf) &&
+  spec.anyOf.some((t) => t.type === 'integer') &&
+  spec.anyOf.some((t) => t.type === 'string');
+
+// id-typed fields that stay `z.string()`, each with a reason.
+const ID_ALLOWLIST: Record<string, string> = {
+  id: 'the primary id is always a string in an Admin API response: the gateway overwrites it from the etcd key, whatever the request body said',
+};
+
+describe('gateway contract: id-typed fields accept the integer form', () => {
+  it.each(Object.keys(SCHEMAS))('%s', (resource) => {
+    const properties = loadFixture(resource).properties ?? {};
+    const shape = toObject(SCHEMAS[resource]).shape;
+
+    const rejectsInteger: string[] = [];
+    const keepsInteger: string[] = [];
+    for (const [field, spec] of Object.entries(properties)) {
+      if (!isIdSchema(spec) || field in ID_ALLOWLIST || !(field in shape)) {
+        continue;
+      }
+      const parsed = (shape[field] as ZodTypeAny).safeParse(10001);
+      if (!parsed.success) rejectsInteger.push(field);
+      else if (parsed.data !== '10001') keepsInteger.push(field);
+    }
+
+    expect(
+      { rejectsInteger, keepsInteger },
+      `${resource}: an id-typed field rejects the integer form the gateway accepts, or does not normalize it to a string`
+    ).toEqual({ rejectsInteger: [], keepsInteger: [] });
+  });
+});
+
+describe('RefId', () => {
+  it.each([
+    ['a string', 'up-1', 'up-1'],
+    ['an empty string (the cleared form field)', '', ''],
+    ['a positive integer, as its decimal string', 10001, '10001'],
+  ])('accepts %s', (_, input, expected) => {
+    expect(APISIX.RefId.parse(input)).toBe(expected);
+  });
+
+  // The gateway's `id_schema` integer branch is `minimum: 1`.
+  it.each([0, -1, 1.5, true, null, {}])('rejects %j', (input) => {
+    expect(APISIX.RefId.safeParse(input).success).toBe(false);
   });
 });

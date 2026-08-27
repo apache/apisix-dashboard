@@ -27,7 +27,7 @@ const Consumer = z
       // ref: https://github.com/apache/apisix/blob/a2482df74d712228a1a6644662d74d2f51a3f5e6/apisix/schema_def.lua#L713
       .regex(/^[a-zA-Z0-9_-]+$/),
     plugins: APISIXPlugins.Plugins.optional(),
-    group_id: z.string().optional(),
+    group_id: APISIXCommon.RefId.optional(),
   })
   .merge(APISIXCommon.Basic.omit({ name: true }))
   .merge(APISIXCommon.Info.omit({ id: true }));

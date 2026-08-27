@@ -45,6 +45,10 @@ const ID = z.object({
   id: z.string(),
 });
 
+const RefId = z
+  .union([z.string(), z.number().int().min(1)])
+  .transform((id) => String(id));
+
 const Timestamp = z.object({
   create_time: z.number(),
   update_time: z.number(),
@@ -70,6 +74,7 @@ export const APISIXCommon = {
   Labels,
   Expr,
   ID,
+  RefId,
   Timestamp,
   Info,
   HttpMethod,

@@ -14,33 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { z } from 'zod';
-
-import { APISIXCommon } from './common';
-import { APISIXPlugins } from './plugins';
-import { APISIXUpstreams } from './upstreams';
-
-const Service = z
-  .object({
-    plugins: APISIXPlugins.Plugins.optional(),
-    upstream: APISIXUpstreams.Upstream.omit({ id: true }).optional(),
-    upstream_id: APISIXCommon.RefId.optional(),
-    script: z.string().optional(),
-    enable_websocket: z.boolean().optional(),
-    hosts: z.array(z.string()).optional(),
-  })
-  .merge(APISIXCommon.Basic)
-  .merge(APISIXCommon.Info);
-
-export const APISIXServices = {
-  Service,
-  ServicePost: Service.omit({
-    id: true,
-    create_time: true,
-    update_time: true,
-  }),
-  ServicePut: Service.omit({
-    create_time: true,
-    update_time: true,
-  }),
+export const toRefId = (value: unknown): string => {
+  if (typeof value === 'number') return String(value);
+  if (typeof value === 'string') return value.trim();
+  return '';
 };

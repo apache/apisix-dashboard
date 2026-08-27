@@ -14,33 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { z } from 'zod';
+import { describe, expect, it } from 'vitest';
 
-import { APISIXCommon } from './common';
-import { APISIXPlugins } from './plugins';
-import { APISIXUpstreams } from './upstreams';
+import { toRefId } from './ref-id';
 
-const Service = z
-  .object({
-    plugins: APISIXPlugins.Plugins.optional(),
-    upstream: APISIXUpstreams.Upstream.omit({ id: true }).optional(),
-    upstream_id: APISIXCommon.RefId.optional(),
-    script: z.string().optional(),
-    enable_websocket: z.boolean().optional(),
-    hosts: z.array(z.string()).optional(),
-  })
-  .merge(APISIXCommon.Basic)
-  .merge(APISIXCommon.Info);
+describe('toRefId', () => {
+  it.each([
+    ['a string, trimmed', ' up-1 ', 'up-1'],
+    ['a number, as its decimal string', 10001, '10001'],
+    ['undefined (field not set)', undefined, ''],
+    ['null', null, ''],
+    ['whitespace only', '   ', ''],
+  ])('%s', (_, input, expected) => {
+    expect(toRefId(input)).toBe(expected);
+  });
 
-export const APISIXServices = {
-  Service,
-  ServicePost: Service.omit({
-    id: true,
-    create_time: true,
-    update_time: true,
-  }),
-  ServicePut: Service.omit({
-    create_time: true,
-    update_time: true,
-  }),
-};
+  it('resolves nothing for a value that is not an id at all', () => {
+    for (const value of [true, {}, [], () => undefined]) {
+      expect(toRefId(value)).toBe('');
+    }
+  });
+});
