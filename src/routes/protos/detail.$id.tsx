@@ -58,7 +58,7 @@ const ProtoDetailForm = ({ id, readOnly, setReadOnly }: ProtoFormProps) => {
     refetch,
   } = useSuspenseQuery(getProtoQueryOptions(id));
 
-  const form = useForm<APISIXType['Proto']>({
+  const form = useForm({
     resolver: zodResolver(APISIX.Proto),
     shouldUnregister: true,
     mode: 'all',

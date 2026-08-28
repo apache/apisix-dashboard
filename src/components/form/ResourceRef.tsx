@@ -109,7 +109,6 @@ export const REFS = {
 
 export type ResourceRefTarget = keyof typeof REFS;
 
-
 export type FormItemResourceRefProps<T extends FieldValues> =
   FormItemTextInputProps<T> & {
     resource: ResourceRefTarget;
