@@ -34,19 +34,6 @@ import {
   API_UPSTREAMS,
 } from '@/config/constant';
 
-// Regression for apache/apisix-dashboard#3471: the gateway's `id_schema` is
-// `anyOf [string, integer]` and it stores the JSON type the writer sent, so a
-// resource created by another client with `"plugin_config_id": 10001` reads
-// back with a number in that field. `ResourceRef` called `.trim()` on it and
-// every detail page with a reference field crashed to "Something went wrong";
-// before that (#3459) the page rendered but Save failed the resolver with
-// "Expected string, received number". Same for a numeric primary `id`, which
-// `PUT /apisix/admin/routes` with an id in the body produces. Seeds numeric
-// ids through the Admin API and checks that each detail page renders the
-// reference, resolves it (the link is the proof the lookup ran with a usable
-// id) and saves. Stream routes reuse the route form's upstream/service
-// sections, so they are covered too.
-
 const UPSTREAM_ID = 10001;
 const UPSTREAM_NAME = 'numeric-id upstream';
 const PLUGIN_CONFIG_ID = 10002;
@@ -82,8 +69,6 @@ test.beforeAll(async () => {
     plugins: {},
   });
   await e2eReq.put(`${API_CONSUMER_GROUPS}/${GROUP_ID}`, { plugins: {} });
-  // No id in the URL: the gateway takes the numeric `id` from the body and
-  // stores it as a number, so the primary id is exercised as well.
   await e2eReq.put(API_ROUTES, {
     id: ROUTE_ID,
     name: 'numeric-ref-route',
@@ -118,11 +103,6 @@ const saveUntouched = async (page: Page, resource: string) => {
     0
   );
 };
-
-// The dashboard's write contract: it normalizes every id to a string on save
-// (`id_schema` accepts either form), so after a save the gateway holds the
-// string form. Asserted as such, so a change to that contract is a visible
-// decision rather than something a `String(...)` on both sides would hide.
 
 test('a route whose id and references are numbers renders, resolves and saves', async ({
   page,
@@ -199,8 +179,6 @@ test('a consumer whose group_id is a number renders, resolves and saves', async 
   await expect(refInput(page, 'group_id')).toHaveValue(
     String(GROUP_ID)
   );
-  // Consumer groups carry no `name`, so the link falls back to the bare
-  // "View Consumer Group" label.
   await expect(
     page.getByRole('link', { name: 'View Consumer Group' })
   ).toBeVisible();

@@ -175,29 +175,11 @@ describe('gateway contract: zod is looser-or-equal to the APISIX schema', () => 
   });
 });
 
-// Id fields (the resource's own `id`, and references such as `upstream_id`,
-// `service_id`, `plugin_config_id`, `group_id`) are `id_schema` on the
-// gateway: `anyOf [string, integer]`. The gateway stores whatever JSON type
-// the writer sent, so a resource written by another client with
-// `"plugin_config_id": 10001` reads back with a number in that field, and
-// `PUT /apisix/admin/routes` with `"id": 10001` in the body stores a numeric
-// primary id. #3471: the dashboard modelled these as `z.string()`, which took
-// the detail page down in `ResourceRef` and, before that, failed the resolver
-// on save with "Expected string, received number". Every id-typed field the
-// dashboard models must accept the integer form and normalize it to the
-// string the form works with. Unlike the coverage check this walks nested
-// objects too (`upstream.tls.client_cert_id`, `protocol.superior_id`), so a
-// new id-typed field cannot land as a bare `z.string()` unnoticed.
 const isIdSchema = (spec: GatewayProperty) =>
   Array.isArray(spec.anyOf) &&
   spec.anyOf.some((t) => t.type === 'integer') &&
   spec.anyOf.some((t) => t.type === 'string');
 
-/**
- * Walk the gateway properties alongside the zod shape and collect, as dotted
- * paths, the id-typed fields whose zod field rejects the integer form or
- * keeps it as a number.
- */
 const collectIdGaps = (
   properties: Record<string, GatewayProperty>,
   shape: ZodRawShape,
