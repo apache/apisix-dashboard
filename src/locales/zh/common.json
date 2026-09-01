@@ -418,6 +418,8 @@
     }
   },
   "a11y": {
+    "clearSearch": "清除搜索",
+    "close": "关闭",
     "openSettings": "打开设置",
     "selectLanguage": "选择语言",
     "toggleNavigation": "切换导航"

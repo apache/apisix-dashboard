@@ -20,6 +20,7 @@ import { test } from '@e2e/utils/test';
 import {
   uiFillMonacoEditor,
   uiGetMonacoEditor,
+  uiGetMonacoEditorValue,
   uiHasToastMsg,
 } from '@e2e/utils/ui';
 import type { Locator } from '@playwright/test';
@@ -33,34 +34,6 @@ const deletePluginMetadata = async (req: typeof e2eReq, name: string) => {
     // Ignore errors if metadata doesn't exist
   });
 };
-const getMonacoEditorValue = async (editPluginDialog: Locator) => {
-  const textarea = editPluginDialog.locator('textarea');
-
-  // Wait for Monaco editor to be fully loaded with content (increased timeout for CI)
-  await textarea.waitFor({ state: 'attached', timeout: 10000 });
-
-  let editorValue = '';
-
-  // Try to get value from textarea first
-  if (await textarea.count() > 0) {
-    editorValue = await textarea.inputValue();
-  }
-
-  // Fallback to reading view-lines if textarea value is incomplete
-  if (!editorValue || editorValue.trim() === '{') {
-    // Wait for view-lines to be populated
-    await editPluginDialog.locator('.view-line').first().waitFor({ timeout: 10000 });
-    const lines = await editPluginDialog.locator('.view-line').allTextContents();
-    editorValue = lines.join('\n').replace(/\s+/g, ' ');
-  }
-
-  if (!editorValue || editorValue.trim() === '{') {
-    const allText = await editPluginDialog.textContent();
-    void allText; // fallback failed, editor value unavailable
-  }
-  return editorValue;
-};
-
 // Helper function to close edit dialog
 const closeEditDialog = async (editPluginDialog: Locator) => {
   const buttons = await editPluginDialog.locator('button').allTextContents();
@@ -203,7 +176,7 @@ test('should CRUD plugin metadata with all fields', async ({ page }) => {
     await expect(editPluginDialog).toBeVisible();
 
     // Get Monaco editor value using helper
-    const editorValue = await getMonacoEditorValue(editPluginDialog);
+    const editorValue = await uiGetMonacoEditorValue(page, editPluginDialog);
     expect(editorValue).toMatch(/"time"\s*:\s*"\$time_iso8601"/);
     expect(editorValue).toMatch(/"user_agent"\s*:\s*"\$http_user_agent"/);
     expect(editorValue).toMatch(/"host"\s*:\s*"\$host"/);
