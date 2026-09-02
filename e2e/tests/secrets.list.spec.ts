@@ -65,8 +65,9 @@ test.describe('page and page_size should work correctly', () => {
       .then((v) => v.data);
     await Promise.all(
       (existingSecrets.list || []).map((d) => {
-        const [manager, id] = d.value.id.split('/');
-        return e2eReq.delete(`${API_SECRETS}/${manager}/${id}`);
+        return e2eReq.delete(
+          `${API_SECRETS}/${d.value.manager}/${d.value.id}`
+        );
       })
     );
 
