@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { produce } from 'immer';
-import { isNotEmpty } from 'rambdax';
+import { current, isDraft, produce } from 'immer';
+import { equals, isNotEmpty } from 'rambdax';
 
-import type { APISIXType } from '@/types/schema/apisix';
+import { APISIX, type APISIXType } from '@/types/schema/apisix';
+import { deepCleanEmptyKeys, rmDoubleUnderscoreKeys } from '@/utils/producer';
 
 import type { FormPartUpstreamType } from './schema';
 
@@ -63,6 +64,62 @@ const isAllUndefined = (obj: Record<string, unknown>) =>
     (v) => v === undefined || v === null || v === '' || Number.isNaN(v)
   );
 
+/**
+ * What the inline upstream widgets register the moment they mount, before
+ * the user has opened the section at all: FormItemScheme,
+ * FormSectionLoadbalancing and FormSectionPassHost pass the first schema
+ * option as their Select default, and the TLS `verify` Switch falls back to
+ * false. Every other widget mounts empty (`''`, `undefined`, `{}`, `[]`),
+ * which the cleaner already strips.
+ *
+ * Keep in step with those widgets: a new widget that registers a non-empty
+ * default must be listed here, or an untouched section is sent again.
+ */
+const INLINE_UPSTREAM_MOUNT_DEFAULTS: Record<string, unknown> = {
+  scheme: APISIX.UpstreamSchemeL7.options[0].value,
+  type: APISIX.UpstreamBalancer.options[0].value,
+  hash_on: APISIX.UpstreamHashOn.options[0].value,
+  pass_host: APISIX.UpstreamPassHost.options[0].value,
+  tls: { verify: false },
+};
+
+/**
+ * True when an inline `upstream` holds nothing but what its widgets
+ * registered on mount (#3395).
+ *
+ * The route / service / stream-route forms always render the inline upstream
+ * section, so react-hook-form submits `upstream: { scheme: 'http', type:
+ * 'roundrobin', hash_on: 'vars', pass_host: 'pass', tls: { verify: false } }`
+ * for a section the user never opened. The Admin API rejects that — an
+ * upstream needs nodes or discovery — so a plugins-only route (public-api)
+ * could not be created, and one created through the Admin API could not be
+ * edit-saved. Dropping such an upstream loses nothing: every value in it is
+ * the gateway default anyway.
+ *
+ * Anything the user did supply (a node row, even an empty one; a different
+ * scheme; a name; …) makes this false, and the upstream is sent as is for the
+ * Admin API to judge — silently discarding input is the #3417 failure mode.
+ */
+export const isUntouchedInlineUpstream = (upstream: unknown): boolean => {
+  if (!upstream || typeof upstream !== 'object' || Array.isArray(upstream)) {
+    return false;
+  }
+  // read-only: a plain snapshot of a (possibly nested) immer draft, cleaned
+  // into a fresh object so the caller's value is never touched
+  const plain = isDraft(upstream) ? current(upstream) : upstream;
+  const cleaned = deepCleanEmptyKeys(plain as Record<string, unknown>, {
+    cleanInPlace: false,
+  }) as Record<string, unknown>;
+  rmDoubleUnderscoreKeys(cleaned);
+  return Object.entries(cleaned).every(
+    ([key, value]) =>
+      Object.prototype.hasOwnProperty.call(
+        INLINE_UPSTREAM_MOUNT_DEFAULTS,
+        key
+      ) && equals(INLINE_UPSTREAM_MOUNT_DEFAULTS[key], value)
+  );
+};
+
 export const produceRmEmptyUpstreamFields = produce(
   (
     draft: {
@@ -73,7 +130,7 @@ export const produceRmEmptyUpstreamFields = produce(
         timeout?: Record<string, unknown>;
         keepalive_pool?: Record<string, unknown>;
         tls?: Record<string, unknown>;
-      };
+      } & Record<string, unknown>;
     } & Record<string, unknown>
   ) => {
     if (draft.timeout && isAllUndefined(draft.timeout)) {
@@ -109,6 +166,13 @@ export const produceRmEmptyUpstreamFields = produce(
       }
       if (draft.upstream.tls && isAllUndefined(draft.upstream.tls)) {
         delete draft.upstream.tls;
+      }
+
+      // the section was never opened: only the widgets' mount-time defaults
+      // are left, and the Admin API rejects an upstream with neither nodes
+      // nor discovery — send no upstream at all (#3395)
+      if (isUntouchedInlineUpstream(draft.upstream)) {
+        delete draft.upstream;
       }
     }
   }

@@ -28,13 +28,17 @@ RUN \
 
 # build ui
 FROM base AS builder
-ENV NODE_ENV=test
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # we need git to get commit sha
 RUN apk add --no-cache git
-RUN corepack enable pnpm && pnpm build
+# `--mode test` (not NODE_ENV=test): the tests must run against the same
+# production React the release ships. NODE_ENV=test made Vite bundle
+# development React, whose StrictMode double effects wiped the form
+# widgets' mount-time values and hid #3395 from every e2e run; the Vite
+# mode still hides the devtools and enables the Monaco test seam.
+RUN corepack enable pnpm && pnpm build --mode test
 
 # embed dashboard ui into apisix
 FROM apache/apisix:dev
