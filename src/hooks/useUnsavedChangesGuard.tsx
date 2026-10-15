@@ -21,6 +21,7 @@ import { useCallback, useRef } from 'react';
 import type { FieldValues, UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { useFormBaseline } from '@/hooks/useFormBaseline';
 import { isFormDirty } from '@/utils/form-dirty';
 
 type Translate = ReturnType<typeof useTranslation>['t'];
@@ -57,14 +58,16 @@ type UseUnsavedChangesGuardOptions = {
  * Block router navigations and tab close/reload while the form holds
  * unsaved work.
  *
- * Dirtiness comes from `isFormDirty`, not react-hook-form's `isDirty`:
- * the raw flag reports 5 of 11 add pages as dirty before the user types
- * anything, because their widgets normalize `undefined` to empty values
- * on mount.
+ * Dirtiness comes from `isFormDirty` against the post-mount baseline
+ * (`useFormBaseline`), not react-hook-form's `isDirty`: the raw flag
+ * reports 5 of 11 add pages as dirty before the user types anything,
+ * because their widgets normalize `undefined` to empty values on mount —
+ * and, in production, every add page, because Select / Switch / number
+ * widgets register a real default value on mount (#3395).
  *
  * The returned `bypass()` must be called before a navigation the form
  * itself initiates after a successful submit — at that point the form is
- * still dirty relative to its defaults, so the guard would otherwise
+ * still dirty relative to its baseline, so the guard would otherwise
  * block the page's own success redirect.
  */
 export const useUnsavedChangesGuard = <T extends FieldValues>(
@@ -73,11 +76,12 @@ export const useUnsavedChangesGuard = <T extends FieldValues>(
 ) => {
   const { t } = useTranslation();
   const bypassRef = useRef(false);
+  const getBaseline = useFormBaseline(form);
 
   const hasUnsavedChanges = useCallback(() => {
     if (bypassRef.current) return false;
-    return isFormDirty(form.formState.defaultValues, form.getValues());
-  }, [form]);
+    return isFormDirty(getBaseline(), form.getValues());
+  }, [form, getBaseline]);
 
   // Stable identity so useBlocker (which keys its effect on shouldBlockFn)
   // subscribes once rather than re-subscribing every render — which would
