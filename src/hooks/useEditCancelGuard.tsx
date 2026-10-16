@@ -18,6 +18,7 @@ import { useCallback } from 'react';
 import type { FieldValues, UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { useFormBaseline } from '@/hooks/useFormBaseline';
 import { confirmDiscardChanges } from '@/hooks/useUnsavedChangesGuard';
 import { isFormDirty } from '@/utils/form-dirty';
 
@@ -33,24 +34,26 @@ import { isFormDirty } from '@/utils/form-dirty';
  * detail pages, and an ordinary refetch returns the same `data` reference
  * (react-query structural sharing), so the reset effect never re-runs.
  *
- * `isFormDirty` rather than react-hook-form's `isDirty` because the raw
- * flag reports pristine add pages as dirty; the two hooks share one
- * definition of "changed".
+ * `isFormDirty` against the post-mount baseline (`useFormBaseline`) rather
+ * than react-hook-form's `isDirty` or `formState.defaultValues`: both read
+ * the widgets' mount-time values as user edits (#3395); the two hooks
+ * share one definition of "changed".
  */
 export const useEditCancelGuard = <T extends FieldValues>(
   form: UseFormReturn<T>,
   onCancel: () => void
 ) => {
   const { t } = useTranslation();
+  const getBaseline = useFormBaseline(form);
   return useCallback(async () => {
     const discard = () => {
       form.reset();
       onCancel();
     };
-    if (!isFormDirty(form.formState.defaultValues, form.getValues())) {
+    if (!isFormDirty(getBaseline(), form.getValues())) {
       discard();
       return;
     }
     if (await confirmDiscardChanges(t)) discard();
-  }, [form, onCancel, t]);
+  }, [form, getBaseline, onCancel, t]);
 };
