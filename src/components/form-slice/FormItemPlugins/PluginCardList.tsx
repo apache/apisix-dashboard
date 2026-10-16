@@ -16,12 +16,11 @@
  */
 import {
   CloseButton,
-  Combobox,
   ScrollArea,
   SimpleGrid,
+  Text,
   TextInput,
   type TextInputProps,
-  useVirtualizedCombobox,
 } from '@mantine/core';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +47,7 @@ export const PluginCardListSearch = (props: PluginCardListSearchProps) => {
       rightSectionPointerEvents="all"
       rightSection={
         <CloseButton
+          aria-label={t('a11y.clearSearch')}
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -59,16 +59,16 @@ export const PluginCardListSearch = (props: PluginCardListSearchProps) => {
   );
 };
 
-type OptionProps = Pick<
+type PluginListItemProps = Pick<
   PluginCardProps,
   'onAdd' | 'onEdit' | 'onDelete' | 'onView' | 'mode'
 > & {
   name: string;
 };
-const Option = (props: OptionProps) => {
+const PluginListItem = (props: PluginListItemProps) => {
   const { mode, name, onAdd, onEdit, onDelete, onView } = props;
   return (
-    <Combobox.Option key={name} value={name} p={0}>
+    <li>
       <PluginCard
         mode={mode}
         name={name}
@@ -77,22 +77,22 @@ const Option = (props: OptionProps) => {
         onDelete={() => onDelete?.(name)}
         onView={() => onView?.(name)}
       />
-    </Combobox.Option>
+    </li>
   );
 };
 
-const Options = (props: { list: OptionProps[] }) => {
+const PluginListItems = (props: { list: PluginListItemProps[] }) => {
   const { list } = props;
   return (
     <>
       {list.map((option) => (
-        <Option key={option.name} {...option} />
+        <PluginListItem key={option.name} {...option} />
       ))}
     </>
   );
 };
 
-export type PluginCardListProps = Omit<OptionProps, 'name'> &
+export type PluginCardListProps = Omit<PluginListItemProps, 'name'> &
   Pick<TextInputProps, 'placeholder'> & {
     cols?: number;
     h?: number | string;
@@ -105,7 +105,6 @@ export const PluginCardList = (props: PluginCardListProps) => {
   const { search = '', cols = 3, h, mah, plugins } = props;
   const { mode, onAdd, onEdit, onDelete, onView } = props;
   const { t } = useTranslation();
-  const combobox = useVirtualizedCombobox();
 
   const list = useMemo(() => {
     const query = search.toLowerCase().trim();
@@ -123,18 +122,20 @@ export const PluginCardList = (props: PluginCardListProps) => {
   }, [search, plugins, mode, onAdd, onEdit, onDelete, onView]);
 
   return (
-    <Combobox store={combobox}>
-      <Combobox.Options mt="1em">
-        <ScrollArea.Autosize h={h} mah={mah} type="scroll">
-          {!list.length ? (
-            <Combobox.Empty>{t('noData')}</Combobox.Empty>
-          ) : (
-            <SimpleGrid cols={cols}>
-              <Options list={list} />
-            </SimpleGrid>
-          )}
-        </ScrollArea.Autosize>
-      </Combobox.Options>
-    </Combobox>
+    <ScrollArea.Autosize mt="1em" h={h} mah={mah} type="scroll">
+      {!list.length ? (
+        <Text c="dimmed" ta="center" py="sm">
+          {t('noData')}
+        </Text>
+      ) : (
+        <SimpleGrid
+          component="ul"
+          cols={cols}
+          style={{ listStyle: 'none', margin: 0, padding: 0 }}
+        >
+          <PluginListItems list={list} />
+        </SimpleGrid>
+      )}
+    </ScrollArea.Autosize>
   );
 };

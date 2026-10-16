@@ -21,6 +21,7 @@ import { test } from '@e2e/utils/test';
 import {
   uiFillMonacoEditor,
   uiGetMonacoEditor,
+  uiGetMonacoEditorValue,
   uiHasToastMsg,
 } from '@e2e/utils/ui';
 import { uiFillUpstreamRequiredFields } from '@e2e/utils/ui/upstreams';
@@ -247,11 +248,7 @@ test('should preserve plugin with empty configuration (key-auth) during creation
     await pluginCard.getByRole('button', { name: 'View' }).click();
     const viewPluginDialog = page.getByRole('dialog', { name: 'View Plugin' });
     await uiGetMonacoEditor(page, viewPluginDialog, false);
-    // Read Monaco editor content from the visible lines (not the textarea)
-    const viewContent = await viewPluginDialog
-      .locator('.view-lines')
-      .first()
-      .innerText();
+    const viewContent = await uiGetMonacoEditorValue(page, viewPluginDialog);
     expect(viewContent.replace(/\s/g, '')).toBe('{}');
   });
 });

@@ -108,7 +108,7 @@ export const PluginEditorDrawer = (props: PluginEditorDrawerProps) => {
       closeOnEscape={false}
       opened={opened}
       onClose={handleClose}
-      closeButtonProps={{ 'aria-label': 'Close' }}
+      closeButtonProps={{ 'aria-label': t('a11y.close') }}
       styles={{ body: { paddingTop: '18px' } }}
       {...(mode === 'add' && { title: t('form.plugins.addPlugin') })}
       {...(mode === 'edit' && { title: t('form.plugins.editPlugin') })}

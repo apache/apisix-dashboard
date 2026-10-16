@@ -48,6 +48,7 @@
     "zod-empty": "^1.4.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.32.0",
     "@estruyf/github-actions-reporter": "^1.11.0",
     "@iconify-json/tabler": "^1.2.37",

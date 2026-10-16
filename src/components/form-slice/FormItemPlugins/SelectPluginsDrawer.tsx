@@ -51,6 +51,7 @@ export const SelectPluginsDrawer = (props: SelectPluginsDrawerProps) => {
         // protect, so Escape should close it like any other dialog (#3417)
         opened={opened}
         onClose={() => setOpened(false)}
+        closeButtonProps={{ 'aria-label': t('a11y.close') }}
         title={t('form.plugins.selectPlugins.title')}
       >
         <Drawer.Header p={0} mih="60px">

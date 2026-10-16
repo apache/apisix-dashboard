@@ -418,6 +418,8 @@
     }
   },
   "a11y": {
+    "clearSearch": "Aramayı temizle",
+    "close": "Kapat",
     "openSettings": "Open settings",
     "selectLanguage": "Select language",
     "toggleNavigation": "Toggle navigation"

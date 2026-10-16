@@ -418,6 +418,8 @@
     }
   },
   "a11y": {
+    "clearSearch": "Clear search",
+    "close": "Close",
     "openSettings": "Open settings",
     "selectLanguage": "Select language",
     "toggleNavigation": "Toggle navigation"
