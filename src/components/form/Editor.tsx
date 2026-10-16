@@ -116,7 +116,7 @@ export const FormItemEditor = <T extends FieldValues>(
         schema: customSchema,
       });
     }
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+    monaco.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       schemas,
       trailingCommas: 'error',

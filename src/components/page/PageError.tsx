@@ -40,7 +40,7 @@ export const PageError = (props: ErrorComponentProps) => {
       <Text fw={700} size="lg">
         {t('error.title')}
       </Text>
-      <Code block>{error.message}</Code>
+      <Code block>{error instanceof Error ? error.message : String(error)}</Code>
       <Button onClick={() => router.invalidate()}>{t('error.retry')}</Button>
     </Stack>
   );
