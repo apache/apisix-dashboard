@@ -155,7 +155,7 @@ const UpstreamHealthCheck = z.object({
 });
 
 const UpstreamTls = z.object({
-  client_cert_id: z.string().optional(),
+  client_cert_id: APISIXCommon.RefId.optional(),
   client_cert: z.string().optional(),
   client_key: z.string().optional(),
   verify: z.boolean().optional(),

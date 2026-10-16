@@ -27,7 +27,7 @@ const StreamRouteProtocolLoggerItem = z.object({
 });
 const StreamRouteProtocol = z.object({
   name: z.string(),
-  superior_id: z.string(),
+  superior_id: APISIXCommon.RefId,
   conf: z.object({}).optional(),
   logger: z.array(StreamRouteProtocolLoggerItem).optional(),
 });
@@ -40,8 +40,8 @@ const StreamRoute = z
     sni: z.string().optional(),
     plugins: APISIXPlugins.Plugins.optional(),
     upstream: APISIXUpstreams.Upstream.omit({ id: true }).optional(),
-    upstream_id: z.string().optional(),
-    service_id: z.string().optional(),
+    upstream_id: APISIXCommon.RefId.optional(),
+    service_id: APISIXCommon.RefId.optional(),
     protocol: StreamRouteProtocol.partial().optional(),
   })
   .partial()

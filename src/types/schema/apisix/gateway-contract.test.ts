@@ -18,7 +18,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
-import type { ZodObject, ZodRawShape, ZodTypeAny } from 'zod';
+import { ZodObject, type ZodRawShape, type ZodTypeAny } from 'zod';
 
 import { APISIX } from '.';
 
@@ -49,8 +49,15 @@ import { APISIX } from '.';
 
 const FIXTURE_DIR = fileURLToPath(new URL('./__fixtures__/gateway/', import.meta.url));
 
+type GatewayProperty = {
+  enum?: unknown[];
+  type?: string;
+  anyOf?: { type?: string }[];
+  properties?: Record<string, GatewayProperty>;
+};
+
 type GatewaySchema = {
-  properties?: Record<string, { enum?: unknown[]; type?: string }>;
+  properties?: Record<string, GatewayProperty>;
   required?: string[];
 };
 
@@ -165,5 +172,48 @@ describe('gateway contract: zod is looser-or-equal to the APISIX schema', () => 
       { notCovered, enumGaps, staleAllow },
       `${resource}: zod is stricter than the gateway (or the allowlist is stale)`
     ).toEqual({ notCovered: [], enumGaps: [], staleAllow: [] });
+  });
+});
+
+const isIdSchema = (spec: GatewayProperty) =>
+  Array.isArray(spec.anyOf) &&
+  spec.anyOf.some((t) => t.type === 'integer') &&
+  spec.anyOf.some((t) => t.type === 'string');
+
+const collectIdGaps = (
+  properties: Record<string, GatewayProperty>,
+  shape: ZodRawShape,
+  path = ''
+): { rejectsInteger: string[]; keepsInteger: string[] } => {
+  const rejectsInteger: string[] = [];
+  const keepsInteger: string[] = [];
+  for (const [field, spec] of Object.entries(properties)) {
+    if (!(field in shape)) continue;
+    const fieldSchema = shape[field] as ZodTypeAny;
+    const at = path ? `${path}.${field}` : field;
+    if (isIdSchema(spec)) {
+      const parsed = fieldSchema.safeParse(10001);
+      if (!parsed.success) rejectsInteger.push(at);
+      else if (parsed.data !== '10001') keepsInteger.push(at);
+    } else if (spec.properties) {
+      const nested = toObject(fieldSchema);
+      if (!(nested instanceof ZodObject)) continue;
+      const gaps = collectIdGaps(spec.properties, nested.shape, at);
+      rejectsInteger.push(...gaps.rejectsInteger);
+      keepsInteger.push(...gaps.keepsInteger);
+    }
+  }
+  return { rejectsInteger, keepsInteger };
+};
+
+describe('gateway contract: id-typed fields accept the integer form', () => {
+  it.each(Object.keys(SCHEMAS))('%s', (resource) => {
+    const properties = loadFixture(resource).properties ?? {};
+    const shape = toObject(SCHEMAS[resource]).shape;
+
+    expect(
+      collectIdGaps(properties, shape),
+      `${resource}: an id-typed field rejects the integer form the gateway accepts, or does not normalize it to a string`
+    ).toEqual({ rejectsInteger: [], keepsInteger: [] });
   });
 });

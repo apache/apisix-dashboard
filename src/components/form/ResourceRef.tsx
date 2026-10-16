@@ -29,6 +29,7 @@ import {
   getServiceQueryOptions,
   getUpstreamQueryOptions,
 } from '@/apis/hooks';
+import { toRefId } from '@/components/form/ref-id';
 import {
   FormItemTextInput,
   type FormItemTextInputProps,
@@ -122,10 +123,10 @@ export const FormItemResourceRef = <T extends FieldValues>(
   const value = useWatch({
     control: props.control,
     name: props.name,
-  }) as string | undefined;
+  });
   // Without this the field fires one query per keystroke while it is being
   // typed into, and all but the last are guaranteed to 404.
-  const [id] = useDebouncedValue((value ?? '').trim(), 300);
+  const [id] = useDebouncedValue(toRefId(value), 300);
 
   const { to, getQueryOptions } = REFS[resource];
   const options = getQueryOptions(id);
