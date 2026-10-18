@@ -15,17 +15,12 @@
  * limitations under the License.
  */
 import { atom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
 
-// Admin key with persistent storage
-export const adminKeyAtom = atomWithStorage<string>(
-  'settings:adminKey',
-  '',
-  undefined,
-  {
-    getOnInit: true,
-  }
-);
+// Admin key — in-memory only. Operators re-enter the key each browser
+// session by design: persisting it to localStorage broadens the
+// credential's audience to anything that can read the dashboard origin's
+// storage (XSS, browser extensions, shared workstations).
+export const adminKeyAtom = atom<string>('');
 
 // Settings modal visibility state
 export const isSettingsOpenAtom = atom<boolean>(false);
