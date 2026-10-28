@@ -96,31 +96,5 @@
       "pnpm lint:fix"
     ]
   },
-  "packageManager": "pnpm@10.34.4+sha512.8768be55200ae3f2226b6527fcca2687e14bc4e5f12d7721a0f25da3df47915177058648db4177baf348120fa0ba2752d8d8d93f6beaf1fe64ae18da8de961af",
-  "pnpm": {
-    "overrides": {
-      "lodash": ">=4.18.0",
-      "lodash-es": ">=4.18.0",
-      "minimatch": ">=9.0.7",
-      "rollup": ">=4.59.0",
-      "simple-git": ">=4.0.1",
-      "diff": ">=8.0.3",
-      "@swc/core": "1.10.0",
-      "flatted": ">=3.4.2",
-      "undici": "^7.29.1",
-      "path-to-regexp": ">=8.4.0",
-      "brace-expansion": ">=5.0.12",
-      "follow-redirects": ">=1.16.0",
-      "js-cookie": ">=3.0.7",
-      "postcss": ">=8.5.23",
-      "dompurify": ">=3.4.16",
-      "anymatch>picomatch": "2.3.2",
-      "readdirp>picomatch": "2.3.2",
-      "picomatch": ">=4.0.4"
-    },
-    "onlyBuiltDependencies": [
-      "@swc/core",
-      "esbuild"
-    ]
-  }
+  "packageManager": "pnpm@12.16.1+sha512.091d1dee7927575661b25dab3c2ae31cafc1c54d6b71ed6a6600cf0c1cb10434a447eae14015f1b23e2e6bedeed79df94a932e2164d2832280dce3fb32f656d1"
 }
