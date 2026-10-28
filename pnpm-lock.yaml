@@ -272,13 +272,13 @@ importers:
         version: 17.6.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       znv:
         specifier: ^0.5.0
-        version: 0.5.0(zod@3.25.76)
+        version: 0.5.0(zod@4.6.7)
       zod:
-        specifier: ^3.24.3
-        version: 3.25.76
+        specifier: ^4.6.6
+        version: 4.6.7
       zod-empty:
         specifier: ^1.4.4
-        version: 1.5.2(typescript@5.8.3)(zod@3.25.76)
+        version: 1.5.2(typescript@5.8.3)(zod@4.6.7)
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.13.0
@@ -4385,9 +4385,6 @@ packages:
     peerDependencies:
       typescript: 5.x
       zod: 3.x
-
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zod@4.6.7:
     resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
@@ -8692,16 +8689,14 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  znv@0.5.0(zod@3.25.76):
+  znv@0.5.0(zod@4.6.7):
     dependencies:
-      zod: 3.25.76
+      zod: 4.6.7
 
-  zod-empty@1.5.2(typescript@5.8.3)(zod@3.25.76):
+  zod-empty@1.5.2(typescript@5.8.3)(zod@4.6.7):
     dependencies:
       just-clone: 6.2.0
       typescript: 5.8.3
-      zod: 3.25.76
-
-  zod@3.25.76: {}
+      zod: 4.6.7
 
   zod@4.6.7: {}
