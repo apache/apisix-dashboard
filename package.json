@@ -53,7 +53,7 @@
     "@estruyf/github-actions-reporter": "^1.11.0",
     "@iconify-json/tabler": "^1.2.37",
     "@m6web/eslint-plugin-i18n": "^2.0.4",
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.64.1",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@tanstack/react-query-devtools": "^5.95.2",
