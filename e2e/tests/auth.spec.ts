@@ -19,8 +19,9 @@ import { getAPISIXConf } from '@e2e/utils/common';
 import { test } from '@e2e/utils/test';
 import { expect } from '@playwright/test';
 
-// use empty storage state to avoid auth
-test.use({ storageState: { cookies: [], origins: [] } });
+// This suite exercises the manual auth flow itself, so opt out of the
+// automatic Admin API key injection and drive the Settings modal directly.
+test.use({ injectAdminKey: false });
 
 test('can auth with admin key', { tag: '@auth' }, async ({ page }) => {
   const settingsModal = page.getByRole('dialog', { name: 'Settings' });
@@ -60,8 +61,18 @@ test('can auth with admin key', { tag: '@auth' }, async ({ page }) => {
       .getByRole('button')
       .click();
 
-    await page.reload();
+    // The key authenticates the current session immediately (it is held in
+    // memory), so the token check now succeeds without a reload.
     await expect(failedMsg).toBeHidden();
+  });
+
+  await test.step('admin key is not persisted across a full reload', async () => {
+    // The admin key is kept in memory only and never written to browser
+    // storage, so a hard reload drops it and re-authentication is required.
+    await page.reload();
+    await expect(failedMsg).toBeVisible();
+    await expect(settingsModal).toBeVisible();
+    await expect(adminKeyInput).toBeEmpty();
   });
 });
 
