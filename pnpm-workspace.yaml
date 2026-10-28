@@ -1,0 +1,23 @@
+allowBuilds:
+  '@swc/core': true
+  esbuild: true
+  unrs-resolver: false
+overrides:
+  lodash: '>=4.18.0'
+  lodash-es: '>=4.18.0'
+  minimatch: '>=9.0.7'
+  rollup: '>=4.59.0'
+  simple-git: '>=4.0.1'
+  diff: '>=8.0.3'
+  '@swc/core': 1.10.0
+  flatted: '>=3.4.2'
+  undici: ^7.29.1
+  path-to-regexp: '>=8.4.0'
+  brace-expansion: '>=5.0.12'
+  follow-redirects: '>=1.16.0'
+  js-cookie: '>=3.0.7'
+  postcss: '>=8.5.23'
+  dompurify: '>=3.4.16'
+  anymatch>picomatch: 2.3.2
+  readdirp>picomatch: 2.3.2
+  picomatch: '>=4.0.4'
