@@ -50,7 +50,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.32.0",
-    "@estruyf/github-actions-reporter": "^1.11.0",
+    "@estruyf/github-actions-reporter": "^1.13.0",
     "@iconify-json/tabler": "^1.2.37",
     "@m6web/eslint-plugin-i18n": "^2.0.4",
     "@playwright/test": "^1.64.1",

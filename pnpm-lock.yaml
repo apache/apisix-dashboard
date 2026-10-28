@@ -287,8 +287,8 @@ importers:
         specifier: ^9.32.0
         version: 9.39.4
       '@estruyf/github-actions-reporter':
-        specifier: ^1.11.0
-        version: 1.11.0(@playwright/test@1.64.1)
+        specifier: ^1.13.0
+        version: 1.13.0(@playwright/test@1.64.1)
       '@iconify-json/tabler':
         specifier: ^1.2.37
         version: 1.2.37
@@ -1040,8 +1040,8 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@estruyf/github-actions-reporter@1.11.0':
-    resolution: {integrity: sha512-4Wk5v4rKNRVKpDWfbLDHrLDtWgi0qfGe7U08JjjsYHgg5HEG/Um2ezzXVMx0030/s1ndaWY51L6jka1YUnsxqA==}
+  '@estruyf/github-actions-reporter@1.13.0':
+    resolution: {integrity: sha512-UhnLZxMIPCsgN8DcFqjFhEF/xgqI3EShc0hzN4PUZl/jJiAO6GNKD3SmdyFfaktYFDQeKbZjyw9SLWdxyLiPdA==}
     peerDependencies:
       '@playwright/test': ^1.42.1
 
@@ -5044,7 +5044,7 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@estruyf/github-actions-reporter@1.11.0(@playwright/test@1.64.1)':
+  '@estruyf/github-actions-reporter@1.13.0(@playwright/test@1.64.1)':
     dependencies:
       '@actions/core': 3.0.0
       '@playwright/test': 1.64.1
