@@ -345,6 +345,9 @@
     "singular": "Proto"
   },
   "routes": {
+    "noMatches": "Aramayla eşleşen rota yok",
+    "search": "Rota ara",
+    "searchFailed": "Arama için rotalar yüklenemedi",
     "singular": "Route"
   },
   "seconds": "Saniye",

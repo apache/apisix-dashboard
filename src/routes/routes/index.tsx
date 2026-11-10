@@ -16,8 +16,9 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
+import { Button, Empty, Input } from 'antd';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
@@ -30,9 +31,11 @@ import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
 import { API_ROUTES } from '@/config/constant';
 import { queryClient } from '@/config/global';
+import { useRouteSearch } from '@/hooks/useRouteSearch';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
+import IconSearch from '~icons/tabler/search';
 
 export type RouteListProps = {
   routeKey: Extract<ListPageKeys, '/routes/' | '/services/detail/$id/routes/'>;
@@ -49,6 +52,33 @@ export const RouteList = (props: RouteListProps) => {
     defaultParams
   );
   const { t } = useTranslation();
+  const params = useSearch({ from: routeKey });
+  const [keyword, setKeyword] = useState('');
+  const [searchPage, setSearchPage] = useState<{
+    current: number;
+    pageSize?: number;
+  }>({ current: 1 });
+  const { active, matches, query: search } = useRouteSearch(keyword, {
+    ...params,
+    ...defaultParams,
+  });
+  const searchPagination = {
+    ...pagination,
+    ...searchPage,
+    total: matches.length,
+    onChange: (current: number, pageSize: number) =>
+      setSearchPage({ current, pageSize }),
+  };
+  const searchEmpty = search.isPending ? null : (
+    <Empty
+      image={Empty.PRESENTED_IMAGE_SIMPLE}
+      description={t(search.isError ? 'routes.searchFailed' : 'routes.noMatches')}
+    >
+      {search.isError && (
+        <Button onClick={() => void search.refetch()}>{t('error.retry')}</Button>
+      )}
+    </Empty>
+  );
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
@@ -100,17 +130,33 @@ export const RouteList = (props: RouteListProps) => {
     <AntdConfigProvider>
       <ProTable
         locale={{
-          emptyText: <ListEmptyState resource="routes" />,
+          emptyText: active ? searchEmpty : <ListEmptyState resource="routes" />,
         }}
         columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
+        dataSource={active ? matches : data.list}
+        rowKey={(record) => record.value.id}
+        loading={active ? search.isFetching : isLoading}
         search={false}
         options={false}
-        pagination={pagination}
+        pagination={active ? searchPagination : pagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
+          actions: [
+            <Input
+              key="search"
+              type="search"
+              aria-label={t('routes.search')}
+              placeholder={t('routes.search')}
+              prefix={<IconSearch />}
+              value={keyword}
+              allowClear
+              style={{ width: 'min(340px, 48vw)' }}
+              onChange={(event) => {
+                setKeyword(event.target.value);
+                setSearchPage((previous) => ({ ...previous, current: 1 }));
+              }}
+            />,
+          ],
           menu: {
             type: 'inline',
             items: [

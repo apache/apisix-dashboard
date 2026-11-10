@@ -345,6 +345,9 @@
     "singular": "Proto"
   },
   "routes": {
+    "noMatches": "没有匹配的路由",
+    "search": "搜索路由",
+    "searchFailed": "无法加载用于搜索的路由",
     "singular": "路由"
   },
   "seconds": "秒",
