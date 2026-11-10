@@ -139,7 +139,7 @@ test.describe('page and page_size should work correctly', () => {
     expect(listRequests).toHaveLength(2);
   });
 
-  test('distinguishes enabled and disabled routes in German and Spanish', async ({ page }) => {
+  test('matches complete status labels using the selected language', async ({ page }) => {
     await routesPom.getRouteNavBtn(page).click();
     const enabledRoute = page.getByRole('cell', { name: 'route_name_1', exact: true });
     const disabledRoute = page.getByRole('cell', { name: 'route_name_11', exact: true });
@@ -147,6 +147,7 @@ test.describe('page and page_size should work correctly', () => {
     for (const [language, label, enabled, disabled] of [
       ['Deutsch', 'Routen suchen', 'Aktiviert', 'Deaktiviert'],
       ['Español', 'Buscar rutas', 'Habilitado', 'Deshabilitado'],
+      ['Türkçe', 'Rota ara', 'AKTİF', 'PASİF'],
     ]) {
       await page.getByRole('button', { name: 'Select language' }).click();
       await page.getByRole('menuitem', { name: language }).click();

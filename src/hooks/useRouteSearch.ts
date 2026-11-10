@@ -25,8 +25,9 @@ export function useRouteSearch(
   keyword: string,
   listParams: Partial<WithServiceIdFilter>
 ) {
-  const { t } = useTranslation();
-  const term = keyword.trim().toLowerCase();
+  const { t, i18n } = useTranslation();
+  const searchText = keyword.trim();
+  const term = searchText.toLowerCase();
   const active = term.length > 0;
   const filters = { ...listParams };
   delete filters.page;
@@ -46,13 +47,18 @@ export function useRouteSearch(
     retry: false,
   });
 
-  const enabled = t('table.enabled').toLowerCase();
-  const disabled = t('table.disabled').toLowerCase();
+  const compareStatusLabel = new Intl.Collator(i18n.resolvedLanguage, {
+    usage: 'search',
+    sensitivity: 'accent',
+  }).compare;
+  const searchedStatus = [
+    { value: 1, label: t('table.enabled') },
+    { value: 0, label: t('table.disabled') },
+  ].find(({ label }) => compareStatusLabel(searchText, label) === 0)?.value;
+
   const matches = useMemo(() => {
     if (!term || query.isError) return [];
     return (query.data ?? []).filter(({ value: route }) => {
-      // Some locales' disabled label contains the full enabled label.
-      const status = route.status === 0 ? disabled : enabled;
       const fields = [
         route.name,
         route.uri,
@@ -64,11 +70,11 @@ export function useRouteSearch(
         ...Object.entries(route.labels ?? {}).map(([key, value]) => `${key}=${value}`),
       ];
       return (
-        status === term ||
+        searchedStatus === (route.status ?? 1) ||
         fields.some((field) => field?.toLowerCase().includes(term))
       );
     });
-  }, [term, query.data, query.isError, enabled, disabled]);
+  }, [term, query.data, query.isError, searchedStatus]);
 
   return { active, matches, query };
 }
