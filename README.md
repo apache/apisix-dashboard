@@ -16,6 +16,8 @@
 
 The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a frontend interface.
 
+Use **Search routes** on the Routes page to find routes by name, URI, host, plugin, label, status, or description. The first search loads the route list from the Admin API, and subsequent keywords filter those routes in the browser.
+
 ## Development
 
 Pull requests are encouraged and always welcome. [Pick an issue](https://github.com/apache/apisix-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) and help us out!

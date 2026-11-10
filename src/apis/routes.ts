@@ -26,9 +26,13 @@ export type WithServiceIdFilter = PageSearchType & {
   };
 };
 
-export const getRouteListReq = (req: AxiosInstance, params: WithServiceIdFilter) =>
+export const getRouteListReq = (
+  req: AxiosInstance,
+  params: Partial<WithServiceIdFilter>,
+  signal?: AbortSignal
+) =>
   req
-    .get<undefined, APISIXType['RespRouteList']>(API_ROUTES, { params })
+    .get<undefined, APISIXType['RespRouteList']>(API_ROUTES, { params, signal })
     .then((v) => v.data);
 
 export const getRouteReq = (req: AxiosInstance, id: string) =>

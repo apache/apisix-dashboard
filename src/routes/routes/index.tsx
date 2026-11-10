@@ -16,23 +16,27 @@
  */
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { Button, Empty, Input } from 'antd';
+import { type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getRouteListQueryOptions, useRouteList } from '@/apis/hooks';
-import type { WithServiceIdFilter } from '@/apis/routes';
+import { getRouteListReq, type WithServiceIdFilter } from '@/apis/routes';
 import { CopyableId } from '@/components/page/CopyableId';
 import { DeleteResourceBtn } from '@/components/page/DeleteResourceBtn';
 import { ListEmptyState } from '@/components/page/ListEmptyState';
 import PageHeader from '@/components/page/PageHeader';
 import { ToAddPageBtn, ToDetailPageBtn } from '@/components/page/ToAddPageBtn';
 import { AntdConfigProvider } from '@/config/antdConfigProvider';
-import { API_ROUTES } from '@/config/constant';
+import { API_ROUTES, PAGE_SIZE_MIN } from '@/config/constant';
 import { queryClient } from '@/config/global';
+import { req } from '@/config/req';
 import type { APISIXType } from '@/types/schema/apisix';
 import { pageSearchSchema } from '@/types/schema/pageSearch';
 import type { ListPageKeys } from '@/utils/useTablePagination';
+import IconSearch from '~icons/tabler/search';
 
 export type RouteListProps = {
   routeKey: Extract<ListPageKeys, '/routes/' | '/services/detail/$id/routes/'>;
@@ -44,11 +48,65 @@ export type RouteListProps = {
 
 export const RouteList = (props: RouteListProps) => {
   const { routeKey, ToDetailBtn, defaultParams } = props;
-  const { data, isLoading, refetch, pagination } = useRouteList(
+  const { data, isLoading, refetch, pagination, params } = useRouteList(
     routeKey,
     defaultParams
   );
   const { t } = useTranslation();
+  const [keyword, setKeyword] = useState('');
+  const [searchPage, setSearchPage] = useState(1);
+  const [searchPageSize, setSearchPageSize] = useState<number>();
+  const term = keyword.trim().toLowerCase();
+  const filters: Partial<WithServiceIdFilter> = { ...params, ...defaultParams };
+  delete filters.page;
+  delete filters.page_size;
+  const search = useQuery({
+    queryKey: ['routes', 'search', filters],
+    queryFn: async ({ signal }) => {
+      const { list } = await getRouteListReq(req, filters, signal);
+      // Unpaginated Admin API responses do not apply the paginated sort order.
+      return (list ?? []).sort((a, b) => a.createdIndex - b.createdIndex);
+    },
+    enabled: Boolean(term),
+    staleTime: Infinity,
+    gcTime: 0,
+    retry: false,
+  });
+  const disabled = t('table.disabled');
+  const enabled = t('table.enabled');
+  const matches = useMemo(() => {
+    if (!term || search.isError) return [];
+    return (search.data ?? []).filter(({ value: route }) => {
+      const fields = [
+        route.name,
+        route.uri,
+        ...(route.uris ?? []),
+        route.host,
+        ...(route.hosts ?? []),
+        route.desc,
+        ...Object.keys(route.plugins ?? {}),
+        ...Object.entries(route.labels ?? {}).map(([key, value]) => `${key}=${value}`),
+        route.status === 0 ? disabled : enabled,
+      ];
+      return fields.some((field) => field?.toLowerCase().includes(term));
+    });
+  }, [term, search.data, search.isError, disabled, enabled]);
+  const pageSize = searchPageSize ?? pagination.pageSize ?? PAGE_SIZE_MIN;
+  const lastPage = Math.max(1, Math.ceil(matches.length / pageSize));
+
+  let emptyText: ReactNode = <ListEmptyState resource="routes" />;
+  if (term) {
+    emptyText = search.isPending ? null : (
+      <Empty
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+        description={t(search.isError ? 'routes.searchFailed' : 'routes.noMatches')}
+      >
+        {search.isError && (
+          <Button onClick={() => void search.refetch()}>{t('error.retry')}</Button>
+        )}
+      </Empty>
+    );
+  }
 
   const columns = useMemo<ProColumns<APISIXType['RespRouteItem']>[]>(() => {
     return [
@@ -99,18 +157,41 @@ export const RouteList = (props: RouteListProps) => {
   return (
     <AntdConfigProvider>
       <ProTable
-        locale={{
-          emptyText: <ListEmptyState resource="routes" />,
-        }}
+        locale={{ emptyText }}
         columns={columns}
-        dataSource={data.list}
-        rowKey="id"
-        loading={isLoading}
+        dataSource={term ? matches : data.list}
+        rowKey={(record) => record.value.id}
+        loading={term ? search.isFetching : isLoading}
         search={false}
         options={false}
-        pagination={pagination}
+        pagination={term ? {
+          ...pagination,
+          current: Math.min(searchPage, lastPage),
+          pageSize,
+          total: matches.length,
+          onChange: (page, size) => {
+            setSearchPage(page);
+            setSearchPageSize(size);
+          },
+        } : pagination}
         cardProps={{ bodyStyle: { padding: 0 } }}
         toolbar={{
+          actions: [
+            <Input
+              key="search"
+              type="search"
+              aria-label={t('routes.search')}
+              placeholder={t('routes.search')}
+              prefix={<IconSearch />}
+              value={keyword}
+              allowClear
+              style={{ width: 'min(340px, 48vw)' }}
+              onChange={(event) => {
+                setKeyword(event.target.value);
+                setSearchPage(1);
+              }}
+            />,
+          ],
           menu: {
             type: 'inline',
             items: [

@@ -66,7 +66,12 @@ test.describe('page and page_size should work correctly', () => {
 
   test.beforeAll(async () => {
     await deleteAllRoutes(e2eReq);
-    await Promise.all(routes.map((d) => putRouteReq(e2eReq, d)));
+    await Promise.all(routes.slice(0, -1).map((d) => putRouteReq(e2eReq, d)));
+    await putRouteReq(e2eReq, {
+      ...routes[10],
+      labels: { team: 'payments-ops' },
+      status: 0,
+    });
   });
 
   test.afterAll(async () => {
@@ -92,5 +97,45 @@ test.describe('page and page_size should work correctly', () => {
     filterItemsNotInPage,
     getCell: (page, item) =>
       page.getByRole('cell', { name: item.name }).first(),
+  });
+
+  test('searches across pages and reuses the downloaded routes', async ({ page }) => {
+    const listRequests: URL[] = [];
+    page.on('request', (request) => {
+      const url = new URL(request.url());
+      if (request.method() === 'GET' && url.pathname === '/apisix/admin/routes') {
+        listRequests.push(url);
+      }
+    });
+    await routesPom.getRouteNavBtn(page).click();
+    const search = page.getByRole('searchbox', { name: 'Search routes' });
+    const first = page.getByRole('cell', { name: 'route_name_1', exact: true });
+    const target = page.getByRole('cell', { name: 'route_name_11', exact: true });
+    await expect(first).toBeVisible();
+    await expect(target).toBeHidden();
+    expect(listRequests).toHaveLength(1);
+    expect(listRequests[0].searchParams.get('page_size')).toBe('10');
+
+    await search.fill('PAYMENTS-OPS');
+    await expect(target).toBeVisible();
+    await expect(first).toBeHidden();
+    expect(listRequests).toHaveLength(2);
+    expect(listRequests[1].search).toBe('');
+
+    await search.fill('route_name_');
+    await expect(first).toBeVisible();
+    await expect(target).toBeHidden();
+    await page.getByRole('listitem', { name: '2', exact: true }).click();
+    await expect(target).toBeVisible();
+    await search.fill('disabled');
+    await expect(target).toBeVisible();
+    await expect(page.getByRole('listitem', { name: '1', exact: true })).toBeVisible();
+
+    await search.fill('no-such-route');
+    await expect(page.getByText('No routes match this search')).toBeVisible();
+    await search.clear();
+    await expect(first).toBeVisible();
+    await expect(target).toBeHidden();
+    expect(listRequests).toHaveLength(2);
   });
 });

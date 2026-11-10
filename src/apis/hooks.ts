@@ -91,7 +91,7 @@ export const genUseList = <
     const { data, isLoading, refetch } = listQuery;
     const opts = { data, setParams, params };
     const pagination = useTablePagination(opts);
-    return { data, isLoading, refetch, pagination, setParams };
+    return { data, isLoading, refetch, pagination, params, setParams };
   };
 };
 
