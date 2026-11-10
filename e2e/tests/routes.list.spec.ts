@@ -138,4 +138,28 @@ test.describe('page and page_size should work correctly', () => {
     await expect(target).toBeHidden();
     expect(listRequests).toHaveLength(2);
   });
+
+  test('distinguishes enabled and disabled routes in German and Spanish', async ({ page }) => {
+    await routesPom.getRouteNavBtn(page).click();
+    const enabledRoute = page.getByRole('cell', { name: 'route_name_1', exact: true });
+    const disabledRoute = page.getByRole('cell', { name: 'route_name_11', exact: true });
+
+    for (const [language, label, enabled, disabled] of [
+      ['Deutsch', 'Routen suchen', 'Aktiviert', 'Deaktiviert'],
+      ['Español', 'Buscar rutas', 'Habilitado', 'Deshabilitado'],
+    ]) {
+      await page.getByRole('button', { name: 'Select language' }).click();
+      await page.getByRole('menuitem', { name: language }).click();
+      const search = page.getByRole('searchbox', { name: label });
+
+      await search.fill(enabled);
+      await expect(enabledRoute).toBeVisible();
+      await expect(disabledRoute).toBeHidden();
+      await expect(page.getByRole('listitem', { name: '2', exact: true })).toBeHidden();
+
+      await search.fill(disabled);
+      await expect(disabledRoute).toBeVisible();
+      await expect(enabledRoute).toBeHidden();
+    }
+  });
 });
