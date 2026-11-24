@@ -14,59 +14,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
+import { test as baseTest } from '@playwright/test';
 
-import { expect, test as baseTest } from '@playwright/test';
+import { API_HEADER_KEY, API_PREFIX } from '@/config/constant';
 
-import { fileExists, getAPISIXConf } from './common';
-import { env } from './env';
+import { getAPISIXConf } from './common';
 
 export type Test = typeof test;
-export const test = baseTest.extend<object, { workerStorageState: string }>({
-  storageState: ({ workerStorageState }, use) => use(workerStorageState),
-  workerStorageState: [
-    async ({ browser }, use) => {
-      // Use parallelIndex as a unique identifier for each worker.
-      const id = test.info().parallelIndex;
-      const fileName = path.resolve(
-        test.info().project.outputDir,
-        `.auth/${id}.json`
-      );
+
+type TestOptions = {
+  /**
+   * Whether to authenticate Admin API requests by injecting the
+   * `X-API-KEY` header at the network layer. On by default.
+   *
+   * The dashboard holds the admin key in memory only (it is no longer
+   * persisted to `localStorage`), so auth cannot be replayed through
+   * Playwright's `storageState` the way it used to be. Instead we add the
+   * header to every Admin API request for the whole browser context, which
+   * keeps the app authenticated across full-page navigations and reloads
+   * (the e2e suite navigates with `page.goto`, i.e. fresh document loads)
+   * without re-driving the Settings modal on every page.
+   *
+   * Tests that exercise the manual auth flow itself (`auth.spec.ts`) opt
+   * out via `test.use({ injectAdminKey: false })`.
+   */
+  injectAdminKey: boolean;
+};
+
+export const test = baseTest.extend<TestOptions>({
+  injectAdminKey: [true, { option: true }],
+  page: async ({ baseURL, page, injectAdminKey }, use) => {
+    if (injectAdminKey) {
       const { adminKey } = await getAPISIXConf();
-
-      // file exists and contains admin key, use it
-      if (
-        (await fileExists(fileName)) &&
-        (await readFile(fileName)).toString().includes(adminKey)
-      ) {
-        return use(fileName);
-      }
-
-      const page = await browser.newPage({ storageState: undefined });
-
-      // have to use env here, because the baseURL is not available in worker
-      await page.goto(env.E2E_TARGET_URL);
-
-      // we need to authenticate
-      const settingsModal = page.getByRole('dialog', { name: 'Settings' });
-      await expect(settingsModal).toBeVisible();
-      // PasswordInput renders with a label, use getByLabel instead
-      const adminKeyInput = page.getByLabel('Admin Key');
-      await adminKeyInput.clear();
-      await adminKeyInput.fill(adminKey);
-      await page
-        .getByRole('dialog', { name: 'Settings' })
-        .getByRole('button')
-        .click();
-
-      await page.context().storageState({ path: fileName });
-      await page.close();
-      await use(fileName);
-    },
-    { scope: 'worker' },
-  ],
-  page: async ({ baseURL, page }, use) => {
+      await page.route(
+        (url) => url.pathname.startsWith(API_PREFIX),
+        (route) =>
+          route.continue({
+            headers: {
+              ...route.request().headers(),
+              [API_HEADER_KEY.toLowerCase()]: adminKey,
+            },
+          })
+      );
+    }
     await page.goto(baseURL);
     await use(page);
   },
