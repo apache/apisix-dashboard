@@ -22,8 +22,9 @@ import { uiHasToastMsg } from '@e2e/utils/ui';
 import { uiFillUpstreamRequiredFields } from '@e2e/utils/ui/upstreams';
 import { expect } from '@playwright/test';
 
-import { deleteAllRoutes } from '@/apis/routes';
+import { deleteAllRoutes, putRouteReq } from '@/apis/routes';
 import { deleteAllServices, postServiceReq } from '@/apis/services';
+import { BASE_PATH } from '@/config/constant';
 import type { APISIXType } from '@/types/schema/apisix';
 
 test.describe.configure({ mode: 'serial' });
@@ -219,4 +220,26 @@ test('should CRUD route under service with required fields', async ({
     });
     await expect(page.getByRole('cell', { name: routeName })).toBeHidden();
   });
+});
+
+test('search only includes routes attached to the current service', async ({ page }) => {
+  const attached = randomId('payment-attached');
+  const unrelated = randomId('payment-unrelated');
+  await putRouteReq(e2eReq, {
+    id: attached,
+    name: attached,
+    uri: '/attached',
+    service_id: testServiceId,
+  });
+  await putRouteReq(e2eReq, {
+    id: unrelated,
+    name: unrelated,
+    uri: '/unrelated',
+    upstream: { nodes },
+  });
+
+  await page.goto(`${BASE_PATH}/services/detail/${testServiceId}/routes`);
+  await page.getByRole('searchbox', { name: 'Search routes' }).fill('payment-');
+  await expect(page.getByRole('cell', { name: attached, exact: true })).toBeVisible();
+  await expect(page.getByRole('cell', { name: unrelated, exact: true })).toBeHidden();
 });

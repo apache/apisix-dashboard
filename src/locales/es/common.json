@@ -345,6 +345,9 @@
     "singular": "Proto"
   },
   "routes": {
+    "noMatches": "Ninguna ruta coincide con la búsqueda",
+    "search": "Buscar rutas",
+    "searchFailed": "No se pudieron cargar las rutas para la búsqueda",
     "singular": "Ruta"
   },
   "seconds": "Segundos",

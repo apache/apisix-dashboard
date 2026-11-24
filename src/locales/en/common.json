@@ -345,6 +345,9 @@
     "singular": "Proto"
   },
   "routes": {
+    "noMatches": "No routes match this search",
+    "search": "Search routes",
+    "searchFailed": "Could not load routes for search",
     "singular": "Route"
   },
   "seconds": "Seconds",
