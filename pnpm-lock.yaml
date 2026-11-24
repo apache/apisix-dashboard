@@ -312,7 +312,7 @@ importers:
         version: 1.167.2(@tanstack/react-router@1.170.44(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@tanstack/router-core@1.171.37)(csstype@3.2.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tanstack/router-plugin':
         specifier: ^1.168.46
-        version: 1.168.46(@tanstack/react-router@1.170.44(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(esbuild@0.25.12)(rollup@4.59.0)(supports-color@7.2.0)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
+        version: 1.168.46(@tanstack/react-router@1.170.44(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(esbuild@0.25.12)(rollup@4.59.0)(supports-color@7.2.0)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
       '@types/node':
         specifier: ^22.14.1
         version: 22.19.15
@@ -327,7 +327,7 @@ importers:
         version: 19.2.3(@types/react@19.2.14)
       '@vitejs/plugin-react-swc':
         specifier: ^3.9.0
-        version: 3.11.0(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
+        version: 3.11.0(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
       eslint:
         specifier: ^9.32.0
         version: 9.39.4(jiti@2.7.0)(supports-color@7.2.0)
@@ -393,16 +393,16 @@ importers:
         version: 22.5.0(@svgr/core@8.1.0(supports-color@7.2.0)(typescript@5.8.3))(supports-color@7.2.0)
       unplugin-info:
         specifier: ^1.2.2
-        version: 1.2.4(esbuild@0.25.12)(rollup@4.59.0)(supports-color@7.2.0)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
+        version: 1.2.4(esbuild@0.25.12)(rollup@4.59.0)(supports-color@7.2.0)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
       vite:
-        specifier: ^6.4.4
-        version: 6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
+        specifier: ^6.4.5
+        version: 6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
       vite-tsconfig-paths:
         specifier: ^5.1.4
-        version: 5.1.4(supports-color@7.2.0)(typescript@5.8.3)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
+        version: 5.1.4(supports-color@7.2.0)(typescript@5.8.3)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@22.19.15)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
+        version: 4.1.11(@types/node@22.19.15)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
       yaml:
         specifier: ^2.8.3
         version: 2.8.3
@@ -4237,8 +4237,8 @@ packages:
       vite:
         optional: true
 
-  vite@6.4.4:
-    resolution: {integrity: sha512-xGjU/SyjeNyb0E4KxXBvYz/1C+3JXuujvf2hXNOtnlcE+58o5ajd9N2/n2VhkiJvpCP2qQasnUpx5PXNeI+p1Q==}
+  vite@6.4.5:
+    resolution: {integrity: sha512-4enwjFfi4IwtEh0w+jPzpLVOFQiPHmmzPxcHXQOyEur47o6u0jE573DmGpjA+7irXoMLYRZD5ZaFUEneS3abPg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -5644,7 +5644,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tanstack/router-plugin@1.168.46(@tanstack/react-router@1.170.44(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(esbuild@0.25.12)(rollup@4.59.0)(supports-color@7.2.0)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))':
+  '@tanstack/router-plugin@1.168.46(@tanstack/react-router@1.170.44(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(esbuild@0.25.12)(rollup@4.59.0)(supports-color@7.2.0)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))':
     dependencies:
       '@babel/core': 7.29.7(supports-color@7.2.0)
       '@babel/template': 7.29.7
@@ -5653,11 +5653,11 @@ snapshots:
       '@tanstack/router-generator': 1.167.44(supports-color@7.2.0)
       '@tanstack/router-utils': 1.162.4(supports-color@7.2.0)
       chokidar: 5.0.0
-      unplugin: 3.4.0(esbuild@0.25.12)(rollup@4.59.0)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
+      unplugin: 3.4.0(esbuild@0.25.12)(rollup@4.59.0)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
       zod: 4.6.7
     optionalDependencies:
       '@tanstack/react-router': 1.170.44(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      vite: 6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
+      vite: 6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
     transitivePeerDependencies:
       - '@farmfe/core'
       - '@rspack/core'
@@ -5882,11 +5882,11 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.11.1':
     optional: true
 
-  '@vitejs/plugin-react-swc@3.11.0(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))':
+  '@vitejs/plugin-react-swc@3.11.0(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@swc/core': 1.10.0
-      vite: 6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
+      vite: 6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -5899,13 +5899,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.11(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))':
+  '@vitest/mocker@4.1.11(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))':
     dependencies:
       '@vitest/spy': 4.1.11
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
+      vite: 6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
 
   '@vitest/pretty-format@4.1.11':
     dependencies:
@@ -8462,7 +8462,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  unplugin-info@1.2.4(esbuild@0.25.12)(rollup@4.59.0)(supports-color@7.2.0)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)):
+  unplugin-info@1.2.4(esbuild@0.25.12)(rollup@4.59.0)(supports-color@7.2.0)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)):
     dependencies:
       ci-info: 4.4.0
       git-url-parse: 16.1.0
@@ -8471,7 +8471,7 @@ snapshots:
     optionalDependencies:
       esbuild: 0.25.12
       rollup: 4.59.0
-      vite: 6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
+      vite: 6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -8482,7 +8482,7 @@ snapshots:
       picomatch: 4.0.4
       webpack-virtual-modules: 0.6.2
 
-  unplugin@3.4.0(esbuild@0.25.12)(rollup@4.59.0)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)):
+  unplugin@3.4.0(esbuild@0.25.12)(rollup@4.59.0)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       picomatch: 4.0.4
@@ -8490,7 +8490,7 @@ snapshots:
     optionalDependencies:
       esbuild: 0.25.12
       rollup: 4.59.0
-      vite: 6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
+      vite: 6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
 
   unrs-resolver@1.11.1:
     dependencies:
@@ -8566,25 +8566,25 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite-tsconfig-paths@5.1.4(supports-color@7.2.0)(typescript@5.8.3)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)):
+  vite-tsconfig-paths@5.1.4(supports-color@7.2.0)(typescript@5.8.3)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)):
     dependencies:
       debug: 4.4.3(supports-color@7.2.0)
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.8.3)
     optionalDependencies:
-      vite: 6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
+      vite: 6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3):
+  vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
       postcss: 8.5.30
       rollup: 4.59.0
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.17
     optionalDependencies:
       '@types/node': 22.19.15
       fsevents: 2.3.3
@@ -8593,10 +8593,10 @@ snapshots:
       tsx: 4.23.15
       yaml: 2.8.3
 
-  vitest@4.1.11(@types/node@22.19.15)(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)):
+  vitest@4.1.11(@types/node@22.19.15)(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)):
     dependencies:
       '@vitest/expect': 4.1.11
-      '@vitest/mocker': 4.1.11(vite@6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
+      '@vitest/mocker': 4.1.11(vite@6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3))
       '@vitest/pretty-format': 4.1.11
       '@vitest/runner': 4.1.11
       '@vitest/snapshot': 4.1.11
@@ -8613,7 +8613,7 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vite: 6.4.4(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
+      vite: 6.4.5(@types/node@22.19.15)(jiti@2.7.0)(sugarss@5.0.1(postcss@8.5.30))(tsx@4.23.15)(yaml@2.8.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.19.15
